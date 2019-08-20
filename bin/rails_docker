@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker-compose run --rm -e EDITOR=vi rails rails $*

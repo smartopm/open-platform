@@ -1,0 +1,14 @@
+require: rubocop-rails
+
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'node_modules/**/*'
+    - 'script/**/*'
+    - 'bin/**/*'
+    - 'Gemfile'
+
+Metrics/LineLength:
+  Max: 100
+

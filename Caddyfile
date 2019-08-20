@@ -1,0 +1,9 @@
+https://dgdp.dev.atrailing.space {
+  tls /root/certs/dgdp.dev.atrailing.space/cert.pem /root/certs/dgdp.dev.atrailing.space/privkey.pem
+  log stdout
+  errors stdout
+  proxy / rails:3000 {
+    transparent
+  }
+}
+

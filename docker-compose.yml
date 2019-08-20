@@ -1,0 +1,38 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  rails:
+    build:
+      context: .
+      dockerfile: ./docker/rails/Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e development -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+  rails_worker:
+    build:
+      context: .
+      dockerfile: ./docker/rails/Dockerfile
+    command: bash -c "bundle exec shoryuken -R"
+    volumes:
+      - .:/myapp
+    depends_on:
+      - db
+  caddy:
+    image: abiosoft/caddy
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./certs:/root/certs
+      - ./Caddyfile:/etc/Caddyfile
+    depends_on:
+      - rails
+volumes:
+  pgdata:
