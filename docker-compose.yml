@@ -1,6 +1,6 @@
 version: "3"
 services:
-  db:
+  postgres:
     image: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -14,7 +14,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - db
+      - postgres
   rails_worker:
     build:
       context: .
@@ -23,7 +23,7 @@ services:
     volumes:
       - .:/myapp
     depends_on:
-      - db
+      - postgres
   caddy:
     image: abiosoft/caddy
     ports:
