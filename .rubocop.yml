@@ -12,3 +12,20 @@ AllCops:
 Metrics/LineLength:
   Max: 100
 
+# This is hard to keep in specs by their nature
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Style/TrailingCommaInArguments:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: comma
+
