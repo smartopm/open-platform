@@ -28,13 +28,31 @@ gem 'jbuilder', '~> 2.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem "nexmo", "~> 5.9"
+
+# Oauth stuff
+gem "omniauth-google-oauth2", "~> 0.8.0"
+gem "devise", "~> 4.7"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+
   gem "rubocop", "~> 0.74.0"
   gem "pronto", "~> 0.10.0"
-
   gem "rubocop-rails", "~> 2.3"
+
+  # RSpec
+  # TODO: @mdp figure out why this needs bundle run twice
+  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: '4-0-dev'
+  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core'
+  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations'
+  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks'
+  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support'
+  gem 'rails-controller-testing'
 end
 
 group :development do
@@ -52,17 +70,5 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+  gem 'factory_bot'
 end
-
-group :test, :development do
-  gem 'rspec-rails', '~> 3.8'
-end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem "nexmo", "~> 5.9"
-
-
-gem "omniauth-google-oauth2", "~> 0.8.0"
-gem "devise", "~> 4.7"
