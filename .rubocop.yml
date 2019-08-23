@@ -17,6 +17,9 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
 
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 Style/TrailingCommaInArguments:
   Enabled: true
   EnforcedStyleForMultiline: comma
