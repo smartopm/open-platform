@@ -17,8 +17,31 @@ Requires Docker and docker-compose to be installed
 ### Updating gems
 
 - `docker-compose run --rm rails bundle add gemfileyouwant`
-- Rebuild the image `docker-compose build rails`
+- `bin/rebuild_rails_image.sh`
+  - This performs
+    - Stop the existing 'rails' service
+    - Run `bundle` to update Gemfile.lock
+    - Runs `bundle install` install gems
+    - Starts the 'rails' service
 
 ### Testing
 
-- `docker-compose run --rm -e ENV="test" rails bundle exec rails test`
+#### Run Rspec tests
+
+`docker-compose run --rm rails rake`
+
+#### Run Rubocop for linting
+
+`docker-compose run --rm rails rake lint`
+
+To autofix
+
+`docker-compose run --rm rails rake lint:fix`
+
+#### Before a merge/pull request
+
+Before you submit a merge or pull request, please ensure that both
+Rubocop and the tests pass.
+
+`bin/all.sh`
+
