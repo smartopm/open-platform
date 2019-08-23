@@ -22,4 +22,5 @@ test:
 
 pronto:
   script:
+    - git fetch
     - bundle exec pronto run -c=origin/master --exit-code
