@@ -6,6 +6,8 @@
 # Workers
 # Contractors
 class User < ApplicationRecord
+  has_many :members
+
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   OAUTH_FIELDS_MAP = {

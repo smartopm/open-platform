@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+
   describe 'Creating a user from a oauth authentication callback' do
+
     auth_obj = OpenStruct.new(
       uid: 'abc12345',
       provider: 'google',
@@ -19,10 +21,12 @@ RSpec.describe User, type: :model do
         refresh_token: 'foo',
       ),
     )
+
     it 'should create a new user' do
       user = User.from_omniauth(auth_obj)
       expect(user.persisted?).to be true
     end
+
     it 'should update an existing user' do
       auth_obj.info.name = 'Mark Percival'
       auth_obj.info.image = 'https://newprofile.com/pic.png'
@@ -32,5 +36,7 @@ RSpec.describe User, type: :model do
       expect(users[0].name).to eq 'Mark Percival'
       expect(users[0].image_url).to eq 'https://newprofile.com/pic.png'
     end
+
   end
+
 end
