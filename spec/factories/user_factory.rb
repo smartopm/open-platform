@@ -14,5 +14,4 @@ FactoryBot.define do
     provider { 'google' }
     uid
   end
-
 end

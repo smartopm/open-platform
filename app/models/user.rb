@@ -6,7 +6,7 @@
 # Workers
 # Contractors
 class User < ApplicationRecord
-  has_many :members
+  has_many :members, dependent: :destroy
 
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 

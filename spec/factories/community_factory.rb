@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-
   sequence :community_name do |n|
     "Community ##{n}"
   end
@@ -13,7 +12,5 @@ FactoryBot.define do
         create_list :role, 3, community: c
       end
     end
-
   end
-
 end

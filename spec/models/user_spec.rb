@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-
   describe 'Creating a user from a oauth authentication callback' do
-
     auth_obj = OpenStruct.new(
       uid: 'abc12345',
       provider: 'google',
@@ -36,7 +34,5 @@ RSpec.describe User, type: :model do
       expect(users[0].name).to eq 'Mark Percival'
       expect(users[0].image_url).to eq 'https://newprofile.com/pic.png'
     end
-
   end
-
 end
