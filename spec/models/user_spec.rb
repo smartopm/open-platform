@@ -19,10 +19,12 @@ RSpec.describe User, type: :model do
         refresh_token: 'foo',
       ),
     )
+
     it 'should create a new user' do
       user = User.from_omniauth(auth_obj)
       expect(user.persisted?).to be true
     end
+
     it 'should update an existing user' do
       auth_obj.info.name = 'Mark Percival'
       auth_obj.info.image = 'https://newprofile.com/pic.png'
