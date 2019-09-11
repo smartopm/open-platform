@@ -37,7 +37,7 @@ class User < ApplicationRecord
 
   # We may want to do a bit more work here massaing the number entered
   def self.find_via_phone_number(phone_number)
-    find(phone_number: phone_number)
+    find_by(phone_number: phone_number)
   end
 
   def create_new_phone_token

@@ -11,7 +11,7 @@ Will add more notes here as we grow
 Requires Docker and docker-compose to be installed
 
 - `docker-compose build`
-- `./bin/rails_docker db:create db:schema:load`
+- `./bin/docker_rails db:create db:schema:load`
 - `docker-compose up`
 
 ### Updating gems

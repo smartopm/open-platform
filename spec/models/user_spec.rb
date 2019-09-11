@@ -63,7 +63,7 @@ RSpec.describe User, type: :model do
         .to raise_exception(User::PhoneTokenResultInvalid)
 
       # With an expired token
-      @user.update(:phone_token_expires_at, 1.minute.ago)
+      @user.update(phone_token_expires_at: 1.minute.ago)
       expect { @user.verify_phone_token!(token) }.to raise_exception(User::PhoneTokenResultExpired)
     end
   end

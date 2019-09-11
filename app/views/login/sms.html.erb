@@ -1,0 +1,12 @@
+<div class="row">
+  <%= form_tag login_sms_complete_path, class: "col s12" do %>
+    <div class="row">
+      <div class="input-field col s12">
+        <%= hidden_field_tag :phone_number, @user.phone_number, type: "text", class: "validate", placeholder: "Code" %>
+        <%= text_field_tag :token, '', type: "text", class: "validate", placeholder: "Code" %>
+        <label for="phone_number">Code</label>
+      </div>
+    </div>
+    <%= submit_tag "Complete login", class: "btn waves-effect waves-light" %>
+  <% end %>
+</div>
