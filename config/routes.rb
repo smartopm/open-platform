@@ -11,5 +11,6 @@ Rails.application.routes.draw do
     get 'logout', :to => 'devise/sessions#destroy', :as => :destroy_user_session
   end
 
+  get 'scan', to: 'home#scan'
   root 'home#index'
 end

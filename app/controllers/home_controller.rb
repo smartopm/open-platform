@@ -5,4 +5,9 @@ class HomeController < ApplicationController
   before_action :authenticate_user!
 
   def index; end
+
+  def scan
+    render html: '', layout: 'react'
+  end
+
 end
