@@ -75,3 +75,5 @@ group :test do
   gem 'webdrivers'
   gem 'factory_bot'
 end
+
+gem "graphql", "~> 1.9"
