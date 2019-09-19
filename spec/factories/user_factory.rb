@@ -13,5 +13,12 @@ FactoryBot.define do
     email
     provider { 'google' }
     uid
+
+    factory :user_with_membership do
+      after :create do |user|
+        community = FactoryBot.create(:community)
+        create_list :member, 1, user: user, community: community
+      end
+    end
   end
 end

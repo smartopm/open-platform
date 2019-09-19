@@ -37,6 +37,9 @@ gem "nexmo", "~> 5.9"
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem "devise", "~> 4.7"
 
+# QR Code library for building SVG's
+gem 'rqrcode'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
