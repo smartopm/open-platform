@@ -3,6 +3,8 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { QRCode } from "react-qr-svg";
 
+import Loading from "./Loading.jsx";
+
 const IdQuery = gql`
 query Member($id: ID!) {
   member(id: $id) {
@@ -24,7 +26,7 @@ export default ({ match }) => {
       {({ data, loading }) => (
       <div>
         {loading
-        ? 'loading...' :
+        ? <Loading /> :
         <div key={data.member.id}>
           <b>{data.member.memberType}</b> {data.member.user.name}
           <QRCode style={{ width: 256 }} value={data.member.user.id} />

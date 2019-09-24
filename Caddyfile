@@ -5,6 +5,10 @@ https://dgdp.dev.atrailing.space {
   proxy /packs webpacker:3035 {
     transparent
   }
+  proxy /sockjs-node webpacker:3035 {
+    transparent
+    websocket
+  }
   proxy / rails:3000 {
     transparent
   }

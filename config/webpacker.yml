@@ -61,9 +61,7 @@ development:
     https: false
     host: webpacker
     port: 3035
-    public: 0.0.0.0:3035
-    proxy:
-      target: 'http://rails:3000'
+    public: 0.0.0.0
     hmr: false
     # Inline should be set to true if using HMR
     inline: true
