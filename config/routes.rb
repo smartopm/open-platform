@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get 'id_verify/:token', to: 'members#id_verify', as: :member_id_verify
 
   get 'scan', to: 'home#scan'
+  get 'react_id/:id', to: 'home#scan'
   get 'hold', to: 'home#hold'
   root 'home#index'
 end
