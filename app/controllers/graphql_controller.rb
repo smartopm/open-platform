@@ -1,30 +1,34 @@
+# frozen_string_literal: true
+
+# GraphQL Controller for all queries and mutations
 class GraphqlController < ApplicationController
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
-    }
-    result = DoubleGdpSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = DoubleGdpSchema.execute(query, variables: variables, context: context,
+                                            operation_name: operation_name)
     render json: result
-  rescue => e
+  rescue StandardError => e
     raise e unless Rails.env.development?
+
     handle_error_in_development e
   end
 
   private
 
+  def context
+    {
+      # Query context goes here, for example:
+      current_user: current_user,
+    }
+  end
+
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)
     case ambiguous_param
     when String
-      if ambiguous_param.present?
-        ensure_hash(JSON.parse(ambiguous_param))
-      else
-        {}
-      end
+      handle_string_param(ambiguous_param)
     when Hash, ActionController::Parameters
       ambiguous_param
     when nil
@@ -34,10 +38,19 @@ class GraphqlController < ApplicationController
     end
   end
 
-  def handle_error_in_development(e)
-    logger.error e.message
-    logger.error e.backtrace.join("\n")
+  def handle_string_param(str_param)
+    if str_param.present?
+      ensure_hash(JSON.parse(str_param))
+    else
+      {}
+    end
+  end
 
-    render json: { error: { message: e.message, backtrace: e.backtrace }, data: {} }, status: 500
+  def handle_error_in_development(err)
+    logger.error err.message
+    logger.error err.backtrace.join("\n")
+
+    render json: { error: { message: err.message, backtrace: err.backtrace }, data: {} },
+           status: :internal_server_error
   end
 end

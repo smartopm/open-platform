@@ -41,8 +41,9 @@ gem "devise", "~> 4.7"
 gem 'rqrcode'
 
 # GraphQL
-gem "graphql", "~> 1.9"
+gem 'graphql', '~> 1.9'
 gem 'graphiql-rails', group: :development
+gem 'graphql-guard'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

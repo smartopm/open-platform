@@ -6,8 +6,8 @@ import React, { useState, Component } from 'react';
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Provider from '../src/components/Provider';
-import IDCard from '../src/components/id_card';
-import Drawer from '../src/components/drawer.jsx'
+import IDCard from '../src/components/IdCard';
+import Nav from '../src/components/Nav.jsx'
 
 class DynamicImport extends Component {
   state = {
@@ -27,7 +27,7 @@ class DynamicImport extends Component {
 }
 
 const Scan = (props) => (
-  <DynamicImport load={() => import('../src/components/scan.jsx')}>
+  <DynamicImport load={() => import('../src/components/Scan.jsx')}>
     {(Component) => Component === null
       ? <p>Loading</p>
       : <Component {...props} />}
@@ -38,10 +38,10 @@ const App = () => {
   return (
     <Provider>
       <Router>
-        <Drawer>
+        <Nav>
           <Route path='/scan' component={Scan}/>
           <Route path='/react_id/:id' component={IDCard}/>
-        </Drawer>
+        </Nav>
       </Router>
     </Provider>
   )

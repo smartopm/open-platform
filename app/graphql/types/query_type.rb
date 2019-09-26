@@ -1,18 +1,37 @@
+# frozen_string_literal: true
+
 module Types
+  # QueryType
   class QueryType < Types::BaseObject
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
-    # First describe the field signature:
+    # Get a member's information
     field :member, MemberType, null: true do
-      description "Find a member by ID"
+      description 'Find a member by ID'
       argument :id, ID, required: true
     end
 
-    # Then provide an implementation:
     def member(id:)
-      Member.find(id)
+      Member.find(id) if context[:current_user]
     end
 
+    field :community, CommunityType, null: true do
+      description 'Find a community by ID'
+      argument :id, ID, required: true
+    end
+
+    def community(id:)
+      Community.find(id) if context[:current_user]
+    end
+
+    # Get a current user information
+    field :current_user, UserType, null: true do
+      description 'Get the current logged in user'
+    end
+
+    def current_user
+      context[:current_user]
+    end
   end
 end
