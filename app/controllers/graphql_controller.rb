@@ -6,7 +6,7 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    result = DoubleGdpSchema.execute(query, variables: variables, context: context,
+    result = DoubleGdpSchema.execute(query, variables: variables, context: getContext(request),
                                             operation_name: operation_name)
     render json: result
   rescue StandardError => e
@@ -17,10 +17,14 @@ class GraphqlController < ApplicationController
 
   private
 
-  def context
+  def getContext(request)
+    if request.headers['X-Member-ID']
+      member = Member.find(request.headers['X-Member-ID'])
+    end
     {
       # Query context goes here, for example:
       current_user: current_user,
+      current_member: member,
     }
   end
 

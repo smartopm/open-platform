@@ -1,9 +1,29 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import { StyleSheet, css } from 'aphrodite';
 
-export default function Nav(props) {
+import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
+
+
+export default (props) => {
+  const authState = useContext(AuthStateContext)
+  return (<Component props={props} authState={authState} />)
+}
+
+export function Component({props, authState}) {
+
+  function communityName() {
+    if (authState.member && authState.member.community) {
+      if (authState.member.community.logoUrl) {
+        return(<img src={authState.member.community.logoUrl} className={css(styles.logo)} />)
+      }
+      return(<div>{authState.member.community.name}</div>)
+    }
+    return  "Community"
+  }
+
   return (
     <div>
-      <nav className="navbar navbar-dark" style={{backgroundColor: '#46ce84'}}>
+      <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -22,7 +42,7 @@ export default function Nav(props) {
         </div>
 
         <ul className="nav navbar-nav navbar-center">
-          <li><a href="#">Community</a></li>
+          <li>{communityName()}</li>
         </ul>
       </nav>
       {props.children}
@@ -30,3 +50,12 @@ export default function Nav(props) {
   );
 }
 
+
+const styles = StyleSheet.create({
+    logo: {
+        height: '25px'
+    },
+    navBar: {
+        backgroundColor: '#46ce84'
+    },
+});

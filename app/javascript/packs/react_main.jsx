@@ -5,9 +5,12 @@
 import React, { useState, Component } from 'react';
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Provider from '../src/components/Provider';
+import ApolloProvider from '../src/components/Provider/ApolloProvider';
+import AuthStateProvider from '../src/components/Provider/AuthStateProvider';
+import Home from '../src/components/Home';
+import IDVerify from '../src/components/IdVerify';
 import IDCard from '../src/components/IdCard';
-import Nav from '../src/components/Nav.jsx'
+import Nav from '../src/components/Nav'
 
 class DynamicImport extends Component {
   state = {
@@ -36,14 +39,18 @@ const Scan = (props) => (
 
 const App = () => {
   return (
-    <Provider>
-      <Router>
-        <Nav>
-          <Route path='/scan' component={Scan}/>
-          <Route path='/react_id/:id' component={IDCard}/>
-        </Nav>
-      </Router>
-    </Provider>
+    <ApolloProvider>
+      <AuthStateProvider>
+        <Router>
+          <Nav>
+            <Route path='/scan' component={Scan}/>
+            <Route path='/id/:id' component={IDCard}/>
+            <Route path='/id_verify/:id' component={IDVerify}/>
+            <Route path='/' exact component={Home}/>
+          </Nav>
+        </Router>
+      </AuthStateProvider>
+    </ApolloProvider>
   )
 
 }

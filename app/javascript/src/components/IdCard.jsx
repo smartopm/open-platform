@@ -1,5 +1,5 @@
 import React from 'react';
-import { Query, useQuery } from 'react-apollo';
+import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { QRCode } from "react-qr-svg";
 

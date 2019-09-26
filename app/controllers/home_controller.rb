@@ -8,7 +8,7 @@ class HomeController < ApplicationController
 
   def hold; end
 
-  def scan
+  def react
     render html: '', layout: 'react'
   end
 end
