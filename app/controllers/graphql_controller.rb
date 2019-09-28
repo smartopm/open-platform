@@ -3,29 +3,47 @@
 # GraphQL Controller for all queries and mutations
 class GraphqlController < ApplicationController
   def execute
-    variables = ensure_hash(params[:variables])
+    variables = prep_variables(params[:variables], request)
     query = params[:query]
     operation_name = params[:operationName]
-    result = DoubleGdpSchema.execute(query, variables: variables, context: getContext(request),
+
+    result = DoubleGdpSchema.execute(query, variables: variables, context: context,
                                             operation_name: operation_name)
     render json: result
   rescue StandardError => e
-    raise e unless Rails.env.development?
-
-    handle_error_in_development e
+    handle_errors(e)
   end
 
   private
 
-  def getContext(request)
-    if request.headers['X-Member-ID']
-      member = Member.find(request.headers['X-Member-ID'])
-    end
+  def handle_errors(err)
+    raise err unless Rails.env.development?
+
+    handle_error_in_development err
+  end
+
+  def context
     {
-      # Query context goes here, for example:
       current_user: current_user,
-      current_member: member,
     }
+  end
+
+  def prep_variables(variables, request)
+    vars = ensure_hash(variables)
+    vars[:actingMemberId] = validate_acting_member_id(vars, request)
+    vars
+  end
+
+  # Ensure that we always have the 'actingMemberId' ready
+  # and that it's authenticated
+  def validate_acting_member_id(variables, request)
+    user = current_user
+    member_id = variables[:actingMemberId] || request.headers['X-Member-ID']
+    if user && member_id
+      member = Member.find_by(id: member_id, user_id: user.id)
+      return member.id if member
+    end
+    nil
   end
 
   # Handle form data, JSON body, or a blank value

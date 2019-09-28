@@ -2,11 +2,11 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useState, Component } from 'react';
+import React, { useState, useContext, Component } from 'react';
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import ApolloProvider from '../src/components/Provider/ApolloProvider';
-import AuthStateProvider from '../src/components/Provider/AuthStateProvider';
+import AuthStateProvider, {Context as AuthStateContext} from '../src/components/Provider/AuthStateProvider';
 import Home from '../src/components/Home';
 import IDVerify from '../src/components/IdVerify';
 import IDCard from '../src/components/IdCard';
@@ -37,17 +37,26 @@ const Scan = (props) => (
   </DynamicImport>
 )
 
+const LoggedInOnly = (props) => {
+  const authState = useContext(AuthStateContext)
+  if (authState.loggedIn) {
+    return props.children
+  }
+  return <Redirect to="/login" />
+}
+
 const App = () => {
   return (
     <ApolloProvider>
       <AuthStateProvider>
         <Router>
-          <Nav>
+          <LoggedInOnly>
+            <Route component={Nav}/>
+            <Route path='/' exact component={Home}/>
             <Route path='/scan' component={Scan}/>
             <Route path='/id/:id' component={IDCard}/>
             <Route path='/id_verify/:id' component={IDVerify}/>
-            <Route path='/' exact component={Home}/>
-          </Nav>
+          </LoggedInOnly>
         </Router>
       </AuthStateProvider>
     </ApolloProvider>

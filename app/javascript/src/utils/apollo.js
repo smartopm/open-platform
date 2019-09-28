@@ -7,6 +7,8 @@ import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, Observable } from 'apollo-link';
 
+import { MEMBER_ID_KEY } from '../components/Provider/AuthStateProvider';
+
 export const createCache = () => {
   const cache = new InMemoryCache();
   if (process.env.NODE_ENV === 'development') {
@@ -23,6 +25,7 @@ const setTokenForOperation = async operation =>
   operation.setContext({
     headers: {
       'X-CSRF-Token': token,
+      'X-Member-ID': window.localStorage.getItem(MEMBER_ID_KEY)
     },
   });
 

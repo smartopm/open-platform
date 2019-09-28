@@ -11,10 +11,9 @@ module Types
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
 
     def last_activity_at
-      if object.activity_logs && object.activity_logs.length > 0
-        return object.activity_logs.last.created_at
-      end
-      return nil
+      return object.activity_logs.last.created_at if object.activity_logs.present?
+
+      nil
     end
   end
 end

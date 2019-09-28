@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 
+export const MEMBER_ID_KEY = 'CURRENT_MEMBER_ID'
+
 const initialState = {
   user: null,
   member: null,
   members: [],
   loggedIn: false,
 }
-
 
 const QUERY = gql`
 {
@@ -56,6 +57,8 @@ export default function AuthStateProvider({children}) {
   }
   if (members.length > 0) {
     state.member = members[0]
+    // TODO: @mdp find a better way to do this
+    window.localStorage.setItem(MEMBER_ID_KEY, state.member.id)
   }
 
   return (

@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
-import { useQuery } from 'react-apollo';
+import { Redirect } from "react-router-dom";
+import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
@@ -23,6 +24,14 @@ query Member($id: ID!) {
 }
 `;
 
+const LOG_ENTRY = gql`
+mutation ActivityLogMutation($memberId: ID!, $note: String, $actingMemberId: ID!) {
+  activityLogAdd(memberId: $memberId, note: $note, actingMemberId: $actingMemberId) {
+    id
+  }
+}
+`;
+
 function expiresAtStr(datetime) {
   if (datetime) {
     const date = DateUtil.fromISO8601(datetime)
@@ -31,16 +40,22 @@ function expiresAtStr(datetime) {
   return "Never"
 }
 
+
+function logEntry() {
+}
+
 export default ({match}) => {
   const id = match.params.id
   const authState = useContext(AuthStateContext)
   const { loading, error, data } = useQuery(QUERY, {variables: {id}});
-  if (loading || !authState.loggedIn) return <Loading />;
+  const [addLogEntry, entry] = useMutation(LOG_ENTRY, {variables: {memberId: id, actingMemberId: authState.member.id}});
+  if (loading || entry.loading) return <Loading />;
+  if (entry.data) return <Redirect to="/scan" />
   if (error) return `Error! ${error}`;
-  return (<Component data={data} authState={authState} />)
+  return (<Component data={data} authState={authState} onLogEntry={addLogEntry}/>)
 }
 
-export function Component({ data, authState }) {
+export function Component({ data, authState, onLogEntry }) {
   return (
     <div>
       <div className="row justify-content-center id_card">
@@ -49,6 +64,7 @@ export function Component({ data, authState }) {
             <div className="member_type">{data.member.member_type}</div>
           </div>
           <div className="d-flex justify-content-center">
+            <img src="/images/default_avatar.svg" />
           </div>
           <div className="d-flex justify-content-center">
             <h1>{data.member.user.name}</h1>
@@ -77,6 +93,7 @@ export function Component({ data, authState }) {
 
     <div className="row justify-content-center log-entry-form">
       <div className="col-10 col-sm-10 col-md-6">
+        <a className="btn btn-primary btn-lg btn-block active" onClick={onLogEntry}>Log an entry</a>
       </div>
     </div>
     <div className="row justify-content-center">

@@ -29,6 +29,5 @@ RSpec.describe Types::QueryType do
       result = DoubleGdpSchema.execute(query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'member')).to be_nil
     end
-
   end
 end

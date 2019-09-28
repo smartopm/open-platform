@@ -42,6 +42,12 @@ export function Component({ authState }) {
                 <Link to="/" className={`card-link`}>Map</Link>
               </div>
             </div>
+            <div className="card align-self-center text-center">
+              <div className="card-body">
+                <h5 className="card-title"><span className="oi oi-map"></span></h5>
+                <Link to="/scan" className={`card-link`}>Scan</Link>
+              </div>
+            </div>
 
           </div>
         </div>

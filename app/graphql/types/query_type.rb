@@ -31,7 +31,9 @@ module Types
     end
 
     def current_user
-      context[:current_user]
+      return context[:current_user] if context[:current_user]
+
+      { error: 'Must be logged in to perform this action' }
     end
   end
 end
