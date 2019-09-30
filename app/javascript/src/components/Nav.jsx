@@ -16,7 +16,7 @@ export function Component({children, authState, location, history}) {
   function backButtonOrMenu(location, history) {
     if (location.pathname !== '/') {
       if (history && history.length > 0) {
-        return (<a><span className="oi oi-arrow-left" onClick={() => history.goBack()} ></span></a>)
+        return (<a><span className={`oi oi-arrow-left ${css(styles.arrow)}`} onClick={() => history.goBack()} ></span></a>)
       }
       return (<Link to='/'><span className="oi oi-arrow-left" onClick={() => history.goBack()} ></span></Link>)
     }
@@ -64,10 +64,14 @@ export function Component({children, authState, location, history}) {
 
 
 const styles = StyleSheet.create({
-    logo: {
-        height: '25px'
-    },
-    navBar: {
-        backgroundColor: '#46ce84'
-    },
+  logo: {
+    height: '25px'
+  },
+  arrow: {
+    color: '#fff',
+    'font-size': '1.5em',
+  },
+  navBar: {
+    backgroundColor: '#46ce84'
+  },
 });
