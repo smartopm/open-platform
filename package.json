@@ -36,6 +36,8 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "eslint": "^6.5.0",
+    "eslint-plugin-react": "^7.14.3",
     "webpack-bundle-analyzer": "^3.5.1",
     "webpack-dev-server": "^3.8.0"
   }

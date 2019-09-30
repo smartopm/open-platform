@@ -8,16 +8,14 @@ function isExpired(date) {
   return now < date
 }
 
-// Format is a future holder for i18n
-function dateToString(date, format) {
+function dateToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }
   return date.getFullYear() + '-' + (pad("00", date.getMonth() + 1)) + '-' + date.getDate()
 }
 
-// Format is a future holder for i18n
-function dateTimeToString(date, format) {
+function dateTimeToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }

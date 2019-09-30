@@ -1,6 +1,6 @@
 // Logged in keeps track of the curent_user and current_member state
 // and passes it along as a context
-import React, { useState } from "react";
+import React from "react";
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 
@@ -43,7 +43,6 @@ export default function AuthStateProvider({children}) {
   if (loading) return false;
   if (error) return false;
 
-  console.log(data)
   const user = data.currentUser
   const members = data.currentUser.members
   const state = {

@@ -1,12 +1,11 @@
 import React, {useContext} from 'react';
-import PropTypes from 'prop-types';
 import {Link, withRouter} from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 
-export default withRouter(({children, match, location, history}) => {
+export default withRouter(({children, location, history}) => {
   const authState = useContext(AuthStateContext)
   return (<Component {...{children, authState, location, history}}/>)
 })
