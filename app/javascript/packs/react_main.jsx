@@ -10,6 +10,7 @@ import AuthStateProvider, {Context as AuthStateContext} from '../src/components/
 import Home from '../src/components/Home';
 import IDVerify from '../src/components/IdVerify';
 import IDCard from '../src/components/IdCard';
+import EntryLogs from '../src/components/EntryLogs';
 import Nav from '../src/components/Nav'
 
 class DynamicImport extends Component {
@@ -56,6 +57,7 @@ const App = () => {
             <Route path='/scan' component={Scan}/>
             <Route path='/id/:id' component={IDCard}/>
             <Route path='/id_verify/:id' component={IDVerify}/>
+            <Route path='/entry_logs/:memberId' component={EntryLogs}/>
           </LoggedInOnly>
         </Router>
       </AuthStateProvider>

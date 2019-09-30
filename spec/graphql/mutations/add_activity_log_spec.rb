@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require 'rails_helper'
@@ -13,12 +12,12 @@ RSpec.describe Mutations::ActivityLog::Add do
 
     let(:query) do
       <<~GQL
-        mutation AddActivityLogMutation($memberId: ID!, $note: String, $actingMemberId: ID!) {
-          activityLogAdd(memberId: $memberId, note: $note, actingMemberId: $actingMemberId ) {
+        mutation AddActivityLogMutation($memberId: ID!, $note: String) {
+          activityLogAdd(memberId: $memberId, note: $note) {
             id
           }
         }
-        GQL
+      GQL
     end
 
     it 'returns should create an activity log' do
@@ -26,7 +25,11 @@ RSpec.describe Mutations::ActivityLog::Add do
         memberId: member.id,
         actingMemberId: reporting_member.id,
       }
-      result = DoubleGdpSchema.execute(query, variables: variables, context: { current_user: current_user }).as_json
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                current_member: reporting_member,
+                                              }).as_json
       expect(result.dig('data', 'activityLogAdd', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
@@ -36,10 +39,13 @@ RSpec.describe Mutations::ActivityLog::Add do
         memberId: member.id,
         actingMemberId: other_community_member.id,
       }
-      result = DoubleGdpSchema.execute(query, variables: variables, context: { current_user: other_community_member.user }).as_json
+      result = DoubleGdpSchema.execute(
+        query, variables: variables, context: {
+          current_user: other_community_member.user, current_member: other_community_member
+        }
+      ).as_json
       expect(result.dig('data', 'activityLogAdd')).to be_nil
       expect(result.dig('errors')).not_to be_empty
     end
-
   end
 end

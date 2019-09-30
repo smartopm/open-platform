@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -25,8 +25,8 @@ query Member($id: ID!) {
 `;
 
 const LOG_ENTRY = gql`
-mutation ActivityLogMutation($memberId: ID!, $note: String, $actingMemberId: ID!) {
-  activityLogAdd(memberId: $memberId, note: $note, actingMemberId: $actingMemberId) {
+mutation ActivityLogMutation($memberId: ID!, $note: String) {
+  activityLogAdd(memberId: $memberId, note: $note) {
     id
   }
 }
@@ -48,7 +48,7 @@ export default ({match}) => {
   const id = match.params.id
   const authState = useContext(AuthStateContext)
   const { loading, error, data } = useQuery(QUERY, {variables: {id}});
-  const [addLogEntry, entry] = useMutation(LOG_ENTRY, {variables: {memberId: id, actingMemberId: authState.member.id}});
+  const [addLogEntry, entry] = useMutation(LOG_ENTRY, {variables: {memberId: id}});
   if (loading || entry.loading) return <Loading />;
   if (entry.data) return <Redirect to="/scan" />
   if (error) return `Error! ${error}`;
@@ -84,7 +84,7 @@ export function Component({ data, authState, onLogEntry }) {
           </div>
 
           <div className="d-flex justify-content-center">
-            <a href="<%= member_activity_logs_path(@member) -%>">Entry Logs <span className="oi oi-chevron-right"></span></a>
+            <Link to={`/entry_logs/${data.member.id}`}>Entry Logs <span className="oi oi-chevron-right"></span></Link>
           </div>
 
         </div>

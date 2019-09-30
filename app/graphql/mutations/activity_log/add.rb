@@ -11,11 +11,11 @@ module Mutations
       field :created_at, String, null: false
       field :note, String, null: true
 
-      def resolve(member_id:, note: nil, acting_member_id:)
+      def resolve(member_id:, note: nil)
         member = Member.find(member_id)
         raise GraphQL::ExecutionError, 'Member not found' unless member
 
-        act_log = member.activity_logs.new(reporting_member_id: acting_member_id,
+        act_log = member.activity_logs.new(reporting_member_id: context[:current_member].id,
                                            note: note)
 
         return act_log if act_log.save

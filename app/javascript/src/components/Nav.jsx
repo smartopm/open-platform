@@ -1,23 +1,24 @@
 import React, {useContext} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 
-export default ({children, match}) => {
+export default withRouter(({children, match, location, history}) => {
   console.log(match)
   const authState = useContext(AuthStateContext)
-  const path = window.location.pathname;
-  return (<Component {...{children, authState, path}}/>)
-}
+  return (<Component {...{children, authState, location, history}}/>)
+})
 
-export function Component({children, authState, path}) {
-  console.log(path)
+export function Component({children, authState, location, history}) {
 
-  function backButtonOrMenu() {
-    if (path !== '/') {
-      return (<Link to='/' className="navbar-brand" href="/"><span className="oi oi-arrow-left"></span></Link>)
+  function backButtonOrMenu(location, history) {
+    if (location.pathname !== '/') {
+      if (history && history.length > 0) {
+        return (<a><span className="oi oi-arrow-left" onClick={() => history.goBack()} ></span></a>)
+      }
+      return (<Link to='/'><span className="oi oi-arrow-left" onClick={() => history.goBack()} ></span></Link>)
     }
     // TODO: @mdp future menu button
     return (
@@ -39,7 +40,7 @@ export function Component({children, authState, path}) {
 
   return (
     <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
-      {backButtonOrMenu()}
+      {backButtonOrMenu(location, history)}
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
           <li className="nav-item active">

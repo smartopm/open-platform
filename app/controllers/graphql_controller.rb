@@ -3,12 +3,14 @@
 # GraphQL Controller for all queries and mutations
 class GraphqlController < ApplicationController
   def execute
-    variables = prep_variables(params[:variables], request)
+    variables = prep_variables(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
 
-    result = DoubleGdpSchema.execute(query, variables: variables, context: context,
-                                            operation_name: operation_name)
+    result = DoubleGdpSchema.execute(query,
+                                     variables: variables,
+                                     context: auth_context(current_user, request),
+                                     operation_name: operation_name)
     render json: result
   rescue StandardError => e
     handle_errors(e)
@@ -22,26 +24,24 @@ class GraphqlController < ApplicationController
     handle_error_in_development err
   end
 
-  def context
+  def auth_context(user, request)
     {
-      current_user: current_user,
+      current_user: user,
+      current_member: validate_acting_member(user, request),
     }
   end
 
-  def prep_variables(variables, request)
-    vars = ensure_hash(variables)
-    vars[:actingMemberId] = validate_acting_member_id(vars, request)
-    vars
+  def prep_variables(variables)
+    ensure_hash(variables)
   end
 
-  # Ensure that we always have the 'actingMemberId' ready
-  # and that it's authenticated
-  def validate_acting_member_id(variables, request)
-    user = current_user
-    member_id = variables[:actingMemberId] || request.headers['X-Member-ID']
+  # Ensure that we always have the current_member
+  # and that it's valid and authenicated
+  def validate_acting_member(user, request)
+    member_id = request.headers['X-Member-ID']
     if user && member_id
       member = Member.find_by(id: member_id, user_id: user.id)
-      return member.id if member
+      return member if member
     end
     nil
   end

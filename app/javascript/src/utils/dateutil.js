@@ -8,8 +8,32 @@ function isExpired(date) {
   return now < date
 }
 
+// Format is a future holder for i18n
+function dateToString(date, format) {
+  if (!(date instanceof Date)) {
+    date = fromISO8601(date)
+  }
+  return date.getFullYear() + '-' + (pad("00", date.getMonth() + 1)) + '-' + date.getDate()
+}
+
+// Format is a future holder for i18n
+function dateTimeToString(date, format) {
+  if (!(date instanceof Date)) {
+    date = fromISO8601(date)
+  }
+  return date.getHours() + ':' + date.getMinutes()
+}
+
 
 export default {
   fromISO8601,
+  dateTimeToString,
+  dateToString,
   isExpired,
+}
+
+
+// pad("00", "1") => "01"
+function pad(padStr, str) {
+  return padStr.substring(0, padStr.length - str.length) + str
 }

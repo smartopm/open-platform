@@ -30,4 +30,42 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'member')).to be_nil
     end
   end
+
+  describe 'entry_logs' do
+    before :each do
+      @member = create(:member_with_community)
+      @reporting_member = create(:member_with_community, community_id: @member.community_id)
+      @current_user = @reporting_member.user
+
+      3.times do
+        @member.activity_logs.create(reporting_member_id: @reporting_member.id)
+      end
+      @query =
+        %(query {
+        entryLogs(memberId:"#{@member.id}") {
+          id
+          createdAt
+          note
+          reportingMember {
+            user {
+              name
+            }
+          }
+        }
+      })
+    end
+
+    it 'returns all entry logs' do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @current_user,
+                                         current_member: @member,
+                                       }).as_json
+      expect(result.dig('data', 'entryLogs').length).to eql 3
+    end
+
+    it 'should fail if no logged in' do
+      result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
+      expect(result.dig('data', 'entryLogs')).to be_nil
+    end
+  end
 end

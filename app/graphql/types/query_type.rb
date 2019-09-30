@@ -35,5 +35,15 @@ module Types
 
       { error: 'Must be logged in to perform this action' }
     end
+
+    # Get a entry logs for a member
+    field :entry_logs, [ActivityLogType], null: true do
+      description 'Get entry logs for a member'
+      argument :member_id, ID, required: true
+    end
+
+    def entry_logs(member_id:)
+      ActivityLog.where(member_id: member_id) if context[:current_user]
+    end
   end
 end
