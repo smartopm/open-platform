@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import PropTypes from 'prop-types';
 import {Link, withRouter} from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 
@@ -6,17 +7,16 @@ import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 
 export default withRouter(({children, match, location, history}) => {
-  console.log(match)
   const authState = useContext(AuthStateContext)
   return (<Component {...{children, authState, location, history}}/>)
 })
 
-export function Component({children, authState, location, history}) {
+export function Component({authState, location, history}) {
 
   function backButtonOrMenu(location, history) {
     if (location.pathname !== '/') {
       if (history && history.length > 0) {
-        return (<a><span className={`oi oi-arrow-left ${css(styles.arrow)}`} onClick={() => history.goBack()} ></span></a>)
+        return (<a><span className={`oi oi-arrow-left ${css(styles.arrow)}}`} onClick={() => history.goBack()} ></span></a>)
       }
       return (<Link to='/'><span className="oi oi-arrow-left" onClick={() => history.goBack()} ></span></Link>)
     }
@@ -61,7 +61,6 @@ export function Component({children, authState, location, history}) {
     </nav>
   );
 }
-
 
 const styles = StyleSheet.create({
   logo: {

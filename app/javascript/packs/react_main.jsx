@@ -13,10 +13,11 @@ import IDCard from '../src/components/IdCard';
 import EntryLogs from '../src/components/EntryLogs';
 import Nav from '../src/components/Nav'
 
+const state = {
+  component: null
+}
+
 class DynamicImport extends Component {
-  state = {
-    component: null
-  }
   componentDidMount () {
     this.props.load()
       .then((component) => {
