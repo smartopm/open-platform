@@ -40,6 +40,11 @@ gem "devise", "~> 4.7"
 # QR Code library for building SVG's
 gem 'rqrcode'
 
+# GraphQL
+gem 'graphql', '~> 1.9'
+gem 'graphiql-rails', group: :development
+gem 'graphql-guard'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -75,3 +80,4 @@ group :test do
   gem 'webdrivers'
   gem 'factory_bot'
 end
+

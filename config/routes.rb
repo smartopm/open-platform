@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  if Rails.env.development?
+    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
+  end
+  post "/graphql", to: "graphql#execute"
   get 'login', to: 'login#index'
   post 'login/sms'
   post 'login/sms_complete'
@@ -22,10 +26,10 @@ Rails.application.routes.draw do
   resources :activity_logs, only: [:show, :create]
 
 
-  get 'id/:token', to: 'members#id_card', as: :member_id
-  get 'id_verify/:token', to: 'members#id_verify', as: :member_id_verify
+  #get 'id/:token', to: 'members#id_card', as: :member_id
+  #get 'id_verify/:token', to: 'members#id_verify', as: :member_id_verify
 
-  get 'scan', to: 'home#scan'
   get 'hold', to: 'home#hold'
-  root 'home#index'
+  get '*path', to: 'home#react'
+  root 'home#react'
 end

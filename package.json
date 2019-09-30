@@ -2,6 +2,7 @@
   "name": "DoubleGDP",
   "private": true,
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.1",
     "@babel/preset-react": "^7.0.0",
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
@@ -9,21 +10,35 @@
     "@rails/activestorage": "^6.0.0-alpha",
     "@rails/ujs": "^6.0.0-alpha",
     "@rails/webpacker": "^4.0.7",
+    "aphrodite": "^2.4.0",
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.13",
+    "apollo-link-error": "^1.1.12",
+    "apollo-link-http": "^1.5.16",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "^4.3.1",
     "clsx": "^1.0.4",
+    "graphql": "^14.5.6",
+    "graphql-tag": "^2.10.1",
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
+    "react-apollo": "^3.1.1",
     "react-dom": "^16.9.0",
     "react-qr-reader": "^2.2.1",
+    "react-qr-svg": "^2.2.1",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
+    "styled-components": "^4.4.0",
     "turbolinks": "^5.2.0"
   },
   "version": "0.1.0",
   "devDependencies": {
+    "eslint": "^6.5.0",
+    "eslint-plugin-react": "^7.14.3",
+    "webpack-bundle-analyzer": "^3.5.1",
     "webpack-dev-server": "^3.8.0"
   }
 }

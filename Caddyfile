@@ -2,6 +2,13 @@ https://dgdp.dev.atrailing.space {
   tls /root/certs/dgdp.dev.atrailing.space/cert.pem /root/certs/dgdp.dev.atrailing.space/privkey.pem
   log stdout
   errors stdout
+  proxy /packs webpacker:3035 {
+    transparent
+  }
+  proxy /sockjs-node webpacker:3035 {
+    transparent
+    websocket
+  }
   proxy / rails:3000 {
     transparent
   }

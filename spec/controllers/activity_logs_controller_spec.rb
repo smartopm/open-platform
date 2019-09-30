@@ -27,11 +27,4 @@ RSpec.describe ActivityLogsController, type: :controller do
       expect(response).to have_http_status(:success)
     end
   end
-
-  describe 'POST #create' do
-    it 'returns http success' do
-      post :create, params: { activity_log: { member_id: @member } }
-      expect(response).to have_http_status(:redirect)
-    end
-  end
 end
