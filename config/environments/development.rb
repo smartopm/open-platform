@@ -61,5 +61,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.hosts << "dev.dgdp.site"
+  config.hosts << "vpn.dgdp.site"  # For external (phone) testing, will point to 10.133.7.1
 
 end
