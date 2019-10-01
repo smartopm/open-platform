@@ -14,13 +14,41 @@ Requires Docker and docker-compose to be installed
 - `./bin/docker_rails db:create db:schema:load`
 - `docker-compose up`
 
+If you're a member of the DoubleGDP team, request the development key
+and place it in `config/credentials/development.key`
+
+At this point you will have access to the environment variables required
+to run the app.
+
+They can be seen and edited by running
+
+`docker-compose run --rm rails credentials:edit --environment development`
+
+If you don't have access to this key, please look at
+`config/credentials/development.yml.sample` for a list of credentials
+that will be needed to run the app and create the development credentials
+by running the same `credentials:edit` function as above.
+
+_SSL Setup_
+
+Caddy is being used to serve the application via SSL. If you like, you can rely
+on it's own self signed certificates which are available on localhost:443
+
+Rather than rely on self-signed certificates, we include certificates for 
+dev.dgdp.site. They are encrypted with the development.key from above, and may
+be decrypted by running `./bin/cert_setup.sh`
+
+The site is now available as https://dev.dgdp.site and https://localhost
+
+dev.dgdp.site points to 127.0.0.1, if you're development server is somewhere else
+please update /etc/hosts to point dev.dgdp.site to the appropriate IP address.
+
 ### Updating gems
 
 - `docker-compose run --rm rails bundle add gemfileyouwant`
 - `bin/rebuild_rails_image.sh`
   - This performs
-    - Stop the existing 'rails' service
-    - Run `bundle` to update Gemfile.lock
+    - Stop the existing 'rails' service - Run `bundle` to update Gemfile.lock
     - Runs `bundle install` install gems
     - Starts the 'rails' service
 
@@ -38,10 +66,14 @@ To autofix
 
 `docker-compose run --rm rails rake lint:fix`
 
+#### ESLint for React linting
+
+`docker-compose run --rm rails eslint app/javascript/src
+
 #### Before a merge/pull request
 
 Before you submit a merge or pull request, please ensure that both
-Rubocop and the tests pass.
+Rubocop, ESLint, and the tests pass.
 
 `bin/all.sh`
 

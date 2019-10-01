@@ -60,6 +60,6 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.hosts << "dgdp.dev.atrailing.space"
+  config.hosts << "dev.dgdp.site"
 
 end
