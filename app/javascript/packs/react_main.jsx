@@ -2,7 +2,7 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useState, useContext, Component } from 'react';
+import React, { useContext, Component } from 'react';
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import ApolloProvider from '../src/components/Provider/ApolloProvider';
@@ -13,11 +13,13 @@ import IDCard from '../src/components/IdCard';
 import EntryLogs from '../src/components/EntryLogs';
 import Nav from '../src/components/Nav'
 
-const state = {
-  component: null
-}
-
 class DynamicImport extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      component: null
+    }
+  }
   componentDidMount () {
     this.props.load()
       .then((component) => {
