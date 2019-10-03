@@ -16,6 +16,17 @@ module Types
       Member.find(id) if context[:current_user]
     end
 
+    # Get a member's information
+    field :member_search, [MemberType], null: true do
+      description 'Find a member by name'
+      argument :name, String, required: true
+    end
+
+    def member_search(name:)
+      users = User.where('name ILIKE ?', '%' + name + '%').limit(20)
+      users.map(&:members).flatten
+    end
+
     field :community, CommunityType, null: true do
       description 'Find a community by ID'
       argument :id, ID, required: true

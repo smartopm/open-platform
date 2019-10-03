@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 import Loading from "./Loading.jsx";
+import Nav from "./Nav.jsx";
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`
@@ -40,10 +41,6 @@ function expiresAtStr(datetime) {
   return "Never"
 }
 
-
-function logEntry() {
-}
-
 export default ({match}) => {
   const id = match.params.id
   const authState = useContext(AuthStateContext)
@@ -55,9 +52,10 @@ export default ({match}) => {
   return (<Component data={data} authState={authState} onLogEntry={addLogEntry}/>)
 }
 
-export function Component({ data, authState, onLogEntry }) {
+export function Component({ data, onLogEntry }) {
   return (
     <div>
+      <Nav menuButton='back' />
       <div className="row justify-content-center id_card">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div className="d-flex justify-content-center">
@@ -106,4 +104,4 @@ export function Component({ data, authState, onLogEntry }) {
     </div>
   </div>
   )
-};
+}

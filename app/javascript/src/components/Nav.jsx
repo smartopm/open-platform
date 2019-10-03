@@ -5,19 +5,21 @@ import { StyleSheet, css } from 'aphrodite';
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 
-export default withRouter(({children, location, history}) => {
+export default withRouter(function Nav({children, menuButton, history}) {
   const authState = useContext(AuthStateContext)
-  return (<Component {...{children, authState, location, history}}/>)
+  return(<Component {...{children, authState, menuButton, history }}/>)
 })
 
-export function Component({authState, location, history}) {
+export function Component({children, authState, menuButton, history}) {
 
-  function backButtonOrMenu(location, history) {
-    if (location.pathname !== '/') {
+  function backButtonOrMenu() {
+    if (menuButton === 'back') {
       if (history && history.length > 0) {
-        return (<a><span className={`oi oi-arrow-left ${css(styles.arrow)}}`} onClick={() => history.goBack()} ></span></a>)
+        return (<a><i className="material-icons" onClick={()=>history.goBack()}>arrow_back</i></a>)
       }
-      return (<Link to='/'><span className="oi oi-arrow-left" onClick={() => history.goBack()} ></span></Link>)
+      return (<Link to='/'><i className="material-icons">arrow_back</i></Link>)
+    } else if (menuButton === 'cancel') {
+      return (<Link to='/'><span className="oi oi-x"></span></Link>)
     }
     // TODO: @mdp future menu button
     return (
@@ -39,7 +41,7 @@ export function Component({authState, location, history}) {
 
   return (
     <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
-      {backButtonOrMenu(location, history)}
+      {backButtonOrMenu()}
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
           <li className="nav-item active">
@@ -57,6 +59,11 @@ export function Component({authState, location, history}) {
       <ul className="nav navbar-nav navbar-center">
         <li>{communityName()}</li>
       </ul>
+
+      <div className="navbar-nav">
+        {children}
+      </div>
+
     </nav>
   );
 }

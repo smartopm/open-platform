@@ -11,7 +11,7 @@ import Home from '../src/components/Home';
 import IDVerify from '../src/components/IdVerify';
 import IDCard from '../src/components/IdCard';
 import EntryLogs from '../src/components/EntryLogs';
-import Nav from '../src/components/Nav'
+import Search from '../src/components/Search';
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -55,9 +55,9 @@ const App = () => {
       <AuthStateProvider>
         <Router>
           <LoggedInOnly>
-            <Route component={Nav}/>
             <Route path='/' exact component={Home}/>
             <Route path='/scan' component={Scan}/>
+            <Route path='/search' component={Search}/>
             <Route path='/id/:id' component={IDCard}/>
             <Route path='/id_verify/:id' component={IDVerify}/>
             <Route path='/entry_logs/:memberId' component={EntryLogs}/>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { QRCode } from "react-qr-svg";
+import Nav from './Nav'
 
 import Loading from "./Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
@@ -44,22 +45,25 @@ export default ({ match }) => {
 
 export function Component({ data }) {
   return (
-    <div className="row justify-content-center">
-      <div className="card id_card_box col-10 col-sm-10 col-md-6">
-        <div className="d-flex justify-content-center">
-          <div className="member_type">{data.member.memberType}</div>
-        </div>
-        <div className="d-flex justify-content-center">
-          <h1>{ data.member.user.name }</h1>
-        </div>
-        <div className="d-flex justify-content-center">
-          <div className="expires">Exp: { expiresAtStr(data.member.expiresAt) }</div>
-        </div>
+    <div>
+      <Nav menuButton="back" />
+      <div className="row justify-content-center">
+        <div className="card id_card_box col-10 col-sm-10 col-md-6">
+          <div className="d-flex justify-content-center">
+            <div className="member_type">{data.member.memberType}</div>
+          </div>
+          <div className="d-flex justify-content-center">
+            <h1>{ data.member.user.name }</h1>
+          </div>
+          <div className="d-flex justify-content-center">
+            <div className="expires">Exp: { expiresAtStr(data.member.expiresAt) }</div>
+          </div>
 
-        <div className="d-flex justify-content-center qr_code">
-          <QRCode style={{ width: 256 }} value={qrCodeAddress(data.member.id)} />
+          <div className="d-flex justify-content-center qr_code">
+            <QRCode style={{ width: 256 }} value={qrCodeAddress(data.member.id)} />
+          </div>
         </div>
       </div>
     </div>
   );
-};
+}

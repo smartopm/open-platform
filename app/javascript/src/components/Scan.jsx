@@ -6,12 +6,10 @@ export default function QRScan() {
     result: '',
   }
 
-  const [state, setState] = useState(initialState)
+  const [state] = useState(initialState)
 
   const handleScan = data => {
     if (data) {
-      // For now, just send us to the URL
-      console.log(data)
       window.location = data
     }
   }
