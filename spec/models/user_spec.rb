@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
   describe 'Creating a user from a oauth authentication callback' do
     auth_obj = OpenStruct.new(
       uid: 'abc12345',
-      provider: 'google',
+      provider: 'google_oauth2',
       info: OpenStruct.new(
         name: 'Mark',
         email: 'mark@doublegdp.com',
@@ -23,9 +23,12 @@ RSpec.describe User, type: :model do
     it 'should create a new user' do
       user = User.from_omniauth(auth_obj)
       expect(user.persisted?).to be true
+      # TODO: Remove this once we fix hardcoding
+      expect(user.members.first.community.name).to eql('Nkwashi')
     end
 
     it 'should update an existing user' do
+      User.from_omniauth(auth_obj)
       auth_obj.info.name = 'Mark Percival'
       auth_obj.info.image = 'https://newprofile.com/pic.png'
       User.from_omniauth(auth_obj)
@@ -33,6 +36,8 @@ RSpec.describe User, type: :model do
       expect(users.length).to be 1
       expect(users[0].name).to eq 'Mark Percival'
       expect(users[0].image_url).to eq 'https://newprofile.com/pic.png'
+      # TODO: Remove this once we fix hardcoding
+      expect(users[0].members.length).to eql 1
     end
   end
 

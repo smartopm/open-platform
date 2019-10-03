@@ -15,6 +15,11 @@ class User < ApplicationRecord
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
+  DOMAINS_COMMUNITY_MAP = {
+    'doublegdp.com': 'Nkwashi',
+    'thebe-im.com': 'Nkwashi',
+  }.freeze
+
   OAUTH_FIELDS_MAP = {
     email: ->(auth) { auth.info.email },
     name: ->(auth) { auth.info.name },
@@ -32,6 +37,7 @@ class User < ApplicationRecord
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
     user.save!
+    user.assign_default_community
     user
   end
 
@@ -45,6 +51,23 @@ class User < ApplicationRecord
     update(phone_token: token,
            phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now)
     token
+  end
+
+  def domain
+    self[:email].split('@').last
+  end
+
+  # Assign known hardcoded domains to a community
+  # TODO: Make this happen from the DB vs hardcoding
+  def assign_default_community
+    return unless members.empty?
+    return unless self[:provider] == 'google_oauth2'
+
+    mapped_name = DOMAINS_COMMUNITY_MAP[domain.to_sym]
+    return unless mapped_name
+
+    community = Community.find_or_create_by(name: mapped_name)
+    members.create(community_id: community.id, member_type: 'admin')
   end
 
   def send_phone_token
