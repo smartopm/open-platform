@@ -11,7 +11,8 @@ Rails.application.routes.draw do
   # Oauth routes
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
-    get 'login_oauth', :to => 'users/omniauth_callbacks#passthru', :as => :new_user_session
+    get 'login_oauth', :to => 'users/omniauth_callbacks#passthru'
+    get 'login', :to => 'login#index', :as => :new_user_session
     get 'logout', :to => 'devise/sessions#destroy', :as => :destroy_user_session
   end
 
@@ -24,10 +25,6 @@ Rails.application.routes.draw do
   end
 
   resources :activity_logs, only: [:show, :create]
-
-
-  #get 'id/:token', to: 'members#id_card', as: :member_id
-  #get 'id_verify/:token', to: 'members#id_verify', as: :member_id_verify
 
   get 'hold', to: 'home#hold'
   get '*path', to: 'home#react'
