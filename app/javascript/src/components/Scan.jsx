@@ -23,7 +23,7 @@ export default function QRScan() {
     <div>
       <Nav navName="Scan" menuButton="back" />
       <QrReader
-        delay={300}
+        delay={100}
         onError={handleError}
         onScan={handleScan}
         style={{ width: '100%' }}

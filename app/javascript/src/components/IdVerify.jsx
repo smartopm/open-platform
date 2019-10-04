@@ -94,14 +94,6 @@ export function Component({ data, onLogEntry }) {
         <a className="btn btn-primary btn-lg btn-block active" onClick={onLogEntry}>Log an entry</a>
       </div>
     </div>
-    <div className="row justify-content-center">
-      <div className="d-flex justify-content-center">
-        <h5>
-          <a href="/">Done</a>
-        </h5>
-      </div>
-
-    </div>
   </div>
   )
 }

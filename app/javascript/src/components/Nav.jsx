@@ -5,23 +5,20 @@ import { StyleSheet, css } from 'aphrodite';
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 
-export default withRouter(function Nav({children, menuButton, history, navName}) {
+export default withRouter(function Nav({children, menuButton, history, navName, backTo}) {
   const authState = useContext(AuthStateContext)
-  return(<Component {...{children, authState, menuButton, history, navName}}/>)
+  return(<Component {...{children, authState, menuButton, history, navName, backTo }}/>)
 })
 
-export function Component({children, authState, menuButton, history, navName}) {
+export function Component({children, authState, menuButton, navName, backTo}) {
 
   function backButtonOrMenu() {
+    const to = backTo || '/'
     if (menuButton === 'back') {
-      if (history && history.length > 0) {
-        return (<a href='/' className={css(styles.buttonLeft)}><i className="material-icons" onClick={()=>history.goBack()}>arrow_back</i></a>)
-      }
-      return (<Link className={css(styles.buttonLeft)} to='/'><i className="material-icons">arrow_back</i></Link>)
+      return (<Link className={css(styles.buttonLeft)} to={to}><i className="material-icons">arrow_back</i></Link>)
     } else if (menuButton === 'cancel') {
-      return (<Link className={css(styles.buttonLeft)} to='/'><i className="material-icons">clear</i></Link>)
+      return (<Link className={css(styles.buttonLeft)} to={to}><i className="material-icons">clear</i></Link>)
     }
-    // TODO: @mdp future menu button
     return (
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
@@ -56,12 +53,12 @@ export function Component({children, authState, menuButton, history, navName}) {
         </ul>
       </div>
 
-      <ul className="nav navbar-nav navbar-center">
+      <ul className={`navbar-nav ${css(styles.navTitle)}`} style={{'margin':'auto'}}>
         <li>{navName ? navName : communityName()}</li>
       </ul>
 
-      <div className="navbar-nav">
-        {children}
+      <div className="nav navbar-nav" style={{width: "100%"}}>
+          {children}
       </div>
 
     </nav>
@@ -71,6 +68,10 @@ export function Component({children, authState, menuButton, history, navName}) {
 const styles = StyleSheet.create({
   logo: {
     height: '25px'
+  },
+  navTitle: {
+    margin: 'auto',
+    color: '#FFF',
   },
   arrow: {
     color: '#fff',

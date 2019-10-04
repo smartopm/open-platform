@@ -26,7 +26,10 @@ export function Component({ authState }) {
   return (
     <div>
       <Nav>
-        <input className={`form-control ${css(styles.input)}`} onFocus={inputToSearch} type="text" placeholder="Search" />
+        <div className={css(styles.inputGroup)}>
+          <input className={`form-control ${css(styles.input)}`} onFocus={inputToSearch} type="text" placeholder="Search" />
+          <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
+        </div>
       </Nav>
       <div className="container">
         <div className="row justify-content-center">
@@ -81,8 +84,12 @@ export function Component({ authState }) {
 }
 
 const styles = StyleSheet.create({
+  inputGroup: {
+    position: 'relative',
+  },
   input: {
-    padding: '0.5em 1em',
+    marginTop: '1em',
+    padding: '0.5em 1em 0.5em 2em',
     height: '30px',
     color: '#222',
     border: 'none',
@@ -91,5 +98,13 @@ const styles = StyleSheet.create({
     '::placeholder': {
         color: '#999'
     }
-  }
+  },
+  searchIcon: {
+    color: '#999',
+    position: 'absolute',
+    left: '4px',
+    top: '20px',
+    bottom: '4px',
+    'z-index': 9,
+  },
 })
