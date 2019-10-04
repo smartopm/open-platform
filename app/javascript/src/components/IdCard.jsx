@@ -46,7 +46,7 @@ export default ({ match }) => {
 export function Component({ data }) {
   return (
     <div>
-      <Nav menuButton="back" />
+      <Nav navName="Identify" menuButton="back" />
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div className="d-flex justify-content-center">

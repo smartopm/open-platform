@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import QrReader from 'react-qr-reader'
+import Nav from './Nav'
 
 export default function QRScan() {
   const initialState = {
@@ -20,6 +21,7 @@ export default function QRScan() {
 
   return (
     <div>
+      <Nav navName="Scan" menuButton="back" />
       <QrReader
         delay={300}
         onError={handleError}

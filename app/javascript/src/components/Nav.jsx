@@ -5,21 +5,21 @@ import { StyleSheet, css } from 'aphrodite';
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 
-export default withRouter(function Nav({children, menuButton, history}) {
+export default withRouter(function Nav({children, menuButton, history, navName}) {
   const authState = useContext(AuthStateContext)
-  return(<Component {...{children, authState, menuButton, history }}/>)
+  return(<Component {...{children, authState, menuButton, history, navName}}/>)
 })
 
-export function Component({children, authState, menuButton, history}) {
+export function Component({children, authState, menuButton, history, navName}) {
 
   function backButtonOrMenu() {
     if (menuButton === 'back') {
       if (history && history.length > 0) {
-        return (<a><i className="material-icons" onClick={()=>history.goBack()}>arrow_back</i></a>)
+        return (<a href='/' className={css(styles.buttonLeft)}><i className="material-icons" onClick={()=>history.goBack()}>arrow_back</i></a>)
       }
-      return (<Link to='/'><i className="material-icons">arrow_back</i></Link>)
+      return (<Link className={css(styles.buttonLeft)} to='/'><i className="material-icons">arrow_back</i></Link>)
     } else if (menuButton === 'cancel') {
-      return (<Link to='/'><span className="oi oi-x"></span></Link>)
+      return (<Link className={css(styles.buttonLeft)} to='/'><i className="material-icons">clear</i></Link>)
     }
     // TODO: @mdp future menu button
     return (
@@ -57,7 +57,7 @@ export function Component({children, authState, menuButton, history}) {
       </div>
 
       <ul className="nav navbar-nav navbar-center">
-        <li>{communityName()}</li>
+        <li>{navName ? navName : communityName()}</li>
       </ul>
 
       <div className="navbar-nav">
@@ -78,5 +78,9 @@ const styles = StyleSheet.create({
   },
   navBar: {
     backgroundColor: '#46ce84'
+  },
+  buttonLeft: {
+    paddingTop: '0.5em',
+    color: '#FFF',
   },
 });
