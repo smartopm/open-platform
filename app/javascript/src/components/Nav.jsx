@@ -38,24 +38,26 @@ export function Component({children, authState, menuButton, navName, backTo}) {
 
   return (
     <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
-      {backButtonOrMenu()}
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li className="nav-item active">
-            <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">Link</a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link disabled" href="#">Disabled</a>
-          </li>
+      <div className={css(styles.topNav)}>
+        {backButtonOrMenu()}
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li className="nav-item active">
+              <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">Link</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link disabled" href="#">Disabled</a>
+            </li>
+          </ul>
+        </div>
+
+        <ul className={`navbar-nav navbar-center ${css(styles.navTitle)}`} style={{'margin':'auto'}}>
+          <li>{navName ? navName : communityName()}</li>
         </ul>
       </div>
-
-      <ul className={`navbar-nav ${css(styles.navTitle)}`} style={{'margin':'auto'}}>
-        <li>{navName ? navName : communityName()}</li>
-      </ul>
 
       <div className="nav navbar-nav" style={{width: "100%"}}>
           {children}
@@ -69,8 +71,12 @@ const styles = StyleSheet.create({
   logo: {
     height: '25px'
   },
+  topNav: {
+    width: '100%',
+    position: 'relative',
+  },
   navTitle: {
-    margin: 'auto',
+    top: '8px',
     color: '#FFF',
   },
   arrow: {
