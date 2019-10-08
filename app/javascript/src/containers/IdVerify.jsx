@@ -59,42 +59,44 @@ export function Component({ data, onLogEntry }) {
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
-      <div className="row justify-content-center id_card">
-        <div className="card id_card_box col-10 col-sm-10 col-md-6">
-          <div className="d-flex justify-content-center">
-            <div className="member_type">{data.member.member_type}</div>
-          </div>
-          <div className="d-flex justify-content-center">
-            <img src={data.member.user.imageUrl} className={css(styles.avatar)} />
-          </div>
-          <div className="d-flex justify-content-center">
-            <h1>{data.member.user.name}</h1>
-          </div>
-          <div className="d-flex justify-content-center">
-            <div className="expires">Exp: {expiresAtStr(data.member.expiresAt)}</div>
-          </div>
-          <div className="d-flex justify-content-center last_accessed">
-            <div className="expires">Last accessed: {expiresAtStr(data.member.lastActivityAt)}</div>
+      <div className="container">
+        <div className="row justify-content-center id_card">
+          <div className="card id_card_box col-10 col-sm-10 col-md-6">
+            <div className="d-flex justify-content-center">
+              <div className="member_type">{data.member.member_type}</div>
+            </div>
+            <div className="d-flex justify-content-center">
+              <img src={data.member.user.imageUrl} className={css(styles.avatar)} />
+            </div>
+            <div className="d-flex justify-content-center">
+              <h1>{data.member.user.name}</h1>
+            </div>
+            <div className="d-flex justify-content-center">
+              <div className="expires">Exp: {expiresAtStr(data.member.expiresAt)}</div>
+            </div>
+            <div className="d-flex justify-content-center last_accessed">
+              <div className="expires">Last accessed: {expiresAtStr(data.member.lastActivityAt)}</div>
+            </div>
+
+            <div className="d-flex justify-content-center">
+              { data.member.expiresAt && DateUtil.isExpired(DateUtil.fromISO8601(data.member.expiresAt)) ? 
+              <Status label='Expired'/> :
+              <Status label='Valid'/>
+              }
+            </div>
+
+            <div className="d-flex justify-content-center">
+              <Link to={`/entry_logs/${data.member.id}`}>Entry Logs <span className="oi oi-chevron-right"></span></Link>
+            </div>
+
           </div>
 
-          <div className="d-flex justify-content-center">
-            { data.member.expiresAt && DateUtil.isExpired(DateUtil.fromISO8601(data.member.expiresAt)) ? 
-            <Status label='Expired'/> :
-            <Status label='Valid'/>
-            }
-          </div>
+      </div>
 
-          <div className="d-flex justify-content-center">
-            <Link to={`/entry_logs/${data.member.id}`}>Entry Logs <span className="oi oi-chevron-right"></span></Link>
-          </div>
-
+      <div className="row justify-content-center log-entry-form">
+        <div className="col-10 col-sm-10 col-md-6">
+          <a className="btn btn-primary btn-lg btn-block active" onClick={onLogEntry}>Log an entry</a>
         </div>
-
-    </div>
-
-    <div className="row justify-content-center log-entry-form">
-      <div className="col-10 col-sm-10 col-md-6">
-        <a className="btn btn-primary btn-lg btn-block active" onClick={onLogEntry}>Log an entry</a>
       </div>
     </div>
   </div>
