@@ -15,9 +15,9 @@ export function Component({children, authState, menuButton, navName, backTo}) {
   function backButtonOrMenu() {
     const to = backTo || '/'
     if (menuButton === 'back') {
-      return (<Link className={css(styles.buttonLeft)} to={to}><i className="material-icons">arrow_back</i></Link>)
+      return (<Link className={css(styles.buttonLeft)} to={to}><i className={`material-icons ${css(styles.icon)}`}>arrow_back</i></Link>)
     } else if (menuButton === 'cancel') {
-      return (<Link className={css(styles.buttonLeft)} to={to}><i className="material-icons">clear</i></Link>)
+      return (<Link className={css(styles.buttonLeft)} to={to}><i className={`material-icons ${css(styles.icon)}`}>clear</i></Link>)
     }
     return (
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,10 +84,13 @@ const styles = StyleSheet.create({
     'font-size': '1.5em',
   },
   navBar: {
-    backgroundColor: '#46ce84'
+    backgroundColor: '#46ce84',
+    minHeight: '50px',
   },
   buttonLeft: {
-    paddingTop: '0.5em',
     color: '#FFF',
+  },
+  icon: {
+    lineHeight: '1.7em',
   },
 });
