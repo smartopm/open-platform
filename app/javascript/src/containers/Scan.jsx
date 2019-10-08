@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import QrReader from 'react-qr-reader'
-import Nav from './Nav'
+import Nav from '../components/Nav'
 
 export default function QRScan() {
   const initialState = {

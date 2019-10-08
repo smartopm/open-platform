@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 
-import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
+import {Context as AuthStateContext} from '../containers/Provider/AuthStateProvider.js';
 
 
 export default withRouter(function Nav({children, menuButton, history, navName, backTo}) {

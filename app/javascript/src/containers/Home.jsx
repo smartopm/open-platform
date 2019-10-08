@@ -1,10 +1,11 @@
 import React, {useContext, useState} from 'react';
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from 'aphrodite';
-import Nav from './Nav'
+import Nav from '../components/Nav'
+import Loading from "../components/Loading.jsx";
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
-import Loading from "./Loading.jsx";
+
 
 export default function Home() {
   const authState = useContext(AuthStateContext)

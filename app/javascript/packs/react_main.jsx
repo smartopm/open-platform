@@ -12,6 +12,7 @@ import IDVerify from '../src/containers/IdVerify';
 import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/containers/EntryLogs';
 import Search from '../src/containers/Search';
+import Loading from "../src/components/Loading.jsx";
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class DynamicImport extends Component {
 const Scan = (props) => (
   <DynamicImport load={() => import('../src/containers/Scan.jsx')}>
     {(Component) => Component === null
-      ? <p>Loading</p>
+      ? <Loading />
       : <Component {...props} />}
   </DynamicImport>
 )

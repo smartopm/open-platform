@@ -6,8 +6,8 @@ import { StyleSheet, css } from 'aphrodite';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
-import Loading from "./Loading.jsx";
-import Nav from "./Nav.jsx";
+import Nav from '../components/Nav'
+import Loading from "../components/Loading.jsx";
 import Status from "../components/StatusBadge";
 import DateUtil from "../utils/dateutil.js";
 

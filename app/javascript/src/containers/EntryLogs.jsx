@@ -1,9 +1,9 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
-import Nav from './Nav'
+import Nav from '../components/Nav'
 
-import Loading from "./Loading.jsx";
+import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`

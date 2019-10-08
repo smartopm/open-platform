@@ -4,7 +4,7 @@ import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { StyleSheet, css } from 'aphrodite';
 
-import Loading from "./Loading.jsx";
+import Loading from "../components/Loading.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 
 const QUERY = gql`
