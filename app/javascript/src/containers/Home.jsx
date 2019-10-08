@@ -40,7 +40,7 @@ export function Component({ authState }) {
                 <Link to={`/id/${authState.member.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title"><i className="material-icons">perm_identity</i></h5>
-                    <p>Identity</p>
+                    <p>Identification</p>
                   </div>
                 </Link>
               </div>
