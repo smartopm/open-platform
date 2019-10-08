@@ -104,6 +104,7 @@ export function Component({ data, onLogEntry }) {
 const styles = StyleSheet.create({
   avatar: {
     maxWidth: '200px',
+    maxHeight: '200px',
     borderRadius: '8px',
   },
 })
