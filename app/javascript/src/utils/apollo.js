@@ -7,7 +7,7 @@ import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, Observable } from 'apollo-link';
 
-import { MEMBER_ID_KEY } from '../components/Provider/AuthStateProvider';
+import { MEMBER_ID_KEY } from '../containers/Provider/AuthStateProvider';
 
 export const createCache = () => {
   const cache = new InMemoryCache();

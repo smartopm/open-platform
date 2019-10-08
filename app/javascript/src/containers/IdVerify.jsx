@@ -2,11 +2,13 @@ import React, {useContext} from 'react';
 import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
+import { StyleSheet, css } from 'aphrodite';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
 import Loading from "./Loading.jsx";
 import Nav from "./Nav.jsx";
+import Status from "../components/StatusBadge";
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`
@@ -20,6 +22,7 @@ query Member($id: ID!) {
       name
       email
       id
+      imageUrl
     }
   }
 }
@@ -62,7 +65,7 @@ export function Component({ data, onLogEntry }) {
             <div className="member_type">{data.member.member_type}</div>
           </div>
           <div className="d-flex justify-content-center">
-            <img src="/images/default_avatar.svg" />
+            <img src={data.member.user.imageUrl} className={css(styles.avatar)} />
           </div>
           <div className="d-flex justify-content-center">
             <h1>{data.member.user.name}</h1>
@@ -76,8 +79,8 @@ export function Component({ data, onLogEntry }) {
 
           <div className="d-flex justify-content-center">
             { data.member.expiresAt && DateUtil.isExpired(DateUtil.fromISO8601(data.member.expiresAt)) ? 
-            <span className="badge badge-danger">Expired</span> :
-            <span className="badge badge-success"><span className="oi oi-circle-check"></span> Valid</span>
+            <Status label='Expired'/> :
+            <Status label='Valid'/>
             }
           </div>
 
@@ -97,3 +100,10 @@ export function Component({ data, onLogEntry }) {
   </div>
   )
 }
+
+const styles = StyleSheet.create({
+  avatar: {
+    maxWidth: '200px',
+    borderRadius: '8px',
+  },
+})

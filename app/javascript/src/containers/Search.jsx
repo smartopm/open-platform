@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { StyleSheet, css } from 'aphrodite';
 
 import Loading from "./Loading.jsx";
+import StatusBadge from "../components/StatusBadge.jsx";
 
 const QUERY = gql`
 query MemberSearch($name: String!) {
@@ -12,21 +13,28 @@ query MemberSearch($name: String!) {
     id
     memberType
     user {
+      imageUrl
       id
       name
-    }
-  }
-}
+    } } }
 `;
 
 function Results({data, loading, called}) {
 
   function memberList(members) {
     return members.map((member) =>
-      <Link to={`/id_verify/${member.id}`} key={member.id} className={css(styles.hover)}>
-        <div className={`card ${css(styles.card)}`}>
-          <h6 className="card-title">{ member.user.name }</h6>
-          <small>{member.memberType}</small>
+      <Link to={`/id_verify/${member.id}`} key={member.id} className={css(styles.link)}>
+        <div className='d-flex flex-row align-items-center py-2'>
+          <div className={`${css(styles.avatar)}`}>
+            <img src={member.user.imageUrl} className={css(styles.avatarImg)}/>
+          </div>
+          <div className={`px-3 w-100`}>
+              <h6 className={css(styles.title)}>{ member.user.name }</h6>
+              <small className={css(styles.small)}> {member.memberType} </small>
+          </div>
+          <div className={`px-2 align-items-center`}>
+            <StatusBadge label={'Valid'} />
+          </div>
         </div>
       </Link>
       )
@@ -37,7 +45,7 @@ function Results({data, loading, called}) {
 
   if (called && data) {
     return (
-      <div className="col-10 col-sm-10 col-md-10">
+      <div className={`col-12 ${css(styles.results)}`}>
         {memberList(data.memberSearch)}
       </div>
       )
@@ -74,19 +82,41 @@ export default () => {
 }
 
 const styles = StyleSheet.create({
-  hover: {
+  results: {
+    margin: "1em 0",
+    padding: 0,
+  },
+  link: {
+    'text-decoration': 'none',
+    'color': '#222',
     ':hover': {
       'text-decoration': 'none',
       'color': '#222',
     }
   },
-  card: {
+  title: {
     color: '#222',
-    margin: '2em 0',
-    padding: '0.75em',
-    h6: {
-      'font-size':'1.2em',
-    },
+    'font-size':'0.9em',
+    lineHeight: '0.5em',
+    margin: '0.5em 0 0 0',
+  },
+  small: {
+    'font-size':'0.8em',
+    color: '#666',
+  },
+  avatar: {
+  },
+  vertCenter: {
+    alignItems: 'center',
+  },
+  avatarImg: {
+    'border-radius': '50%',
+    width: '50px',
+  },
+  statusBadgePending: {
+    border: '1px dashed #46ce84',
+    color: '#46ce84',
+    borderRadius: '10px',
   },
   inputGroup: {
     border: '1px solid #AAA',

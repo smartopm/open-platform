@@ -5,13 +5,13 @@
 import React, { useContext, Component } from 'react';
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
-import ApolloProvider from '../src/components/Provider/ApolloProvider';
-import AuthStateProvider, {Context as AuthStateContext} from '../src/components/Provider/AuthStateProvider';
-import Home from '../src/components/Home';
-import IDVerify from '../src/components/IdVerify';
-import IDCard from '../src/components/IdCard';
-import EntryLogs from '../src/components/EntryLogs';
-import Search from '../src/components/Search';
+import ApolloProvider from '../src/containers/Provider/ApolloProvider';
+import AuthStateProvider, {Context as AuthStateContext} from '../src/containers/Provider/AuthStateProvider';
+import Home from '../src/containers/Home';
+import IDVerify from '../src/containers/IdVerify';
+import IDCard from '../src/containers/IdCard';
+import EntryLogs from '../src/containers/EntryLogs';
+import Search from '../src/containers/Search';
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class DynamicImport extends Component {
 }
 
 const Scan = (props) => (
-  <DynamicImport load={() => import('../src/components/Scan.jsx')}>
+  <DynamicImport load={() => import('../src/containers/Scan.jsx')}>
     {(Component) => Component === null
       ? <p>Loading</p>
       : <Component {...props} />}

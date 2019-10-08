@@ -6,6 +6,7 @@ module Types
     field :id, ID, null: false
     field :email, String, null: true
     field :name, String, null: false
+    field :image_url, String, null: true
     field :members, [Types::MemberType], null: false
   end
 end
