@@ -9,13 +9,10 @@ class ApplicationController < ActionController::Base
   end
 
   # For now we can assume that each user is just a member of one community
-  def current_member
-    current_user.members.first if current_user&.members
-  end
-
   def authenticate_member!
     authenticate_user!
     # Keep out any user that not a member of a community
-    redirect_to '/hold' unless current_member
+    current_user.assign_default_community
+    redirect_to '/hold' unless current_user.community
   end
 end

@@ -37,7 +37,7 @@ export function Component({ authState }) {
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.member.id}`} className={`card-link`}>
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title"><i className="material-icons">perm_identity</i></h5>
                     <p>Identity</p>
@@ -45,7 +45,7 @@ export function Component({ authState }) {
                 </Link>
               </div>
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.member.id}`} className={`card-link`}>
+                <Link to={`/user/request`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title"><i className="material-icons">perm_identity</i></h5>
                     <p>Request</p>
@@ -53,7 +53,23 @@ export function Component({ authState }) {
                 </Link>
               </div>
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.member.id}`} className={`card-link`}>
+                <Link to={`/user/pending`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title"><i className="material-icons">perm_identity</i></h5>
+                    <p>Pending Requests</p>
+                  </div>
+                </Link>
+              </div>
+              <div className="card align-self-center text-center">
+                <Link to={`/user/new`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title"><i className="material-icons">perm_identity</i></h5>
+                    <p>New User</p>
+                  </div>
+                </Link>
+              </div>
+              <div className="card align-self-center text-center">
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title"><i className="material-icons">payment</i></h5>
                     <p>Pay</p>
@@ -61,7 +77,7 @@ export function Component({ authState }) {
                 </Link>
               </div>
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.member.id}`} className={`card-link`}>
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title"><i className="material-icons">directions</i></h5>
                     <p>Map</p>

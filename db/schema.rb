@@ -10,19 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_24_214117) do
+ActiveRecord::Schema.define(version: 2019_10_11_183930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "activity_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "member_id"
     t.uuid "community_id"
     t.text "note"
-    t.uuid "reporting_member_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "user_id"
+    t.uuid "reporting_user_id"
   end
 
   create_table "communities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -33,16 +33,6 @@ ActiveRecord::Schema.define(version: 2019_09_24_214117) do
     t.string "slug"
     t.string "logo_url"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
-  end
-
-  create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.uuid "user_id"
-    t.uuid "community_id"
-    t.string "member_type"
-    t.datetime "expires_at"
-    t.string "id_token"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -60,6 +50,14 @@ ActiveRecord::Schema.define(version: 2019_09_24_214117) do
     t.string "phone_number"
     t.string "phone_token"
     t.datetime "phone_token_expires_at"
+    t.string "user_type"
+    t.string "request_reason"
+    t.string "request_status"
+    t.text "request_note"
+    t.string "vehicle"
+    t.uuid "community_id"
+    t.datetime "last_activity_at"
+    t.string "state"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
       user = User.from_omniauth(auth_obj)
       expect(user.persisted?).to be true
       # TODO: Remove this once we fix hardcoding
-      expect(user.members.first.community.name).to eql('Nkwashi')
+      expect(user.community.name).to eql('Nkwashi')
     end
 
     it 'should update an existing user' do
@@ -37,13 +37,13 @@ RSpec.describe User, type: :model do
       expect(users[0].name).to eq 'Mark Percival'
       expect(users[0].image_url).to eq 'https://newprofile.com/pic.png'
       # TODO: Remove this once we fix hardcoding
-      expect(users[0].members.length).to eql 1
+      expect(users[0].community).to_not be_nil
     end
   end
 
   describe 'Authenticating the user with a token via sms' do
     before :each do
-      @user = FactoryBot.create(:user, phone_number: '14157351116')
+      @user = FactoryBot.create(:user_with_community, phone_number: '14157351116')
     end
 
     it 'should create a token' do
@@ -70,6 +70,36 @@ RSpec.describe User, type: :model do
       # With an expired token
       @user.update(phone_token_expires_at: 1.minute.ago)
       expect { @user.verify_phone_token!(token) }.to raise_exception(User::PhoneTokenResultExpired)
+    end
+  end
+
+  describe 'User state and roles' do
+    before :each do
+      @user = FactoryBot.create(:user_with_community, phone_number: '14157351116')
+    end
+
+    it 'without a role/type it should be pending' do
+      expect(@user.pending?).to be true
+    end
+
+    it 'after assinging a admin role, it should be an admin' do
+      @user.update(user_type: 'admin')
+      expect(@user.admin?).to be true
+    end
+
+    it 'Roles should have a human name' do
+      @user.update(user_type: 'admin')
+      expect(@user.role_name).to eql 'Admin'
+    end
+
+    it 'should be expired if it\'s expired' do
+      @user.update(state: 'pending')
+      expect(@user.state).to eql 'pending'
+    end
+
+    it 'should be expired if it\'s expired' do
+      @user.update(expires_at: 1.week.ago)
+      expect(@user.expired?).to be true
     end
   end
 end

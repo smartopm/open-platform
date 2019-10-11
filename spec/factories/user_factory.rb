@@ -14,11 +14,17 @@ FactoryBot.define do
     provider { 'google' }
     uid
 
-    factory :user_with_membership do
-      after :create do |user|
-        community = FactoryBot.create(:community)
-        create_list :member, 1, user: user, community: community
-      end
+    factory :user_with_community do
+      community
+    end
+    factory :security_guard do
+      user_type { 'security_guard' }
+    end
+    factory :admin_user do
+      user_type { 'admin' }
+    end
+    factory :pending_user do
+      request_status { 'pending' }
     end
   end
 end

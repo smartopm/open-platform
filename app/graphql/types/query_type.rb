@@ -7,24 +7,24 @@ module Types
     # They will be entry points for queries on your schema.
 
     # Get a member's information
-    field :member, MemberType, null: true do
-      description 'Find a member by ID'
+    field :user, UserType, null: true do
+      description 'Find a user by ID'
       argument :id, ID, required: true
     end
 
-    def member(id:)
-      Member.find(id) if context[:current_user]
+    def user(id:)
+      User.find(id) if context[:current_user]
     end
 
     # Get a member's information
-    field :member_search, [MemberType], null: true do
-      description 'Find a member by name'
+    field :user_search, [UserType], null: true do
+      description 'Find a user by name'
       argument :name, String, required: true
     end
 
-    def member_search(name:)
-      users = User.where('name ILIKE ?', '%' + name + '%').limit(20)
-      users.map(&:members).flatten
+    def user_search(name:)
+      User.where('name ILIKE ?', '%' + name + '%')
+          .where(community_id: context[:current_user].community_id).limit(20)
     end
 
     field :community, CommunityType, null: true do
@@ -47,14 +47,24 @@ module Types
       { error: 'Must be logged in to perform this action' }
     end
 
-    # Get a entry logs for a member
+    # Get a entry logs for a user
     field :entry_logs, [ActivityLogType], null: true do
       description 'Get entry logs for a member'
-      argument :member_id, ID, required: true
+      argument :user_id, ID, required: true
     end
 
-    def entry_logs(member_id:)
-      ActivityLog.where(member_id: member_id) if context[:current_user]
+    def entry_logs(user_id:)
+      ActivityLog.where(user_id: user_id) if context[:current_user]
+    end
+
+    # Get a entry logs for a user
+    field :pending_users, [UserType], null: true do
+      description 'Get all pending members'
+    end
+
+    def pending_users
+      User.where(state: 'pending',
+                 community_id: context[:current_user].community_id)
     end
   end
 end

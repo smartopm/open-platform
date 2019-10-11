@@ -8,16 +8,13 @@ import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`
-query Member($id: ID!) {
-  member(id: $id) {
+query User($id: ID!) {
+  user(id: $id) {
     id
-    memberType
+    userType
     expiresAt
-    user {
-      name
-      email
-      id
-    }
+    name
+    email
   }
 }
 `;
@@ -31,7 +28,7 @@ function expiresAtStr(datetime) {
 }
 
 function qrCodeAddress(id_card_token) {
-  return window.location.protocol + '//' + window.location.hostname + '/id_verify/' + id_card_token
+  return window.location.protocol + '//' + window.location.hostname + '/user/' + id_card_token
 }
 
 export default ({ match }) => {
@@ -50,17 +47,17 @@ export function Component({ data }) {
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div className="d-flex justify-content-center">
-            <div className="member_type">{data.member.memberType}</div>
+            <div className="member_type">{data.user.userType}</div>
           </div>
           <div className="d-flex justify-content-center">
-            <h1>{ data.member.user.name }</h1>
+            <h1>{ data.user.name }</h1>
           </div>
           <div className="d-flex justify-content-center">
-            <div className="expires">Exp: { expiresAtStr(data.member.expiresAt) }</div>
+            <div className="expires">Exp: { expiresAtStr(data.user.expiresAt) }</div>
           </div>
 
           <div className="d-flex justify-content-center qr_code">
-            <QRCode style={{ width: 256 }} value={qrCodeAddress(data.member.id)} />
+            <QRCode style={{ width: 256 }} value={qrCodeAddress(data.user.id)} />
           </div>
         </div>
       </div>

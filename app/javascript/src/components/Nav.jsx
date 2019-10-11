@@ -27,11 +27,11 @@ export function Component({children, authState, menuButton, navName, backTo}) {
   }
 
   function communityName() {
-    if (authState.member && authState.member.community) {
-      if (authState.member.community.logoUrl) {
-        return(<Link to='/'><img src={authState.member.community.logoUrl} className={css(styles.logo)} /></Link>)
+    if (authState.id && authState.community) {
+      if (authState.community.logoUrl) {
+        return(<Link to='/'><img src={authState.community.logoUrl} className={css(styles.logo)} /></Link>)
       }
-      return(<Link to='/'><div>{authState.member.community.name}</div></Link>)
+      return(<Link to='/'><div>{authState.community.name}</div></Link>)
     }
     return  "Community"
   }

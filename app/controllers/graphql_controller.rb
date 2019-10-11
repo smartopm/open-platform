@@ -24,26 +24,14 @@ class GraphqlController < ApplicationController
     handle_error_in_development err
   end
 
-  def auth_context(user, request)
+  def auth_context(user, _request)
     {
       current_user: user,
-      current_member: validate_acting_member(user, request),
     }
   end
 
   def prep_variables(variables)
     ensure_hash(variables)
-  end
-
-  # Ensure that we always have the current_member
-  # and that it's valid and authenicated
-  def validate_acting_member(user, request)
-    member_id = request.headers['X-Member-ID']
-    if user && member_id
-      member = Member.find_by(id: member_id, user_id: user.id)
-      return member if member
-    end
-    nil
   end
 
   # Handle form data, JSON body, or a blank value

@@ -7,23 +7,21 @@ import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`
-query EntryLogs($memberId: ID!) {
-  entryLogs(memberId: $memberId) {
+query EntryLogs($userId: ID!) {
+  entryLogs(userId: $userId) {
     id
     createdAt
     note
-    reportingMember {
-      user {
-        name
-      }
+    reportingUser {
+      name
     }
   }
 }
 `;
 
 export default ({ match }) => {
-  let memberId = match.params.memberId
-  const { loading, error, data } = useQuery(QUERY, {variables: {memberId}});
+  let userId = match.params.userId
+  const { loading, error, data } = useQuery(QUERY, {variables: {userId}});
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
@@ -35,7 +33,7 @@ function logs(entries) {
     <tr key={entry.id}>
       <td>{DateUtil.dateToString(entry.createdAt)}</td>
       <td>{DateUtil.dateTimeToString(entry.createdAt)}</td>
-      <td>{entry.reportingMember.user.name}</td>
+      <td>{entry.reportingUser.name}</td>
       <td>{entry.note}</td>
     </tr>
     )
