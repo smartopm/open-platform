@@ -19,14 +19,11 @@ const QUERY = gql`
     id
     email
     name
-    members {
-      id
-      expiresAt
-      memberType
-      community {
-        name
-        logoUrl
-      }
+    userType
+    expiresAt
+    community {
+      name
+      logoUrl
     }
   }
 }
@@ -44,20 +41,13 @@ export default function AuthStateProvider({children}) {
   if (error) return false;
 
   const user = data.currentUser
-  const members = data.currentUser.members
   const state = {
     user: {
       id: user.id,
       email: user.email,
       name: user.name,
     },
-    members: members,
     loggedIn: true,
-  }
-  if (members.length > 0) {
-    state.member = members[0]
-    // TODO: @mdp find a better way to do this
-    window.localStorage.setItem(MEMBER_ID_KEY, state.member.id)
   }
 
   return (

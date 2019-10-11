@@ -3,17 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe Mutations::ActivityLog::Add do
-  describe 'member' do
-    let!(:member) { create(:member_with_community) }
-    let!(:reporting_member) { create(:member_with_community, community_id: member.community_id) }
-    let!(:current_user) { reporting_member.user }
+  describe 'user' do
+    let!(:user) { create(:user_with_community) }
+    let!(:reporting_user) { create(:user, community_id: user.community_id) }
 
-    let!(:other_community_member) { create(:member_with_community) }
+    let!(:other_community_user) { create(:user_with_community) }
 
     let(:query) do
       <<~GQL
-        mutation AddActivityLogMutation($memberId: ID!, $note: String) {
-          activityLogAdd(memberId: $memberId, note: $note) {
+        mutation AddActivityLogMutation($userId: ID!, $note: String) {
+          activityLogAdd(userId: $userId, note: $note) {
             id
           }
         }
@@ -22,13 +21,11 @@ RSpec.describe Mutations::ActivityLog::Add do
 
     it 'returns should create an activity log' do
       variables = {
-        memberId: member.id,
-        actingMemberId: reporting_member.id,
+        userId: user.id,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: current_user,
-                                                current_member: reporting_member,
+                                                current_user: user,
                                               }).as_json
       expect(result.dig('data', 'activityLogAdd', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
@@ -36,12 +33,11 @@ RSpec.describe Mutations::ActivityLog::Add do
 
     it 'returns should not create an invalid activity log' do
       variables = {
-        memberId: member.id,
-        actingMemberId: other_community_member.id,
+        userId: user.id,
       }
       result = DoubleGdpSchema.execute(
         query, variables: variables, context: {
-          current_user: other_community_member.user, current_member: other_community_member
+          current_user: other_community_user,
         }
       ).as_json
       expect(result.dig('data', 'activityLogAdd')).to be_nil

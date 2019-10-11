@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
-import { useLazyQuery } from 'react-apollo';
+import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { StyleSheet, css } from 'aphrodite';
 
@@ -8,8 +8,8 @@ import Loading from "../components/Loading.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 
 const QUERY = gql`
-query UserSearch($name: String!) {
-  userSearch(name: $name) {
+{
+  results: pendingUsers {
     id
     userType
     name
@@ -20,11 +20,11 @@ query UserSearch($name: String!) {
 }
 `;
 
-function Results({data, loading, called}) {
+function Results({data, loading}) {
 
   function memberList(users) {
     return users.map((user) =>
-      <Link to={`/user/${user.id}`} key={user.id} className={css(styles.link)}>
+      <Link to={`/user/${user.id}/edit`} key={user.id} className={css(styles.link)}>
         <div className='d-flex flex-row align-items-center py-2'>
           <div className={`${css(styles.avatar)}`}>
             <img src={user.imageUrl} className={css(styles.avatarImg)}/>
@@ -34,20 +34,20 @@ function Results({data, loading, called}) {
               <small className={css(styles.small)}> {user.roleName} </small>
           </div>
           <div className={`px-2 align-items-center`}>
-            <StatusBadge label={user.state} />
+            <StatusBadge label={'Pending'} />
           </div>
         </div>
       </Link>
       )
   }
-  if (called && loading) {
+  if (loading) {
     return <Loading />
   }
 
-  if (called && data) {
+  if (data) {
     return (
       <div className={`col-12 ${css(styles.results)}`}>
-        {memberList(data.userSearch)}
+        {memberList(data.results)}
       </div>
       )
   }
@@ -56,27 +56,14 @@ function Results({data, loading, called}) {
 
 export default () => {
 
-  function updateSearch(e) {
-    const {value} = e.target
-    loadGQL()
-    setName(value)
-  }
-
-  const [name, setName] = useState('')
-  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY, {variables: {name}});
+  const { loading, error, data } = useQuery(QUERY, {variables: {name}});
   if (error) return `Error! ${error}`;
+  console.log(data)
 
   return (
     <div className="container">
       <div className={`row justify-content-center ${css(styles.inputGroup)}`}>
-        <input className={`form-control ${css(styles.input)}`} onChange={updateSearch} type="text" placeholder="Search" value={name} autoFocus />
-        <Link to='/' className={css(styles.cancelBtn)}>
-          <i className="material-icons">arrow_back</i>
-        </Link>
-
-        {name.length > 0 &&
-          <Results {...{data, loading, called}}/>
-        }
+        <Results {...{data, loading}} />
       </div>
     </div>
   );
@@ -118,31 +105,5 @@ const styles = StyleSheet.create({
     border: '1px dashed #46ce84',
     color: '#46ce84',
     borderRadius: '10px',
-  },
-  inputGroup: {
-    border: '1px solid #AAA',
-    'border-radius': '5px',
-    position: 'relative',
-    height: '48px',
-    backgroundColor: '#FFF',
-  },
-  input: {
-    height: '36px',
-    border: 'none',
-    width: '100%',
-    padding: '0.7em 0 0em 3em',
-    color: '#222',
-    'background-image': 'none',
-    '::placeholder': {
-        color: '#999'
-    }
-  },
-  cancelBtn: {
-    color: '#666',
-    position: 'absolute',
-    left: '10px',
-    top: '12px',
-    bottom: '4px',
-    'z-index': 9,
   },
 })

@@ -10,6 +10,6 @@ community = Community.create(name: 'Test Community', slug: "dgdp", logo_url: "//
 mark = User.create(name: 'Mark Percival', email: 'mark1@doublegdp.com',
                    provider: 'google_oauth2',
                    image_url: 'https://lh3.googleusercontent.com/-ong4yo_HRvk/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rdHiURdL-7LHJ1e4mrpVEEU_MYgsg/photo.jpg',
+                   community_id: community,
+                   user_type: 'admin',
                   )
-
-Member.create(user_id: mark.id, community_id: community.id, member_type: 'Contractor', expires_at: 4.weeks.from_now)

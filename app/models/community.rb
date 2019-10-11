@@ -2,7 +2,7 @@
 
 # A Community is a city, or organization under which members/citizens exist
 class Community < ApplicationRecord
-  has_many :members, dependent: :destroy
+  has_many :users, dependent: :destroy
   has_many :roles, dependent: :destroy
   has_many :activity_logs, dependent: :destroy
 end

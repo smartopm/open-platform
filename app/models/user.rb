@@ -6,7 +6,16 @@
 # Workers
 # Contractors
 class User < ApplicationRecord
-  has_many :members, dependent: :destroy
+  belongs_to :community, optional: true
+  has_many :activity_logs, dependent: :destroy
+
+  VALID_USER_TYPES = %w[security_guard admin resident contractor].freeze
+  VALID_STATES = %w[valid pending banned expired].freeze
+
+  validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
+  validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
+  validates :name, presence: true
+  before_save :ensure_default_state
 
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
@@ -36,14 +45,55 @@ class User < ApplicationRecord
     OAUTH_FIELDS_MAP.keys.each do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
-    user.save!
     user.assign_default_community
+    user.save!
     user
   end
 
   # We may want to do a bit more work here massaing the number entered
   def self.find_via_phone_number(phone_number)
     find_by(phone_number: phone_number)
+  end
+
+  def self.lookup_by_id_card_token(token)
+    find_by(id: token)
+  end
+
+  def id_card_token
+    # May want to do more to secure this in the future with some extra token
+    self[:id]
+  end
+
+  def admin?
+    self[:user_type] == 'admin'
+  end
+
+  def role_name
+    return '' unless self[:user_type]
+
+    self[:user_type].humanize.titleize
+  end
+
+  # Returns status of a user
+  # banned, expired, pending, valid
+  def state
+    return 'expired' if expired?
+
+    self[:state] || 'pending'
+  end
+
+  def pending?
+    self[:state] == 'pending'
+  end
+
+  def expired?
+    return false unless self[:expires_at]
+
+    self[:expires_at] < Time.zone.now
+  end
+
+  def ensure_default_state
+    self[:state] ||= 'pending'
   end
 
   def create_new_phone_token
@@ -60,14 +110,14 @@ class User < ApplicationRecord
   # Assign known hardcoded domains to a community
   # TODO: Make this happen from the DB vs hardcoding
   def assign_default_community
-    return unless members.empty?
+    return if self[:community_id]
     return unless self[:provider] == 'google_oauth2'
 
     mapped_name = DOMAINS_COMMUNITY_MAP[domain.to_sym]
     return unless mapped_name
 
     community = Community.find_or_create_by(name: mapped_name)
-    members.create(community_id: community.id, member_type: 'admin')
+    update(community_id: community.id, user_type: 'admin')
   end
 
   def send_phone_token

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# A list of a members activity
+# A list of a users activity
 class ActivityLog < ApplicationRecord
   belongs_to :community
-  belongs_to :member
-  belongs_to :reporting_member, class_name: 'Member'
+  belongs_to :user
+  belongs_to :reporting_user, class_name: 'User'
 
   before_validation :ensure_community_id
   validate :validate_reporter
@@ -14,17 +14,17 @@ class ActivityLog < ApplicationRecord
   # Bit of early denormalization, but it's very likely
   # we will want to query based on the entry logs of the entire community
   def ensure_community_id
-    m = Member.find(self[:member_id])
-    self.community_id = m.community_id
+    u = User.find(self[:user_id])
+    self.community_id = u.community_id
   end
 
   def validate_reporter
-    return errors.add(:reporting_member, 'must exist') unless self[:reporting_member_id]
+    return errors.add(:reporting_user, 'must exist') unless self[:reporting_user_id]
 
-    reporting_member = Member.find(self[:reporting_member_id])
-    member = Member.find(self[:member_id])
-    return unless reporting_member.community_id != member.community_id
+    reporting_user = User.find(self[:reporting_user_id])
+    user = User.find(self[:user_id])
+    return if reporting_user.community_id == user.community_id
 
-    errors.add(:reporting_member, 'Can only report members in your own community')
+    errors.add(:reporting_user, 'Can only report users in your own community')
   end
 end

@@ -3,53 +3,48 @@
 require 'rails_helper'
 
 RSpec.describe Types::QueryType do
-  describe 'member' do
-    let!(:member) { create(:member_with_community) }
-    let!(:current_user) { member.user }
+  describe 'user' do
+    let!(:current_user) { create(:user_with_community) }
 
     let(:query) do
       %(query {
-        member(id:"#{member.id}") {
+        user(id:"#{current_user.id}") {
           id
-          memberType
-          user {
-            email
-            name
-          }
+          userType
+          email
+          name
         }
       })
     end
 
     it 'returns all items' do
       result = DoubleGdpSchema.execute(query, context: { current_user: current_user }).as_json
-      expect(result.dig('data', 'member', 'id')).to eql member.id
+      expect(result.dig('data', 'user', 'id')).to eql current_user.id
     end
 
     it 'should fail if no logged in' do
       result = DoubleGdpSchema.execute(query, context: { current_user: nil }).as_json
-      expect(result.dig('data', 'member')).to be_nil
+      expect(result.dig('data', 'user')).to be_nil
     end
   end
 
   describe 'entry_logs' do
     before :each do
-      @member = create(:member_with_community)
-      @reporting_member = create(:member_with_community, community_id: @member.community_id)
-      @current_user = @reporting_member.user
+      @user = create(:user_with_community)
+      @reporting_user = create(:user_with_community, community_id: @user.community_id)
+      @current_user = @reporting_user
 
       3.times do
-        @member.activity_logs.create(reporting_member_id: @reporting_member.id)
+        @user.activity_logs.create(reporting_user_id: @reporting_user.id)
       end
       @query =
         %(query {
-        entryLogs(memberId:"#{@member.id}") {
+        entryLogs(userId:"#{@user.id}") {
           id
           createdAt
           note
-          reportingMember {
-            user {
-              name
-            }
+          reportingUser{
+            name
           }
         }
       })
@@ -58,7 +53,6 @@ RSpec.describe Types::QueryType do
     it 'returns all entry logs' do
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
-                                         current_member: @member,
                                        }).as_json
       expect(result.dig('data', 'entryLogs').length).to eql 3
     end
@@ -69,24 +63,20 @@ RSpec.describe Types::QueryType do
     end
   end
 
-  describe 'member_search' do
+  describe 'user_search' do
     before :each do
-      @member = create(:member_with_community)
-      @member.user.update(name: 'Joe User')
-      @admin_member = create(:member_with_community,
-                             member_type: 'admin',
-                             community_id: @member.community_id)
-      @current_user = @admin_member.user
+      @user = create(:user_with_community, name: 'Joe Test')
+      @admin_user = create(:user_with_community,
+                           user_type: 'admin',
+                           community_id: @user.community_id)
+      @current_user = @admin_user
 
       @query =
         %(query($name: String!) {
-          memberSearch(name: $name) {
+          userSearch(name: $name) {
             id
-            memberType
-            user {
-              id
-              name
-            }
+            name
+            userType
           }
         })
     end
@@ -94,21 +84,19 @@ RSpec.describe Types::QueryType do
     it 'returns all entry logs' do
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
-                                         current_member: @admin_member,
                                        },
                                                variables: { name: 'Joe' }).as_json
-      expect(result.dig('data', 'memberSearch').length).to eql 1
+      expect(result.dig('data', 'userSearch').length).to eql 1
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
-                                         current_member: @admin_member,
                                        },
                                                variables: { name: 'Steve' }).as_json
-      expect(result.dig('data', 'memberSearch').length).to eql 0
+      expect(result.dig('data', 'userSearch').length).to eql 0
     end
 
     it 'should fail if no logged in' do
       result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
-      expect(result.dig('data', 'memberSearch')).to be_nil
+      expect(result.dig('data', 'userSearch')).to be_nil
     end
   end
 end
