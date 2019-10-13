@@ -9,15 +9,11 @@ module Mutations
       argument :request_reason, String, required: true
       argument :vehicle, String, required: false
 
-      field :id, ID, null: false
-      field :request_reason, String, null: false
-      field :name, String, null: false
-      field :created_at, String, null: false
-      field :vehicle, String, null: true
+      field :user, Types::UserType, null: true
 
       def resolve(id:, name:, request_reason:, vehicle:)
         user = ::User.find(id)
-        return user if user.update(
+        return { user: user } if user.update(
           name: name,
           request_reason: request_reason, vehicle: vehicle
         )

@@ -18,7 +18,9 @@ RSpec.describe Mutations::User do
               requestReason: $reason,
               vehicle: $vehicle,
             ) {
-            id
+            user {
+              id
+            }
           }
         }
       GQL
@@ -34,7 +36,7 @@ RSpec.describe Mutations::User do
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
-      expect(result.dig('data', 'userCreatePending', 'id')).not_to be_nil
+      expect(result.dig('data', 'userCreatePending', 'user', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
 
@@ -48,7 +50,7 @@ RSpec.describe Mutations::User do
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
-      expect(result.dig('data', 'userCreatePending')).to be_nil
+      expect(result.dig('data', 'userCreatePending', 'user')).to be_nil
       expect(result.dig('errors')).not_to be_empty
     end
   end
@@ -71,8 +73,10 @@ RSpec.describe Mutations::User do
               requestReason: $reason,
               vehicle: $vehicle,
             ) {
-            id
-            requestReason
+            user {
+              id
+              requestReason
+            }
           }
         }
       GQL
@@ -89,8 +93,8 @@ RSpec.describe Mutations::User do
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
-      expect(result.dig('data', 'userUpdatePending', 'id')).not_to be_nil
-      expect(result.dig('data', 'userUpdatePending', 'requestReason')).to eql 'Rspec'
+      expect(result.dig('data', 'userUpdatePending', 'user', 'id')).not_to be_nil
+      expect(result.dig('data', 'userUpdatePending', 'user', 'requestReason')).to eql 'Rspec'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -105,7 +109,7 @@ RSpec.describe Mutations::User do
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
-      expect(result.dig('data', 'userUpdatePending')).to be_nil
+      expect(result.dig('data', 'userUpdatePending', 'user')).to be_nil
       expect(result.dig('errors')).not_to be_empty
     end
   end
@@ -125,9 +129,11 @@ RSpec.describe Mutations::User do
               id: $id,
               userType: $userType,
             ) {
-            id
-            userType
-            roleName
+            user {
+              id
+              userType
+              roleName
+            }
           }
         }
       GQL
@@ -142,8 +148,8 @@ RSpec.describe Mutations::User do
                                               context: {
                                                 current_user: admin,
                                               }).as_json
-      expect(result.dig('data', 'userUpdate', 'id')).not_to be_nil
-      expect(result.dig('data', 'userUpdate', 'roleName')).to eql 'Security Guard'
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(result.dig('data', 'userUpdate', 'user', 'roleName')).to eql 'Security Guard'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -157,7 +163,7 @@ RSpec.describe Mutations::User do
                                                 current_user: security_guard,
                                               }).as_json
 
-      expect(result.dig('data', 'userUpdate', 'id')).to be_nil
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
       expect(result.dig('errors')).not_to be_empty
       expect(result.dig('errors').map { |err| err['message'] }).to include('Unauthorized')
     end
