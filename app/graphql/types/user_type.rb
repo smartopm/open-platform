@@ -15,6 +15,8 @@ module Types
     field :role_name, String, null: true
     field :state, String, null: true
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

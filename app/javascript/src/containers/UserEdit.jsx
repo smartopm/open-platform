@@ -1,127 +1,26 @@
 import React from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { withFormik } from 'formik';
 
 import Nav from '../components/Nav'
 import UserForm from '../components/UserForm.jsx';
 import Loading from "../components/Loading.jsx";
+import crudHandler from "../graphql/crud_handler"
 
-const QUERY = gql`
-query User($id: ID!) {
-  result: user(id: $id) {
-    name
-    userType
-    roleName
-    vehicle
-    requestReason
-    id
-    expiresAt
-    email
-  }
-}
-`;
-
-
-const CREATE_USER = gql`
-mutation CreateUserMutation(
-    $name: String!,
-    $email: String,
-    $phoneNumber: String,
-    $userType: String!,
-    $state: String,
-    $vehicle: String
-    $requestReason: String,
-  ) {
-  result: userCreate(
-      name: $name,
-      userType: $userType,
-      email: $email,
-      phoneNumber: $phoneNumber,
-      requestReason: $requestReason,
-      vehicle: $vehicle,
-      state: $state,
-    ) {
-      id
-      name
-      vehicle
-      requestReason
-  }
-}
-`;
-
-const UPDATE_USER = gql`
-mutation UpdateUserMutation(
-    $id: ID!,
-    $name: String,
-    $email: String,
-    $phoneNumber: String,
-    $userType: String,
-    $requestReason: String,
-    $vehicle: String
-    $state: String,
-  ) {
-  result: userUpdate(
-      id: $id,
-      name: $name,
-      email: $email,
-      phoneNumber: $phoneNumber,
-      userType: $userType,
-      requestReason: $requestReason,
-      vehicle: $vehicle,
-      state: $state,
-    ) {
-      id
-      name
-      vehicle
-      requestReason
-  }
-}
-`;
-
-
-// Break this out into it's own module
-const crudHandler = ({createMutation, readLazyQuery, updateMutation}) => {
-  // Create a record or Modify an existing record
-  const [loadRecord, {loading: recordLoading, error: queryError, data: queryResult }] = readLazyQuery;
-  const [updateRecord, {loading: updateLoading, error: updateError, data: updatedResult }] = updateMutation;
-  const [createRecord, {loading: createLoading, error: createError, data: createdResult }] = createMutation;
-  const isLoading = recordLoading || updateLoading || createLoading
-  const {result} = updatedResult || createdResult || queryResult || {result:{}}
-  const error = updateError || createError || queryError
-  const isNewRecord = !result.id
-
-  function createOrUpdate(data) {
-    if (result.id) {
-      data.id = result.id // Ensure ID is set
-      return updateRecord({variables: data})
-    } else {
-      return createRecord({variables: data})
-    }
-  }
-
-
-  return {
-    isLoading,
-    isNewRecord,
-    result,
-    error,
-    createOrUpdate,
-    loadRecord
-  }
-
-}
-
+import {UserQuery} from "../graphql/queries"
+import {UpdateUserMutation, CreateUserMutation} from "../graphql/mutations"
 
 export default function UserFormContainer({match, history}) {
 
   const {isLoading, error, result, createOrUpdate, loadRecord} = crudHandler({
-    readLazyQuery: useLazyQuery(QUERY),
-    updateMutation: useMutation(UPDATE_USER),
-    createMutation: useMutation(CREATE_USER),
+    typeName: 'user',
+    readLazyQuery: useLazyQuery(UserQuery),
+    updateMutation: useMutation(UpdateUserMutation),
+    createMutation: useMutation(CreateUserMutation),
   });
 
   function submitMutation({name, userType, requestReason, vehicle, state, email, phoneNumber}) {
+    console.log("Submit")
     return createOrUpdate({
       name,
       requestReason,
@@ -159,11 +58,12 @@ export default function UserFormContainer({match, history}) {
     },
 
     handleSubmit: (values, { setSubmitting }) => {
-      console.log(values)
+      console.log('submit', values)
       submitMutation(values).then(({data})=> {
+        console.log(data)
         setSubmitting(false)
-        history.push(`/user/${data.result.id}`)
-      })
+        history.push(`/user/${data.mutation.user.id}`)
+      }).catch((err)=>console.log(err))
     },
 
     displayName: 'UserForm',

@@ -8,19 +8,16 @@ module Mutations
       argument :request_reason, String, required: true
       argument :vehicle, String, required: false
 
-      field :id, ID, null: false
-      field :request_reason, String, null: false
-      field :name, String, null: false
-      field :created_at, String, null: false
-      field :vehicle, String, null: true
+      field :user, Types::UserType, null: true
 
       def resolve(name:, request_reason:, vehicle:)
-        user = ::User.new(
+        user = ::User.create(
           name: name,
           request_reason: request_reason, vehicle: vehicle,
           community_id: context[:current_user].community_id
         )
-        return user if user.save
+
+        return { user: user } if user
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end

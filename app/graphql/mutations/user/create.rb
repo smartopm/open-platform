@@ -13,21 +13,12 @@ module Mutations
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
 
-      field :id, ID, null: false
-      field :name, String, null: false
-      field :email, String, null: false
-      field :phone_number, String, null: false
-      field :user_type, String, null: false
-      field :state, String, null: false
-      field :created_at, String, null: false
-      field :request_reason, String, null: true
-      field :vehicle, String, null: true
+      field :user, Types::UserType, null: true
 
       def resolve(vals)
         user = ::User.create(vals, community_id: context[:current_user].community_id)
-        raise GraphQL::ExecutionError, 'NotFound' unless user
 
-        return user if user.update(vals)
+        return { user: user } if user
 
         raise GraphQL::ExecutionError, member.errors.full_messages
       end
