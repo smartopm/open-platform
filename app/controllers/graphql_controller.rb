@@ -40,7 +40,7 @@ class GraphqlController < ApplicationController
     when String
       handle_string_param(ambiguous_param)
     when Hash, ActionController::Parameters
-      ambiguous_param
+      nil_empty(ambiguous_param)
     when nil
       {}
     else
@@ -53,6 +53,16 @@ class GraphqlController < ApplicationController
       ensure_hash(JSON.parse(str_param))
     else
       {}
+    end
+  end
+
+  def nil_empty(params)
+    params.transform_values do |v|
+      if v.is_a(String) && v.empty?
+        nil
+      else
+        v
+      end
     end
   end
 

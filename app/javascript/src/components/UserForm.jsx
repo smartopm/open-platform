@@ -41,6 +41,7 @@ export default function UserForm(props){
             <option></option>
             <option value="admin">Admin</option>
             <option value="security_guard">Security Guard</option>
+            <option value="resident">Resident</option>
             <option value="contractor">Contractor</option>
           </Field>
           {errors.userType && touched.userType ? (
