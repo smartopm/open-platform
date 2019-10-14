@@ -5,12 +5,15 @@ import { QRCode } from "react-qr-svg";
 import Nav from '../components/Nav'
 import Loading from "../components/Loading.jsx";
 
+import Avatar from "../components/Avatar";
+
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`
 query User($id: ID!) {
   user(id: $id) {
     id
+    imageUrl
     userType
     expiresAt
     name
@@ -46,9 +49,10 @@ export function Component({ data }) {
       <Nav navName="Identify" menuButton="back" />
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
-          <div className="d-flex justify-content-center">
+          <div className="d-flex justify-content-center" style={{'margin-bottom':'1em'}}>
             <div className="member_type">{data.user.userType}</div>
           </div>
+          <Avatar imageURL={data.user.imageUrl} style='small' />
           <div className="d-flex justify-content-center">
             <h1>{ data.user.name }</h1>
           </div>
