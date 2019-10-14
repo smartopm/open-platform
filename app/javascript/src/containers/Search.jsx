@@ -54,17 +54,21 @@ function Results({data, loading, called}) {
   return false
 }
 
-export default () => {
+export default function SearchContainer() {
 
   function updateSearch(e) {
     const {value} = e.target
-    loadGQL()
-    setName(value)
+    setName(value || '')
+    if (value && value.length > 0) {
+      loadGQL({variables: { name:value }})
+    }
   }
 
   const [name, setName] = useState('')
-  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY, {variables: {name}});
-  if (error) return `Error! ${error}`;
+  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY);
+  if (error) {
+    return(<div>Error {error}</div>)
+  }
 
   return (
     <div className="container">
