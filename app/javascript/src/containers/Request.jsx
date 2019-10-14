@@ -74,7 +74,7 @@ export default function RequestFormContainer({match, history}) {
     displayName: 'RequestForm',
   })(Container);
   if (!isLoading && !result.id && !error) {
-    loadRecord({variables: {id: match.params.userId}})
+    loadRecord({variables: {id: match.params.id}})
   } else if (isLoading) {
     return (<Loading/>)
   } 
