@@ -62,7 +62,7 @@ export default function UserFormContainer({match, history}) {
       submitMutation(values).then(({data})=> {
         console.log(data)
         setSubmitting(false)
-        history.push(`/user/${data.mutation.user.id}`)
+        history.push(`/user/${data.result.user.id}`)
       }).catch((err)=>console.log(err))
     },
 

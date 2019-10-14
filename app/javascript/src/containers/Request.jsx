@@ -67,7 +67,7 @@ export default function RequestFormContainer({match, history}) {
     handleSubmit: (values, { setSubmitting }) => {
       submitMutation(values).then(({data})=> {
         setSubmitting(false)
-        history.push(`/id_verify/${data.result.id}`)
+        history.push(`/id_verify/${data.result.user.id}`)
       })
     },
 
