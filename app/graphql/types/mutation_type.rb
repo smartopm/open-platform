@@ -8,5 +8,6 @@ module Types
     field :user_update_pending, mutation: Mutations::User::UpdatePending
     field :user_create, mutation: Mutations::User::Create
     field :user_update, mutation: Mutations::User::Update
+    field :create_upload, mutation: Mutations::CreateUpload
   end
 end

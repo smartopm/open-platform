@@ -97,3 +97,25 @@ mutation UpdatePendingUserMutation(
 }
 ${UserFragment.publicFields}
 `;
+
+
+export const createUpload = gql`
+mutation CreateUpload(
+   $filename: String!,
+   $contentType: String!,
+   $checksum: String!,
+   $byteSize: Int!,
+) {
+ createUpload(input: {
+   filename: $filename
+   contentType: $contentType
+   checksum: $checksum,
+   byteSize: $byteSize,
+ }) {
+   upload {
+     signedBlobId
+   }
+ }
+}
+`
+
