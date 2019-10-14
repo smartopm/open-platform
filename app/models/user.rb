@@ -125,6 +125,13 @@ class User < ApplicationRecord
     # Send number via Nexmo
   end
 
+  def last_activity_at
+    return self[:last_activity_at] if self[:last_activity_at]
+    return activity_logs.last.created_at unless activity_logs.empty?
+
+    nil
+  end
+
   def verify_phone_token!(token)
     if phone_token == token
       return true if phone_token_expires_at > Time.zone.now

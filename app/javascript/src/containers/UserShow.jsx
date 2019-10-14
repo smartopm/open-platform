@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
@@ -11,28 +10,8 @@ import Status from "../components/StatusBadge";
 import Avatar from "../components/Avatar";
 import DateUtil from "../utils/dateutil.js";
 
-const QUERY = gql`
-query User($id: ID!) {
-  user(id: $id) {
-    id
-    userType
-    state
-    expiresAt
-    lastActivityAt
-    name
-    email
-    imageUrl
-  }
-}
-`;
-
-const LOG_ENTRY = gql`
-mutation ActivityLogMutation($userId: ID!, $note: String) {
-  activityLogAdd(userId: $userId, note: $note) {
-    id
-  }
-}
-`;
+import {UserQuery} from "../graphql/queries"
+import {AddActivityLog} from "../graphql/mutations"
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -45,8 +24,8 @@ function expiresAtStr(datetime) {
 export default ({match}) => {
   const id = match.params.id
   const authState = useContext(AuthStateContext)
-  const { loading, error, data } = useQuery(QUERY, {variables: {id}});
-  const [addLogEntry, entry] = useMutation(LOG_ENTRY, {variables: {userId: id}});
+  const { loading, error, data } = useQuery(UserQuery, {variables: {id}});
+  const [addLogEntry, entry] = useMutation(AddActivityLog, {variables: {userId: id}});
   if (loading || entry.loading) return <Loading />;
   if (entry.data) return <Redirect to="/" />
   if (error) return `Error! ${error}`;

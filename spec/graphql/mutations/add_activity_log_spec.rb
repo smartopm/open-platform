@@ -13,7 +13,9 @@ RSpec.describe Mutations::ActivityLog::Add do
       <<~GQL
         mutation AddActivityLogMutation($userId: ID!, $note: String) {
           activityLogAdd(userId: $userId, note: $note) {
-            id
+            activityLog {
+              id
+            }
           }
         }
       GQL
@@ -27,7 +29,7 @@ RSpec.describe Mutations::ActivityLog::Add do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      expect(result.dig('data', 'activityLogAdd', 'id')).not_to be_nil
+      expect(result.dig('data', 'activityLogAdd', 'activityLog', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
 

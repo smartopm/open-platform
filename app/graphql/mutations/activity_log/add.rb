@@ -7,9 +7,8 @@ module Mutations
       argument :user_id, ID, required: true
       argument :note, String, required: false
 
-      field :id, ID, null: false
-      field :created_at, String, null: false
-      field :note, String, null: true
+      field :user, Types::UserType, null: true
+      field :activity_log, Types::ActivityLogType, null: true
 
       def resolve(user_id:, note: nil)
         user = ::User.find(user_id)
@@ -18,7 +17,7 @@ module Mutations
         act_log = user.activity_logs.new(reporting_user_id: context[:current_user].id,
                                          note: note)
 
-        return act_log if act_log.save
+        return { activity_log: act_log, user: user } if act_log.save
 
         raise GraphQL::ExecutionError, act_log.errors.full_messages
       end

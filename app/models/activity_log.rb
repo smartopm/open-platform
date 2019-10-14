@@ -7,6 +7,7 @@ class ActivityLog < ApplicationRecord
   belongs_to :reporting_user, class_name: 'User'
 
   before_validation :ensure_community_id
+  after_create :update_user
   validate :validate_reporter
 
   private
@@ -26,5 +27,9 @@ class ActivityLog < ApplicationRecord
     return if reporting_user.community_id == user.community_id
 
     errors.add(:reporting_user, 'Can only report users in your own community')
+  end
+
+  def update_user
+    user.update(last_activity_at: Time.zone.now)
   end
 end

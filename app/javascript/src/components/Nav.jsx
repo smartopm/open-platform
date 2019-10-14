@@ -10,12 +10,12 @@ export default withRouter(function Nav({children, menuButton, history, navName, 
   return(<Component {...{children, authState, menuButton, history, navName, backTo }}/>)
 })
 
-export function Component({children, authState, menuButton, navName, backTo}) {
+export function Component({children, authState, menuButton, navName, backTo, history}) {
 
   function backButtonOrMenu() {
     const to = backTo || '/'
     if (menuButton === 'back') {
-      return (<Link className={css(styles.buttonLeft)} to={to}><i className={`material-icons ${css(styles.icon)}`}>arrow_back</i></Link>)
+      return (<a href='#' className={css(styles.buttonLeft)} onClick={history.goBack}><i className={`material-icons ${css(styles.icon)}`}>arrow_back</i></a>)
     } else if (menuButton === 'cancel') {
       return (<Link className={css(styles.buttonLeft)} to={to}><i className={`material-icons ${css(styles.icon)}`}>clear</i></Link>)
     }
