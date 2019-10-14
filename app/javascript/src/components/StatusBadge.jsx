@@ -3,7 +3,6 @@ import { StyleSheet, css } from 'aphrodite';
 
 
 export default function StatusBadge({label}) {
-  console.log(label)
   switch(label.toLowerCase()) {
     case 'pending':
       return ( <p className={css(styles.badge, styles.statusBadgePending)}>{label}</p>)

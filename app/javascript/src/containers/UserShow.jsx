@@ -9,6 +9,7 @@ import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 import Nav from '../components/Nav'
 import Loading from "../components/Loading.jsx";
 import Status from "../components/StatusBadge";
+import Avatar from "../components/Avatar";
 import DateUtil from "../utils/dateutil.js";
 
 const QUERY = gql`
@@ -71,9 +72,7 @@ export function Component({ data, onLogEntry }) {
             <div className="d-flex justify-content-center">
               <div className="member_type">{data.user.userType}</div>
             </div>
-            <div className="d-flex justify-content-center">
-              <img src={avatarURL(data.user.imageUrl)} className={css(styles.avatar)} />
-            </div>
+            <Avatar imageURL={data.user.imageUrl} style='big' />
             <div className="d-flex justify-content-center">
               <h1>{data.user.name}</h1>
             </div>
