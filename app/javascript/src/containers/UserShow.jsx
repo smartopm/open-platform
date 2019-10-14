@@ -48,7 +48,7 @@ export default ({match}) => {
   const { loading, error, data } = useQuery(QUERY, {variables: {id}});
   const [addLogEntry, entry] = useMutation(LOG_ENTRY, {variables: {userId: id}});
   if (loading || entry.loading) return <Loading />;
-  if (entry.data) return <Redirect to="/scan" />
+  if (entry.data) return <Redirect to="/" />
   if (error) return `Error! ${error}`;
   return (<Component data={data} authState={authState} onLogEntry={addLogEntry}/>)
 }
