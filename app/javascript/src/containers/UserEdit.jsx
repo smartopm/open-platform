@@ -37,6 +37,7 @@ export default function UserFormContainer({match, history}) {
       name: result.name,
       email: result.email || '',
       phoneNumber: result.phoneNumber || '',
+      requestReason: result.requestReason || '',
       userType: result.userType,
       expiresAt: result.expiresAt || false,
       state: result.state,
@@ -69,17 +70,22 @@ export default function UserFormContainer({match, history}) {
     displayName: 'UserForm',
   })(Container);
   if (!isLoading && !result.id && !error) {
-    loadRecord({variables: {id: match.params.userId}})
+    loadRecord({variables: {id: match.params.id}})
   } else if (isLoading) {
     return (<Loading/>)
   } 
-  return (<FormContainer />)
+  return (<FormContainer id={result.id}/>)
 }
 
 export function Container(props) {
+  let title = "New User"
+  console.log(props)
+  if (props && props.id) {
+    title = "Editing User"
+  }
   return (
     <div>
-      <Nav navName="New Request" menuButton="cancel" />
+      <Nav navName={title} menuButton="cancel" />
       <UserForm {...props} />
     </div>
   )

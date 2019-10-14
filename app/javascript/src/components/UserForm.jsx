@@ -22,17 +22,24 @@ export default function UserForm(props){
           ) : null}
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">Email</label>
+          <label className="bmd-label-static" htmlFor="email">Email</label>
           <input className="form-control" type="text" onChange={handleChange} onBlur={handleBlur} value={values.email} name="email"/>
           {errors.email && touched.email ? (
             <div>{errors.email}</div>
           ) : null}
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">Phone Number</label>
+          <label className="bmd-label-static" htmlFor="phoneNumber">Phone Number</label>
           <input className="form-control" type="text" onChange={handleChange} onBlur={handleBlur} value={values.phoneNumber} name="phoneNumber"/>
           {errors.phoneNumber && touched.phoneNumber ? (
             <div>{errors.phoneNumber}</div>
+          ) : null}
+        </div>
+        <div className="form-group">
+          <label className="bmd-label-static" htmlFor="reason">Reason</label>
+          <input className="form-control" type="text" onChange={handleChange} onBlur={handleBlur} value={values.requestReason} name="requestReason"/>
+          {errors.requestReason && touched.requestReason ? (
+            <div>{errors.requestReason}</div>
           ) : null}
         </div>
         <div className="form-group">

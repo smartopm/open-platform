@@ -4,7 +4,6 @@ module Mutations
   module User
     # Create a new request/pending member
     class Create < BaseMutation
-      argument :id, ID, required: true
       argument :name, String, required: true
       argument :email, String, required: false
       argument :phone_number, String, required: false
@@ -16,9 +15,10 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
-        user = ::User.create(vals, community_id: context[:current_user].community_id)
+        user = ::User.new(vals)
+        user.community_id = context[:current_user].community_id
 
-        return { user: user } if user
+        return { user: user } if user.save
 
         raise GraphQL::ExecutionError, member.errors.full_messages
       end

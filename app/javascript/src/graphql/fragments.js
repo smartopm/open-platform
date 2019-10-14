@@ -5,6 +5,8 @@ export const UserFragment = {
     fragment UserFields on User {
       name
       userType
+      lastActivityAt
+      phoneNumber
       roleName
       vehicle
       requestReason

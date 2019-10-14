@@ -70,8 +70,8 @@ const App = () => {
               <Route path='/user/request' exact component={Request}/>
               <Route path='/user/new' exact component={UserEdit}/>
               <Route path='/user/:id' exact component={UserShow}/>
-              <Route path='/user/:userId/edit' exact component={UserEdit}/>
-              <Route path='/user/request/:userId' component={Request}/>
+              <Route path='/user/:id/edit' exact component={UserEdit}/>
+              <Route path='/user/request/:id' component={Request}/>
             </Switch>
           </LoggedInOnly>
         </Router>

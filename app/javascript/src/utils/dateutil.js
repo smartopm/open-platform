@@ -12,14 +12,14 @@ function dateToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }
-  return date.getFullYear() + '-' + (pad("00", date.getMonth() + 1)) + '-' + date.getDate()
+  return date.getFullYear() + '-' + (pad("00", date.getMonth() + 1)) + '-' + pad('00', date.getDate())
 }
 
 function dateTimeToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }
-  return date.getHours() + ':' + date.getMinutes()
+  return date.getHours() + ':' + pad('00', date.getMinutes())
 }
 
 
@@ -33,5 +33,6 @@ export default {
 
 // pad("00", "1") => "01"
 function pad(padStr, str) {
+  str = str.toString(10)
   return padStr.substring(0, padStr.length - str.length) + str
 }

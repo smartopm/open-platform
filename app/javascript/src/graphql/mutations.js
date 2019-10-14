@@ -98,7 +98,6 @@ mutation UpdatePendingUserMutation(
 ${UserFragment.publicFields}
 `;
 
-
 export const createUpload = gql`
 mutation CreateUpload(
    $filename: String!,
@@ -119,3 +118,13 @@ mutation CreateUpload(
 }
 `
 
+export const AddActivityLog = gql`
+mutation ActivityLogMutation($userId: ID!, $note: String) {
+  activityLogAdd(userId: $userId, note: $note) {
+    user {
+      ...UserFields
+    }
+  }
+}
+${UserFragment.publicFields}
+`;

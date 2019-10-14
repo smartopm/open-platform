@@ -6,6 +6,7 @@ import { StyleSheet, css } from 'aphrodite';
 
 import Loading from "../components/Loading.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
+import Avatar from "../components/Avatar.jsx";
 
 const QUERY = gql`
 query UserSearch($name: String!) {
@@ -26,9 +27,7 @@ function Results({data, loading, called}) {
     return users.map((user) =>
       <Link to={`/user/${user.id}`} key={user.id} className={css(styles.link)}>
         <div className='d-flex flex-row align-items-center py-2'>
-          <div className={`${css(styles.avatar)}`}>
-            <img src={user.imageUrl} className={css(styles.avatarImg)}/>
-          </div>
+          <Avatar imageURL={user.imageUrl} style='small' />
           <div className={`px-3 w-100`}>
               <h6 className={css(styles.title)}>{ user.name }</h6>
               <small className={css(styles.small)}> {user.roleName} </small>
@@ -47,24 +46,34 @@ function Results({data, loading, called}) {
   if (called && data) {
     return (
       <div className={`col-12 ${css(styles.results)}`}>
-        {memberList(data.userSearch)}
+        { data.userSearch.length > 0 ?
+          memberList(data.userSearch) :
+          <div>
+            <h4>No Results </h4>
+            <Link to='/user/request'>Create a new request</Link>
+          </div>
+        }
       </div>
       )
   }
   return false
 }
 
-export default () => {
+export default function SearchContainer() {
 
   function updateSearch(e) {
     const {value} = e.target
-    loadGQL()
-    setName(value)
+    setName(value || '')
+    if (value && value.length > 0) {
+      loadGQL({variables: { name:value }})
+    }
   }
 
   const [name, setName] = useState('')
-  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY, {variables: {name}});
-  if (error) return `Error! ${error}`;
+  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY);
+  if (error) {
+    return(<div>Error {error}</div>)
+  }
 
   return (
     <div className="container">
