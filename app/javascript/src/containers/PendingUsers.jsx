@@ -4,6 +4,7 @@ import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { StyleSheet, css } from 'aphrodite';
 
+import Nav from "../components/Nav.jsx";
 import Loading from "../components/Loading.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 
@@ -47,7 +48,10 @@ function Results({data, loading}) {
   if (data) {
     return (
       <div className={`col-12 ${css(styles.results)}`}>
-        {memberList(data.results)}
+        {(data.results && data.results.length > 0) ?
+          memberList(data.results) :
+          <h4>No Pending Users Found</h4>
+        }
       </div>
       )
   }
@@ -61,9 +65,12 @@ export default () => {
   console.log(data)
 
   return (
-    <div className="container">
-      <div className={`row justify-content-center ${css(styles.inputGroup)}`}>
-        <Results {...{data, loading}} />
+    <div>
+      <Nav navName="Pending Users" menuButton="cancel" />
+      <div className="container">
+        <div className={`row justify-content-center ${css(styles.inputGroup)}`}>
+          <Results {...{data, loading}} />
+        </div>
       </div>
     </div>
   );
