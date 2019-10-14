@@ -53,6 +53,14 @@ export default ({match}) => {
   return (<Component data={data} authState={authState} onLogEntry={addLogEntry}/>)
 }
 
+const avatarURL = (imageURL) => {
+  if (imageURL) {
+    return imageURL
+  } else {
+    return '/images/default_avatar.svg'
+  }
+}
+
 export function Component({ data, onLogEntry }) {
   return (
     <div>
@@ -64,7 +72,7 @@ export function Component({ data, onLogEntry }) {
               <div className="member_type">{data.user.userType}</div>
             </div>
             <div className="d-flex justify-content-center">
-              <img src={data.user.imageUrl} className={css(styles.avatar)} />
+              <img src={avatarURL(data.user.imageUrl)} className={css(styles.avatar)} />
             </div>
             <div className="d-flex justify-content-center">
               <h1>{data.user.name}</h1>
