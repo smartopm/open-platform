@@ -58,7 +58,7 @@ class GraphqlController < ApplicationController
 
   def nil_empty(params)
     params.transform_values do |v|
-      if v.is_a(String) && v.empty?
+      if v.is_a?(String) && v.empty?
         nil
       else
         v
