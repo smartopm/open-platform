@@ -28,6 +28,7 @@ export default function StatusBadge({imageURL, style='small'}) {
 const styles = StyleSheet.create({
   avatarSmall: {
     width: '50px',
+    height: '50px',
     borderRadius: '8px',
   },
   avatarBig: {

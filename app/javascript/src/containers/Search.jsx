@@ -46,7 +46,10 @@ function Results({data, loading, called}) {
   if (called && data) {
     return (
       <div className={`col-12 ${css(styles.results)}`}>
-        {memberList(data.userSearch)}
+        { data.userSearch.length > 0 ?
+          memberList(data.userSearch) :
+          <h4>No Results</h4>
+        }
       </div>
       )
   }

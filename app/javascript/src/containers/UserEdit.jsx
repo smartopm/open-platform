@@ -37,6 +37,7 @@ export default function UserFormContainer({match, history}) {
       name: result.name,
       email: result.email || '',
       phoneNumber: result.phoneNumber || '',
+      requestReason: result.requestReason || '',
       userType: result.userType,
       expiresAt: result.expiresAt || false,
       state: result.state,

@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { StyleSheet, css } from 'aphrodite';
 
 import {Context as AuthStateContext} from './Provider/AuthStateProvider.js';
 
@@ -54,14 +53,6 @@ export default ({match}) => {
   return (<Component data={data} authState={authState} onLogEntry={addLogEntry}/>)
 }
 
-const avatarURL = (imageURL) => {
-  if (imageURL) {
-    return imageURL
-  } else {
-    return '/images/default_avatar.svg'
-  }
-}
-
 export function Component({ data, onLogEntry }) {
   return (
     <div>
@@ -111,11 +102,3 @@ export function Component({ data, onLogEntry }) {
   </div>
   )
 }
-
-const styles = StyleSheet.create({
-  avatar: {
-    maxWidth: '200px',
-    maxHeight: '200px',
-    borderRadius: '8px',
-  },
-})
