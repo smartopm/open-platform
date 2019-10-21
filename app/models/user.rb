@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO: @mdp break this class up
+# rubocop:disable ClassLength
+
 # User should encompass all users of the system
 # Citizens
 # City Administrators
@@ -37,6 +40,15 @@ class User < ApplicationRecord
     expires: ->(auth) { auth.credentials.expires },
     expires_at: ->(auth) { Time.zone.at(auth.credentials.expires_at).utc.to_datetime },
     refresh_token: ->(auth) { auth.credentials.refresh_token },
+  }.freeze
+
+  ROLE_PRIVILEGES = {
+    avatar_rw: ->(user) { %w[security_guard admin].includes(user.user_type) },
+  }.freeze
+
+  ALLOWED_PARAMS_FOR_ROLES = {
+    admin: {}, # Everything
+    security_guard: { except: %i[state user_type] },
   }.freeze
 
   def self.from_omniauth(auth)
@@ -141,3 +153,4 @@ class User < ApplicationRecord
     raise PhoneTokenResultInvalid
   end
 end
+# rubocop:enable ClassLength

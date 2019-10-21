@@ -64,7 +64,7 @@ mutation CreatePendingUserMutation(
     $requestReason: String!,
     $vehicle: String
   ) {
-  result: userCreatePending(
+  result: userCreate(
       name: $name,
       requestReason: $requestReason,
       vehicle: $vehicle,
@@ -84,7 +84,7 @@ mutation UpdatePendingUserMutation(
     $requestReason: String!,
     $vehicle: String
   ) {
-  result: userUpdatePending(
+  result: userUpdate(
       id: $id,
       name: $name,
       requestReason: $requestReason,
