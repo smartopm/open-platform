@@ -63,4 +63,8 @@ Rails.application.configure do
   config.hosts << "dev.dgdp.site"
   config.hosts << "vpn.dgdp.site"  # For external (phone) testing, will point to 10.133.7.1
 
+  config.action_mailer.default_url_options = { host: 'test.com' }
+
+  Rails.application.routes.default_url_options[:host] = 'test.com'
+
 end

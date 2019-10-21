@@ -11,8 +11,14 @@ module Mutations
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
+      argument :avatar_blob_id, String, required: false
 
       field :user, Types::UserType, null: true
+
+      ALLOWED_PARAMS_FOR_ROLES = {
+        admin: {}, # Everything
+        security_guard: { except: %i[state user_type] },
+      }.freeze
 
       def resolve(vals)
         user = ::User.new(vals)
@@ -20,12 +26,13 @@ module Mutations
 
         return { user: user } if user.save
 
-        raise GraphQL::ExecutionError, member.errors.full_messages
+        raise GraphQL::ExecutionError, user.errors.full_messages
       end
 
-      def authorized?(_vars)
+      def authorized?(vals)
+        check_params(ALLOWED_PARAMS_FOR_ROLES, vals)
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.admin?
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
 
         true
       end

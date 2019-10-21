@@ -64,7 +64,7 @@ mutation CreatePendingUserMutation(
     $requestReason: String!,
     $vehicle: String
   ) {
-  result: userCreatePending(
+  result: userCreate(
       name: $name,
       requestReason: $requestReason,
       vehicle: $vehicle,
@@ -84,7 +84,7 @@ mutation UpdatePendingUserMutation(
     $requestReason: String!,
     $vehicle: String
   ) {
-  result: userUpdatePending(
+  result: userUpdate(
       id: $id,
       name: $name,
       requestReason: $requestReason,
@@ -97,6 +97,26 @@ mutation UpdatePendingUserMutation(
 }
 ${UserFragment.publicFields}
 `;
+
+export const createUpload = gql`
+mutation CreateUpload(
+   $filename: String!,
+   $contentType: String!,
+   $checksum: String!,
+   $byteSize: Int!,
+) {
+ createUpload(input: {
+   filename: $filename
+   contentType: $contentType
+   checksum: $checksum,
+   byteSize: $byteSize,
+ }) {
+   upload {
+     signedBlobId
+   }
+ }
+}
+`
 
 export const AddActivityLog = gql`
 mutation ActivityLogMutation($userId: ID!, $note: String) {
