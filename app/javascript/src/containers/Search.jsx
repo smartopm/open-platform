@@ -48,8 +48,8 @@ function Results({ data, loading, called }) {
         {data.userSearch.length > 0 ? (
           memberList(data.userSearch)
         ) : (
-          <div>
-            <h4>No Results </h4>
+          <div className={`${css(styles.noResults)}`}>
+            <h4>No results found!</h4>
             <Link to="/user/request">Create a new request</Link>
           </div>
         )}
@@ -164,5 +164,9 @@ const styles = StyleSheet.create({
     right: 5,
     width: 24,
     height: 35
+  },
+  noResults: {
+    margin: "4em 0",
+    textAlign: "center"
   }
 });
