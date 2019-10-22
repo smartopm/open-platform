@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     height: "30px",
     color: "#222",
     border: "none",
+    borderRadius: "5px",
     backgroundImage: "none",
     backgroundColor: "#FFF",
     "::placeholder": {
