@@ -12,6 +12,7 @@ module Mutations
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
+      argument :avatar_blob_id, String, required: false
 
       field :user, Types::UserType, null: true
 
@@ -24,11 +25,11 @@ module Mutations
         raise GraphQL::ExecutionError, member.errors.full_messages
       end
 
-      def authorized?(vars)
-        user_record = ::User.find(vars[:id])
+      def authorized?(vals)
+        check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
+        user_record = ::User.find(vals[:id])
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.admin? &&
-                                                             user_record.community_id ==
+        raise GraphQL::ExecutionError, 'Unauthorized' unless user_record.community_id ==
                                                              current_user.community_id
 
         true
