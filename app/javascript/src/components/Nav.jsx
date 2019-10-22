@@ -76,7 +76,11 @@ export function Component({
         </Link>
       );
     }
-    return "Community";
+    return (
+      <Link to="/">
+        <img src={logoUrl} className={css(styles.logo)} />
+      </Link>
+    );
   }
 
   return (
