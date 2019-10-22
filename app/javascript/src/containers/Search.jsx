@@ -88,6 +88,7 @@ export default function SearchContainer() {
         <Link to="/" className={css(styles.cancelBtn)}>
           <i className="material-icons">arrow_back</i>
         </Link>
+        <i className={`material-icons ${css(styles.scanIcon)}`}>crop_free</i>
 
         {name.length > 0 && <Results {...{ data, loading, called }} />}
       </div>
@@ -157,4 +158,11 @@ const styles = StyleSheet.create({
     bottom: "4px",
     "z-index": 9
   },
+  scanIcon: {
+    position: "absolute",
+    bottom: 0,
+    right: 5,
+    width: 24,
+    height: 35
+  }
 });
