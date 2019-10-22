@@ -37,4 +37,6 @@ yarn-debug.log*
 /config/credentials/development.key
 /certs/dev.dgdp.site/privkey.pem
 /certs/vpn.dgdp.site/privkey.pem
-.DS_Store
+**/.DS_Store
+
+.env.*.local
