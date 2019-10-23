@@ -88,7 +88,9 @@ export default function SearchContainer() {
         <Link to="/" className={css(styles.cancelBtn)}>
           <i className="material-icons">arrow_back</i>
         </Link>
-        <i className={`material-icons ${css(styles.scanIcon)}`}>crop_free</i>
+        <Link to="/scan">
+          <i className={`material-icons ${css(styles.scanIcon)}`}>crop_free</i>
+        </Link>
 
         {name.length > 0 && <Results {...{ data, loading, called }} />}
       </div>

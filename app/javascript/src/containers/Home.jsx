@@ -34,7 +34,11 @@ export function Component({ authState }) {
             placeholder="Search"
           />
           <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
-          <i className={`material-icons ${css(styles.scanIcon)}`}>crop_free</i>
+          <Link to="/scan">
+            <i className={`material-icons ${css(styles.scanIcon)}`}>
+              crop_free
+            </i>
+          </Link>
         </div>
       </Nav>
       <div className="container">

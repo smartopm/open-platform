@@ -1,21 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
-
+import Avatar from "@material-ui/core/Avatar";
+import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
+import Drawer from "@material-ui/core/Drawer";
+import { SideList } from "./SideList.jsx";
 
 export default withRouter(function Nav({
   children,
   menuButton,
   history,
   navName,
-  backTo
+  backTo,
+  handleSubmit
 }) {
   const authState = useContext(AuthStateContext);
   return (
     <Component
-      {...{ children, authState, menuButton, history, navName, backTo }}
+      {...{
+        children,
+        authState,
+        menuButton,
+        history,
+        navName,
+        backTo,
+        handleSubmit
+      }}
     />
   );
 });
@@ -26,8 +38,11 @@ export function Component({
   menuButton,
   navName,
   backTo,
-  history
+  history,
+  handleSubmit
 }) {
+  const [state, setState] = React.useState(false);
+
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
@@ -42,19 +57,32 @@ export function Component({
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </Link>
       );
+    } else if (menuButton === "edit") {
+      return (
+        <Fragment>
+          <Link className={css(styles.buttonLeft)} to={to}>
+            <i className={`material-icons ${css(styles.icon)}`}>clear</i>
+          </Link>
+          <span onClick={handleSubmit}>
+            <i className={`material-icons ${css(styles.rightSideIcon)}`}>
+              check
+            </i>
+          </span>
+        </Fragment>
+      );
     }
     return (
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
+      <Fragment>
+        <Avatar
+          alt="Default Avatar"
+          onClick={toggleDrawer}
+          className={`${css(styles.userAvatar)}`}
+          src="/images/default_avatar.svg"
+        />
+        <NotificationsNoneOutlinedIcon
+          className={`${css(styles.rightSideIcon)}`}
+        />
+      </Fragment>
     );
   }
 
@@ -82,43 +110,37 @@ export function Component({
       </Link>
     );
   }
+  const toggleDrawer = event => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setState(!state);
+  };
 
   return (
-    <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
-      <div className={css(styles.topNav)}>
-        {backButtonOrMenu()}
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li className="nav-item active">
-              <a className="nav-link" href="#">
-                Home <span className="sr-only">(current)</span>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Link
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link disabled" href="#">
-                Disabled
-              </a>
-            </li>
+    <>
+      <Drawer open={state} onClose={toggleDrawer}>
+        <SideList toggleDrawer={toggleDrawer} name={authState.user.name} />
+      </Drawer>
+      <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
+        <div className={css(styles.topNav)}>
+          {backButtonOrMenu()}
+          <ul
+            className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
+            style={{ margin: "auto" }}
+          >
+            <li>{navName ? navName : communityName()}</li>
           </ul>
         </div>
 
-        <ul
-          className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
-          style={{ margin: "auto" }}
-        >
-          <li>{navName ? navName : communityName()}</li>
-        </ul>
-      </div>
-
-      <div className="nav navbar-nav" style={{ width: "100%" }}>
-        {children}
-      </div>
-    </nav>
+        <div className="nav navbar-nav" style={{ width: "100%" }}>
+          {children}
+        </div>
+      </nav>
+    </>
   );
 }
 
@@ -147,5 +169,20 @@ const styles = StyleSheet.create({
   },
   icon: {
     lineHeight: "1.7em"
+  },
+  userAvatar: {
+    width: 30,
+    height: 30,
+    color: "#FFF"
+  },
+  rightSideIcon: {
+    position: "absolute",
+    bottom: 0,
+    right: 5,
+    height: 30,
+    color: "#FFF",
+    ":hover": {
+      cursor: "pointer"
+    }
   }
 });
