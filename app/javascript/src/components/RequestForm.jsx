@@ -10,7 +10,6 @@ export default function RequestForm(props) {
     handleChange,
     handleBlur,
     handleSubmit,
-    isSubmitting,
     errors,
     touched
   } = props;
@@ -65,7 +64,9 @@ export default function RequestForm(props) {
               </MenuItem>
             ))}
           </TextField>
-          {errors.requestReason ? <div>{errors.requestReason}</div> : null}
+          {errors.requestReason && touched.requestReason ? (
+            <div>{errors.requestReason}</div>
+          ) : null}
         </div>
       </form>
     </div>
