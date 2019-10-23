@@ -5,7 +5,6 @@ import Avatar from "@material-ui/core/Avatar";
 import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
 import Drawer from "@material-ui/core/Drawer";
-import Button from "@material-ui/core/Button";
 import { SideList } from "./SideList.jsx";
 
 export default withRouter(function Nav({
@@ -31,6 +30,8 @@ export function Component({
   backTo,
   history
 }) {
+  const [state, setState] = React.useState(false);
+
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
@@ -80,7 +81,6 @@ export function Component({
       </Link>
     );
   }
-  const [state, setState] = React.useState(false);
   const toggleDrawer = event => {
     if (
       event.type === "keydown" &&
@@ -88,14 +88,13 @@ export function Component({
     ) {
       return;
     }
-
     setState(!state);
   };
 
   return (
     <>
       <Drawer open={state} onClose={toggleDrawer}>
-        <SideList toggleDrawer={toggleDrawer} />
+        <SideList toggleDrawer={toggleDrawer} name={authState.user.name} />
       </Drawer>
       <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
         <div className={css(styles.topNav)}>

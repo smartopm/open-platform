@@ -2,8 +2,7 @@ import React from "react";
 import { StyleSheet, css } from "aphrodite";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-
-const reasons = ["Visiting", "Residing", "Working", "Passing through", "Other"];
+import { reasons } from "../utils/constants";
 
 export default function RequestForm(props) {
   const {

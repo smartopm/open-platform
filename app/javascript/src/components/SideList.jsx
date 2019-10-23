@@ -7,21 +7,25 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleIcon from "@material-ui/icons/People";
 import CropFreeIcon from "@material-ui/icons/CropFree";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import SettingsIcon from "@material-ui/icons/Settings";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import HelpIcon from "@material-ui/icons/Help";
 import { StyleSheet, css } from "aphrodite";
 import StatusBadge from "./Avatar.jsx";
 
-export const SideList = ({ toggleDrawer }) => (
+export const SideList = ({ toggleDrawer, name }) => (
   <div
     role="presentation"
     onClick={toggleDrawer}
     className={`${css(styles.sidenav)}`}
     onKeyDown={toggleDrawer}
   >
-    <StatusBadge />
+    <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
+      <StatusBadge />
+      <h5>{name}</h5>
+      <p>P34534534534</p>
+    </div>
     <Divider />
     <List>
       <ListItem button>
@@ -38,7 +42,7 @@ export const SideList = ({ toggleDrawer }) => (
       </ListItem>
       <ListItem button>
         <ListItemIcon>
-          <NotificationsNoneIcon />
+          <NotificationsIcon />
         </ListItemIcon>
         <ListItemText primary="Notification" />
       </ListItem>
@@ -65,11 +69,15 @@ export const SideList = ({ toggleDrawer }) => (
 );
 
 SideList.propTypes = {
-  toggleDrawer: PropTypes.func.isRequired
+  toggleDrawer: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired
 };
 
 const styles = StyleSheet.create({
   sidenav: {
     width: 300
+  },
+  userInfo: {
+    marginTop: 55
   }
 });
