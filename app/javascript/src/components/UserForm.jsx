@@ -10,7 +10,6 @@ export default function UserForm(props) {
     handleChange,
     handleBlur,
     handleSubmit,
-    isSubmitting,
     errors,
     touched
   } = props;
@@ -121,10 +120,6 @@ export default function UserForm(props) {
           </TextField>
           {errors.state && touched.state ? <div>{errors.state}</div> : null}
         </div>
-
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </button>
       </form>
     </div>
   );
