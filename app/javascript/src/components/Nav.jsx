@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
-
+import Avatar from "@material-ui/core/Avatar";
 import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
+import Drawer from "@material-ui/core/Drawer";
+import Button from "@material-ui/core/Button";
+import { SideList } from "./SideList.jsx";
 
 export default withRouter(function Nav({
   children,
@@ -44,17 +47,12 @@ export function Component({
       );
     }
     return (
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
+      <Avatar
+        alt="Default Avatar"
+        onClick={toggleDrawer}
+        className={`${css(styles.userAvatar)}`}
+        src="/images/default_avatar.svg"
+      />
     );
   }
 
@@ -82,43 +80,59 @@ export function Component({
       </Link>
     );
   }
+  const [state, setState] = React.useState(false);
+  const toggleDrawer = event => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState(!state);
+  };
 
   return (
-    <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
-      <div className={css(styles.topNav)}>
-        {backButtonOrMenu()}
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li className="nav-item active">
-              <a className="nav-link" href="#">
-                Home <span className="sr-only">(current)</span>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Link
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link disabled" href="#">
-                Disabled
-              </a>
-            </li>
+    <>
+      <Drawer open={state} onClose={toggleDrawer}>
+        <SideList toggleDrawer={toggleDrawer}/>
+      </Drawer>
+      <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
+        <div className={css(styles.topNav)}>
+          {backButtonOrMenu()}
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+              <li className="nav-item active">
+                <a className="nav-link" href="#">
+                  Home <span className="sr-only">(current)</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  Link
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link disabled" href="#">
+                  Disabled
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <ul
+            className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
+            style={{ margin: "auto" }}
+          >
+            <li>{navName ? navName : communityName()}</li>
           </ul>
         </div>
 
-        <ul
-          className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
-          style={{ margin: "auto" }}
-        >
-          <li>{navName ? navName : communityName()}</li>
-        </ul>
-      </div>
-
-      <div className="nav navbar-nav" style={{ width: "100%" }}>
-        {children}
-      </div>
-    </nav>
+        <div className="nav navbar-nav" style={{ width: "100%" }}>
+          {children}
+        </div>
+      </nav>
+    </>
   );
 }
 
@@ -147,5 +161,10 @@ const styles = StyleSheet.create({
   },
   icon: {
     lineHeight: "1.7em"
+  },
+  userAvatar: {
+    width: 30,
+    height: 30,
+    color: "#FFF"
   }
 });
