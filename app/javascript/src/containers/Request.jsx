@@ -87,7 +87,11 @@ export default function RequestFormContainer({ match, history }) {
 export function Container(props) {
   return (
     <div>
-      <Nav navName="New Request" menuButton="cancel" />
+      <Nav
+        navName="New Request"
+        menuButton="edit"
+        handleSubmit={props.handleSubmit}
+      />
       <RequestForm {...props} />
     </div>
   );

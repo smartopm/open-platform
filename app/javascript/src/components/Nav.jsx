@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import Avatar from "@material-ui/core/Avatar";
@@ -12,12 +12,21 @@ export default withRouter(function Nav({
   menuButton,
   history,
   navName,
-  backTo
+  backTo,
+  handleSubmit
 }) {
   const authState = useContext(AuthStateContext);
   return (
     <Component
-      {...{ children, authState, menuButton, history, navName, backTo }}
+      {...{
+        children,
+        authState,
+        menuButton,
+        history,
+        navName,
+        backTo,
+        handleSubmit
+      }}
     />
   );
 });
@@ -28,7 +37,8 @@ export function Component({
   menuButton,
   navName,
   backTo,
-  history
+  history,
+  handleSubmit
 }) {
   const [state, setState] = React.useState(false);
 
@@ -45,6 +55,17 @@ export function Component({
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </Link>
+      );
+    } else if (menuButton === "edit") {
+      return (
+        <Fragment>
+          <Link className={css(styles.buttonLeft)} to={to}>
+            <i className={`material-icons ${css(styles.icon)}`}>clear</i>
+          </Link>
+          <span onClick={handleSubmit}>
+            <i className={`material-icons ${css(styles.checkIcon)}`}>check</i>
+          </span>
+        </Fragment>
       );
     }
     return (
@@ -165,5 +186,15 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     color: "#FFF"
+  },
+  checkIcon: {
+    position: "absolute",
+    bottom: 0,
+    right: 5,
+    height: 35,
+    color: "#FFF",
+    ":hover": {
+      cursor: "pointer"
+    }
   }
 });

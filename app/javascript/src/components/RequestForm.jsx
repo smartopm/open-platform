@@ -67,10 +67,6 @@ export default function RequestForm(props) {
           </TextField>
           {errors.requestReason ? <div>{errors.requestReason}</div> : null}
         </div>
-
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </button>
       </form>
     </div>
   );
