@@ -95,7 +95,7 @@ export function Component({
   return (
     <>
       <Drawer open={state} onClose={toggleDrawer}>
-        <SideList toggleDrawer={toggleDrawer}/>
+        <SideList toggleDrawer={toggleDrawer} />
       </Drawer>
       <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
         <div className={css(styles.topNav)}>

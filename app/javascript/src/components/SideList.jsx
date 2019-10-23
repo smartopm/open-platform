@@ -11,10 +11,16 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import SettingsIcon from "@material-ui/icons/Settings";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import HelpIcon from "@material-ui/icons/Help";
+import { StyleSheet, css } from "aphrodite";
 import StatusBadge from "./Avatar.jsx";
 
 export const SideList = ({ toggleDrawer }) => (
-  <div role="presentation" onClick={toggleDrawer} onKeyDown={toggleDrawer}>
+  <div
+    role="presentation"
+    onClick={toggleDrawer}
+    className={`${css(styles.sidenav)}`}
+    onKeyDown={toggleDrawer}
+  >
     <StatusBadge />
     <Divider />
     <List>
@@ -61,3 +67,9 @@ export const SideList = ({ toggleDrawer }) => (
 SideList.propTypes = {
   toggleDrawer: PropTypes.func.isRequired
 };
+
+const styles = StyleSheet.create({
+  sidenav: {
+    width: 300
+  }
+});
