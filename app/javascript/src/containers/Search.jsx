@@ -9,16 +9,17 @@ import StatusBadge from "../components/StatusBadge.jsx";
 import Avatar from "../components/Avatar.jsx";
 
 const QUERY = gql`
-  query UserSearch($name: String!) {
-    userSearch(name: $name) {
-      id
-      userType
-      name
-      state
-      roleName
-      imageUrl
-    }
+query UserSearch($name: String!) {
+  userSearch(name: $name) {
+    id
+    userType
+    name
+    state
+    roleName
+    imageUrl
+    avatarUrl
   }
+}
 `;
 
 function Results({ data, loading, called }) {
@@ -26,7 +27,7 @@ function Results({ data, loading, called }) {
     return users.map(user => (
       <Link to={`/user/${user.id}`} key={user.id} className={css(styles.link)}>
         <div className="d-flex flex-row align-items-center py-2">
-          <Avatar imageURL={user.imageUrl} style="small" />
+          <Avatar user={user} style='small' />
           <div className={`px-3 w-100`}>
             <h6 className={css(styles.title)}>{user.name}</h6>
             <small className={css(styles.small)}> {user.roleName} </small>

@@ -2,6 +2,17 @@ require_relative 'boot'
 
 require 'rails/all'
 
+ROOT_PATH ||= File.expand_path('../.', __dir__)
+
+# Load local .env files for development
+# https://github.com/bkeepers/dotenv
+require 'dotenv'
+if Rails.env.development?
+  Dotenv.load("#{ROOT_PATH}/.env.development.local", "#{ROOT_PATH}.env")
+elsif Rails.env.test?
+  Dotenv.load("#{ROOT_PATH}/.env.test.local", "#{ROOT_PATH}.env")
+end
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)

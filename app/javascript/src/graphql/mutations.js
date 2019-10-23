@@ -98,7 +98,7 @@ mutation UpdatePendingUserMutation(
 ${UserFragment.publicFields}
 `;
 
-export const createUpload = gql`
+export const CreateUpload = gql`
 mutation CreateUpload(
    $filename: String!,
    $contentType: String!,
@@ -111,11 +111,31 @@ mutation CreateUpload(
    checksum: $checksum,
    byteSize: $byteSize,
  }) {
-   upload {
+   attachment {
+     url
+     headers
+     blobId
      signedBlobId
    }
  }
 }
+`
+
+export const AttachAvatar = gql`
+mutation AttachAvatar(
+   $id: ID!,
+   $signedBlobId: String!,
+) {
+  userUpdate(
+    id: $id,
+    avatarBlobId: $signedBlobId
+  ) {
+    user {
+      ...UserFields
+    }
+  }
+}
+${UserFragment.publicFields}
 `
 
 export const AddActivityLog = gql`

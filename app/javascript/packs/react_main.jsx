@@ -8,12 +8,12 @@ import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-d
 import ApolloProvider from '../src/containers/Provider/ApolloProvider';
 import AuthStateProvider, {Context as AuthStateContext} from '../src/containers/Provider/AuthStateProvider';
 import Home from '../src/containers/Home';
-import UserShow from '../src/containers/UserShow';
-import IDCard from '../src/containers/IdCard';
+import UserShow from '../src/containers/UserShow'; import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/containers/EntryLogs';
 import Search from '../src/containers/Search';
 import Request from '../src/containers/Request';
 import UserEdit from '../src/containers/UserEdit';
+import Upload from '../src/containers/UploadTest';
 import PendingUsers from '../src/containers/PendingUsers';
 import Loading from "../src/components/Loading.jsx";
 
@@ -70,6 +70,7 @@ const App = () => {
               <Route path='/user/request' exact component={Request}/>
               <Route path='/user/new' exact component={UserEdit}/>
               <Route path='/user/:id' exact component={UserShow}/>
+              <Route path='/user/:id/avatar' component={Upload}/>
               <Route path='/user/:id/edit' exact component={UserEdit}/>
               <Route path='/user/request/:id' component={Request}/>
             </Switch>

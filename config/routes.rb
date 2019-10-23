@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   resources :activity_logs, only: [:show, :create]
 
   get 'hold', to: 'home#hold'
-  get '*path', to: 'home#react'
+  get '*path', to: 'home#react', constraints: lambda { |req|
+    req.path.exclude? 'rails/active_storage'
+  }
   root 'home#react'
 end

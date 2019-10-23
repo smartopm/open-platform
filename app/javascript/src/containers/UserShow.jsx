@@ -42,7 +42,7 @@ export function Component({ data, onLogEntry }) {
             <div className="d-flex justify-content-center">
               <div className="member_type">{data.user.userType}</div>
             </div>
-            <Avatar imageURL={data.user.imageUrl} style='big' />
+            <Avatar user={data.user} style='big' />
             <div className="d-flex justify-content-center">
               <h1>{data.user.name}</h1>
             </div>

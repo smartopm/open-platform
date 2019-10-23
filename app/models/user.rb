@@ -12,6 +12,8 @@ class User < ApplicationRecord
   belongs_to :community, optional: true
   has_many :activity_logs, dependent: :destroy
 
+  has_one_attached :avatar
+
   VALID_USER_TYPES = %w[security_guard admin resident contractor].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
 

@@ -18,6 +18,7 @@ module Mutations
 
       def resolve(vals)
         user = ::User.find(vals.delete(:id))
+        user.avatar.attach(vals.delete(:avatar_blob_id)) if vals[:avatar_blob_id]
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
         return { user: user } if user.update(vals)

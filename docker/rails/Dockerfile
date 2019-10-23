@@ -5,14 +5,16 @@ RUN apt-get update && apt-get install -y nodejs
 # Needed for PDF preview. In Heroku is available with
 # `heroku buildpacks:add -i 1 https://github.com/heroku/heroku-buildpack-activestorage-preview`
 RUN apt-get install -y vim nano
-RUN npm i -g yarn && yarn
+RUN npm i -g yarn@1.19.1
 
 RUN mkdir /myapp
 WORKDIR /myapp
 
+# Install all the gems needed
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
+
 COPY . /myapp
 
 # Add a script to be executed every time the container starts.

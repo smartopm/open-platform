@@ -14,6 +14,7 @@ export const UserFragment = {
       state
       expiresAt
       email
+      avatarUrl
     }
   `,
 }

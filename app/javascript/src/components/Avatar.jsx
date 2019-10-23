@@ -1,25 +1,29 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 
-const avatarURL = (imageURL) => {
+const avatarURL = ({imageURL, user}) => {
   if (imageURL) {
     return imageURL
+  } else if(user && user.avatarUrl) {
+    return  user.avatarUrl
+  } else if(user && user.imageUrl) {
+    return  user.imageUrl
   } else {
     return '/images/default_avatar.svg'
   }
 }
 
-export default function StatusBadge({imageURL, style='small'}) {
+export default function StatusBadge({imageURL, user, style='small'}) {
   if (style === 'big') {
     return(
       <div className="d-flex justify-content-center">
-        <img src={avatarURL(imageURL)} className={css(styles.avatarBig)} />
+        <img src={avatarURL({imageURL, user})} className={css(styles.avatarBig)} />
       </div>
       )
   } else {
     return(
       <div className="d-flex justify-content-center">
-        <img src={avatarURL(imageURL)} className={css(styles.avatarSmall)} />
+        <img src={avatarURL({imageURL, user})} className={css(styles.avatarSmall)} />
       </div>
       )
   }
