@@ -19,5 +19,13 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :avatar_url, String, null: true
+
+    def avatar_url
+      return nil unless object.avatar.attached?
+
+      Rails.application.routes.url_helpers
+           .rails_blob_url(object.avatar)
+    end
   end
 end

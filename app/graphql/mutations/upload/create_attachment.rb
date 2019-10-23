@@ -33,7 +33,7 @@ module Mutations
       field :attachment, Attachment, null: false
 
       def resolve(input:)
-        ActiveStorage::Current.host = 'dev.dgdp.site'
+        set_host
         blob = ActiveStorage::Blob.create_before_direct_upload!(input.to_h)
 
         {
@@ -52,6 +52,13 @@ module Mutations
         raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
 
         true
+      end
+
+      private
+
+      def set_host
+        ActiveStorage::Current.host = Rails.application.routes.default_url_options[:protocol] +
+                                      '://' + Rails.application.routes.default_url_options[:host]
       end
     end
   end

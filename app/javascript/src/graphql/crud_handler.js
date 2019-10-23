@@ -13,7 +13,6 @@ export default ({createMutation, readLazyQuery, updateMutation, typeName}) => {
   } else if (returnedData && returnedData[typeName]) {
     result = returnedData[typeName]
   }
-  console.log(result)
   const error = updateError || createError || queryError
   const isNewRecord = !result.id
 

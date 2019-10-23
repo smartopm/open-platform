@@ -1,6 +1,5 @@
-import React from "react";
-import { useQuery } from "react-apollo";
-import gql from "graphql-tag";
+import React from 'react';
+import { useQuery } from 'react-apollo';
 import { QRCode } from "react-qr-svg";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
@@ -9,18 +8,7 @@ import Avatar from "../components/Avatar";
 
 import DateUtil from "../utils/dateutil.js";
 
-const QUERY = gql`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      imageUrl
-      userType
-      expiresAt
-      name
-      email
-    }
-  }
-`;
+import {UserQuery} from "../graphql/queries"
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -43,8 +31,9 @@ function qrCodeAddress(id_card_token) {
 }
 
 export default ({ match }) => {
-  let id = match.params.id;
-  const { loading, error, data } = useQuery(QUERY, { variables: { id } });
+  let id = match.params.id
+  const { loading, error, data } = useQuery(UserQuery, {variables: {id}});
+
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
@@ -63,7 +52,7 @@ export function Component({ data }) {
           >
             <div className="member_type">{data.user.userType}</div>
           </div>
-          <Avatar imageURL={data.user.imageUrl} style="small" />
+          <Avatar user={data.user} style='small' />
           <div className="d-flex justify-content-center">
             <h1>{data.user.name}</h1>
           </div>
