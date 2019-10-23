@@ -2,6 +2,7 @@ import React, { useContext, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import Avatar from "@material-ui/core/Avatar";
+import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
 import Drawer from "@material-ui/core/Drawer";
@@ -63,18 +64,25 @@ export function Component({
             <i className={`material-icons ${css(styles.icon)}`}>clear</i>
           </Link>
           <span onClick={handleSubmit}>
-            <i className={`material-icons ${css(styles.checkIcon)}`}>check</i>
+            <i className={`material-icons ${css(styles.rightSideIcon)}`}>
+              check
+            </i>
           </span>
         </Fragment>
       );
     }
     return (
-      <Avatar
-        alt="Default Avatar"
-        onClick={toggleDrawer}
-        className={`${css(styles.userAvatar)}`}
-        src="/images/default_avatar.svg"
-      />
+      <Fragment>
+        <Avatar
+          alt="Default Avatar"
+          onClick={toggleDrawer}
+          className={`${css(styles.userAvatar)}`}
+          src="/images/default_avatar.svg"
+        />
+        <NotificationsNoneOutlinedIcon
+          className={`${css(styles.rightSideIcon)}`}
+        />
+      </Fragment>
     );
   }
 
@@ -167,11 +175,11 @@ const styles = StyleSheet.create({
     height: 30,
     color: "#FFF"
   },
-  checkIcon: {
+  rightSideIcon: {
     position: "absolute",
     bottom: 0,
     right: 5,
-    height: 35,
+    height: 30,
     color: "#FFF",
     ":hover": {
       cursor: "pointer"
