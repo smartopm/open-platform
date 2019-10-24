@@ -11,15 +11,20 @@ import Nav from '../components/Nav'
 export default function UploadTest({match}){
   const authState = useContext(AuthStateContext)
   const {onChange, status} = useFileUpload({updateGQL: AttachAvatar, id: match.params.id, client: useApolloClient()})
-  console.log(status)
-  console.log(onChange)
   if (status == 'DONE') {
     return (<Redirect to={`/user/${match.params.id}`} />)
   }
-  return (<Component authState={authState} onChange={onChange} />)
+  return (<Component authState={authState} onChange={onChange} status={status} />)
 }
 
-export function Component({onChange}) {
+function Status({status}) {
+  if (status != 'INIT') {
+    return <p>{status}</p>;
+  }
+  return null;
+}
+
+export function Component({onChange, status}) {
   return (
     <div>
       <Nav navName="Upload Avatar" menuButton="cancel" />
@@ -29,6 +34,7 @@ export function Component({onChange}) {
             <div>
               <label>Upload an image</label>
               <input type="file" accept="image/*" onChange={onChange} />
+              <Status status={status} />
             </div>
           </form>
         </div>
