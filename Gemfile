@@ -36,6 +36,9 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "nexmo", "~> 5.9"
 
+# For S3 file uploads in ActiveStorage
+gem "aws-sdk-s3", require: false
+
 # Oauth stuff
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem "devise", "~> 4.7"
