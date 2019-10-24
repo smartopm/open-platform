@@ -21,6 +21,8 @@ const QUERY = gql`
     name
     userType
     expiresAt
+    imageUrl
+    avatarUrl
     community {
       name
       logoUrl
@@ -42,11 +44,7 @@ export default function AuthStateProvider({children}) {
 
   const user = data.currentUser
   const state = {
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    },
+    user,
     loggedIn: true,
   }
 
