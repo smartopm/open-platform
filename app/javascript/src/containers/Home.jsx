@@ -51,7 +51,7 @@ export function Component({ authState }) {
                     <h5 className="card-title">
                       <i className="material-icons">perm_identity</i>
                     </h5>
-                    <p>Identify</p>
+                    <p>Identity</p>
                   </div>
                 </Link>
               </div>
