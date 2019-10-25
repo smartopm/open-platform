@@ -42,7 +42,6 @@ export function Component({
   handleSubmit
 }) {
   const [state, setState] = React.useState(false);
-
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
@@ -119,11 +118,14 @@ export function Component({
     }
     setState(!state);
   };
-
   return (
     <>
       <Drawer open={state} onClose={toggleDrawer}>
-        <SideList toggleDrawer={toggleDrawer} name={authState.user.name} />
+        <SideList
+          toggleDrawer={toggleDrawer}
+          name={authState.user.name}
+          phoneNumber={authState.user.phoneNumber}
+        />
       </Drawer>
       <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
         <div className={css(styles.topNav)}>

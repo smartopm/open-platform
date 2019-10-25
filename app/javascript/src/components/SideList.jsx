@@ -14,7 +14,7 @@ import HelpIcon from "@material-ui/icons/Help";
 import { StyleSheet, css } from "aphrodite";
 import StatusBadge from "./Avatar.jsx";
 
-export const SideList = ({ toggleDrawer, name }) => (
+export const SideList = ({ toggleDrawer, name, phoneNumber }) => (
   <div
     role="presentation"
     onClick={toggleDrawer}
@@ -24,7 +24,7 @@ export const SideList = ({ toggleDrawer, name }) => (
     <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
       <StatusBadge />
       <h5>{name}</h5>
-      <p>P34534534534</p>
+      <p>{phoneNumber}</p>
     </div>
     <Divider />
     <List>
@@ -70,7 +70,8 @@ export const SideList = ({ toggleDrawer, name }) => (
 
 SideList.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  phoneNumber: PropTypes.string
 };
 
 const styles = StyleSheet.create({
