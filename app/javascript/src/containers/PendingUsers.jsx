@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
+import { formatDistance } from "date-fns";
 import gql from "graphql-tag";
 import { StyleSheet, css } from "aphrodite";
-
 import Nav from "../components/Nav.jsx";
 import Loading from "../components/Loading.jsx";
-import StatusBadge from "../components/StatusBadge.jsx";
+import { CardContent, Card } from "@material-ui/core";
 
 const QUERY = gql`
   {
@@ -16,6 +16,7 @@ const QUERY = gql`
       name
       state
       roleName
+      createdAt
       imageUrl
     }
   }
@@ -29,18 +30,34 @@ function Results({ data, loading }) {
         key={user.id}
         className={css(styles.link)}
       >
-        <div className="d-flex flex-row align-items-center py-2">
-          <div className={`${css(styles.avatar)}`}>
-            <img src={user.imageUrl} className={css(styles.avatarImg)} />
-          </div>
-          <div className={`px-3 w-100`}>
-            <h6 className={css(styles.title)}>{user.name}</h6>
-            <small className={css(styles.small)}> {user.roleName} </small>
-          </div>
-          <div className={`px-2 align-items-center`}>
-            <StatusBadge label={"Pending"} />
-          </div>
-        </div>
+        <Card>
+          <CardContent>
+            <div className="container">
+              <div className="row">
+                <div className={`col ${css(styles.userInfo)}`}>
+                  <img
+                    src="/images/default_avatar.svg"
+                    className={css(styles.avatarImg)}
+                    alt="user_picture"
+                  />
+                </div>
+                <div className={`col ${css(styles.userInfo)}`}>
+                  <h6 className={css(styles.title)}>{user.name}</h6>
+                  <br />
+                  <small className={css(styles.small)}> {user.roleName} </small>
+                </div>
+                <div className={`col ${css(styles.userInfo)}`}>
+                  <div className={`px-2 align-items-center`}>
+                    {`${formatDistance(
+                      new Date(user.createdAt),
+                      new Date()
+                    )} ago`}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </Link>
     ));
   }
@@ -108,11 +125,14 @@ const styles = StyleSheet.create({
   },
   avatarImg: {
     "border-radius": "50%",
-    width: "50px"
+    width: "100px"
   },
   statusBadgePending: {
     border: "1px dashed #46ce84",
     color: "#46ce84",
     borderRadius: "10px"
+  },
+  userInfo: {
+    padding: 5
   }
 });

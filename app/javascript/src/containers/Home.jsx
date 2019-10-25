@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import Nav from "../components/Nav";
@@ -55,36 +55,47 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
-              <div className="card align-self-center text-center">
-                <Link to={`/user/request`} className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <i className="material-icons">perm_identity</i>
-                    </h5>
-                    <p>Request</p>
+              {!["admin", "resident"].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <div className="card align-self-center text-center">
+                  <Link to={`/user/request`} className={`card-link`}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <i className="material-icons">perm_identity</i>
+                      </h5>
+                      <p>Request</p>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
+              {!["Security Guard", "resident"].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Fragment>
+                  <div className="card align-self-center text-center">
+                    <Link to={`/user/pending`} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <i className="material-icons">perm_identity</i>
+                        </h5>
+                        <p>Pending Requests</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className="card align-self-center text-center">
-                <Link to={`/user/pending`} className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <i className="material-icons">perm_identity</i>
-                    </h5>
-                    <p>Pending Requests</p>
+                  <div className="card align-self-center text-center">
+                    <Link to={`/user/new`} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <i className="material-icons">perm_identity</i>
+                        </h5>
+                        <p>New User</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className="card align-self-center text-center">
-                <Link to={`/user/new`} className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <i className="material-icons">perm_identity</i>
-                    </h5>
-                    <p>New User</p>
-                  </div>
-                </Link>
-              </div>
+                </Fragment>
+              ) : null}
+
               <div className="card align-self-center text-center">
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">

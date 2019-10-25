@@ -25,7 +25,7 @@ export const SideList = ({ toggleDrawer, user }) => (
     <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
       <Avatar user={user} />
       <h5>{user.name}</h5>
-      <p>&nbsp;</p>
+      <p>{user.phoneNumber}</p>
     </div>
     <Divider />
     <List>

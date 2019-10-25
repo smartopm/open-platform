@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, css } from "aphrodite";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+import { StyleSheet, css } from "aphrodite";
 import { reasons, userState, userType } from "../utils/constants";
 
 export default function UserForm(props) {
