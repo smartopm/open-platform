@@ -47,14 +47,22 @@ The site is now available as https://dev.dgdp.site and https://localhost
 dev.dgdp.site points to 127.0.0.1, if you're development server is somewhere else
 please update /etc/hosts to point dev.dgdp.site to the appropriate IP address.
 
-### Updating gems
+### Updating gems or node_modules
 
-- `docker-compose run --rm rails bundle add gemfileyouwant`
-- `bin/rebuild_rails_image.sh`
+- Adding a Gemfile
+  - `docker-compose run --rm rails bundle add gemfileyouwant`
+
+- Adding a javascript dependency
+  - `docker-compose run --rm webpacker yarn add modulename`
+
+Then rebuild the images:
+
+- `bin/rebuild.sh`
   - This performs
-    - Stop the existing 'rails' service - Run `bundle` to update Gemfile.lock
+    - Stop the existing 'rails' and 'webpacker' service
     - Runs `bundle install` install gems
-    - Starts the 'rails' service
+    - Runs `yarn install` install javascript dependencies
+    - Starts the 'rails' and 'webpacker' service
 
 ### Testing
 
