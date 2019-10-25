@@ -39,15 +39,11 @@ const uploadFileMetaToRails = (state, apolloClient) => {
 }
 
 const uploadFileToRails = (state) => {
-  return fetch(state.url, {
+  return fetch(state.uploadUrl, {
     method: 'PUT',
     headers: JSON.parse(state.headers),
     body: state.file
   })
-}
-
-const updateRecord = ({apolloClient, mutation, recordId, signedBlobId}) => {
-  return apolloClient.mutate({mutation, variables: {id: recordId, signedBlobId}})
 }
 
 // Constants
@@ -57,7 +53,6 @@ const STATE = {
   FILE_CHECKSUM: 'FILE_CHECKSUM',
   FILE_META_UPLOAD: 'FILE_META_UPLOAD',
   FILE_UPLOAD: 'FILE_UPLOAD',
-  RECORD_UPDATE: 'RECORD_UPDATE',
   DONE: 'DONE',
   ERROR: 'ERROR',
 }
@@ -72,6 +67,7 @@ const initialState = {
   fileName: null,
   signedBlobId: null,
   blobId: null,
+  uploadUrl: null,
   url: null,
   headers: null,
   status: STATE.INIT,
@@ -101,11 +97,10 @@ const reducer = (state, action) => {
         blobId: action.blobId,
         headers: action.headers,
         url: action.url,
+        uploadUrl: action.uploadUrl,
         status: action.next
       }
     case STATE.FILE_UPLOAD:
-      return { ...state, status: action.next }
-    case STATE.RECORD_UPDATE:
       return { ...state, status: action.next }
     case STATE.ERROR:
       return { ...state, status: STATE.ERROR }
@@ -114,25 +109,30 @@ const reducer = (state, action) => {
   }
 }
 
-const useFileUpload = ({updateGQL: recordUpdateGQL, id: recordId, client: apolloClient}) => {
+const useFileUpload = ({client: apolloClient, maxSize}) => {
   const [state, dispatch] = useReducer(reducer, initialState)
+  maxSize = maxSize || 500
 
   const onChange = (e) => {
     if (e.target.files.length) {
       const file = e.target.files[0]
-      dispatch({
-        next: STATE.FILE_RESIZE,
-        current: STATE.FILE_INIT,
-        file: file,
-        filename: file.name,
-      })
+      startUpload(file)
     }
+  }
+
+  const startUpload = (file) => {
+    dispatch({
+      next: STATE.FILE_RESIZE,
+      current: STATE.FILE_INIT,
+      file: file,
+      filename: file.name,
+    })
   }
 
   // Upload the 'placeholder' for the object and get back blob details
   useEffect(() => {
     if (state.status == STATE.FILE_RESIZE) {
-      ImageResize({file: state.file, maxSize: 500}).then((resizedImage) => {
+      ImageResize({ file: state.file, maxSize }).then((resizedImage) => {
         dispatch({
           file: resizedImage,
           contentType: resizedImage.type,
@@ -165,6 +165,7 @@ const useFileUpload = ({updateGQL: recordUpdateGQL, id: recordId, client: apollo
           blobId: attachment.blobId,
           headers: attachment.headers,
           url: attachment.url,
+          uploadUrl: attachment.uploadUrl,
 
           current: STATE.FILE_META_UPLOAD,
           next: STATE.FILE_UPLOAD,
@@ -176,22 +177,16 @@ const useFileUpload = ({updateGQL: recordUpdateGQL, id: recordId, client: apollo
       // Upload file meta data
       // Then set state and ready for file upload
       uploadFileToRails(state).then(() => {
-        dispatch({ current: STATE.FILE_UPLOAD, next: STATE.RECORD_UPDATE })
+        dispatch({ current: STATE.FILE_UPLOAD, next: STATE.DONE })
       });
     }
 
-    if (state.status == STATE.RECORD_UPDATE) {
-      // Upload record data
-      // Then set state and ready for file upload
-      updateRecord({apolloClient, mutation:recordUpdateGQL, signedBlobId:state.signedBlobId, recordId}).then((data) => {
-        dispatch({ current: STATE.RECORD_UPDATE, next: STATE.DONE })
-      })
-    }
   })
 
   return {
     ...state,
     onChange,
+    startUpload,
   }
 }
 
