@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
+import { formatDistance } from "date-fns";
 import gql from "graphql-tag";
 import { StyleSheet, css } from "aphrodite";
 import Nav from "../components/Nav.jsx";
@@ -15,6 +16,7 @@ const QUERY = gql`
       name
       state
       roleName
+      createdAt
       imageUrl
     }
   }
@@ -45,7 +47,12 @@ function Results({ data, loading }) {
                   <small className={css(styles.small)}> {user.roleName} </small>
                 </div>
                 <div className={`col ${css(styles.userInfo)}`}>
-                  <div className={`px-2 align-items-center`}>2 hours</div>
+                  <div className={`px-2 align-items-center`}>
+                    {`${formatDistance(
+                      new Date(user.createdAt),
+                      new Date()
+                    )} ago`}
+                  </div>
                 </div>
               </div>
             </div>
