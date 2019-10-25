@@ -1,30 +1,30 @@
 import React, {useContext} from 'react';
-import { Redirect } from 'react-router-dom';
 import { useApolloClient } from 'react-apollo';
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js';
 import { useFileUpload } from '../graphql/useFileUpload'
-import { AttachAvatar } from '../graphql/mutations'
 
 import Nav from '../components/Nav'
 
-export default function UploadTest({match}){
+export default function UploadTest(){
   const authState = useContext(AuthStateContext)
-  const {onChange, status} = useFileUpload({updateGQL: AttachAvatar, id: match.params.id, client: useApolloClient()})
-  if (status == 'DONE') {
-    return (<Redirect to={`/user/${match.params.id}`} />)
-  }
-  return (<Component authState={authState} onChange={onChange} status={status} />)
+  const {onChange, status, url, uploadUrl, signedBlobId} = useFileUpload({client: useApolloClient()})
+  console.log(status)
+  console.log(url, uploadUrl)
+  console.log(signedBlobId) // This is what's sent to Update/CreateUser as avatarBlobId
+  return (<Component authState={authState} onChange={onChange} status={status} url={url} />)
 }
 
-function Status({status}) {
-  if (status != 'INIT') {
+function Status({status, url}) {
+  if (status === 'DONE') {
+    return <img src={url} />;
+  } else if (status !== 'INIT') {
     return <p>{status}</p>;
   }
   return null;
 }
 
-export function Component({onChange, status}) {
+export function Component({onChange, status, url}) {
   return (
     <div>
       <Nav navName="Upload Avatar" menuButton="cancel" />
@@ -34,7 +34,7 @@ export function Component({onChange, status}) {
             <div>
               <label>Upload an image</label>
               <input type="file" accept="image/*" onChange={onChange} />
-              <Status status={status} />
+              <Status status={status} url={url} />
             </div>
           </form>
         </div>

@@ -16,7 +16,8 @@ module Mutations
     class Attachment < GraphQL::Schema::Object
       description 'Represents direct upload credentials'
 
-      field :url, String, 'Upload URL', null: false
+      field :upload_url, String, 'Upload URL', null: false
+      field :url, String, 'URL for item', null: false
       field :headers, String,
             'HTTP request headers (JSON-encoded)',
             null: false
@@ -37,13 +38,18 @@ module Mutations
         blob = ActiveStorage::Blob.create_before_direct_upload!(input.to_h)
 
         {
-          attachment: {
-            url: blob.service_url_for_direct_upload,
-            # NOTE: we pass headers as JSON since they have no schema
-            headers: blob.service_headers_for_direct_upload.to_json,
-            blob_id: blob.id,
-            signed_blob_id: blob.signed_id,
-          },
+          attachment: attachment(blob),
+        }
+      end
+
+      def attachment(blob)
+        {
+          upload_url: blob.service_url_for_direct_upload,
+          url: blob.service_url,
+          # NOTE: we pass headers as JSON since they have no schema
+          headers: blob.service_headers_for_direct_upload.to_json,
+          blob_id: blob.id,
+          signed_blob_id: blob.signed_id,
         }
       end
 

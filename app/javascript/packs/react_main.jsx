@@ -70,7 +70,7 @@ const App = () => {
               <Route path='/user/request' exact component={Request}/>
               <Route path='/user/new' exact component={UserEdit}/>
               <Route path='/user/:id' exact component={UserShow}/>
-              <Route path='/user/:id/avatar' component={Upload}/>
+              <Route path='/upload' component={Upload}/>
               <Route path='/user/:id/edit' exact component={UserEdit}/>
               <Route path='/user/request/:id' component={Request}/>
             </Switch>
