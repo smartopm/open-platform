@@ -10,7 +10,7 @@ export default function StatusBadge({ label }) {
     case "valid":
       return (
         <p className={css(styles.badge, styles.statusBadgeValid)}>
-          <i className={`material-icons ${css(styles.icon)}`}>check</i>
+          <i className={`material-icons ${css(styles.icon)}`}>verified_user</i>
           {label}
         </p>
       );
