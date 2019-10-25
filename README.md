@@ -29,12 +29,16 @@ If you don't have access to this key, please look at
 that will be needed to run the app and create the development credentials
 by running the same `credentials:edit` function as above.
 
+Run this for db migration
+
+`./bin/docker_rails db:migrate RAILS_ENV=development`
+
 _SSL Setup_
 
 Caddy is being used to serve the application via SSL. If you like, you can rely
 on it's own self signed certificates which are available on localhost:443
 
-Rather than rely on self-signed certificates, we include certificates for 
+Rather than rely on self-signed certificates, we include certificates for
 dev.dgdp.site. They are encrypted with the development.key from above, and may
 be decrypted by running `./bin/cert_setup.sh`
 
