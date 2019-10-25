@@ -56,7 +56,7 @@ export function Component({ authState }) {
                 </Link>
               </div>
               {!["admin", "resident"].includes(
-                authState.user.role.toLowerCase()
+                authState.user.userType.toLowerCase()
               ) ? (
                 <div className="card align-self-center text-center">
                   <Link to={`/user/request`} className={`card-link`}>
@@ -70,7 +70,7 @@ export function Component({ authState }) {
                 </div>
               ) : null}
               {!["Security Guard", "resident"].includes(
-                authState.user.role.toLowerCase()
+                authState.user.userType.toLowerCase()
               ) ? (
                 <Fragment>
                   <div className="card align-self-center text-center">

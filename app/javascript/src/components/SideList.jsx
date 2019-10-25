@@ -12,9 +12,10 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import HelpIcon from "@material-ui/icons/Help";
 import { StyleSheet, css } from "aphrodite";
-import StatusBadge from "./Avatar.jsx";
+import { Link } from "react-router-dom";
+import Avatar from "./Avatar.jsx";
 
-export const SideList = ({ toggleDrawer, name, phoneNumber }) => (
+export const SideList = ({ toggleDrawer, user }) => (
   <div
     role="presentation"
     onClick={toggleDrawer}
@@ -22,9 +23,9 @@ export const SideList = ({ toggleDrawer, name, phoneNumber }) => (
     onKeyDown={toggleDrawer}
   >
     <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
-      <StatusBadge />
-      <h5>{name}</h5>
-      <p>{phoneNumber}</p>
+      <Avatar user={user} />
+      <h5>{user.name}</h5>
+      <p>{user.phoneNumber}</p>
     </div>
     <Divider />
     <List>
@@ -32,13 +33,13 @@ export const SideList = ({ toggleDrawer, name, phoneNumber }) => (
         <ListItemIcon>
           <CropFreeIcon />
         </ListItemIcon>
-        <ListItemText primary="Scanner" />
+        <Link to="/scan" className={`${css(styles.link)}`}><ListItemText primary="Scanner" /></Link>
       </ListItem>
       <ListItem button>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <ListItemText primary="Search People" />
+        <Link to="/search" className={`${css(styles.link)}`}><ListItemText primary="Search People" /></Link>
       </ListItem>
       <ListItem button>
         <ListItemIcon>
@@ -62,7 +63,7 @@ export const SideList = ({ toggleDrawer, name, phoneNumber }) => (
         <ListItemIcon>
           <MeetingRoomIcon />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
+        <Link to="/logout" className={`${css(styles.link)}`}><ListItemText primary="Logout" /></Link>
       </ListItem>
     </List>
   </div>
@@ -70,11 +71,14 @@ export const SideList = ({ toggleDrawer, name, phoneNumber }) => (
 
 SideList.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  phoneNumber: PropTypes.string
+  user: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
+  link: {
+    color: '#000',
+    textDecoration: 'none',
+  },
   sidenav: {
     width: 300
   },

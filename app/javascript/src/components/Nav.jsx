@@ -121,11 +121,7 @@ export function Component({
   return (
     <>
       <Drawer open={state} onClose={toggleDrawer}>
-        <SideList
-          toggleDrawer={toggleDrawer}
-          name={authState.user.name}
-          phoneNumber={authState.user.phoneNumber}
-        />
+        <SideList toggleDrawer={toggleDrawer} user={authState.user} />
       </Drawer>
       <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
         <div className={css(styles.topNav)}>
