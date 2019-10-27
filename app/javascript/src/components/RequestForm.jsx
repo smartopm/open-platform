@@ -2,9 +2,10 @@ import React from "react";
 import { StyleSheet, css } from "aphrodite";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import { useDropzone } from "react-dropzone";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import { reasons } from "../utils/constants";
+import { useFileUpload } from "../graphql/useFileUpload";
+import { useApolloClient } from "react-apollo";
 
 export default function RequestForm(props) {
   const {
@@ -15,20 +16,36 @@ export default function RequestForm(props) {
     errors,
     touched
   } = props;
-  const { getRootProps, getInputProps } = useDropzone({ accept: "image/*" });
+  const { onChange, status, url, uploadUrl, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  });
+  console.log(uploadUrl);
+  console.log(signedBlobId);
+
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <div
-            {...getRootProps()}
-            className={`${css(styles.photoUpload)}`}
-            style={{ width: "40%" }}
-          >
-            <input {...getInputProps()} />
-            <PhotoCameraIcon />
-            <p>Take Photo</p>
-          </div>
+          {status === "DONE" && url ? (
+            <img
+              src={url}
+              alt="uploaded picture"
+              className={`${css(styles.uploadedImage)}`}
+            />
+          ) : (
+            <div className={`${css(styles.photoUpload)}`}>
+              <input
+                type="file"
+                accepts="image/*"
+                capture
+                id="file"
+                onChange={onChange}
+                className={`${css(styles.fileInput)}`}
+              />
+              <PhotoCameraIcon />
+              <label htmlFor="file">Take a photo</label>
+            </div>
+          )}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -115,10 +132,17 @@ export default function RequestForm(props) {
           ) : null}
         </div>
         <div className="form-group">
-          <div {...getRootProps()} className={`${css(styles.photoUpload)}`}>
-            <input {...getInputProps()} />
+          <div className={`${css(styles.photoUpload)} `}>
+            <input
+              type="file"
+              accepts="image/*"
+              capture
+              id="file"
+              onChange={onChange}
+              className={`${css(styles.fileInput)}`}
+            />
             <PhotoCameraIcon />
-            <p>Take picture of your ID</p>
+            <label htmlFor="file">Take picture of your ID</label>
           </div>
         </div>
       </form>
@@ -143,11 +167,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafafa",
     color: "#bdbdbd",
     outline: "none",
-    transition: "border .24s ease-in-out"
+    transition: "border .24s ease-in-out",
+    width: "40%"
   },
-  cardUpload: {
-    backgroundColor: "rgb(245, 245, 247)",
-    outline: "2px dashed grey",
-    padding: "80px 0 45px 0"
+  fileInput: {
+    width: 0.1,
+    height: 0.1,
+    opacity: 0,
+    overflow: "hidden",
+    position: "absolute",
+    zIndex: -1,
+    cursor: "pointer"
+  },
+  uploadedImage: {
+    width: "40%",
+    borderRadius: 8
   }
 });
