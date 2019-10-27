@@ -3,6 +3,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { StyleSheet, css } from "aphrodite";
 import { reasons, userState, userType } from "../utils/constants";
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+import { useFileUpload } from "../graphql/useFileUpload";
+import { useApolloClient } from "react-apollo";
 
 export default function UserForm(props) {
   const {
@@ -13,9 +16,34 @@ export default function UserForm(props) {
     errors,
     touched
   } = props;
+  const { onChange, status, url, uploadUrl, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  });
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          {status === "DONE" && url ? (
+            <img
+              src={url}
+              alt="uploaded picture"
+              className={`${css(styles.uploadedImage)}`}
+            />
+          ) : (
+            <div className={`${css(styles.photoUpload)}`}>
+              <input
+                type="file"
+                accepts="image/*"
+                capture
+                id="file"
+                onChange={onChange}
+                className={`${css(styles.fileInput)}`}
+              />
+              <PhotoCameraIcon />
+              <label htmlFor="file">Take a photo</label>
+            </div>
+          )}
+        </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
             Name
@@ -128,5 +156,34 @@ export default function UserForm(props) {
 const styles = StyleSheet.create({
   selectInput: {
     width: "100%"
+  },
+  photoUpload: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "20px",
+    borderWidth: 2,
+    borderRadius: 2,
+    borderColor: "#eeeeee",
+    borderStyle: "dashed",
+    backgroundColor: "#fafafa",
+    color: "#bdbdbd",
+    outline: "none",
+    transition: "border .24s ease-in-out",
+    width: "40%"
+  },
+  fileInput: {
+    width: 0.1,
+    height: 0.1,
+    opacity: 0,
+    overflow: "hidden",
+    position: "absolute",
+    zIndex: -1,
+    cursor: "pointer"
+  },
+  uploadedImage: {
+    width: "40%",
+    borderRadius: 8
   }
 });

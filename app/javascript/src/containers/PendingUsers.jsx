@@ -23,6 +23,7 @@ const QUERY = gql`
 `;
 
 function Results({ data, loading }) {
+  console.log(data);
   function memberList(users) {
     return users.map(user => (
       <Link

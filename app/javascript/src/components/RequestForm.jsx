@@ -44,6 +44,11 @@ export default function RequestForm(props) {
               />
               <PhotoCameraIcon />
               <label htmlFor="file">Take a photo</label>
+              <input
+                type="hidden"
+                name=""
+                defaultValue={url ? values.url : ""}
+              />
             </div>
           )}
         </div>
