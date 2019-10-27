@@ -70,13 +70,14 @@ export function Component({
         </Fragment>
       );
     }
+
     return (
       <Fragment>
         <Avatar
           alt="Default Avatar"
           onClick={toggleDrawer}
           className={`${css(styles.userAvatar)}`}
-          src="/images/default_avatar.svg"
+          src={authState.user.avatarUrl}
         />
         <NotificationsNoneOutlinedIcon
           className={`${css(styles.rightSideIcon)}`}
