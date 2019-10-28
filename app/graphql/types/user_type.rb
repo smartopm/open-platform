@@ -20,6 +20,7 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
     field :avatar_url, String, null: true
+    field :document_url, String, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -27,5 +28,13 @@ module Types
       Rails.application.routes.url_helpers
            .rails_blob_url(object.avatar)
     end
+
+    def document_url
+      return nil unless object.document.attached?
+
+      Rails.application.routes.url_helpers
+           .rails_blob_url(object.document)
+    end
+
   end
 end

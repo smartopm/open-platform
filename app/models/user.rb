@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :activity_logs, dependent: :destroy
 
   has_one_attached :avatar
+  has_one_attached :document
 
   VALID_USER_TYPES = %w[security_guard admin resident contractor].freeze
   VALID_STATES = %w[valid pending banned expired].freeze

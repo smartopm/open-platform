@@ -7,4 +7,4 @@ export const reasons = [
   "Other"
 ];
 export const userType = ["Admin", "Security Guard", "Resident", "Contractor"];
-export const userState = ["Valid", "Pending", "Banned"];
+export const userState = ["Valid", "Pending", "Banned", "Expired"];

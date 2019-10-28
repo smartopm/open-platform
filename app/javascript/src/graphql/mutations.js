@@ -12,6 +12,7 @@ mutation CreateUserMutation(
     $vehicle: String
     $requestReason: String,
     $avatarBlobId: String,
+    $documentBlobId: String,
   ) {
   result: userCreate(
       name: $name,
@@ -22,6 +23,7 @@ mutation CreateUserMutation(
       vehicle: $vehicle,
       state: $state,
       avatarBlobId: $avatarBlobId,
+      documentBlobId: $documentBlobId,
     ) {
     user {
       ...UserFields
@@ -42,6 +44,7 @@ mutation UpdateUserMutation(
     $vehicle: String
     $state: String,
     $avatarBlobId: String,
+    $documentBlobId: String,
   ) {
   result: userUpdate(
       id: $id,
@@ -53,6 +56,7 @@ mutation UpdateUserMutation(
       vehicle: $vehicle,
       state: $state,
       avatarBlobId: $avatarBlobId,
+      documentBlobId: $documentBlobId,
     ) {
     user {
       ...UserFields
