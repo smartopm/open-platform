@@ -6,22 +6,30 @@ import { reasons, userState, userType } from "../utils/constants";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import { useFileUpload } from "../graphql/useFileUpload";
 import { useApolloClient } from "react-apollo";
+import { withFormik } from "formik";
 
 export default function UserForm(props) {
-  const {
-    values,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    errors,
-    touched
-  } = props;
   const { onChange, status, url, uploadUrl, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+  const formik = withFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      requestReason: "",
+      userType: "",
+      state: ""
+    },
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2));
+    }
+  });
   return (
     <div className="container">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={formik.values.handleSubmit}>
         <div className="form-group">
           {status === "DONE" && url ? (
             <img
@@ -51,12 +59,12 @@ export default function UserForm(props) {
           <input
             className="form-control"
             type="text"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.name}
             name="name"
           />
-          {errors.name && touched.name ? <div>{errors.name}</div> : null}
+          {/* {errors.name && touched.name ? <div>{errors.name}</div> : null} */}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
@@ -65,12 +73,12 @@ export default function UserForm(props) {
           <input
             className="form-control"
             type="text"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
             name="email"
           />
-          {errors.email && touched.email ? <div>{errors.email}</div> : null}
+          {/* {errors.email && touched.email ? <div>{errors.email}</div> : null} */}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="phoneNumber">
@@ -79,22 +87,22 @@ export default function UserForm(props) {
           <input
             className="form-control"
             type="text"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.phoneNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.phoneNumber}
             name="phoneNumber"
           />
-          {errors.phoneNumber && touched.phoneNumber ? (
+          {/* {errors.phoneNumber && touched.phoneNumber ? (
             <div>{errors.phoneNumber}</div>
-          ) : null}
+          ) : null} */}
         </div>
         <div className="form-group">
           <TextField
             id="reason"
             select
             label="Reason"
-            value={values.requestReason || ""}
-            onChange={handleChange("requestReason")}
+            value={formik.values.requestReason || ""}
+            onChange={formik.handleChange("requestReason")}
             margin="normal"
             className={`${css(styles.selectInput)}`}
           >
@@ -104,17 +112,17 @@ export default function UserForm(props) {
               </MenuItem>
             ))}
           </TextField>
-          {errors.requestReason && touched.requestReason ? (
+          {/* {errors.requestReason && touched.requestReason ? (
             <div>{errors.requestReason}</div>
-          ) : null}
+          ) : null} */}
         </div>
         <div className="form-group">
           <TextField
             id="userType"
             select
             label="User Type"
-            value={values.userType || ""}
-            onChange={handleChange("userType")}
+            value={formik.values.userType || ""}
+            onChange={formik.handleChange("userType")}
             margin="normal"
             className={`${css(styles.selectInput)}`}
           >
@@ -125,9 +133,9 @@ export default function UserForm(props) {
             ))}
           </TextField>
 
-          {errors.userType && touched.userType ? (
+          {/* {errors.userType && touched.userType ? (
             <div>{errors.userType}</div>
-          ) : null}
+          ) : null} */}
         </div>
 
         <div className="form-group">
@@ -135,8 +143,8 @@ export default function UserForm(props) {
             id="state"
             select
             label="State"
-            value={values.state || ""}
-            onChange={handleChange("state")}
+            value={formik.values.state || ""}
+            onChange={formik.handleChange("state")}
             margin="normal"
             className={`${css(styles.selectInput)}`}
           >
@@ -146,7 +154,7 @@ export default function UserForm(props) {
               </MenuItem>
             ))}
           </TextField>
-          {errors.state && touched.state ? <div>{errors.state}</div> : null}
+          {/* {errors.state && touched.state ? <div>{errors.state}</div> : null} */}
         </div>
       </form>
     </div>

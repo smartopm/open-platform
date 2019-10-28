@@ -100,7 +100,7 @@ export function Container(props) {
         menuButton="edit"
         handleSubmit={props.handleSubmit}
       />
-      <UserForm {...props} />
+      <UserForm />
       {props && props.id ? (
         <div className="row justify-content-center align-items-center">
           <Button

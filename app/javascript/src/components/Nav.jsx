@@ -14,7 +14,8 @@ export default withRouter(function Nav({
   history,
   navName,
   backTo,
-  handleSubmit
+  handleSubmit,
+  boxShadow
 }) {
   const authState = useContext(AuthStateContext);
   return (
@@ -26,7 +27,8 @@ export default withRouter(function Nav({
         history,
         navName,
         backTo,
-        handleSubmit
+        handleSubmit,
+        boxShadow
       }}
     />
   );
@@ -39,7 +41,8 @@ export function Component({
   navName,
   backTo,
   history,
-  handleSubmit
+  handleSubmit,
+  boxShadow
 }) {
   const [state, setState] = React.useState(false);
   function backButtonOrMenu() {
@@ -124,7 +127,10 @@ export function Component({
       <Drawer open={state} onClose={toggleDrawer}>
         <SideList toggleDrawer={toggleDrawer} user={authState.user} />
       </Drawer>
-      <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
+      <nav
+        className={`navbar navbar-dark ${css(styles.navBar)}`}
+        style={{ boxShadow }}
+      >
         <div className={css(styles.topNav)}>
           {backButtonOrMenu()}
           <ul
@@ -142,6 +148,10 @@ export function Component({
     </>
   );
 }
+
+Component.defaultProps = {
+  boxShadow: "0 2px 2px 0 rgba(0,0,0,.14)"
+};
 
 const styles = StyleSheet.create({
   logo: {
@@ -162,6 +172,7 @@ const styles = StyleSheet.create({
   navBar: {
     backgroundColor: "#46ce84",
     minHeight: "50px"
+    // boxShadow: "0 2px 2px 0 rgba(0,0,0,.14)"
   },
   buttonLeft: {
     color: "#FFF"
