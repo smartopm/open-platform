@@ -1,10 +1,10 @@
 import React, { useContext, useState, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
+import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
-
-import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
+import ScanIcon from "../../../assets/images/shape.svg";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -35,9 +35,11 @@ export function Component({ authState }) {
           />
           <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
           <Link to="/scan">
-            <i className={`material-icons ${css(styles.scanIcon)}`}>
-              crop_free
-            </i>
+            <img
+              src={ScanIcon}
+              alt="scan icon"
+              className={` ${css(styles.scanIcon)}`}
+            />
           </Link>
         </div>
       </Nav>
@@ -87,7 +89,7 @@ export function Component({ authState }) {
                     <Link to={`/user/new`} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <i className="material-icons">perm_identity</i>
+                          <i className="material-icons">person_add</i>
                         </h5>
                         <p>New User</p>
                       </div>
@@ -161,9 +163,8 @@ const styles = StyleSheet.create({
   },
   scanIcon: {
     position: "absolute",
-    bottom: 2,
+    bottom: 5,
     right: 5,
-    width: 24,
-    height: 24
+    width: 20
   }
 });
