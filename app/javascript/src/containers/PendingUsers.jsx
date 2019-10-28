@@ -7,6 +7,7 @@ import { StyleSheet, css } from "aphrodite";
 import Nav from "../components/Nav.jsx";
 import Loading from "../components/Loading.jsx";
 import { CardContent, Card } from "@material-ui/core";
+import Avatar from "../components/Avatar";
 
 const QUERY = gql`
   {
@@ -23,7 +24,6 @@ const QUERY = gql`
 `;
 
 function Results({ data, loading }) {
-  console.log(data);
   function memberList(users) {
     return users.map(user => (
       <Link
@@ -36,11 +36,7 @@ function Results({ data, loading }) {
             <div className="container">
               <div className="row">
                 <div className={`col ${css(styles.userInfo)}`}>
-                  <img
-                    src="/images/default_avatar.svg"
-                    className={css(styles.avatarImg)}
-                    alt="user_picture"
-                  />
+                  <Avatar imageURL={user.imageURL} user={user} />
                 </div>
                 <div className={`col ${css(styles.userInfo)}`}>
                   <h6 className={css(styles.title)}>{user.name}</h6>
