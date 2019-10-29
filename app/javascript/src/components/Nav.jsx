@@ -15,7 +15,6 @@ export default withRouter(function Nav({
   history,
   navName,
   backTo,
-  handleSubmit,
   boxShadow
 }) {
   const authState = useContext(AuthStateContext);
@@ -28,7 +27,6 @@ export default withRouter(function Nav({
         history,
         navName,
         backTo,
-        handleSubmit,
         boxShadow
       }}
     />
@@ -42,7 +40,6 @@ export function Component({
   navName,
   backTo,
   history,
-  // handleSubmit,
   boxShadow
 }) {
   const [state, setState] = React.useState(false);
@@ -175,7 +172,6 @@ const styles = StyleSheet.create({
   navBar: {
     backgroundColor: "#46ce84",
     minHeight: "50px"
-    // boxShadow: "0 2px 2px 0 rgba(0,0,0,.14)"
   },
   buttonLeft: {
     color: "#FFF"

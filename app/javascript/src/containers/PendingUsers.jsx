@@ -121,7 +121,6 @@ export default () => {
   const { loading, error, data } = useQuery(QUERY, { variables: { name } });
   const [value, setValue] = React.useState(0);
   if (error) return `Error! ${error}`;
-  console.log(data);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -139,7 +138,7 @@ export default () => {
           backgroundColor: "#46ce84"
         }}
       >
-        <Nav navName="Requests" menuButton="back" boxShadow={"none"} />
+        <Nav navName="Requests" menuButton="cancel" boxShadow={"none"} />
         <StyledTabs
           value={value}
           onChange={handleChange}
@@ -160,7 +159,7 @@ export default () => {
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        Nothing yet
       </TabPanel>
     </div>
   );
