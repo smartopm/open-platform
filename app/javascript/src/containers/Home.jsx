@@ -47,16 +47,6 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <i className="material-icons">perm_identity</i>
-                    </h5>
-                    <p>Identity</p>
-                  </div>
-                </Link>
-              </div>
               {!["admin", "resident"].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
@@ -81,7 +71,7 @@ export function Component({ authState }) {
                         <h5 className="card-title">
                           <i className="material-icons">perm_identity</i>
                         </h5>
-                        <p>Pending Requests</p>
+                        <p>Request</p>
                       </div>
                     </Link>
                   </div>
@@ -114,20 +104,11 @@ export function Component({ authState }) {
                     <h5 className="card-title">
                       <i className="material-icons">directions</i>
                     </h5>
-                    <p>Map</p>
+                    <p>Explore</p>
                   </div>
                 </Link>
               </div>
-              <div className="card align-self-center text-center">
-                <Link to="/scan" className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <i className="material-icons">photo_camera</i>
-                    </h5>
-                    <p>Scan</p>
-                  </div>
-                </Link>
-              </div>
+
             </div>
           </div>
         </div>
