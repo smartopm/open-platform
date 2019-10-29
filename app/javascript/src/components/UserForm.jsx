@@ -134,6 +134,20 @@ export default function UserForm() {
             ))}
           </TextField>
         </div>
+        <div className="form-group">
+           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
+              <input
+                type="file"
+                accepts="image/*"
+                capture
+                id="file"
+                onChange={handleFileUpload}
+                className={`${css(styles.fileInput)}`}
+              />
+              <PhotoCameraIcon />
+              <label htmlFor="file">Take a photo of your ID</label>
+            </div>
+        </div>
       </form>
     </div>
   );
@@ -157,7 +171,10 @@ const styles = StyleSheet.create({
     color: "#bdbdbd",
     outline: "none",
     transition: "border .24s ease-in-out",
-    width: "40%"
+    width: "40%",
+  },
+  idUpload: {
+    width: "80%"
   },
   fileInput: {
     width: 0.1,
