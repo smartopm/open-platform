@@ -18,13 +18,14 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
+        avatar_blob_id = vals.delete(:avatar_blob_id) if vals[:avatar_blob_id]
+        document_blob_id = vals.delete(:document_blob_id) if vals[:document_blob_id]
         user = ::User.find(vals.delete(:id))
-        user.avatar.attach(vals.delete(:avatar_blob_id)) if vals[:avatar_blob_id]
         raise GraphQL::ExecutionError, 'NotFound' unless user
+        user.avatar.attach(avatar_blob_id) if avatar_blob_id
+        user.document.attach(document_blob_id) if document_blob_id
 
         return { user: user } if user.update(vals)
-
-        raise GraphQL::ExecutionError, member.errors.full_messages
       end
 
       def authorized?(vals)

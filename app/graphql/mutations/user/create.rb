@@ -22,12 +22,16 @@ module Mutations
       }.freeze
 
       def resolve(vals)
+        avatar_blob_id = vals.delete(:avatar_blob_id) if vals[:avatar_blob_id]
+        document_blob_id = vals.delete(:document_blob_id) if vals[:document_blob_id]
         user = ::User.new(vals)
         user.community_id = context[:current_user].community_id
+        user.avatar.attach(avatar_blob_id) if avatar_blob_id
+        user.document.attach(document_blob_id) if document_blob_id
 
-        return { user: user } if user.save
+        return { user: user } if user.update(vals)
 
-        raise GraphQL::ExecutionError, user.errors.full_messages
+        raise GraphQL::ExecutionError, member.errors.full_messages
       end
 
       def authorized?(vals)

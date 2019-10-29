@@ -7,19 +7,20 @@ import { StyleSheet, css } from "aphrodite";
 import Loading from "../components/Loading.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 import Avatar from "../components/Avatar.jsx";
+import ScanIcon from "../../../assets/images/shape.svg";
 
 const QUERY = gql`
-query UserSearch($name: String!) {
-  userSearch(name: $name) {
-    id
-    userType
-    name
-    state
-    roleName
-    imageUrl
-    avatarUrl
+  query UserSearch($name: String!) {
+    userSearch(name: $name) {
+      id
+      userType
+      name
+      state
+      roleName
+      imageUrl
+      avatarUrl
+    }
   }
-}
 `;
 
 function Results({ data, loading, called }) {
@@ -27,7 +28,7 @@ function Results({ data, loading, called }) {
     return users.map(user => (
       <Link to={`/user/${user.id}`} key={user.id} className={css(styles.link)}>
         <div className="d-flex flex-row align-items-center py-2">
-          <Avatar user={user} style='small' />
+          <Avatar user={user} style="small" />
           <div className={`px-3 w-100`}>
             <h6 className={css(styles.title)}>{user.name}</h6>
             <small className={css(styles.small)}> {user.roleName} </small>
@@ -90,7 +91,11 @@ export default function SearchContainer() {
           <i className="material-icons">arrow_back</i>
         </Link>
         <Link to="/scan">
-          <i className={`material-icons ${css(styles.scanIcon)}`}>crop_free</i>
+          <img
+            src={ScanIcon}
+            alt="scan icon"
+            className={` ${css(styles.scanIcon)}`}
+          />
         </Link>
 
         {name.length > 0 && <Results {...{ data, loading, called }} />}
@@ -163,7 +168,7 @@ const styles = StyleSheet.create({
   },
   scanIcon: {
     position: "absolute",
-    bottom: 0,
+    bottom: 4,
     right: 5,
     width: 24,
     height: 35

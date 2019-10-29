@@ -1,107 +1,115 @@
 import React from "react";
 import { useLazyQuery, useMutation } from "react-apollo";
-import { withFormik } from "formik";
 import { StyleSheet, css } from "aphrodite";
 import { Button } from "@material-ui/core";
 import Nav from "../components/Nav";
 import UserForm from "../components/UserForm.jsx";
 import Loading from "../components/Loading.jsx";
 import crudHandler from "../graphql/crud_handler";
-
+import { useFileUpload } from "../graphql/useFileUpload";
+import { useApolloClient } from "react-apollo";
 import { UserQuery } from "../graphql/queries";
 import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
+import { ModalDialog } from "../components/Dialog";
 
-export default function UserFormContainer({ match, history }) {
-  const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
+
+  const initialValues = {
+      name: "", 
+      email:  "", 
+      phoneNumber:  "", 
+      requestReason: "", 
+      userType: "", 
+      state:  "", 
+      signedBlobId: "", 
+      imageUrl:  "", 
+    }
+
+export const FormContext = React.createContext({ values: initialValues, handleInputChange: () => {} })
+
+
+export default function FormContainer({match, history}) {
+    const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: "user",
     readLazyQuery: useLazyQuery(UserQuery),
     updateMutation: useMutation(UpdateUserMutation),
     createMutation: useMutation(CreateUserMutation)
   });
 
-  function submitMutation({
-    name,
-    userType,
-    requestReason,
-    vehicle,
-    state,
-    email,
-    phoneNumber
-  }) {
-    console.log("Submit");
-    return createOrUpdate({
-      name,
-      requestReason,
-      userType,
-      vehicle,
-      state,
-      email,
-      phoneNumber
+
+  let title = "New User";
+  if (result && result.id) {
+    title = "Editing User";
+  }
+  const [data, setData] = React.useState(initialValues)
+  const [open, setOpen] = React.useState(false);
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  });
+
+
+  function handleModal(){
+    setOpen(!open)
+  }
+  function handleModalConfirm(){
+    // grant the user here
+
+    // closing the modal when done
+    setOpen(!open)
+  }
+
+  function handleSubmit(event){
+    event.preventDefault()
+    const values = {
+      ...data,
+      avatarBlobId: signedBlobId
+    }
+    createOrUpdate(values)
+      .then(({ data }) => {
+        // setSubmitting(false);
+        history.push(`/user/${data.result.user.id}`);
+      })
+      .catch(err => console.log(err));
+  }
+  function handleInputChange(event){
+    const { name, value } = event.target
+    setData({
+      ...data,
+      [name]: value
     });
   }
 
-  const FormContainer = withFormik({
-    mapPropsToValues: () => ({
-      name: result.name,
-      email: result.email || "",
-      phoneNumber: result.phoneNumber || "",
-      requestReason: result.requestReason || "",
-      userType: result.userType,
-      expiresAt: result.expiresAt || false,
-      state: result.state,
-      vehicle: result.vehicle || ""
-    }),
 
-    // Custom sync validation
-    validate: values => {
-      const errors = {};
+  // If we are in an edit flow and haven't loaded the data,
+  // load the user data
 
-      if (!values.name) {
-        errors.name = "Required";
-      }
-      if (!values.userType) {
-        errors.userType = "Required";
-      }
-
-      return errors;
-    },
-
-    handleSubmit: (values, { setSubmitting }) => {
-      console.log("submit", values);
-      submitMutation(values)
-        .then(({ data }) => {
-          console.log(data);
-          setSubmitting(false);
-          history.push(`/user/${data.result.user.id}`);
-        })
-        .catch(err => console.log(err));
-    },
-
-    displayName: "UserForm"
-  })(Container);
-  if (!isLoading && !result.id && !error) {
-    loadRecord({ variables: { id: match.params.id } });
-  } else if (isLoading) {
-    return <Loading />;
+  // If we are in an edit flow and have data loaded,
+  // and it hasn't been merged with values, then 
+  // merge the result with the form 'data'
+  //
+  if (match.params.id) {
+    if (isLoading) {
+      return <Loading />;
+    }
+    else if (!result.id && !error) {
+      loadRecord({ variables: { id: match.params.id } });
+    }
+    else if (!data.dataLoaded && result.id) {
+      setData({
+        ...result,
+        dataLoaded: true,
+      })
+    }
   }
-  return <FormContainer id={result.id} />;
-}
-
-export function Container(props) {
-  let title = "New User";
-  console.log(props);
-  if (props && props.id) {
-    title = "Editing User";
-  }
+  
   return (
-    <div>
+    <FormContext.Provider value={{values: data || data, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
       <Nav
         navName={title}
         menuButton="edit"
-        handleSubmit={props.handleSubmit}
       />
-      <UserForm {...props} />
-      {props && props.id ? (
+      <ModalDialog handleClose={handleModal} handleConfirm={handleModalConfirm} open={open} action="deny"/>
+      <UserForm />
+      {result && result.id ? (
         <div className="row justify-content-center align-items-center">
           <Button
             variant="contained"
@@ -111,17 +119,20 @@ export function Container(props) {
           </Button>
           <Button
             variant="contained"
+            onClick={handleModal}
             className={`btn  ${css(styles.denyButton)}`}
           >
             Deny
           </Button>
         </div>
       ) : null}
-    </div>
+    </FormContext.Provider>
   );
 }
 
-Container.displayName = "UserForm";
+
+
+FormContainer.displayName = "UserForm";
 
 const styles = StyleSheet.create({
   grantButton: {

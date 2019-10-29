@@ -32,11 +32,18 @@ export default function RequestFormContainer({ match, history }) {
   console.log("error", error);
   console.log("result", result);
 
-  function submitMutation({ firstName, lastName, requestReason, vehicle }) {
+  function submitMutation({
+    firstName,
+    lastName,
+    requestReason,
+    vehicle,
+    avatarUrl
+  }) {
     return createOrUpdate({
       name: [firstName, lastName].join(" "),
       requestReason,
-      vehicle
+      vehicle,
+      avatarUrl
     });
   }
 
@@ -45,7 +52,9 @@ export default function RequestFormContainer({ match, history }) {
       firstName: firstName(result.name),
       lastName: lastName(result.name),
       requestReason: result.requestReason || "",
-      vehicle: result.vehicle || ""
+      vehicle: result.vehicle || "",
+      // signedBlobId: result.signedBlobId,
+      avatarUrl: result.url
     }),
 
     // Custom sync validation
@@ -66,9 +75,9 @@ export default function RequestFormContainer({ match, history }) {
     },
 
     handleSubmit: (values, { setSubmitting }) => {
-      console.log(values);
-
       submitMutation(values).then(({ data }) => {
+        console.log(data);
+
         setSubmitting(false);
         history.push(`/user/${data.result.user.id}`);
       });
