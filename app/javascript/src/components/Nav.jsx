@@ -7,6 +7,7 @@ import { Context as AuthStateContext } from "../containers/Provider/AuthStatePro
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
 import Drawer from "@material-ui/core/Drawer";
 import { SideList } from "./SideList.jsx";
+import { FormContext } from "../containers/UserEdit.jsx";
 
 export default withRouter(function Nav({
   children,
@@ -14,7 +15,7 @@ export default withRouter(function Nav({
   history,
   navName,
   backTo,
-  handleSubmit
+  boxShadow
 }) {
   const authState = useContext(AuthStateContext);
   return (
@@ -26,7 +27,7 @@ export default withRouter(function Nav({
         history,
         navName,
         backTo,
-        handleSubmit
+        boxShadow
       }}
     />
   );
@@ -38,17 +39,17 @@ export function Component({
   menuButton,
   navName,
   backTo,
-  history,
-  handleSubmit
+  boxShadow
 }) {
   const [state, setState] = React.useState(false);
+  const {values, handleSubmit} = useContext(FormContext)
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
       return (
-        <a href="#" className={css(styles.buttonLeft)} onClick={history.goBack}>
+        <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
-        </a>
+       </Link>
       );
     } else if (menuButton === "cancel") {
       return (
@@ -57,12 +58,13 @@ export function Component({
         </Link>
       );
     } else if (menuButton === "edit") {
+
       return (
         <Fragment>
           <Link className={css(styles.buttonLeft)} to={to}>
             <i className={`material-icons ${css(styles.icon)}`}>clear</i>
           </Link>
-          <span onClick={handleSubmit}>
+          <span onClick={e => handleSubmit(e, values)}>
             <i className={`material-icons ${css(styles.rightSideIcon)}`}>
               check
             </i>
@@ -70,13 +72,14 @@ export function Component({
         </Fragment>
       );
     }
+
     return (
       <Fragment>
         <Avatar
           alt="Default Avatar"
           onClick={toggleDrawer}
           className={`${css(styles.userAvatar)}`}
-          src="/images/default_avatar.svg"
+          src={authState.user.avatarUrl}
         />
         <NotificationsNoneOutlinedIcon
           className={`${css(styles.rightSideIcon)}`}
@@ -123,7 +126,10 @@ export function Component({
       <Drawer open={state} onClose={toggleDrawer}>
         <SideList toggleDrawer={toggleDrawer} user={authState.user} />
       </Drawer>
-      <nav className={`navbar navbar-dark ${css(styles.navBar)}`}>
+      <nav
+        className={`navbar navbar-dark ${css(styles.navBar)}`}
+        style={{ boxShadow }}
+      >
         <div className={css(styles.topNav)}>
           {backButtonOrMenu()}
           <ul
@@ -141,6 +147,10 @@ export function Component({
     </>
   );
 }
+
+Component.defaultProps = {
+  boxShadow: "0 2px 2px 0 rgba(0,0,0,.14)"
+};
 
 const styles = StyleSheet.create({
   logo: {

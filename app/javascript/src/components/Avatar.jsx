@@ -1,43 +1,56 @@
-import React from 'react';
-import { StyleSheet, css } from 'aphrodite';
+import React from "react";
+import { StyleSheet, css } from "aphrodite";
+import PropTypes from "prop-types";
 
-const avatarURL = ({imageURL, user}) => {
+const avatarURL = ({ imageURL, user }) => {
   if (imageURL) {
-    return imageURL
-  } else if(user && user.avatarUrl) {
-    return  user.avatarUrl
-  } else if(user && user.imageUrl) {
-    return  user.imageUrl
+    return imageURL;
+  } else if (user && user.avatarUrl) {
+    return user.avatarUrl;
+  } else if (user && user.imageUrl) {
+    return user.imageUrl;
   } else {
-    return '/images/default_avatar.svg'
+    return "/images/default_avatar.svg";
+  }
+};
+
+export default function StatusBadge({ imageURL, user, style = "small" }) {
+  if (style === "big") {
+    return (
+      <div className="d-flex justify-content-center">
+        <img
+          src={avatarURL({ imageURL, user })}
+          className={css(styles.avatarBig)}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div className="d-flex justify-content-center">
+        <img
+          src={avatarURL({ imageURL, user })}
+          className={css(styles.avatarSmall)}
+        />
+      </div>
+    );
   }
 }
 
-export default function StatusBadge({imageURL, user, style='small'}) {
-  if (style === 'big') {
-    return(
-      <div className="d-flex justify-content-center">
-        <img src={avatarURL({imageURL, user})} className={css(styles.avatarBig)} />
-      </div>
-      )
-  } else {
-    return(
-      <div className="d-flex justify-content-center">
-        <img src={avatarURL({imageURL, user})} className={css(styles.avatarSmall)} />
-      </div>
-      )
-  }
-}
+StatusBadge.propTypes = {
+  imageURL: PropTypes.string,
+  user: PropTypes.object.isRequired,
+  style: PropTypes.string
+};
 
 const styles = StyleSheet.create({
   avatarSmall: {
-    width: '50px',
-    height: '50px',
-    borderRadius: '8px',
+    width: "50px",
+    height: "50px",
+    borderRadius: "8px"
   },
   avatarBig: {
-    maxWidth: '200px',
-    maxHeight: '200px',
-    borderRadius: '8px',
+    maxWidth: "200px",
+    maxHeight: "200px",
+    borderRadius: "8px"
   }
-})
+});
