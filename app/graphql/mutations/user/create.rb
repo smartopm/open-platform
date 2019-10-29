@@ -12,6 +12,7 @@ module Mutations
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
       argument :avatar_blob_id, String, required: false
+      argument :document_blob_id, String, required: false
 
       field :user, Types::UserType, null: true
 
