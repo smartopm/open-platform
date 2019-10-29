@@ -1,39 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { StyleSheet, css } from "aphrodite";
 import { reasons, userState, userType } from "../utils/constants";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-import { useFileUpload } from "../graphql/useFileUpload";
-import { useApolloClient } from "react-apollo";
-import { withFormik } from "formik";
+import { formContext } from "../containers/UserEdit";
 
-export default function UserForm(props) {
-  const { onChange, status, url, uploadUrl, signedBlobId } = useFileUpload({
-    client: useApolloClient()
-  });
+export default function UserForm() {
 
-  const formik = withFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      requestReason: "",
-      userType: "",
-      state: ""
-    },
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
-    }
-  });
+ const {values, handleInputChange, handleFileUpload, imageUrl, status} = useContext(formContext) 
+  
   return (
     <div className="container">
-      <form onSubmit={formik.values.handleSubmit}>
+      <form>
         <div className="form-group">
-          {status === "DONE" && url ? (
+          {
+          status === "DONE" ? (
             <img
-              src={url}
+              src={imageUrl}
               alt="uploaded picture"
               className={`${css(styles.uploadedImage)}`}
             />
@@ -44,13 +28,14 @@ export default function UserForm(props) {
                 accepts="image/*"
                 capture
                 id="file"
-                onChange={onChange}
+                onChange={handleFileUpload}
                 className={`${css(styles.fileInput)}`}
               />
               <PhotoCameraIcon />
               <label htmlFor="file">Take a photo</label>
             </div>
           )}
+
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -59,9 +44,8 @@ export default function UserForm(props) {
           <input
             className="form-control"
             type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
+            onChange={handleInputChange}
+            defaultValue={values.name}
             name="name"
           />
           {/* {errors.name && touched.name ? <div>{errors.name}</div> : null} */}
@@ -72,11 +56,11 @@ export default function UserForm(props) {
           </label>
           <input
             className="form-control"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
             name="email"
+            type="email"
+            onChange={handleInputChange}
+            defaultValue={values.email || ""}
+
           />
           {/* {errors.email && touched.email ? <div>{errors.email}</div> : null} */}
         </div>
@@ -87,9 +71,8 @@ export default function UserForm(props) {
           <input
             className="form-control"
             type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.phoneNumber}
+            onChange={handleInputChange}
+            defaultValue={values.phoneNumber || ""}
             name="phoneNumber"
           />
           {/* {errors.phoneNumber && touched.phoneNumber ? (
@@ -101,8 +84,9 @@ export default function UserForm(props) {
             id="reason"
             select
             label="Reason"
-            value={formik.values.requestReason || ""}
-            onChange={formik.handleChange("requestReason")}
+            name="requestReason"
+            value={values.requestReason || ""}
+            onChange={handleInputChange}
             margin="normal"
             className={`${css(styles.selectInput)}`}
           >
@@ -121,9 +105,10 @@ export default function UserForm(props) {
             id="userType"
             select
             label="User Type"
-            value={formik.values.userType || ""}
-            onChange={formik.handleChange("userType")}
+            value={values.userType || "" }
+            onChange={handleInputChange}
             margin="normal"
+            name="userType"
             className={`${css(styles.selectInput)}`}
           >
             {userType.map(type => (
@@ -143,9 +128,10 @@ export default function UserForm(props) {
             id="state"
             select
             label="State"
-            value={formik.values.state || ""}
-            onChange={formik.handleChange("state")}
+            value={values.state || ""}
+            onChange={handleInputChange}
             margin="normal"
+            name="state"
             className={`${css(styles.selectInput)}`}
           >
             {userState.map(state => (

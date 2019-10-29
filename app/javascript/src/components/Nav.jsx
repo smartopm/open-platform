@@ -7,6 +7,7 @@ import { Context as AuthStateContext } from "../containers/Provider/AuthStatePro
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
 import Drawer from "@material-ui/core/Drawer";
 import { SideList } from "./SideList.jsx";
+import { formContext } from "../containers/UserEdit.jsx";
 
 export default withRouter(function Nav({
   children,
@@ -41,10 +42,11 @@ export function Component({
   navName,
   backTo,
   history,
-  handleSubmit,
+  // handleSubmit,
   boxShadow
 }) {
   const [state, setState] = React.useState(false);
+  const {values, handleSubmit} = useContext(formContext)
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
@@ -60,12 +62,13 @@ export function Component({
         </Link>
       );
     } else if (menuButton === "edit") {
+
       return (
         <Fragment>
           <Link className={css(styles.buttonLeft)} to={to}>
             <i className={`material-icons ${css(styles.icon)}`}>clear</i>
           </Link>
-          <span onClick={handleSubmit}>
+          <span onClick={e => handleSubmit(e, values)}>
             <i className={`material-icons ${css(styles.rightSideIcon)}`}>
               check
             </i>
