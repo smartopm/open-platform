@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
     width: "40%",
   },
   idUpload: {
-    width: "80%"
+    width: "80%",
+    padding: "60px",
   },
   fileInput: {
     width: 0.1,
@@ -190,3 +191,4 @@ const styles = StyleSheet.create({
     borderRadius: 8
   }
 });
+// blobId

@@ -62,7 +62,7 @@ export default function FormContainer(props) {
   }
   const [data, setData] = React.useState(initialValues)
   const [open, setOpen] = React.useState(false);
-  const { onChange, status, url, signedBlobId } = useFileUpload({
+  const { onChange, status, url, signedBlobId, blobId } = useFileUpload({
     client: useApolloClient()
   });
 
