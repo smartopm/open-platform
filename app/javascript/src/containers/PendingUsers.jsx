@@ -60,16 +60,18 @@ function Results({ data, loading }) {
                   <Avatar imageURL={user.imageURL} user={user} />
                 </div>
                 <div className={`col ${css(styles.userInfo)}`}>
-                  <h6 className={css(styles.title)}>{user.name}</h6>
+                  <p className={css(styles.title)}>{user.name}</p>
                   <br />
                   <small className={css(styles.small)}> {user.roleName} </small>
                 </div>
                 <div className={`col ${css(styles.userInfo)}`}>
                   <div className={`px-2 align-items-center`}>
+                    <span>
                     {`${formatDistance(
                       new Date(user.createdAt),
                       new Date()
                     )} ago`}
+                    </span>
                   </div>
                 </div>
               </div>

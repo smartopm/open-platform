@@ -4,11 +4,11 @@ import TextField from "@material-ui/core/TextField";
 import { StyleSheet, css } from "aphrodite";
 import { reasons, userState, userType } from "../utils/constants";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-import { formContext } from "../containers/UserEdit";
+import { FormContext } from "../containers/UserEdit";
 
 export default function UserForm() {
 
- const {values, handleInputChange, handleFileUpload, imageUrl, status} = useContext(formContext) 
+ const {values, handleInputChange, handleFileUpload, imageUrl, status} = useContext(FormContext) 
   
   return (
     <div className="container">

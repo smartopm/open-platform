@@ -10,6 +10,7 @@ import { useFileUpload } from "../graphql/useFileUpload";
 import { useApolloClient } from "react-apollo";
 import { UserQuery } from "../graphql/queries";
 import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
+import { ModalDialog } from "../components/Dialog";
 
 
   const initialValues = {
@@ -23,10 +24,10 @@ import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
       imageUrl:  "", 
     }
 
-export const formContext = React.createContext({ values: initialValues, handleInputChange: () => {} })
+export const FormContext = React.createContext({ values: initialValues, handleInputChange: () => {} })
 
 
-export default function Container(props) {
+export default function FormContainer(props) {
     const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: "user",
     readLazyQuery: useLazyQuery(UserQuery),
@@ -60,9 +61,20 @@ export default function Container(props) {
     title = "Editing User";
   }
   const [data, setData] = React.useState(initialValues)
+  const [open, setOpen] = React.useState(false);
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+  function handleModal(){
+    setOpen(!open)
+  }
+  function handleModalConfirm(){
+    // grant the user here
+
+    // closing the modal when done
+    setOpen(!open)
+  }
 
   function handleSubmit(event){
     event.preventDefault()
@@ -77,13 +89,13 @@ export default function Container(props) {
         })
         .catch(err => console.log(err));
   }
-  const handleInputChange = event => {
+  function handleInputChange(event){
     const { name, value } = event.target
     setData({
       ...data,
       [name]: value
     });
-  };
+  }
 
     if (!isLoading && !result.id && !error) {
     loadRecord({ variables: { id: props.match.params.id } });
@@ -93,11 +105,12 @@ export default function Container(props) {
   }
   
   return (
-    <formContext.Provider value={{values: result || data, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
+    <FormContext.Provider value={{values: result || data, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
       <Nav
         navName={title}
         menuButton="edit"
       />
+      <ModalDialog handleClose={handleModal} handleConfirm={handleModalConfirm} open={open} action="deny"/>
       <UserForm />
       {result && result.id ? (
         <div className="row justify-content-center align-items-center">
@@ -109,17 +122,20 @@ export default function Container(props) {
           </Button>
           <Button
             variant="contained"
+            onClick={handleModal}
             className={`btn  ${css(styles.denyButton)}`}
           >
             Deny
           </Button>
         </div>
       ) : null}
-    </formContext.Provider>
+    </FormContext.Provider>
   );
 }
 
-Container.displayName = "UserForm";
+
+
+FormContainer.displayName = "UserForm";
 
 const styles = StyleSheet.create({
   grantButton: {

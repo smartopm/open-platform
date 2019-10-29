@@ -7,7 +7,7 @@ import { Context as AuthStateContext } from "../containers/Provider/AuthStatePro
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
 import Drawer from "@material-ui/core/Drawer";
 import { SideList } from "./SideList.jsx";
-import { formContext } from "../containers/UserEdit.jsx";
+import { FormContext } from "../containers/UserEdit.jsx";
 
 export default withRouter(function Nav({
   children,
@@ -39,12 +39,10 @@ export function Component({
   menuButton,
   navName,
   backTo,
-  history,
   boxShadow
 }) {
-  console.log(history)
   const [state, setState] = React.useState(false);
-  const {values, handleSubmit} = useContext(formContext)
+  const {values, handleSubmit} = useContext(FormContext)
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
