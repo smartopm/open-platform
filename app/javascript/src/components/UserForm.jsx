@@ -47,8 +47,8 @@ export default function UserForm() {
             onChange={handleInputChange}
             defaultValue={values.name}
             name="name"
+            required
           />
-          {/* {errors.name && touched.name ? <div>{errors.name}</div> : null} */}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
@@ -60,9 +60,9 @@ export default function UserForm() {
             type="email"
             onChange={handleInputChange}
             defaultValue={values.email || ""}
+            required
 
           />
-          {/* {errors.email && touched.email ? <div>{errors.email}</div> : null} */}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="phoneNumber">
@@ -74,10 +74,9 @@ export default function UserForm() {
             onChange={handleInputChange}
             defaultValue={values.phoneNumber || ""}
             name="phoneNumber"
+            required
           />
-          {/* {errors.phoneNumber && touched.phoneNumber ? (
-            <div>{errors.phoneNumber}</div>
-          ) : null} */}
+         
         </div>
         <div className="form-group">
           <TextField
@@ -96,9 +95,7 @@ export default function UserForm() {
               </MenuItem>
             ))}
           </TextField>
-          {/* {errors.requestReason && touched.requestReason ? (
-            <div>{errors.requestReason}</div>
-          ) : null} */}
+          
         </div>
         <div className="form-group">
           <TextField
@@ -117,10 +114,6 @@ export default function UserForm() {
               </MenuItem>
             ))}
           </TextField>
-
-          {/* {errors.userType && touched.userType ? (
-            <div>{errors.userType}</div>
-          ) : null} */}
         </div>
 
         <div className="form-group">
@@ -140,7 +133,6 @@ export default function UserForm() {
               </MenuItem>
             ))}
           </TextField>
-          {/* {errors.state && touched.state ? <div>{errors.state}</div> : null} */}
         </div>
       </form>
     </div>
