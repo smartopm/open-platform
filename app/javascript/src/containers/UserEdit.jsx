@@ -103,9 +103,11 @@ export default function FormContainer(props) {
   } else if (isLoading) {
     return <Loading />;
   }
+
+  const values = result.id ? result : data
   
   return (
-    <FormContext.Provider value={{values: result || data, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
+    <FormContext.Provider value={{values, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
       <Nav
         navName={title}
         menuButton="edit"
