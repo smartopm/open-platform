@@ -42,15 +42,16 @@ export function Component({
   history,
   boxShadow
 }) {
+  console.log(history)
   const [state, setState] = React.useState(false);
   const {values, handleSubmit} = useContext(formContext)
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
       return (
-        <a href="#" className={css(styles.buttonLeft)} onClick={history.goBack}>
+        <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
-        </a>
+       </Link>
       );
     } else if (menuButton === "cancel") {
       return (

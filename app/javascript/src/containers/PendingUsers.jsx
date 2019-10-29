@@ -138,7 +138,7 @@ export default () => {
           backgroundColor: "#46ce84"
         }}
       >
-        <Nav navName="Requests" menuButton="cancel" boxShadow={"none"} />
+        <Nav navName="Requests" menuButton="back" boxShadow={"none"} />
         <StyledTabs
           value={value}
           onChange={handleChange}

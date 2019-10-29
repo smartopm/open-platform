@@ -56,7 +56,7 @@ export default function Container(props) {
 
 
   let title = "New User";
-  if (props && props.id) {
+  if (result && result.id) {
     title = "Editing User";
   }
   const [data, setData] = React.useState(initialValues)
@@ -64,11 +64,11 @@ export default function Container(props) {
     client: useApolloClient()
   });
 
-  function handleSubmit(){
-
+  function handleSubmit(event){
+    event.preventDefault()
     const values = {
       ...data,
-      signedBlobId
+      avatarBlobId: signedBlobId
     }
       submitMutation(values)
         .then(({ data }) => {
@@ -99,7 +99,7 @@ export default function Container(props) {
         menuButton="edit"
       />
       <UserForm />
-      {props && props.id ? (
+      {result && result.id ? (
         <div className="row justify-content-center align-items-center">
           <Button
             variant="contained"
