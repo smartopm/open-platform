@@ -2,6 +2,11 @@
 
 module Mutations
   module User
+    ATTACHMENTS = {
+      avatar_blob_id: :avatar,
+      document_blob_id: :document,
+    }.freeze
+
     # Create a new request/pending member
     class Create < BaseMutation
       argument :name, String, required: true
@@ -22,16 +27,19 @@ module Mutations
       }.freeze
 
       def resolve(vals)
-        avatar_blob_id = vals.delete(:avatar_blob_id) if vals[:avatar_blob_id]
-        document_blob_id = vals.delete(:document_blob_id) if vals[:document_blob_id]
-        user = ::User.new(vals)
+        user = ::User.new(vals.except(*ATTACHMENTS.keys))
         user.community_id = context[:current_user].community_id
-        user.avatar.attach(avatar_blob_id) if avatar_blob_id
-        user.document.attach(document_blob_id) if document_blob_id
+        attach_avatars(user, vals)
 
-        return { user: user } if user.update(vals)
+        return { user: user } if user.save
 
-        raise GraphQL::ExecutionError, member.errors.full_messages
+        raise GraphQL::ExecutionError, user.errors.full_messages
+      end
+
+      def attach_avatars(user, vals)
+        ATTACHMENTS.each_pair do |key, attr|
+          user.send(attr).attach(vals[key]) if vals[key]
+        end
       end
 
       def authorized?(vals)

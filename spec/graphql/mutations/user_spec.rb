@@ -172,4 +172,94 @@ RSpec.describe Mutations::User do
       expect(result.dig('errors')).to_not be nil
     end
   end
+
+  describe 'creating avatars and adding them to the user' do
+    let!(:admin) { create(:admin_user) }
+    let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
+
+    let(:create_query) do
+      <<~GQL
+        mutation CreateUserMutation(
+            $name: String!,
+            $reason: String!,
+            $vehicle: String
+            $avatarBlobId: String
+          ) {
+          userCreate(
+              name: $name,
+              requestReason: $reason,
+              vehicle: $vehicle,
+              avatarBlobId: $avatarBlobId,
+            ) {
+            user {
+              id
+              avatarUrl
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:update_query) do
+      <<~GQL
+        mutation UpdateUserMutation(
+            $id: ID!,
+            $avatarBlobId: String
+          ) {
+          userUpdate(
+              id: $id,
+              avatarBlobId: $avatarBlobId,
+            ) {
+            user {
+              id
+              avatarUrl
+              documentUrl
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'should allow authorized users to attach avatars and documents to new users' do
+      file = fixture_file_upload(Rails.root.join('public', 'apple-touch-icon.png'), 'image/png')
+      avatar_blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
+        filename: 'test.jpg',
+        content_type: 'image/jpg',
+      )
+      variables = {
+        name: 'Mark Percival',
+        reason: 'Resident',
+        vehicle: nil,
+        avatarBlobId: avatar_blob.signed_id,
+      }
+      result = DoubleGdpSchema.execute(create_query, variables: variables,
+                                                     context: {
+                                                       current_user: admin,
+                                                     }).as_json
+
+      expect(result.dig('data', 'userCreate', 'user', 'avatarUrl')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'should allow authorized users to attach avatars and documents' do
+      file = fixture_file_upload(Rails.root.join('public', 'apple-touch-icon.png'), 'image/png')
+      avatar_blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
+        filename: 'test.jpg',
+        content_type: 'image/jpg',
+      )
+      variables = {
+        id: pending_user.id,
+        avatarBlobId: avatar_blob.signed_id,
+      }
+      result = DoubleGdpSchema.execute(update_query, variables: variables,
+                                                     context: {
+                                                       current_user: admin,
+                                                     }).as_json
+
+      expect(result.dig('data', 'userUpdate', 'user', 'avatarUrl')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
+    end
+  end
 end

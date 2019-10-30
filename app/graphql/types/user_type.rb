@@ -35,6 +35,5 @@ module Types
       Rails.application.routes.url_helpers
            .rails_blob_url(object.document)
     end
-
   end
 end
