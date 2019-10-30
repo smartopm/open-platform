@@ -1,6 +1,7 @@
 import React, { useContext, useState, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
+import { useTranslation } from "react-i18next";
 import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
@@ -14,7 +15,7 @@ export default function Home() {
 
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false);
-
+  const { t } = useTranslation();
   function inputToSearch() {
     setRedirect("/search");
   }
@@ -56,7 +57,7 @@ export function Component({ authState }) {
                       <h5 className="card-title">
                         <i className="material-icons">perm_identity</i>
                       </h5>
-                      <p>Request</p>
+                      <p>{t("auth.email_p")}</p>
                     </div>
                   </Link>
                 </div>
@@ -94,7 +95,7 @@ export function Component({ authState }) {
                     <h5 className="card-title">
                       <i className="material-icons">payment</i>
                     </h5>
-                    <p>Pay</p>
+                    <p>{t("home.pay")}</p>
                   </div>
                 </Link>
               </div>
@@ -108,7 +109,6 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
-
             </div>
           </div>
         </div>
