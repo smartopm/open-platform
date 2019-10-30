@@ -61,7 +61,7 @@ const LoggedInOnly = props => {
 
 const App = () => {
   return (
-    <Suspense fallback="loading">
+    <Suspense fallback={<Loading />}>
       <ApolloProvider>
         <AuthStateProvider>
           <Router>
