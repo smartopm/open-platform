@@ -1,6 +1,10 @@
 import React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import { DialogContent, DialogActions, Button } from "@material-ui/core";
+import {
+  DialogContent,
+  DialogActions,
+  Button,
+  Dialog
+} from "@material-ui/core";
 import PropTypes from "prop-types";
 import { StyleSheet, css } from "aphrodite";
 import Avatar from "./Avatar";
@@ -55,6 +59,7 @@ export function GrantModalDialog({ handleClose, open, imageURL }) {
           Log entry
         </Button>
       </div>
+      <br />
       <Button onClick={handleClose} color="primary">
         Dismiss
       </Button>

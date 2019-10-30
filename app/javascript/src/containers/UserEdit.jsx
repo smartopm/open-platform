@@ -10,11 +10,7 @@ import { useFileUpload } from "../graphql/useFileUpload";
 import { useApolloClient } from "react-apollo";
 import { UserQuery } from "../graphql/queries";
 import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
-import {
-  ModalDialog,
-  DenyModalDialog,
-  GrantModalDialog
-} from "../components/Dialog";
+import { DenyModalDialog, GrantModalDialog } from "../components/Dialog";
 
 const initialValues = {
   name: "",

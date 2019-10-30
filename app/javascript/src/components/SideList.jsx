@@ -24,6 +24,7 @@ export const SideList = ({ toggleDrawer, user }) => (
   >
     <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
       <Avatar user={user} />
+
       <h5>{user.name}</h5>
       <p>{user.phoneNumber}</p>
     </div>
@@ -33,13 +34,17 @@ export const SideList = ({ toggleDrawer, user }) => (
         <ListItemIcon>
           <CropFreeIcon />
         </ListItemIcon>
-        <Link to="/scan" className={`${css(styles.link)}`}><ListItemText primary="Scanner" /></Link>
+        <Link to="/scan" className={`${css(styles.link)}`}>
+          <ListItemText primary="Scanner" />
+        </Link>
       </ListItem>
       <ListItem button>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <Link to="/search" className={`${css(styles.link)}`}><ListItemText primary="Search People" /></Link>
+        <Link to="/search" className={`${css(styles.link)}`}>
+          <ListItemText primary="Search People" />
+        </Link>
       </ListItem>
       <ListItem button>
         <ListItemIcon>
@@ -63,7 +68,9 @@ export const SideList = ({ toggleDrawer, user }) => (
         <ListItemIcon>
           <MeetingRoomIcon />
         </ListItemIcon>
-        <Link to="/logout" className={`${css(styles.link)}`}><ListItemText primary="Logout" /></Link>
+        <Link to="/logout" className={`${css(styles.link)}`}>
+          <ListItemText primary="Logout" />
+        </Link>
       </ListItem>
     </List>
   </div>
@@ -76,8 +83,8 @@ SideList.propTypes = {
 
 const styles = StyleSheet.create({
   link: {
-    color: '#000',
-    textDecoration: 'none',
+    color: "#000",
+    textDecoration: "none"
   },
   sidenav: {
     width: 300
