@@ -1,7 +1,5 @@
 import React from "react";
 import { useLazyQuery, useMutation } from "react-apollo";
-import { StyleSheet, css } from "aphrodite";
-import { Button } from "@material-ui/core";
 import Nav from "../components/Nav";
 import UserForm from "../components/UserForm.jsx";
 import Loading from "../components/Loading.jsx";
@@ -110,24 +108,7 @@ export default function FormContainer({match, history}) {
       <ModalDialog handleClose={handleModal} handleConfirm={handleModalConfirm} open={open} action="deny"/>
       <UserForm />
 
-      {/* TODO: Enable this when we have grant and deny ready */}
-      {result && result.id && false ? (
-        <div className="row justify-content-center align-items-center">
-          <Button
-            variant="contained"
-            className={`btn ${css(styles.grantButton)}`}
-          >
-            Grant
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleModal}
-            className={`btn  ${css(styles.denyButton)}`}
-          >
-            Deny
-          </Button>
-        </div>
-      ) : null}
+      {/* TODO: Enable buttons here, check git blame/diff on this line for the changes */}
     </FormContext.Provider>
   );
 }
@@ -135,17 +116,3 @@ export default function FormContainer({match, history}) {
 
 
 FormContainer.displayName = "UserForm";
-
-const styles = StyleSheet.create({
-  grantButton: {
-    backgroundColor: "rgb(61, 199, 113)",
-    color: "#FFF",
-    marginRight: 60,
-    width: "35%"
-  },
-  denyButton: {
-    backgroundColor: "rgb(230, 63, 69)",
-    color: "#FFF",
-    width: "35%"
-  }
-});
