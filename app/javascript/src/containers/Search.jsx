@@ -191,7 +191,5 @@ const styles = StyleSheet.create({
   requestButton: {
     backgroundColor: "rgb(61, 199, 113)",
     color: "#FFF"
-    // marginRight: 60,
-    // width: "35%"
   }
 });

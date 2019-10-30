@@ -10,59 +10,67 @@ import { useFileUpload } from "../graphql/useFileUpload";
 import { useApolloClient } from "react-apollo";
 import { UserQuery } from "../graphql/queries";
 import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
-import { ModalDialog } from "../components/Dialog";
+import {
+  ModalDialog,
+  DenyModalDialog,
+  GrantModalDialog
+} from "../components/Dialog";
 
+const initialValues = {
+  name: "",
+  email: "",
+  phoneNumber: "",
+  requestReason: "",
+  userType: "",
+  state: "",
+  signedBlobId: "",
+  imageUrl: ""
+};
 
-  const initialValues = {
-      name: "", 
-      email:  "", 
-      phoneNumber:  "", 
-      requestReason: "", 
-      userType: "", 
-      state:  "", 
-      signedBlobId: "", 
-      imageUrl:  "", 
-    }
+export const FormContext = React.createContext({
+  values: initialValues,
+  handleInputChange: () => {}
+});
 
-export const FormContext = React.createContext({ values: initialValues, handleInputChange: () => {} })
-
-
-export default function FormContainer({match, history}) {
-    const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
+export default function FormContainer({ match, history }) {
+  const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: "user",
     readLazyQuery: useLazyQuery(UserQuery),
     updateMutation: useMutation(UpdateUserMutation),
     createMutation: useMutation(CreateUserMutation)
   });
 
-
   let title = "New User";
   if (result && result.id) {
     title = "Editing User";
   }
-  const [data, setData] = React.useState(initialValues)
-  const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState(initialValues);
+  const [isGrantOpen, setGrantModal] = React.useState(false);
+  const [isDenyOpen, setDenyModal] = React.useState(false);
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
 
-
-  function handleModal(){
-    setOpen(!open)
+  function handleDenyModal() {
+    setDenyModal(!isDenyOpen);
   }
-  function handleModalConfirm(){
+
+  function handleGrantModal() {
+    setGrantModal(!isGrantOpen);
+  }
+  function handleModalConfirm() {
     // grant the user here
 
     // closing the modal when done
-    setOpen(!open)
+    setDenyModal(!isDenyOpen);
   }
 
-  function handleSubmit(event){
-    event.preventDefault()
+  function handleSubmit(event) {
+    event.preventDefault();
     const values = {
       ...data,
       avatarBlobId: signedBlobId
-    }
+    };
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
@@ -70,56 +78,70 @@ export default function FormContainer({match, history}) {
       })
       .catch(err => console.log(err));
   }
-  function handleInputChange(event){
-    const { name, value } = event.target
+  function handleInputChange(event) {
+    const { name, value } = event.target;
     setData({
       ...data,
       [name]: value
     });
   }
 
-
   // If we are in an edit flow and haven't loaded the data,
   // load the user data
 
   // If we are in an edit flow and have data loaded,
-  // and it hasn't been merged with values, then 
+  // and it hasn't been merged with values, then
   // merge the result with the form 'data'
   //
   if (match.params.id) {
     if (isLoading) {
       return <Loading />;
-    }
-    else if (!result.id && !error) {
+    } else if (!result.id && !error) {
       loadRecord({ variables: { id: match.params.id } });
-    }
-    else if (!data.dataLoaded && result.id) {
+    } else if (!data.dataLoaded && result.id) {
       setData({
         ...result,
-        dataLoaded: true,
-      })
+        dataLoaded: true
+      });
     }
   }
-  
+
   return (
-    <FormContext.Provider value={{values: data || data, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
-      <Nav
-        navName={title}
-        menuButton="edit"
+    <FormContext.Provider
+      value={{
+        values: data || data,
+        imageUrl: url,
+        handleInputChange,
+        handleSubmit,
+        handleFileUpload: onChange,
+        status
+      }}
+    >
+      <Nav navName={title} menuButton="edit" />
+      <DenyModalDialog
+        handleClose={handleDenyModal}
+        handleConfirm={handleModalConfirm}
+        open={isDenyOpen}
       />
-      <ModalDialog handleClose={handleModal} handleConfirm={handleModalConfirm} open={open} action="deny"/>
+      <GrantModalDialog
+        handleClose={handleGrantModal}
+        handleConfirm={handleModalConfirm}
+        open={isGrantOpen}
+        imageURL={result.avatarUrl}
+      />
       <UserForm />
       {result && result.id ? (
         <div className="row justify-content-center align-items-center">
           <Button
             variant="contained"
+            onClick={handleGrantModal}
             className={`btn ${css(styles.grantButton)}`}
           >
             Grant
           </Button>
           <Button
             variant="contained"
-            onClick={handleModal}
+            onClick={handleDenyModal}
             className={`btn  ${css(styles.denyButton)}`}
           >
             Deny
@@ -129,8 +151,6 @@ export default function FormContainer({match, history}) {
     </FormContext.Provider>
   );
 }
-
-
 
 FormContainer.displayName = "UserForm";
 
