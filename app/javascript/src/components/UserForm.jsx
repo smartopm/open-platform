@@ -7,15 +7,19 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import { FormContext } from "../containers/UserEdit";
 
 export default function UserForm() {
+  const {
+    values,
+    handleInputChange,
+    handleFileUpload,
+    imageUrl,
+    status
+  } = useContext(FormContext);
 
- const {values, handleInputChange, handleFileUpload, imageUrl, status} = useContext(FormContext) 
-  
   return (
     <div className="container">
       <form>
         <div className="form-group">
-          {
-          status === "DONE" ? (
+          {status === "DONE" ? (
             <img
               src={imageUrl}
               alt="uploaded picture"
@@ -35,7 +39,6 @@ export default function UserForm() {
               <label htmlFor="file">Take a photo</label>
             </div>
           )}
-
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -45,7 +48,7 @@ export default function UserForm() {
             className="form-control"
             type="text"
             onChange={handleInputChange}
-            defaultValue={values.name}
+            value={values.name || ""}
             name="name"
             required
           />
@@ -59,9 +62,8 @@ export default function UserForm() {
             name="email"
             type="email"
             onChange={handleInputChange}
-            defaultValue={values.email || ""}
+            value={values.email || ""}
             required
-
           />
         </div>
         <div className="form-group">
@@ -76,7 +78,6 @@ export default function UserForm() {
             name="phoneNumber"
             required
           />
-         
         </div>
         <div className="form-group">
           <TextField
@@ -95,22 +96,21 @@ export default function UserForm() {
               </MenuItem>
             ))}
           </TextField>
-          
         </div>
         <div className="form-group">
           <TextField
             id="userType"
             select
             label="User Type"
-            value={values.userType || "" }
+            value={values.userType || ""}
             onChange={handleInputChange}
             margin="normal"
             name="userType"
             className={`${css(styles.selectInput)}`}
           >
-            {userType.map(type => (
-              <MenuItem key={type} value={type}>
-                {type}
+            {Object.entries(userType).map(([key, val]) => (
+              <MenuItem key={key} value={key}>
+                {val}
               </MenuItem>
             ))}
           </TextField>
@@ -127,26 +127,26 @@ export default function UserForm() {
             name="state"
             className={`${css(styles.selectInput)}`}
           >
-            {userState.map(state => (
-              <MenuItem key={state} value={state}>
-                {state}
+            {Object.entries(userState).map(([key, val]) => (
+              <MenuItem key={key} value={key}>
+                {val}
               </MenuItem>
             ))}
           </TextField>
         </div>
         <div className="form-group">
-           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
-              <input
-                type="file"
-                accepts="image/*"
-                capture
-                id="file"
-                onChange={handleFileUpload}
-                className={`${css(styles.fileInput)}`}
-              />
-              <PhotoCameraIcon />
-              <label htmlFor="file">Take a photo of your ID</label>
-            </div>
+          <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
+            <input
+              type="file"
+              accepts="image/*"
+              capture
+              id="file"
+              onChange={handleFileUpload}
+              className={`${css(styles.fileInput)}`}
+            />
+            <PhotoCameraIcon />
+            <label htmlFor="file">Take a photo of your ID</label>
+          </div>
         </div>
       </form>
     </div>
@@ -171,11 +171,11 @@ const styles = StyleSheet.create({
     color: "#bdbdbd",
     outline: "none",
     transition: "border .24s ease-in-out",
-    width: "40%",
+    width: "40%"
   },
   idUpload: {
     width: "80%",
-    padding: "60px",
+    padding: "60px"
   },
   fileInput: {
     width: 0.1,
@@ -191,4 +191,3 @@ const styles = StyleSheet.create({
     borderRadius: 8
   }
 });
-// blobId

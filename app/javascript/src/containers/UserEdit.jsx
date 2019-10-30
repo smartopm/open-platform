@@ -27,33 +27,13 @@ import { ModalDialog } from "../components/Dialog";
 export const FormContext = React.createContext({ values: initialValues, handleInputChange: () => {} })
 
 
-export default function FormContainer(props) {
+export default function FormContainer({match, history}) {
     const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: "user",
     readLazyQuery: useLazyQuery(UserQuery),
     updateMutation: useMutation(UpdateUserMutation),
     createMutation: useMutation(CreateUserMutation)
   });
-
-  function submitMutation({
-    name,
-    userType,
-    requestReason,
-    vehicle,
-    state,
-    email,
-    phoneNumber
-  }) {
-    return createOrUpdate({
-      name,
-      requestReason,
-      userType,
-      vehicle,
-      state,
-      email,
-      phoneNumber
-    });
-  }
 
 
   let title = "New User";
@@ -62,9 +42,10 @@ export default function FormContainer(props) {
   }
   const [data, setData] = React.useState(initialValues)
   const [open, setOpen] = React.useState(false);
-  const { onChange, status, url, signedBlobId, blobId } = useFileUpload({
+  const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
 
   function handleModal(){
     setOpen(!open)
@@ -82,12 +63,12 @@ export default function FormContainer(props) {
       ...data,
       avatarBlobId: signedBlobId
     }
-      submitMutation(values)
-        .then(({ data }) => {
-          // setSubmitting(false);
-          history.push(`/user/${data.result.user.id}`);
-        })
-        .catch(err => console.log(err));
+    createOrUpdate(values)
+      .then(({ data }) => {
+        // setSubmitting(false);
+        history.push(`/user/${data.result.user.id}`);
+      })
+      .catch(err => console.log(err));
   }
   function handleInputChange(event){
     const { name, value } = event.target
@@ -97,17 +78,31 @@ export default function FormContainer(props) {
     });
   }
 
-    if (!isLoading && !result.id && !error) {
-    loadRecord({ variables: { id: props.match.params.id } });
-    
-  } else if (isLoading) {
-    return <Loading />;
-  }
 
-  const values = result.id ? result : data
+  // If we are in an edit flow and haven't loaded the data,
+  // load the user data
+
+  // If we are in an edit flow and have data loaded,
+  // and it hasn't been merged with values, then 
+  // merge the result with the form 'data'
+  //
+  if (match.params.id) {
+    if (isLoading) {
+      return <Loading />;
+    }
+    else if (!result.id && !error) {
+      loadRecord({ variables: { id: match.params.id } });
+    }
+    else if (!data.dataLoaded && result.id) {
+      setData({
+        ...result,
+        dataLoaded: true,
+      })
+    }
+  }
   
   return (
-    <FormContext.Provider value={{values, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
+    <FormContext.Provider value={{values: data || data, imageUrl: url, handleInputChange, handleSubmit, handleFileUpload: onChange, status }}>
       <Nav
         navName={title}
         menuButton="edit"
