@@ -57,7 +57,7 @@ export function Component({ authState }) {
                       <h5 className="card-title">
                         <i className="material-icons">perm_identity</i>
                       </h5>
-                      <p>{t("auth.email_p")}</p>
+                      <p>{t("home.request")}</p>
                     </div>
                   </Link>
                 </div>
@@ -72,7 +72,7 @@ export function Component({ authState }) {
                         <h5 className="card-title">
                           <i className="material-icons">perm_identity</i>
                         </h5>
-                        <p>Request</p>
+                        <p>{t("home.request")}</p>
                       </div>
                     </Link>
                   </div>
@@ -82,7 +82,7 @@ export function Component({ authState }) {
                         <h5 className="card-title">
                           <i className="material-icons">person_add</i>
                         </h5>
-                        <p>New User</p>
+                        <p>{t("home.new_user")}</p>
                       </div>
                     </Link>
                   </div>
@@ -105,11 +105,10 @@ export function Component({ authState }) {
                     <h5 className="card-title">
                       <i className="material-icons">directions</i>
                     </h5>
-                    <p>Explore</p>
+                    <p>{t("home.explore")}</p>
                   </div>
                 </Link>
               </div>
-
             </div>
           </div>
         </div>
