@@ -109,7 +109,9 @@ export default function FormContainer({match, history}) {
       />
       <ModalDialog handleClose={handleModal} handleConfirm={handleModalConfirm} open={open} action="deny"/>
       <UserForm />
-      {result && result.id ? (
+
+      {/* TODO: Enable this when we have grant and deny ready */}
+      {result && result.id && false ? (
         <div className="row justify-content-center align-items-center">
           <Button
             variant="contained"
