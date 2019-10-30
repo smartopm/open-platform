@@ -18,7 +18,8 @@ before_script:
 
 test:
   script:
-    - bundle exec rails test
+    - bundle exec rake lint
+    - bundle exec rake
 
 pronto:
   script:
