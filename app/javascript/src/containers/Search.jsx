@@ -8,6 +8,7 @@ import Loading from "../components/Loading.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 import Avatar from "../components/Avatar.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
+import { Button } from "@material-ui/core";
 
 const QUERY = gql`
   query UserSearch($name: String!) {
@@ -52,7 +53,17 @@ function Results({ data, loading, called }) {
         ) : (
           <div className={`${css(styles.noResults)}`}>
             <h4>No results found!</h4>
-            <Link to="/user/request">Create a new request</Link>
+            <br />
+            <div className="d-flex justify-content-center">
+              <Link to="/user/request">
+                <Button
+                  variant="contained"
+                  className={`btn ${css(styles.requestButton)}`}
+                >
+                  Create a new request
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
       </div>
@@ -176,5 +187,11 @@ const styles = StyleSheet.create({
   noResults: {
     margin: "4em 0",
     textAlign: "center"
+  },
+  requestButton: {
+    backgroundColor: "rgb(61, 199, 113)",
+    color: "#FFF"
+    // marginRight: 60,
+    // width: "35%"
   }
 });
