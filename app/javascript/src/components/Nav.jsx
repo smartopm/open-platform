@@ -42,14 +42,14 @@ export function Component({
   boxShadow
 }) {
   const [state, setState] = React.useState(false);
-  const {values, handleSubmit} = useContext(FormContext)
+  const { values, handleSubmit } = useContext(FormContext);
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back") {
       return (
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
-       </Link>
+        </Link>
       );
     } else if (menuButton === "cancel") {
       return (
@@ -58,7 +58,6 @@ export function Component({
         </Link>
       );
     } else if (menuButton === "edit") {
-
       return (
         <Fragment>
           <Link className={css(styles.buttonLeft)} to={to}>
