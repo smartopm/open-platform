@@ -2,7 +2,7 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useContext, Component } from "react";
+import React, { useContext, Component, Suspense } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
@@ -19,7 +19,6 @@ import UserShow from "../src/containers/UserShow";
 import IDCard from "../src/containers/IdCard";
 import EntryLogs from "../src/containers/EntryLogs";
 import Search from "../src/containers/Search";
-import Request from "../src/containers/Request";
 import UserEdit from "../src/containers/UserEdit";
 import Upload from "../src/containers/UploadTest";
 import PendingUsers from "../src/containers/PendingUsers";
@@ -60,29 +59,31 @@ const LoggedInOnly = props => {
 
 const App = () => {
   return (
-    <ApolloProvider>
-      <AuthStateProvider>
-        <Router>
-          <LoggedInOnly>
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/scan" component={Scan} />
-              <Route path="/search" component={Search} />
-              <Route path="/id/:id" component={IDCard} />
-              <Route path="/entry_logs/:userId" component={EntryLogs} />
-              <Route path="/user" exact component={UserEdit} />
-              <Route path="/user/pending" exact component={PendingUsers} />
-              <Route path="/user/request" exact component={Request} />
-              <Route path="/user/new" exact component={UserEdit} />
-              <Route path="/user/:id" exact component={UserShow} />
-              <Route path="/upload" component={Upload} />
-              <Route path="/user/:id/edit" exact component={UserEdit} />
-              <Route path="/user/request/:id" component={Request} />
-            </Switch>
-          </LoggedInOnly>
-        </Router>
-      </AuthStateProvider>
-    </ApolloProvider>
+    <Suspense fallback={<Loading />}>
+      <ApolloProvider>
+        <AuthStateProvider>
+          <Router>
+            <LoggedInOnly>
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/scan" component={Scan} />
+                <Route path="/search" component={Search} />
+                <Route path="/id/:id" component={IDCard} />
+                <Route path="/entry_logs/:userId" component={EntryLogs} />
+                <Route path="/user" exact component={UserEdit} />
+                <Route path="/user/pending" exact component={PendingUsers} />
+                <Route path="/user/request" exact component={Request} />
+                <Route path="/user/new" exact component={UserEdit} />
+                <Route path="/user/:id" exact component={UserShow} />
+                <Route path="/upload" component={Upload} />
+                <Route path="/user/:id/edit" exact component={UserEdit} />
+                <Route path="/user/request/:id" component={Request} />
+              </Switch>
+            </LoggedInOnly>
+          </Router>
+        </AuthStateProvider>
+      </ApolloProvider>
+    </Suspense>
   );
 };
 

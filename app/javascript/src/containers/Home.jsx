@@ -5,6 +5,8 @@ import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
+import RequestIcon from "../../../assets/images/icon_request.svg";
+import ExploreIcon from "../../../assets/images/icon_map";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -14,7 +16,6 @@ export default function Home() {
 
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false);
-
   function inputToSearch() {
     setRedirect("/search");
   }
@@ -54,7 +55,13 @@ export function Component({ authState }) {
                   <Link to={`/user/request`} className={`card-link`}>
                     <div className="card-body">
                       <h5 className="card-title">
-                        <i className="material-icons">perm_identity</i>
+                        <i
+                          className={`${css(
+                            styles.homeIconColor
+                          )} material-icons`}
+                        >
+                          perm_identity
+                        </i>
                       </h5>
                       <p>Request</p>
                     </div>
@@ -69,7 +76,7 @@ export function Component({ authState }) {
                     <Link to={`/user/pending`} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <i className="material-icons">perm_identity</i>
+                          <img src={RequestIcon} alt="request icon" />
                         </h5>
                         <p>Request</p>
                       </div>
@@ -79,7 +86,13 @@ export function Component({ authState }) {
                     <Link to={`/user/new`} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <i className="material-icons">person_add</i>
+                          <i
+                            className={`${css(
+                              styles.homeIconColor
+                            )} material-icons`}
+                          >
+                            person_add
+                          </i>
                         </h5>
                         <p>New User</p>
                       </div>
@@ -92,7 +105,13 @@ export function Component({ authState }) {
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <i className="material-icons">payment</i>
+                      <i
+                        className={`${css(
+                          styles.homeIconColor
+                        )} material-icons`}
+                      >
+                        payment
+                      </i>
                     </h5>
                     <p>Pay</p>
                   </div>
@@ -102,13 +121,12 @@ export function Component({ authState }) {
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <i className="material-icons">directions</i>
+                      <img src={ExploreIcon} alt="map icon" />
                     </h5>
                     <p>Explore</p>
                   </div>
                 </Link>
               </div>
-
             </div>
           </div>
         </div>
@@ -147,5 +165,8 @@ const styles = StyleSheet.create({
     bottom: 5,
     right: 5,
     width: 20
+  },
+  homeIconColor: {
+    color: "#5ed8ab"
   }
 });

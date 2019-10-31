@@ -40,6 +40,7 @@ const QUERY = gql`
       roleName
       createdAt
       imageUrl
+      avatarUrl
     }
   }
 `;
@@ -56,21 +57,21 @@ function Results({ data, loading }) {
           <CardContent>
             <div className="container">
               <div className="row">
-                <div className={`col ${css(styles.userInfo)}`}>
-                  <Avatar imageURL={user.imageURL} user={user} />
+                <div className={` col `}>
+                  <Avatar imageURL={user.avatarUrl} user={user} />
                 </div>
-                <div className={`col ${css(styles.userInfo)}`}>
-                  <p className={css(styles.title)}>{user.name}</p>
+                <div className={` col ${css(styles.userInfo)}`}>
+                  <p className={css(styles.title)}>{user.name.split(" ")[0]}</p>
                   <br />
-                  <small className={css(styles.small)}> {user.roleName} </small>
+                  <p className={css(styles.small)}> {user.roleName} </p>
                 </div>
-                <div className={`col ${css(styles.userInfo)}`}>
+                <div className={` col ${css(styles.userInfo)}`}>
                   <div className={`px-2 align-items-center`}>
                     <span>
-                    {`${formatDistance(
-                      new Date(user.createdAt),
-                      new Date()
-                    )} ago`}
+                      {`${formatDistance(
+                        new Date(user.createdAt),
+                        new Date()
+                      )} ago`}
                     </span>
                   </div>
                 </div>
@@ -133,6 +134,7 @@ export default () => {
       "aria-controls": `simple-tabpanel-${index}`
     };
   }
+  console.log(data);
   return (
     <div>
       <div
@@ -202,5 +204,8 @@ const styles = StyleSheet.create({
     border: "1px dashed #46ce84",
     color: "#46ce84",
     borderRadius: "10px"
+  },
+  userInfo: {
+    fontSize: "0.7em"
   }
 });
