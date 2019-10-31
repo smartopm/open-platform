@@ -23,6 +23,7 @@ import UserEdit from "../src/containers/UserEdit";
 import Upload from "../src/containers/UploadTest";
 import PendingUsers from "../src/containers/PendingUsers";
 import Loading from "../src/components/Loading.jsx";
+import "../src/i18n";
 
 class DynamicImport extends Component {
   constructor(props) {

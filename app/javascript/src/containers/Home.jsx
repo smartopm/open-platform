@@ -1,6 +1,7 @@
 import React, { useContext, useState, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
+import { useTranslation } from "react-i18next";
 import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
@@ -16,6 +17,7 @@ export default function Home() {
 
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false);
+  const { t } = useTranslation();
   function inputToSearch() {
     setRedirect("/search");
   }
@@ -63,7 +65,7 @@ export function Component({ authState }) {
                           perm_identity
                         </i>
                       </h5>
-                      <p>Request</p>
+                      <p>{t("home.request")}</p>
                     </div>
                   </Link>
                 </div>
@@ -78,7 +80,7 @@ export function Component({ authState }) {
                         <h5 className="card-title">
                           <img src={RequestIcon} alt="request icon" />
                         </h5>
-                        <p>Request</p>
+                        <p>{t("home.request")}</p>
                       </div>
                     </Link>
                   </div>
@@ -94,7 +96,7 @@ export function Component({ authState }) {
                             person_add
                           </i>
                         </h5>
-                        <p>New User</p>
+                        <p>{t("home.new_user")}</p>
                       </div>
                     </Link>
                   </div>
@@ -113,7 +115,7 @@ export function Component({ authState }) {
                         payment
                       </i>
                     </h5>
-                    <p>Pay</p>
+                    <p>{t("home.pay")}</p>
                   </div>
                 </Link>
               </div>
@@ -123,7 +125,7 @@ export function Component({ authState }) {
                     <h5 className="card-title">
                       <img src={ExploreIcon} alt="map icon" />
                     </h5>
-                    <p>Explore</p>
+                    <p>{t("home.explore")}</p>
                   </div>
                 </Link>
               </div>

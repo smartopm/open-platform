@@ -11,7 +11,6 @@ import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
 import { DenyModalDialog, GrantModalDialog } from "../components/Dialog";
 import { Button } from "@material-ui/core";
 import { css, StyleSheet } from "aphrodite";
-import gql from "graphql-tag";
 
 const initialValues = {
   name: "",
@@ -51,6 +50,7 @@ export default function FormContainer({ match, history }) {
   function handleDenyModal() {
     setDenyModal(!isDenyOpen);
   }
+
 // Todo: add an extra step to ask the user for confirmation
   function handleGrantModal() {
     createOrUpdate({ id: result.id, state: "valid" }).then(() => {

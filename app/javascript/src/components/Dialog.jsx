@@ -46,7 +46,7 @@ export function GrantModalDialog({ handleClose, open, imageURL }) {
         <br />
         <p className="text-center">Thomas Jones</p>
         <br />
-        <p className="text-center ">
+        <p className="text-center">
           <strong>Access all clear</strong>
         </p>
       </DialogContent>
