@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   input: {
     marginTop: "1em",
     padding: "0.5em 1em 0.5em 2em",
-    height: "30px",
+    height: 40,
     color: "#222",
     border: "none",
     borderRadius: "5px",
@@ -157,14 +157,15 @@ const styles = StyleSheet.create({
   searchIcon: {
     color: "#999",
     position: "absolute",
-    left: "4px",
-    top: "20px",
+    left: 4,
+    top: 26,
     bottom: "4px",
     "z-index": 9
   },
   scanIcon: {
     position: "absolute",
-    bottom: 5,
+    top: 26,
+    bottom: 4,
     right: 5,
     width: 20
   },
