@@ -102,4 +102,15 @@ RSpec.describe User, type: :model do
       expect(@user.expired?).to be true
     end
   end
+
+  describe 'User phone numbers' do
+    before :each do
+      @user = FactoryBot.create(:user_with_community)
+    end
+
+    it 'should be all numbers, and no more than 15 digits' do
+      @user.update(phone_number: '+14157351116')
+      expect(@user.errors.messages[:phone_number]).to_not be_nil
+    end
+  end
 end
