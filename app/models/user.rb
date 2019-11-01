@@ -147,6 +147,13 @@ class User < ApplicationRecord
     nil
   end
 
+  def role?(roles)
+    user_type = self[:user_type]
+    return false unless user_type
+
+    Array(roles).include?(user_type.to_sym)
+  end
+
   def verify_phone_token!(token)
     if phone_token == token
       return true if phone_token_expires_at > Time.zone.now

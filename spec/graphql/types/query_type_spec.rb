@@ -5,14 +5,22 @@ require 'rails_helper'
 RSpec.describe Types::QueryType do
   describe 'user' do
     let!(:current_user) { create(:user_with_community) }
+    let!(:another_user) { create(:user_with_community, community_id: current_user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
 
     let(:query) do
       %(query {
         user(id:"#{current_user.id}") {
           id
-          userType
-          email
-          name
+        }
+      })
+    end
+
+    let(:priviledged_query) do
+      %(query {
+        user(id:"#{current_user.id}") {
+          id
+          phoneNumber
         }
       })
     end
@@ -22,9 +30,24 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'user', 'id')).to eql current_user.id
     end
 
-    it 'should fail if no logged in' do
+    it 'should fail if not logged in' do
       result = DoubleGdpSchema.execute(query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'user')).to be_nil
+    end
+
+    it 'hide priviledged information' do
+      result = DoubleGdpSchema.execute(priviledged_query, context:
+                                       { current_user: another_user }).as_json
+      expect(result.dig('data', 'user', 'id')).to_not be_nil
+      expect(result.dig('data', 'user', 'phoneNumber')).to be_nil
+
+      result = DoubleGdpSchema.execute(priviledged_query, context: { current_user: admin }).as_json
+      expect(result.dig('data', 'user', 'phoneNumber')).to eql current_user.phone_number
+
+      # Visible to the owner
+      result = DoubleGdpSchema.execute(priviledged_query, context:
+                                       { current_user: current_user }).as_json
+      expect(result.dig('data', 'user', 'phoneNumber')).to eql current_user.phone_number
     end
   end
 
