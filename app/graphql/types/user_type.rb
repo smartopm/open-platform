@@ -11,7 +11,7 @@ module Types
     field :user_type, String, null: true
     field :vehicle, String, null: true
     field :request_reason, String, null: true
-    field :phone_number, String, null: true
+    field :phone_number, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :request_note, String, null: true
     field :role_name, String, null: true
     field :state, String, null: true
