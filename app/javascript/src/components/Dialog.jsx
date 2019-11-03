@@ -22,21 +22,26 @@ export function ModalDialog({
     >
       <DialogContent>
         <p className="deny-msg">
-          Are you sure you want to {action} request <strong>{name}</strong> ?
+          Are you sure you want to {action} access to <strong>{name}</strong> ?
         </p>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleConfirm} color="secondary">
+        <Button
+          autoFocus
+          onClick={handleConfirm}
+          color={action === "grant" ? "primary" : "secondary"}
+        >
           {action}
         </Button>
-        <Button onClick={handleClose} color="primary">
-          Never Mind
-        </Button>
+        <Button onClick={handleClose}>Never Mind</Button>
       </DialogActions>
     </Dialog>
   );
 }
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  action: PropTypes.string.isRequired,
+  handleConfirm: PropTypes.func.isRequired
 };
