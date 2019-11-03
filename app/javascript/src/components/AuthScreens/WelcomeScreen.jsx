@@ -1,22 +1,38 @@
 import React from "react";
 import { Container, Grid, Link, Button } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
-import logo from "../../../../assets/images/nkwashi_white_logo_transparent.png";
+import logo from "../../../../assets/images/logo_nkwashi.svg";
 
 export function WelcomeScreen() {
   return (
     <Container component="main" maxWidth="xs">
-      <div className="row justify-content-center align-items-center">
-        <img src={logo} width="240px" height="120px" />
-
-        <h3>Welcome to Nkwashi App</h3>
+      <div
+        className="row justify-content-center align-items-center"
+        style={{
+          marginTop: 91
+        }}
+      >
+        <img src={logo} width="137px" height="40px" />
+        <h3
+          style={{
+            marginTop: 33
+          }}
+        >
+          Welcome to Nkwashi App
+        </h3>
         <br />
         <br />
-        <p>First smart city in Zambia</p>
-
+        <br />
+        <p
+          style={{
+            marginTop: 18
+          }}
+        >
+          First smart city in Zambia
+        </p>
         <Button
           variant="contained"
-          className={`btn ${css(styles.grantButton)}`}
+          className={`btn ${css(styles.getStartedButton)}`}
         >
           Get Started
         </Button>
@@ -29,11 +45,12 @@ export function WelcomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  grantButton: {
-    backgroundColor: "rgb(61, 199, 113)",
+  getStartedButton: {
+    backgroundColor: "#53d6a5",
     color: "#FFF",
     margin: 60,
-    width: "75%"
+    width: "75%",
+    boxShadow: "none"
   },
   googleLink: {
     margin: 40

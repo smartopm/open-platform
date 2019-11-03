@@ -92,7 +92,7 @@ function Results({ data, loading }) {
         {data.results && data.results.length > 0 ? (
           memberList(data.results)
         ) : (
-          <h4>No Pending Users Found</h4>
+          <h4 className="text-center">No Pending Users Found</h4>
         )}
       </div>
     );
@@ -163,7 +163,7 @@ export default () => {
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Nothing yet
+        <h4 className="text-center">Nothing yet</h4>
       </TabPanel>
     </div>
   );
