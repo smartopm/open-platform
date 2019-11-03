@@ -8,7 +8,7 @@ import { useFileUpload } from "../graphql/useFileUpload";
 import { useApolloClient } from "react-apollo";
 import { UserQuery } from "../graphql/queries";
 import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
-import { DenyModalDialog, GrantModalDialog } from "../components/Dialog";
+import { ModalDialog } from "../components/Dialog";
 import { Button } from "@material-ui/core";
 import { css, StyleSheet } from "aphrodite";
 
@@ -41,28 +41,33 @@ export default function FormContainer({ match, history }) {
     title = "Editing User";
   }
   const [data, setData] = React.useState(initialValues);
-  const [isGrantOpen, setGrantModal] = React.useState(false);
-  const [isDenyOpen, setDenyModal] = React.useState(false);
+  const [isModalOpen, setDenyModal] = React.useState(false);
+  const [modalAction, setModalAction] = React.useState("grant");
+
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
 
-  function handleDenyModal() {
-    setDenyModal(!isDenyOpen);
+  function handleModal(type) {
+    if (type === "grant") {
+      setModalAction("grant");
+    } else {
+      setModalAction("deny");
+    }
+    setDenyModal(!isModalOpen);
   }
 
-// Todo: add an extra step to ask the user for confirmation
-  function handleGrantModal() {
-    createOrUpdate({ id: result.id, state: "valid" }).then(() => {
-      setGrantModal(!isGrantOpen);
-    });
-  }
   function handleModalConfirm() {
-    createOrUpdate({ id: result.id, state: "banned" }).then(() => {
-      setDenyModal(!isGrantOpen);
-    }).then(() => {
-      history.push("/");
+    createOrUpdate({
+      id: result.id,
+      state: modalAction === "grant" ? "valid" : "banned"
     })
+      .then(() => {
+        setDenyModal(!isModalOpen);
+      })
+      .then(() => {
+        history.push("/user/pending");
+      });
   }
 
   function handleSubmit(event) {
@@ -118,16 +123,14 @@ export default function FormContainer({ match, history }) {
       }}
     >
       <Nav navName={title} menuButton="edit" />
-      <DenyModalDialog
-        handleClose={handleDenyModal}
+
+      <ModalDialog
+        handleClose={handleModal}
         handleConfirm={handleModalConfirm}
-        open={isDenyOpen}
-      />
-      <GrantModalDialog
-        handleClose={handleGrantModal}
-        handleConfirm={handleModalConfirm}
-        open={isGrantOpen}
+        open={isModalOpen}
         imageURL={result.avatarUrl}
+        action={modalAction}
+        name={data.name}
       />
       <UserForm />
 
@@ -135,14 +138,14 @@ export default function FormContainer({ match, history }) {
         <div className="row justify-content-center align-items-center">
           <Button
             variant="contained"
-            onClick={handleGrantModal}
+            onClick={() => handleModal("grant")}
             className={`btn ${css(styles.grantButton)}`}
           >
             Grant
           </Button>
           <Button
             variant="contained"
-            onClick={handleDenyModal}
+            onClick={() => handleModal("deny")}
             className={`btn  ${css(styles.denyButton)}`}
           >
             Deny

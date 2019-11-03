@@ -24,6 +24,7 @@ import Upload from "../src/containers/UploadTest";
 import PendingUsers from "../src/containers/PendingUsers";
 import Loading from "../src/components/Loading.jsx";
 import "../src/i18n";
+import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -79,6 +80,7 @@ const App = () => {
                 <Route path="/upload" component={Upload} />
                 <Route path="/user/:id/edit" exact component={UserEdit} />
                 <Route path="/user/request/:id" component={Request} />
+                <Route path="/welcome" component={WelcomeScreen} />
               </Switch>
             </LoggedInOnly>
           </Router>
