@@ -140,7 +140,6 @@ export default () => {
       "aria-controls": `simple-tabpanel-${index}`
     };
   }
-  console.log(data);
   return (
     <div>
       <div
