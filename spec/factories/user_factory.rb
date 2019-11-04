@@ -8,8 +8,13 @@ FactoryBot.define do
     "email_#{n}@doublegdp.com"
   end
 
+  sequence :phone_number do |n|
+    "1404555121#{n}"
+  end
+
   factory :user do
     name { 'Mark Test' }
+    phone_number
     email
     provider { 'google' }
     uid

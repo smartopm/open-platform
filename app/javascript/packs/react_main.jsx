@@ -2,13 +2,15 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useContext, Component, Suspense } from "react";
+import React, { useContext, useState, Component, Suspense } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
   Switch,
   Redirect,
-  Route
+  Route,
+  useLocation,
+  useHistory
 } from "react-router-dom";
 import ApolloProvider from "../src/containers/Provider/ApolloProvider";
 import AuthStateProvider, {
@@ -23,8 +25,11 @@ import UserEdit from "../src/containers/UserEdit";
 import Upload from "../src/containers/UploadTest";
 import PendingUsers from "../src/containers/PendingUsers";
 import Loading from "../src/components/Loading.jsx";
-import "../src/i18n";
 import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
+import "../src/i18n";
+
+// Prevent Google Analytics reporting from staging and dev domains
+const PRIMARY_DOMAINS = ["app.dgdp.site"];
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -59,30 +64,59 @@ const LoggedInOnly = props => {
   return <Redirect to="/login" />;
 };
 
+const Analytics = props => {
+  const gtag = window.gtag;
+  const location = useLocation();
+  const history = useHistory();
+  const [prevLocation, setLocation] = useState("");
+  const liveAnalytics = (host => {
+    return PRIMARY_DOMAINS.includes(host);
+  })(window.location.host);
+
+  if (location.pathname !== prevLocation) {
+    if (history.action === "PUSH" && typeof gtag === "function") {
+      const pageData = {
+        page_location: window.location.href,
+        page_path: location.pathname
+      };
+      if (liveAnalytics) {
+        gtag("config", "G-W8TMB8D2SL", pageData);
+      } else {
+        console.log("GA DEVELOPMENT MODE:", pageData);
+      }
+    }
+    setLocation(location.pathname);
+  }
+
+  return props.children;
+};
+
 const App = () => {
   return (
     <Suspense fallback={<Loading />}>
       <ApolloProvider>
         <AuthStateProvider>
           <Router>
-            <LoggedInOnly>
-              <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/scan" component={Scan} />
-                <Route path="/search" component={Search} />
-                <Route path="/id/:id" component={IDCard} />
-                <Route path="/entry_logs/:userId" component={EntryLogs} />
-                <Route path="/user" exact component={UserEdit} />
-                <Route path="/user/pending" exact component={PendingUsers} />
-                <Route path="/user/request" exact component={Request} />
-                <Route path="/user/new" exact component={UserEdit} />
-                <Route path="/user/:id" exact component={UserShow} />
-                <Route path="/upload" component={Upload} />
-                <Route path="/user/:id/edit" exact component={UserEdit} />
-                <Route path="/user/request/:id" component={Request} />
-                <Route path="/welcome" component={WelcomeScreen} />
-              </Switch>
-            </LoggedInOnly>
+            <Analytics>
+              <LoggedInOnly>
+                <Switch>
+                  <Route path="/" exact component={Home} />
+                  <Route path="/scan" component={Scan} />
+                  <Route path="/search" component={Search} />
+                  <Route path="/id/:id" component={IDCard} />
+                  <Route path="/entry_logs/:userId" component={EntryLogs} />
+                  <Route path="/user" exact component={UserEdit} />
+                  <Route path="/user/pending" exact component={PendingUsers} />
+                  <Route path="/user/request" exact component={Request} />
+                  <Route path="/user/new" exact component={UserEdit} />
+                  <Route path="/user/:id" exact component={UserShow} />
+                  <Route path="/upload" component={Upload} />
+                  <Route path="/user/:id/edit" exact component={UserEdit} />
+                  <Route path="/user/request/:id" component={Request} />
+                  <Route path="/welcome" component={WelcomeScreen} />
+                </Switch>
+              </LoggedInOnly>
+            </Analytics>
           </Router>
         </AuthStateProvider>
       </ApolloProvider>

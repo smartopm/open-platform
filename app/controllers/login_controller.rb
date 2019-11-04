@@ -15,8 +15,7 @@ class LoginController < ApplicationController
       flash[:error] = 'Phone number not found'
       return redirect_to login_path
     end
-    token = @user.create_new_phone_token
-    Sms.send(@user.phone_number, "Your code is #{token}")
+    @user.send_phone_token
     # Present form for entering in code
   end
 
