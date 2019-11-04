@@ -33,7 +33,9 @@ export function ModalDialog({
         >
           {action}
         </Button>
-        <Button onClick={handleClose}>Never Mind</Button>
+        <Button className="btn-close" onClick={handleClose}>
+          Never Mind
+        </Button>
       </DialogActions>
     </Dialog>
   );
