@@ -7,6 +7,8 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import RequestIcon from "../../../assets/images/icon_request.svg";
+import FinanceIcon from "../../../assets/images/icon_request_fill.svg";
+import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import ExploreIcon from "../../../assets/images/icon_map";
 
 export default function Home() {
@@ -75,28 +77,25 @@ export function Component({ authState }) {
               ) ? (
                 <Fragment>
                   <div className="card align-self-center text-center">
+                    <Link
+                      to={`/id/${authState.user.id}`}
+                      className={`card-link`}
+                    >
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <img src={ExploreIcon} alt="map icon" />
+                        </h5>
+                        <p>{t("home.explore")}</p>
+                      </div>
+                    </Link>
+                  </div>
+                  <div className="card align-self-center text-center">
                     <Link to={`/user/pending`} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
                           <img src={RequestIcon} alt="request icon" />
                         </h5>
                         <p>{t("home.request")}</p>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="card align-self-center text-center">
-                    <Link to={`/user/new`} className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <i
-                            className={`${css(
-                              styles.homeIconColor
-                            )} material-icons`}
-                          >
-                            person_add
-                          </i>
-                        </h5>
-                        <p>{t("home.new_user")}</p>
                       </div>
                     </Link>
                   </div>
@@ -107,25 +106,20 @@ export function Component({ authState }) {
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <i
-                        className={`${css(
-                          styles.homeIconColor
-                        )} material-icons`}
-                      >
-                        payment
-                      </i>
+                      <img src={FinanceIcon} alt="finance icon" />
                     </h5>
-                    <p>{t("home.pay")}</p>
+                    <p>{t("home.finance")}</p>
                   </div>
                 </Link>
               </div>
+
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                <Link to={`/user/new`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <img src={ExploreIcon} alt="map icon" />
+                      <img src={SupportIcon} alt="support icon" />
                     </h5>
-                    <p>{t("home.explore")}</p>
+                    <p>{t("home.support")}</p>
                   </div>
                 </Link>
               </div>
@@ -144,7 +138,7 @@ const styles = StyleSheet.create({
   input: {
     marginTop: "1em",
     padding: "0.5em 1em 0.5em 2em",
-    height: "30px",
+    height: 40,
     color: "#222",
     border: "none",
     borderRadius: "5px",
@@ -157,18 +151,19 @@ const styles = StyleSheet.create({
   searchIcon: {
     color: "#999",
     position: "absolute",
-    left: "4px",
-    top: "20px",
+    left: 4,
+    top: 26,
     bottom: "4px",
     "z-index": 9
   },
   scanIcon: {
     position: "absolute",
-    bottom: 5,
+    top: 26,
+    bottom: 4,
     right: 5,
     width: 20
   },
   homeIconColor: {
-    color: "#5ed8ab"
+    color: "#53d6a5"
   }
 });

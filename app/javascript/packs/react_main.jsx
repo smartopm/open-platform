@@ -10,7 +10,7 @@ import {
   Redirect,
   Route,
   useLocation,
-  useHistory,
+  useHistory
 } from "react-router-dom";
 import ApolloProvider from "../src/containers/Provider/ApolloProvider";
 import AuthStateProvider, {
@@ -22,13 +22,13 @@ import IDCard from "../src/containers/IdCard";
 import EntryLogs from "../src/containers/EntryLogs";
 import Search from "../src/containers/Search";
 import UserEdit from "../src/containers/UserEdit";
-import Upload from "../src/containers/UploadTest";
 import PendingUsers from "../src/containers/PendingUsers";
 import Loading from "../src/components/Loading.jsx";
+import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
 import "../src/i18n";
 
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS=['app.dgdp.site']
+const PRIMARY_DOMAINS = ["app.dgdp.site"];
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -64,31 +64,30 @@ const LoggedInOnly = props => {
 };
 
 const Analytics = props => {
-  const gtag = window.gtag
-  const location = useLocation()
-  const history = useHistory()
-  const [prevLocation, setLocation] = useState('');
-  const liveAnalytics = ((host) => {
-    return PRIMARY_DOMAINS.includes(host)
-  })(window.location.host)
+  const gtag = window.gtag;
+  const location = useLocation();
+  const history = useHistory();
+  const [prevLocation, setLocation] = useState("");
+  const liveAnalytics = (host => {
+    return PRIMARY_DOMAINS.includes(host);
+  })(window.location.host);
 
   if (location.pathname !== prevLocation) {
-
-    if (history.action === 'PUSH' && typeof(gtag) === 'function') {
+    if (history.action === "PUSH" && typeof gtag === "function") {
       const pageData = {
-          'page_location': window.location.href,
-          'page_path': location.pathname,
-      }
+        page_location: window.location.href,
+        page_path: location.pathname
+      };
       if (liveAnalytics) {
-        gtag('config', 'G-W8TMB8D2SL', pageData)
+        gtag("config", "G-W8TMB8D2SL", pageData);
       } else {
-        console.log("GA DEVELOPMENT MODE:", pageData)
+        console.log("GA DEVELOPMENT MODE:", pageData);
       }
     }
-    setLocation(location.pathname)
+    setLocation(location.pathname);
   }
 
-  return props.children
+  return props.children;
 };
 
 const App = () => {
@@ -110,9 +109,9 @@ const App = () => {
                   <Route path="/user/request" exact component={Request} />
                   <Route path="/user/new" exact component={UserEdit} />
                   <Route path="/user/:id" exact component={UserShow} />
-                  <Route path="/upload" component={Upload} />
                   <Route path="/user/:id/edit" exact component={UserEdit} />
                   <Route path="/user/request/:id" component={Request} />
+                  <Route path="/welcome" component={WelcomeScreen} />
                 </Switch>
               </LoggedInOnly>
             </Analytics>
