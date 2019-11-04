@@ -2,7 +2,8 @@
   "home": {
     "request": "Request",
     "new_user": "New User",
-    "pay": "Pay",
-    "explore": "Explore"
+    "finance": "Finance",
+    "explore": "Explore",
+    "support": "Support"
   }
 }
