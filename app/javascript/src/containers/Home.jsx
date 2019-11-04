@@ -170,6 +170,6 @@ const styles = StyleSheet.create({
     width: 20
   },
   homeIconColor: {
-    color: "#5ed8ab"
+    color: "#53d6a5"
   }
 });

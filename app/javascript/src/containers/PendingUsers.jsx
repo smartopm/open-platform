@@ -6,11 +6,17 @@ import { StyleSheet, css } from "aphrodite";
 import { formatDistance } from "date-fns";
 import Nav from "../components/Nav.jsx";
 import Loading from "../components/Loading.jsx";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import { CardContent, Card, withStyles } from "@material-ui/core";
+import {
+  CardContent,
+  Card,
+  withStyles,
+  Fab,
+  Box,
+  Tabs,
+  Tab,
+  Typography
+} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
 import Avatar from "../components/Avatar";
 
 function TabPanel(props) {
@@ -160,6 +166,15 @@ export default () => {
           >
             <Results {...{ data, loading }} />
           </div>
+          <Link to="/user/new">
+            <Fab
+              color="primary"
+              aria-label="add"
+              className={css(styles.fabButton)}
+            >
+              <AddIcon />
+            </Fab>
+          </Link>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -207,5 +222,11 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     fontSize: "0.7em"
+  },
+  fabButton: {
+    position: "absolute",
+    bottom: 8,
+    right: 16,
+    backgroundColor: "#53d6a5"
   }
 });
