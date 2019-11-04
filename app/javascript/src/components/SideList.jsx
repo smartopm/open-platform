@@ -48,21 +48,9 @@ export const SideList = ({ toggleDrawer, user }) => (
       </ListItem>
       <ListItem button>
         <ListItemIcon>
-          <NotificationsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Notification" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <SettingsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Settings" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
           <HelpIcon />
         </ListItemIcon>
-        <ListItemText primary="Help" />
+        <ListItemText primary="Support" />
       </ListItem>
       <ListItem button>
         <ListItemIcon>
