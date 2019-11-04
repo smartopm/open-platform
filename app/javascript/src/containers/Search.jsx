@@ -55,7 +55,7 @@ function Results({ data, loading, called }) {
             <h4>No results found!</h4>
             <br />
             <div className="d-flex justify-content-center">
-              <Link to="/user/request">
+              <Link className={css(styles.requestLink)} to="/user/new">
                 <Button
                   variant="contained"
                   className={`btn ${css(styles.requestButton)}`}
@@ -189,7 +189,10 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   requestButton: {
-    backgroundColor: "rgb(61, 199, 113)",
+    backgroundColor: "#53d6a5",
     color: "#FFF"
+  },
+  requestLink: {
+    textDecorationLine: "none"
   }
 });

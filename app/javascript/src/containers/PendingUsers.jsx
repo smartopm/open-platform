@@ -64,7 +64,7 @@ function Results({ data, loading }) {
             <div className="container">
               <div className="row">
                 <div className={` col `}>
-                  <Avatar imageURL={user.avatarUrl} user={user} />
+                  <Avatar imageUrl={user.avatarUrl} user={user} />
                 </div>
                 <div className={` col ${css(styles.userInfo)}`}>
                   <p className={css(styles.title)}>{user.name.split(" ")[0]}</p>
