@@ -8,37 +8,19 @@ export function WelcomeScreen() {
   return (
     <Container component="div" maxWidth="xs" style={{ height: "100vh" }}>
       <div
-        className="row justify-content-center align-items-center"
-        style={{
-          position: "relative",
-          textAlign: "center",
-          color: "white"
-        }}
+        className={`row justify-content-center align-items-center ${css(
+          styles.welcomeContainer
+        )}`}
       >
         <img
           src={bgImage}
-          style={{ width: "100%" }}
+          className={css(styles.bgImage)}
           alt="nkwashi background image"
         />
         <div className={css(styles.overlaySection)}>
-          <img src={logo} style={{ width: "100%" }} alt="nkwashi logo" />
-          <p
-            style={{
-              marginTop: 33,
-              color: "#1f2026",
-              fontSize: 18
-            }}
-          >
-            Welcome to Nkwashi App
-          </p>
-
-          <p
-            style={{
-              color: "#818188"
-            }}
-          >
-            First smart city in Zambia
-          </p>
+          <img src={logo} alt="nkwashi logo" />
+          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+          <p className={css(styles.subText)}>First smart city in Zambia</p>
         </div>
       </div>
       <div
@@ -64,14 +46,11 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#53d6a5",
     color: "#FFF",
-    // margin: 60,
     width: "75%",
     boxShadow: "none"
-    // marginBottom: 78
   },
-  logoImg: {
-    width: 137,
-    height: 40
+  bgImage: {
+    width: "100%"
   },
   googleLink: {
     margin: 40,
@@ -85,5 +64,18 @@ const styles = StyleSheet.create({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)"
+  },
+  welcomeText: {
+    marginTop: 33,
+    color: "#1f2026",
+    fontSize: 18
+  },
+  subText: {
+    color: "#818188"
+  },
+  welcomeContainer: {
+    position: "relative",
+    textAlign: "center",
+    color: "white"
   }
 });
