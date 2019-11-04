@@ -22,7 +22,6 @@ import IDCard from "../src/containers/IdCard";
 import EntryLogs from "../src/containers/EntryLogs";
 import Search from "../src/containers/Search";
 import UserEdit from "../src/containers/UserEdit";
-import Upload from "../src/containers/UploadTest";
 import PendingUsers from "../src/containers/PendingUsers";
 import Loading from "../src/components/Loading.jsx";
 import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
@@ -110,7 +109,6 @@ const App = () => {
                   <Route path="/user/request" exact component={Request} />
                   <Route path="/user/new" exact component={UserEdit} />
                   <Route path="/user/:id" exact component={UserShow} />
-                  <Route path="/upload" component={Upload} />
                   <Route path="/user/:id/edit" exact component={UserEdit} />
                   <Route path="/user/request/:id" component={Request} />
                   <Route path="/welcome" component={WelcomeScreen} />
