@@ -108,9 +108,19 @@ RSpec.describe User, type: :model do
       @user = FactoryBot.create(:user_with_community)
     end
 
-    it 'should be all numbers, and no more than 15 digits' do
-      @user.update(phone_number: '+14157351116')
-      expect(@user.errors.messages[:phone_number]).to_not be_nil
+    it 'should be valid' do
+      @user.update(phone_number: '+1 415 735 1116')
+      expect(@user.errors.messages[:phone_number]).to be_empty
+    end
+
+    it 'should be the proper length' do
+      @user.update(phone_number: '+1 415 735')
+      expect(@user.errors.messages[:phone_number]).to_not be_empty
+    end
+
+    it 'should not contain more than "-", " ", "+" and numbers' do
+      @user.update(phone_number: '+1415.735.1116')
+      expect(@user.errors.messages[:phone_number]).to_not be_empty
     end
   end
 end
