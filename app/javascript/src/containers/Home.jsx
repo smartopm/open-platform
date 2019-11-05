@@ -77,10 +77,7 @@ export function Component({ authState }) {
               ) ? (
                 <Fragment>
                   <div className="card align-self-center text-center">
-                    <Link
-                      to={`/id/${authState.user.id}`}
-                      className={`card-link`}
-                    >
+                    <Link to={"/map"} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
                           <img src={ExploreIcon} alt="map icon" />

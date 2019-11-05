@@ -26,6 +26,7 @@ import PendingUsers from "../src/containers/PendingUsers";
 import Loading from "../src/components/Loading.jsx";
 import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
 import "../src/i18n";
+import Explore from "../src/containers/Explore";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -112,6 +113,7 @@ const App = () => {
                   <Route path="/user/:id/edit" exact component={UserEdit} />
                   <Route path="/user/request/:id" component={Request} />
                   <Route path="/welcome" component={WelcomeScreen} />
+                  <Route path="/map" component={Explore} />
                 </Switch>
               </LoggedInOnly>
             </Analytics>
