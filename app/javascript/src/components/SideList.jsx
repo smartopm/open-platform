@@ -7,8 +7,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleIcon from "@material-ui/icons/People";
 import CropFreeIcon from "@material-ui/icons/CropFree";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import SettingsIcon from "@material-ui/icons/Settings";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import HelpIcon from "@material-ui/icons/Help";
 import { StyleSheet, css } from "aphrodite";
