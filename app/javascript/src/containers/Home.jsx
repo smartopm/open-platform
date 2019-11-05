@@ -7,7 +7,9 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import RequestIcon from "../../../assets/images/icon_request.svg";
+import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import ExploreIcon from "../../../assets/images/icon_map";
+import PersonIcon from "@material-ui/icons/Person";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -75,6 +77,16 @@ export function Component({ authState }) {
               ) ? (
                 <Fragment>
                   <div className="card align-self-center text-center">
+                    <Link to={"/map"} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <img src={ExploreIcon} alt="map icon" />
+                        </h5>
+                        <p>{t("home.explore")}</p>
+                      </div>
+                    </Link>
+                  </div>
+                  <div className="card align-self-center text-center">
                     <Link to={`/user/pending`} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
@@ -84,48 +96,27 @@ export function Component({ authState }) {
                       </div>
                     </Link>
                   </div>
-                  <div className="card align-self-center text-center">
-                    <Link to={`/user/new`} className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <i
-                            className={`${css(
-                              styles.homeIconColor
-                            )} material-icons`}
-                          >
-                            person_add
-                          </i>
-                        </h5>
-                        <p>{t("home.new_user")}</p>
-                      </div>
-                    </Link>
-                  </div>
                 </Fragment>
               ) : null}
 
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                <Link to={`/user/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <i
-                        className={`${css(
-                          styles.homeIconColor
-                        )} material-icons`}
-                      >
-                        payment
-                      </i>
+                      <PersonIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t("home.pay")}</p>
+                    <p>{t("home.identity")}</p>
                   </div>
                 </Link>
               </div>
+
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                <Link to={``} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <img src={ExploreIcon} alt="map icon" />
+                      <img src={SupportIcon} alt="support icon" />
                     </h5>
-                    <p>{t("home.explore")}</p>
+                    <p>{t("home.support")}</p>
                   </div>
                 </Link>
               </div>
@@ -170,6 +161,6 @@ const styles = StyleSheet.create({
     width: 20
   },
   homeIconColor: {
-    color: "#5ed8ab"
+    color: "#53d6a5"
   }
 });

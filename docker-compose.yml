@@ -30,7 +30,6 @@ services:
       - 3035:3035
   rails_worker:
     image: doublegdp_rails:latest
-    command: bash -c "rm -rf ./public/packs; ./bin/webpack-dev-server"
     command: bash -c "bundle exec shoryuken -R"
     env_file:
       - '.env.docker'

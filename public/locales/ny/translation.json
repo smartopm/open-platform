@@ -1,8 +1,10 @@
 {
   "home": {
-    "request": "zopempha",
-    "new_user": "wosuta watsopano",
-    "pay": "Lipila",
-    "explore": "fufuzani"
+    "request": "Zopempha",
+    "new_user": "Wosuta watsopano",
+    "finance": "Ndalama",
+    "explore": "Fufuzani",
+    "support": "Chithandizo",
+    "identity": "Identity"
   }
 }

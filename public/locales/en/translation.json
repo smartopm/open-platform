@@ -1,8 +1,10 @@
 {
   "home": {
-    "request": "Request",
+    "request": "Requests",
     "new_user": "New User",
-    "pay": "Pay",
-    "explore": "Explore"
+    "finance": "Finance",
+    "explore": "Explore",
+    "support": "Support",
+    "identity": "Identity"
   }
 }

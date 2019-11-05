@@ -12,6 +12,16 @@ import DateUtil from "../utils/dateutil.js";
 
 import { UserQuery } from "../graphql/queries";
 import { AddActivityLog } from "../graphql/mutations";
+import { css, StyleSheet } from "aphrodite";
+
+// once we have different actions, we can add them here
+const userState = {
+  pending: "Call Admin",
+  valid: "Log this Entry",
+  expired: "Request Extension",
+  "exp. soon": "Log this Entry",
+  banned: "Call Police"
+};
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -68,9 +78,7 @@ export function Component({ data, onLogEntry }) {
             </div>
 
             <div className="d-flex justify-content-center">
-              <Link to={`/entry_logs/${data.user.id}`}>
-                Entry Logs <span className="oi oi-chevron-right"></span>
-              </Link>
+              <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
             </div>
           </div>
         </div>
@@ -78,14 +86,16 @@ export function Component({ data, onLogEntry }) {
         <div className="row justify-content-center log-entry-form">
           <div className="col-10 col-sm-10 col-md-6">
             <a
-              className="btn btn-primary btn-lg btn-block active"
+              className={`btn btn-primary btn-lg btn-block active ${css(
+                styles.logButton
+              )}`}
               onClick={onLogEntry}
             >
-              Log an entry
+              {userState[data.user.state]}
             </a>
           </div>
         </div>
-
+        {/* Need to check in with Ahmed if we still need this, it seems removed from designs */}
         <div className="row justify-content-center log-entry-form">
           <div className="col-10 col-sm-10 col-md-6">
             <Link
@@ -100,3 +110,10 @@ export function Component({ data, onLogEntry }) {
     </div>
   );
 }
+
+const styles = StyleSheet.create({
+  logButton: {
+    backgroundColor: "#53d6a5",
+    textTransform: "unset"
+  }
+});

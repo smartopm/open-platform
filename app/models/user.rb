@@ -21,6 +21,7 @@ class User < ApplicationRecord
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
+  validates :phone_number, allow_blank: true, format: { with: /\A[0-9]{8,15}\z/ }
   before_save :ensure_default_state
 
   devise :omniauthable, omniauth_providers: [:google_oauth2]
@@ -136,7 +137,9 @@ class User < ApplicationRecord
   end
 
   def send_phone_token
-    Rails.logger.info "Sending #{self[:phone_token]} to #{self[:phone_number]}"
+    token = create_new_phone_token
+    Rails.logger.info "Sending #{token} to #{self[:phone_number]}"
+    Sms.send(self[:phone_number], "Your code is #{token}")
     # Send number via Nexmo
   end
 
@@ -147,10 +150,19 @@ class User < ApplicationRecord
     nil
   end
 
+  def role?(roles)
+    user_type = self[:user_type]
+    return false unless user_type
+
+    Array(roles).include?(user_type.to_sym)
+  end
+
   def verify_phone_token!(token)
     if phone_token == token
-      return true if phone_token_expires_at > Time.zone.now
-
+      if phone_token_expires_at > Time.zone.now
+        update(phone_token_expires_at: Time.zone.now)
+        return true
+      end
       raise PhoneTokenResultExpired
     end
     raise PhoneTokenResultInvalid

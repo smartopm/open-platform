@@ -15,6 +15,7 @@ export const UserFragment = {
       expiresAt
       email
       avatarUrl
+      imageUrl
     }
   `,
 }

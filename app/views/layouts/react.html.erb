@@ -13,8 +13,18 @@
   </head>
 
   <body>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W8TMB8D2SL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-W8TMB8D2SL');
+    </script>
+
     <div id="root">
     </div>
     <%= javascript_pack_tag 'react_main' %>
+
   </body>
 </html>

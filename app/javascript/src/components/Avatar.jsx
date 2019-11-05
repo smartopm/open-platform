@@ -2,9 +2,9 @@ import React from "react";
 import { StyleSheet, css } from "aphrodite";
 import PropTypes from "prop-types";
 
-const avatarURL = ({ imageURL, user }) => {
-  if (imageURL) {
-    return imageURL;
+export const avatarUrl = ({ imageUrl, user }) => {
+  if (imageUrl) {
+    return imageUrl;
   } else if (user && user.avatarUrl) {
     return user.avatarUrl;
   } else if (user && user.imageUrl) {
@@ -14,12 +14,12 @@ const avatarURL = ({ imageURL, user }) => {
   }
 };
 
-export default function StatusBadge({ imageURL, user, style = "small" }) {
+export default function Avatar({ imageUrl, user, style = "small" }) {
   if (style === "big") {
     return (
       <div className="d-flex justify-content-center">
         <img
-          src={avatarURL({ imageURL, user })}
+          src={avatarUrl({ imageUrl, user })}
           className={css(styles.avatarBig)}
         />
       </div>
@@ -28,7 +28,7 @@ export default function StatusBadge({ imageURL, user, style = "small" }) {
     return (
       <div className="d-flex justify-content-center">
         <img
-          src={avatarURL({ imageURL, user })}
+          src={avatarUrl({ imageUrl, user })}
           className={css(styles.avatarSmall)}
         />
       </div>
@@ -36,8 +36,8 @@ export default function StatusBadge({ imageURL, user, style = "small" }) {
   }
 }
 
-StatusBadge.propTypes = {
-  imageURL: PropTypes.string,
+Avatar.propTypes = {
+  imageUrl: PropTypes.string,
   user: PropTypes.object.isRequired,
   style: PropTypes.string
 };
