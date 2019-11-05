@@ -21,7 +21,7 @@ class User < ApplicationRecord
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
-  validates :phone_number, allow_blank: true, format: { with: /\A[0-9]{8,15}\z/ }
+  validate :phone_number_valid?
   before_save :ensure_default_state
 
   devise :omniauthable, omniauth_providers: [:google_oauth2]
@@ -166,6 +166,21 @@ class User < ApplicationRecord
       raise PhoneTokenResultExpired
     end
     raise PhoneTokenResultInvalid
+  end
+
+  private
+
+  def phone_number_valid?
+    return nil if self[:phone_number].nil? || self[:phone_number].blank?
+
+    unless self[:phone_number].match(/\A[0-9\+\s\-]+\z/)
+      errors.add(:phone_number, "can only contain 0-9, '-', '+' and space")
+    end
+
+    # All phone numbers with country codes are between 8-15 characters long
+    errors.add(:phone_number, 'must be a valid length') unless self[:phone_number]
+                                                               .gsub(/[^0-9]/, '')
+                                                               .length.between?(8, 15)
   end
 end
 # rubocop:enable ClassLength
