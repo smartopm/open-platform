@@ -85,14 +85,14 @@ export function Component({ data, onLogEntry }) {
 
         <div className="row justify-content-center log-entry-form">
           <div className="col-10 col-sm-10 col-md-6">
-            <a
-              className={`btn btn-primary btn-lg btn-block active ${css(
+            <button
+              className={`btn btn-primary btn-lg btn-block ${css(
                 styles.logButton
               )}`}
               onClick={onLogEntry}
             >
               {userState[data.user.state]}
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -103,6 +103,7 @@ export function Component({ data, onLogEntry }) {
 const styles = StyleSheet.create({
   logButton: {
     backgroundColor: "#53d6a5",
-    textTransform: "unset"
+    textTransform: "unset",
+    color: "#FFFFFF"
   }
 });
