@@ -95,17 +95,6 @@ export function Component({ data, onLogEntry }) {
             </a>
           </div>
         </div>
-        {/* Need to check in with Ahmed if we still need this, it seems removed from designs */}
-        <div className="row justify-content-center log-entry-form">
-          <div className="col-10 col-sm-10 col-md-6">
-            <Link
-              to={`/user/${data.user.id}/edit`}
-              className="btn btn-primary btn-lg btn-block active"
-            >
-              Edit
-            </Link>
-          </div>
-        </div>
       </div>
     </div>
   );
