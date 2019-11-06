@@ -37,7 +37,7 @@ export function WelcomeScreen() {
             Get Started
           </Link>
         </Button>
-        <Link className={`${css(styles.googleLink)} `} variant="body2">
+        <Link className={`${css(styles.googleLink)} `} to="" variant="body2">
           Or Login with Google instead
         </Link>
       </div>
