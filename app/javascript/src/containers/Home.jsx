@@ -7,10 +7,10 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import RequestIcon from "../../../assets/images/icon_request.svg";
-import LogIcon from "../../../assets/images/icon_bell.svg";
 import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import ExploreIcon from "../../../assets/images/icon_map";
 import PersonIcon from "@material-ui/icons/Person";
+import LogIcon from "@material-ui/icons/Assignment";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -109,7 +109,7 @@ export function Component({ authState }) {
                     <Link to={"/entry_logs"} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <img src={LogIcon} alt="map icon" />
+                          <LogIcon className={css(styles.homeIconColor)} />
                         </h5>
                         <p>{t("home.entry_logs")}</p>
                       </div>
@@ -149,6 +149,9 @@ const styles = StyleSheet.create({
     top: 26,
     bottom: "4px",
     "z-index": 9
+  },
+  bellIcon: {
+    color: "#53d6a5"
   },
   scanIcon: {
     position: "absolute",
