@@ -7,6 +7,7 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import RequestIcon from "../../../assets/images/icon_request.svg";
+import LogIcon from "../../../assets/images/icon_bell.svg";
 import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import ExploreIcon from "../../../assets/images/icon_map";
 import PersonIcon from "@material-ui/icons/Person";
@@ -100,6 +101,22 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
+              {["security_guard", "admin"].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Fragment>
+                  <div className="card align-self-center text-center">
+                    <Link to={"/entry_logs"} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <img src={LogIcon} alt="map icon" />
+                        </h5>
+                        <p>{t("home.entry_logs")}</p>
+                      </div>
+                    </Link>
+                  </div>
+                </Fragment>
+              ) : null}
             </div>
           </div>
         </div>

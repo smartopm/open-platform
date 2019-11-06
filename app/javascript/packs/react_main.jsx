@@ -105,6 +105,7 @@ const App = () => {
                   <Route path="/search" component={Search} />
                   <Route path="/id/:id" component={IDCard} />
                   <Route path="/entry_logs/:userId" component={EntryLogs} />
+                  <Route path="/entry_logs" component={EntryLogs} />
                   <Route path="/user" exact component={UserEdit} />
                   <Route path="/user/pending" exact component={PendingUsers} />
                   <Route path="/user/request" exact component={Request} />

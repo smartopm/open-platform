@@ -10,3 +10,31 @@ query User($id: ID!) {
 ${UserFragment.publicFields}
 `;
 
+export const AllEntryLogsQuery = gql`
+query {
+  entryLogs: allEntryLogs {
+    id
+    createdAt
+    note
+    reportingUser{
+      name
+      id
+    }
+  }
+}
+`;
+
+export const EntryLogsQuery = gql`
+query EntryLogs($userId: ID!) {
+  entryLogs(userId: $userId) {
+    id
+    createdAt
+    note
+    reportingUser {
+      name
+      id
+    }
+  }
+}
+`;
+
