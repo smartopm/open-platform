@@ -1,27 +1,29 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
-import gql from 'graphql-tag';
 import Nav from '../components/Nav'
 
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
-
-const QUERY = gql`
-query EntryLogs($userId: ID!) {
-  entryLogs(userId: $userId) {
-    id
-    createdAt
-    note
-    reportingUser {
-      name
-    }
-  }
-}
-`;
+import {AllEntryLogsQuery, EntryLogsQuery}  from "../graphql/queries.js"
 
 export default ({ match }) => {
-  let userId = match.params.userId
-  const { loading, error, data } = useQuery(QUERY, {variables: {userId}});
+  if (match.params.userId) {
+    return userEntryLogs(match.params.userId)
+  } else {
+    return allEntryLogs()
+  }
+}
+
+const userEntryLogs = (userId) => {
+  const { loading, error, data } = useQuery(EntryLogsQuery, {variables: {userId}, fetchPolicy: 'no-cache'});
+  if (loading) return <Loading />;
+  if (error) return `Error! ${error}`;
+
+  return <Component data={data} />
+}
+
+const allEntryLogs = () => {
+  const { loading, error, data } = useQuery(AllEntryLogsQuery, {fetchPolicy: 'no-cache'});
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
