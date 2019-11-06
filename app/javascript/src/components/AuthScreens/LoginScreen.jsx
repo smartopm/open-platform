@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Container,
-  Button,
-  TextField,
-  InputAdornment
-} from "@material-ui/core";
+import { Button, TextField, InputAdornment } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 
@@ -31,6 +26,8 @@ export function LoginScreen() {
         <TextField
           id="input-with-icon-textfield"
           placeholder="Enter Phone Number"
+          type="number"
+          maxLength={10}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -51,7 +48,9 @@ export function LoginScreen() {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
         >
-          Next
+          <Link className={css(styles.getStartedLink)} to={"/code"}>
+            Next
+          </Link>
         </Button>
       </div>
     </div>
@@ -65,6 +64,10 @@ const styles = StyleSheet.create({
     width: "75%",
     boxShadow: "none",
     marginTop: 100
+  },
+  getStartedLink: {
+    textDecoration: "none",
+    color: "#FFFFFF"
   },
   linksSection: {
     marginTop: 40
