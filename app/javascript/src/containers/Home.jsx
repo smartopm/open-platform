@@ -52,27 +52,7 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {!["admin", "resident"].includes(
-                authState.user.userType.toLowerCase()
-              ) ? (
-                <div className="card align-self-center text-center">
-                  <Link to={`/user/request`} className={`card-link`}>
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <i
-                          className={`${css(
-                            styles.homeIconColor
-                          )} material-icons`}
-                        >
-                          perm_identity
-                        </i>
-                      </h5>
-                      <p>{t("home.request")}</p>
-                    </div>
-                  </Link>
-                </div>
-              ) : null}
-              {!["Security Guard", "resident"].includes(
+              {!["security guard", "resident"].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
                 <Fragment>
