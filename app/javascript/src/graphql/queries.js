@@ -16,6 +16,10 @@ query {
     id
     createdAt
     note
+    user {
+      name
+      id
+    }
     reportingUser{
       name
       id
