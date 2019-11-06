@@ -41,8 +41,8 @@ class User < ApplicationRecord
     name: ->(auth) { auth.info.name },
     image_url: ->(auth) { auth.info.image },
     token: ->(auth) { auth.credentials.token },
-    expires: ->(auth) { auth.credentials.expires },
-    expires_at: ->(auth) { Time.zone.at(auth.credentials.expires_at).utc.to_datetime },
+    oauth_expires: ->(auth) { auth.credentials.expires },
+    oauth_expires_at: ->(auth) { Time.zone.at(auth.credentials.expires_at).utc.to_datetime },
     refresh_token: ->(auth) { auth.credentials.refresh_token },
   }.freeze
 
@@ -93,8 +93,6 @@ class User < ApplicationRecord
   # Returns status of a user
   # banned, expired, pending, valid
   def state
-    return 'expired' if expired?
-
     self[:state] || 'pending'
   end
 
