@@ -93,8 +93,6 @@ class User < ApplicationRecord
   # Returns status of a user
   # banned, expired, pending, valid
   def state
-    return 'expired' if expired?
-
     self[:state] || 'pending'
   end
 
