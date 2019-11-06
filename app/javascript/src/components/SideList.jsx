@@ -7,8 +7,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleIcon from "@material-ui/icons/People";
 import CropFreeIcon from "@material-ui/icons/CropFree";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import SettingsIcon from "@material-ui/icons/Settings";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import HelpIcon from "@material-ui/icons/Help";
 import { StyleSheet, css } from "aphrodite";
@@ -48,29 +46,17 @@ export const SideList = ({ toggleDrawer, user }) => (
       </ListItem>
       <ListItem button>
         <ListItemIcon>
-          <NotificationsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Notification" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <SettingsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Settings" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
           <HelpIcon />
         </ListItemIcon>
-        <ListItemText primary="Help" />
+        <ListItemText primary="Support" />
       </ListItem>
       <ListItem button>
         <ListItemIcon>
           <MeetingRoomIcon />
         </ListItemIcon>
-        <Link to="/logout" className={`${css(styles.link)}`}>
+        <a href="/logout" className={`${css(styles.link)}`}>
           <ListItemText primary="Logout" />
-        </Link>
+        </a>
       </ListItem>
     </List>
   </div>

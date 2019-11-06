@@ -7,6 +7,7 @@ import { Context as AuthStateContext } from "../containers/Provider/AuthStatePro
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
 import Drawer from "@material-ui/core/Drawer";
 import { SideList } from "./SideList.jsx";
+import { avatarUrl } from "./Avatar.jsx";
 import { FormContext } from "../containers/UserEdit.jsx";
 
 export default withRouter(function Nav({
@@ -78,7 +79,7 @@ export function Component({
           alt="Default Avatar"
           onClick={toggleDrawer}
           className={`${css(styles.userAvatar)}`}
-          src={authState.user.avatarUrl}
+          src={avatarUrl({user: authState.user})}
         />
         <NotificationsNoneOutlinedIcon
           className={`${css(styles.rightSideIcon)}`}

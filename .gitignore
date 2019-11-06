@@ -41,6 +41,9 @@ yarn-debug.log*
 # .env files for local development
 .env.*.local
 
+# SQL Backups
+/*.dump
+
 # Mac cruft
 **/.DS_Store
 

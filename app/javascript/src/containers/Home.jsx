@@ -7,9 +7,9 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import RequestIcon from "../../../assets/images/icon_request.svg";
-import FinanceIcon from "../../../assets/images/icon_request_fill.svg";
 import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import ExploreIcon from "../../../assets/images/icon_map";
+import PersonIcon from "@material-ui/icons/Person";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -77,10 +77,7 @@ export function Component({ authState }) {
               ) ? (
                 <Fragment>
                   <div className="card align-self-center text-center">
-                    <Link
-                      to={`/id/${authState.user.id}`}
-                      className={`card-link`}
-                    >
+                    <Link to={"/map"} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
                           <img src={ExploreIcon} alt="map icon" />
@@ -106,15 +103,15 @@ export function Component({ authState }) {
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <img src={FinanceIcon} alt="finance icon" />
+                      <PersonIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t("home.finance")}</p>
+                    <p>{t("home.identity")}</p>
                   </div>
                 </Link>
               </div>
 
               <div className="card align-self-center text-center">
-                <Link to={`/user/new`} className={`card-link`}>
+                <Link to={``} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <img src={SupportIcon} alt="support icon" />
