@@ -198,12 +198,12 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#222",
-    "font-size": "0.9em",
+    fontSize: "1em",
     lineHeight: "0.5em",
     margin: "0.5em 0 0 0"
   },
   small: {
-    "font-size": "0.8em",
+    fontSize: "1em",
     color: "#666"
   },
   avatar: {},
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     borderRadius: "10px"
   },
   userInfo: {
-    fontSize: "0.7em"
+    fontSize: "1em"
   },
   fabButton: {
     position: "absolute",
