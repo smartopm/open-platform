@@ -12,7 +12,7 @@ export function LoginScreen() {
   return (
     <div style={{ height: "100vh" }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={"/"}>
+        <Link to={"/welcome"}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
