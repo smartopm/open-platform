@@ -1,10 +1,7 @@
 import React, { useContext } from "react";
 import { useQuery } from "react-apollo";
 import { QRCode } from "react-qr-svg";
-import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
-
-import Avatar from "../components/Avatar";
 
 import DateUtil from "../utils/dateutil.js";
 
