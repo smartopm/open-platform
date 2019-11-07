@@ -83,6 +83,7 @@ export function Component({ data, onLogEntry, authState}) {
           </div>
         </div>
 
+        {data.user.state === 'valid' ?
         <div className="row justify-content-center log-entry-form">
           <div className="col-10 col-sm-10 col-md-6">
             <a
@@ -91,7 +92,21 @@ export function Component({ data, onLogEntry, authState}) {
               )}`}
               onClick={onLogEntry}
             >
-              {userState[data.user.state]}
+              Log This Entry
+            </a>
+          </div>
+        </div>
+        : null
+        }
+        <div className="row justify-content-center log-entry-form">
+          <div className="col-10 col-sm-10 col-md-6">
+            <a
+              href='tel:+260976064298'
+              className={`btn btn-primary btn-lg btn-block ${css(
+                styles.callButton
+              )}`}
+            >
+              Call Poniso
             </a>
           </div>
         </div>
@@ -127,6 +142,11 @@ export function Component({ data, onLogEntry, authState}) {
 const styles = StyleSheet.create({
   logButton: {
     backgroundColor: "#53d6a5",
+    textTransform: "unset"
+  },
+  callButton: {
+    backgroundColor: "#fafafa",
+    color: "#ed5757",
     textTransform: "unset"
   }
 });
