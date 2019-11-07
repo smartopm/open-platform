@@ -7,7 +7,6 @@ module Mutations
 
     private
 
-    # TODO: eventually replace with CanCanCan
     def check_params(rules, values)
       user_type = context[:current_user]&.user_type
       raise MutationArgumentError unless user_type

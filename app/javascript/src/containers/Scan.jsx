@@ -3,14 +3,11 @@ import QrReader from 'react-qr-reader'
 import Nav from '../components/Nav'
 
 export default function QRScan() {
-  const initialState = {
-    result: '',
-  }
-
-  const [state] = useState(initialState)
+  const [scanned, setScanned] = useState(false)
 
   const handleScan = data => {
     if (data) {
+      setScanned(true)
       window.location = data
     }
   }
@@ -22,13 +19,15 @@ export default function QRScan() {
   return (
     <div>
       <Nav navName="Scan" menuButton="back" />
-      <QrReader
-        delay={100}
-        onError={handleError}
-        onScan={handleScan}
-        style={{ width: '100%' }}
-      />
-      <p>{state.result}</p>
+
+      { scanned ? <h1>Decoding...</h1> :
+        <QrReader
+          delay={100}
+          onError={handleError}
+          onScan={handleScan}
+          style={{ width: '100%' }}
+        />
+      }
     </div>
   )
 

@@ -51,7 +51,7 @@ RSpec.describe Types::QueryType do
     end
   end
 
-  describe 'entry_logs' do
+  describe 'entry_logs for a user' do
     before :each do
       @user = create(:user_with_community)
       @reporting_user = create(:user_with_community, community_id: @user.community_id)
@@ -83,6 +83,43 @@ RSpec.describe Types::QueryType do
     it 'should fail if no logged in' do
       result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'entryLogs')).to be_nil
+    end
+  end
+
+  describe 'entry_logs for a community' do
+    before :each do
+      @user = create(:user_with_community, user_type: 'admin')
+      @resident = create(:user_with_community,
+                         community_id: @user.community_id,
+                         user_type: 'resident')
+      @reporting_user = create(:user_with_community, community_id: @user.community_id)
+
+      3.times do
+        @resident.activity_logs.create(reporting_user_id: @reporting_user.id)
+      end
+      @query =
+        %(query {
+        allEntryLogs {
+          id
+          createdAt
+          note
+          reportingUser{
+            name
+          }
+        }
+      })
+    end
+
+    it 'returns all entry logs' do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @user,
+                                       }).as_json
+      expect(result.dig('data', 'allEntryLogs').length).to eql 3
+    end
+
+    it 'should fail if no logged in' do
+      result = DoubleGdpSchema.execute(@query, context: { current_user: @resident }).as_json
+      expect(result.dig('data', 'allEntryLogs')).to be_nil
     end
   end
 

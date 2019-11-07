@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_22_014144) do
+ActiveRecord::Schema.define(version: 2019_11_06_214217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(version: 2019_10_22_014144) do
     t.string "provider"
     t.string "uid"
     t.string "token"
-    t.boolean "expires"
-    t.datetime "expires_at"
+    t.boolean "oauth_expires"
+    t.datetime "oauth_expires_at"
     t.string "refresh_token"
     t.string "image_url"
     t.datetime "created_at", precision: 6, null: false
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 2019_10_22_014144) do
     t.uuid "community_id"
     t.datetime "last_activity_at"
     t.string "state"
+    t.datetime "expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

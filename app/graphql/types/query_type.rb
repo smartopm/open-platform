@@ -27,6 +27,15 @@ module Types
           .where(community_id: context[:current_user].community_id).limit(20)
     end
 
+    # Get a entry logs
+    field :activity_logs, [ActivityLogType], null: true do
+      description 'Find activity logs for the current user community'
+    end
+
+    def activity_logs
+      ActivityLog.where(community_id: context[:current_user].community_id).limit(100)
+    end
+
     field :community, CommunityType, null: true do
       description 'Find a community by ID'
       argument :id, ID, required: true
@@ -44,7 +53,7 @@ module Types
     def current_user
       return context[:current_user] if context[:current_user]
 
-      { error: 'Must be logged in to perform this action' }
+      raise GraphQL::ExecutionError, 'Must be logged in to perform this action'
     end
 
     # Get a entry logs for a user
@@ -55,6 +64,22 @@ module Types
 
     def entry_logs(user_id:)
       ActivityLog.where(user_id: user_id) if context[:current_user]
+    end
+
+    # TODO: @mdp pagination
+    field :all_entry_logs, [ActivityLogType], null: true do
+      description 'Get entry logs for the current_user community'
+    end
+
+    def all_entry_logs
+      authorized = context[:current_user]&.role?(%i[security_guard admin])
+      if authorized
+        return ActivityLog.where(
+          community_id: context[:current_user].community_id,
+        ).limit(100)
+      end
+
+      raise GraphQL::ExecutionError, 'Not available to this user'
     end
 
     # Get a entry logs for a user

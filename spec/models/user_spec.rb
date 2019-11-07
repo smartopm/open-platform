@@ -36,6 +36,7 @@ RSpec.describe User, type: :model do
       expect(users.length).to be 1
       expect(users[0].name).to eq 'Mark Percival'
       expect(users[0].image_url).to eq 'https://newprofile.com/pic.png'
+      expect(users[0].oauth_expires).to be true
       # TODO: Remove this once we fix hardcoding
       expect(users[0].community).to_not be_nil
     end

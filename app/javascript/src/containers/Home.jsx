@@ -10,6 +10,7 @@ import RequestIcon from "../../../assets/images/icon_request.svg";
 import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import ExploreIcon from "../../../assets/images/icon_map";
 import PersonIcon from "@material-ui/icons/Person";
+import LogIcon from "@material-ui/icons/Assignment";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -52,27 +53,7 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {!["admin", "resident"].includes(
-                authState.user.userType.toLowerCase()
-              ) ? (
-                <div className="card align-self-center text-center">
-                  <Link to={`/user/request`} className={`card-link`}>
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <i
-                          className={`${css(
-                            styles.homeIconColor
-                          )} material-icons`}
-                        >
-                          perm_identity
-                        </i>
-                      </h5>
-                      <p>{t("home.request")}</p>
-                    </div>
-                  </Link>
-                </div>
-              ) : null}
-              {!["Security Guard", "resident"].includes(
+              {!["security guard", "resident"].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
                 <Fragment>
@@ -100,7 +81,7 @@ export function Component({ authState }) {
               ) : null}
 
               <div className="card align-self-center text-center">
-                <Link to={`/user/${authState.user.id}`} className={`card-link`}>
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <PersonIcon className={css(styles.homeIconColor)} />
@@ -120,6 +101,22 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
+              {["security_guard", "admin"].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Fragment>
+                  <div className="card align-self-center text-center">
+                    <Link to={"/entry_logs"} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <LogIcon className={css(styles.homeIconColor)} />
+                        </h5>
+                        <p>{t("home.entry_logs")}</p>
+                      </div>
+                    </Link>
+                  </div>
+                </Fragment>
+              ) : null}
             </div>
           </div>
         </div>
@@ -152,6 +149,9 @@ const styles = StyleSheet.create({
     top: 26,
     bottom: "4px",
     "z-index": 9
+  },
+  bellIcon: {
+    color: "#53d6a5"
   },
   scanIcon: {
     position: "absolute",
