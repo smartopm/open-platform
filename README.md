@@ -73,11 +73,11 @@ This assumes you are a collaborator on our Heroku instance
 1. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 1. Login with `heroku login`
 1. Assuming you already have this project checked out:
-  1. Change directories to the root of this project
-  1. Add the following Heroku remotes
-    - `heroku git:remote --app double-gdp-dev && git remote rename heroku heroku-dev`
-    - `heroku git:remote --app double-gdp-staging && git remote rename heroku heroku-staging`
-    - `heroku git:remote --app double-gdp-fe && git remote rename heroku heroku-prod`
+    1. Change directories to the root of this project
+    1. Add the following Heroku remotes
+        - `heroku git:remote --app double-gdp-dev && git remote rename heroku heroku-dev`
+        - `heroku git:remote --app double-gdp-staging && git remote rename heroku heroku-staging`
+        - `heroku git:remote --app double-gdp-fe && git remote rename heroku heroku-prod`
 
 #### Deploy
 
