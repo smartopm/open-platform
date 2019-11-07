@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useLazyQuery } from "react-apollo";
 import gql from "graphql-tag";
@@ -24,22 +24,46 @@ const QUERY = gql`
   }
 `;
 
+function NewRequestButton() {
+  return (
+    <div className="d-flex justify-content-center">
+      <Link className={css(styles.requestLink)} to="/user/new">
+        <Button
+          variant="contained"
+          className={`btn ${css(styles.requestButton)}`}
+        >
+          Create a new request
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
 function Results({ data, loading, called }) {
   function memberList(users) {
-    return users.map(user => (
-      <Link to={`/user/${user.id}`} key={user.id} className={css(styles.link)}>
-        <div className="d-flex flex-row align-items-center py-2">
-          <Avatar user={user} style="small" />
-          <div className={`px-3 w-100`}>
-            <h6 className={css(styles.title)}>{user.name}</h6>
-            <small className={css(styles.small)}> {user.roleName} </small>
-          </div>
-          <div className={`px-2 align-items-center`}>
-            <StatusBadge label={user.state} />
-          </div>
-        </div>
-      </Link>
-    ));
+    return (
+      <Fragment>
+        {users.map(user => (
+          <Link
+            to={`/user/${user.id}`}
+            key={user.id}
+            className={css(styles.link)}
+          >
+            <div className="d-flex flex-row align-items-center py-2">
+              <Avatar user={user} style="small" />
+              <div className={`px-3 w-100`}>
+                <h6 className={css(styles.title)}>{user.name}</h6>
+                <small className={css(styles.small)}> {user.roleName} </small>
+              </div>
+              <div className={`px-2 align-items-center`}>
+                <StatusBadge label={user.state} />
+              </div>
+            </div>
+          </Link>
+        ))}
+        <br />
+      </Fragment>
+    );
   }
   if (called && loading) {
     return <Loading />;
@@ -53,19 +77,9 @@ function Results({ data, loading, called }) {
         ) : (
           <div className={`${css(styles.noResults)}`}>
             <h4>No results found!</h4>
-            <br />
-            <div className="d-flex justify-content-center">
-              <Link className={css(styles.requestLink)} to="/user/new">
-                <Button
-                  variant="contained"
-                  className={`btn ${css(styles.requestButton)}`}
-                >
-                  Create a new request
-                </Button>
-              </Link>
-            </div>
           </div>
         )}
+        <NewRequestButton />
       </div>
     );
   }
