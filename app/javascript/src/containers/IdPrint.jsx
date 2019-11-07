@@ -77,8 +77,8 @@ export function Component({ data }) {
   return (
     <div>
       <div className="row justify-content-center">
-        <div id='idCard' className="card id_card_box col-8 col-sm-8 col-md-6" onClick={openImageInNewTab}>
-          <div className="d-flex justify-content-center">
+        <div id='idCard' className="card id_card_box" style={{width: '325px'}} onClick={openImageInNewTab}>
+          <div className="d-flex justify-content-center" style={{marginTop:'1.75em'}}>
             <img src={Logo} style={{width: '200px'}} onLoad={downloadBtn}/>
           </div>
           <div
