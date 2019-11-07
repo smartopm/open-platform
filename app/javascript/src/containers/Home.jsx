@@ -92,7 +92,7 @@ export function Component({ authState }) {
               </div>
 
               <div className="card align-self-center text-center">
-                <Link to={``} className={`card-link`}>
+                <Link to={"/support"} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <img src={SupportIcon} alt="support icon" />

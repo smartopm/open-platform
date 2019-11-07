@@ -19,7 +19,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import Avatar from "../components/Avatar";
 
-function TabPanel(props) {
+export function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -106,7 +106,7 @@ function Results({ data, loading }) {
   return false;
 }
 
-const StyledTabs = withStyles({
+export const StyledTabs = withStyles({
   indicator: {
     backgroundColor: "transparent",
     "& > div": {
@@ -117,7 +117,7 @@ const StyledTabs = withStyles({
   }
 })(props => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />);
 
-const StyledTab = withStyles({
+export const StyledTab = withStyles({
   root: {
     textTransform: "none",
     color: "#fff",
