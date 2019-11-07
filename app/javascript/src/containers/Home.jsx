@@ -53,7 +53,7 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {!["security guard", "resident"].includes(
+              {!["security_guard", "resident"].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
                 <Fragment>
@@ -81,7 +81,7 @@ export function Component({ authState }) {
               ) : null}
 
               <div className="card align-self-center text-center">
-                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                <Link to={`/scan`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <PersonIcon className={css(styles.homeIconColor)} />

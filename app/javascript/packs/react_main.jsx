@@ -112,11 +112,9 @@ const App = () => {
                   <Route path="/entry_logs" component={EntryLogs} />
                   <Route path="/user" exact component={UserEdit} />
                   <Route path="/user/pending" exact component={PendingUsers} />
-                  <Route path="/user/request" exact component={Request} />
                   <Route path="/user/new" exact component={UserEdit} />
                   <Route path="/user/:id" exact component={UserShow} />
                   <Route path="/user/:id/edit" exact component={UserEdit} />
-                  <Route path="/user/request/:id" component={Request} />
                   <Route path="/welcome" component={WelcomeScreen} />
                   <Route path="/map" component={Explore} />
                   <Route path="/login_w" component={LoginScreen} />

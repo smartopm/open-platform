@@ -66,8 +66,8 @@ function Results({ data, loading }) {
                 <div className={` col `}>
                   <Avatar imageUrl={user.avatarUrl} user={user} />
                 </div>
-                <div className={` col ${css(styles.userInfo)}`}>
-                  <p className={css(styles.title)}>{user.name.split(" ")[0]}</p>
+                <div className={` col }`}>
+                  <p className={""}>{user.name.split(" ")[0]}</p>
                   <br />
                   <p className={css(styles.small)}> {user.roleName} </p>
                 </div>
@@ -196,14 +196,7 @@ const styles = StyleSheet.create({
       color: "#222"
     }
   },
-  title: {
-    color: "#222",
-    "font-size": "0.9em",
-    lineHeight: "0.5em",
-    margin: "0.5em 0 0 0"
-  },
   small: {
-    "font-size": "0.8em",
     color: "#666"
   },
   avatar: {},
@@ -218,9 +211,6 @@ const styles = StyleSheet.create({
     border: "1px dashed #46ce84",
     color: "#46ce84",
     borderRadius: "10px"
-  },
-  userInfo: {
-    fontSize: "0.7em"
   },
   fabButton: {
     position: "absolute",
