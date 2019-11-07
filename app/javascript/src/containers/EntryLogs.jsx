@@ -35,8 +35,8 @@ export function IndexComponent({ data }) {
     return entries.map((entry) =>
       <tr key={entry.id}>
         <td>{entry.user.name}</td>
-        <td>{DateUtil.dateToString(entry.createdAt)}</td>
-        <td>{DateUtil.dateTimeToString(entry.createdAt)}</td>
+        <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
+        <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.reportingUser.name}</td>
       </tr>
       )
@@ -69,8 +69,8 @@ export function UserComponent({ data }) {
   function logs(entries) {
     return entries.map((entry) =>
       <tr key={entry.id}>
-        <td>{DateUtil.dateToString(entry.createdAt)}</td>
-        <td>{DateUtil.dateTimeToString(entry.createdAt)}</td>
+        <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
+        <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.reportingUser.name}</td>
       </tr>
       )
