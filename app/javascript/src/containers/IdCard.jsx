@@ -32,8 +32,6 @@ function qrCodeAddress(id_card_token) {
 }
 
 export default () => {
-  // let id = match.params.id;
-
   const authState = useContext(Context);
   const { loading, error, data } = useQuery(UserQuery, {
     variables: { id: authState.user.id }
