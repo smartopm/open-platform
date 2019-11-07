@@ -1,14 +1,13 @@
-import React from 'react';
-import { useQuery } from 'react-apollo';
+import React from "react";
+import { useQuery } from "react-apollo";
 import Loading from "../components/Loading.jsx";
 import Logo from "../../../assets/images/nkwashi_logo_black_transparent.png";
 
-import html2canvas from 'html2canvas';
-
+import html2canvas from "html2canvas";
 
 import DateUtil from "../utils/dateutil.js";
 
-import {UserQuery} from "../graphql/queries"
+import { UserQuery } from "../graphql/queries";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -21,29 +20,32 @@ function expiresAtStr(datetime) {
 }
 
 function qrCodeAddress(id_card_token) {
-  const linkUrl = window.location.protocol +
+  const linkUrl =
+    window.location.protocol +
     "//" +
     window.location.hostname +
     "/user/" +
-    id_card_token
-  return '/qr_code?data='+encodeURIComponent(linkUrl)+'&size=100x100'
+    id_card_token;
+  return "/qr_code?data=" + encodeURIComponent(linkUrl) + "&size=100x100";
 }
 
 function openImageInNewTab() {
-  html2canvas(document.getElementById('idCard'), {allowTaint: true}).then(function(canvas) {
-    let d=canvas.toDataURL("image/png");
-    let w = window.open('about:blank');
-    let image = new Image();
-    image.src = d;
-    setTimeout(function(){
-      w.document.write(image.outerHTML);
-    }, 0);
-  });
+  html2canvas(document.getElementById("idCard"), { allowTaint: true }).then(
+    function(canvas) {
+      let d = canvas.toDataURL("image/png");
+      let w = window.open("about:blank");
+      let image = new Image();
+      image.src = d;
+      setTimeout(function() {
+        w.document.write(image.outerHTML);
+      }, 0);
+    }
+  );
 }
 
 export default ({ match }) => {
-  let id = match.params.id
-  const { loading, error, data } = useQuery(UserQuery, {variables: {id}});
+  let id = match.params.id;
+  const { loading, error, data } = useQuery(UserQuery, { variables: { id } });
 
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
@@ -52,34 +54,50 @@ export default ({ match }) => {
 };
 
 function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt){
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
+  return str.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
 }
 
 function downloadBtn() {
-  html2canvas(document.getElementById('idCard'), {allowTaint: true}).then(function(canvas) {
-    let dt = canvas.toDataURL('image/png');
-    /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
-    let dlDt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+  html2canvas(document.getElementById("idCard"), { allowTaint: true }).then(
+    function(canvas) {
+      let dt = canvas.toDataURL("image/png");
+      /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
+      let dlDt = dt.replace(
+        /^data:image\/[^;]*/,
+        "data:application/octet-stream"
+      );
 
-    /* In addition to <a>'s "download" attribute, you can define HTTP-style headers */
-    dlDt = dlDt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
-    const a = document.createElement('a')
-    a.setAttribute('download','Canvas.png')
-    a.setAttribute('href', dlDt)
-    a.innerHTML = "Download"
-    document.body.appendChild(a);
-  });
+      /* In addition to <a>'s "download" attribute, you can define HTTP-style headers */
+      dlDt = dlDt.replace(
+        /^data:application\/octet-stream/,
+        "data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png"
+      );
+      const a = document.createElement("a");
+      a.setAttribute("download", "Canvas.png");
+      a.setAttribute("href", dlDt);
+      a.innerHTML = "Download";
+      document.body.appendChild(a);
+    }
+  );
 }
 
 export function Component({ data }) {
   return (
     <div>
       <div className="row justify-content-center">
-        <div id='idCard' className="card id_card_box" style={{width: '325px'}} onClick={openImageInNewTab}>
-          <div className="d-flex justify-content-center" style={{marginTop:'1.75em'}}>
-            <img src={Logo} style={{width: '200px'}} onLoad={downloadBtn}/>
+        <div
+          id="idCard"
+          className="card id_card_box"
+          style={{ width: "325px" }}
+          onClick={openImageInNewTab}
+        >
+          <div
+            className="d-flex justify-content-center"
+            style={{ marginTop: "1.75em" }}
+          >
+            <img src={Logo} style={{ width: "200px" }} onLoad={downloadBtn} />
           </div>
           <div
             className="d-flex justify-content-center"
@@ -88,7 +106,7 @@ export function Component({ data }) {
             <div className="member_type">{toTitleCase(data.user.userType)}</div>
           </div>
           <div className="d-flex justify-content-center">
-            <h1 style={{'fontWeight':'800'}}>{data.user.name}</h1>
+            <h1 style={{ fontWeight: "800" }}>{data.user.name}</h1>
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
@@ -97,10 +115,7 @@ export function Component({ data }) {
           </div>
 
           <div className="d-flex justify-content-center qr_code">
-            <img
-              style={{ width: 256 }}
-              src={qrCodeAddress(data.user.id)}
-            />
+            <img style={{ width: 256 }} src={qrCodeAddress(data.user.id)} />
           </div>
         </div>
       </div>
