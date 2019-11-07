@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
   resources :activity_logs, only: [:show, :create]
 
+  get 'qr_code', to: 'home#qr_code'
   get 'hold', to: 'home#hold'
   get '*path', to: 'home#react', constraints: lambda { |req|
     req.path.exclude? 'rails/active_storage'
