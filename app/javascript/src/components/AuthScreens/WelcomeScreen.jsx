@@ -1,6 +1,7 @@
 import React from "react";
-import { Container, Link, Button } from "@material-ui/core";
+import { Container, Button } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
+import { Link } from "react-router-dom";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
 import bgImage from "../../../../assets/images/nkwashi_bgi.jpg";
 
@@ -32,9 +33,11 @@ export function WelcomeScreen() {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
         >
-          Get Started
+          <Link className={css(styles.getStartedLink)} to={"/login_w"}>
+            Get Started
+          </Link>
         </Button>
-        <Link href="#" className={`${css(styles.googleLink)} `} variant="body2">
+        <Link className={`${css(styles.googleLink)} `} to="" variant="body2">
           Or Login with Google instead
         </Link>
       </div>
@@ -49,12 +52,17 @@ const styles = StyleSheet.create({
     width: "75%",
     boxShadow: "none"
   },
+  getStartedLink: {
+    textDecoration: "none",
+    color: "#FFFFFF"
+  },
   bgImage: {
     width: "100%"
   },
   googleLink: {
     margin: 40,
-    marginBottom: 47
+    marginBottom: 47,
+    textDecoration: "none"
   },
   linksSection: {
     marginTop: 40

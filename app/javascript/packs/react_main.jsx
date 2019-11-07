@@ -28,6 +28,9 @@ import Loading from "../src/components/Loading.jsx";
 import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
 import "../src/i18n";
 import Explore from "../src/containers/Explore";
+import { LoginScreen } from "../src/components/AuthScreens/LoginScreen";
+import ConfirmCodeScreen from "../src/components/AuthScreens/ConfirmCodeScreen";
+import Support from "../src/containers/Support";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -110,13 +113,15 @@ const App = () => {
                   <Route path="/entry_logs" component={EntryLogs} />
                   <Route path="/user" exact component={UserEdit} />
                   <Route path="/user/pending" exact component={PendingUsers} />
-                  <Route path="/user/request" exact component={Request} />
                   <Route path="/user/new" exact component={UserEdit} />
                   <Route path="/user/:id" exact component={UserShow} />
                   <Route path="/user/:id/edit" exact component={UserEdit} />
-                  <Route path="/user/request/:id" component={Request} />
-                  <Route path="/welcome" component={WelcomeScreen} />
                   <Route path="/map" component={Explore} />
+                  <Route path="/support" component={Support} />
+                  {/* onboarding */}
+                  <Route path="/welcome" component={WelcomeScreen} />
+                  <Route path="/login_w" component={LoginScreen} />
+                  <Route path="/code" component={ConfirmCodeScreen} />
                 </Switch>
               </LoggedInOnly>
             </Analytics>

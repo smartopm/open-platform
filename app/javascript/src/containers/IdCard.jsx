@@ -1,14 +1,12 @@
-import React from 'react';
-import { useQuery } from 'react-apollo';
+import React, { useContext } from "react";
+import { useQuery } from "react-apollo";
 import { QRCode } from "react-qr-svg";
-import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
-
-import Avatar from "../components/Avatar";
 
 import DateUtil from "../utils/dateutil.js";
 
-import {UserQuery} from "../graphql/queries"
+import { UserQuery } from "../graphql/queries";
+import { Context } from "./Provider/AuthStateProvider";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -30,10 +28,11 @@ function qrCodeAddress(id_card_token) {
   );
 }
 
-export default ({ match }) => {
-  let id = match.params.id
-  const { loading, error, data } = useQuery(UserQuery, {variables: {id}});
-
+export default () => {
+  const authState = useContext(Context);
+  const { loading, error, data } = useQuery(UserQuery, {
+    variables: { id: authState.user.id }
+  });
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
@@ -43,7 +42,7 @@ export default ({ match }) => {
 export function Component({ data }) {
   return (
     <div>
-      <Nav navName="Identify" menuButton="back" />
+      {/* <Nav navName="Identify" menuButton="back" /> */}
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
@@ -52,15 +51,18 @@ export function Component({ data }) {
           >
             <div className="member_type">{data.user.userType}</div>
           </div>
-          <Avatar user={data.user} style='small' />
           <div className="d-flex justify-content-center">
-            <h1>{data.user.name}</h1>
+            <h1>
+              <strong>{data.user.name}</strong>
+            </h1>
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
               Exp: {expiresAtStr(data.user.expiresAt)}
             </div>
           </div>
+          <br />
+          <br />
 
           <div className="d-flex justify-content-center qr_code">
             <QRCode
