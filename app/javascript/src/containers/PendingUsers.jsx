@@ -6,35 +6,15 @@ import { StyleSheet, css } from "aphrodite";
 import { formatDistance } from "date-fns";
 import Nav from "../components/Nav.jsx";
 import Loading from "../components/Loading.jsx";
-import {
-  CardContent,
-  Card,
-  withStyles,
-  Fab,
-  Box,
-  Tabs,
-  Tab,
-  Typography
-} from "@material-ui/core";
+import { CardContent, Card, Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Avatar from "../components/Avatar";
-
-export function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
+import {
+  a11yProps,
+  StyledTabs,
+  StyledTab,
+  TabPanel
+} from "../components/Tabs.jsx";
 
 const QUERY = gql`
   {
@@ -106,26 +86,6 @@ function Results({ data, loading }) {
   return false;
 }
 
-export const StyledTabs = withStyles({
-  indicator: {
-    backgroundColor: "transparent",
-    "& > div": {
-      maxWidth: 40,
-      width: "100%",
-      backgroundColor: "#FFF"
-    }
-  }
-})(props => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />);
-
-export const StyledTab = withStyles({
-  root: {
-    textTransform: "none",
-    color: "#fff",
-    display: "flex",
-    justifyContent: "center"
-  }
-})(props => <Tab {...props} />);
-
 export default () => {
   const { loading, error, data } = useQuery(QUERY, { variables: { name } });
   const [value, setValue] = React.useState(0);
@@ -134,12 +94,6 @@ export default () => {
     setValue(newValue);
   };
 
-  function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      "aria-controls": `simple-tabpanel-${index}`
-    };
-  }
   return (
     <div>
       <div
