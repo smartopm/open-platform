@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { Fragment, useContext } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-apollo";
 
@@ -48,7 +48,7 @@ export default ({ match }) => {
   );
 };
 
-export function Component({ data, onLogEntry }) {
+export function Component({ data, onLogEntry, authState}) {
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -95,17 +95,30 @@ export function Component({ data, onLogEntry }) {
             </a>
           </div>
         </div>
-        {/* Need to check in with Ahmed if we still need this, it seems removed from designs */}
-        <div className="row justify-content-center log-entry-form">
-          <div className="col-10 col-sm-10 col-md-6">
-            <Link
-              to={`/user/${data.user.id}/edit`}
-              className="btn btn-primary btn-lg btn-block active"
-            >
-              Edit
-            </Link>
+        {authState.user.userType === 'admin' ?
+        <Fragment>
+          <div className="row justify-content-center log-entry-form">
+            <div className="col-10 col-sm-10 col-md-6">
+              <Link
+                to={`/user/${data.user.id}/edit`}
+                className="btn btn-primary btn-lg btn-block active"
+              >
+                Edit
+              </Link>
+            </div>
           </div>
-        </div>
+          <div className="row justify-content-center log-entry-form">
+            <div className="col-10 col-sm-10 col-md-6">
+              <Link
+                to={`/print/${data.user.id}`}
+                className="btn btn-primary btn-lg btn-block active"
+              >
+                Print
+              </Link>
+            </div>
+          </div>
+        </Fragment>
+        : null}
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import AuthStateProvider, {
 import Home from "../src/containers/Home";
 import UserShow from "../src/containers/UserShow";
 import IDCard from "../src/containers/IdCard";
+import IDPrint from "../src/containers/IdPrint";
 import EntryLogs from "../src/containers/EntryLogs";
 import Search from "../src/containers/Search";
 import UserEdit from "../src/containers/UserEdit";
@@ -104,6 +105,7 @@ const App = () => {
                   <Route path="/scan" component={Scan} />
                   <Route path="/search" component={Search} />
                   <Route path="/id/:id" component={IDCard} />
+                  <Route path="/print/:id" component={IDPrint} />
                   <Route path="/entry_logs/:userId" component={EntryLogs} />
                   <Route path="/entry_logs" component={EntryLogs} />
                   <Route path="/user" exact component={UserEdit} />
