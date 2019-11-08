@@ -66,7 +66,12 @@ export default function GuardHome() {
   if (redirect) {
     return <Redirect push to={redirect} />;
   }
-  console.log(state);
+  function handleGrantAccess() {
+    // update user
+    console.log(state);
+  }
+
+  function handleDenyAccess() {}
 
   return (
     <div>
@@ -205,11 +210,24 @@ export default function GuardHome() {
                       <CheckIcon
                         className={`btn ${css(styles.grantIcon)}`}
                         size={32}
+                        onClick={handleGrantAccess}
                       />
                       <ClearIcon
                         className={`btn ${css(styles.denyIcon)}`}
                         size={32}
+                        onClick={handleDenyAccess}
                       />
+                      <br />
+                      <div className="row ">
+                        <a
+                          href="tel:+260976064298"
+                          className={`btn btn-primary btn-lg btn-block ${css(
+                            styles.callButton
+                          )}`}
+                        >
+                          Call Poniso
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </Fragment>
@@ -270,5 +288,10 @@ const styles = StyleSheet.create({
     color: "rgb(299, 63, 69)",
     width: "35%",
     fontSize: "4em"
+  },
+  callButton: {
+    backgroundColor: "#fafafa",
+    color: "#ed5757",
+    textTransform: "unset"
   }
 });
