@@ -7,9 +7,13 @@ import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import PersonIcon from "@material-ui/icons/Person";
 import ClearIcon from "@material-ui/icons/Clear";
 import CheckIcon from "@material-ui/icons/Check";
-import { Button } from "@material-ui/core";
+import RemoveIcon from "@material-ui/icons/Remove";
+import AddIcon from "@material-ui/icons/Add";
 
-// grant/deny/call Poniso
+// Todo: put reducers in their own file
+// Todo: Add other cases
+// Todo: Make this the default home page for securiry guards
+// Todo: Clean up the flow
 
 const initialState = {
   guest: false,
@@ -20,12 +24,12 @@ const initialState = {
 const initialStateFormState = {
   visitor: "",
   host: "",
-  plotNumber: ""
+  plotNumber: "",
+  peopleCount: 0
 };
 
 const homeReducer = (state, action) => {
   switch (action.type) {
-    // return initialstate for main cards to reset the view
     case "person":
       return {
         ...initialState,
@@ -63,7 +67,16 @@ const formReducer = (state, action) => {
         ...state,
         plotNumber: action.payload
       };
-
+    case "peopleCountAdd":
+      return {
+        ...state,
+        peopleCount: state.peopleCount + 1
+      };
+    case "peopleCountRemove":
+      return {
+        ...state,
+        peopleCount: state.peopleCount - 1
+      };
     default:
       break;
   }
@@ -257,6 +270,22 @@ export default function GuardHome() {
                 </Fragment>
               ) : null}
               {/* Truck */}
+
+              {state.truck ? (
+                <Fragment>
+                  <RemoveIcon
+                    onClick={() =>
+                      dispatchInputs({ type: "peopleCountRemove" })
+                    }
+                    size={28}
+                  />
+                  <h3> {formState.peopleCount} </h3>
+                  <AddIcon
+                    onClick={() => dispatchInputs({ type: "peopleCountAdd" })}
+                    size={28}
+                  />
+                </Fragment>
+              ) : null}
             </div>
           </div>
         </div>
