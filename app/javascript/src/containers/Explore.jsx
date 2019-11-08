@@ -9,7 +9,7 @@ export default function Explore() {
       <Nav navName="Explore" menuButton="back" />
       <div className={css(styles.mapContainer)}>
         <img
-          src="http://nkwashi.com/wp-content/uploads/2017/02/Map-of-distict.jpg"
+          src="https://nkwashi.com/wp-content/uploads/2017/02/Map-of-distict.jpg"
           alt="nkwashi static map"
           className="img-fluid"
         />
