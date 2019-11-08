@@ -64,6 +64,37 @@ Then rebuild the images:
     - Runs `yarn install` install javascript dependencies
     - Starts the 'rails' and 'webpacker' service
 
+### Deployment on Heroku
+
+#### Setup
+
+This assumes you are a collaborator on our Heroku instance
+
+1. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+1. Login with `heroku login`
+1. Assuming you already have this project checked out:
+    1. Change directories to the root of this project
+    1. Add the following Heroku remotes
+        - `heroku git:remote --app double-gdp-dev && git remote rename heroku heroku-dev`
+        - `heroku git:remote --app double-gdp-staging && git remote rename heroku heroku-staging`
+        - `heroku git:remote --app double-gdp-fe && git remote rename heroku heroku-prod`
+
+#### Deploy
+
+To deploy master to staging: `git push heroku-staging master -f`
+
+To deploy another_branch to staging: `git push heroku-staging another_branch:staging -f`
+
+To deploy master to production: `git push heroku-prod master -f`
+
+#### Rollback
+
+You can rollback a release as follows:
+
+1. View the releases - `heroku releases`
+1. Pick the release you want to rollback to - `heroku rollback v40`
+
+
 ### Testing
 
 #### Run Rspec tests
