@@ -14,15 +14,6 @@ import { UserQuery } from "../graphql/queries";
 import { AddActivityLog } from "../graphql/mutations";
 import { css, StyleSheet } from "aphrodite";
 
-// once we have different actions, we can add them here
-const userState = {
-  pending: "Call Admin",
-  valid: "Log this Entry",
-  expired: "Request Extension",
-  "exp. soon": "Log this Entry",
-  banned: "Call Police"
-};
-
 function expiresAtStr(datetime) {
   if (datetime) {
     const date = DateUtil.fromISO8601(datetime);
