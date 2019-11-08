@@ -31,6 +31,7 @@ import Explore from "../src/containers/Explore";
 import { LoginScreen } from "../src/components/AuthScreens/LoginScreen";
 import ConfirmCodeScreen from "../src/components/AuthScreens/ConfirmCodeScreen";
 import Support from "../src/containers/Support";
+import GuardHome from "../src/containers/GuardHome";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -122,6 +123,10 @@ const App = () => {
                   <Route path="/welcome" component={WelcomeScreen} />
                   <Route path="/login_w" component={LoginScreen} />
                   <Route path="/code" component={ConfirmCodeScreen} />
+
+                  {/* new routes => guards */}
+
+                  <Route path="/guard_home" component={GuardHome} />
                 </Switch>
               </LoggedInOnly>
             </Analytics>
