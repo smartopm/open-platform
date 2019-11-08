@@ -44,6 +44,8 @@ yarn-debug.log*
 # SQL Backups
 /*.dump
 
+*.log
+
 # Mac cruft
 **/.DS_Store
 
