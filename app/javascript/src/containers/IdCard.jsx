@@ -2,11 +2,10 @@ import React, { useContext } from "react";
 import { useQuery } from "react-apollo";
 import { QRCode } from "react-qr-svg";
 import Loading from "../components/Loading.jsx";
-
 import DateUtil from "../utils/dateutil.js";
-
 import { UserQuery } from "../graphql/queries";
 import { Context } from "./Provider/AuthStateProvider";
+import Nav from "../components/Nav.jsx";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -42,7 +41,7 @@ export default () => {
 export function Component({ data }) {
   return (
     <div>
-      {/* <Nav navName="Identify" menuButton="back" /> */}
+      <Nav navName="Identify" menuButton="back" />
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div

@@ -81,7 +81,7 @@ export function Component({ authState }) {
               ) : null}
 
               <div className="card align-self-center text-center">
-                <Link to={`/scan`} className={`card-link`}>
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <PersonIcon className={css(styles.homeIconColor)} />
