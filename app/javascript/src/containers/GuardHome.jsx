@@ -17,7 +17,13 @@ const initialState = {
   truck: false
 };
 
-const reducer = (state, action) => {
+const initialStateFormState = {
+  visitor: "",
+  host: "",
+  plotNumber: ""
+};
+
+const homeReducer = (state, action) => {
   switch (action.type) {
     // return initialstate for main cards to reset the view
     case "person":
@@ -35,6 +41,13 @@ const reducer = (state, action) => {
         ...initialState,
         truck: action.payload
       };
+    default:
+      break;
+  }
+};
+
+const formReducer = (state, action) => {
+  switch (action.type) {
     case "visitor":
       return {
         ...state,
@@ -50,6 +63,7 @@ const reducer = (state, action) => {
         ...state,
         plotNumber: action.payload
       };
+
     default:
       break;
   }
@@ -58,7 +72,11 @@ const reducer = (state, action) => {
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(homeReducer, initialState);
+  const [formState, dispatchInputs] = useReducer(
+    formReducer,
+    initialStateFormState
+  );
 
   function inputToSearch() {
     setRedirect("/search");
@@ -164,9 +182,12 @@ export default function GuardHome() {
                         className="form-control"
                         type="text"
                         onChange={e =>
-                          dispatch({ type: "visitor", payload: e.target.value })
+                          dispatchInputs({
+                            type: "visitor",
+                            payload: e.target.value
+                          })
                         }
-                        value={state.visitor}
+                        value={formState.visitor}
                         name="visitor"
                         required
                       />
@@ -180,9 +201,12 @@ export default function GuardHome() {
                         className="form-control"
                         type="text"
                         onChange={e =>
-                          dispatch({ type: "host", payload: e.target.value })
+                          dispatchInputs({
+                            type: "host",
+                            payload: e.target.value
+                          })
                         }
-                        value={state.host}
+                        value={formState.host}
                         name="host"
                         required
                       />
@@ -196,12 +220,12 @@ export default function GuardHome() {
                         className="form-control"
                         type="text"
                         onChange={e =>
-                          dispatch({
+                          dispatchInputs({
                             type: "plotNumber",
                             payload: e.target.value
                           })
                         }
-                        value={state.plotNumber}
+                        value={formState.plotNumber}
                         name="plot-numer"
                         required
                       />
@@ -232,6 +256,7 @@ export default function GuardHome() {
                   </div>
                 </Fragment>
               ) : null}
+              {/* Truck */}
             </div>
           </div>
         </div>
