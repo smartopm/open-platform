@@ -25,6 +25,11 @@ export function Component({ authState }) {
     setRedirect("/search");
   }
 
+  // TODO: Make this just a conditional part of Home
+  if (authState.user.userType === 'security_guard') {
+    return <Redirect push to='/guard_home' />;
+  }
+
   if (redirect) {
     return <Redirect push to={redirect} />;
   }

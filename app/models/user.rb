@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_one_attached :document
 
-  VALID_USER_TYPES = %w[security_guard admin resident contractor].freeze
+  VALID_USER_TYPES = %w[security_guard admin resident contractor prospective_client].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }

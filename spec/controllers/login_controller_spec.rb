@@ -34,10 +34,17 @@ RSpec.describe LoginController, type: :controller do
     end
   end
 
-  describe 'POST #sms_one_time_login' do
+  describe 'GET #sms_one_time_login' do
     it 'handles valid token to login' do
       @user.create_new_phone_token
       get :sms_one_time_login, params: { user_id: @user.id, token: @user.phone_token }
+      expect(response).to redirect_to(root_path)
+    end
+
+    it 'handles an already logged in user' do
+      sign_in @user
+      get :sms_one_time_login, params: { user_id: @user.id, token: '000000' }
+      # They are logged in and just go to root_path regardless of token
       expect(response).to redirect_to(root_path)
     end
   end
