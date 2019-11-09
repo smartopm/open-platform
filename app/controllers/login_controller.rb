@@ -4,6 +4,7 @@
 class LoginController < ApplicationController
   before_action :find_user_by_phone, only: %i[sms sms_complete]
   before_action :find_user_by_id, only: %i[sms_one_time_login]
+  before_action :ignore_logged_in, only: %i[sms_one_time_login]
 
   def index
     # Present login options to the user
@@ -56,5 +57,10 @@ class LoginController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash[:error] = 'User not found'
     redirect_to login_sms_path
+  end
+
+  # Let logged in users continue to use the one time passcode link
+  def ignore_logged_in
+    redirect_to root_path if current_user
   end
 end
