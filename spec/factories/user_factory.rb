@@ -24,12 +24,15 @@ FactoryBot.define do
     end
     factory :security_guard do
       user_type { 'security_guard' }
+      community
     end
     factory :admin_user do
       user_type { 'admin' }
+      community
     end
     factory :pending_user do
       request_status { 'pending' }
+      community
     end
   end
 end

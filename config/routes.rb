@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'login', to: 'login#index'
   post 'login/sms'
   post 'login/sms_complete'
+  get  'login/sms_complete/:user_id/:token', to: "login#sms_one_time_login"
 
   # Oauth routes
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }

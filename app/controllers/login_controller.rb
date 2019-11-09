@@ -2,7 +2,7 @@
 
 # Handle all the user authentication here
 class LoginController < ApplicationController
-  before_action :find_user, except: [:index]
+  before_action :find_user, only: [:sms, :sms_complete]
 
   def index
     # Present login options to the user
@@ -21,6 +21,21 @@ class LoginController < ApplicationController
 
   # POST with phone_number and verification code
   def sms_complete
+    @user.verify_phone_token!(params[:token])
+    sign_in(@user)
+    redirect_to root_path
+  rescue User::PhoneTokenResultInvalid
+    flash[:error] = 'Invalid code'
+    redirect_to login_sms_path
+  rescue User::PhoneTokenResultExpired
+    flash[:error] = 'This code has expired, please try again'
+    redirect_to login_sms_path
+  end
+
+  # Login with a one time code that was sent to the user
+  # GET /login/:phone_number/:token
+  def sms_one_time_login
+    @user = User.find(params[:user_id])
     @user.verify_phone_token!(params[:token])
     sign_in(@user)
     redirect_to root_path
