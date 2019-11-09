@@ -151,7 +151,7 @@ class User < ApplicationRecord
 
   def send_one_time_login
     token = create_new_phone_token
-    msg = "Your login link for #{self.community.name} is https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
+    msg = "Your login link for #{community.name} is https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
     Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
     Sms.send(self[:phone_number], msg)
   end
