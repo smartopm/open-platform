@@ -75,7 +75,7 @@ const formReducer = (state, action) => {
     case "peopleCountRemove":
       return {
         ...state,
-        peopleCount: state.peopleCount - 1
+        peopleCount: state.peopleCount === 0 ? 0 : state.peopleCount - 1
       };
     default:
       break;
