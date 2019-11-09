@@ -285,6 +285,7 @@ RSpec.describe Mutations::User do
       variables = {
         userId: resident.id,
       }
+      expect(Sms).to receive(:send)
       result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
                                                             context: {
                                                               current_user: admin,
