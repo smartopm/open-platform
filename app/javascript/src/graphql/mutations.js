@@ -157,3 +157,11 @@ mutation ActivityLogMutation($userId: ID!, $note: String) {
 }
 ${UserFragment.publicFields}
 `;
+
+export const SendOneTimePasscode = gql`
+mutation SendOneTimePasscode($userId: ID!) {
+  oneTimeLogin(userId: $userId) {
+    success
+  }
+}
+`;

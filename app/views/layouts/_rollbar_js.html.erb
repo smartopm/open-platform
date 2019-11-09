@@ -4,7 +4,8 @@
         captureUncaught: true,
         captureUnhandledRejections: true,
         payload: {
-          environment: "production"
+          environment: "production",
+          version: "<%= ENV['HEROKU_RELEASE_VERSION'] || '' %>"
         }
       };
       // Rollbar Snippet

@@ -262,4 +262,48 @@ RSpec.describe Mutations::User do
       expect(result.dig('errors')).to be_nil
     end
   end
+  describe 'sending a user a one time passcode' do
+    let!(:admin) { create(:admin_user) }
+    let!(:non_admin) { create(:user, community_id: admin.community_id) }
+    let!(:resident) { create(:user, community_id: admin.community_id) }
+
+    let(:send_one_time_login) do
+      <<~GQL
+        mutation SendOneTimePasscode(
+            $userId: ID!
+          ) {
+          result: oneTimeLogin(
+              userId: $userId
+            ) {
+            success
+          }
+        }
+      GQL
+    end
+
+    it 'should allow an admin to send a one time login code' do
+      variables = {
+        userId: resident.id,
+      }
+      expect(Sms).to receive(:send)
+      result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                            }).as_json
+      expect(result.dig('data', 'result', 'success')).to be true
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'should not allow non-admins to send one time login codes' do
+      variables = {
+        userId: resident.id,
+      }
+      result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
+                                                            context: {
+                                                              current_user: non_admin,
+                                                            }).as_json
+      expect(result.dig('data', 'result')).to be nil
+      expect(result.dig('errors')).not_to be_nil
+    end
+  end
 end

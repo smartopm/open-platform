@@ -57,6 +57,7 @@ class User < ApplicationRecord
 
   def self.from_omniauth(auth)
     # Either create a User record or update it based on the provider (Google) and the UID
+    user = find_or_initialize_from_oauth(auth)
     user = where(provider: auth.provider, uid: auth.uid).first_or_initialize
     OAUTH_FIELDS_MAP.keys.each do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
@@ -64,6 +65,13 @@ class User < ApplicationRecord
     user.assign_default_community
     user.save!
     user
+  end
+
+  def self.find_or_initialize_from_oauth(auth)
+    by_email = find_by(email: auth.info.email)
+    return by_email if by_email
+
+    where(provider: auth.provider, uid: auth.uid).first_or_initialize
   end
 
   # We may want to do a bit more work here massaing the number entered
@@ -139,6 +147,13 @@ class User < ApplicationRecord
     Rails.logger.info "Sending #{token} to #{self[:phone_number]}"
     Sms.send(self[:phone_number], "Your code is #{token}")
     # Send number via Nexmo
+  end
+
+  def send_one_time_login
+    token = create_new_phone_token
+    msg = "Your login link for #{community.name} is https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
+    Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
+    Sms.send(self[:phone_number], msg)
   end
 
   def last_activity_at

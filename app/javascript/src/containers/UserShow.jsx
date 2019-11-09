@@ -11,17 +11,8 @@ import Avatar from "../components/Avatar";
 import DateUtil from "../utils/dateutil.js";
 
 import { UserQuery } from "../graphql/queries";
-import { AddActivityLog } from "../graphql/mutations";
+import { AddActivityLog, SendOneTimePasscode } from "../graphql/mutations";
 import { css, StyleSheet } from "aphrodite";
-
-// once we have different actions, we can add them here
-const userState = {
-  pending: "Call Admin",
-  valid: "Log this Entry",
-  expired: "Request Extension",
-  "exp. soon": "Log this Entry",
-  banned: "Call Police"
-};
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -40,15 +31,18 @@ export default ({ match }) => {
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: { userId: id }
   });
+  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
+    variables: { userId: id }
+  });
   if (loading || entry.loading) return <Loading />;
   if (entry.data) return <Redirect to="/" />;
   if (error) return `Error! ${error}`;
   return (
-    <Component data={data} authState={authState} onLogEntry={addLogEntry} />
+    <Component data={data} authState={authState} onLogEntry={addLogEntry} sendOneTimePasscode={sendOneTimePasscode} />
   );
 };
 
-export function Component({ data, onLogEntry, authState}) {
+export function Component({ data, onLogEntry, authState, sendOneTimePasscode}) {
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -129,6 +123,16 @@ export function Component({ data, onLogEntry, authState}) {
                 className="btn btn-primary btn-lg btn-block active"
               >
                 Print
+              </Link>
+            </div>
+          </div>
+          <div className="row justify-content-center log-entry-form">
+            <div className="col-10 col-sm-10 col-md-6">
+              <Link
+                onClick={sendOneTimePasscode}
+                className="btn btn-primary btn-lg btn-block active"
+              >
+                Send One Time Passcode
               </Link>
             </div>
           </div>
