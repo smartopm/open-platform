@@ -17,7 +17,6 @@ class User < ApplicationRecord
 
   VALID_USER_TYPES = %w[security_guard admin resident contractor prospective_client client].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
-
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
@@ -27,7 +26,7 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   PHONE_TOKEN_LEN = 6
-  PHONE_TOKEN_EXPIRATION_MINUTES = 15
+  PHONE_TOKEN_EXPIRATION_MINUTES = 10
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
@@ -172,10 +171,8 @@ class User < ApplicationRecord
 
   def verify_phone_token!(token)
     if phone_token == token
-      if phone_token_expires_at > Time.zone.now
-        update(phone_token_expires_at: Time.zone.now)
-        return true
-      end
+      return true if phone_token_expires_at > Time.zone.now
+
       raise PhoneTokenResultExpired
     end
     raise PhoneTokenResultInvalid
