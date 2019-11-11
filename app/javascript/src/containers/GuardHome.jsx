@@ -7,6 +7,7 @@ import ScanIcon from "../../../assets/images/shape.svg";
 import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import LogIcon from "../../../assets/images/icon_contact_card_fill.svg";
 import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
+import CallIcon from "@material-ui/icons/Call";
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
@@ -79,14 +80,14 @@ export default function GuardHome() {
                   width: "100%"
                 }}
               >
-                <Link to={`/support`} className={`card-link`}>
+                <a href="tel:+260976064298">
                   <div className="card-body">
                     <h5 className="card-title">
-                      <img src={SupportIcon} alt="support icon" />
+                      <CallIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t("home.support")}</p>
+                    Call Poniso
                   </div>
-                </Link>
+                </a>
               </div>
             </div>
           </div>
