@@ -8,6 +8,7 @@ export default function RequestUpdate() {
   // Todo: Query the requests and display depending on the table
 
   //   request mock, to prototype the request form
+  // ideally this will come from the db
   const request = {
     name: "Olivier Req",
     nrc: "101010/10/1",
@@ -15,7 +16,6 @@ export default function RequestUpdate() {
     vehicle: "13409",
     reason: "Delivering sand"
   };
-
   function handleGrantRequest() {}
   function handleDenyRequest() {}
   return (
