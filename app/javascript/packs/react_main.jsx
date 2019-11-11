@@ -35,6 +35,7 @@ import GuardHome from "../src/containers/GuardHome";
 import EntryRequest from "../src/containers/EntryRequest";
 import RequestUpdate from "../src/containers/RequestUpdate";
 import WaitScreen from "../src/containers/WaitingScreen";
+import RequestApproval from "../src/containers/RequestApproval";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -132,8 +133,9 @@ const App = () => {
 
                   {/* requests */}
                   <Route path="/entry_request" component={EntryRequest} />
-                  <Route path="/requests/:id" component={RequestUpdate} />
+                  <Route path="/request/:id" component={RequestUpdate} />
                   <Route path="/wait" component={WaitScreen} />
+                  <Route path="/request_status" component={RequestApproval} />
                 </Switch>
               </LoggedInOnly>
             </Analytics>
