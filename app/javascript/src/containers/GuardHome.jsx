@@ -140,7 +140,7 @@ export default function GuardHome() {
                     <h5 className="card-title">
                       <PersonIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t("home.manualLog")}</p>
+                    <p>{t("home.log_entry")}</p>
                   </div>
                 </Link>
               </div>
