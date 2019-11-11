@@ -12,6 +12,7 @@ import {
   TabPanel
 } from "../components/Tabs.jsx";
 
+// Todo: We can reusable the table with just data from different queries
 export default ({ match }) => {
   if (match.params.userId) {
     return userEntryLogs(match.params.userId);
