@@ -110,6 +110,5 @@ module Types
     def entry_requests
       EntryRequest.where(community_id: context[:current_user].community_id)
     end
-
   end
 end

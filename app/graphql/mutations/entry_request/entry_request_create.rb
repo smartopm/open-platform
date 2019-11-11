@@ -1,9 +1,7 @@
-
 # frozen_string_literal: true
 
 module Mutations
   module EntryRequest
-
     # Create a new request/pending member
     class EntryRequestCreate < BaseMutation
       argument :name, String, required: true
@@ -25,9 +23,10 @@ module Mutations
       end
 
       # TODO: Better auth here
-      def authorized?(vals)
+      def authorized?(_vals)
         current_user = context[:current_user]
         raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+
         true
       end
     end

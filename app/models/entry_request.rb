@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Record of visitor entries to a community
 class EntryRequest < ApplicationRecord
   belongs_to :user
   belongs_to :community
@@ -7,38 +8,38 @@ class EntryRequest < ApplicationRecord
 
   before_validation :attach_community
 
-  class Unauthorized < StandardError; end;
+  class Unauthorized < StandardError; end
 
-  GRANT_STATE=["Pending", "Granted", "Denied"]
+  GRANT_STATE = %w[Pending Granted Denied].freeze
 
   def grant!(grantor)
     can_grant?(grantor)
-    self.update({
+    update(
       grantor_id: grantor.id,
       granted_state: 1,
-      granted_at: Time.now
-    })
+      granted_at: Time.zone.now,
+    )
   end
 
   def deny!(grantor)
     can_grant?(grantor)
-    self.update({
+    update(
       grantor_id: grantor.id,
       granted_state: 2,
-      granted_at: Time.now
-    })
+      granted_at: Time.zone.now,
+    )
   end
 
   def granted?
-    return self[:granted_state] == 1
+    self[:granted_state] == 1
   end
 
   def denied?
-    return self[:granted_state] == 2
+    self[:granted_state] == 2
   end
 
   def pending?
-    return self[:granted_state] == 0 || self[:granted_state].nil?
+    self[:granted_state].nil? || self[:granted_state].zero?
   end
 
   private
@@ -48,6 +49,6 @@ class EntryRequest < ApplicationRecord
   end
 
   def attach_community
-    self[:community_id] = self.user.community_id
+    self[:community_id] = user.community_id
   end
 end
