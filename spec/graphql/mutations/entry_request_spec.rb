@@ -9,9 +9,9 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation CreateEntryRequest($name: String, $reason: String) {
-          result: entryRequestCreate(name: $name, reason: $reason) {
-            entryRequest {
+        mutation CreateEntryRequest($name: String!, $reason: String!) {
+          entryRequestCreate(name: $name, reason: $reason) {
+            result: entryRequest {
               id
               name
               user {
@@ -32,7 +32,7 @@ RSpec.describe Mutations::EntryRequest do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('data', 'entryRequestCreate', 'result', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
 

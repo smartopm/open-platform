@@ -17,9 +17,9 @@ module Mutations
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
-        entry_request = context[:user].entry_logs.create(vals)
+        entry_request = context[:current_user].entry_requests.create(vals)
 
-        return { entry_request: entry_request } if entry_request.saved?
+        return { entry_request: entry_request } if entry_request.persisted?
 
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
