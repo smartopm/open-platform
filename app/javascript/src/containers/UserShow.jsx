@@ -38,11 +38,21 @@ export default ({ match }) => {
   if (entry.data) return <Redirect to="/" />;
   if (error) return `Error! ${error}`;
   return (
-    <Component data={data} authState={authState} onLogEntry={addLogEntry} sendOneTimePasscode={sendOneTimePasscode} />
+    <Component
+      data={data}
+      authState={authState}
+      onLogEntry={addLogEntry}
+      sendOneTimePasscode={sendOneTimePasscode}
+    />
   );
 };
 
-export function Component({ data, onLogEntry, authState, sendOneTimePasscode}) {
+export function Component({
+  data,
+  onLogEntry,
+  authState,
+  sendOneTimePasscode
+}) {
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -77,25 +87,24 @@ export function Component({ data, onLogEntry, authState, sendOneTimePasscode}) {
           </div>
         </div>
 
-        {data.user.state === 'valid' ?
-        <div className="row justify-content-center log-entry-form">
-          <div className="col-10 col-sm-10 col-md-6">
-            <a
-              className={`btn btn-primary btn-lg btn-block active ${css(
-                styles.logButton
-              )}`}
-              onClick={onLogEntry}
-            >
-              Log This Entry
-            </a>
+        {data.user.state === "valid" ? (
+          <div className="row justify-content-center log-entry-form">
+            <div className="col-10 col-sm-10 col-md-6">
+              <a
+                className={`btn btn-primary btn-lg btn-block active ${css(
+                  styles.logButton
+                )}`}
+                onClick={onLogEntry}
+              >
+                Log This Entry
+              </a>
+            </div>
           </div>
-        </div>
-        : null
-        }
+        ) : null}
         <div className="row justify-content-center log-entry-form">
           <div className="col-10 col-sm-10 col-md-6">
             <a
-              href='tel:+260976064298'
+              href="tel:+260976064298"
               className={`btn btn-primary btn-lg btn-block ${css(
                 styles.callButton
               )}`}
@@ -104,40 +113,40 @@ export function Component({ data, onLogEntry, authState, sendOneTimePasscode}) {
             </a>
           </div>
         </div>
-        {authState.user.userType === 'admin' ?
-        <Fragment>
-          <div className="row justify-content-center log-entry-form">
-            <div className="col-10 col-sm-10 col-md-6">
-              <Link
-                to={`/user/${data.user.id}/edit`}
-                className="btn btn-primary btn-lg btn-block active"
-              >
-                Edit
-              </Link>
+        {authState.user.userType === "admin" ? (
+          <Fragment>
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
+                <Link
+                  to={`/user/${data.user.id}/edit`}
+                  className="btn btn-primary btn-lg btn-block active"
+                >
+                  Edit
+                </Link>
+              </div>
             </div>
-          </div>
-          <div className="row justify-content-center log-entry-form">
-            <div className="col-10 col-sm-10 col-md-6">
-              <Link
-                to={`/print/${data.user.id}`}
-                className="btn btn-primary btn-lg btn-block active"
-              >
-                Print
-              </Link>
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
+                <Link
+                  to={`/print/${data.user.id}`}
+                  className="btn btn-primary btn-lg btn-block active"
+                >
+                  Print
+                </Link>
+              </div>
             </div>
-          </div>
-          <div className="row justify-content-center log-entry-form">
-            <div className="col-10 col-sm-10 col-md-6">
-              <Link
-                onClick={sendOneTimePasscode}
-                className="btn btn-primary btn-lg btn-block active"
-              >
-                Send One Time Passcode
-              </Link>
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
+                <Link
+                  onClick={sendOneTimePasscode}
+                  className="btn btn-primary btn-lg btn-block active"
+                >
+                  Send One Time Passcode
+                </Link>
+              </div>
             </div>
-          </div>
-        </Fragment>
-        : null}
+          </Fragment>
+        ) : null}
       </div>
     </div>
   );
