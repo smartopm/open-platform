@@ -61,7 +61,7 @@ export function IndexComponent({ data }) {
     <div>
       <div
         style={{
-          backgroundColor: "#53d6a5"
+          backgroundColor: "#25c0b0"
         }}
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />

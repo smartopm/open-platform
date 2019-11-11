@@ -20,7 +20,7 @@ export function TabPanel(props) {
 
 export const StyledTabs = withStyles({
   indicator: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     "& > div": {
       maxWidth: 40,
       width: "100%",

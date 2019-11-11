@@ -154,7 +154,7 @@ export function Component({
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     textTransform: "unset"
   },
   callButton: {
