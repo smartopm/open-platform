@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import { useTranslation } from "react-i18next";
@@ -8,87 +8,9 @@ import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import LogIcon from "../../../assets/images/icon_contact_card_fill.svg";
 import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
 
-// Todo: put reducers in their own file
-// Todo: Add other cases
-// Todo: Make this the default home page for securiry guards
-// Todo: Clean up the flow
-
-const initialState = {
-  guest: false,
-  person: false,
-  truck: false
-};
-
-const initialStateFormState = {
-  visitor: "",
-  host: "",
-  plotNumber: "",
-  peopleCount: 0
-};
-
-const homeReducer = (state, action) => {
-  switch (action.type) {
-    case "person":
-      return {
-        ...initialState,
-        person: action.payload
-      };
-    case "guest":
-      return {
-        ...state,
-        guest: action.payload
-      };
-    case "truck":
-      return {
-        ...initialState,
-        truck: action.payload
-      };
-    default:
-      break;
-  }
-};
-
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case "visitor":
-      return {
-        ...state,
-        visitor: action.payload
-      };
-    case "host":
-      return {
-        ...state,
-        host: action.payload
-      };
-    case "plotNumber":
-      return {
-        ...state,
-        plotNumber: action.payload
-      };
-    case "peopleCountAdd":
-      return {
-        ...state,
-        peopleCount: state.peopleCount + 1
-      };
-    case "peopleCountRemove":
-      return {
-        ...state,
-        peopleCount: state.peopleCount === 0 ? 0 : state.peopleCount - 1
-      };
-    default:
-      break;
-  }
-};
-
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
   const { t } = useTranslation();
-
-  const [state, dispatch] = useReducer(homeReducer, initialState);
-  const [formState, dispatchInputs] = useReducer(
-    formReducer,
-    initialStateFormState
-  );
 
   function inputToSearch() {
     setRedirect("/search");
@@ -142,7 +64,7 @@ export default function GuardHome() {
                   width: "100%"
                 }}
               >
-                <Link to={`/log_entry`} className={`card-link`}>
+                <Link to={`/entry_request`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <img src={LogIcon} alt="support icon" />

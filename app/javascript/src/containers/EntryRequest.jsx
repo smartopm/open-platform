@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#53d6a5",
     color: "#FFF",
     width: "75%",
-    boxShadow: "none"
+    boxShadow: "none",
+    marginTop: 60
   },
   selectInput: {
     width: "100%"
