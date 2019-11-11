@@ -8,5 +8,9 @@ module Types
     field :user_update, mutation: Mutations::User::Update
     field :one_time_login, mutation: Mutations::User::OneTimeLogin
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
+    field :entry_request_create, mutation: Mutations::EntryRequest::EntryRequestCreate
+    field :entry_request_update, mutation: Mutations::EntryRequest::EntryRequestUpdate
+    field :entry_request_grant, mutation: Mutations::EntryRequest::EntryRequestGrant
+    field :entry_request_deny, mutation: Mutations::EntryRequest::EntryRequestDeny
   end
 end

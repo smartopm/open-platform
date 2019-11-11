@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_06_214217) do
+ActiveRecord::Schema.define(version: 2019_11_11_154347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -54,6 +54,23 @@ ActiveRecord::Schema.define(version: 2019_11_06_214217) do
     t.string "slug"
     t.string "logo_url"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
+  end
+
+  create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.uuid "community_id"
+    t.string "name"
+    t.string "nrc"
+    t.string "phone_number"
+    t.string "vehicle_plate"
+    t.string "reason"
+    t.string "other_reason"
+    t.boolean "concern_flag"
+    t.integer "granted_state"
+    t.uuid "grantor_id"
+    t.datetime "granted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
