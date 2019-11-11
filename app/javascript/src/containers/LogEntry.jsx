@@ -1,9 +1,10 @@
 import React, { Fragment, useState } from "react";
 import { StyleSheet, css } from "aphrodite";
 import Nav from "../components/Nav";
-import { Button } from "@material-ui/core";
+import { Button, TextField, MenuItem, InputAdornment } from "@material-ui/core";
 import { useMutation } from "react-apollo";
 import { AddActivityLog, CreateUserMutation } from "../graphql/mutations";
+import { entryReason } from "../utils/constants";
 
 export default function LogEntry({ history }) {
   const name = useFormInput("");
@@ -90,15 +91,20 @@ export default function LogEntry({ history }) {
             />
           </div>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="business">
-              BUSINESS
-            </label>
-            <input
-              className="form-control"
-              type="text"
+            <TextField
+              id="reason"
+              select
+              label="Reason for visit"
+              name="reason"
               {...business}
-              name="business"
-            />
+              className={`${css(styles.selectInput)}`}
+            >
+              {entryReason.map(reason => (
+                <MenuItem key={reason} value={reason}>
+                  {reason}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
 
           <div
@@ -111,7 +117,7 @@ export default function LogEntry({ history }) {
               className={`btn ${css(styles.logButton)}`}
               onClick={handleSubmit}
             >
-              Log Entry
+              Request Entry
             </Button>
           </div>
         </form>
@@ -129,23 +135,13 @@ function useFormInput(initialValue) {
 }
 
 const styles = StyleSheet.create({
-  flag: {
-    display: "inline-block",
-    marginTop: 7
-  },
-  countryCode: {
-    display: "inline-block",
-    marginTop: -2,
-    marginLeft: 6
-  },
-
-  phoneNumberInput: {
-    marginTop: 50
-  },
   logButton: {
     backgroundColor: "#53d6a5",
     color: "#FFF",
     width: "75%",
     boxShadow: "none"
+  },
+  selectInput: {
+    width: "100%"
   }
 });

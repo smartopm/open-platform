@@ -14,4 +14,18 @@ export const userType = {
   prospective_client: "Prospective Client",
   client: "Client"
 };
-export const userState = {valid: "Valid", pending: "Pending", banned: "Banned", expired: "Expired"};
+
+export const userState = {
+  valid: "Valid",
+  pending: "Pending",
+  banned: "Banned",
+  expired: "Expired"
+};
+
+export const entryReason = [
+  "Client",
+  "Prospective Client",
+  "Working",
+  "Sales",
+  "Passing through"
+];
