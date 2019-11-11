@@ -98,7 +98,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    def entry_request(id)
+    def entry_request(id:)
       EntryRequest.find(id) if context[:current_user]
     end
 

@@ -1,23 +1,65 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
+import { useQuery, useMutation } from "react-apollo";
 import Nav from "../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
+import { EntryRequestQuery } from "../graphql/queries.js"
+import { EntryRequestUpdate, EntryRequestGrant, EntryRequestDeny } from "../graphql/mutations.js"
+import Loading from "../components/Loading"
 import { StyleSheet, css } from "aphrodite";
 
-export default function RequestUpdate() {
+export default function RequestUpdate({match, history}) {
   // Todo: Get the request Id from the url
   // Todo: Query the requests and display depending on the table
 
   //   request mock, to prototype the request form
   // ideally this will come from the db
-  const request = {
-    name: "Olivier Req",
-    nrc: "101010/10/1",
-    phoneNumber: "260923423423",
-    vehicle: "13409",
-    reason: "Delivering sand"
-  };
-  function handleGrantRequest() {}
-  function handleDenyRequest() {}
+  const { loading, data } = useQuery(EntryRequestQuery, {variables: {id: match.params.id}})
+  const [updateEntryRequest] = useMutation(EntryRequestUpdate)
+  const [grantEntry] = useMutation(EntryRequestGrant)
+  const [denyEntry] = useMutation(EntryRequestDeny)
+
+  const [formData, setFormData] = useState({
+    name:'',
+    phoneNumber:'',
+    nrc:'',
+    vehiclePlate:'',
+    reason:'',
+    loaded: false,
+  });
+
+  if (loading) {
+    return <Loading />
+  }
+
+  // Data is loaded, so set the initialState, but only once
+  if (!formData.loaded && data) {
+    setFormData({...data.result, loaded: true})
+  }
+
+  function handleInputChange(e) {
+    const {name, value} = e.target
+    setFormData({
+      ...formData,
+      [name]: value
+    })
+  }
+
+  function handleUpdateRecord() {
+    return updateEntryRequest({variables: formData})
+  }
+  
+  function handleGrantRequest() {
+    handleUpdateRecord().then(grantEntry({variables: {id: match.params.id}})).then(()=> {
+      history.push('/requests')
+    })
+  }
+
+  function handleDenyRequest() {
+    handleUpdateRecord().then(denyEntry({variables: {id: match.params.id}})).then(()=> {
+      history.push('/requests')
+    })
+  }
+
   return (
     <Fragment>
       <Nav navName="Approve Request" menuButton="cancel" />
@@ -30,8 +72,9 @@ export default function RequestUpdate() {
             <input
               className="form-control"
               type="text"
-              value={request.name}
-              name="_name"
+              value={formData.name}
+              onChange={handleInputChange}
+              name="name"
               required
             />
           </div>
@@ -42,7 +85,8 @@ export default function RequestUpdate() {
             <input
               className="form-control"
               type="text"
-              value={request.nrc}
+              value={formData.nrc || ''}
+              onChange={handleInputChange}
               name="nrc"
               required
             />
@@ -54,7 +98,8 @@ export default function RequestUpdate() {
             <input
               className="form-control"
               type="text"
-              value={request.phoneNumber}
+              value={formData.phoneNumber || ''}
+              onChange={handleInputChange}
               name="phoneNumber"
             />
           </div>
@@ -65,8 +110,9 @@ export default function RequestUpdate() {
             <input
               className="form-control"
               type="text"
-              value={request.vehicle}
-              name="vehicle"
+              onChange={handleInputChange}
+              value={formData.vehiclePlate || ''}
+              name="vehiclePlate"
             />
           </div>
           <div className="form-group">
@@ -75,10 +121,11 @@ export default function RequestUpdate() {
               select
               label="Reason for visit"
               name="reason"
-              value={request.reason}
+              value={formData.reason || ''}
+              onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
             >
-              <MenuItem value={request.reason}>{request.reason}</MenuItem>
+              <MenuItem value={formData.reason}>{formData.reason}</MenuItem>
             </TextField>
           </div>
 
