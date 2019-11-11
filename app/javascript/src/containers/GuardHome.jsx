@@ -9,6 +9,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import CheckIcon from "@material-ui/icons/Check";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
+import { useTranslation } from "react-i18next";
 
 // Todo: put reducers in their own file
 // Todo: Add other cases
@@ -84,6 +85,7 @@ const formReducer = (state, action) => {
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
+  const { t } = useTranslation();
 
   const [state, dispatch] = useReducer(homeReducer, initialState);
   const [formState, dispatchInputs] = useReducer(
@@ -97,12 +99,6 @@ export default function GuardHome() {
   if (redirect) {
     return <Redirect push to={redirect} />;
   }
-  function handleGrantAccess() {
-    // update user
-    console.log(state);
-  }
-
-  function handleDenyAccess() {}
 
   return (
     <div>
@@ -128,164 +124,36 @@ export default function GuardHome() {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {state.person || state.truck ? null : (
-                <Fragment>
-                  <div className="card align-self-center text-center">
-                    <div
-                      onClick={() =>
-                        dispatch({ type: "person", payload: true })
-                      }
-                      className="card-body"
-                    >
-                      <h5 className="card-title">
-                        <PersonIcon className={css(styles.homeIconColor)} />
-                      </h5>
-                      <p>Person</p>
-                    </div>
+              <div className="card align-self-center text-center">
+                <Link to={`/scan`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <PersonIcon className={css(styles.homeIconColor)} />
+                    </h5>
+                    <p>{t("home.scan")}</p>
                   </div>
-                  <div className="card align-self-center text-center">
-                    <div
-                      onClick={() => dispatch({ type: "truck", payload: true })}
-                      className="card-body"
-                    >
-                      <h5 className="card-title">
-                        <PersonIcon className={css(styles.homeIconColor)} />
-                      </h5>
-                      <p>Truck</p>
-                    </div>
+                </Link>
+              </div>
+              <div className="card align-self-center text-center">
+                <Link to={`/log_entry`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <PersonIcon className={css(styles.homeIconColor)} />
+                    </h5>
+                    <p>{t("home.manualLog")}</p>
                   </div>
-                </Fragment>
-              )}
-
-              {state.person && !state.guest ? (
-                <Fragment>
-                  <div className="card align-self-center text-center">
-                    <Link to={"/scan"} className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <img src={ScanIcon} alt="scan icon" />
-                        </h5>
-                        <p>Scan</p>
-                      </div>
-                    </Link>
+                </Link>
+              </div>
+              <div className="card align-self-center text-center">
+                <Link to={`/support`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <PersonIcon className={css(styles.homeIconColor)} />
+                    </h5>
+                    <p>{t("home.support")}</p>
                   </div>
-
-                  <div className="card align-self-center text-center">
-                    <div
-                      onClick={() => dispatch({ type: "guest", payload: true })}
-                      className="card-body"
-                    >
-                      <h5 className="card-title">
-                        <img src={SupportIcon} alt="support icon" />
-                      </h5>
-                      <p>Guest</p>
-                    </div>
-                  </div>
-                </Fragment>
-              ) : null}
-
-              {state.guest ? (
-                <Fragment>
-                  <div className="container">
-                    <div className="form-group">
-                      <label className="bmd-label-static" htmlFor="visitor">
-                        Visitor Name
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        onChange={e =>
-                          dispatchInputs({
-                            type: "visitor",
-                            payload: e.target.value
-                          })
-                        }
-                        value={formState.visitor}
-                        name="visitor"
-                        required
-                      />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                      <label className="bmd-label-static" htmlFor="host">
-                        Host Name
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        onChange={e =>
-                          dispatchInputs({
-                            type: "host",
-                            payload: e.target.value
-                          })
-                        }
-                        value={formState.host}
-                        name="host"
-                        required
-                      />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                      <label className="bmd-label-static" htmlFor="plot-number">
-                        Plot Number
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        onChange={e =>
-                          dispatchInputs({
-                            type: "plotNumber",
-                            payload: e.target.value
-                          })
-                        }
-                        value={formState.plotNumber}
-                        name="plot-numer"
-                        required
-                      />
-                    </div>
-                    <div className="row justify-content-center align-items-center">
-                      <CheckIcon
-                        className={`btn ${css(styles.grantIcon)}`}
-                        size={32}
-                        onClick={handleGrantAccess}
-                      />
-                      <ClearIcon
-                        className={`btn ${css(styles.denyIcon)}`}
-                        size={32}
-                        onClick={handleDenyAccess}
-                      />
-                      <br />
-                      <div className="row ">
-                        <a
-                          href="tel:+260976064298"
-                          className={`btn btn-primary btn-lg btn-block ${css(
-                            styles.callButton
-                          )}`}
-                        >
-                          Call Poniso
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </Fragment>
-              ) : null}
-              {/* Truck */}
-
-              {state.truck ? (
-                <Fragment>
-                  <RemoveIcon
-                    onClick={() =>
-                      dispatchInputs({ type: "peopleCountRemove" })
-                    }
-                    size={28}
-                  />
-                  <h3> {formState.peopleCount} </h3>
-                  <AddIcon
-                    onClick={() => dispatchInputs({ type: "peopleCountAdd" })}
-                    size={28}
-                  />
-                </Fragment>
-              ) : null}
+                </Link>
+              </div>
             </div>
           </div>
         </div>

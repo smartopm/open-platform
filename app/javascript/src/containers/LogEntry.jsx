@@ -3,21 +3,9 @@ import { StyleSheet, css } from "aphrodite";
 import Nav from "../components/Nav";
 import { Button } from "@material-ui/core";
 import { useMutation } from "react-apollo";
-import { AddActivityLog } from "../graphql/mutations";
+import { AddActivityLog, CreateUserMutation } from "../graphql/mutations";
 
-import gql from "graphql-tag";
-
-const CREATEUSER = gql`
-  mutation userCreate($name: String!, $phoneNumber: String, $vehicle: String) {
-    userCreate(name: $name, phoneNumber: $phoneNumber, vehicle: $vehicle) {
-      user {
-        id
-      }
-    }
-  }
-`;
-
-export default function LogEntry() {
+export default function LogEntry({ history }) {
   const name = useFormInput("");
   const nrc = useFormInput("");
   const phoneNumber = useFormInput("");
@@ -25,7 +13,7 @@ export default function LogEntry() {
   const business = useFormInput("");
 
   const [addLogEntry] = useMutation(AddActivityLog);
-  const [createUser] = useMutation(CREATEUSER);
+  const [createUser] = useMutation(CreateUserMutation);
 
   //   we need to create a user and then use their id to log entry
   function handleSubmit() {
@@ -42,11 +30,12 @@ export default function LogEntry() {
     })
       .then(({ data }) => {
         return addLogEntry({
-          variables: { userId: data.userCreate.user.id, note }
+          variables: { userId: data.result.user.id, note }
         });
       })
-      .then(_data => {
-        console.log(_data);
+      .then(() => {
+        // clean up
+        history.push("/guard_home");
       });
   }
   return (
