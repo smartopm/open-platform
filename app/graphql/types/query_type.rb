@@ -91,5 +91,25 @@ module Types
       User.where(state: 'pending',
                  community_id: context[:current_user].community_id)
     end
+
+    # Get a entry logs for a user
+    field :entry_request, EntryRequestType, null: true do
+      description 'Get an entry request'
+      argument :id, ID, required: true
+    end
+
+    def entry_request(id)
+      EntryRequest.find(id) if context[:current_user]
+    end
+
+    # Get a entry logs for a user
+    field :entry_requests, [EntryRequestType], null: true do
+      description 'Get a list of entry request'
+    end
+
+    def entry_requests
+      EntryRequest.where(community_id: context[:current_user].community_id)
+    end
+
   end
 end
