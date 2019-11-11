@@ -1,14 +1,11 @@
-import React, { useState, Fragment, useReducer } from "react";
+import React, { useState, useReducer } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import Nav from "../components/Nav";
 import ScanIcon from "../../../assets/images/shape.svg";
 import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
-import PersonIcon from "@material-ui/icons/Person";
-import ClearIcon from "@material-ui/icons/Clear";
-import CheckIcon from "@material-ui/icons/Check";
-import RemoveIcon from "@material-ui/icons/Remove";
-import AddIcon from "@material-ui/icons/Add";
+import LogIcon from "../../../assets/images/icon_contact_card_fill.svg";
+import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
 import { useTranslation } from "react-i18next";
 
 // Todo: put reducers in their own file
@@ -124,31 +121,46 @@ export default function GuardHome() {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              <div className="card align-self-center text-center">
+              <div
+                className="card align-self-center text-center"
+                style={{
+                  width: "100%"
+                }}
+              >
                 <Link to={`/scan`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <PersonIcon className={css(styles.homeIconColor)} />
+                      <img src={QRIcon} alt="support icon" />
                     </h5>
                     <p>{t("home.scan")}</p>
                   </div>
                 </Link>
               </div>
-              <div className="card align-self-center text-center">
+              <div
+                className="card align-self-center text-center"
+                style={{
+                  width: "100%"
+                }}
+              >
                 <Link to={`/log_entry`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <PersonIcon className={css(styles.homeIconColor)} />
+                      <img src={LogIcon} alt="support icon" />
                     </h5>
                     <p>{t("home.log_entry")}</p>
                   </div>
                 </Link>
               </div>
-              <div className="card align-self-center text-center">
+              <div
+                className="card align-self-center text-center"
+                style={{
+                  width: "100%"
+                }}
+              >
                 <Link to={`/support`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <PersonIcon className={css(styles.homeIconColor)} />
+                      <img src={SupportIcon} alt="support icon" />
                     </h5>
                     <p>{t("home.support")}</p>
                   </div>
