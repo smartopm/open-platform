@@ -23,7 +23,7 @@ export default function LogEntry({history}) {
       nrc: nrc.value,
       reason: business.value
     };
-    console.log(userData)
+
     createEntryRequest({ variables: userData }).then(({data}) => {
       console.log(data)
       // Send them to the wait page
