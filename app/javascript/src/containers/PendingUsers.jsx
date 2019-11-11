@@ -98,7 +98,7 @@ export default () => {
     <div>
       <div
         style={{
-          backgroundColor: "#25c0b0"
+          backgroundColor: "#53d6a5"
         }}
       >
         <Nav navName="Requests" menuButton="back" boxShadow={"none"} />
@@ -170,6 +170,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 8,
     right: 16,
-    backgroundColor: "#25c0b0"
+    backgroundColor: "#53d6a5"
   }
 });

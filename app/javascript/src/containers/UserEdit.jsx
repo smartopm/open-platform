@@ -159,7 +159,7 @@ export default function FormContainer({ match, history }) {
 FormContainer.displayName = "UserForm";
 const styles = StyleSheet.create({
   grantButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#53d6a5",
     color: "#FFF",
     marginRight: 60,
     width: "35%"

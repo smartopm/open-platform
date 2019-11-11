@@ -106,7 +106,7 @@ export default function RequestUpdate() {
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#53d6a5",
     color: "#FFF",
     width: "75%",
     boxShadow: "none"
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   grantButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#53d6a5",
     color: "#FFF",
     display: "inline-block",
     width: "180px"

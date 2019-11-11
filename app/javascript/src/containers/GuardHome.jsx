@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     "z-index": 9
   },
   bellIcon: {
-    color: "#25c0b0"
+    color: "#53d6a5"
   },
   scanIcon: {
     position: "absolute",
@@ -133,10 +133,10 @@ const styles = StyleSheet.create({
     width: 20
   },
   homeIconColor: {
-    color: "#25c0b0"
+    color: "#53d6a5"
   },
   grantIcon: {
-    color: "#25c0b0",
+    color: "#53d6a5",
     marginRight: 60,
     width: "35%",
     fontSize: "4em"

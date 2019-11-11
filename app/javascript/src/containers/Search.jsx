@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   requestButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#53d6a5",
     color: "#FFF"
   },
   requestLink: {
