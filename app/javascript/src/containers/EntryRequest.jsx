@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from "react";
 import { StyleSheet, css } from "aphrodite";
-import Nav from "../components/Nav";
-import { Button, TextField, MenuItem, InputAdornment } from "@material-ui/core";
+import { Button, TextField, MenuItem } from "@material-ui/core";
 import { useMutation } from "react-apollo";
 import { AddActivityLog, CreateUserMutation } from "../graphql/mutations";
 import { entryReason } from "../utils/constants";
+import Nav from "../components/Nav";
 
 export default function LogEntry({ history }) {
   const name = useFormInput("");
