@@ -10,9 +10,9 @@ class CreateEntryRequests < ActiveRecord::Migration[6.0]
       t.string :reason
       t.string :other_reason
       t.boolean :concern_flag
-      t.int :granted_state
-      t.datetime :granted_at
+      t.integer :granted_state
       t.uuid :grantor_id
+      t.datetime :granted_at
 
       t.timestamps
     end
