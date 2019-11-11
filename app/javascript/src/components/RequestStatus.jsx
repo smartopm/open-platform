@@ -1,5 +1,6 @@
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
+import { Link } from "react-router-dom";
 
 export default function RequestStatus(props) {
   return (
@@ -16,14 +17,15 @@ export default function RequestStatus(props) {
       </h1>
       <br />
       <div className="col-10 col-sm-10 col-md-6">
-        <button
+        <Link
+          to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.okButton)}`}
           style={{
             backgroundColor: props.isDenied ? "#ed5757" : "#25c0b0"
           }}
         >
           Ok
-        </button>
+        </Link>
       </div>
       {props.isDenied ? (
         <div className="col-10 col-sm-10 col-md-6">
