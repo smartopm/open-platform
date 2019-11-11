@@ -79,7 +79,7 @@ export function Component({
           alt="Default Avatar"
           onClick={toggleDrawer}
           className={`${css(styles.userAvatar)}`}
-          src={avatarUrl({user: authState.user})}
+          src={avatarUrl({ user: authState.user })}
         />
         <NotificationsNoneOutlinedIcon
           className={`${css(styles.rightSideIcon)}`}

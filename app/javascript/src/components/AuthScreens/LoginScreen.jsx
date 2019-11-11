@@ -28,6 +28,7 @@ export function LoginScreen() {
           placeholder="Enter Phone Number"
           type="number"
           maxLength={10}
+          autoFocus
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

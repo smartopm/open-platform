@@ -6,6 +6,8 @@
     "explore": "Explore",
     "support": "Support",
     "identity": "Identify",
-    "entry_logs": "Entry Logs"
+    "entry_logs": "Entry Logs",
+    "log_entry": "Manual",
+    "scan": "Scan"
   }
 }

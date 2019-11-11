@@ -21,58 +21,12 @@ export default function ConfirmCodeScreen() {
         <div className="container ">
           <div className={css(styles.phoneNumberInput)}>
             <TextField
-              style={{
-                width: 60,
-                gridArea: "1 / 4 / 2 / 5"
-              }}
               id="outlined-basic"
               margin="normal"
               variant="outlined"
-            />
-            <TextField
-              style={{
-                width: 60,
-                gridArea: "1 / 5 / 2 / 6"
-              }}
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              style={{
-                width: 60,
-                gridArea: "1 / 3 / 2 / 4"
-              }}
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              style={{
-                width: 60,
-                gridArea: "1 / 2 / 2 / 3"
-              }}
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              style={{
-                width: 60,
-                gridArea: "1 / 6 / 2 / 7"
-              }}
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              style={{
-                width: 60,
-                gridArea: "1 / 7 / 3 / 8"
-              }}
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
+              autoFocus
+              type="number"
+              placeholder="Confirmation code"
             />
           </div>
         </div>
@@ -134,11 +88,6 @@ const styles = StyleSheet.create({
     color: "white"
   },
   phoneNumberInput: {
-    marginTop: 50,
-    display: "grid",
-    "grid-template-rows": "1fr",
-    "grid-template-column": "repeat(6, 1fr)",
-    "grid-column-gap": "2px",
-    "grid-row-gap": "0px"
+    marginTop: 50
   }
 });
