@@ -87,7 +87,8 @@ export function Component({
           </div>
         </div>
 
-        {data.user.state === "valid" ? (
+        {data.user.state === "valid" &&
+        authState.user.userType === "security_guard" ? (
           <div className="row justify-content-center log-entry-form">
             <div className="col-10 col-sm-10 col-md-6">
               <a
@@ -101,18 +102,20 @@ export function Component({
             </div>
           </div>
         ) : null}
-        <div className="row justify-content-center log-entry-form">
-          <div className="col-10 col-sm-10 col-md-6">
-            <a
-              href="tel:+260976064298"
-              className={`btn btn-primary btn-lg btn-block ${css(
-                styles.callButton
-              )}`}
-            >
-              Call Poniso
-            </a>
+        {authState.user.userType === "security_guard" ? (
+          <div className="row justify-content-center log-entry-form">
+            <div className="col-10 col-sm-10 col-md-6">
+              <a
+                href="tel:+260976064298"
+                className={`btn btn-primary btn-lg btn-block ${css(
+                  styles.callButton
+                )}`}
+              >
+                Call Poniso
+              </a>
+            </div>
           </div>
-        </div>
+        ) : null}
         {authState.user.userType === "admin" ? (
           <Fragment>
             <div className="row justify-content-center log-entry-form">

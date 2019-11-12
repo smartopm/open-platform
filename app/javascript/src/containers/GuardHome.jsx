@@ -6,6 +6,7 @@ import Nav from "../components/Nav";
 import ScanIcon from "../../../assets/images/shape.svg";
 import LogIcon from "../../../assets/images/icon_contact_card_fill.svg";
 import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
+import LogEntryIcon from "@material-ui/icons/Assignment";
 import CallIcon from "@material-ui/icons/Call";
 
 export default function GuardHome() {
@@ -70,6 +71,21 @@ export default function GuardHome() {
                       <img src={LogIcon} alt="support icon" />
                     </h5>
                     <p>{t("home.log_entry")}</p>
+                  </div>
+                </Link>
+              </div>
+              <div
+                className="card align-self-center text-center"
+                style={{
+                  width: "100%"
+                }}
+              >
+                <Link to={`/entry_logs`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <LogEntryIcon className={css(styles.homeIconColor)} />
+                    </h5>
+                    <p>{t("home.entry_logs")}</p>
                   </div>
                 </Link>
               </div>
