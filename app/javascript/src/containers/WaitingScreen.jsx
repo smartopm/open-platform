@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
 import { css, StyleSheet } from "aphrodite";
@@ -25,7 +25,16 @@ export default function HoldScreen({ match }) {
   return <WaitScreen />;
 }
 
+// Todo: Show call Pezo after delayed time
 function WaitScreen() {
+  const [isCallActive, setCallActive] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCallActive(true);
+    }, 180000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div
       className={`row justify-content-center align-items-center ${css(
@@ -34,13 +43,19 @@ function WaitScreen() {
     >
       <h4 className={css(styles.title)}>Waiting on Approval</h4>
       <br />
-      <div className="col-10 col-sm-10 col-md-6">
-        <a
-          href="tel:+260976064298"
-          className={`btn btn-lg btn-block ${css(styles.callButton)}`}
-        >
-          Call Poniso
-        </a>
+
+      <div className="col-10 col-sm-10">
+        {isCallActive && (
+          <a
+            href="tel:+260976064298"
+            className={`btn btn-lg btn-block ${css(styles.callButton)}`}
+          >
+            Call Poniso
+          </a>
+        )}
+        {!isCallActive && (
+          <h5 className="text-center text-white">Call Poniso</h5>
+        )}
       </div>
     </div>
   );
@@ -55,7 +70,7 @@ function GrantedScreen() {
     >
       <h4 className={css(styles.title)}>Granted</h4>
       <br />
-      <div className="col-10 col-sm-10 col-md-6">
+      <div className="col-10 col-sm-10">
         <Link
           to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
@@ -76,7 +91,7 @@ function DeniedScreen() {
     >
       <h4 className={css(styles.title)}>Denied</h4>
       <br />
-      <div className="col-10 col-sm-10 col-md-6">
+      <div className="col-10 col-sm-10">
         <a
           href="tel:+260976064298"
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
@@ -84,7 +99,7 @@ function DeniedScreen() {
           Call Poniso
         </a>
       </div>
-      <div className="col-10 col-sm-10 col-md-6">
+      <div className="col-10 col-sm-10">
         <Link
           to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
