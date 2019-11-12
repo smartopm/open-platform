@@ -55,10 +55,10 @@ class EntryRequest < ApplicationRecord
 
   # TODO: Build this into a proper notification scheme
   def notify_admin
-    link = "https://#{ENV['HOST']}/request/#{self.id}/edit"
-    if ENV["REQUEST_NOTIFICATION_NUMBER"]
-      Sms.send(ENV["REQUEST_NOTIFICATION_NUMBER"], "New entry request from #{self.name} - Approve or Deny at #{link}")
-    end
-  end
+    link = "https://#{ENV['HOST']}/request/#{id}/edit"
+    return unless ENV['REQUEST_NOTIFICATION_NUMBER']
 
+    Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
+             "New entry request from #{name} - Approve or Deny at #{link}")
+  end
 end
