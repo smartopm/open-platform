@@ -2,62 +2,72 @@ import React, { Fragment, useState } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
-import { EntryRequestQuery } from "../graphql/queries.js"
-import { EntryRequestUpdate, EntryRequestGrant, EntryRequestDeny } from "../graphql/mutations.js"
-import Loading from "../components/Loading"
+import { EntryRequestQuery } from "../graphql/queries.js";
+import {
+  EntryRequestUpdate,
+  EntryRequestGrant,
+  EntryRequestDeny
+} from "../graphql/mutations.js";
+import Loading from "../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 
-export default function RequestUpdate({match, history}) {
+export default function RequestUpdate({ match, history }) {
   // Todo: Get the request Id from the url
   // Todo: Query the requests and display depending on the table
 
   //   request mock, to prototype the request form
   // ideally this will come from the db
-  const { loading, data } = useQuery(EntryRequestQuery, {variables: {id: match.params.id}})
-  const [updateEntryRequest] = useMutation(EntryRequestUpdate)
-  const [grantEntry] = useMutation(EntryRequestGrant)
-  const [denyEntry] = useMutation(EntryRequestDeny)
+  const { loading, data } = useQuery(EntryRequestQuery, {
+    variables: { id: match.params.id }
+  });
+  const [updateEntryRequest] = useMutation(EntryRequestUpdate);
+  const [grantEntry] = useMutation(EntryRequestGrant);
+  const [denyEntry] = useMutation(EntryRequestDeny);
 
   const [formData, setFormData] = useState({
-    name:'',
-    phoneNumber:'',
-    nrc:'',
-    vehiclePlate:'',
-    reason:'',
-    loaded: false,
+    name: "",
+    phoneNumber: "",
+    nrc: "",
+    vehiclePlate: "",
+    reason: "",
+    loaded: false
   });
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   // Data is loaded, so set the initialState, but only once
   if (!formData.loaded && data) {
-    setFormData({...data.result, loaded: true})
+    setFormData({ ...data.result, loaded: true });
   }
 
   function handleInputChange(e) {
-    const {name, value} = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
-    })
+    });
   }
 
   function handleUpdateRecord() {
-    return updateEntryRequest({variables: formData})
+    return updateEntryRequest({ variables: formData });
   }
-  
+
   function handleGrantRequest() {
-    handleUpdateRecord().then(grantEntry({variables: {id: match.params.id}})).then(()=> {
-      history.push('/requests')
-    })
+    handleUpdateRecord()
+      .then(grantEntry({ variables: { id: match.params.id } }))
+      .then(() => {
+        history.push("/requests");
+      });
   }
 
   function handleDenyRequest() {
-    handleUpdateRecord().then(denyEntry({variables: {id: match.params.id}})).then(()=> {
-      history.push('/requests')
-    })
+    handleUpdateRecord()
+      .then(denyEntry({ variables: { id: match.params.id } }))
+      .then(() => {
+        history.push("/requests");
+      });
   }
 
   return (
@@ -85,7 +95,7 @@ export default function RequestUpdate({match, history}) {
             <input
               className="form-control"
               type="text"
-              value={formData.nrc || ''}
+              value={formData.nrc || ""}
               onChange={handleInputChange}
               name="nrc"
               required
@@ -98,7 +108,7 @@ export default function RequestUpdate({match, history}) {
             <input
               className="form-control"
               type="text"
-              value={formData.phoneNumber || ''}
+              value={formData.phoneNumber || ""}
               onChange={handleInputChange}
               name="phoneNumber"
             />
@@ -111,7 +121,7 @@ export default function RequestUpdate({match, history}) {
               className="form-control"
               type="text"
               onChange={handleInputChange}
-              value={formData.vehiclePlate || ''}
+              value={formData.vehiclePlate || ""}
               name="vehiclePlate"
             />
           </div>
@@ -121,7 +131,7 @@ export default function RequestUpdate({match, history}) {
               select
               label="Reason for visit"
               name="reason"
-              value={formData.reason || ''}
+              value={formData.reason || ""}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
             >

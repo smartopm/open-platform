@@ -1,25 +1,28 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
 import { css, StyleSheet } from "aphrodite";
-import { EntryRequestQuery } from "../graphql/queries.js"
+import { EntryRequestQuery } from "../graphql/queries.js";
 
-export default function HoldScreen({match}) {
-  const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {variables: {id: match.params.id}, pollInterval:5000})
+export default function HoldScreen({ match }) {
+  const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {
+    variables: { id: match.params.id },
+    pollInterval: 5000
+  });
   useEffect(() => {
     return function cleanup() {
-      stopPolling()
+      stopPolling();
     };
   }, []);
   if (loading) {
-    return <WaitScreen />
+    return <WaitScreen />;
   }
   if (data.result.grantedState === 1) {
-    return <GrantedScreen />
+    return <GrantedScreen />;
   } else if (data.result.grantedState === 2) {
-    return <DeniedScreen />
+    return <DeniedScreen />;
   }
-  return <WaitScreen />
+  return <WaitScreen />;
 }
 
 function WaitScreen() {
@@ -53,7 +56,8 @@ function GrantedScreen() {
       <h4 className={css(styles.title)}>Granted</h4>
       <br />
       <div className="col-10 col-sm-10 col-md-6">
-        <Link to='/guard_home'
+        <Link
+          to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
           Home
@@ -81,7 +85,8 @@ function DeniedScreen() {
         </a>
       </div>
       <div className="col-10 col-sm-10 col-md-6">
-        <Link to='/guard_home'
+        <Link
+          to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
           Home

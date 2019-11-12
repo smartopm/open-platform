@@ -11,6 +11,7 @@ import {
   StyledTab,
   TabPanel
 } from "../components/Tabs.jsx";
+import EntryRequests from "./EntryRequests";
 
 // Todo: We can reusable the table with just data from different queries
 export default ({ match }) => {
@@ -93,7 +94,7 @@ export function IndexComponent({ data }) {
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <h4 className="text-center">Gate logs</h4>
+        <EntryRequests />
       </TabPanel>
     </div>
   );

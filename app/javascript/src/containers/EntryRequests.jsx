@@ -24,63 +24,41 @@ const allEntryRequests = () => {
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
-  console.log(data)
+  console.log(data);
   return <IndexComponent data={data} />;
 };
 
 export function IndexComponent({ data }) {
-  const [value, setValue] = useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
   function logs(entries) {
-    console.log(entries)
+    console.log(entries);
     return entries.map(entry => (
       <tr key={entry.id}>
         <td>{entry.name}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
-        <td>{["Pending", "Granted", "Denied"][entry.grantedState] || "Pending"}</td>
+        <td>
+          {["Pending", "Granted", "Denied"][entry.grantedState] || "Pending"}
+        </td>
       </tr>
     ));
   }
   return (
     <div>
-      <div
-        style={{
-          backgroundColor: "#53d6a5"
-        }}
-      >
-        <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
-        <StyledTabs
-          value={value}
-          onChange={handleChange}
-          aria-label="request tabs"
-          centered
-        >
-          <StyledTab label="Entry Requests" {...a11yProps(0)} />
-        </StyledTabs>
-      </div>
-      <TabPanel value={value} index={0}>
-        <div className="row justify-content-center">
-          <div className="col-10 col-sm-10 col-md-6">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Visitor</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">State</th>
-                </tr>
-              </thead>
-              <tbody>{logs(data.result)}</tbody>
-            </table>
-          </div>
+      <div className="row justify-content-center">
+        <div className="col-10 col-sm-10 col-md-6">
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Visitor</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">State</th>
+              </tr>
+            </thead>
+            <tbody>{logs(data.result)}</tbody>
+          </table>
         </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <h4 className="text-center">Entry Requests</h4>
-      </TabPanel>
+      </div>
     </div>
   );
 }

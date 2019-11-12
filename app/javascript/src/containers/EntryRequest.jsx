@@ -3,16 +3,16 @@ import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import { entryReason } from "../utils/constants";
-import { EntryRequestCreate } from "../graphql/mutations.js"
+import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
 
-export default function LogEntry({history}) {
+export default function LogEntry({ history }) {
   const name = useFormInput("");
   const nrc = useFormInput("");
   const phoneNumber = useFormInput("");
   const vehicle = useFormInput("");
   const business = useFormInput("");
-  const [createEntryRequest] = useMutation(EntryRequestCreate)
+  const [createEntryRequest] = useMutation(EntryRequestCreate);
 
   //   we need to create a user and then use their id to log entry
   function handleSubmit() {
@@ -24,11 +24,11 @@ export default function LogEntry({history}) {
       reason: business.value
     };
 
-    createEntryRequest({ variables: userData }).then(({data}) => {
-      console.log(data)
+    createEntryRequest({ variables: userData }).then(({ data }) => {
+      console.log(data);
       // Send them to the wait page
       history.push(`/request_wait/${data.result.entryRequest.id}`);
-    })
+    });
   }
   return (
     <Fragment>
@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
     color: "#FFF",
     width: "75%",
     boxShadow: "none",
-    marginTop: 60
+    marginTop: 60,
+    height: 50
   },
   selectInput: {
     width: "100%"
