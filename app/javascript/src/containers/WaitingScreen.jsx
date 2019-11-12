@@ -73,6 +73,14 @@ function DeniedScreen() {
       <h4 className={css(styles.title)}>Denied</h4>
       <br />
       <div className="col-10 col-sm-10 col-md-6">
+        <a
+          href="tel:+260976064298"
+          className={`btn btn-lg btn-block ${css(styles.callButton)}`}
+        >
+          Call Poniso
+        </a>
+      </div>
+      <div className="col-10 col-sm-10 col-md-6">
         <Link to='/guard_home'
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
