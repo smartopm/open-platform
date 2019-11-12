@@ -58,7 +58,7 @@ export default function RequestUpdate({ match, history }) {
     handleUpdateRecord()
       .then(grantEntry({ variables: { id: match.params.id } }))
       .then(() => {
-        history.push("/requests");
+        history.push("/entry_logs", { tab: 1 });
       });
   }
 
@@ -66,7 +66,7 @@ export default function RequestUpdate({ match, history }) {
     handleUpdateRecord()
       .then(denyEntry({ variables: { id: match.params.id } }))
       .then(() => {
-        history.push("/requests");
+        history.push("/entry_logs", { tab: 1 });
       });
   }
 

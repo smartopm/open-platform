@@ -30,7 +30,7 @@ export function IndexComponent({ data }) {
         <td>{entry.phoneNumber}</td>
         <td>{entry.nrc}</td>
         <td>{entry.vehicle}</td>
-        <td>{entry.reason.length === 0 ? entry.otherReason : entry.reason}</td>
+        <td>{entry.reason}</td>
         <td>
           {["Pending", "Granted", "Denied"][entry.grantedState] || "Pending"}
         </td>

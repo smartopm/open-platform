@@ -13,12 +13,13 @@ import {
 } from "../components/Tabs.jsx";
 import EntryRequests from "./EntryRequests";
 
-// Todo: We can reusable the table with just data from different queries
-export default ({ match }) => {
+export default ({ match, location }) => {
+  // auto route to gate logs if user is from requestUpdate
+  const tabIndex = location.state ? location.state.tab : 0;
   if (match.params.userId) {
     return userEntryLogs(match.params.userId);
   } else {
-    return allEntryLogs();
+    return allEntryLogs(tabIndex);
   }
 };
 
@@ -33,18 +34,18 @@ const userEntryLogs = userId => {
   return <UserComponent data={data} />;
 };
 
-const allEntryLogs = () => {
+const allEntryLogs = tabId => {
   const { loading, error, data } = useQuery(AllEntryLogsQuery, {
     fetchPolicy: "no-cache"
   });
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
-  return <IndexComponent data={data} />;
+  return <IndexComponent data={data} tabId={tabId} />;
 };
 
-export function IndexComponent({ data }) {
-  const [value, setValue] = useState(0);
+export function IndexComponent({ data, tabId }) {
+  const [value, setValue] = useState(tabId || 0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
