@@ -173,6 +173,61 @@ RSpec.describe Mutations::User do
     end
   end
 
+  describe 'deleting a user' do
+    let!(:admin) { create(:admin_user) }
+    let!(:other_community_admin) { create(:admin_user) }
+    let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
+    let!(:user) { create(:user, community_id: admin.community_id) }
+
+    let(:query) do
+      <<~GQL
+        mutation DeleteUserMutation(
+            $id: ID!,
+          ) {
+          result: userDelete(id:$id) {
+            success
+          }
+        }
+      GQL
+    end
+
+    it 'should delete the user' do
+      variables = {
+        id: user.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'success')).to be true
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'returns prevent non-admins from deleting users' do
+      variables = {
+        id: user.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: security_guard,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'success')).to be nil
+      expect(result.dig('errors')).not_to be_nil
+    end
+
+    it 'returns prevent admins from another community from deleting users' do
+      variables = {
+        id: user.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: other_community_admin,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'success')).to be nil
+      expect(result.dig('errors')).not_to be_nil
+    end
+  end
+
   describe 'creating avatars and adding them to the user' do
     let!(:admin) { create(:admin_user) }
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }

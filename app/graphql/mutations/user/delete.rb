@@ -2,7 +2,6 @@
 
 module Mutations
   module User
-
     # Create a new request/pending member
     class Delete < BaseMutation
       argument :id, ID, required: true
@@ -12,7 +11,7 @@ module Mutations
       def resolve(vals)
         user = ::User.find(vals[:id])
 
-        return { success: user.destroy }
+        { success: user.destroy }
       end
 
       def authorized?(vals)
