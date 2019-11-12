@@ -1,26 +1,34 @@
 import React, { Fragment, useState } from "react";
+import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import { entryReason } from "../utils/constants";
+import { EntryRequestCreate } from "../graphql/mutations.js"
 import Nav from "../components/Nav";
 
-export default function LogEntry() {
+export default function LogEntry({history}) {
   const name = useFormInput("");
   const nrc = useFormInput("");
   const phoneNumber = useFormInput("");
   const vehicle = useFormInput("");
   const business = useFormInput("");
+  const [createEntryRequest] = useMutation(EntryRequestCreate)
 
   //   we need to create a user and then use their id to log entry
   function handleSubmit() {
     const userData = {
       name: name.value,
-      vehicle: vehicle.value,
+      vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
-      business: business.value
+      reason: business.value
     };
-    // Todo: create a request
+
+    createEntryRequest({ variables: userData }).then(({data}) => {
+      console.log(data)
+      // Send them to the wait page
+      history.push(`/request_wait/${data.result.entryRequest.id}`);
+    })
   }
   return (
     <Fragment>

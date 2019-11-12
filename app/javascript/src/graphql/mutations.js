@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { UserFragment } from "../graphql/fragments";
+import { UserFragment, EntryRequestFragment } from "../graphql/fragments";
 
 export const CreateUserMutation = gql`
   mutation CreateUserMutation(
@@ -160,4 +160,86 @@ export const SendOneTimePasscode = gql`
       success
     }
   }
+`;
+
+export const EntryRequestCreate = gql`
+  mutation EntryRequestCreateMutation(
+    $name: String!
+    $reason: String!
+    $vehiclePlate: String
+    $nrc: String
+    $otherReason: String
+    $phoneNumber: String
+  ) {
+    result: entryRequestCreate(
+      name: $name
+      reason: $reason
+      vehiclePlate: $vehiclePlate
+      nrc: $nrc
+      otherReason: $otherReason
+      phoneNumber: $phoneNumber
+    ) {
+      entryRequest {
+        ...EntryRequestFields
+      }
+    }
+  }
+  ${EntryRequestFragment.publicFields}
+`;
+
+export const EntryRequestUpdate = gql`
+  mutation EntryRequestUpdateMutation(
+    $id: ID!
+    $name: String!
+    $reason: String!
+    $vehiclePlate: String
+    $nrc: String
+    $otherReason: String
+    $phoneNumber: String
+  ) {
+    result: entryRequestUpdate(
+      id: $id
+      name: $name
+      reason: $reason
+      vehiclePlate: $vehiclePlate
+      nrc: $nrc
+      otherReason: $otherReason
+      phoneNumber: $phoneNumber
+    ) {
+      entryRequest {
+        ...EntryRequestFields
+      }
+    }
+  }
+  ${EntryRequestFragment.publicFields}
+`;
+
+export const EntryRequestGrant = gql`
+  mutation EntryRequestGrantMutation(
+    $id: ID!
+  ) {
+    result: entryRequestGrant(
+      id: $id
+    ) {
+      entryRequest {
+        ...EntryRequestFields
+      }
+    }
+  }
+  ${EntryRequestFragment.publicFields}
+`;
+
+export const EntryRequestDeny = gql`
+  mutation EntryRequestGrantMutation(
+    $id: ID!
+  ) {
+    result: entryRequestDeny(
+      id: $id
+    ) {
+      entryRequest {
+        ...EntryRequestFields
+      }
+    }
+  }
+  ${EntryRequestFragment.publicFields}
 `;

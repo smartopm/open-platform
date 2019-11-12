@@ -36,6 +36,7 @@ import EntryRequest from "../src/containers/EntryRequest";
 import RequestUpdate from "../src/containers/RequestUpdate";
 import WaitScreen from "../src/containers/WaitingScreen";
 import RequestApproval from "../src/containers/RequestApproval";
+import EntryRequests from "../src/containers/EntryRequests.jsx";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -134,8 +135,10 @@ const App = () => {
                   {/* requests */}
                   <Route path="/entry_request" component={EntryRequest} />
                   <Route path="/request/:id" component={RequestUpdate} />
-                  <Route path="/wait" component={WaitScreen} />
-                  <Route path="/request_status" component={RequestApproval} />
+                  <Route path="/request_wait/:id" component={WaitScreen} />
+                  <Route path="/request_status/:id/edit" component={RequestApproval} />
+                  <Route path="/request_status/:id" component={RequestApproval} />
+                  <Route path="/requests" component={EntryRequests} />
                 </Switch>
               </LoggedInOnly>
             </Analytics>

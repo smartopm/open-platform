@@ -4,7 +4,6 @@ import { StyleSheet, css } from "aphrodite";
 import { useTranslation } from "react-i18next";
 import Nav from "../components/Nav";
 import ScanIcon from "../../../assets/images/shape.svg";
-import SupportIcon from "../../../assets/images/icon_discover_card_fill.svg";
 import LogIcon from "../../../assets/images/icon_contact_card_fill.svg";
 import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
 import CallIcon from "@material-ui/icons/Call";

@@ -7,6 +7,7 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
+  after_create :notify_admin
 
   class Unauthorized < StandardError; end
 
@@ -50,5 +51,14 @@ class EntryRequest < ApplicationRecord
 
   def attach_community
     self[:community_id] = user.community_id
+  end
+
+  # TODO: Build this into a proper notification scheme
+  def notify_admin
+    link = "https://#{ENV['HOST']}/request/#{id}/edit"
+    return unless ENV['REQUEST_NOTIFICATION_NUMBER']
+
+    Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
+             "New entry request from #{name} - Approve or Deny at #{link}")
   end
 end

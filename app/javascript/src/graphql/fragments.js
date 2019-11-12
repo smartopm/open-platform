@@ -20,3 +20,22 @@ export const UserFragment = {
   `,
 }
 
+export const EntryRequestFragment = {
+  publicFields: gql`
+    fragment EntryRequestFields on EntryRequest {
+      id
+      name
+      phoneNumber
+      nrc
+      vehiclePlate
+      reason
+      otherReason
+      concernFlag
+      grantedState
+      createdAt
+      updatedAt
+      grantedAt
+    }
+  `,
+}
+

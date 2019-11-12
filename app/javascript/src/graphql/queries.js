@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {UserFragment} from './fragments';
+import {UserFragment, EntryRequestFragment} from './fragments';
 
 export const UserQuery = gql`
 query User($id: ID!) {
@@ -8,6 +8,25 @@ query User($id: ID!) {
   }
 }
 ${UserFragment.publicFields}
+`;
+
+
+export const EntryRequestQuery = gql`
+query EntryRequest($id: ID!) {
+  result: entryRequest(id: $id) {
+    ...EntryRequestFields
+  }
+}
+${EntryRequestFragment.publicFields}
+`;
+
+export const AllEntryRequestsQuery = gql`
+query AllEntryRequests {
+  result: entryRequests {
+    ...EntryRequestFields
+  }
+}
+${EntryRequestFragment.publicFields}
 `;
 
 export const AllEntryLogsQuery = gql`
