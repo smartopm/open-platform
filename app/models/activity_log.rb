@@ -10,6 +10,8 @@ class ActivityLog < ApplicationRecord
   after_create :update_user
   validate :validate_reporter
 
+  default_scope { order(created_at: :asc) }
+
   private
 
   # Bit of early denormalization, but it's very likely

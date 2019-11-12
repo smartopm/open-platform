@@ -25,6 +25,7 @@ export function IndexComponent({ data }) {
     return entries.map(entry => (
       <tr key={entry.id}>
         <td>{entry.name}</td>
+        <td>{entry.guard.name}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.phoneNumber}</td>
@@ -45,6 +46,7 @@ export function IndexComponent({ data }) {
             <thead>
               <tr>
                 <th scope="col">Visitor</th>
+                <th scope="col">Guard</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
                 <th scope="col">Phone Number</th>

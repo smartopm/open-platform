@@ -15,6 +15,9 @@ export const EntryRequestQuery = gql`
 query EntryRequest($id: ID!) {
   result: entryRequest(id: $id) {
     ...EntryRequestFields
+    guard: user {
+      name
+    }
   }
 }
 ${EntryRequestFragment.publicFields}
@@ -24,6 +27,9 @@ export const AllEntryRequestsQuery = gql`
 query AllEntryRequests {
   result: entryRequests {
     ...EntryRequestFields
+    guard: user {
+      name
+    }
   }
 }
 ${EntryRequestFragment.publicFields}

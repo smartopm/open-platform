@@ -9,6 +9,8 @@ class EntryRequest < ApplicationRecord
   before_validation :attach_community
   after_create :notify_admin
 
+  default_scope { order(created_at: :asc) }
+
   class Unauthorized < StandardError; end
 
   GRANT_STATE = %w[Pending Granted Denied].freeze
