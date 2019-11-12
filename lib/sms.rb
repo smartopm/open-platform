@@ -16,12 +16,16 @@ class Sms
   end
 
   def self.send(to, message)
+    return if Rails.env.test?
+
     to = clean_number(to)
     client = Nexmo::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
     client.sms.send(from: config[:from], to: to, text: message)
   end
 
   def self.send_from(to, from, message)
+    return if Rails.env.test?
+
     to = clean_number(to)
     client = Nexmo::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
     client.sms.send(from: from, to: to, text: message)

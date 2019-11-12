@@ -66,6 +66,14 @@ export const UpdateUserMutation = gql`
   ${UserFragment.publicFields}
 `;
 
+export const DeleteUser = gql`
+  mutation DeleteUser($id: ID!) {
+    result: userDelete(id: $id) {
+      success
+    }
+  }
+`;
+
 export const CreatePendingUserMutation = gql`
   mutation CreatePendingUserMutation(
     $name: String!

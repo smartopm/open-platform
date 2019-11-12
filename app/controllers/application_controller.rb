@@ -3,6 +3,7 @@
 # Primary ApplicationController
 class ApplicationController < ActionController::Base
   helper_method :current_member
+  before_action :set_paper_trail_whodunnit
 
   def new_session_path(_scope)
     user_google_oauth2_omniauth_authorize_path

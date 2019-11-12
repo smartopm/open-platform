@@ -51,6 +51,9 @@ gem 'graphql', '~> 1.9'
 gem 'graphiql-rails', group: :development
 gem 'graphql-guard'
 
+# PaperTrail for auditing and tracking changes
+gem 'paper_trail'
+
 # Rollbar for error logging
 gem 'rollbar'
 
