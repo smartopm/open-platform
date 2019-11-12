@@ -13,10 +13,13 @@ class User < ApplicationRecord
   has_many :activity_logs, dependent: :destroy
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
-                                    dependent: :destroy, inverse_of: :entry_requests
+                                    dependent: :destroy, inverse_of: :user
 
   has_one_attached :avatar
   has_one_attached :document
+
+  # Track changes to the User
+  has_paper_trail
 
   VALID_USER_TYPES = %w[security_guard admin resident contractor prospective_client client].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
