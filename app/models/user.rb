@@ -11,6 +11,8 @@
 class User < ApplicationRecord
   belongs_to :community, optional: true
   has_many :activity_logs, dependent: :destroy
+  has_many :reported_activity_logs, class_name: 'ActivityLog', foreign_key: :reporting_user_id,
+                                    dependent: :destroy, inverse_of: :user
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
                                     dependent: :destroy, inverse_of: :user

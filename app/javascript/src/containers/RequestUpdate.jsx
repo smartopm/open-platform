@@ -77,6 +77,19 @@ export default function RequestUpdate({ match, history }) {
         <form>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
+              Guard
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              value={formData.guard ? formData.guard.name : ''}
+              disabled={true}
+              name="name"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
               NAME
             </label>
             <input
