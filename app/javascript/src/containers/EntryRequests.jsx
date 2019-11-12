@@ -1,17 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../components/Nav";
 
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 import { AllEntryRequestsQuery } from "../graphql/queries.js";
-
-import {
-  a11yProps,
-  StyledTabs,
-  StyledTab,
-  TabPanel
-} from "../components/Tabs.jsx";
 
 export default () => {
   return allEntryRequests();
@@ -24,18 +17,20 @@ const allEntryRequests = () => {
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
-  console.log(data);
   return <IndexComponent data={data} />;
 };
 
 export function IndexComponent({ data }) {
   function logs(entries) {
-    console.log(entries);
     return entries.map(entry => (
       <tr key={entry.id}>
         <td>{entry.name}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
+        <td>{entry.phoneNumber}</td>
+        <td>{entry.nrc}</td>
+        <td>{entry.vehicle}</td>
+        <td>{entry.reason.length === 0 ? entry.otherReason : entry.reason}</td>
         <td>
           {["Pending", "Granted", "Denied"][entry.grantedState] || "Pending"}
         </td>
@@ -46,12 +41,16 @@ export function IndexComponent({ data }) {
     <div>
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6">
-          <table className="table">
+          <table className="table table-responsive">
             <thead>
               <tr>
                 <th scope="col">Visitor</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">NRC</th>
+                <th scope="col">Vehicle</th>
+                <th scope="col">Reason</th>
                 <th scope="col">State</th>
               </tr>
             </thead>
