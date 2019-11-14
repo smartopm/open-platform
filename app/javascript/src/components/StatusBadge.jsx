@@ -41,13 +41,13 @@ const styles = StyleSheet.create({
     padding: "0 0.2em 0 0"
   },
   statusBadgePending: {
-    border: "1px dashed #46ce84",
-    color: "#46ce84"
+    border: "1px dashed #25c0b0",
+    color: "#25c0b0"
   },
   statusBadgeValid: {
-    border: "1px solid #46ce84",
+    border: "1px solid #25c0b0",
     color: "#fff",
-    backgroundColor: "#46ce84"
+    backgroundColor: "#25c0b0"
   },
   statusBadgeInvalid: {
     border: "1px solid #5d606b",

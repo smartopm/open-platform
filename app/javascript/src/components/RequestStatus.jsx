@@ -9,7 +9,7 @@ export default function RequestStatus(props) {
         styles.waitPage
       )}`}
       style={{
-        backgroundColor: props.isDenied ? "#ed5757" : "#53d6a5"
+        backgroundColor: props.isDenied ? "#ed5757" : "#25c0b0"
       }}
     >
       <h1 className={css(styles.title)}>
@@ -21,7 +21,7 @@ export default function RequestStatus(props) {
           to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.okButton)}`}
           style={{
-            backgroundColor: props.isDenied ? "#ed5757" : "#53d6a5"
+            backgroundColor: props.isDenied ? "#ed5757" : "#25c0b0"
           }}
         >
           Ok
