@@ -27,12 +27,8 @@ export default function HoldScreen({ match }) {
 }
 
 function WaitScreen() {
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(180);
 
-  function formatTime() {
-    const formattedSeconds = addSeconds(new Date(0), timeLeft);
-    return format(formattedSeconds, "mm:ss");
-  }
   useEffect(() => {
     if (!timeLeft) return;
     const intervalId = setInterval(() => {
@@ -58,17 +54,27 @@ function WaitScreen() {
             href="tel:+260976064298"
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
           >
-            Call Poniso in
+            Call Poniso
           </a>
         )}
         {timeLeft > 0 && (
           <h5 className="text-center text-white">
-            Sending request, Wait for {formatTime()} to call Poniso{" "}
+            Sending request, Wait for {formatTime(timeLeft)} to call Poniso{" "}
           </h5>
         )}
       </div>
     </div>
   );
+}
+/**
+ *
+ * @param {String} seconds
+ * @description formats seconds in minute:seconds format
+ * @returns {String} formatted string
+ */
+function formatTime(seconds) {
+  const formattedSeconds = addSeconds(new Date(0), seconds);
+  return format(formattedSeconds, "mm:ss");
 }
 
 function GrantedScreen() {
