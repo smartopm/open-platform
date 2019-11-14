@@ -25,6 +25,7 @@ export default function QRScan() {
       ) : (
         <QrReader
           delay={100}
+          torch={true}
           onError={handleError}
           onScan={handleScan}
           style={{ width: "100%" }}
