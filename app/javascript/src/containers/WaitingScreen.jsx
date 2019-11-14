@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
 import { css, StyleSheet } from "aphrodite";
+import { addSeconds, format } from "date-fns";
 import { EntryRequestQuery } from "../graphql/queries.js";
+import { ponisoNumber } from "../utils/constants.js";
 
+// Todo: Test the vibration on android
 export default function HoldScreen({ match }) {
   const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id },
@@ -18,22 +21,30 @@ export default function HoldScreen({ match }) {
     return <WaitScreen />;
   }
   if (data.result.grantedState === 1) {
+    if (window.navigator.vibrate) {
+      navigator.vibrate([600]);
+    }
     return <GrantedScreen />;
   } else if (data.result.grantedState === 2) {
+    if (window.navigator.vibrate) {
+      navigator.vibrate([600]);
+    }
     return <DeniedScreen />;
   }
   return <WaitScreen />;
 }
 
-// Todo: Show call Pezo after delayed time
 function WaitScreen() {
-  const [isCallActive, setCallActive] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(180);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCallActive(true);
-    }, 180000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!timeLeft) return;
+    const intervalId = setInterval(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timeLeft]);
 
   return (
     <div
@@ -42,23 +53,36 @@ function WaitScreen() {
       )}`}
     >
       <h4 className={css(styles.title)}>Waiting on Approval</h4>
+
       <br />
 
       <div className="col-10 col-sm-10">
-        {isCallActive && (
+        {timeLeft === 0 && (
           <a
-            href="tel:+260976064298"
+            href={`tel:${ponisoNumber}`}
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
           >
             Call Poniso
           </a>
         )}
-        {!isCallActive && (
-          <h5 className="text-center text-white">Call Poniso</h5>
+        {timeLeft > 0 && (
+          <h5 className="text-center text-white">
+            Sending request, Wait for {formatTime(timeLeft)} to call Poniso{" "}
+          </h5>
         )}
       </div>
     </div>
   );
+}
+/**
+ *
+ * @param {String} seconds
+ * @description formats seconds in minute:seconds format
+ * @returns {String} formatted string
+ */
+function formatTime(seconds) {
+  const formattedSeconds = addSeconds(new Date(0), seconds);
+  return format(formattedSeconds, "mm:ss");
 }
 
 function GrantedScreen() {
@@ -93,7 +117,7 @@ function DeniedScreen() {
       <br />
       <div className="col-10 col-sm-10">
         <a
-          href="tel:+260976064298"
+          href={`tel:${ponisoNumber}`}
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
           Call Poniso

@@ -47,7 +47,7 @@ export function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "75%",
     boxShadow: "none"

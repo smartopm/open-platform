@@ -176,7 +176,7 @@ export default function RequestUpdate({ match, history }) {
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "75%",
     boxShadow: "none"
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   grantButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     color: "#FFF",
     marginRight: 60,
     width: "35%"

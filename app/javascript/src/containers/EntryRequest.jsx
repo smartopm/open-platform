@@ -25,7 +25,7 @@ export default function LogEntry({ history }) {
     };
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
-      console.log(data);
+
       // Send them to the wait page
       history.push(`/request_wait/${data.result.entryRequest.id}`);
     });
@@ -127,7 +127,7 @@ function useFormInput(initialValue) {
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "75%",
     boxShadow: "none",

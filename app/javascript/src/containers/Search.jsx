@@ -9,6 +9,7 @@ import StatusBadge from "../components/StatusBadge.jsx";
 import Avatar from "../components/Avatar.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import { Button } from "@material-ui/core";
+import ErrorPage from "../components/Error.jsx";
 
 const QUERY = gql`
   query UserSearch($name: String!) {
@@ -98,7 +99,7 @@ export default function SearchContainer() {
   const [name, setName] = useState("");
   const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY);
   if (error) {
-    return <div>Error {error}</div>;
+    return <ErrorPage title={error.message} />;
   }
 
   return (
@@ -161,8 +162,8 @@ const styles = StyleSheet.create({
     width: "50px"
   },
   statusBadgePending: {
-    border: "1px dashed #46ce84",
-    color: "#46ce84",
+    border: "1px dashed #25c0b0",
+    color: "#25c0b0",
     borderRadius: "10px"
   },
   inputGroup: {
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   requestButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     color: "#FFF"
   },
   requestLink: {

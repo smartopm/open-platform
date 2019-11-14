@@ -93,3 +93,5 @@ group :test do
   gem 'factory_bot'
 end
 
+
+gem "request_store", "~> 1.4"

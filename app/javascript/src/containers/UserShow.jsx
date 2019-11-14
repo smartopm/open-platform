@@ -11,8 +11,14 @@ import Avatar from "../components/Avatar";
 import DateUtil from "../utils/dateutil.js";
 
 import { UserQuery } from "../graphql/queries";
-import { AddActivityLog, SendOneTimePasscode, DeleteUser } from "../graphql/mutations";
+import {
+  AddActivityLog,
+  SendOneTimePasscode,
+  DeleteUser
+} from "../graphql/mutations";
 import { css, StyleSheet } from "aphrodite";
+import ErrorPage from "../components/Error.jsx";
+import { ponisoNumber } from "../utils/constants.js";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -29,18 +35,20 @@ export default ({ match, history }) => {
   const authState = useContext(AuthStateContext);
   const { loading, error, data } = useQuery(UserQuery, { variables: { id } });
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
-    variables: { userId: id },
+    variables: { userId: id }
   });
   const [deleteUser] = useMutation(DeleteUser, {
     variables: { id: id },
-    onCompleted: () => { history.push('/')}
+    onCompleted: () => {
+      history.push("/");
+    }
   });
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
     variables: { userId: id }
   });
   if (loading || entry.loading) return <Loading />;
   if (entry.data) return <Redirect to="/" />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error} />;
   return (
     <Component
       data={data}
@@ -112,7 +120,7 @@ export function Component({
           <div className="row justify-content-center log-entry-form">
             <div className="col-10 col-sm-10 col-md-6">
               <a
-                href="tel:+260976064298"
+                href={`tel:${ponisoNumber}`}
                 className={`btn btn-primary btn-lg btn-block ${css(
                   styles.callButton
                 )}`}
@@ -157,7 +165,14 @@ export function Component({
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
                 <a
-                  onClick={() => { if (window.confirm('Are you sure you wish to delete this user?')) onDelete() } }
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you wish to delete this user?"
+                      )
+                    )
+                      onDelete();
+                  }}
                   className="btn btn-primary btn-lg btn-block active"
                 >
                   Delete
@@ -173,7 +188,7 @@ export function Component({
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#53d6a5",
+    backgroundColor: "#25c0b0",
     textTransform: "unset"
   },
   callButton: {
