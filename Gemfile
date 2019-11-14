@@ -51,6 +51,9 @@ gem 'graphql', '~> 1.9'
 gem 'graphiql-rails', group: :development
 gem 'graphql-guard'
 
+# PaperTrail for auditing and tracking changes
+gem 'paper_trail'
+
 # Rollbar for error logging
 gem 'rollbar'
 
@@ -90,3 +93,5 @@ group :test do
   gem 'factory_bot'
 end
 
+
+gem "request_store", "~> 1.4"

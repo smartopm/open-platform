@@ -77,6 +77,19 @@ export default function RequestUpdate({ match, history }) {
         <form>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
+              Guard
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              value={formData.guard ? formData.guard.name : ''}
+              disabled={true}
+              name="name"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
               NAME
             </label>
             <input
@@ -174,14 +187,12 @@ const styles = StyleSheet.create({
   grantButton: {
     backgroundColor: "#53d6a5",
     color: "#FFF",
-    display: "inline-block",
-    width: "180px"
+    marginRight: 60,
+    width: "35%"
   },
   denyButton: {
     backgroundColor: "rgb(230, 63, 69)",
     color: "#FFF",
-    display: "inline-block",
-    width: "180px",
-    marginLeft: "12px"
+    width: "35%"
   }
 });

@@ -11,7 +11,7 @@ import Avatar from "../components/Avatar";
 import DateUtil from "../utils/dateutil.js";
 
 import { UserQuery } from "../graphql/queries";
-import { AddActivityLog, SendOneTimePasscode } from "../graphql/mutations";
+import { AddActivityLog, SendOneTimePasscode, DeleteUser } from "../graphql/mutations";
 import { css, StyleSheet } from "aphrodite";
 
 function expiresAtStr(datetime) {
@@ -24,12 +24,16 @@ function expiresAtStr(datetime) {
   return "Never";
 }
 
-export default ({ match }) => {
+export default ({ match, history }) => {
   const id = match.params.id;
   const authState = useContext(AuthStateContext);
   const { loading, error, data } = useQuery(UserQuery, { variables: { id } });
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
-    variables: { userId: id }
+    variables: { userId: id },
+  });
+  const [deleteUser] = useMutation(DeleteUser, {
+    variables: { id: id },
+    onCompleted: () => { history.push('/')}
   });
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
     variables: { userId: id }
@@ -42,6 +46,7 @@ export default ({ match }) => {
       data={data}
       authState={authState}
       onLogEntry={addLogEntry}
+      onDelete={deleteUser}
       sendOneTimePasscode={sendOneTimePasscode}
     />
   );
@@ -50,6 +55,7 @@ export default ({ match }) => {
 export function Component({
   data,
   onLogEntry,
+  onDelete,
   authState,
   sendOneTimePasscode
 }) {
@@ -140,12 +146,22 @@ export function Component({
             </div>
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
-                <Link
+                <a
                   onClick={sendOneTimePasscode}
                   className="btn btn-primary btn-lg btn-block active"
                 >
                   Send One Time Passcode
-                </Link>
+                </a>
+              </div>
+            </div>
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
+                <a
+                  onClick={() => { if (window.confirm('Are you sure you wish to delete this user?')) onDelete() } }
+                  className="btn btn-primary btn-lg btn-block active"
+                >
+                  Delete
+                </a>
               </div>
             </div>
           </Fragment>
