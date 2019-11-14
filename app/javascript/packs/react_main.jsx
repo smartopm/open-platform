@@ -37,6 +37,7 @@ import RequestUpdate from "../src/containers/RequestUpdate";
 import WaitScreen from "../src/containers/WaitingScreen";
 import RequestApproval from "../src/containers/RequestApproval";
 import EntryRequests from "../src/containers/EntryRequests.jsx";
+import ErrorPage from "../src/components/Error";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -136,9 +137,19 @@ const App = () => {
                   <Route path="/entry_request" component={EntryRequest} />
                   <Route path="/request/:id" component={RequestUpdate} />
                   <Route path="/request_wait/:id" component={WaitScreen} />
-                  <Route path="/request_status/:id/edit" component={RequestApproval} />
-                  <Route path="/request_status/:id" component={RequestApproval} />
+                  <Route
+                    path="/request_status/:id/edit"
+                    component={RequestApproval}
+                  />
+                  <Route
+                    path="/request_status/:id"
+                    component={RequestApproval}
+                  />
                   <Route path="/requests" component={EntryRequests} />
+                  <Route
+                    path="*"
+                    component={() => <ErrorPage title="Sorry Page not Found" />}
+                  />
                 </Switch>
               </LoggedInOnly>
             </Analytics>
