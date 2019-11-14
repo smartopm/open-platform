@@ -17,6 +17,7 @@ class EntryRequest < ApplicationRecord
 
   def grant!(grantor)
     can_grant?(grantor)
+    community.notify_slack("#{grantor.name} granted an entry for #{self[:name]}")
     update(
       grantor_id: grantor.id,
       granted_state: 1,
@@ -26,6 +27,7 @@ class EntryRequest < ApplicationRecord
 
   def deny!(grantor)
     can_grant?(grantor)
+    community.notify_slack("#{grantor.name} denied an entry for #{self[:name]}")
     update(
       grantor_id: grantor.id,
       granted_state: 2,
@@ -53,6 +55,10 @@ class EntryRequest < ApplicationRecord
 
   def attach_community
     self[:community_id] = user.community_id
+  end
+
+  def notify_community
+    community.notify_slack("#{user.name} started an entry for #{self[:name]}")
   end
 
   # TODO: Build this into a proper notification scheme
