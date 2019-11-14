@@ -5,6 +5,7 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 import { AllEntryRequestsQuery } from "../graphql/queries.js";
+import ErrorPage from "../components/Error";
 
 export default () => {
   return allEntryRequests();
@@ -15,7 +16,7 @@ const allEntryRequests = () => {
     fetchPolicy: "no-cache"
   });
   if (loading) return <Loading />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error.message} />;
 
   return <IndexComponent data={data} />;
 };

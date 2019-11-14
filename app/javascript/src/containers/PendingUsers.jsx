@@ -15,6 +15,7 @@ import {
   StyledTab,
   TabPanel
 } from "../components/Tabs.jsx";
+import ErrorPage from "../components/Error.jsx";
 
 const QUERY = gql`
   {
@@ -89,7 +90,7 @@ function Results({ data, loading }) {
 export default () => {
   const { loading, error, data } = useQuery(QUERY, { variables: { name } });
   const [value, setValue] = React.useState(0);
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error.message} />;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

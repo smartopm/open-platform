@@ -9,6 +9,7 @@ import StatusBadge from "../components/StatusBadge.jsx";
 import Avatar from "../components/Avatar.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import { Button } from "@material-ui/core";
+import ErrorPage from "../components/Error.jsx";
 
 const QUERY = gql`
   query UserSearch($name: String!) {
@@ -98,7 +99,7 @@ export default function SearchContainer() {
   const [name, setName] = useState("");
   const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY);
   if (error) {
-    return <div>Error {error}</div>;
+    return <ErrorPage title={error.message} />;
   }
 
   return (

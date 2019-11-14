@@ -6,6 +6,7 @@ import DateUtil from "../utils/dateutil.js";
 import { UserQuery } from "../graphql/queries";
 import { Context } from "./Provider/AuthStateProvider";
 import Nav from "../components/Nav.jsx";
+import ErrorPage from "../components/Error.jsx";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -33,7 +34,7 @@ export default () => {
     variables: { id: authState.user.id }
   });
   if (loading) return <Loading />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error.message} />;
 
   return <Component data={data} />;
 };

@@ -13,6 +13,7 @@ import DateUtil from "../utils/dateutil.js";
 import { UserQuery } from "../graphql/queries";
 import { AddActivityLog, SendOneTimePasscode, DeleteUser } from "../graphql/mutations";
 import { css, StyleSheet } from "aphrodite";
+import ErrorPage from "../components/Error.jsx";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -40,7 +41,7 @@ export default ({ match, history }) => {
   });
   if (loading || entry.loading) return <Loading />;
   if (entry.data) return <Redirect to="/" />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error} /> 
   return (
     <Component
       data={data}

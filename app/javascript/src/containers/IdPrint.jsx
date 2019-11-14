@@ -8,6 +8,7 @@ import html2canvas from "html2canvas";
 import DateUtil from "../utils/dateutil.js";
 
 import { UserQuery } from "../graphql/queries";
+import ErrorPage from "../components/Error.jsx";
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -48,7 +49,7 @@ export default ({ match }) => {
   const { loading, error, data } = useQuery(UserQuery, { variables: { id } });
 
   if (loading) return <Loading />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error.message} />;
 
   return <Component data={data} />;
 };

@@ -9,7 +9,9 @@ export default function ErrorPage({ title }) {
         styles.errorPage
       )}`}
     >
-      <h4 className={css(styles.title)}>{title}</h4>
+      <h4 className={`text-center align-items-center ${css(styles.title)}`}>
+        {title}
+      </h4>
       <br />
       <div className="col-10 col-sm-10">
         <Link

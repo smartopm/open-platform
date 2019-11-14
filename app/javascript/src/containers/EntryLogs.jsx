@@ -13,6 +13,7 @@ import {
   TabPanel
 } from "../components/Tabs.jsx";
 import EntryRequests from "./EntryRequests";
+import ErrorPage from "../components/Error";
 
 export default ({ match, location, history }) => {
   // auto route to gate logs if user is from requestUpdate
@@ -30,7 +31,7 @@ const userEntryLogs = userId => {
     fetchPolicy: "no-cache"
   });
   if (loading) return <Loading />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error.message} />;
 
   return <UserComponent data={data} />;
 };
@@ -40,7 +41,7 @@ const allEntryLogs = (tabId, history) => {
     fetchPolicy: "no-cache"
   });
   if (loading) return <Loading />;
-  if (error) return `Error! ${error}`;
+  if (error) return <ErrorPage title={error.message} />;
 
   return <IndexComponent data={data} tabId={tabId} router={history} />;
 };
