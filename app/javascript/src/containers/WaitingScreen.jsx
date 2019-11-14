@@ -5,6 +5,7 @@ import { css, StyleSheet } from "aphrodite";
 import { addSeconds, format } from "date-fns";
 import { EntryRequestQuery } from "../graphql/queries.js";
 
+// Todo: Test the vibration on android
 export default function HoldScreen({ match }) {
   const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id },
@@ -19,8 +20,14 @@ export default function HoldScreen({ match }) {
     return <WaitScreen />;
   }
   if (data.result.grantedState === 1) {
+    if (window.navigator.vibrate) {
+      navigator.vibrate([600]);
+    }
     return <GrantedScreen />;
   } else if (data.result.grantedState === 2) {
+    if (window.navigator.vibrate) {
+      navigator.vibrate([600]);
+    }
     return <DeniedScreen />;
   }
   return <WaitScreen />;
