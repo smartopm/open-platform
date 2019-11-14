@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "react-apollo";
+import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 
 import Loading from "../components/Loading.jsx";
@@ -13,13 +14,13 @@ import {
 } from "../components/Tabs.jsx";
 import EntryRequests from "./EntryRequests";
 
-export default ({ match, location }) => {
+export default ({ match, location, history }) => {
   // auto route to gate logs if user is from requestUpdate
   const tabIndex = location.state ? location.state.tab : 0;
   if (match.params.userId) {
     return userEntryLogs(match.params.userId);
   } else {
-    return allEntryLogs(tabIndex);
+    return allEntryLogs(tabIndex, history);
   }
 };
 
@@ -34,24 +35,34 @@ const userEntryLogs = userId => {
   return <UserComponent data={data} />;
 };
 
-const allEntryLogs = tabId => {
+const allEntryLogs = (tabId, history) => {
   const { loading, error, data } = useQuery(AllEntryLogsQuery, {
     fetchPolicy: "no-cache"
   });
   if (loading) return <Loading />;
   if (error) return `Error! ${error}`;
 
-  return <IndexComponent data={data} tabId={tabId} />;
+  return <IndexComponent data={data} tabId={tabId} router={history} />;
 };
 
-export function IndexComponent({ data, tabId }) {
+export function IndexComponent({ data, tabId, router }) {
   const [value, setValue] = useState(tabId || 0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  function routeToUserInfo(userId) {
+    return router.push(`/user/${userId}/edit`);
+  }
   function logs(entries) {
     return entries.map(entry => (
-      <tr key={entry.id}>
+      <tr
+        key={entry.id}
+        onClick={() => routeToUserInfo(entry.user.id)}
+        style={{
+          cursor: "pointer"
+        }}
+      >
         <td>{entry.user.name}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
