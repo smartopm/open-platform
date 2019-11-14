@@ -29,3 +29,5 @@ export const entryReason = [
   "Sales",
   "Passing through"
 ];
+
+export const ponisoNumber = "+260976064298";

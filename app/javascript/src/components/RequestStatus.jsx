@@ -1,6 +1,7 @@
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Link } from "react-router-dom";
+import { ponisoNumber } from "../utils/constants";
 
 export default function RequestStatus(props) {
   return (
@@ -30,7 +31,7 @@ export default function RequestStatus(props) {
       {props.isDenied ? (
         <div className="col-10 col-sm-10 col-md-6">
           <a
-            href="tel:+260976064298"
+            href={`tel:${ponisoNumber}`}
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
           >
             Call Poniso

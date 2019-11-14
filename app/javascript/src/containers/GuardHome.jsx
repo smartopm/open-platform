@@ -8,6 +8,7 @@ import LogIcon from "../../../assets/images/icon_contact_card_fill.svg";
 import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
 import LogEntryIcon from "@material-ui/icons/Assignment";
 import CallIcon from "@material-ui/icons/Call";
+import { ponisoNumber } from "../utils/constants";
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
@@ -95,7 +96,7 @@ export default function GuardHome() {
                   width: "100%"
                 }}
               >
-                <a href="tel:+260976064298">
+                <a href={`tel:${ponisoNumber}`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <CallIcon className={css(styles.homeIconColor)} />

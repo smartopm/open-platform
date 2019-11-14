@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useQuery } from "react-apollo";
-import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 
 import Loading from "../components/Loading.jsx";

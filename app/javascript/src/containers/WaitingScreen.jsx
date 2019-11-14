@@ -4,6 +4,7 @@ import { useQuery } from "react-apollo";
 import { css, StyleSheet } from "aphrodite";
 import { addSeconds, format } from "date-fns";
 import { EntryRequestQuery } from "../graphql/queries.js";
+import { ponisoNumber } from "../utils/constants.js";
 
 // Todo: Test the vibration on android
 export default function HoldScreen({ match }) {
@@ -58,7 +59,7 @@ function WaitScreen() {
       <div className="col-10 col-sm-10">
         {timeLeft === 0 && (
           <a
-            href="tel:+260976064298"
+            href={`tel:${ponisoNumber}`}
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
           >
             Call Poniso
@@ -116,7 +117,7 @@ function DeniedScreen() {
       <br />
       <div className="col-10 col-sm-10">
         <a
-          href="tel:+260976064298"
+          href={`tel:${ponisoNumber}`}
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
           Call Poniso
