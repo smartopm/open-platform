@@ -36,7 +36,6 @@ import EntryRequest from "../src/containers/EntryRequest";
 import RequestUpdate from "../src/containers/RequestUpdate";
 import WaitScreen from "../src/containers/WaitingScreen";
 import RequestApproval from "../src/containers/RequestApproval";
-import EntryRequests from "../src/containers/EntryRequests.jsx";
 import ErrorPage from "../src/components/Error";
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -145,7 +144,7 @@ const App = () => {
                     path="/request_status/:id"
                     component={RequestApproval}
                   />
-                  <Route path="/requests" component={EntryRequests} />
+
                   <Route
                     path="*"
                     component={() => <ErrorPage title="Sorry Page not Found" />}
