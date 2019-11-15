@@ -11,15 +11,20 @@ import CallIcon from "@material-ui/icons/Call";
 import { ponisoNumber } from "../utils/constants";
 import Avatar from "../components/Avatar";
 import { Context } from "./Provider/AuthStateProvider";
+import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
   const authState = useContext(Context);
   const { t } = useTranslation();
+  const [name, setName] = React.useState(authState.user.name);
 
   function inputToSearch() {
     setRedirect("/search");
   }
+  const handleChange = event => {
+    setName(event.target.value);
+  };
   if (redirect) {
     return <Redirect push to={redirect} />;
   }
@@ -31,7 +36,27 @@ export default function GuardHome() {
           <br />
           <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
             <Avatar user={authState.user} />
+            <br />
+            <br />
           </div>
+          <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+            <FormControl
+              variant="outlined"
+              style={{
+                minWidth: 120,
+                color: "#FFFFFF"
+              }}
+            >
+              <Select
+                id="demo-simple-select-outlined"
+                value={name}
+                onChange={handleChange}
+              >
+                <MenuItem value={name}>{name}</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+
           <input
             className={`form-control ${css(styles.input)}`}
             onFocus={inputToSearch}
@@ -141,9 +166,9 @@ const styles = StyleSheet.create({
     color: "#999",
     position: "absolute",
     left: 4,
-    top: 26,
-    marginTop: 74,
-    bottom: "4px",
+    // top: 26,
+    // marginTop: 74,
+    bottom: 6,
     "z-index": 9
   },
   bellIcon: {
