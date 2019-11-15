@@ -4,6 +4,12 @@ services:
     image: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+  redis:
+    image: redis
+    expose:
+      - "6379"
   rails:
     build:
       context: .
