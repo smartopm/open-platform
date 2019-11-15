@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import { useTranslation } from "react-i18next";
@@ -9,9 +9,12 @@ import QRIcon from "../../../assets/images/icon_qr_card_fill_copy.svg";
 import LogEntryIcon from "@material-ui/icons/Assignment";
 import CallIcon from "@material-ui/icons/Call";
 import { ponisoNumber } from "../utils/constants";
+import Avatar from "../components/Avatar";
+import { Context } from "./Provider/AuthStateProvider";
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
+  const authState = useContext(Context);
   const { t } = useTranslation();
 
   function inputToSearch() {
@@ -25,6 +28,10 @@ export default function GuardHome() {
     <div>
       <Nav>
         <div className={css(styles.inputGroup)}>
+          <br />
+          <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+            <Avatar user={authState.user} />
+          </div>
           <input
             className={`form-control ${css(styles.input)}`}
             onFocus={inputToSearch}
@@ -135,6 +142,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 4,
     top: 26,
+    marginTop: 74,
     bottom: "4px",
     "z-index": 9
   },
@@ -143,10 +151,10 @@ const styles = StyleSheet.create({
   },
   scanIcon: {
     position: "absolute",
-    top: 26,
-    bottom: 4,
+    marginTop: 75,
     right: 5,
-    width: 20
+    width: 20,
+    bottom: 11
   },
   homeIconColor: {
     color: "#25c0b0"
