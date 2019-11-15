@@ -47,12 +47,27 @@ export default function GuardHome() {
                 color: "#FFFFFF"
               }}
             >
+              <a href="/logout" className={`${css(styles.link)}`}>
+                Switch accounts
+              </a>
+              <br />
               <Select
                 id="demo-simple-select-outlined"
                 value={name}
                 onChange={handleChange}
+                style={{
+                  color: "#FFFFFF",
+                  borderColor: "#FFFFFF"
+                }}
               >
-                <MenuItem value={name}>{name}</MenuItem>
+                <MenuItem
+                  value={name}
+                  style={{
+                    color: "#FFFFFF"
+                  }}
+                >
+                  {name}
+                </MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -166,8 +181,6 @@ const styles = StyleSheet.create({
     color: "#999",
     position: "absolute",
     left: 4,
-    // top: 26,
-    // marginTop: 74,
     bottom: 6,
     "z-index": 9
   },
@@ -199,5 +212,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafafa",
     color: "#ed5757",
     textTransform: "unset"
+  },
+  link: {
+    color: "#FFFFFF",
+    textDecoration: "none"
   }
 });
