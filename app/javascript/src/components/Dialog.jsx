@@ -40,10 +40,42 @@ export function ModalDialog({
     </Dialog>
   );
 }
+
+export function ReasonInputModal({ handleClose, open, children }) {
+  return (
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+      fullWidth={true}
+      maxWidth={"lg"}
+    >
+      <DialogContent>
+        <p className="deny-msg">Other Business</p>
+        <br />
+        {children}
+      </DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={handleClose} color={"primary"}>
+          Save
+        </Button>
+        <Button className="btn-close" onClick={handleClose}>
+          Cancel
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   action: PropTypes.string.isRequired,
   handleConfirm: PropTypes.func.isRequired
+};
+ReasonInputModal.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired
 };
