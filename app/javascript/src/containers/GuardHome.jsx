@@ -11,7 +11,7 @@ import CallIcon from "@material-ui/icons/Call";
 import { ponisoNumber } from "../utils/constants";
 import Avatar from "../components/Avatar";
 import { Context } from "./Provider/AuthStateProvider";
-import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import { FormControl, Select, MenuItem } from "@material-ui/core";
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: "#FFFFFF",
-    textDecoration: "none"
+    textDecoration: "none",
+    marginLeft: 30
   }
 });

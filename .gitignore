@@ -48,4 +48,4 @@ yarn-debug.log*
 
 # Mac cruft
 **/.DS_Store
-
+.vscode/
