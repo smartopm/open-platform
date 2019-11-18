@@ -1,10 +1,11 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import { entryReason } from "../utils/constants";
 import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
+import { ReasonInputModal } from "../components/Dialog";
 
 export default function LogEntry({ history }) {
   const name = useFormInput("");
@@ -12,8 +13,10 @@ export default function LogEntry({ history }) {
   const phoneNumber = useFormInput("");
   const vehicle = useFormInput("");
   const business = useFormInput("");
+  const reason = useFormInput("");
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const [isbtnClicked, setBtnClicked] = useState(false);
+  const [isModalOpen, setModal] = useState(false);
 
   function handleSubmit() {
     setBtnClicked(!isbtnClicked);
@@ -22,7 +25,7 @@ export default function LogEntry({ history }) {
       vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
-      reason: business.value
+      reason: business.value === "Other" ? reason.value : business.value
     };
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
@@ -30,8 +33,29 @@ export default function LogEntry({ history }) {
       history.push(`/request_wait/${data.result.entryRequest.id}`);
     });
   }
+
+  useEffect(() => {
+    if (business.value === "Other") {
+      setModal(!isModalOpen);
+    }
+  }, [business.value]);
   return (
     <Fragment>
+      <ReasonInputModal
+        handleClose={() => setModal(!isModalOpen)}
+        open={isModalOpen}
+      >
+        <div className="form-group">
+          <input
+            className="form-control"
+            type="text"
+            {...reason}
+            name="reason"
+            placeholder="Other"
+            required
+          />
+        </div>
+      </ReasonInputModal>
       <Nav navName="New Log" menuButton="cancel" />
       <div className="container">
         <form>
