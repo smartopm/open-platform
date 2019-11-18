@@ -13,11 +13,12 @@ export default function LogEntry({ history }) {
   const vehicle = useFormInput("");
   const business = useFormInput("");
   const [createEntryRequest] = useMutation(EntryRequestCreate);
+  const [isbtnClicked, setBtnClicked] = useState(false);
 
-  //   we need to create a user and then use their id to log entry
   function handleSubmit() {
+    setBtnClicked(!isbtnClicked);
     const userData = {
-      name: name.value,
+      name: capitalizeLastName(name.value),
       vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
@@ -25,7 +26,6 @@ export default function LogEntry({ history }) {
     };
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
-
       // Send them to the wait page
       history.push(`/request_wait/${data.result.entryRequest.id}`);
     });
@@ -107,8 +107,9 @@ export default function LogEntry({ history }) {
               variant="contained"
               className={`btn ${css(styles.logButton)}`}
               onClick={handleSubmit}
+              disabled={isbtnClicked}
             >
-              Request Entry
+              {isbtnClicked ? "Submitting ..." : " Request Entry"}
             </Button>
           </div>
         </form>
@@ -123,6 +124,15 @@ function useFormInput(initialValue) {
     setValue(event.target.value);
   };
   return { value, onChange: handleChange };
+}
+function capitalizeLastName(fullName) {
+  const names = fullName.trim().split(" ");
+  if (!names.length) {
+    return;
+  }
+  return names
+    .map((name, index) => (index === 1 ? name.toUpperCase() : name))
+    .join(" ");
 }
 
 const styles = StyleSheet.create({
