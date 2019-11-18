@@ -144,6 +144,17 @@ export function Component({
             </div>
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
+                <a
+                  className="btn btn-primary btn-lg btn-block active"
+                  href={`tel:+${authState.user.phoneNumber}`}
+                >
+                  Call {authState.user.name}
+                </a>
+              </div>
+            </div>
+
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
                 <Link
                   to={`/print/${data.user.id}`}
                   className="btn btn-primary btn-lg btn-block active"
