@@ -46,6 +46,9 @@ gem "devise", "~> 4.7"
 # QR Code library for building SVG's
 gem 'rqrcode'
 
+# Sidekiq for jobs
+gem 'sidekiq'
+
 # GraphQL
 gem 'graphql', '~> 1.9'
 gem 'graphiql-rails', group: :development
