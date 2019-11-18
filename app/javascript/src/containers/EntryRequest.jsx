@@ -16,19 +16,23 @@ export default function LogEntry({ history }) {
   const business = useFormInput("");
   const reason = useFormInput("");
   const [createEntryRequest] = useMutation(EntryRequestCreate);
-  const [isbtnClicked, setBtnClicked] = useState(false);
+  const [isSubmitted, setSubmitted] = useState(false);
   const [isModalOpen, setModal] = useState(false);
   const signRef = useRef(null);
+  const [isBtnActive, setClearBtnActive] = useState(false);
 
   function handleSubmit() {
-    setBtnClicked(!isbtnClicked);
+    setSubmitted(!isSubmitted);
     const userData = {
       name: capitalizeLastName(name.value),
       vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
       reason: business.value === "Other" ? reason.value : business.value
+      // Todo: We can add the following as a signature, its a 64base String
+      // signature: signRef.current.toDataURL("image/png")
     };
+
     createEntryRequest({ variables: userData }).then(({ data }) => {
       // Send them to the wait page
       history.push(`/request_wait/${data.result.entryRequest.id}`);
@@ -40,6 +44,12 @@ export default function LogEntry({ history }) {
       setModal(!isModalOpen);
     }
   }, [business.value]);
+
+  function clearSignature() {
+    signRef.current.clear();
+    setClearBtnActive(!isBtnActive);
+  }
+
   return (
     <Fragment>
       <ReasonInputModal
@@ -127,21 +137,31 @@ export default function LogEntry({ history }) {
             <SignaturePad
               canvasProps={{ className: css(styles.signaturePad) }}
               ref={signRef}
+              onEnd={() => setClearBtnActive(!isBtnActive)}
             />
           </div>
+          <br />
 
-          <div
-            className={`row justify-content-center align-items-center ${css(
-              styles.linksSection
-            )}`}
-          >
+          {isBtnActive ? (
+            <div className="row justify-content-center align-items-center ">
+              <Button
+                variant="outlined"
+                className={`btn`}
+                onClick={clearSignature}
+              >
+                Clear Signature
+              </Button>
+            </div>
+          ) : null}
+
+          <div className="row justify-content-center align-items-center ">
             <Button
               variant="contained"
               className={`btn ${css(styles.logButton)}`}
               onClick={handleSubmit}
-              disabled={isbtnClicked}
+              disabled={isSubmitted}
             >
-              {isbtnClicked ? "Submitting ..." : " Request Entry"}
+              {isSubmitted ? "Submitting ..." : " Request Entry"}
             </Button>
           </div>
         </form>
