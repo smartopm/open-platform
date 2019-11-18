@@ -1,7 +1,8 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
+import SignaturePad from "react-signature-canvas";
 import { entryReason } from "../utils/constants";
 import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
@@ -17,6 +18,7 @@ export default function LogEntry({ history }) {
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const [isbtnClicked, setBtnClicked] = useState(false);
   const [isModalOpen, setModal] = useState(false);
+  const signRef = useRef(null);
 
   function handleSubmit() {
     setBtnClicked(!isbtnClicked);
@@ -27,7 +29,6 @@ export default function LogEntry({ history }) {
       nrc: nrc.value,
       reason: business.value === "Other" ? reason.value : business.value
     };
-
     createEntryRequest({ variables: userData }).then(({ data }) => {
       // Send them to the wait page
       history.push(`/request_wait/${data.result.entryRequest.id}`);
@@ -122,6 +123,13 @@ export default function LogEntry({ history }) {
             </TextField>
           </div>
 
+          <div className={css(styles.signatureContainer)}>
+            <SignaturePad
+              canvasProps={{ className: css(styles.signaturePad) }}
+              ref={signRef}
+            />
+          </div>
+
           <div
             className={`row justify-content-center align-items-center ${css(
               styles.linksSection
@@ -170,5 +178,15 @@ const styles = StyleSheet.create({
   },
   selectInput: {
     width: "100%"
+  },
+  signatureContainer: {
+    width: "100%",
+    height: "80%",
+    margin: "0 auto",
+    backgroundColor: "#FFFFFF"
+  },
+  signaturePad: {
+    width: "100%",
+    height: "100%"
   }
 });
