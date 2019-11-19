@@ -7,7 +7,7 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :notify_admin
+  after_create :notify_admin, :notify_community_slack
 
   default_scope { order(created_at: :asc) }
 
@@ -17,7 +17,8 @@ class EntryRequest < ApplicationRecord
 
   def grant!(grantor)
     can_grant?(grantor)
-    community.notify_slack("#{grantor.name} granted an entry for #{self[:name]}")
+    SlackNotification.perform_later(community,
+                                    "#{grantor.name} granted an entry for #{self[:name]}")
     update(
       grantor_id: grantor.id,
       granted_state: 1,
@@ -27,7 +28,8 @@ class EntryRequest < ApplicationRecord
 
   def deny!(grantor)
     can_grant?(grantor)
-    community.notify_slack("#{grantor.name} denied an entry for #{self[:name]}")
+    SlackNotification.perform_later(community,
+                                    "#{grantor.name} denied an entry for #{self[:name]}")
     update(
       grantor_id: grantor.id,
       granted_state: 2,
@@ -57,8 +59,9 @@ class EntryRequest < ApplicationRecord
     self[:community_id] = user.community_id
   end
 
-  def notify_community
-    community.notify_slack("#{user.name} started an entry for #{self[:name]}")
+  def notify_community_slack
+    SlackNotification.perform_later(community,
+                                    "#{user.name} started an entry for #{self[:name]}")
   end
 
   # TODO: Build this into a proper notification scheme
