@@ -133,6 +133,9 @@ export default function LogEntry({ history }) {
             </TextField>
           </div>
 
+          {/*
+          // Turn this off until we make sure it's good to go and not going to interfere
+          // with the guards
           <div className={css(styles.signatureContainer)}>
             <SignaturePad
               canvasProps={{ className: css(styles.signaturePad) }}
@@ -153,6 +156,8 @@ export default function LogEntry({ history }) {
               </Button>
             </div>
           ) : null}
+
+          */}
 
           <div className="row justify-content-center align-items-center ">
             <Button
