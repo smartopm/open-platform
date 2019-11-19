@@ -37,7 +37,7 @@ services:
       - 3035:3035
   rails_worker:
     image: doublegdp_rails:latest
-    command: bash -c "bundle exec shoryuken -R"
+    command: bash -c "bundle exec sidekiq"
     env_file:
       - '.env.docker'
     volumes:
