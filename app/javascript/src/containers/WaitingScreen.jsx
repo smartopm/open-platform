@@ -55,6 +55,7 @@ function WaitScreen() {
       <h4 className={css(styles.title)}>Waiting on Approval</h4>
 
       <br />
+      <h1 className={css(styles.clockStyles)}>{formatTime(timeLeft)}</h1>
 
       <div className="col-10 col-sm-10">
         {timeLeft === 0 && (
@@ -67,7 +68,7 @@ function WaitScreen() {
         )}
         {timeLeft > 0 && (
           <h5 className="text-center text-white">
-            Sending request, Wait for {formatTime(timeLeft)} to call Poniso{" "}
+            Sending request ... wait for the timer to call Poniso{" "}
           </h5>
         )}
       </div>
@@ -156,6 +157,10 @@ const styles = StyleSheet.create({
     height: "100vh"
   },
   title: {
+    color: "#FFFFFF"
+  },
+  clockStyles: {
+    fontSize: "7em",
     color: "#FFFFFF"
   }
 });
