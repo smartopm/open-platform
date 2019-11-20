@@ -244,7 +244,7 @@ export const EntryRequestDeny = gql`
   ${EntryRequestFragment.publicFields}
 `;
 
-export const loginPhoneMutation = gql`
+export const loginPhone = gql`
   mutation loginPhoneStart($phoneNumber: String!) {
     loginPhoneStart(phoneNumber: $phoneNumber) {
       user {
@@ -253,3 +253,11 @@ export const loginPhoneMutation = gql`
     }
   }
 `;
+
+export const loginPhoneConfirmCode = gql`
+mutation loginPhoneComplete($phoneNumber: String!, $token: String!){
+  loginPhoneComplete(phoneNumber: $phoneNumber, token: $token){
+      authToken
+  }
+}
+`

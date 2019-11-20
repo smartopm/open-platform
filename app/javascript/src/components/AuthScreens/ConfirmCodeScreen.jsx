@@ -3,13 +3,25 @@ import { Button, TextField } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
+import { loginPhoneConfirmCode } from "../../graphql/mutations";
 
-export default function ConfirmCodeScreen() {
+export default function ConfirmCodeScreen({ location }) {
+  const { phoneNumber } = location.state;
   const [code, setCode] = useState("");
-  // const [loginPhoneStart] = useMutation(loginPhoneMutation);
+  const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
 
-  function handleConfirmCode() {}
+  function handleConfirmCode() {
+    loginPhoneComplete({
+      variables: { phoneNumber, token: code }
+    })
+      .then(() => {
+        history.push("/");
+      })
+      .catch(error => {
+        setError(error.message);
+      });
+  }
 
   return (
     <div style={{ height: "100vh" }}>
@@ -40,6 +52,17 @@ export default function ConfirmCodeScreen() {
           </div>
         </div>
       </div>
+      <br />
+      {error && (
+        <p
+          className=" text-center text-danger"
+          style={{
+            margin: 40
+          }}
+        >
+          {error}
+        </p>
+      )}
       <div
         className={`row justify-content-center align-items-center ${css(
           styles.linksSection
@@ -48,10 +71,9 @@ export default function ConfirmCodeScreen() {
         <Button
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
+          onClick={handleConfirmCode}
         >
-          <Link className={css(styles.getStartedLink)} to={"/"}>
-            Next
-          </Link>
+          Next
         </Button>
       </div>
     </div>

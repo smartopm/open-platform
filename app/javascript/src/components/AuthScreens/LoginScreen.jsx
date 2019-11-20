@@ -3,11 +3,11 @@ import { Button, TextField, InputAdornment } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
-import { loginPhoneMutation } from "../../graphql/mutations";
+import { loginPhone } from "../../graphql/mutations";
 
 export function LoginScreen({ history }) {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [loginPhoneStart] = useMutation(loginPhoneMutation);
+  const [loginPhoneStart] = useMutation(loginPhone);
   const [error, setError] = useState(null);
 
   function loginWithPhone() {
@@ -15,11 +15,10 @@ export function LoginScreen({ history }) {
       variables: { phoneNumber: `260${phoneNumber}` }
     })
       .then(() => {
-        history.push("/code");
+        history.push("/code", { phoneNumber: `260${phoneNumber}` });
       })
       .catch(error => {
         setError(error.message);
-        console.log(error);
       });
   }
   return (
