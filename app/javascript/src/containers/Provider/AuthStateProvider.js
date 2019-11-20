@@ -1,7 +1,6 @@
 // Logged in keeps track of the curent_user and current_member state
 // and passes it along as a context
 import React, {useReducer, useState, useEffect} from "react";
-import { Redirect } from "react-router-dom";
 
 import gql from "graphql-tag";
 import { useApolloClient } from "react-apollo";
