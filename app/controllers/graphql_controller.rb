@@ -2,6 +2,8 @@
 
 # GraphQL Controller for all queries and mutations
 class GraphqlController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:execute]
+
   def execute
     variables = prep_variables(params[:variables])
     query = params[:query]

@@ -4,7 +4,6 @@ Rails.application.routes.draw do
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
   post "/graphql", to: "graphql#execute"
-  get 'login', to: 'login#index'
   post 'login/sms'
   post 'login/sms_complete'
   get  'l/:user_id/:token', to: "login#sms_one_time_login"
@@ -13,8 +12,6 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
     get 'login_oauth', :to => 'users/omniauth_callbacks#passthru'
-    get 'login', :to => 'login#index', :as => :new_user_session
-    get 'logout', :to => 'devise/sessions#destroy', :as => :destroy_user_session
   end
 
   resources :users

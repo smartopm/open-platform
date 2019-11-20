@@ -53,6 +53,14 @@ export function LoginScreen() {
             Next
           </Link>
         </Button>
+        <Button
+          variant="contained"
+          className={`btn ${css(styles.getStartedButton)}`}
+        >
+          <a className={css(styles.getStartedLink)} href={"/login_oauth"}>
+            Login with Google
+          </a>
+        </Button>
       </div>
     </div>
   );
