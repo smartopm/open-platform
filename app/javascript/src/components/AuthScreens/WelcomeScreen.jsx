@@ -33,7 +33,7 @@ export function WelcomeScreen() {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
         >
-          <Link className={css(styles.getStartedLink)} to={"/login_w"}>
+          <Link className={css(styles.getStartedLink)} to={"/login"}>
             Get Started
           </Link>
         </Button>

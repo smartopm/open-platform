@@ -223,12 +223,8 @@ export const EntryRequestUpdate = gql`
 `;
 
 export const EntryRequestGrant = gql`
-  mutation EntryRequestGrantMutation(
-    $id: ID!
-  ) {
-    result: entryRequestGrant(
-      id: $id
-    ) {
+  mutation EntryRequestGrantMutation($id: ID!) {
+    result: entryRequestGrant(id: $id) {
       entryRequest {
         ...EntryRequestFields
       }
@@ -238,16 +234,22 @@ export const EntryRequestGrant = gql`
 `;
 
 export const EntryRequestDeny = gql`
-  mutation EntryRequestGrantMutation(
-    $id: ID!
-  ) {
-    result: entryRequestDeny(
-      id: $id
-    ) {
+  mutation EntryRequestGrantMutation($id: ID!) {
+    result: entryRequestDeny(id: $id) {
       entryRequest {
         ...EntryRequestFields
       }
     }
   }
   ${EntryRequestFragment.publicFields}
+`;
+
+export const loginPhoneMutation = gql`
+  mutation loginPhoneStart($phoneNumber: String!) {
+    loginPhoneStart(phoneNumber: $phoneNumber) {
+      user {
+        phoneNumber
+      }
+    }
+  }
 `;

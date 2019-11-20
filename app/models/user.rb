@@ -190,7 +190,7 @@ class User < ApplicationRecord
     JWT.encode({ user_id: self[:id] }, Rails.application.credentials.secret_key_base, 'HS256')
   end
 
-  def self.find_by_auth_token(auth_token)
+  def self.find_via_auth_token(auth_token)
     decoded_token = JWT.decode auth_token,
                                Rails.application.credentials.secret_key_base,
                                true,

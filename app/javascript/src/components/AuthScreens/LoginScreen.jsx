@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, TextField, InputAdornment } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
+import { useMutation } from "react-apollo";
+import { loginPhoneMutation } from "../../graphql/mutations";
 
-export function LoginScreen() {
+export function LoginScreen({ history }) {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [loginPhoneStart] = useMutation(loginPhoneMutation);
+  const [error, setError] = useState(null);
+
+  function loginWithPhone() {
+    loginPhoneStart({
+      variables: { phoneNumber: `260${phoneNumber}` }
+    })
+      .then(() => {
+        history.push("/code");
+      })
+      .catch(error => {
+        setError(error.message);
+        console.log(error);
+      });
+  }
   return (
     <div style={{ height: "100vh" }}>
       <nav className={`${css(styles.navBar)} navbar`}>
@@ -29,6 +47,8 @@ export function LoginScreen() {
           type="number"
           maxLength={10}
           autoFocus
+          value={phoneNumber}
+          onChange={e => setPhoneNumber(e.target.value)}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -48,19 +68,25 @@ export function LoginScreen() {
         <Button
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
+          onClick={loginWithPhone}
         >
-          <Link className={css(styles.getStartedLink)} to={"/code"}>
-            Next
-          </Link>
+          <span className={css(styles.getStartedLink)}>Next</span>
         </Button>
-        <Button
-          variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
-        >
-          <a className={css(styles.getStartedLink)} href={"/login_oauth"}>
-            Login with Google
-          </a>
-        </Button>
+        <br />
+        {error && (
+          <p
+            className=" text-center text-danger"
+            style={{
+              margin: 40
+            }}
+          >
+            {error}
+          </p>
+        )}
+
+        <a className={css(styles.googleLink)} href={"/login_oauth"}>
+          Or Login with Google instead
+        </a>
       </div>
     </div>
   );
@@ -106,5 +132,10 @@ const styles = StyleSheet.create({
   },
   phoneNumberInput: {
     marginTop: 50
+  },
+  googleLink: {
+    margin: 40,
+    marginBottom: 47,
+    textDecoration: "none"
   }
 });

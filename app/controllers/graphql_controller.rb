@@ -30,7 +30,7 @@ class GraphqlController < ApplicationController
     token = bearer_token(request)
     return nil unless token
 
-    user = User.find_by(auth_token: token)
+    user = User.find_via_auth_token(auth_token: token)
     {
       current_user: user,
     }

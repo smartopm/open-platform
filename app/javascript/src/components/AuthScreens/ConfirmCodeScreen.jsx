@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, TextField } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
+import { useMutation } from "react-apollo";
 
 export default function ConfirmCodeScreen() {
+  const [code, setCode] = useState("");
+  // const [loginPhoneStart] = useMutation(loginPhoneMutation);
+  const [error, setError] = useState(null);
+
+  function handleConfirmCode() {}
+
   return (
     <div style={{ height: "100vh" }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={"/login_w"}>
+        <Link to={"/login"}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -19,13 +26,15 @@ export default function ConfirmCodeScreen() {
         <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
 
         <div className="container ">
-          <div className={css(styles.phoneNumberInput)}>
+          <div className={css(styles.phoneCodeInput)}>
             <TextField
               id="outlined-basic"
               margin="normal"
               variant="outlined"
               autoFocus
               type="number"
+              value={code}
+              onChange={e => setCode(e.target.value)}
               placeholder="Confirmation code"
             />
           </div>
@@ -87,7 +96,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white"
   },
-  phoneNumberInput: {
+  phoneCodeInput: {
     marginTop: 50
   }
 });
