@@ -113,12 +113,13 @@ const Analytics = props => {
 
 const App = () => {
   return (
-    <Suspense fallback={<Loading />}>
-      <ApolloProvider>
+    <Suspense fallback={()=> {return <Loading />}}>
+    <ApolloProvider>
+      <Router>
         <AuthStateProvider>
-          <Router>
-            <Analytics>
-              {/* onboarding */}
+          <Analytics>
+            {/* onboarding */}
+            <Switch>
               <Route path="/welcome" component={WelcomeScreen} />
               <Route path="/login" component={LoginScreen} />
               <Route path="/code" component={ConfirmCodeScreen} />
@@ -157,17 +158,18 @@ const App = () => {
                     component={RequestApproval}
                   />
 
-                  <Route
-                    path="*"
-                    component={() => <ErrorPage title="Sorry Page not Found" />}
-                  />
-                </Switch>
-              </LoggedInOnly>
-            </Analytics>
-          </Router>
-        </AuthStateProvider>
-      </ApolloProvider>
-    </Suspense>
+                <Route
+                  path="*"
+                  component={() => <ErrorPage title="Sorry Page not Found" />}
+                />
+              </Switch>
+            </LoggedInOnly>
+          </Switch>
+        </Analytics>
+      </AuthStateProvider>
+    </Router>
+  </ApolloProvider>
+</Suspense>
   );
 };
 

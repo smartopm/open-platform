@@ -1,8 +1,10 @@
 // Logged in keeps track of the curent_user and current_member state
 // and passes it along as a context
-import React, {useReducer} from "react";
+import React, {useReducer, useState, useEffect} from "react";
+import { Redirect } from "react-router-dom";
+
 import gql from "graphql-tag";
-import { useLazyQuery } from "react-apollo";
+import { useApolloClient } from "react-apollo";
 
 import { AUTH_TOKEN_KEY } from "../../utils/apollo";
 
@@ -35,21 +37,27 @@ const QUERY = gql`
 `;
 
 export default function AuthToken({ children }) {
-  const token = localStorage.getItem(AUTH_TOKEN_KEY)
 
-  // TODO: clean this up
-  function setToken({action, token}) {
-    if (action === 'delete') {
-      localStorage.removeItem(AUTH_TOKEN_KEY)
-      window.location.href = '/'
-    } else {
-      localStorage.setItem(AUTH_TOKEN_KEY, token)
-      window.location.href = '/'
+  function reducer(state, action) {
+    console.log(state, action)
+    switch (action.type) {
+      case 'delete':
+        localStorage.removeItem(AUTH_TOKEN_KEY)
+        return {token: null};
+      default:
+        if (action.token) {
+          localStorage.setItem(AUTH_TOKEN_KEY, action.token)
+        }
+        return {token: action.token};
     }
   }
 
+  const [state, setToken] = useReducer(reducer, {
+    token: localStorage.getItem(AUTH_TOKEN_KEY),
+  });
+
   return (
-    <AuthStateProvider token={token} setToken={setToken}>
+    <AuthStateProvider token={state.token} setToken={setToken}>
       {children}
     </AuthStateProvider>
   );
@@ -59,30 +67,44 @@ const AuthStateContext = React.createContext(initialState);
 export const Consumer = AuthStateContext.Consumer;
 export const Context = AuthStateContext;
 
+// Returns a promise with currentUser query
+function getCurrentUser(client) {
+  return client.query({query: QUERY, fetchPolicy: "no-cache"})
+}
+
 // Provider is the default export
 export function AuthStateProvider({ children, token, setToken}) {
-  const state = {
+  const client = useApolloClient()
+  const [state, setState] = useState({
     loggedIn: false,
+    loaded: false,
     user: null,
-    token,
-    setToken,
-  };
-  console.log("AuthStateProvier", state, token)
-  const [loadQuery, { called, loading, error, data }] = useLazyQuery(QUERY);
+    setToken
+  })
 
+  useEffect(()=>{
+    // Reset state while we evaluate a token change
+    setState({...state, user: null, loaded:false})
+    if (token && !state.error) {
+      getCurrentUser(client).then(({data})=>{
+        setState({...state, user: data.currentUser, loaded:true, loggedIn: true})
+        }).catch((err) => {
+          setState({...state, error: err})
+        })
+    } else {
+      setState({...state, user: null, loaded:true})
+    }
+    // Get query if token changes
+  }, [token])
 
-  if (!called && token) {
-    console.log('loadQUery')
-    loadQuery()
+  if (state.error && token) {
+    // There's an error with the token, delete it
+    setToken({type:'delete'})
   }
-  if (loading) return false;
 
-  if (!error && data) {
-    state.loggedIn = true
-    state.user = data.currentUser
+  if (!state.loaded) {
+    return <p>Loading</p>
   }
-
-  console.log("Render", state)
 
   return (
     <AuthStateContext.Provider value={state}>
