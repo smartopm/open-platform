@@ -2,7 +2,7 @@
 
 # HomeController is our Root route for the application
 class HomeController < ApplicationController
-  before_action :authenticate_member!, except: [:hold, :react]
+  before_action :authenticate_member!, except: %i[hold react]
 
   def index; end
 

@@ -13,5 +13,9 @@ module Types
     field :entry_request_update, mutation: Mutations::EntryRequest::EntryRequestUpdate
     field :entry_request_grant, mutation: Mutations::EntryRequest::EntryRequestGrant
     field :entry_request_deny, mutation: Mutations::EntryRequest::EntryRequestDeny
+
+    # User login
+    field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart
+    field :login_phone_complete, mutation: Mutations::Login::LoginPhoneComplete
   end
 end

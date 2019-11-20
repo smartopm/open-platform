@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 module Mutations
   module Login
@@ -6,16 +6,14 @@ module Mutations
     class LoginPhoneStart < BaseMutation
       argument :phone_number, String, required: true
 
-      field :success, Boolean, null: true
+      field :user, Types::UserType, null: true
 
       def resolve(vals)
         user = User.find_via_phone_number(vals[:phone_number])
-        user.send_phone_token if user
+        user&.send_phone_token
 
-        return { success: !!user }
-
+        { user: user }
       end
-
     end
   end
 end

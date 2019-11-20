@@ -29,7 +29,8 @@ class GraphqlController < ApplicationController
   def auth_context(request)
     token = bearer_token(request)
     return nil unless token
-    user = User.find_by_auth_token(token)
+
+    user = User.find_by(auth_token: token)
     {
       current_user: user,
     }
@@ -38,7 +39,7 @@ class GraphqlController < ApplicationController
   def bearer_token(request)
     pattern = /^Bearer /
     header  = request.headers['Authorization']
-    header.gsub(pattern, '') if header && header.match(pattern)
+    header.gsub(pattern, '') if header&.match(pattern)
   end
 
   def prep_variables(variables)

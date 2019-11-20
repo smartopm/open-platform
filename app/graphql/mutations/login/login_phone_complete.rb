@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 module Mutations
   module Login
@@ -16,9 +16,7 @@ module Mutations
         return { auth_token: auth_token } if auth_token
 
         raise GraphQL::ExecutionError, 'Unauthorized'
-
       end
-
     end
   end
 end
