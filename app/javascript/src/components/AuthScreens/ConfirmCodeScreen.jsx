@@ -4,22 +4,29 @@ import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
+import { AUTH_TOKEN_KEY } from "../../utils/apollo";
 
 export default function ConfirmCodeScreen({ location }) {
-  const { phoneNumber } = location.state;
+  const { id } = location.state;
   const [code, setCode] = useState("");
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleConfirmCode() {
+    setIsLoading(true);
     loginPhoneComplete({
-      variables: { phoneNumber, token: code }
+      variables: { id, token: code }
     })
-      .then(() => {
-        history.push("/");
+      .then(({ data }) => {
+        localStorage.setItem(AUTH_TOKEN_KEY, data.loginPhoneComplete.authToken);
+        setIsLoading(false);
+        // do a reload for home to read user info
+        window.location.href = "/";
       })
       .catch(error => {
         setError(error.message);
+        setIsLoading(false);
       });
   }
 
@@ -72,8 +79,9 @@ export default function ConfirmCodeScreen({ location }) {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={handleConfirmCode}
+          disabled={isLoading}
         >
-          Next
+          {isLoading ? "Verifying ..." : "Next"}
         </Button>
       </div>
     </div>

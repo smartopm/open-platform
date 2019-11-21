@@ -249,15 +249,16 @@ export const loginPhone = gql`
     loginPhoneStart(phoneNumber: $phoneNumber) {
       user {
         phoneNumber
+        id
       }
     }
   }
 `;
 
 export const loginPhoneConfirmCode = gql`
-mutation loginPhoneComplete($phoneNumber: String!, $token: String!){
-  loginPhoneComplete(phoneNumber: $phoneNumber, token: $token){
+  mutation loginPhoneComplete($id: ID!, $token: String!) {
+    loginPhoneComplete(id: $id, token: $token) {
       authToken
+    }
   }
-}
-`
+`;

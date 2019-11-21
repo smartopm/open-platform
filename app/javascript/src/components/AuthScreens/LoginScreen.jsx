@@ -9,16 +9,23 @@ export function LoginScreen({ history }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loginPhoneStart] = useMutation(loginPhone);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   function loginWithPhone() {
+    setIsLoading(true);
     loginPhoneStart({
       variables: { phoneNumber: `260${phoneNumber}` }
     })
-      .then(() => {
-        history.push("/code", { phoneNumber: `260${phoneNumber}` });
+      .then(({ data }) => {
+        setIsLoading(false);
+        return data;
+      })
+      .then(data => {
+        history.push("/code", { id: data.loginPhoneStart.user.id });
       })
       .catch(error => {
         setError(error.message);
+        setIsLoading(false);
       });
   }
   return (
@@ -68,8 +75,11 @@ export function LoginScreen({ history }) {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={loginWithPhone}
+          disabled={isLoading}
         >
-          <span className={css(styles.getStartedLink)}>Next</span>
+          <span className={css(styles.getStartedLink)}>
+            {isLoading ? "Submitting ..." : "Next"}
+          </span>
         </Button>
         <br />
         {error && (
