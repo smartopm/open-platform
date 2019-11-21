@@ -1,12 +1,10 @@
 Rails.application.routes.draw do
 
+  # GraphQL controller
   if Rails.env.development?
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
   post "/graphql", to: "graphql#execute"
-  post 'login/sms'
-  post 'login/sms_complete'
-  get  'l/:user_id/:token', to: "login#sms_one_time_login"
 
   # Oauth routes
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }

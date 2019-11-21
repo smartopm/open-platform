@@ -30,6 +30,7 @@ import "../src/i18n";
 import Explore from "../src/containers/Explore";
 import { LoginScreen } from "../src/components/AuthScreens/LoginScreen";
 import ConfirmCodeScreen from "../src/components/AuthScreens/ConfirmCodeScreen";
+import OneTimeLoginCode from "../src/components/AuthScreens/OneTimeLoginCode";
 import Support from "../src/containers/Support";
 import GuardHome from "../src/containers/GuardHome";
 import EntryRequest from "../src/containers/EntryRequest";
@@ -123,6 +124,7 @@ const App = () => {
               <Route path="/welcome" component={WelcomeScreen} />
               <Route path="/login" component={LoginScreen} />
               <Route path="/code" component={ConfirmCodeScreen} />
+              <Route path="/l/:id/:code" component={OneTimeLoginCode} />
               <Route path="/logout" component={Logout} />
               <Route path="/google/:token" component={GoogleAuthCallback} />
               <LoggedInOnly>
