@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Button, TextField, InputAdornment } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  InputAdornment,
+  CircularProgress,
+  Typography
+} from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
@@ -77,9 +83,11 @@ export function LoginScreen({ history }) {
           onClick={loginWithPhone}
           disabled={isLoading}
         >
-          <span className={css(styles.getStartedLink)}>
-            {isLoading ? "Submitting ..." : "Next"}
-          </span>
+         
+          {isLoading ? (
+            <CircularProgress size={25} color="inherit" />           ) : (
+            <span>Next</span>
+          )}
         </Button>
         <br />
         {error && (
@@ -108,10 +116,6 @@ const styles = StyleSheet.create({
     width: "75%",
     boxShadow: "none",
     marginTop: 100
-  },
-  getStartedLink: {
-    textDecoration: "none",
-    color: "#FFFFFF"
   },
   linksSection: {
     marginTop: 40
