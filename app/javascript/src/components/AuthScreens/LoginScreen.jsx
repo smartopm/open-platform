@@ -3,8 +3,7 @@ import {
   Button,
   TextField,
   InputAdornment,
-  CircularProgress,
-  Typography
+  CircularProgress
 } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
@@ -83,9 +82,9 @@ export function LoginScreen({ history }) {
           onClick={loginWithPhone}
           disabled={isLoading}
         >
-         
           {isLoading ? (
-            <CircularProgress size={25} color="inherit" />           ) : (
+            <CircularProgress size={25} color="inherit" />
+          ) : (
             <span>Next</span>
           )}
         </Button>

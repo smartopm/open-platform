@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
@@ -81,7 +81,11 @@ export default function ConfirmCodeScreen({ location }) {
           onClick={handleConfirmCode}
           disabled={isLoading}
         >
-          {isLoading ? "Verifying ..." : "Next"}
+          {isLoading ? (
+            <CircularProgress size={25} color="inherit" />
+          ) : (
+            <span>Verify</span>
+          )}
         </Button>
       </div>
     </div>
