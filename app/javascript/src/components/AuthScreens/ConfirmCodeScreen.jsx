@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Redirect } from "react-router-dom";
 import { Button, TextField, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
-import { AUTH_TOKEN_KEY } from "../../utils/apollo";
+import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
 export default function ConfirmCodeScreen({ location }) {
+  const authState = useContext(AuthStateContext);
   const { id } = location.state;
   const [code, setCode] = useState("");
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
@@ -19,15 +21,17 @@ export default function ConfirmCodeScreen({ location }) {
       variables: { id, token: code }
     })
       .then(({ data }) => {
-        localStorage.setItem(AUTH_TOKEN_KEY, data.loginPhoneComplete.authToken);
-        setIsLoading(false);
-        // do a reload for home to read user info
-        window.location.href = "/";
+        authState.setToken({type:'update', token: data.loginPhoneComplete.authToken})
       })
       .catch(error => {
         setError(error.message);
         setIsLoading(false);
       });
+  }
+
+  // Redirect once our authState.setToken does it's job
+  if (authState.loggedIn) {
+    return <Redirect to='/' />
   }
 
   return (

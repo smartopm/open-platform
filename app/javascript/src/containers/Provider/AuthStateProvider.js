@@ -52,7 +52,7 @@ export default function AuthToken({ children }) {
   }
 
   const [state, setToken] = useReducer(reducer, {
-    token: localStorage.getItem(AUTH_TOKEN_KEY)
+    token: localStorage.getItem(AUTH_TOKEN_KEY),
   });
 
   return (
@@ -81,6 +81,7 @@ export function AuthStateProvider({ children, token, setToken }) {
     setToken
   });
 
+
   useEffect(() => {
     // Reset state while we evaluate a token change
     setState({ ...state, user: null, loaded: false });
@@ -91,7 +92,7 @@ export function AuthStateProvider({ children, token, setToken }) {
             ...state,
             user: data.currentUser,
             loaded: true,
-            loggedIn: true
+            loggedIn: true,
           });
         })
         .catch(err => {
