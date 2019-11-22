@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import QrReader from "react-qr-reader";
+import { Button, FormGroup, FormControlLabel, Switch } from "@material-ui/core";
 import Nav from "../components/Nav";
 
 export default function QRScan() {
   const [scanned, setScanned] = useState(false);
+  const [error, setError] = useState(null);
+  const [isTorchOn, setToggleTorch] = useState(true)
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({
@@ -27,15 +30,20 @@ export default function QRScan() {
         function onCapabilitiesReady(capabilities) {
           if (capabilities.torch) {
             track.applyConstraints({
-              advanced: [{ torch: true }]
+              advanced: [{ torch: isTorchOn }]
             })
-              .catch(e => console.log(e));
+              .catch(e => {
+                console.log(e)
+                setError(JSON.stringify(e))
+              });
           }
         }
 
       })
-      .catch(err => console.error('getUserMedia() failed: ', err));
-  })
+      .catch(err => {
+        setError(JSON.stringify(err))
+      });
+  }, [isTorchOn])
 
   const handleScan = data => {
     if (data) {
@@ -67,7 +75,14 @@ export default function QRScan() {
               onScan={handleScan}
               style={{ width: "100%" }}
             />
+            {error && <p className="text-center text-danger" >{error}</p>}
 
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
+                label="Toggle Torch"
+              />
+            </FormGroup>
           </>
         )}
     </div>
