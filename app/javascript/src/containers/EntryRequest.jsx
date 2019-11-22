@@ -1,10 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
+import SignaturePad from "react-signature-canvas";
 import { entryReason } from "../utils/constants";
 import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
+import { ReasonInputModal } from "../components/Dialog";
 
 export default function LogEntry({ history }) {
   const name = useFormInput("");
@@ -12,26 +14,59 @@ export default function LogEntry({ history }) {
   const phoneNumber = useFormInput("");
   const vehicle = useFormInput("");
   const business = useFormInput("");
+  const reason = useFormInput("");
   const [createEntryRequest] = useMutation(EntryRequestCreate);
+  const [isSubmitted, setSubmitted] = useState(false);
+  const [isModalOpen, setModal] = useState(false);
+  const signRef = useRef(null);
+  const [isBtnActive, setClearBtnActive] = useState(false);
 
-  //   we need to create a user and then use their id to log entry
   function handleSubmit() {
+    setSubmitted(!isSubmitted);
     const userData = {
-      name: name.value,
+      name: capitalizeLastName(name.value),
       vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
-      reason: business.value
+      reason: business.value === "Other" ? reason.value : business.value
+      // Todo: We can add the following as a signature, its a 64base String
+      // signature: signRef.current.toDataURL("image/png")
     };
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
-
       // Send them to the wait page
       history.push(`/request_wait/${data.result.entryRequest.id}`);
     });
   }
+
+  useEffect(() => {
+    if (business.value === "Other") {
+      setModal(!isModalOpen);
+    }
+  }, [business.value]);
+
+  function clearSignature() {
+    signRef.current.clear();
+    setClearBtnActive(!isBtnActive);
+  }
+
   return (
     <Fragment>
+      <ReasonInputModal
+        handleClose={() => setModal(!isModalOpen)}
+        open={isModalOpen}
+      >
+        <div className="form-group">
+          <input
+            className="form-control"
+            type="text"
+            {...reason}
+            name="reason"
+            placeholder="Other"
+            required
+          />
+        </div>
+      </ReasonInputModal>
       <Nav navName="New Log" menuButton="cancel" />
       <div className="container">
         <form>
@@ -98,17 +133,40 @@ export default function LogEntry({ history }) {
             </TextField>
           </div>
 
-          <div
-            className={`row justify-content-center align-items-center ${css(
-              styles.linksSection
-            )}`}
-          >
+          {/*
+          // Turn this off until we make sure it's good to go and not going to interfere
+          // with the guards
+          <div className={css(styles.signatureContainer)}>
+            <SignaturePad
+              canvasProps={{ className: css(styles.signaturePad) }}
+              ref={signRef}
+              onEnd={() => setClearBtnActive(!isBtnActive)}
+            />
+          </div>
+          <br />
+
+          {isBtnActive ? (
+            <div className="row justify-content-center align-items-center ">
+              <Button
+                variant="outlined"
+                className={`btn`}
+                onClick={clearSignature}
+              >
+                Clear Signature
+              </Button>
+            </div>
+          ) : null}
+
+          */}
+
+          <div className="row justify-content-center align-items-center ">
             <Button
               variant="contained"
               className={`btn ${css(styles.logButton)}`}
               onClick={handleSubmit}
+              disabled={isSubmitted}
             >
-              Request Entry
+              {isSubmitted ? "Submitting ..." : " Request Entry"}
             </Button>
           </div>
         </form>
@@ -124,6 +182,15 @@ function useFormInput(initialValue) {
   };
   return { value, onChange: handleChange };
 }
+function capitalizeLastName(fullName) {
+  const names = fullName.trim().split(" ");
+  if (!names.length) {
+    return;
+  }
+  return names
+    .map((name, index) => (index === 1 ? name.toUpperCase() : name))
+    .join(" ");
+}
 
 const styles = StyleSheet.create({
   logButton: {
@@ -136,5 +203,15 @@ const styles = StyleSheet.create({
   },
   selectInput: {
     width: "100%"
+  },
+  signatureContainer: {
+    width: "100%",
+    height: "80%",
+    margin: "0 auto",
+    backgroundColor: "#FFFFFF"
+  },
+  signaturePad: {
+    width: "100%",
+    height: "100%"
   }
 });
