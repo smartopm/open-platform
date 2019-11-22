@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import QrReader from "react-qr-reader";
+import { useTranslation } from "react-i18next";
 import {  FormControlLabel, Switch } from "@material-ui/core";
 import Nav from "../components/Nav";
 
@@ -7,6 +8,7 @@ export default function QRScan() {
   const [scanned, setScanned] = useState(false);
   const [error, setError] = useState(null);
   const [isTorchOn, setToggleTorch] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const video = document.querySelector('video');
@@ -83,7 +85,7 @@ export default function QRScan() {
             }} >
               <FormControlLabel
                 control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
-                label="Toggle Torch"
+                label={t("scan.torch")}
               />
             </div>
           </>
