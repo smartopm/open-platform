@@ -71,13 +71,6 @@ function getCurrentUser(client) {
   return client.query({ query: QUERY, fetchPolicy: "no-cache" });
 }
 
-function googleLogUser(user) {
-  if(user) {
-    gtag('set', {'user_id': user.id})
-    gtag('set', 'user_properties', { Role: user.userType });
-  }
-}
-
 // Provider is the default export
 export function AuthStateProvider({ children, token, setToken }) {
   const client = useApolloClient();
@@ -95,7 +88,6 @@ export function AuthStateProvider({ children, token, setToken }) {
     if (token && !state.error) {
       getCurrentUser(client)
         .then(({ data }) => {
-          googleLogUser(data.currentUser)
           setState({
             ...state,
             user: data.currentUser,

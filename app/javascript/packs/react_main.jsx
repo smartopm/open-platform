@@ -2,7 +2,7 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useContext, useState, Component, Suspense } from "react";
+import React, { useContext, useState, useEffect, Component, Suspense } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
@@ -93,6 +93,20 @@ const Analytics = props => {
   const liveAnalytics = (host => {
     return PRIMARY_DOMAINS.includes(host);
   })(window.location.host);
+
+  const authState = useContext(AuthStateContext);
+  
+  useEffect(() => {
+    const user = authState.user
+    if (user) {
+      if (liveAnalytics) {
+        gtag('set', { 'user_id': user.id })
+        gtag('set', 'user_properties', { Role: user.userType });
+      } else {
+        console.log("GA DEVELOPMENT MODE: log user", user)
+      }
+    }
+  },[authState.user])
 
   if (location.pathname !== prevLocation) {
     if (history.action === "PUSH" && typeof gtag === "function") {
