@@ -9,8 +9,6 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: ""
   REDIS_URL: localhost:6379
-  RAILS_MASTER_KEY: aabbccddeeff
-
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
