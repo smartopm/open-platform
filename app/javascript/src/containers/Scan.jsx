@@ -24,7 +24,7 @@ export default function QRScan() {
         // get the active track of the stream
         const track = stream.getVideoTracks()[0];
 
-        video.addEventListener('loadedmetadata', (e) => {
+        video.addEventListener('loadedmetadata', () => {
           window.setTimeout(() => (
             onCapabilitiesReady(track.getCapabilities())
           ), 500);
