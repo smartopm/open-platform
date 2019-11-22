@@ -12,8 +12,8 @@ class DoubleGdpSchema < GraphQL::Schema
     raise GraphQL::ExecutionError, 'Invalid or expired phone token'
   end
 
-  rescue_from(ActiveRecord::RecordNotFound) do |_err, _obj, _args, _ctx, field|
+  rescue_from(ActiveRecord::RecordNotFound) do |err|
     # Raise a graphql-friendly error with a custom message
-    raise GraphQL::ExecutionError, "#{field.type.unwrap.graphql_name} not found"
+    raise GraphQL::ExecutionError, "#{err.model.to_s} not found"
   end
 end

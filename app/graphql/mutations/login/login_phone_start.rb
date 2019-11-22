@@ -10,6 +10,7 @@ module Mutations
 
       def resolve(vals)
         user = ::User.find_via_phone_number(vals[:phone_number])
+        raise ActiveRecord::RecordNotFound.new("User not found", ::User) unless user
         user&.send_phone_token
 
         { user: user }

@@ -137,7 +137,7 @@ const App = () => {
             <Switch>
               <Route path="/welcome" component={WelcomeScreen} />
               <Route path="/login" component={LoginScreen} />
-              <Route path="/code" component={ConfirmCodeScreen} />
+              <Route path="/code/:id" component={ConfirmCodeScreen} />
               <Route path="/l/:id/:code" component={OneTimeLoginCode} />
               <Route path="/logout" component={Logout} />
               <Route path="/google/:token" component={GoogleAuthCallback} />
