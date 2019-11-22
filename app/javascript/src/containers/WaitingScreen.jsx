@@ -49,9 +49,18 @@ function WaitScreen() {
         styles.waitPage
       )}`}
     >
-      <h4 className={css(styles.title)}>Waiting on Approval</h4>
+      <h4 className={css(styles.title)}>Waiting for Approval</h4>
 
       <br />
+
+      <h1 style={{
+        fontSize: "9em",
+        color: "#FFFFFF"
+      }}>{formatTime(timeLeft)}</h1>
+
+      <span style={{
+        color: "#FFFFFF"
+      }}>{timeLeft === 0 && "No Response"}</span>
 
       <div className="col-10 col-sm-10">
         {timeLeft === 0 && (
@@ -64,7 +73,7 @@ function WaitScreen() {
         )}
         {timeLeft > 0 && (
           <h5 className="text-center text-white">
-            Sending request, Wait for {formatTime(timeLeft)} to call Poniso{" "}
+            Please wait, This may take some time
           </h5>
         )}
       </div>
