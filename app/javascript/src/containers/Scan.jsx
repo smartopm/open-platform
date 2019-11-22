@@ -77,12 +77,14 @@ export default function QRScan() {
             />
             {error && <p className="text-center text-danger" >{error}</p>}
 
-            <FormGroup>
+            <div className="row justify-content-center align-items-center " style={{
+              marginTop: 60
+            }} >
               <FormControlLabel
                 control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
                 label="Toggle Torch"
               />
-            </FormGroup>
+            </div>
           </>
         )}
     </div>
