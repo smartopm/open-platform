@@ -30,6 +30,7 @@ import "../src/i18n";
 import Explore from "../src/containers/Explore";
 import { LoginScreen } from "../src/components/AuthScreens/LoginScreen";
 import ConfirmCodeScreen from "../src/components/AuthScreens/ConfirmCodeScreen";
+import OneTimeLoginCode from "../src/components/AuthScreens/OneTimeLoginCode";
 import Support from "../src/containers/Support";
 import GuardHome from "../src/containers/GuardHome";
 import EntryRequest from "../src/containers/EntryRequest";
@@ -37,6 +38,9 @@ import RequestUpdate from "../src/containers/RequestUpdate";
 import WaitScreen from "../src/containers/WaitingScreen";
 import RequestApproval from "../src/containers/RequestApproval";
 import ErrorPage from "../src/components/Error";
+import GoogleAuthCallback from "../src/containers/GoogleAuthCallback";
+
+import {AUTH_TOKEN_KEY} from "../src/utils/apollo"
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -74,6 +78,13 @@ const LoggedInOnly = props => {
   return <Redirect to="/login" />;
 };
 
+const Logout = () => {
+  localStorage.removeItem(AUTH_TOKEN_KEY)
+  const authState = useContext(AuthStateContext);
+  authState.setToken({action: 'delete'})
+  return <Redirect to="/login" />;
+}
+
 const Analytics = props => {
   const gtag = window.gtag;
   const location = useLocation();
@@ -103,11 +114,19 @@ const Analytics = props => {
 
 const App = () => {
   return (
-    <Suspense fallback={<Loading />}>
-      <ApolloProvider>
+    <Suspense fallback={()=> {return <Loading />}}>
+    <ApolloProvider>
+      <Router>
         <AuthStateProvider>
-          <Router>
-            <Analytics>
+          <Analytics>
+            {/* onboarding */}
+            <Switch>
+              <Route path="/welcome" component={WelcomeScreen} />
+              <Route path="/login" component={LoginScreen} />
+              <Route path="/code" component={ConfirmCodeScreen} />
+              <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+              <Route path="/logout" component={Logout} />
+              <Route path="/google/:token" component={GoogleAuthCallback} />
               <LoggedInOnly>
                 <Switch>
                   <Route path="/" exact component={Home} />
@@ -124,10 +143,6 @@ const App = () => {
                   <Route path="/user/:id/edit" exact component={UserEdit} />
                   <Route path="/map" component={Explore} />
                   <Route path="/support" component={Support} />
-                  {/* onboarding */}
-                  <Route path="/welcome" component={WelcomeScreen} />
-                  <Route path="/login_w" component={LoginScreen} />
-                  <Route path="/code" component={ConfirmCodeScreen} />
 
                   {/* new routes => guards */}
                   <Route path="/guard_home" component={GuardHome} />
@@ -145,17 +160,18 @@ const App = () => {
                     component={RequestApproval}
                   />
 
-                  <Route
-                    path="*"
-                    component={() => <ErrorPage title="Sorry Page not Found" />}
-                  />
-                </Switch>
-              </LoggedInOnly>
-            </Analytics>
-          </Router>
-        </AuthStateProvider>
-      </ApolloProvider>
-    </Suspense>
+                <Route
+                  path="*"
+                  component={() => <ErrorPage title="Sorry Page not Found" />}
+                />
+              </Switch>
+            </LoggedInOnly>
+          </Switch>
+        </Analytics>
+      </AuthStateProvider>
+    </Router>
+  </ApolloProvider>
+</Suspense>
   );
 };
 

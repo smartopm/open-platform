@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
-import SignaturePad from "react-signature-canvas";
+//import SignaturePad from "react-signature-canvas";
 import { entryReason } from "../utils/constants";
 import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
@@ -45,7 +45,8 @@ export default function LogEntry({ history }) {
     }
   }, [business.value]);
 
-  function clearSignature() {
+  // Disable this temporarily until it's setup on the server
+  function clearSignature() { // eslint-disable-line no-unused-vars
     signRef.current.clear();
     setClearBtnActive(!isBtnActive);
   }

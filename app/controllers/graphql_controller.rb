@@ -2,6 +2,8 @@
 
 # GraphQL Controller for all queries and mutations
 class GraphqlController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:execute]
+
   def execute
     variables = prep_variables(params[:variables])
     query = params[:query]
@@ -9,7 +11,7 @@ class GraphqlController < ApplicationController
 
     result = DoubleGdpSchema.execute(query,
                                      variables: variables,
-                                     context: auth_context(current_user, request),
+                                     context: auth_context(request),
                                      operation_name: operation_name)
     render json: result
   rescue StandardError => e
@@ -24,10 +26,20 @@ class GraphqlController < ApplicationController
     handle_error_in_development err
   end
 
-  def auth_context(user, _request)
+  def auth_context(request)
+    token = bearer_token(request)
+    return nil unless token
+
+    user = User.find_via_auth_token(token)
     {
       current_user: user,
     }
+  end
+
+  def bearer_token(request)
+    pattern = /^Bearer /
+    header  = request.headers['Authorization']
+    header.gsub(pattern, '') if header&.match(pattern)
   end
 
   def prep_variables(variables)

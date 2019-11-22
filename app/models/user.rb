@@ -186,6 +186,19 @@ class User < ApplicationRecord
     raise PhoneTokenResultInvalid
   end
 
+  def auth_token
+    JWT.encode({ user_id: self[:id] }, Rails.application.credentials.secret_key_base, 'HS256')
+  end
+
+  def self.find_via_auth_token(auth_token)
+    decoded_token = JWT.decode auth_token,
+                               Rails.application.credentials.secret_key_base,
+                               true,
+                               algorithm: 'HS256'
+    payload = decoded_token[0]
+    User.find(payload['user_id'])
+  end
+
   private
 
   def phone_number_valid?
