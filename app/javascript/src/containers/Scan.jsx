@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import QrReader from "react-qr-reader";
-import { Button, FormGroup, FormControlLabel, Switch } from "@material-ui/core";
+import {  FormControlLabel, Switch } from "@material-ui/core";
 import Nav from "../components/Nav";
 
 export default function QRScan() {
   const [scanned, setScanned] = useState(false);
   const [error, setError] = useState(null);
-  const [isTorchOn, setToggleTorch] = useState(true)
+  const [isTorchOn, setToggleTorch] = useState(false)
 
   useEffect(() => {
+    const video = document.querySelector('video');
+
     navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: 'environment',
       }
     })
       .then((stream) => {
-        const video = document.querySelector('video');
         video.srcObject = stream;
 
         // get the active track of the stream
