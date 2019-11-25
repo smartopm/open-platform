@@ -7,15 +7,16 @@ import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
-export default function ConfirmCodeScreen({ match, location }) {
+export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext);
-  const { id } = location.state || match.params;
+  const { id } = match.params;
   const [code, setCode] = useState("");
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   function handleConfirmCode() {
+    console.log(id, code)
     setIsLoading(true);
     loginPhoneComplete({
       variables: { id, token: code }
