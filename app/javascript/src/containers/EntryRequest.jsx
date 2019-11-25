@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
-//import SignaturePad from "react-signature-canvas";
+import SignaturePad from "react-signature-canvas";
 import { entryReason } from "../utils/constants";
 import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
@@ -134,9 +134,6 @@ export default function LogEntry({ history }) {
             </TextField>
           </div>
 
-          {/*
-          // Turn this off until we make sure it's good to go and not going to interfere
-          // with the guards
           <div className={css(styles.signatureContainer)}>
             <SignaturePad
               canvasProps={{ className: css(styles.signaturePad) }}
@@ -157,8 +154,6 @@ export default function LogEntry({ history }) {
               </Button>
             </div>
           ) : null}
-
-          */}
 
           <div className="row justify-content-center align-items-center ">
             <Button
