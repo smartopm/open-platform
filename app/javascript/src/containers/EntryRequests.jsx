@@ -31,7 +31,7 @@ export function IndexComponent({ data }) {
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.phoneNumber}</td>
         <td>{entry.nrc}</td>
-        <td>{entry.vehicle}</td>
+        <td>{entry.vehiclePlate}</td>
         <td>{entry.reason}</td>
         <td>
           {["Pending", "Granted", "Denied"][entry.grantedState] || "Pending"}

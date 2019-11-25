@@ -40,7 +40,7 @@ import RequestApproval from "../src/containers/RequestApproval";
 import ErrorPage from "../src/components/Error";
 import GoogleAuthCallback from "../src/containers/GoogleAuthCallback";
 
-import {AUTH_TOKEN_KEY} from "../src/utils/apollo"
+import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.dgdp.site"];
@@ -81,7 +81,7 @@ const LoggedInOnly = props => {
 const Logout = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY)
   const authState = useContext(AuthStateContext);
-  authState.setToken({action: 'delete'})
+  authState.setToken({ action: 'delete' })
   return <Redirect to="/login" />;
 }
 
@@ -128,64 +128,64 @@ const Analytics = props => {
 
 const App = () => {
   return (
-    <Suspense fallback={()=> {return <Loading />}}>
-    <ApolloProvider>
-      <Router>
-        <AuthStateProvider>
-          <Analytics>
-            {/* onboarding */}
-            <Switch>
-              <Route path="/welcome" component={WelcomeScreen} />
-              <Route path="/login" component={LoginScreen} />
-              <Route path="/code/:id" component={ConfirmCodeScreen} />
-              <Route path="/l/:id/:code" component={OneTimeLoginCode} />
-              <Route path="/logout" component={Logout} />
-              <Route path="/google/:token" component={GoogleAuthCallback} />
-              <LoggedInOnly>
-                <Switch>
-                  <Route path="/" exact component={Home} />
-                  <Route path="/scan" component={Scan} />
-                  <Route path="/search" component={Search} />
-                  <Route path="/id/:id" component={IDCard} />
-                  <Route path="/print/:id" component={IDPrint} />
-                  <Route path="/entry_logs/:userId" component={EntryLogs} />
-                  <Route path="/entry_logs" component={EntryLogs} />
-                  <Route path="/user" exact component={UserEdit} />
-                  <Route path="/user/pending" exact component={PendingUsers} />
-                  <Route path="/user/new" exact component={UserEdit} />
-                  <Route path="/user/:id" exact component={UserShow} />
-                  <Route path="/user/:id/edit" exact component={UserEdit} />
-                  <Route path="/map" component={Explore} />
-                  <Route path="/support" component={Support} />
+    <Suspense fallback={() => { return <Loading /> }}>
+      <ApolloProvider>
+        <Router>
+          <AuthStateProvider>
+            <Analytics>
+              {/* onboarding */}
+              <Switch>
+                <Route path="/welcome" component={WelcomeScreen} />
+                <Route path="/login" component={LoginScreen} />
+                <Route path="/code" component={ConfirmCodeScreen} />
+                <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+                <Route path="/logout" component={Logout} />
+                <Route path="/google/:token" component={GoogleAuthCallback} />
+                <LoggedInOnly>
+                  <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/scan" component={Scan} />
+                    <Route path="/search" component={Search} />
+                    <Route path="/id/:id" component={IDCard} />
+                    <Route path="/print/:id" component={IDPrint} />
+                    <Route path="/entry_logs/:userId" component={EntryLogs} />
+                    <Route path="/entry_logs" component={EntryLogs} />
+                    <Route path="/user" exact component={UserEdit} />
+                    <Route path="/user/pending" exact component={PendingUsers} />
+                    <Route path="/user/new" exact component={UserEdit} />
+                    <Route path="/user/:id" exact component={UserShow} />
+                    <Route path="/user/:id/edit" exact component={UserEdit} />
+                    <Route path="/map" component={Explore} />
+                    <Route path="/support" component={Support} />
 
-                  {/* new routes => guards */}
-                  <Route path="/guard_home" component={GuardHome} />
+                    {/* new routes => guards */}
+                    <Route path="/guard_home" component={GuardHome} />
 
-                  {/* requests */}
-                  <Route path="/entry_request" component={EntryRequest} />
-                  <Route path="/request/:id" component={RequestUpdate} />
-                  <Route path="/request_wait/:id" component={WaitScreen} />
-                  <Route
-                    path="/request_status/:id/edit"
-                    component={RequestApproval}
-                  />
-                  <Route
-                    path="/request_status/:id"
-                    component={RequestApproval}
-                  />
+                    {/* requests */}
+                    <Route path="/entry_request" component={EntryRequest} />
+                    <Route path="/request/:id" component={RequestUpdate} />
+                    <Route path="/request_wait/:id" component={WaitScreen} />
+                    <Route
+                      path="/request_status/:id/edit"
+                      component={RequestApproval}
+                    />
+                    <Route
+                      path="/request_status/:id"
+                      component={RequestApproval}
+                    />
 
-                <Route
-                  path="*"
-                  component={() => <ErrorPage title="Sorry Page not Found" />}
-                />
+                    <Route
+                      path="*"
+                      render={() => <ErrorPage title="Sorry Page not Found" />}
+                    />
+                  </Switch>
+                </LoggedInOnly>
               </Switch>
-            </LoggedInOnly>
-          </Switch>
-        </Analytics>
-      </AuthStateProvider>
-    </Router>
-  </ApolloProvider>
-</Suspense>
+            </Analytics>
+          </AuthStateProvider>
+        </Router>
+      </ApolloProvider>
+    </Suspense>
   );
 };
 

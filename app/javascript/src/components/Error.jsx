@@ -4,22 +4,27 @@ import { css, StyleSheet } from "aphrodite";
 
 export default function ErrorPage({ title }) {
   return (
+
     <div
-      className={`row justify-content-center align-items-center ${css(
+      className={` ${css(
         styles.errorPage
       )}`}
     >
-      <h4 className={`text-center align-items-center ${css(styles.title)}`}>
-        {title}
-      </h4>
-      <br />
-      <div className="col-10 col-sm-10">
-        <Link
-          to="/"
-          className={`btn btn-lg btn-block ${css(styles.callButton)}`}
-        >
-          Home
-        </Link>
+      <div className="container ">
+        <div className="row d-flex justify-content-center">
+          <h4 className={`text-center align-items-center ${css(styles.title)}`}>
+            {title}
+          </h4>
+        </div>
+        <br />
+        <div className="row d-flex justify-content-center" >
+          <Link
+            to="/"
+            className={`btn btn-lg btn-block ${css(styles.callButton)}`}
+          >
+            Home
+            </Link>
+        </div>
       </div>
     </div>
   );
@@ -35,9 +40,12 @@ const styles = StyleSheet.create({
     textTransform: "unset",
     color: "#FFFFFF",
     border: "2px solid black",
-    borderColor: "#FFFFFF"
+    borderColor: "#FFFFFF",
+    marginTop: 250,
+    width: "35%"
   },
   title: {
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+    marginTop: 120
   }
 });

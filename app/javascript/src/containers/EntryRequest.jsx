@@ -104,6 +104,7 @@ export default function LogEntry({ history }) {
               type="text"
               {...phoneNumber}
               name="phoneNumber"
+              type="number"
             />
           </div>
           <div className="form-group">
