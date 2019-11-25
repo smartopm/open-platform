@@ -101,7 +101,6 @@ export default function LogEntry({ history }) {
             </label>
             <input
               className="form-control"
-              type="text"
               {...phoneNumber}
               name="phoneNumber"
               type="number"
