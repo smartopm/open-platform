@@ -99,7 +99,7 @@ export function AuthStateProvider({ children, token, setToken }) {
           setState({ ...state, error: err });
         });
     } else {
-      setState({ ...state, user: null, loaded: true });
+      setState({ ...state, user: null, loaded: true , loggedIn: false});
     }
     // Get query if token changes
   }, [token]);
