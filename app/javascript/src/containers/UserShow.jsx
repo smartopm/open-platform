@@ -142,16 +142,19 @@ export function Component({
                 </Link>
               </div>
             </div>
+
+            { data.user.phoneNumber  ? (
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
                 <a
                   className="btn btn-primary btn-lg btn-block active"
-                  href={`tel:+${authState.user.phoneNumber}`}
+                  href={`tel:+${data.user.phoneNumber}`}
                 >
-                  Call {authState.user.name}
+                  Call {data.user.name}
                 </a>
               </div>
             </div>
+            ):null}
 
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
