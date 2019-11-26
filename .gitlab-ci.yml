@@ -10,7 +10,6 @@ variables:
   POSTGRES_PASSWORD: ""
   REDIS_URL: localhost:6379
 
-
 before_script:
   - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
   - ruby -v

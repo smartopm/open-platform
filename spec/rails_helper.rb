@@ -10,6 +10,7 @@ require 'rspec/rails'
 
 # Require our Factory Bot factories
 require File.expand_path('support/factory_bot.rb', __dir__)
+require File.expand_path('support/controller_spec_helper.rb', __dir__)
 
 require 'devise'
 
@@ -44,6 +45,8 @@ RSpec.configure do |config|
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  config.include ControllerSpecHelper, type: :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
