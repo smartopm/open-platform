@@ -26,7 +26,7 @@ export function LoginScreen({ history }) {
         return data;
       })
       .then(data => {
-        history.push("/code/" + data.loginPhoneStart.user.id );
+        history.push("/code/" + data.loginPhoneStart.user.id);
       })
       .catch(error => {
         setError(error.message);
@@ -40,69 +40,78 @@ export function LoginScreen({ history }) {
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
-      <div
-        className={`row justify-content-center align-items-center ${css(
-          styles.welcomeContainer
-        )}`}
-      >
-        <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
-      </div>
-      <div
-        className={`${css(
-          styles.phoneNumberInput
-        )} row justify-content-center align-items-center`}
-      >
-        <TextField
-          id="input-with-icon-textfield"
-          placeholder="Enter Phone Number"
-          type="number"
-          maxLength={10}
-          autoFocus
-          value={phoneNumber}
-          onChange={e => setPhoneNumber(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <h3 className={css(styles.flag)}>🇿🇲 </h3>
-                <span className={css(styles.countryCode)}>+260</span>
-              </InputAdornment>
-            )
-          }}
-        />
-      </div>
-
-      <div
-        className={`row justify-content-center align-items-center ${css(
-          styles.linksSection
-        )}`}
-      >
-        <Button
-          variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
-          onClick={loginWithPhone}
-          disabled={isLoading}
+      <div className="container">
+        <div
+          className={`row justify-content-center align-items-center ${css(
+            styles.welcomeContainer
+          )}`}
         >
-          {isLoading ? (
-            <CircularProgress size={25} color="inherit" />
-          ) : (
-            <span>Next</span>
-          )}
-        </Button>
-        <br />
-        {error && (
-          <p
-            className=" text-center text-danger"
+          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+        </div>
+        <div
+          className={`${css(
+            styles.phoneNumberInput
+          )} row justify-content-center align-items-center`}
+        >
+          <TextField
+            id="phone"
+            placeholder="Enter Phone Number"
+            type="number"
+            maxLength={10}
+            autoFocus
             style={{
-              margin: 40
+              width: "65%",
             }}
-          >
-            {error}
-          </p>
-        )}
+            value={phoneNumber}
+            onChange={e => setPhoneNumber(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <h3 className={css(styles.flag)}>🇿🇲 </h3>
+                  <span className={css(styles.countryCode)}>+260</span>
+                </InputAdornment>
+              )
+            }}
+          />
+        </div>
 
-        <a className={css(styles.googleLink)} href={"/login_oauth"}>
-          Or Login with Google instead
-        </a>
+        <div
+          className={`row justify-content-center align-items-center ${css(
+            styles.linksSection
+          )}`}
+        >
+          <Button
+            variant="contained"
+            className={`btn ${css(styles.getStartedButton)}`}
+            onClick={loginWithPhone}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <CircularProgress size={25} color="inherit" />
+            ) : (
+                <span>Next</span>
+              )}
+          </Button>
+        </div>
+
+        <br />
+        <div className="row justify-content-center align-items-center">
+          {error && (
+            <p
+              className=" text-center text-danger"
+              style={{
+                margin: 40
+              }}
+            >
+              {error}
+            </p>
+          )}
+        </div>
+        <div className="row justify-content-center align-items-center">
+          <a className={css(styles.googleLink)} href={"/login_oauth"}>
+            Or Login with Google instead
+            </a>
+        </div>
       </div>
     </div>
   );
@@ -112,7 +121,7 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#25c0b0",
     color: "#FFF",
-    width: "75%",
+    width: "55%",
     boxShadow: "none",
     marginTop: 100
   },
@@ -143,11 +152,14 @@ const styles = StyleSheet.create({
     color: "white"
   },
   phoneNumberInput: {
-    marginTop: 50
+    marginTop: 50,
   },
   googleLink: {
     margin: 40,
     marginBottom: 47,
     textDecoration: "none"
+  },
+  "[type='number']": {
+    fontSize: 30
   }
 });
