@@ -21,7 +21,7 @@ export function LoginScreen({ history }) {
   function loginWithPhone() {
     setIsLoading(true);
     loginPhoneStart({
-      variables: { phoneNumber: `260${phoneNumber}` }
+      variables: { phoneNumber: `${countryCode}${phoneNumber}` }
     })
       .then(({ data }) => {
         setIsLoading(false);
@@ -69,8 +69,6 @@ export function LoginScreen({ history }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  {/* <h3 className={css(styles.flag)}>🇿🇲 </h3>
-                  <span className={css(styles.countryCode)}>+260</span> */}
                   <Select
                     native
                     value={countryCode}
@@ -78,12 +76,7 @@ export function LoginScreen({ history }) {
                       width: 85,
                     }}
                     onChange={e => setCountryCode(e.target.value)}
-                    inputProps={{
-                      name: 'age',
-                      id: 'age-native-simple',
-                    }}
                   >
-
                     <option value={260}>🇿🇲 +260</option>
                     <option value={1}>🇺🇸 +1</option>
                   </Select>
