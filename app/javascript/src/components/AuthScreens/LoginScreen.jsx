@@ -3,7 +3,8 @@ import {
   Button,
   TextField,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
+  Select
 } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
@@ -15,6 +16,7 @@ export function LoginScreen({ history }) {
   const [loginPhoneStart] = useMutation(loginPhone);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [countryCode, setCountryCode] = useState(260)
 
   function loginWithPhone() {
     setIsLoading(true);
@@ -67,8 +69,24 @@ export function LoginScreen({ history }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <h3 className={css(styles.flag)}>🇿🇲 </h3>
-                  <span className={css(styles.countryCode)}>+260</span>
+                  {/* <h3 className={css(styles.flag)}>🇿🇲 </h3>
+                  <span className={css(styles.countryCode)}>+260</span> */}
+                  <Select
+                    native
+                    value={countryCode}
+                    style={{
+                      width: 85,
+                    }}
+                    onChange={e => setCountryCode(e.target.value)}
+                    inputProps={{
+                      name: 'age',
+                      id: 'age-native-simple',
+                    }}
+                  >
+
+                    <option value={260}>🇿🇲 +260</option>
+                    <option value={1}>🇺🇸 +1</option>
+                  </Select>
                 </InputAdornment>
               )
             }}
