@@ -159,4 +159,34 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'userSearch')).to be_nil
     end
   end
+  describe 'security guard list' do
+    before :each do
+      @user = create(:security_guard)
+      @security_guard1 = create(:security_guard, community_id: @user.community_id)
+      @security_guard2 = create(:security_guard, community_id: @user.community_id)
+      @security_guard_another_commuinity = create(:security_guard)
+      @current_user = @user
+
+      @query =
+        %(query {
+          securityGuards {
+            id
+            name
+            userType
+          }
+        })
+    end
+
+    it 'returns all security guards logs' do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @current_user,
+                                       }).as_json
+      expect(result.dig('data', 'securityGuards').length).to eql 3
+    end
+
+    it 'should fail if no logged in' do
+      result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
+      expect(result.dig('data', 'securityGuards')).to be_nil
+    end
+  end
 end
