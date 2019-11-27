@@ -33,13 +33,13 @@ export function WelcomeScreen() {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
         >
-          <Link className={css(styles.getStartedLink)} to={"/login_w"}>
+          <Link className={css(styles.getStartedLink)} to={"/login"}>
             Get Started
           </Link>
         </Button>
-        <Link className={`${css(styles.googleLink)} `} to="" variant="body2">
+        <a className={css(styles.googleLink)} href={"/login_oauth"}>
           Or Login with Google instead
-        </Link>
+        </a>
       </div>
     </Container>
   );

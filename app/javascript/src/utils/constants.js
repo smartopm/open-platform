@@ -18,7 +18,7 @@ export const userType = {
 export const userState = {
   valid: "Valid",
   pending: "Pending",
-  banned: "Banned",
+  banned: "Not Allowed",
   expired: "Expired"
 };
 

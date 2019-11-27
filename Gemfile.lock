@@ -386,6 +386,7 @@ DEPENDENCIES
   graphql (~> 1.9)
   graphql-guard
   jbuilder (~> 2.7)
+  jwt
   listen (>= 3.0.5, < 3.2)
   nexmo (~> 5.9)
   omniauth-google-oauth2 (~> 0.8.0)

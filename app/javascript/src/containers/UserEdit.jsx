@@ -9,8 +9,6 @@ import { useApolloClient } from "react-apollo";
 import { UserQuery } from "../graphql/queries";
 import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
 import { ModalDialog } from "../components/Dialog";
-import { Button } from "@material-ui/core";
-import { css, StyleSheet } from "aphrodite";
 
 const initialValues = {
   name: "",
@@ -133,40 +131,8 @@ export default function FormContainer({ match, history }) {
         name={data.name}
       />
       <UserForm />
-
-      {result && result.id ? (
-        <div className="row justify-content-center align-items-center">
-          <Button
-            variant="contained"
-            onClick={() => handleModal("grant")}
-            className={`btn ${css(styles.grantButton)}`}
-          >
-            Grant
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => handleModal("deny")}
-            className={`btn  ${css(styles.denyButton)}`}
-          >
-            Deny
-          </Button>
-        </div>
-      ) : null}
     </FormContext.Provider>
   );
 }
 
 FormContainer.displayName = "UserForm";
-const styles = StyleSheet.create({
-  grantButton: {
-    backgroundColor: "#25c0b0",
-    color: "#FFF",
-    marginRight: 60,
-    width: "35%"
-  },
-  denyButton: {
-    backgroundColor: "rgb(230, 63, 69)",
-    color: "#FFF",
-    width: "35%"
-  }
-});

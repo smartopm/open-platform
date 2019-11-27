@@ -45,7 +45,8 @@ export default function LogEntry({ history }) {
     }
   }, [business.value]);
 
-  function clearSignature() {
+  // Disable this temporarily until it's setup on the server
+  function clearSignature() { // eslint-disable-line no-unused-vars
     signRef.current.clear();
     setClearBtnActive(!isBtnActive);
   }
@@ -100,9 +101,9 @@ export default function LogEntry({ history }) {
             </label>
             <input
               className="form-control"
-              type="text"
               {...phoneNumber}
               name="phoneNumber"
+              type="number"
             />
           </div>
           <div className="form-group">
@@ -133,9 +134,6 @@ export default function LogEntry({ history }) {
             </TextField>
           </div>
 
-          {/*
-          // Turn this off until we make sure it's good to go and not going to interfere
-          // with the guards
           <div className={css(styles.signatureContainer)}>
             <SignaturePad
               canvasProps={{ className: css(styles.signaturePad) }}
@@ -156,8 +154,6 @@ export default function LogEntry({ history }) {
               </Button>
             </div>
           ) : null}
-
-          */}
 
           <div className="row justify-content-center align-items-center ">
             <Button

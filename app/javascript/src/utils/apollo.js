@@ -15,16 +15,22 @@ export const createCache = () => {
   return cache;
 };
 
+export const AUTH_TOKEN_KEY = 'dgdp_auth_token'
+
 // getToken from meta tags
-const getToken = () =>
-  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const token = getToken();
-const setTokenForOperation = async operation =>
-  operation.setContext({
-    headers: {
-      'X-CSRF-Token': token,
-    },
-  });
+const getAuthToken = () =>
+  window.localStorage.getItem(AUTH_TOKEN_KEY)
+
+const setTokenForOperation = async operation => {
+  const authToken = getAuthToken()
+  if (authToken) {
+    operation.setContext({
+      headers: {
+        authorization: authToken ? `Bearer ${authToken}` : "",
+      },
+    });
+  }
+}
 
 // link with token
 const createLinkWithToken = () =>
@@ -71,8 +77,8 @@ const createHttpLink = () => new HttpLink({
 export const createClient = (cache) => {
   return new ApolloClient({
     link: ApolloLink.from([
-      createErrorLink(),
       createLinkWithToken(),
+      createErrorLink(),
       createHttpLink(),
     ]),
     cache,
