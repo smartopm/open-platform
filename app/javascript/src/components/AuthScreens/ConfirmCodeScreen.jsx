@@ -16,13 +16,12 @@ export default function ConfirmCodeScreen({ match }) {
   const [isLoading, setIsLoading] = useState(false);
 
   function handleConfirmCode() {
-    console.log(id, code)
     setIsLoading(true);
     loginPhoneComplete({
       variables: { id, token: code }
     })
       .then(({ data }) => {
-        authState.setToken({type:'update', token: data.loginPhoneComplete.authToken})
+        authState.setToken({ type: 'update', token: data.loginPhoneComplete.authToken })
       })
       .catch(error => {
         setError(error.message);
@@ -42,14 +41,15 @@ export default function ConfirmCodeScreen({ match }) {
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
-      <div
-        className={`row justify-content-center align-items-center ${css(
-          styles.welcomeContainer
-        )}`}
-      >
-        <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
-
-        <div className="container ">
+      <div className="container ">
+        <div
+          className={`row justify-content-center align-items-center ${css(
+            styles.welcomeContainer
+          )}`}
+        >
+          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+        </div>
+        <div className="row justify-content-center align-items-center">
           <div className={css(styles.phoneCodeInput)}>
             <TextField
               id="outlined-basic"
@@ -63,35 +63,37 @@ export default function ConfirmCodeScreen({ match }) {
             />
           </div>
         </div>
-      </div>
-      <br />
-      {error && (
-        <p
-          className=" text-center text-danger"
-          style={{
-            margin: 40
-          }}
-        >
-          {error}
-        </p>
-      )}
-      <div
-        className={`row justify-content-center align-items-center ${css(
-          styles.linksSection
-        )}`}
-      >
-        <Button
-          variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
-          onClick={handleConfirmCode}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <CircularProgress size={25} color="inherit" />
-          ) : (
-            <span>Verify</span>
+        <div className="row">
+          <br />
+          {error && (
+            <p
+              className="text-center text-danger"
+              style={{
+                margin: 40
+              }}
+            >
+              {error}
+            </p>
           )}
-        </Button>
+        </div>
+        <div
+          className={`row justify-content-center align-items-center ${css(
+            styles.linksSection
+          )}`}
+        >
+          <Button
+            variant="contained"
+            className={`btn ${css(styles.getStartedButton)}`}
+            onClick={handleConfirmCode}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <CircularProgress size={25} color="inherit" />
+            ) : (
+                <span>Verify</span>
+              )}
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -101,9 +103,9 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#25c0b0",
     color: "#FFF",
-    width: "75%",
+    width: "55%",
     boxShadow: "none",
-    marginTop: 100
+    marginTop: 80
   },
   getStartedLink: {
     textDecoration: "none",
