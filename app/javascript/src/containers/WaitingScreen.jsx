@@ -52,6 +52,7 @@ function WaitScreen() {
       <h4 className={css(styles.title)}>Waiting for Approval</h4>
 
       <br />
+      <h1 className={css(styles.clockStyles)}>{formatTime(timeLeft)}</h1>
 
       <h1 style={{
         fontSize: "9em",
@@ -162,6 +163,10 @@ const styles = StyleSheet.create({
     height: "100vh"
   },
   title: {
+    color: "#FFFFFF"
+  },
+  clockStyles: {
+    fontSize: "7em",
     color: "#FFFFFF"
   }
 });

@@ -20,7 +20,7 @@ export default function StatusBadge({ label }) {
       );
     case "banned":
       return (
-        <p className={css(styles.badge, styles.statusBadgeBanned)}>{label}</p>
+        <p className={css(styles.badge, styles.statusBadgeBanned)}>{"Not Allowed"}</p>
       );
     default:
       return <p className={css(styles.statusBadgePending)}>{label}</p>;
