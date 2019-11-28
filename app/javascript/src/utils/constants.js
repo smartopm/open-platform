@@ -18,7 +18,7 @@ export const userType = {
 export const userState = {
   valid: "Valid",
   pending: "Pending",
-  banned: "Banned",
+  banned: "Not Allowed",
   expired: "Expired"
 };
 
@@ -27,7 +27,8 @@ export const entryReason = [
   "Prospective Client",
   "Working",
   "Sales",
-  "Passing through"
+  "Passing through",
+  "Other"
 ];
 
 export const ponisoNumber = "+260976064298";

@@ -1,49 +1,99 @@
-import React from "react";
-import { Button, TextField } from "@material-ui/core";
+import React, { useState, useContext } from "react";
+import { Redirect } from "react-router-dom";
+import { Button, TextField, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
+import { useMutation } from "react-apollo";
+import { loginPhoneConfirmCode } from "../../graphql/mutations";
+import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
-export default function ConfirmCodeScreen() {
+export default function ConfirmCodeScreen({ match }) {
+  const authState = useContext(AuthStateContext);
+  const { id } = match.params;
+  const [code, setCode] = useState("");
+  const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleConfirmCode() {
+    setIsLoading(true);
+    loginPhoneComplete({
+      variables: { id, token: code }
+    })
+      .then(({ data }) => {
+        authState.setToken({ type: 'update', token: data.loginPhoneComplete.authToken })
+      })
+      .catch(error => {
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }
+
+  // Redirect once our authState.setToken does it's job
+  if (authState.loggedIn) {
+    return <Redirect to='/' />
+  }
+
   return (
     <div style={{ height: "100vh" }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={"/login_w"}>
+        <Link to={"/login"}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
-      <div
-        className={`row justify-content-center align-items-center ${css(
-          styles.welcomeContainer
-        )}`}
-      >
-        <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
-
-        <div className="container ">
-          <div className={css(styles.phoneNumberInput)}>
+      <div className="container ">
+        <div
+          className={`row justify-content-center align-items-center ${css(
+            styles.welcomeContainer
+          )}`}
+        >
+          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+        </div>
+        <div className="row justify-content-center align-items-center">
+          <div className={css(styles.phoneCodeInput)}>
             <TextField
               id="outlined-basic"
               margin="normal"
               variant="outlined"
               autoFocus
               type="number"
+              value={code}
+              onChange={e => setCode(e.target.value)}
               placeholder="Confirmation code"
             />
           </div>
         </div>
-      </div>
-      <div
-        className={`row justify-content-center align-items-center ${css(
-          styles.linksSection
-        )}`}
-      >
-        <Button
-          variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
+        <div className="row">
+          <br />
+          {error && (
+            <p
+              className="text-center text-danger"
+              style={{
+                margin: 40
+              }}
+            >
+              {error}
+            </p>
+          )}
+        </div>
+        <div
+          className={`row justify-content-center align-items-center ${css(
+            styles.linksSection
+          )}`}
         >
-          <Link className={css(styles.getStartedLink)} to={"/"}>
-            Next
-          </Link>
-        </Button>
+          <Button
+            variant="contained"
+            className={`btn ${css(styles.getStartedButton)}`}
+            onClick={handleConfirmCode}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <CircularProgress size={25} color="inherit" />
+            ) : (
+                <span>Verify</span>
+              )}
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -53,9 +103,9 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#25c0b0",
     color: "#FFF",
-    width: "75%",
+    width: "55%",
     boxShadow: "none",
-    marginTop: 100
+    marginTop: 80
   },
   getStartedLink: {
     textDecoration: "none",
@@ -87,7 +137,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white"
   },
-  phoneNumberInput: {
+  phoneCodeInput: {
     marginTop: 50
   }
 });

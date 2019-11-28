@@ -1,9 +1,15 @@
-version: "3"
+version: "2"
 services:
   postgres:
     image: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+  redis:
+    image: redis
+    expose:
+      - "6379"
   rails:
     build:
       context: .
@@ -17,11 +23,13 @@ services:
     ports:
       - 3000:3000
     depends_on:
+      - redis
       - postgres
       - webpacker
   webpacker:
     image: doublegdp_rails:latest
     command: bash -c "rm -rf ./public/packs; ./bin/webpack-dev-server"
+    cpu_shares: 75
     env_file:
       - '.env.docker'
     volumes:
@@ -30,7 +38,7 @@ services:
       - 3035:3035
   rails_worker:
     image: doublegdp_rails:latest
-    command: bash -c "bundle exec shoryuken -R"
+    command: bash -c "bundle exec sidekiq"
     env_file:
       - '.env.docker'
     volumes:

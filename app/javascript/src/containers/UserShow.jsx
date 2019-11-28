@@ -102,20 +102,20 @@ export function Component({
         </div>
 
         {data.user.state === "valid" &&
-        authState.user.userType === "security_guard" ? (
-          <div className="row justify-content-center log-entry-form">
-            <div className="col-10 col-sm-10 col-md-6">
-              <a
-                className={`btn btn-primary btn-lg btn-block active ${css(
-                  styles.logButton
-                )}`}
-                onClick={onLogEntry}
-              >
-                Log This Entry
+          authState.user.userType === "security_guard" ? (
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
+                <a
+                  className={`btn btn-primary btn-lg btn-block active ${css(
+                    styles.logButton
+                  )}`}
+                  onClick={onLogEntry}
+                >
+                  Log This Entry
               </a>
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
         {authState.user.userType === "security_guard" ? (
           <div className="row justify-content-center log-entry-form">
             <div className="col-10 col-sm-10 col-md-6">
@@ -142,6 +142,20 @@ export function Component({
                 </Link>
               </div>
             </div>
+
+            {data.user.phoneNumber ? (
+              <div className="row justify-content-center log-entry-form">
+                <div className="col-10 col-sm-10 col-md-6">
+                  <a
+                    className="btn btn-primary btn-lg btn-block active"
+                    href={`tel:+${data.user.phoneNumber}`}
+                  >
+                    Call {data.user.name}
+                  </a>
+                </div>
+              </div>
+            ) : null}
+
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
                 <Link

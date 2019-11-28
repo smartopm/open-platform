@@ -110,5 +110,19 @@ module Types
     def entry_requests
       EntryRequest.where(community_id: context[:current_user].community_id)
     end
+
+    # Get a list of guards
+    field :security_guards, [UserType], null: true do
+      description 'Get a list of security guards for a community'
+    end
+
+    def security_guards
+      return unless context[:current_user]
+
+      User.where(
+        community_id: context[:current_user].community_id,
+        user_type: 'security_guard',
+      )
+    end
   end
 end

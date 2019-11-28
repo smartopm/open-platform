@@ -9,5 +9,8 @@
     "entry_logs": "Entry Logs",
     "log_entry": "Manual",
     "scan": "Scan"
+  },
+  "scan": {
+    "torch": "Toggle Torch"
   }
 }
