@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { Button, TextField, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
@@ -14,6 +14,12 @@ export default function ConfirmCodeScreen({ match }) {
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const inputEl1 = useRef()
+  const inputEl2 = useRef()
+  const inputEl3 = useRef()
+  const inputEl4 = useRef()
+  const inputEl5 = useRef()
+  const inputEl6 = useRef()
 
   function handleConfirmCode() {
     setIsLoading(true);
@@ -34,6 +40,7 @@ export default function ConfirmCodeScreen({ match }) {
     return <Redirect to='/' />
   }
 
+
   return (
     <div style={{ height: "100vh" }}>
       <nav className={`${css(styles.navBar)} navbar`}>
@@ -49,19 +56,60 @@ export default function ConfirmCodeScreen({ match }) {
         >
           <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
         </div>
+        <br />
+        <br />
         <div className="row justify-content-center align-items-center">
-          <div className={css(styles.phoneCodeInput)}>
-            <TextField
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
-              autoFocus
-              type="number"
-              value={code}
-              onChange={e => setCode(e.target.value)}
-              placeholder="Confirmation code"
-            />
-          </div>
+          <input
+            name="val"
+            maxLength="1"
+            type="tel"
+            autoFocus
+            ref={inputEl1}
+            className={css(styles.newInput)}
+            onChange={() => inputEl2.current.focus()}
+
+          />
+          <input
+            name="val2"
+            maxLength="1"
+            type="tel"
+            ref={inputEl2}
+            className={css(styles.newInput)}
+            onChange={() => inputEl3.current.focus()}
+
+          />
+          <input
+            name="val"
+            maxLength="1"
+            type="tel"
+            ref={inputEl3}
+            className={css(styles.newInput)}
+            onChange={() => inputEl4.current.focus()}
+          />
+          <input
+            name="val"
+            maxLength="1"
+            type="tel"
+            ref={inputEl4}
+            className={css(styles.newInput)}
+            onChange={() => inputEl5.current.focus()}
+          />
+          <input
+            name="val"
+            maxLength="1"
+            type="tel"
+            ref={inputEl5}
+            className={css(styles.newInput)}
+            onChange={() => inputEl6.current.focus()}
+
+          />
+          <input
+            name="val"
+            maxLength="1"
+            type="tel"
+            ref={inputEl6}
+            className={css(styles.newInput)}
+          />
         </div>
         <div className="row">
           <br />
@@ -98,6 +146,8 @@ export default function ConfirmCodeScreen({ match }) {
     </div>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   getStartedButton: {
@@ -139,5 +189,19 @@ const styles = StyleSheet.create({
   },
   phoneCodeInput: {
     marginTop: 50
+  },
+  newInput: {
+    width: 50,
+    height: 60,
+    fontSize: 20,
+    textAlign: "center",
+    border: '2px solid #1C6EA4',
+    borderRadius: 5,
+    borderTop: "none",
+    borderRight: "none",
+    borderLeft: "none",
+    // padding: 20,
+    margin: 9,
+    paddingRight: 10,
   }
 });
