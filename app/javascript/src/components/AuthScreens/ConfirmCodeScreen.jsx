@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect, createRef } from "react";
 import { Redirect } from "react-router-dom";
-import { Button, TextField, CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
@@ -13,27 +13,32 @@ const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext);
   const { id } = match.params;
-  const [code, setCode] = useState("");
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-
+  // generate refs to use later
   const elementsRef = useRef(randomCodeData.map(() => createRef()));
 
-
   useEffect(() => {
+    // force focus to just be on the first element
     elementsRef.current[1].current.focus()
   }, [elementsRef.current])
 
   function handleConfirmCode() {
     setIsLoading(true);
-    // console.log(elementsRef.current[3].current.value)
-    let arr = []
-    randomCodeData.map((index) => {
-      arr.push(elementsRef.current[index].current.value)
-      console.log(arr.join(""))
-    })
+
+    // Todo: Find more efficient way of getting values from the input
+    const code1 = elementsRef.current[1].current.value
+    const code2 = elementsRef.current[2].current.value
+    const code3 = elementsRef.current[3].current.value
+    const code4 = elementsRef.current[4].current.value
+    const code5 = elementsRef.current[5].current.value
+    const code6 = elementsRef.current[6].current.value
+
+    // Todo: refactor this 
+    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`
+
     loginPhoneComplete({
       variables: { id, token: code }
     })
@@ -50,7 +55,6 @@ export default function ConfirmCodeScreen({ match }) {
   if (authState.loggedIn) {
     return <Redirect to='/' />
   }
-
 
   return (
     <div style={{ height: "100vh" }}>
@@ -82,12 +86,13 @@ export default function ConfirmCodeScreen({ match }) {
                 ref={elementsRef.current[item]}
                 className={css(styles.newInput)}
                 onChange={() => elementsRef.current[item + 1].current.focus()}
+                // hide the seventh input for the next ref to work [6]
                 hidden={item === 7 && true}
               />
             ))
           }
         </div>
-        <div className="row">
+        <div className="row justify-content-center align-items-center">
           <br />
           {error && (
             <p
