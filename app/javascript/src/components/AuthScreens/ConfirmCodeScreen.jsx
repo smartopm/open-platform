@@ -18,12 +18,13 @@ export default function ConfirmCodeScreen({ match }) {
   const [isLoading, setIsLoading] = useState(false);
 
   // generate refs to use later
-  const elementsRef = useRef(randomCodeData.map(() => createRef()));
+  let elementsRef = useRef(randomCodeData.map(() => createRef()));
+  const inputRef = useRef(null)
 
   useEffect(() => {
     // force focus to just be on the first element
     elementsRef.current[1].current.focus()
-  }, [elementsRef.current])
+  })
 
   function handleConfirmCode() {
     setIsLoading(true);
@@ -53,6 +54,7 @@ export default function ConfirmCodeScreen({ match }) {
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
+    // window.location.href = "/"
     return <Redirect to='/' />
   }
 
@@ -85,13 +87,14 @@ export default function ConfirmCodeScreen({ match }) {
                 autoFocus
                 ref={elementsRef.current[item]}
                 className={css(styles.newInput)}
-                onChange={() => elementsRef.current[item + 1].current.focus()}
+                onChange={() => item < 6 ? elementsRef.current[item + 1].current.focus() : inputRef.current.click()}
                 // hide the seventh input for the next ref to work [6]
                 hidden={item === 7 && true}
               />
             ))
           }
         </div>
+
         <div className="row justify-content-center align-items-center">
           <br />
           {error && (
@@ -114,6 +117,7 @@ export default function ConfirmCodeScreen({ match }) {
             variant="contained"
             className={`btn ${css(styles.getStartedButton)}`}
             onClick={handleConfirmCode}
+            ref={inputRef}
             disabled={isLoading}
           >
             {isLoading ? (
