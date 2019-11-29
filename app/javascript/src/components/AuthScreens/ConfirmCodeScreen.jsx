@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext, useRef, useEffect, createRef } from "react";
 import { Redirect } from "react-router-dom";
 import { Button, TextField, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
@@ -7,6 +7,9 @@ import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
+
+const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
+
 export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext);
   const { id } = match.params;
@@ -14,15 +17,23 @@ export default function ConfirmCodeScreen({ match }) {
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const inputEl1 = useRef()
-  const inputEl2 = useRef()
-  const inputEl3 = useRef()
-  const inputEl4 = useRef()
-  const inputEl5 = useRef()
-  const inputEl6 = useRef()
+
+
+  const elementsRef = useRef(randomCodeData.map(() => createRef()));
+
+
+  useEffect(() => {
+    elementsRef.current[1].current.focus()
+  }, [elementsRef.current])
 
   function handleConfirmCode() {
     setIsLoading(true);
+    // console.log(elementsRef.current[3].current.value)
+    let arr = []
+    randomCodeData.map((index) => {
+      arr.push(elementsRef.current[index].current.value)
+      console.log(arr.join(""))
+    })
     loginPhoneComplete({
       variables: { id, token: code }
     })
@@ -59,57 +70,22 @@ export default function ConfirmCodeScreen({ match }) {
         <br />
         <br />
         <div className="row justify-content-center align-items-center">
-          <input
-            name="val"
-            maxLength="1"
-            type="tel"
-            autoFocus
-            ref={inputEl1}
-            className={css(styles.newInput)}
-            onChange={() => inputEl2.current.focus()}
 
-          />
-          <input
-            name="val2"
-            maxLength="1"
-            type="tel"
-            ref={inputEl2}
-            className={css(styles.newInput)}
-            onChange={() => inputEl3.current.focus()}
-
-          />
-          <input
-            name="val"
-            maxLength="1"
-            type="tel"
-            ref={inputEl3}
-            className={css(styles.newInput)}
-            onChange={() => inputEl4.current.focus()}
-          />
-          <input
-            name="val"
-            maxLength="1"
-            type="tel"
-            ref={inputEl4}
-            className={css(styles.newInput)}
-            onChange={() => inputEl5.current.focus()}
-          />
-          <input
-            name="val"
-            maxLength="1"
-            type="tel"
-            ref={inputEl5}
-            className={css(styles.newInput)}
-            onChange={() => inputEl6.current.focus()}
-
-          />
-          <input
-            name="val"
-            maxLength="1"
-            type="tel"
-            ref={inputEl6}
-            className={css(styles.newInput)}
-          />
+          {
+            randomCodeData.map(item => (
+              <input
+                key={item}
+                name={`code${item}`}
+                maxLength="1"
+                type="tel"
+                autoFocus
+                ref={elementsRef.current[item]}
+                className={css(styles.newInput)}
+                onChange={() => elementsRef.current[item + 1].current.focus()}
+                hidden={item === 7 && true}
+              />
+            ))
+          }
         </div>
         <div className="row">
           <br />
