@@ -65,3 +65,13 @@ export const EntryLogsQuery = gql`
     }
   }
 `;
+
+export const AllSecurityGuards = gql`
+  {
+    securityGuards{
+      id
+      name
+      phoneNumber
+    }
+  }
+`;
