@@ -48,7 +48,11 @@ export function LoginScreen({ history }) {
             styles.welcomeContainer
           )}`}
         >
-          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+          <h4
+            className={css(styles.welcomeText)}
+          >
+            Welcome to Nkwashi App
+          </h4>
         </div>
         <div
           className={`${css(
@@ -58,7 +62,7 @@ export function LoginScreen({ history }) {
           <TextField
             id="phone"
             placeholder="Enter Phone Number"
-            type="number"
+            type="tel"
             maxLength={10}
             autoFocus
             style={{
@@ -85,7 +89,15 @@ export function LoginScreen({ history }) {
             }}
           />
         </div>
-
+        <br />
+        <br />
+        {error && (
+          <p
+            className=" text-center text-danger"
+          >
+            {error}
+          </p>
+        )}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
@@ -105,19 +117,8 @@ export function LoginScreen({ history }) {
           </Button>
         </div>
 
-        <br />
-        <div className="row justify-content-center align-items-center">
-          {error && (
-            <p
-              className=" text-center text-danger"
-              style={{
-                margin: 40
-              }}
-            >
-              {error}
-            </p>
-          )}
-        </div>
+
+
         <div className="row justify-content-center align-items-center">
           <a className={css(styles.googleLink)} href={"/login_oauth"}>
             Or Login with Google instead
@@ -133,11 +134,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "55%",
+    height: 51,
     boxShadow: "none",
     marginTop: 100
   },
   linksSection: {
-    marginTop: 40
+    marginTop: 20
   },
   navBar: {
     boxShadow: "none",
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
   welcomeText: {
     marginTop: 33,
     color: "#1f2026",
-    fontSize: 18
+    // fontSize: "1.3em",
   },
   flag: {
     display: "inline-block",
