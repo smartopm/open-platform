@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "55%",
+    height: 51,
     boxShadow: "none",
     marginTop: 80
   },
