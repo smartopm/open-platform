@@ -37,9 +37,7 @@ export function WelcomeScreen({ history }) {
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/push")}
         >
-          {/* <Link className={css(styles.getStartedLink)} to={"/login"}> */}
           Get Started
-          {/* </Link> */}
         </Button>
         <a className={css(styles.googleLink)} href={"/login_oauth"}>
           Or Login with Google instead
