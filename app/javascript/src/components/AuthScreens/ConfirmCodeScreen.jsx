@@ -19,7 +19,7 @@ export default function ConfirmCodeScreen({ match }) {
 
   // generate refs to use later
   let elementsRef = useRef(randomCodeData.map(() => createRef()));
-  const inputRef = useRef(null)
+  const submitRef = useRef(null)
 
   useEffect(() => {
     // force focus to just be on the first element
@@ -90,7 +90,7 @@ export default function ConfirmCodeScreen({ match }) {
                 autoFocus
                 ref={elementsRef.current[item]}
                 className={css(styles.newInput)}
-                onChange={() => item < 6 ? elementsRef.current[item + 1].current.focus() : inputRef.current.click()}
+                onChange={() => item < 6 ? elementsRef.current[item + 1].current.focus() : submitRef.current.click()}
                 // hide the seventh input for the next ref to work [6]
                 hidden={item === 7 && true}
               />
@@ -98,19 +98,15 @@ export default function ConfirmCodeScreen({ match }) {
           }
         </div>
 
-        <div className="row justify-content-center align-items-center">
-          <br />
-          {error && (
-            <p
-              className="text-center text-danger"
-              style={{
-                margin: 40
-              }}
-            >
-              {error}
-            </p>
-          )}
-        </div>
+        <br />
+        <br />
+        {error && (
+          <p
+            className="text-center text-danger"
+          >
+            {error}
+          </p>
+        )}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
@@ -120,7 +116,7 @@ export default function ConfirmCodeScreen({ match }) {
             variant="contained"
             className={`btn ${css(styles.getStartedButton)}`}
             onClick={handleConfirmCode}
-            ref={inputRef}
+            ref={submitRef}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -151,7 +147,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   linksSection: {
-    marginTop: 40
+    marginTop: 20
   },
   navBar: {
     boxShadow: "none",
