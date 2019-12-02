@@ -126,7 +126,7 @@ export default function ConfirmCodeScreen({ match }) {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Verify</span>
+                <span>Next</span>
               )}
           </Button>
         </div>
@@ -181,15 +181,15 @@ const styles = StyleSheet.create({
   newInput: {
     width: 50,
     height: 60,
-    fontSize: 20,
+    fontSize: 27,
     textAlign: "center",
-    border: '2px solid #1C6EA4',
-    borderRadius: 5,
+    border: '2px solid #5189dd',
+    borderRadius: 2,
     borderTop: "none",
     borderRight: "none",
     borderLeft: "none",
     // padding: 20,
     margin: 9,
-    paddingRight: 10,
+    // paddingRight: 13,
   }
 });
