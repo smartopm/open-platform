@@ -84,7 +84,7 @@ export default function GuardHome() {
                 <Link to={`/entry_logs`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <LogEntryIcon className={css(styles.homeIconColor)} />
+                      <LogEntryIcon className={css(styles.homeIconColor)} fontSize="large" />
                     </h5>
                     <p>{t("home.entry_logs")}</p>
                   </div>
@@ -99,7 +99,7 @@ export default function GuardHome() {
                 <a href={`tel:${ponisoNumber}`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <CallIcon className={css(styles.homeIconColor)} />
+                      <CallIcon className={css(styles.homeIconColor)} fontSize="large" />
                     </h5>
                     Call Poniso
                   </div>
