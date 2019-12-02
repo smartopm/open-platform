@@ -23,8 +23,11 @@ export default function ConfirmCodeScreen({ match }) {
 
   useEffect(() => {
     // force focus to just be on the first element
-    elementsRef.current[1].current.focus()
-  })
+    // check if the refs are not null to avoid breaking the app
+    if (elementsRef.current[1].current) {
+      elementsRef.current[1].current.focus()
+    }
+  }, [])
 
   function handleConfirmCode() {
     setIsLoading(true);
@@ -45,6 +48,7 @@ export default function ConfirmCodeScreen({ match }) {
     })
       .then(({ data }) => {
         authState.setToken({ type: 'update', token: data.loginPhoneComplete.authToken })
+        setIsLoading(true);
       })
       .catch(error => {
         setError(error.message);
@@ -54,7 +58,6 @@ export default function ConfirmCodeScreen({ match }) {
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    // window.location.href = "/"
     return <Redirect to='/' />
   }
 
