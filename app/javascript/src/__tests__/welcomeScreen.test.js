@@ -4,7 +4,6 @@ import { WelcomeScreen } from "../components/AuthScreens/WelcomeScreen";
 
 describe("Welcome screen ", () => {
   const welcomeWrapper = shallow(<WelcomeScreen />);
-  const mockImage = "https://host.com/image.jpg";
   const mainTitle = "Welcome to Nkwashi App";
   it("should have a proper title", () => {
     expect(welcomeWrapper.text()).toContain(mainTitle);
