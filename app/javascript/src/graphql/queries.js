@@ -66,6 +66,24 @@ export const EntryLogsQuery = gql`
   }
 `;
 
+export const AllEventLogsQuery = gql`
+  query AllEventLogs($subject: String, $refId: ID, $refType: String){
+    result: allEventLogs(subject: $subject, refId: $refId, refType:$refType) {
+      id
+      createdAt
+      refId
+      refType
+      subject
+      sentence
+      data
+      actingUser {
+        name
+        id
+      }
+    }
+  }
+`;
+
 export const AllSecurityGuards = gql`
   {
     securityGuards{

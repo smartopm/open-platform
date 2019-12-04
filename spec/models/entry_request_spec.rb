@@ -15,6 +15,7 @@ RSpec.describe EntryRequest, type: :model do
                                                     name: 'Visitor Joe', nrc: '012345')
       expect(@entry_request.community_id).to eql @guard.community_id
       expect(@entry_request.pending?).to be true
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
     it 'should handle an admin granting a request' do
