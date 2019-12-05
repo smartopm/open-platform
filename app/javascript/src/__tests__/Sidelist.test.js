@@ -8,7 +8,6 @@ describe("Sidelist component", () => {
     user: {}
   };
   const sideListWrapper = shallow(<SideList {...sideProps} />);
-  // MuiList-root
 
   it("should contain required list ", () => {
     const { children } = sideListWrapper.props();

@@ -188,6 +188,7 @@ function capitalizeLastName(fullName) {
     .join(" ");
 }
 
+
 const styles = StyleSheet.create({
   logButton: {
     backgroundColor: "#25c0b0",

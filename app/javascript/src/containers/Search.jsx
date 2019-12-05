@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useLazyQuery } from "react-apollo";
 import gql from "graphql-tag";
@@ -10,6 +10,7 @@ import Avatar from "../components/Avatar.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 import { Button } from "@material-ui/core";
 import ErrorPage from "../components/Error.jsx";
+import { Context } from "./Provider/AuthStateProvider.js";
 
 const QUERY = gql`
   query UserSearch($name: String!) {
@@ -41,6 +42,7 @@ function NewRequestButton() {
 }
 
 function Results({ data, loading, called }) {
+  const authState = useContext(Context)
   function memberList(users) {
     return (
       <Fragment>
@@ -76,11 +78,15 @@ function Results({ data, loading, called }) {
         {data.userSearch.length > 0 ? (
           memberList(data.userSearch)
         ) : (
-          <div className={`${css(styles.noResults)}`}>
-            <h4>No results found!</h4>
-          </div>
-        )}
-        <NewRequestButton />
+            <div className={`${css(styles.noResults)}`}>
+              <h4>No results found!</h4>
+            </div>
+          )}
+        {/* only show this when the user is admin */}
+        {
+          authState.user.userType === "admin" && <NewRequestButton />
+        }
+
       </div>
     );
   }

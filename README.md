@@ -44,7 +44,7 @@ be decrypted by running `./bin/cert_setup.sh`
 
 The site is now available as https://dev.dgdp.site and https://localhost
 
-dev.dgdp.site points to 127.0.0.1, if you're development server is somewhere else
+dev.dgdp.site points to 127.0.0.1, if your development server is somewhere else
 please update /etc/hosts to point dev.dgdp.site to the appropriate IP address.
 
 ### Updating gems or node_modules

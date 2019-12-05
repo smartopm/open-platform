@@ -49,21 +49,18 @@ function WaitScreen() {
         styles.waitPage
       )}`}
     >
-      <h4 className={css(styles.title)}>Waiting for Approval</h4>
-
+      <h4 className={`${css(styles.title)} text-center col-sm-12 `}>Waiting for Approval</h4>
       <br />
-      <h1 className={css(styles.clockStyles)}>{formatTime(timeLeft)}</h1>
+      <br />
+      <br />
 
-      <h1 style={{
-        fontSize: "9em",
-        color: "#FFFFFF"
-      }}>{formatTime(timeLeft)}</h1>
+      <h1 className={`${css(styles.clockStyles)} text-center col-sm-12`}>{formatTime(timeLeft)}</h1>
 
       <span style={{
         color: "#FFFFFF"
       }}>{timeLeft === 0 && "No Response"}</span>
 
-      <div className="col-10 col-sm-10">
+      <div className="col-10 col-sm-12">
         {timeLeft === 0 && (
           <a
             href={`tel:${ponisoNumber}`}
@@ -99,7 +96,7 @@ function GrantedScreen() {
         styles.grantedPage
       )}`}
     >
-      <h4 className={css(styles.title)}>Granted</h4>
+      <h4 className={`${css(styles.title)}  text-center col-sm-12`}>Granted</h4>
       <br />
       <div className="col-10 col-sm-10">
         <Link
@@ -120,7 +117,7 @@ function DeniedScreen() {
         styles.deniedPage
       )}`}
     >
-      <h4 className={css(styles.title)}>Denied</h4>
+      <h4 className={`${css(styles.title)}  text-center col-sm-12`}>Denied</h4>
       <br />
       <div className="col-10 col-sm-10">
         <a
