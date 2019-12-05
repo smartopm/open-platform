@@ -2,6 +2,10 @@ import React from "react";
 import { shallow } from "enzyme";
 import { WelcomeScreen } from "../components/AuthScreens/WelcomeScreen";
 
+/* Checks:
+    - Correct title
+    - Have images (background and logo) 
+*/
 describe("Welcome screen ", () => {
   const welcomeWrapper = shallow(<WelcomeScreen />);
   const mainTitle = "Welcome to Nkwashi App";

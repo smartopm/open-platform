@@ -25,6 +25,7 @@ export function LoginScreen({ history }) {
     })
       .then(({ data }) => {
         setIsLoading(false);
+        console.log(data)
         return data;
       })
       .then(data => {
@@ -36,13 +37,13 @@ export function LoginScreen({ history }) {
       });
   }
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "100vh" }} className="login-page" >
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to={"/welcome"}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
-      <div className="container">
+      <div className="container ">
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.welcomeContainer
@@ -105,7 +106,7 @@ export function LoginScreen({ history }) {
         >
           <Button
             variant="contained"
-            className={`btn ${css(styles.getStartedButton)}`}
+            className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
             onClick={loginWithPhone}
             disabled={isLoading}
           >
