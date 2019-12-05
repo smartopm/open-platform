@@ -14,6 +14,9 @@ RSpec.describe Mutations::ActivityLog::Add do
         mutation AddActivityLogMutation($userId: ID!, $note: String) {
           activityLogAdd(userId: $userId, note: $note) {
             eventLog {
+              actingUser {
+                id
+              }
               id
             }
           }
@@ -31,6 +34,7 @@ RSpec.describe Mutations::ActivityLog::Add do
                                               }).as_json
       expect(result.dig('errors')).to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
+      expect(result.dig('data', 'activityLogAdd', 'eventLog', 'actingUser', 'id')).to eql user.id
     end
 
     it 'returns should not create an invalid activity log' do
