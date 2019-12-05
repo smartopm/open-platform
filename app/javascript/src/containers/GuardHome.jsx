@@ -12,31 +12,51 @@ import { ponisoNumber } from "../utils/constants";
 import Avatar from "../components/Avatar";
 import { Context } from "./Provider/AuthStateProvider";
 import { FormControl, Select, MenuItem } from "@material-ui/core";
-import { useQuery } from "react-apollo";
+import { useQuery, useMutation } from "react-apollo";
 import { SecurityGuards } from "../graphql/queries";
 import Loading from "../components/Loading";
 import ErrorPage from "../components/Error";
+import { AUTH_TOKEN_KEY } from "../utils/apollo";
+import { loginPhone } from "../graphql/mutations";
 
-export default function GuardHome() {
+export default function GuardHome({ history }) {
   const [redirect, setRedirect] = useState(false);
+  const [isDataLoading, setIsLoading] = useState(false);
   const authState = useContext(Context);
   const { t } = useTranslation();
-  const [name, setName] = React.useState(authState.user.name);
+  const [phoneNumber, setPhone] = React.useState(authState.user.phoneNumber);
   const { data, loading, error } = useQuery(SecurityGuards)
+  const [loginPhoneStart] = useMutation(loginPhone);
 
   function inputToSearch() {
     setRedirect("/search");
   }
   const handleChange = event => {
-    setName(event.target.value);
+    setPhone(event.target.value);
+    // logout the user (Delete the token)
+    // do a login and re-route the user to a code confirmation screen
+    setIsLoading(true)
+    loginPhoneStart({
+      variables: { phoneNumber: event.target.value }
+    })
+      .then(({ data }) => {
+        localStorage.removeItem(AUTH_TOKEN_KEY)
+        authState.setToken({ action: 'delete' })
+        return data;
+      })
+      .then(data => {
+
+        return history.push("/code/" + data.loginPhoneStart.user.id);
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
   };
   if (redirect) {
     return <Redirect push to={redirect} />;
   }
-  if (loading) return <Loading />;
+  if (loading || isDataLoading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
-
-  console.log(data)
   return (
     <div>
       <Nav>
@@ -55,22 +75,22 @@ export default function GuardHome() {
                 color: "#FFFFFF"
               }}
             >
-              <a href="/logout" className={`${css(styles.link)}`}>
-                Switch accounts
-              </a>
+              <span className={`${css(styles.link)}`}>
+                Switch account
+              </span>
               <br />
               <Select
                 id="demo-simple-select-outlined"
-                value={name}
+                value={phoneNumber}
                 onChange={handleChange}
                 style={{
-                  borderColor: "#FFFFFF"
+                  width: 180
                 }}
               >
                 {
                   data.securityGuards.map(guard => (
                     <MenuItem
-                      value={guard.name}
+                      value={guard.phoneNumber}
                       key={guard.id}
                     >
                       {guard.name}
@@ -176,7 +196,7 @@ const styles = StyleSheet.create({
   input: {
     marginTop: "1em",
     padding: "0.5em 1em 0.5em 2em",
-    height: 40,
+    height: 50,
     color: "#222",
     border: "none",
     borderRadius: "5px",
@@ -190,7 +210,7 @@ const styles = StyleSheet.create({
     color: "#999",
     position: "absolute",
     left: 4,
-    bottom: 6,
+    bottom: 11,
     "z-index": 9
   },
   bellIcon: {
@@ -199,9 +219,9 @@ const styles = StyleSheet.create({
   scanIcon: {
     position: "absolute",
     marginTop: 75,
-    right: 5,
+    right: 9,
     width: 20,
-    bottom: 11
+    bottom: 12
   },
   homeIconColor: {
     color: "#25c0b0"
@@ -225,6 +245,6 @@ const styles = StyleSheet.create({
   link: {
     color: "#FFFFFF",
     textDecoration: "none",
-    marginLeft: 30
+    marginLeft: 25
   }
 });
