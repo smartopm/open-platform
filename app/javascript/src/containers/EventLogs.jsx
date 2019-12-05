@@ -44,6 +44,10 @@ export function IndexComponent({ data, tabId, router }) {
     }
   }
   function logs(eventLogs) {
+    // we could add this as an early exit to avoid breakage
+    // if (!eventLogs || eventLogs.length) {
+    //   return;
+    // }
     return eventLogs.map(entry => (
       <tr
         key={entry.id}
