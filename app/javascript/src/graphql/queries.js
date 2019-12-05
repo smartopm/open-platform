@@ -66,11 +66,11 @@ export const EntryLogsQuery = gql`
   }
 `;
 
-export const AllSecurityGuards = gql`
+export const SecurityGuards = gql`
   {
-    securityGuards{
-      id
+    securityGuards {
       name
+      id
       phoneNumber
     }
   }

@@ -18,7 +18,7 @@ export function WelcomeScreen({ history }) {
           alt="nkwashi background image"
         />
         <div className={css(styles.overlaySection)}>
-          <img src={logo} alt="nkwashi logo" />
+          <img className="nz-logo-nkwashi" src={logo} alt="nkwashi logo" />
           <p className={css(styles.welcomeText)}>
             <strong>
               Welcome to Nkwashi App
