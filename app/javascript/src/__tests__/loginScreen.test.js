@@ -35,9 +35,9 @@ describe("Login screen", () => {
     </MockedProvider>
   );
   // loginWrapper.find(".enz-lg-btn").simulate("click");
-  it("should render properly", () => {
-    // expect(loginWrapper.text()).toContain("next");
-    // console.log(loginWrapper.find("nav"));
-    console.log("this needs to be fixed");
+  // TODO: @olivier to fix
+  it.skip("should render properly", () => {
+    expect(loginWrapper.text()).toContain("next");
+    console.log(loginWrapper.find("nav"));
   });
 });
