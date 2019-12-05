@@ -25,7 +25,6 @@ export function LoginScreen({ history }) {
     })
       .then(({ data }) => {
         setIsLoading(false);
-        console.log(data)
         return data;
       })
       .then(data => {
@@ -117,8 +116,6 @@ export function LoginScreen({ history }) {
               )}
           </Button>
         </div>
-
-
 
         <div className="row justify-content-center align-items-center">
           <a className={css(styles.googleLink)} href={"/login_oauth"}>
