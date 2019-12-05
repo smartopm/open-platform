@@ -1,11 +1,10 @@
 import React from "react";
 import { Container, Button } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
-import { Link } from "react-router-dom";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
 import bgImage from "../../../../assets/images/nkwashi_bgi.jpg";
 
-export function WelcomeScreen() {
+export function WelcomeScreen({ history }) {
   return (
     <Container component="div" maxWidth="xs" style={{ height: "100vh" }}>
       <div
@@ -19,8 +18,12 @@ export function WelcomeScreen() {
           alt="nkwashi background image"
         />
         <div className={css(styles.overlaySection)}>
-          <img src={logo} alt="nkwashi logo" />
-          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+          <img className="nz-logo-nkwashi" src={logo} alt="nkwashi logo" />
+          <p className={css(styles.welcomeText)}>
+            <strong>
+              Welcome to Nkwashi App
+            </strong>
+          </p>
           <p className={css(styles.subText)}>First smart city in Zambia</p>
         </div>
       </div>
@@ -32,10 +35,9 @@ export function WelcomeScreen() {
         <Button
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
+          onClick={() => history.push("/push")}
         >
-          <Link className={css(styles.getStartedLink)} to={"/login"}>
-            Get Started
-          </Link>
+          Get Started
         </Button>
         <a className={css(styles.googleLink)} href={"/login_oauth"}>
           Or Login with Google instead
@@ -50,6 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "75%",
+    height: 51,
     boxShadow: "none"
   },
   getStartedLink: {

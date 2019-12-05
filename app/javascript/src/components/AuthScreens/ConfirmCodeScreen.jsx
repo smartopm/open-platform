@@ -1,27 +1,54 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect, createRef } from "react";
 import { Redirect } from "react-router-dom";
-import { Button, TextField, CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
+
+const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
+
 export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext);
   const { id } = match.params;
-  const [code, setCode] = useState("");
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // generate refs to use later
+  let elementsRef = useRef(randomCodeData.map(() => createRef()));
+  const submitRef = useRef(null)
+
+  useEffect(() => {
+    // force focus to just be on the first element
+    // check if the refs are not null to avoid breaking the app
+    if (elementsRef.current[1].current) {
+      elementsRef.current[1].current.focus()
+    }
+  }, [])
+
   function handleConfirmCode() {
     setIsLoading(true);
+
+    // Todo: Find more efficient way of getting values from the input
+    const code1 = elementsRef.current[1].current.value
+    const code2 = elementsRef.current[2].current.value
+    const code3 = elementsRef.current[3].current.value
+    const code4 = elementsRef.current[4].current.value
+    const code5 = elementsRef.current[5].current.value
+    const code6 = elementsRef.current[6].current.value
+
+    // Todo: refactor this 
+    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`
+
     loginPhoneComplete({
       variables: { id, token: code }
     })
       .then(({ data }) => {
         authState.setToken({ type: 'update', token: data.loginPhoneComplete.authToken })
+        setIsLoading(true);
       })
       .catch(error => {
         setError(error.message);
@@ -49,33 +76,37 @@ export default function ConfirmCodeScreen({ match }) {
         >
           <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
         </div>
+        <br />
+        <br />
         <div className="row justify-content-center align-items-center">
-          <div className={css(styles.phoneCodeInput)}>
-            <TextField
-              id="outlined-basic"
-              margin="normal"
-              variant="outlined"
-              autoFocus
-              type="number"
-              value={code}
-              onChange={e => setCode(e.target.value)}
-              placeholder="Confirmation code"
-            />
-          </div>
+
+          {
+            randomCodeData.map(item => (
+              <input
+                key={item}
+                name={`code${item}`}
+                maxLength="1"
+                type="tel"
+                autoFocus
+                ref={elementsRef.current[item]}
+                className={css(styles.newInput)}
+                onChange={() => item < 6 ? elementsRef.current[item + 1].current.focus() : submitRef.current.click()}
+                // hide the seventh input for the next ref to work [6]
+                hidden={item === 7 && true}
+              />
+            ))
+          }
         </div>
-        <div className="row">
-          <br />
-          {error && (
-            <p
-              className="text-center text-danger"
-              style={{
-                margin: 40
-              }}
-            >
-              {error}
-            </p>
-          )}
-        </div>
+
+        <br />
+        <br />
+        {error && (
+          <p
+            className="text-center text-danger"
+          >
+            {error}
+          </p>
+        )}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
@@ -85,12 +116,13 @@ export default function ConfirmCodeScreen({ match }) {
             variant="contained"
             className={`btn ${css(styles.getStartedButton)}`}
             onClick={handleConfirmCode}
+            ref={submitRef}
             disabled={isLoading}
           >
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Verify</span>
+                <span>Next</span>
               )}
           </Button>
         </div>
@@ -99,11 +131,14 @@ export default function ConfirmCodeScreen({ match }) {
   );
 }
 
+
+
 const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#25c0b0",
     color: "#FFF",
     width: "55%",
+    height: 51,
     boxShadow: "none",
     marginTop: 80
   },
@@ -112,7 +147,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   linksSection: {
-    marginTop: 40
+    marginTop: 20
   },
   navBar: {
     boxShadow: "none",
@@ -139,5 +174,19 @@ const styles = StyleSheet.create({
   },
   phoneCodeInput: {
     marginTop: 50
+  },
+  newInput: {
+    width: 50,
+    height: 60,
+    fontSize: 27,
+    textAlign: "center",
+    border: '2px solid #5189dd',
+    borderRadius: 2,
+    borderTop: "none",
+    borderRight: "none",
+    borderLeft: "none",
+    // padding: 20,
+    margin: 9,
+    // paddingRight: 13,
   }
 });
