@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+module Mutations
+  module Login
+    # Complete the phone number login
+    class LoginSwitchUser < BaseMutation
+      argument :id, ID, required: true
+
+      field :auth_token, String, null: true
+
+      def resolve(vals)
+        user = ::User.find(vals[:id])
+
+        unless context[:current_user].can_become?(user)
+          raise GraphQL::ExecutionError, 'Unauthorized'
+        end
+
+        { auth_token: user.auth_token }
+      end
+    end
+  end
+end

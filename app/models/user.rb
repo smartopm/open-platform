@@ -177,6 +177,12 @@ class User < ApplicationRecord
     Array(roles).include?(user_type.to_sym)
   end
 
+  def can_become?(user)
+    return false unless role?('admin', 'security_guard')
+
+    user.community_id == community_id
+  end
+
   def verify_phone_token!(token)
     if phone_token == token
       return true if phone_token_expires_at > Time.zone.now

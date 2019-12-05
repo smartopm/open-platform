@@ -24,6 +24,7 @@ export default function GuardHome({ history }) {
   const [isDataLoading, setIsLoading] = useState(false);
   const authState = useContext(Context);
   const { t } = useTranslation();
+  const hideGuardSwitching = true;
   const [phoneNumber, setPhone] = React.useState(authState.user.phoneNumber);
   const { data, loading, error } = useQuery(SecurityGuards)
   const [loginPhoneStart] = useMutation(loginPhone);
@@ -62,44 +63,48 @@ export default function GuardHome({ history }) {
       <Nav>
         <div className={css(styles.inputGroup)}>
           <br />
-          <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-            <Avatar user={authState.user} />
-            <br />
-            <br />
-          </div>
-          <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-            <FormControl
-              variant="outlined"
-              style={{
-                minWidth: 120,
-                color: "#FFFFFF"
-              }}
-            >
-              <span className={`${css(styles.link)}`}>
-                Switch account
+          { hideGuardSwitching ? null :
+            <div>
+              <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+                <Avatar user={authState.user} />
+                <br />
+                <br />
+              </div>
+              <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+                <FormControl
+                  variant="outlined"
+                  style={{
+                    minWidth: 120,
+                    color: "#FFFFFF"
+                  }}
+                >
+                  <span className={`${css(styles.link)}`}>
+                    Switch account
               </span>
-              <br />
-              <Select
-                id="demo-simple-select-outlined"
-                value={phoneNumber}
-                onChange={handleChange}
-                style={{
-                  width: 180
-                }}
-              >
-                {
-                  data.securityGuards.map(guard => (
-                    <MenuItem
-                      value={guard.phoneNumber}
-                      key={guard.id}
-                    >
-                      {guard.name}
-                    </MenuItem>
-                  ))
-                }
-              </Select>
-            </FormControl>
-          </div>
+                  <br />
+                  <Select
+                    id="demo-simple-select-outlined"
+                    value={phoneNumber}
+                    onChange={handleChange}
+                    style={{
+                      width: 180
+                    }}
+                  >
+                    {
+                      data.securityGuards.map(guard => (
+                        <MenuItem
+                          value={guard.phoneNumber}
+                          key={guard.id}
+                        >
+                          {guard.name}
+                        </MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+          }
 
           <input
             className={`form-control ${css(styles.input)}`}
