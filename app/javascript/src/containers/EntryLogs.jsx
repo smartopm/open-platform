@@ -4,7 +4,7 @@ import Nav from "../components/Nav";
 
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
-import { AllEventLogsQuery, AllEntryRequestsQuery } from "../graphql/queries.js";
+import { AllEventLogsQuery } from "../graphql/queries.js";
 import {
   a11yProps,
   StyledTabs,
