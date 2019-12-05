@@ -12,12 +12,17 @@ import { ponisoNumber } from "../utils/constants";
 import Avatar from "../components/Avatar";
 import { Context } from "./Provider/AuthStateProvider";
 import { FormControl, Select, MenuItem } from "@material-ui/core";
+import { useQuery } from "react-apollo";
+import { SecurityGuards } from "../graphql/queries";
+import Loading from "../components/Loading";
+import ErrorPage from "../components/Error";
 
 export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
   const authState = useContext(Context);
   const { t } = useTranslation();
   const [name, setName] = React.useState(authState.user.name);
+  const { data, loading, error } = useQuery(SecurityGuards)
 
   function inputToSearch() {
     setRedirect("/search");
@@ -28,7 +33,10 @@ export default function GuardHome() {
   if (redirect) {
     return <Redirect push to={redirect} />;
   }
+  if (loading) return <Loading />;
+  if (error) return <ErrorPage title={error.message} />;
 
+  console.log(data)
   return (
     <div>
       <Nav>
@@ -56,18 +64,19 @@ export default function GuardHome() {
                 value={name}
                 onChange={handleChange}
                 style={{
-                  color: "#FFFFFF",
                   borderColor: "#FFFFFF"
                 }}
               >
-                <MenuItem
-                  value={name}
-                  style={{
-                    color: "#FFFFFF"
-                  }}
-                >
-                  {name}
-                </MenuItem>
+                {
+                  data.securityGuards.map(guard => (
+                    <MenuItem
+                      value={guard.name}
+                      key={guard.id}
+                    >
+                      {guard.name}
+                    </MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
           </div>
