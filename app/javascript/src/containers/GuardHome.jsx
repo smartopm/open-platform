@@ -17,17 +17,15 @@ import { SecurityGuards } from "../graphql/queries";
 import Loading from "../components/Loading";
 import ErrorPage from "../components/Error";
 import { AUTH_TOKEN_KEY } from "../utils/apollo";
-import { loginPhone, switchGuards } from "../graphql/mutations";
+import { switchGuards } from "../graphql/mutations";
 
-export default function GuardHome({ history }) {
+export default function GuardHome() {
   const [redirect, setRedirect] = useState(false);
-  const [isDataLoading, setIsLoading] = useState(false);
   const authState = useContext(Context);
   const { t } = useTranslation();
   const hideGuardSwitching = false;
   const [id, setId] = React.useState(authState.user.id);
   const { data, loading, error } = useQuery(SecurityGuards)
-  const [loginPhoneStart] = useMutation(loginPhone);
   const [loginSwitchUser] = useMutation(switchGuards)
 
   function inputToSearch() {
@@ -35,23 +33,14 @@ export default function GuardHome({ history }) {
   }
   const handleChange = event => {
     setId(event.target.value);
-
-    console.log(id)
-    // logout the user (Delete the token)
-    // do a login and re-route the user to a code confirmation screen
-    // setIsLoading(true)
     loginSwitchUser({
       variables: { id: event.target.value }
     })
       .then(({ data }) => {
-        // localStorage.removeItem(AUTH_TOKEN_KEY)
-        // authState.setToken({ action: 'delete' })
-        console.log(data)
-        return data;
+        localStorage.setItem(AUTH_TOKEN_KEY, data.loginSwitchUser.authToken)
+        // reloading the page to propagate the new user details
+        window.location.href = "/guard_home";
       })
-      // .then(data => {
-      //   return history.push("/code/" + data.loginPhoneStart.user.id);
-      // })
       .catch(error => {
         console.log(error.message);
       });
@@ -59,7 +48,7 @@ export default function GuardHome({ history }) {
   if (redirect) {
     return <Redirect push to={redirect} />;
   }
-  if (loading || isDataLoading) return <Loading />;
+  if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
   return (
     <div>
