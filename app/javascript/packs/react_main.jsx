@@ -21,6 +21,7 @@ import UserShow from "../src/containers/UserShow";
 import IDCard from "../src/containers/IdCard";
 import IDPrint from "../src/containers/IdPrint";
 import EntryLogs from "../src/containers/EntryLogs";
+import EventLogs from "../src/containers/EventLogs";
 import Search from "../src/containers/Search";
 import UserEdit from "../src/containers/UserEdit";
 import PendingUsers from "../src/containers/PendingUsers";
@@ -150,6 +151,7 @@ const App = () => {
                     <Route path="/print/:id" component={IDPrint} />
                     <Route path="/entry_logs/:userId" component={EntryLogs} />
                     <Route path="/entry_logs" component={EntryLogs} />
+                    <Route path="/event_logs" component={EventLogs} />
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/user/pending" exact component={PendingUsers} />
                     <Route path="/user/new" exact component={UserEdit} />

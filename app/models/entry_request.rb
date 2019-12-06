@@ -7,7 +7,7 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :notify_admin, :notify_community_slack
+  after_create :notify_admin, :log_entry_start
 
   default_scope { order(created_at: :asc) }
 
@@ -17,24 +17,22 @@ class EntryRequest < ApplicationRecord
 
   def grant!(grantor)
     can_grant?(grantor)
-    SlackNotification.perform_later(community,
-                                    "#{grantor.name} granted an entry for #{self[:name]}")
     update(
       grantor_id: grantor.id,
       granted_state: 1,
       granted_at: Time.zone.now,
     )
+    log_decision(true)
   end
 
   def deny!(grantor)
     can_grant?(grantor)
-    SlackNotification.perform_later(community,
-                                    "#{grantor.name} denied an entry for #{self[:name]}")
     update(
       grantor_id: grantor.id,
       granted_state: 2,
       granted_at: Time.zone.now,
     )
+    log_decision(false)
   end
 
   def granted?
@@ -59,14 +57,34 @@ class EntryRequest < ApplicationRecord
     self[:community_id] = user.community_id
   end
 
-  def notify_community_slack
-    SlackNotification.perform_later(community,
-                                    "#{user.name} started an entry for #{self[:name]}")
+  def log_entry_start
+    EventLog.create(
+      acting_user: user, community: user.community,
+      subject: 'visitor_entry',
+      ref_id: self[:id], ref_type: 'EntryRequest',
+      data: {
+        action: 'started',
+        visitor_name: self[:name],
+      }
+    )
+  end
+
+  def log_decision(approved)
+    EventLog.create(
+      acting_user: grantor, community: user.community,
+      subject: 'visitor_entry',
+      ref_id: self[:id], ref_type: 'EntryRequest',
+      data: {
+        action: approved ? 'granted' : 'denied',
+        visitor_name: self[:name],
+      }
+    )
   end
 
   # TODO: Build this into a proper notification scheme
   def notify_admin
     link = "https://#{ENV['HOST']}/request/#{id}/edit"
+    Rails.logger.info "Sending entry request approval notification for #{link}"
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
 
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
