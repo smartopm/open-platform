@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../components/Nav";
 
@@ -12,17 +12,25 @@ export default ({ history }) => {
 };
 
 const allEventLogs = (history) => {
+  const [offset, setOffset] = useState(0)
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: {subject: null, refId: null, refType: null},
-    fetchPolicy: "no-cache"
+    variables: { subject: null, refId: null, refType: null, offset, limit: 5 },
+    fetchPolicy: "cache-and-network"
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
-  return <IndexComponent data={data} router={history} />;
+  function handleNextPage() {
+    setOffset(offset + 5)
+  }
+  function handlePreviousPage() {
+    setOffset(offset - 5)
+  }
+
+  return <IndexComponent data={data} offset={offset} previousPage={handlePreviousPage} nextPage={handleNextPage} router={history} />;
 };
 
-export function IndexComponent({ data, router }) {
+export function IndexComponent({ data, router, nextPage, previousPage }) {
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
@@ -50,6 +58,7 @@ export function IndexComponent({ data, router }) {
       </tr>
     ));
   }
+  console.log(data.result);
   return (
     <div>
       <div
@@ -72,6 +81,14 @@ export function IndexComponent({ data, router }) {
             </thead>
             <tbody>{logs(data.result)}</tbody>
           </table>
+          <nav aria-label="Page navigation example">
+            <ul className="pagination">
+              <li className="page-item">
+                <a className="page-link" onClick={previousPage} href="#">Previous</a>
+              </li>
+              <li className="page-item"><a className="page-link" onClick={nextPage} href="#">Next</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
