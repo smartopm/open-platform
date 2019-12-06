@@ -121,7 +121,6 @@ RSpec.describe User, type: :model do
       expect(@user.can_become?(@security_guard)).to be false
       expect(@security_guard.can_become?(@admin)).to be false
     end
-
   end
 
   describe 'User phone numbers' do

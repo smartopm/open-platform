@@ -168,7 +168,7 @@ class User < ApplicationRecord
   end
 
   def can_become?(user)
-    return false unless role?([:admin, :security_guard])
+    return false unless role?(%i[admin security_guard])
 
     return false if user.role?([:admin]) # Don't let anyone become an admin
 
