@@ -87,6 +87,95 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'userSearch')).to be_nil
     end
   end
+
+  describe 'event logs query' do
+    before :each do
+      @current_user = create(:security_guard)
+      @user = create(:user, community: @current_user.community)
+      3.times do
+        EventLog.create(
+          community: @current_user.community,
+          ref_id: @user.id,
+          ref_type: 'User',
+          subject: 'user_entry',
+          acting_user: @current_user,
+        )
+      end
+      3.times do
+        # Will automatically created entry logs
+        EntryRequest.create(name: 'Joe Visitor', user: @current_user)
+      end
+
+      @query =
+        %(query AllEventLogs($subject: String, $refId: ID, $refType: String){
+          result: allEventLogs(subject: $subject, refId: $refId, refType:$refType) {
+            id
+            createdAt
+            refId
+            refType
+            subject
+            sentence
+            data
+            actingUser {
+              name
+              id
+            }
+          }
+        })
+    end
+
+    it 'returns all event logs' do
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: @current_user },
+        variables: {
+          subject: nil, refId: nil, refType: nil
+        },
+      ).as_json
+      expect(result.dig('data', 'result').length).to eql 6
+    end
+
+    it 'returns select event logs' do
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: @current_user },
+        variables: {
+          subject: 'user_entry', refId: nil, refType: nil
+        },
+      ).as_json
+      expect(result.dig('data', 'result').length).to eql 3
+
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: @current_user },
+        variables: {
+          subject: nil, refId: nil, refType: 'User'
+        },
+      ).as_json
+      expect(result.dig('data', 'result').length).to eql 3
+
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: @current_user },
+        variables: {
+          subject: nil, refId: @user.id, refType: nil
+        },
+      ).as_json
+      expect(result.dig('data', 'result').length).to eql 3
+    end
+
+    it 'should fail if not logged in' do
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: nil },
+        variables: {
+          subject: nil, refId: nil, refType: nil
+        },
+      ).as_json
+      expect(result.dig('data', 'securityGuards')).to be_nil
+    end
+  end
+
   describe 'security guard list' do
     before :each do
       @user = create(:security_guard)

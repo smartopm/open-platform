@@ -34,31 +34,17 @@ export const AllEntryRequestsQuery = gql`
   ${EntryRequestFragment.publicFields}
 `;
 
-export const AllEntryLogsQuery = gql`
-  query {
-    entryLogs: allEntryLogs {
+export const AllEventLogsQuery = gql`
+  query AllEventLogs($subject: String, $refId: ID, $refType: String){
+    result: allEventLogs(subject: $subject, refId: $refId, refType:$refType) {
       id
       createdAt
-      note
-      user {
-        name
-        id
-      }
-      reportingUser {
-        name
-        id
-      }
-    }
-  }
-`;
-
-export const EntryLogsQuery = gql`
-  query EntryLogs($userId: ID!) {
-    entryLogs(userId: $userId) {
-      id
-      createdAt
-      note
-      reportingUser {
+      refId
+      refType
+      subject
+      sentence
+      data
+      actingUser {
         name
         id
       }

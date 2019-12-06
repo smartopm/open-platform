@@ -17,6 +17,8 @@ module Types::Queries::EventLog
 
   def all_event_logs(offset: 0, limit: 100, subject:, ref_id:, ref_type:)
     authorized = context[:current_user]&.role?(%i[security_guard admin])
+    raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
+
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
     if authorized
       return EventLog.where(query)
