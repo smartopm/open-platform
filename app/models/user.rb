@@ -10,9 +10,6 @@
 # Contractors
 class User < ApplicationRecord
   belongs_to :community, optional: true
-  has_many :activity_logs, dependent: :destroy
-  has_many :reported_activity_logs, class_name: 'ActivityLog', foreign_key: :reporting_user_id,
-                                    dependent: :destroy, inverse_of: :user
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
                                     dependent: :destroy, inverse_of: :user
@@ -161,13 +158,6 @@ class User < ApplicationRecord
     msg = "Your login link for #{community.name} is https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
     Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
     Sms.send(self[:phone_number], msg)
-  end
-
-  def last_activity_at
-    return self[:last_activity_at] if self[:last_activity_at]
-    return activity_logs.last.created_at unless activity_logs.empty?
-
-    nil
   end
 
   def role?(roles)
