@@ -31,7 +31,7 @@ class EventLog < ApplicationRecord
 
   # Hand back a human description of the event
   def to_sentence
-    method = "#{subject}_to_sentence".sym
+    method = "#{subject}_to_sentence".to_sym
     return '' unless respond_to?(method)
 
     send(method)
