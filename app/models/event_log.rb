@@ -8,7 +8,7 @@ class EventLog < ApplicationRecord
   after_create :notify_slack
   validate :validate_log, :validate_acting_user
 
-  default_scope { order(created_at: :asc) }
+  default_scope { order(created_at: :desc) }
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_active].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
