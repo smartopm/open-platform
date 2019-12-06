@@ -15,6 +15,7 @@ RSpec.describe EntryRequest, type: :model do
                                                     name: 'Visitor Joe', nrc: '012345')
       expect(@entry_request.community_id).to eql @guard.community_id
       expect(@entry_request.pending?).to be true
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
     it 'should handle an admin granting a request' do
@@ -25,6 +26,7 @@ RSpec.describe EntryRequest, type: :model do
       expect(@entry_request.denied?).to be false
       expect(@entry_request.granted?).to be true
       expect(@entry_request.grantor_id).to eql @admin.id
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 2
     end
 
     it 'should handle an admin denying a request' do
@@ -35,6 +37,7 @@ RSpec.describe EntryRequest, type: :model do
       expect(@entry_request.denied?).to be true
       expect(@entry_request.granted?).to be false
       expect(@entry_request.grantor_id).to eql @admin.id
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 2
     end
 
     it 'should prevent unauthorized granting' do

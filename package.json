@@ -2,6 +2,7 @@
   "name": "DoubleGDP",
   "private": true,
   "scripts": {
+    "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {

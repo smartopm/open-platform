@@ -57,7 +57,7 @@ please update /etc/hosts to point dev.dgdp.site to the appropriate IP address.
 
 Then rebuild the images:
 
-- `bin/build.sh`
+- `./bin/rebuild.sh`
   - This performs
     - Stop the existing 'rails' and 'webpacker' service
     - Runs `bundle install` install gems

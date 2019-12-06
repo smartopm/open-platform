@@ -4,7 +4,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-docker-compose run --rm webpacker ./node_modules/.bin/eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx
+docker-compose run --rm webpacker yarn lint
 docker-compose run --rm webpacker yarn test
 $DIR/docker_rake lint
 $DIR/docker_rake
