@@ -12,16 +12,6 @@ Rails.application.routes.draw do
     get 'login_oauth', :to => 'users/omniauth_callbacks#passthru'
   end
 
-  resources :users
-  resources :members do
-    resources :activity_logs, only: [:index]
-  end
-  resources :communities do
-    resources :activity_logs, only: [:index]
-  end
-
-  resources :activity_logs, only: [:show, :create]
-
   get 'qr_code', to: 'home#qr_code'
   get 'hold', to: 'home#hold'
   get '*path', to: 'home#react', constraints: lambda { |req|

@@ -9,6 +9,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def google_oauth2
     @user = User.from_omniauth(request.env['omniauth.auth'])
     if @user.persisted?
+      EventLog.create(
+        acting_user: @user, community: @user.community,
+        subject: 'user_login', ref_id: nil, ref_type: nil
+      )
       redirect_to "/google/#{@user.auth_token}"
     else
       session['devise.google_data'] = request.env['omniauth.auth']
