@@ -12,7 +12,7 @@ export default ({ history }) => {
 };
 
 // Todo: Find the total number of allEventLogs
-const limit = 5
+const limit = 10
 const allEventLogs = (history) => {
   const [offset, setOffset] = useState(0)
   // const eventsPage = 
@@ -87,10 +87,10 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
           </table>
           <nav aria-label="Page navigation">
             <ul className="pagination">
-              <li className={`page-item ${(offset < limit) ? 'disabled' : ''}`}>
+              <li className={`page-item ${(offset < limit) && 'disabled'}`}>
                 <a className="page-link" onClick={previousPage} href="#">Previous</a>
               </li>
-              <li className={`page-item ${(data.result.length < limit) ? 'disabled' : ''}`}>
+              <li className={`page-item ${(data.result.length < limit) && 'disabled'}`}>
                 <a className="page-link" onClick={nextPage} href="#">Next</a></li>
             </ul>
           </nav>
