@@ -178,7 +178,7 @@ class User < ApplicationRecord
   end
 
   def can_become?(user)
-    return false unless role?('admin', 'security_guard')
+    return false unless role?([:admin, :security_guard])
 
     user.community_id == community_id
   end
