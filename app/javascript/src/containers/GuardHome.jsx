@@ -17,38 +17,41 @@ import { SecurityGuards } from "../graphql/queries";
 import Loading from "../components/Loading";
 import ErrorPage from "../components/Error";
 import { AUTH_TOKEN_KEY } from "../utils/apollo";
-import { loginPhone } from "../graphql/mutations";
+import { loginPhone, switchGuards } from "../graphql/mutations";
 
 export default function GuardHome({ history }) {
   const [redirect, setRedirect] = useState(false);
   const [isDataLoading, setIsLoading] = useState(false);
   const authState = useContext(Context);
   const { t } = useTranslation();
-  const hideGuardSwitching = true;
-  const [phoneNumber, setPhone] = React.useState(authState.user.phoneNumber);
+  const hideGuardSwitching = false;
+  const [id, setId] = React.useState(authState.user.id);
   const { data, loading, error } = useQuery(SecurityGuards)
   const [loginPhoneStart] = useMutation(loginPhone);
+  const [loginSwitchUser] = useMutation(switchGuards)
 
   function inputToSearch() {
     setRedirect("/search");
   }
   const handleChange = event => {
-    setPhone(event.target.value);
+    setId(event.target.value);
+
+    console.log(id)
     // logout the user (Delete the token)
     // do a login and re-route the user to a code confirmation screen
-    setIsLoading(true)
-    loginPhoneStart({
-      variables: { phoneNumber: event.target.value }
+    // setIsLoading(true)
+    loginSwitchUser({
+      variables: { id: event.target.value }
     })
       .then(({ data }) => {
-        localStorage.removeItem(AUTH_TOKEN_KEY)
-        authState.setToken({ action: 'delete' })
+        // localStorage.removeItem(AUTH_TOKEN_KEY)
+        // authState.setToken({ action: 'delete' })
+        console.log(data)
         return data;
       })
-      .then(data => {
-
-        return history.push("/code/" + data.loginPhoneStart.user.id);
-      })
+      // .then(data => {
+      //   return history.push("/code/" + data.loginPhoneStart.user.id);
+      // })
       .catch(error => {
         console.log(error.message);
       });
@@ -63,7 +66,7 @@ export default function GuardHome({ history }) {
       <Nav>
         <div className={css(styles.inputGroup)}>
           <br />
-          { hideGuardSwitching ? null :
+          {hideGuardSwitching ? null :
             <div>
               <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
                 <Avatar user={authState.user} />
@@ -84,7 +87,7 @@ export default function GuardHome({ history }) {
                   <br />
                   <Select
                     id="demo-simple-select-outlined"
-                    value={phoneNumber}
+                    value={id}
                     onChange={handleChange}
                     style={{
                       width: 180
@@ -93,7 +96,7 @@ export default function GuardHome({ history }) {
                     {
                       data.securityGuards.map(guard => (
                         <MenuItem
-                          value={guard.phoneNumber}
+                          value={guard.id}
                           key={guard.id}
                         >
                           {guard.name}
