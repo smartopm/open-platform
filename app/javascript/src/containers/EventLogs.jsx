@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../components/Nav";
 
@@ -11,18 +11,31 @@ export default ({ history }) => {
   return allEventLogs(history);
 };
 
+// Todo: Find the total number of allEventLogs
+const limit = 10
 const allEventLogs = (history) => {
+  const [offset, setOffset] = useState(0)
+  // const eventsPage = 
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: {subject: null, refId: null, refType: null},
-    fetchPolicy: "no-cache"
+    variables: { subject: null, refId: null, refType: null, offset, limit },
+    fetchPolicy: "cache-and-network"
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
-  return <IndexComponent data={data} router={history} />;
+  function handleNextPage() {
+    setOffset(offset + limit)
+  }
+  function handlePreviousPage() {
+    if (offset < limit) {
+      return;
+    }
+    setOffset(offset - limit)
+  }
+  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} />;
 };
 
-export function IndexComponent({ data, router }) {
+export function IndexComponent({ data, router, nextPage, previousPage, offset }) {
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
@@ -60,7 +73,7 @@ export function IndexComponent({ data, router }) {
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
       <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6">
+        <div className="col-10 col-sm-10 col-md-6 table-responsive">
           <table className="table">
             <thead>
               <tr>
@@ -72,6 +85,15 @@ export function IndexComponent({ data, router }) {
             </thead>
             <tbody>{logs(data.result)}</tbody>
           </table>
+          <nav aria-label="Page navigation">
+            <ul className="pagination">
+              <li className={`page-item ${(offset < limit) && 'disabled'}`}>
+                <a className="page-link" onClick={previousPage} href="#">Previous</a>
+              </li>
+              <li className={`page-item ${(data.result.length < limit) && 'disabled'}`}>
+                <a className="page-link" onClick={nextPage} href="#">Next</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>

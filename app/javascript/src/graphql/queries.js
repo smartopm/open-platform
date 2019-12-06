@@ -35,8 +35,20 @@ export const AllEntryRequestsQuery = gql`
 `;
 
 export const AllEventLogsQuery = gql`
-  query AllEventLogs($subject: String, $refId: ID, $refType: String){
-    result: allEventLogs(subject: $subject, refId: $refId, refType:$refType) {
+  query AllEventLogs(
+    $subject: String
+    $refId: ID
+    $refType: String
+    $offset: Int
+    $limit: Int
+  ) {
+    result: allEventLogs(
+      subject: $subject
+      refId: $refId
+      refType: $refType
+      offset: $offset
+      limit: $limit
+    ) {
       id
       createdAt
       refId
