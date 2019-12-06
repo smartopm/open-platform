@@ -11,26 +11,31 @@ export default ({ history }) => {
   return allEventLogs(history);
 };
 
+// Todo: Find the total number of allEventLogs
+const limit = 5
 const allEventLogs = (history) => {
   const [offset, setOffset] = useState(0)
+  // const eventsPage = 
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: { subject: null, refId: null, refType: null, offset, limit: 5 },
+    variables: { subject: null, refId: null, refType: null, offset, limit },
     fetchPolicy: "cache-and-network"
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
   function handleNextPage() {
-    setOffset(offset + 5)
+    setOffset(offset + limit)
   }
   function handlePreviousPage() {
-    setOffset(offset - 5)
+    if (offset < limit) {
+      return;
+    }
+    setOffset(offset - limit)
   }
-
-  return <IndexComponent data={data} offset={offset} previousPage={handlePreviousPage} nextPage={handleNextPage} router={history} />;
+  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} />;
 };
 
-export function IndexComponent({ data, router, nextPage, previousPage }) {
+export function IndexComponent({ data, router, nextPage, previousPage, offset }) {
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
@@ -58,7 +63,6 @@ export function IndexComponent({ data, router, nextPage, previousPage }) {
       </tr>
     ));
   }
-  console.log(data.result);
   return (
     <div>
       <div
@@ -69,7 +73,7 @@ export function IndexComponent({ data, router, nextPage, previousPage }) {
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
       <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6">
+        <div className="col-10 col-sm-10 col-md-6 table-responsive">
           <table className="table">
             <thead>
               <tr>
@@ -81,12 +85,13 @@ export function IndexComponent({ data, router, nextPage, previousPage }) {
             </thead>
             <tbody>{logs(data.result)}</tbody>
           </table>
-          <nav aria-label="Page navigation example">
+          <nav aria-label="Page navigation">
             <ul className="pagination">
-              <li className="page-item">
+              <li className={`page-item ${(offset < limit) ? 'disabled' : ''}`}>
                 <a className="page-link" onClick={previousPage} href="#">Previous</a>
               </li>
-              <li className="page-item"><a className="page-link" onClick={nextPage} href="#">Next</a></li>
+              <li className={`page-item ${(data.result.length < limit) ? 'disabled' : ''}`}>
+                <a className="page-link" onClick={nextPage} href="#">Next</a></li>
             </ul>
           </nav>
         </div>
