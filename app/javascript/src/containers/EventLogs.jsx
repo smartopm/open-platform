@@ -32,7 +32,7 @@ export function IndexComponent({ data, router }) {
     }
   }
   function logs(eventLogs) {
-    if (!eventLogs || eventLogs.length) {
+    if (!eventLogs) {
       return;
     }
     return eventLogs.map(entry => (
