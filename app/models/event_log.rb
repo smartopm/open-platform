@@ -31,16 +31,10 @@ class EventLog < ApplicationRecord
 
   # Hand back a human description of the event
   def to_sentence
-    case subject
-    when 'user_entry'
-      user_entry_to_sentence
-    when 'visitor_entry'
-      visitor_entry_to_sentence
-    when 'user_login'
-      user_login_to_sentence
-    when 'user_switch'
-      user_switch_to_sentence
-    end
+    method = "#{subject}_to_sentence".to_sym
+    return '' unless respond_to?(method)
+
+    send(method)
   end
 
   def visitor_entry_to_sentence
@@ -65,7 +59,7 @@ class EventLog < ApplicationRecord
     "User #{acting_user.name} switched to user #{user.name}"
   end
 
-  def user_active_sentence
+  def user_active_to_sentence
     "User #{acting_user.name} was active"
   end
 
