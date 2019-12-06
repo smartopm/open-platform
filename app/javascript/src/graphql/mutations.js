@@ -262,3 +262,11 @@ export const loginPhoneConfirmCode = gql`
     }
   }
 `;
+
+export const switchGuards = gql`
+  mutation loginSwitchUser($id: ID!) {
+    loginSwitchUser(id: $id) {
+      authToken
+    }
+  }
+`;
