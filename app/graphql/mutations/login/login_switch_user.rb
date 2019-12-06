@@ -9,6 +9,7 @@ module Mutations
       field :auth_token, String, null: true
 
       def resolve(vals)
+        ensure_logged_in
         user = ::User.find(vals[:id])
 
         unless context[:current_user].can_become?(user)
@@ -16,6 +17,11 @@ module Mutations
         end
 
         { auth_token: user.auth_token }
+      end
+
+      def ensure_logged_in
+        user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Must be logged in' unless user
       end
     end
   end
