@@ -12,7 +12,7 @@ export default ({ history }) => {
 };
 
 // Todo: Find the total number of allEventLogs
-const limit = 10
+const limit = 30
 const allEventLogs = (history) => {
   const [offset, setOffset] = useState(0)
   // const eventsPage = 

@@ -5,6 +5,7 @@ require 'nexmo'
 # Library to initialize and send SMS messages using Nexmo/Twilio
 class Sms
   class UninitializedError < StandardError; end
+  class SmsError < StandardError; end
 
   @config = {}
   class << self
@@ -16,6 +17,8 @@ class Sms
   end
 
   def self.send(to, message)
+    raise SmsError, '`to` can\'t be nil or empty' if to.blank?
+
     return if Rails.env.test?
 
     to = clean_number(to)
@@ -24,6 +27,8 @@ class Sms
   end
 
   def self.send_from(to, from, message)
+    raise SmsError, '`to` can\'t be nil or empty' if to.blank?
+
     return if Rails.env.test?
 
     to = clean_number(to)
