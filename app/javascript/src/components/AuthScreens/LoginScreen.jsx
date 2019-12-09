@@ -18,22 +18,25 @@ export function LoginScreen({ history }) {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState(260)
 
-  function loginWithPhone() {
-    setIsLoading(true);
-    loginPhoneStart({
-      variables: { phoneNumber: `${countryCode}${phoneNumber}` }
-    })
-      .then(({ data }) => {
-        setIsLoading(false);
-        return data;
+  function loginWithPhone(event, type = "input") {
+    // submit on both click and Enter Key pressed
+    if (event.keyCode === 13 || type === "btnClick") {
+      setIsLoading(true);
+      loginPhoneStart({
+        variables: { phoneNumber: `${countryCode}${phoneNumber}` }
       })
-      .then(data => {
-        history.push("/code/" + data.loginPhoneStart.user.id);
-      })
-      .catch(error => {
-        setError(error.message);
-        setIsLoading(false);
-      });
+        .then(({ data }) => {
+          setIsLoading(false);
+          return data;
+        })
+        .then(data => {
+          history.push("/code/" + data.loginPhoneStart.user.id);
+        })
+        .catch(error => {
+          setError(error.message);
+          setIsLoading(false);
+        });
+    }
   }
   return (
     <div style={{ height: "100vh" }} className="login-page" >
@@ -70,6 +73,7 @@ export function LoginScreen({ history }) {
             }}
             value={phoneNumber}
             onChange={e => setPhoneNumber(e.target.value)}
+            onKeyDown={loginWithPhone}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -106,7 +110,7 @@ export function LoginScreen({ history }) {
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-            onClick={loginWithPhone}
+            onClick={event => loginWithPhone(event, "btnClick")}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
     width: "55%",
     height: 51,
     boxShadow: "none",
-    marginTop: 100
+    marginTop: 80
   },
   linksSection: {
     marginTop: 20

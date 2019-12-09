@@ -17,5 +17,6 @@ module Types
     # User login
     field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart
     field :login_phone_complete, mutation: Mutations::Login::LoginPhoneComplete
+    field :login_switch_user, mutation: Mutations::Login::LoginSwitchUser
   end
 end

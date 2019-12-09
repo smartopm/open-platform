@@ -174,6 +174,14 @@ class User < ApplicationRecord
     Array(roles).include?(user_type.to_sym)
   end
 
+  def can_become?(user)
+    return false unless role?(%i[admin security_guard])
+
+    return false if user.role?([:admin]) # Don't let anyone become an admin
+
+    user.community_id == community_id
+  end
+
   def verify_phone_token!(token)
     if phone_token == token
       return true if phone_token_expires_at > Time.zone.now

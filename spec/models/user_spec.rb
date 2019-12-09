@@ -83,11 +83,6 @@ RSpec.describe User, type: :model do
       expect(@user.pending?).to be true
     end
 
-    it 'after assinging a admin role, it should be an admin' do
-      @user.update(user_type: 'admin')
-      expect(@user.admin?).to be true
-    end
-
     it 'Roles should have a human name' do
       @user.update(user_type: 'admin')
       expect(@user.role_name).to eql 'Admin'
@@ -101,6 +96,30 @@ RSpec.describe User, type: :model do
     it 'should be expired if it\'s expired' do
       @user.update(expires_at: 1.week.ago)
       expect(@user.expired?).to be true
+    end
+  end
+
+  describe 'User with user_type roles' do
+    before :each do
+      @security_guard = FactoryBot.create(:security_guard)
+      @admin = FactoryBot.create(:admin_user, community: @security_guard.community)
+      @user = FactoryBot.create(:user, community: @security_guard.community)
+    end
+
+    it 'should know if user an admin' do
+      @user.update(user_type: 'admin')
+      expect(@user.admin?).to be true
+    end
+
+    it 'should be able to check if user belongs to a role?' do
+      expect(@admin.role?(%i[security_guard admin])).to be true
+      expect(@admin.role?([:security_guard])).to be false
+    end
+
+    it 'should allow users to become other users' do
+      expect(@admin.can_become?(@security_guard)).to be true
+      expect(@user.can_become?(@security_guard)).to be false
+      expect(@security_guard.can_become?(@admin)).to be false
     end
   end
 
