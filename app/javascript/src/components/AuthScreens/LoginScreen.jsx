@@ -19,6 +19,7 @@ export function LoginScreen({ history }) {
   const [countryCode, setCountryCode] = useState(260)
 
   function loginWithPhone(event, type = "input") {
+    // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === "btnClick") {
       setIsLoading(true);
       loginPhoneStart({
