@@ -2,6 +2,7 @@ import React, { useContext, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import Avatar from "@material-ui/core/Avatar";
+import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
@@ -75,14 +76,22 @@ export function Component({
 
     return (
       <Fragment>
-        <Avatar
-          alt="Default Avatar"
-          onClick={toggleDrawer}
-          className={`${css(styles.userAvatar)}`}
-          src={avatarUrl({ user: authState.user })}
-        />
+        {
+          authState.user.userType === "security_guard" ? (
+            <MenuIcon
+              onClick={toggleDrawer}
+              className={`${css(styles.userAvatar)}`}
+            />
+          ) :
+            <Avatar
+              alt="Default Avatar"
+              onClick={toggleDrawer}
+              className={`${css(styles.userAvatar)}`}
+              src={avatarUrl({ user: authState.user })}
+            />
+        }
         <NotificationsNoneOutlinedIcon
-          className={`${css(styles.rightSideIcon)}`}
+          className={`${css(authState.user.userType === "security_guard" ? styles.rightSideIconGuard : styles.rightSideIconAdmin)}`}
         />
       </Fragment>
     );
@@ -183,11 +192,19 @@ const styles = StyleSheet.create({
     height: 30,
     color: "#FFF"
   },
-  rightSideIcon: {
+  rightSideIconAdmin: {
     position: "absolute",
     bottom: 0,
     right: 5,
     height: 30,
+    color: "#FFF",
+    ":hover": {
+      cursor: "pointer"
+    }
+  },
+  rightSideIconGuard: {
+    position: "absolute",
+    right: 5,
     color: "#FFF",
     ":hover": {
       cursor: "pointer"
