@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     marginTop: 50
   },
   newInput: {
-    width: 50,
+    width: 40,
     height: 60,
     fontSize: 27,
     textAlign: "center",
