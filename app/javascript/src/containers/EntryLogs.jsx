@@ -72,7 +72,7 @@ export function IndexComponent({ data, tabId, router }) {
           cursor: "pointer"
         }}
       >
-        <td>{entry.data.ref_name}</td>
+        <td>{entry.data.ref_name || entry.data.name}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.actingUser.name}</td>

@@ -27,7 +27,7 @@ module Mutations
                      ref_id: user.id,
                      ref_type: 'User',
                      data: {
-                       name: user.name, note: note
+                       ref_name: user.name, note: note
                      })
       end
     end

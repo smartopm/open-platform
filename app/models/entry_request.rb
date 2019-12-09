@@ -64,7 +64,7 @@ class EntryRequest < ApplicationRecord
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
         action: 'started',
-        visitor_name: self[:name],
+        ref_name: self[:name],
       }
     )
   end
@@ -76,7 +76,7 @@ class EntryRequest < ApplicationRecord
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
         action: approved ? 'granted' : 'denied',
-        visitor_name: self[:name],
+        ref_name: self[:name],
       }
     )
   end

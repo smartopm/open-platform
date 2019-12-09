@@ -38,10 +38,11 @@ class EventLog < ApplicationRecord
   end
 
   def visitor_entry_to_sentence
+    visitor_name = data['visitor_name'] || data['ref_name']
     if data['action'] == 'started'
-      "#{acting_user.name} started registering #{data['visitor_name']} for entry."
+      "#{acting_user.name} started registering #{visitor_name} for entry."
     else
-      "#{acting_user.name} #{data['action']} #{data['visitor_name']} for entry."
+      "#{acting_user.name} #{data['action']} #{visitor_name} for entry."
     end
   end
 
@@ -83,7 +84,7 @@ class EventLog < ApplicationRecord
   end
 
   def validate_visitor_entry
-    errors.add(:data, 'Visitor name required') unless data['visitor_name']
+    errors.add(:data, 'Visitor name required') unless data['ref_name']
     return if acting_user
 
     errors.add(:acting_user_id, 'Must be associated with a reporting user')
