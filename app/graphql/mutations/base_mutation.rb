@@ -7,6 +7,10 @@ module Mutations
 
     private
 
+    def ensure_logged_in
+      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+    end
+
     def check_params(rules, values)
       user_type = context[:current_user]&.user_type
       raise MutationArgumentError unless user_type
