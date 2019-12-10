@@ -47,13 +47,19 @@ export function Component({
   const { values, handleSubmit } = useContext(FormContext);
   function backButtonOrMenu() {
     const to = backTo || "/";
-    if (menuButton === "back") {
+    if (menuButton === "back" && navName === "Scan") {
+      return <a href="/" className={css(styles.buttonLeft)} >
+        <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
+      </a>
+    }
+    else if (menuButton === "back") {
       return (
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </Link>
       );
-    } else if (menuButton === "cancel") {
+    }
+    else if (menuButton === "cancel") {
       return (
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>

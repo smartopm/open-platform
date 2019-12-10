@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import QrReader from "react-qr-reader";
 import { useTranslation } from "react-i18next";
-import {  FormControlLabel, Switch } from "@material-ui/core";
+import { FormControlLabel, Switch } from "@material-ui/core";
 import Nav from "../components/Nav";
 
 export default function QRScan() {
@@ -36,7 +36,6 @@ export default function QRScan() {
               advanced: [{ torch: isTorchOn }]
             })
               .catch(e => {
-                console.log(e)
                 setError(JSON.stringify(e))
               });
           }
