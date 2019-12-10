@@ -36,6 +36,7 @@ import Support from "../src/containers/Support";
 import GuardHome from "../src/containers/GuardHome";
 import EntryRequest from "../src/containers/EntryRequest";
 import RequestUpdate from "../src/containers/RequestUpdate";
+import CommunityLogs from "../src/containers/CommunityLogs";
 import WaitScreen from "../src/containers/WaitingScreen";
 import RequestApproval from "../src/containers/RequestApproval";
 import ErrorPage from "../src/components/Error";
@@ -151,6 +152,7 @@ const App = () => {
                     <Route path="/print/:id" component={IDPrint} />
                     <Route path="/entry_logs/:userId" component={EntryLogs} />
                     <Route path="/entry_logs" component={EntryLogs} />
+                    <Route path="/logs" component={CommunityLogs} />
                     <Route path="/event_logs" component={EventLogs} />
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/user/pending" exact component={PendingUsers} />

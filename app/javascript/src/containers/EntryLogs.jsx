@@ -42,7 +42,7 @@ const userEntryLogs = userId => {
 const allEntryLogs = (tabId, history) => {
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: 'user_entry',
+      subject: ['user_entry'],
       refId: null,
       refType: null,
     },

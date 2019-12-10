@@ -9,7 +9,7 @@ module Types::Queries::EventLog
       description 'Get entry logs for the current_user community'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-      argument :subject, String, required: false
+      argument :subject, [String, null: true], required: false
       argument :ref_id, GraphQL::Types::ID, required: false
       argument :ref_type, String, required: false
     end

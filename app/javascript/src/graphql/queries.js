@@ -36,7 +36,7 @@ export const AllEntryRequestsQuery = gql`
 
 export const AllEventLogsQuery = gql`
   query AllEventLogs(
-    $subject: String
+    $subject: [String]
     $refId: ID
     $refType: String
     $offset: Int
@@ -58,6 +58,10 @@ export const AllEventLogsQuery = gql`
       data
       actingUser {
         name
+        id
+      }
+      entryRequest {
+        reason
         id
       }
     }
