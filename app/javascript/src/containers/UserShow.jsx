@@ -159,6 +159,17 @@ export function Component({
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
                 <Link
+                  to={`/user/${data.user.id}/logs`}
+                  className="btn btn-primary btn-lg btn-block active"
+                >
+                  User Logs
+                </Link>
+              </div>
+            </div>
+
+            <div className="row justify-content-center log-entry-form">
+              <div className="col-10 col-sm-10 col-md-6">
+                <Link
                   to={`/print/${data.user.id}`}
                   className="btn btn-primary btn-lg btn-block active"
                 >
