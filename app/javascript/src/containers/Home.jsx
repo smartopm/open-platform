@@ -6,7 +6,7 @@ import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
-import RequestIcon from "../../../assets/images/icon_request.svg";
+// import RequestIcon from "../../../assets/images/icon_request.svg";
 import HelpIcon from '@material-ui/icons/Help';
 import ExploreIcon from "../../../assets/images/icon_map";
 import PersonIcon from "@material-ui/icons/Person";
@@ -61,28 +61,16 @@ export function Component({ authState }) {
               {!["security_guard", "resident"].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                  <Fragment>
-                    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                      <Link to={"/map"} className={`card-link`}>
-                        <div className="card-body">
-                          <h5 className="card-title">
-                            <img src={ExploreIcon} alt="map icon" />
-                          </h5>
-                          <p>{t("home.explore")}</p>
-                        </div>
-                      </Link>
-                    </div>
-                    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                      <Link to={`/user/pending`} className={`card-link`}>
-                        <div className="card-body">
-                          <h5 className="card-title">
-                            <img src={RequestIcon} alt="request icon" />
-                          </h5>
-                          <p>{t("home.request")}</p>
-                        </div>
-                      </Link>
-                    </div>
-                  </Fragment>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to={"/map"} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <img src={ExploreIcon} alt="map icon" />
+                        </h5>
+                        <p>{t("home.explore")}</p>
+                      </div>
+                    </Link>
+                  </div>
                 ) : null}
 
               <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
