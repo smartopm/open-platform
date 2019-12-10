@@ -48,9 +48,11 @@ export function Component({
   function backButtonOrMenu() {
     const to = backTo || "/";
     if (menuButton === "back" && navName === "Scan") {
-      return <a href="/" className={css(styles.buttonLeft)} >
-        <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
-      </a>
+      return (
+        <a href="/" className={css(styles.buttonLeft)} >
+          <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
+        </a>
+      )
     }
     else if (menuButton === "back") {
       return (
