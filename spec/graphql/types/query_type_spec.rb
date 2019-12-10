@@ -107,7 +107,7 @@ RSpec.describe Types::QueryType do
       end
 
       @query =
-        %(query AllEventLogs($subject: String, $refId: ID, $refType: String){
+        %(query AllEventLogs($subject: [String], $refId: ID, $refType: String){
           result: allEventLogs(subject: $subject, refId: $refId, refType:$refType) {
             id
             createdAt

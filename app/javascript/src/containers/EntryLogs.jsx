@@ -5,79 +5,69 @@ import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 import { AllEventLogsQuery } from "../graphql/queries.js";
-import {
-  a11yProps,
-  StyledTabs,
-  StyledTab,
-  TabPanel
-} from "../components/Tabs.jsx";
-import EntryRequests from "./EntryRequests";
 import ErrorPage from "../components/Error";
 
-export default ({ match, location, history }) => {
-  // auto route to gate logs if user is from requestUpdate
-  const tabIndex = location.state ? location.state.tab : 0;
-  if (match.params.userId) {
-    return userEntryLogs(match.params.userId);
-  } else {
-    return allEntryLogs(tabIndex, history);
-  }
+export default ({ history, match }) => {
+  return allEventLogs(history, match);
 };
 
-const userEntryLogs = userId => {
+// Todo: Find the total number of allEventLogs
+const limit = 50
+const allEventLogs = (history, match) => {
+  const [offset, setOffset] = useState(0)
+  // const eventsPage = 
+  const refId = match.params.userId || null
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: {
-      subject: 'user_entry',
-      refId: userId,
-      refType: "User",
-    },
-    fetchPolicy: "no-cache"
+    variables: { subject: ['user_entry', 'visitor_entry'], refId: refId, refType: null, offset, limit },
+    fetchPolicy: "cache-and-network"
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
-  return <UserComponent data={data} />;
-};
-
-const allEntryLogs = (tabId, history) => {
-  const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: {
-      subject: 'user_entry',
-      refId: null,
-      refType: null,
-    },
-    fetchPolicy: "no-cache"
-  });
-  if (loading) return <Loading />;
-  if (error) return <ErrorPage title={error.message} />;
-
-  return <IndexComponent data={data} tabId={tabId} router={history} />;
-};
-
-export function IndexComponent({ data, tabId, router }) {
-  const [value, setValue] = useState(tabId || 0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  function routeToUserInfo(userId) {
-    return router.push(`/user/${userId}/edit`);
+  function handleNextPage() {
+    setOffset(offset + limit)
   }
-  function logs(entries) {
-    return entries.map(entry => (
-      <tr
-        key={entry.id}
-        onClick={() => routeToUserInfo(entry.user.id)}
+  function handlePreviousPage() {
+    if (offset < limit) {
+      return;
+    }
+    setOffset(offset - limit)
+  }
+  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} />;
+};
+
+export function IndexComponent({ data, router, nextPage, previousPage, offset }) {
+
+  function routeToAction(eventLog) {
+    if (eventLog.refType === 'EntryRequest') {
+      return router.push(`/entry_request/${eventLog.refId}`);
+    } else if (eventLog.refType === 'User') {
+      return router.push(`/user/${eventLog.refId}`);
+    }
+  }
+  function logs(eventLogs) {
+    if (!eventLogs) {
+      return;
+    }
+    return eventLogs.map(event => {
+      const source = event.subject === 'user_entry' ? 'Scan' : 'Manual'
+      const reason = event.entryRequest ? event.entryRequest.reason : ''
+      const visitorName = event.data.ref_name || event.data.visitor_name || event.data.name
+      return (<tr
+        key={event.id}
+        onClick={() => routeToAction(event)}
         style={{
           cursor: "pointer"
         }}
       >
-        <td>{entry.data.ref_name || entry.data.name}</td>
-        <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
-        <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
-        <td>{entry.actingUser.name}</td>
+        <td>{visitorName}</td>
+        <td>{DateUtil.dateToString(new Date(event.createdAt))}</td>
+        <td>{DateUtil.dateTimeToString(new Date(event.createdAt))}</td>
+        <td>{reason}</td>
+        <td>{event.actingUser.name}</td>
+        <td>{source}</td>
       </tr>
-    ));
+    )});
   }
   return (
     <div>
@@ -87,66 +77,31 @@ export function IndexComponent({ data, tabId, router }) {
         }}
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
-        <StyledTabs
-          value={value}
-          onChange={handleChange}
-          aria-label="request tabs"
-          centered
-        >
-          <StyledTab label="Users" {...a11yProps(0)} />
-          <StyledTab label="Gate Logs" {...a11yProps(1)} />
-        </StyledTabs>
       </div>
-      <TabPanel value={value} index={0}>
-        <div className="row justify-content-center">
-          <div className="col-10 col-sm-10 col-md-6">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Visitor</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Reporter</th>
-                </tr>
-              </thead>
-              <tbody>{logs(data.result)}</tbody>
-            </table>
-          </div>
-        </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <EntryRequests />
-      </TabPanel>
-    </div>
-  );
-}
-
-export function UserComponent({ data }) {
-  function logs(entries) {
-    return entries.map(entry => (
-      <tr key={entry.refId}>
-        <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
-        <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
-        <td>{entry.actingUser.name}</td>
-      </tr>
-    ));
-  }
-
-  return (
-    <div>
-      <Nav menuButton="back" />
       <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6">
+        <div className="col-10 col-sm-10 col-md-6 table-responsive">
           <table className="table">
             <thead>
               <tr>
+                <th scope="col">Visitor</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
+                <th scope="col">Reason</th>
                 <th scope="col">Reporter</th>
+                <th scope="col">Source</th>
               </tr>
             </thead>
             <tbody>{logs(data.result)}</tbody>
           </table>
+          <nav aria-label="Page navigation">
+            <ul className="pagination">
+              <li className={`page-item ${(offset < limit) && 'disabled'}`}>
+                <a className="page-link" onClick={previousPage} href="#">Previous</a>
+              </li>
+              <li className={`page-item ${(data.result.length < limit) && 'disabled'}`}>
+                <a className="page-link" onClick={nextPage} href="#">Next</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
