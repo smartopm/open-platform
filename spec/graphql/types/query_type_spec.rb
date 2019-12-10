@@ -176,6 +176,61 @@ RSpec.describe Types::QueryType do
     end
   end
 
+  describe 'event logs query for a user' do
+    before :each do
+      @current_user = create(:security_guard)
+      @user = create(:user, community: @current_user.community)
+      3.times do
+        EventLog.create(
+          community: @user.community,
+          ref_id: @user.id,
+          ref_type: 'User',
+          subject: 'user_login',
+          acting_user: @user,
+        )
+      end
+
+      @query =
+        %(query AllEventLogsForUser($subject: [String], $userId: ID!){
+          result: allEventLogsForUser(subject: $subject, userId: $userId) {
+            id
+            createdAt
+            refId
+            refType
+            subject
+            sentence
+            data
+            actingUser {
+              name
+              id
+            }
+          }
+        })
+    end
+
+    it 'returns all event logs' do
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: @current_user },
+        variables: {
+          subject: nil, userId: @user.id, refType: nil
+        },
+      ).as_json
+      expect(result.dig('data', 'result').length).to eql 3
+    end
+
+    it 'should fail if not logged in' do
+      result = DoubleGdpSchema.execute(
+        @query,
+        context: { current_user: nil },
+        variables: {
+          subject: nil, userId: @user.id, refType: nil
+        },
+      ).as_json
+      expect(result.dig('data', 'securityGuards')).to be_nil
+    end
+  end
+
   describe 'security guard list' do
     before :each do
       @user = create(:security_guard)

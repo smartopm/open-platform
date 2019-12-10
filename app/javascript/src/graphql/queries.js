@@ -68,6 +68,34 @@ export const AllEventLogsQuery = gql`
   }
 `;
 
+export const AllEventLogsForUserQuery = gql`
+  query AllEventLogsForUser(
+    $subject: [String]
+    $userId: ID!
+    $offset: Int
+    $limit: Int
+  ) {
+    result: allEventLogsForUser(
+      subject: $subject
+      userId: $userId
+      offset: $offset
+      limit: $limit
+    ) {
+      id
+      createdAt
+      refId
+      refType
+      subject
+      sentence
+      data
+      actingUser {
+        name
+        id
+      }
+    }
+  }
+`;
+
 export const SecurityGuards = gql`
   {
     securityGuards {

@@ -4,11 +4,11 @@ import Nav from "../components/Nav";
 
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
-import { AllEventLogsQuery } from "../graphql/queries.js";
+import { AllEventLogsForUserQuery } from "../graphql/queries.js";
 import ErrorPage from "../components/Error";
 
 export default ({ history, match }) => {
-  const subjects = ['user_entry', 'visitor_entry']
+  const subjects = null;
   return allEventLogs(history, match, subjects);
 };
 
@@ -17,9 +17,9 @@ const limit = 50
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0)
   // const eventsPage = 
-  const refId = match.params.userId || null
-  const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: { subject: subjects, refId: refId, refType: null, offset, limit },
+  const userId = match.params.id || null
+  const { loading, error, data } = useQuery(AllEventLogsForUserQuery, {
+    variables: { subject: subjects, userId, offset, limit },
     fetchPolicy: "cache-and-network"
   });
   if (loading) return <Loading />;
@@ -51,9 +51,6 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
       return;
     }
     return eventLogs.map(event => {
-      const source = event.subject === 'user_entry' ? 'Scan' : 'Manual'
-      const reason = event.entryRequest ? event.entryRequest.reason : ''
-      const visitorName = event.data.ref_name || event.data.visitor_name || event.data.name
       return (<tr
         key={event.id}
         onClick={() => routeToAction(event)}
@@ -61,12 +58,9 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
           cursor: "pointer"
         }}
       >
-        <td>{visitorName}</td>
         <td>{DateUtil.dateToString(new Date(event.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(event.createdAt))}</td>
-        <td>{reason}</td>
-        <td>{event.actingUser.name}</td>
-        <td>{source}</td>
+        <td>{event.sentence}</td>
       </tr>
     )});
   }
@@ -84,12 +78,9 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">Visitor</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
-                <th scope="col">Reason</th>
-                <th scope="col">Reporter</th>
-                <th scope="col">Source</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>{logs(data.result)}</tbody>
