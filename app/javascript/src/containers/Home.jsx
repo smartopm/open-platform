@@ -6,7 +6,7 @@ import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
-import RequestIcon from "../../../assets/images/icon_request.svg";
+// import RequestIcon from "../../../assets/images/icon_request.svg";
 import HelpIcon from '@material-ui/icons/Help';
 import ExploreIcon from "../../../assets/images/icon_map";
 import PersonIcon from "@material-ui/icons/Person";
@@ -61,31 +61,19 @@ export function Component({ authState }) {
               {!["security_guard", "resident"].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                  <Fragment>
-                    <div className="card align-self-center text-center">
-                      <Link to={"/map"} className={`card-link`}>
-                        <div className="card-body">
-                          <h5 className="card-title">
-                            <img src={ExploreIcon} alt="map icon" />
-                          </h5>
-                          <p>{t("home.explore")}</p>
-                        </div>
-                      </Link>
-                    </div>
-                    <div className="card align-self-center text-center">
-                      <Link to={`/user/pending`} className={`card-link`}>
-                        <div className="card-body">
-                          <h5 className="card-title">
-                            <img src={RequestIcon} alt="request icon" />
-                          </h5>
-                          <p>{t("home.request")}</p>
-                        </div>
-                      </Link>
-                    </div>
-                  </Fragment>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to={"/map"} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <img src={ExploreIcon} alt="map icon" />
+                        </h5>
+                        <p>{t("home.explore")}</p>
+                      </div>
+                    </Link>
+                  </div>
                 ) : null}
 
-              <div className="card align-self-center text-center">
+              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
@@ -96,7 +84,7 @@ export function Component({ authState }) {
                 </Link>
               </div>
 
-              <div className="card align-self-center text-center">
+              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                 <Link to={"/support"} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
@@ -110,7 +98,8 @@ export function Component({ authState }) {
                 authState.user.userType.toLowerCase()
               ) ? (
                   <Fragment>
-                    <div className="card align-self-center text-center">
+                    <div
+                      className={`${css(styles.cardSize)} card align-self-center text-center`}>
                       <Link to={"/entry_logs"} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
@@ -125,6 +114,7 @@ export function Component({ authState }) {
             </div>
           </div>
         </div>
+        <p>Powered by DoubleGDP </p>
       </div>
     </div>
   );
@@ -167,5 +157,9 @@ const styles = StyleSheet.create({
   },
   homeIconColor: {
     color: "#25c0b0"
+  },
+  cardSize: {
+    width: 200,
+    height: 154
   }
 });

@@ -11,6 +11,6 @@ describe("Sidelist component", () => {
 
   it("should contain required list ", () => {
     const { children } = sideListWrapper.props();
-    expect(children).toHaveLength(3);
+    expect(children).toHaveLength(4);
   });
 });

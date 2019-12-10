@@ -7,6 +7,7 @@ import { entryReason } from "../utils/constants";
 import { EntryRequestCreate } from "../graphql/mutations.js";
 import Nav from "../components/Nav";
 import { ReasonInputModal } from "../components/Dialog";
+import { Footer } from "../components/Footer";
 
 export default function LogEntry({ history }) {
   const name = useFormInput("");
@@ -133,13 +134,17 @@ export default function LogEntry({ history }) {
               ))}
             </TextField>
           </div>
-
-          <div className={css(styles.signatureContainer)}>
-            <SignaturePad
-              canvasProps={{ className: css(styles.signaturePad) }}
-              ref={signRef}
-              onEnd={() => setClearBtnActive(!isBtnActive)}
-            />
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="signature">
+              SIGNATURE
+            </label>
+            <div className={css(styles.signatureContainer)}>
+              <SignaturePad
+                canvasProps={{ className: css(styles.signaturePad) }}
+                ref={signRef}
+                onEnd={() => setClearBtnActive(!isBtnActive)}
+              />
+            </div>
           </div>
           <br />
 
@@ -166,6 +171,7 @@ export default function LogEntry({ history }) {
             </Button>
           </div>
         </form>
+        <Footer position="5vh" />
       </div>
     </Fragment>
   );
