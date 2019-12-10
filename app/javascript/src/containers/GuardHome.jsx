@@ -142,10 +142,7 @@ export default function GuardHome() {
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
               <div
-                className="card align-self-center text-center"
-                style={{
-                  width: "100%"
-                }}
+                className={`${css(styles.cardSize)} card align-self-center text-center`}
               >
                 <Link to={`/scan`} className={`card-link`}>
                   <div className="card-body">
@@ -157,10 +154,7 @@ export default function GuardHome() {
                 </Link>
               </div>
               <div
-                className="card align-self-center text-center"
-                style={{
-                  width: "100%"
-                }}
+                className={`${css(styles.cardSize)} card align-self-center text-center`}
               >
                 <Link to={`/entry_request`} className={`card-link`}>
                   <div className="card-body">
@@ -172,10 +166,7 @@ export default function GuardHome() {
                 </Link>
               </div>
               <div
-                className="card align-self-center text-center"
-                style={{
-                  width: "100%"
-                }}
+                className={`${css(styles.cardSize)} card align-self-center text-center`}
               >
                 <Link to={`/entry_logs`} className={`card-link`}>
                   <div className="card-body">
@@ -187,10 +178,7 @@ export default function GuardHome() {
                 </Link>
               </div>
               <div
-                className="card align-self-center text-center"
-                style={{
-                  width: "100%"
-                }}
+                className={`${css(styles.cardSize)} card align-self-center text-center`}
               >
                 <a href={`tel:${ponisoNumber}`}>
                   <div className="card-body">
@@ -266,5 +254,9 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     textDecoration: "none",
     marginLeft: 25
+  },
+  cardSize: {
+    width: 200,
+    height: 154
   }
 });
