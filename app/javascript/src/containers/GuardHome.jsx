@@ -20,6 +20,7 @@ import ErrorPage from "../components/Error";
 import { AUTH_TOKEN_KEY } from "../utils/apollo";
 import { switchGuards } from "../graphql/mutations";
 import { withStyles } from "@material-ui/core/styles"
+import { Footer } from "../components/Footer";
 
 const BootstrapInput = withStyles(() => ({
   input: {
@@ -192,10 +193,12 @@ export default function GuardHome() {
             </div>
           </div>
         </div>
+        <Footer position="5vh" />
       </div>
     </div>
   );
 }
+
 
 const styles = StyleSheet.create({
   inputGroup: {

@@ -12,6 +12,7 @@ import HelpIcon from "@material-ui/icons/Help";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import Avatar from "./Avatar.jsx";
+import { Footer } from "./Footer.jsx";
 
 export const SideList = ({ toggleDrawer, user }) => (
   <div
@@ -61,6 +62,7 @@ export const SideList = ({ toggleDrawer, user }) => (
         </a>
       </ListItem>
     </List>
+    <Footer position="36vh" />
   </div>
 );
 

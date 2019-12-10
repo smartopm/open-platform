@@ -114,6 +114,7 @@ export function Component({ authState }) {
             </div>
           </div>
         </div>
+        <p>Powered by DoubleGDP </p>
       </div>
     </div>
   );

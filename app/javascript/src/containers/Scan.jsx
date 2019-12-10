@@ -3,6 +3,7 @@ import QrReader from "react-qr-reader";
 import { useTranslation } from "react-i18next";
 import { FormControlLabel, Switch } from "@material-ui/core";
 import Nav from "../components/Nav";
+import { Footer } from "../components/Footer";
 
 export default function QRScan() {
   const [scanned, setScanned] = useState(false);
@@ -89,6 +90,7 @@ export default function QRScan() {
             </div>
           </>
         )}
+      <Footer position="5vh" />
     </div>
   );
 }
