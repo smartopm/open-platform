@@ -40,7 +40,7 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
-      return router.push(`/entry_request/${eventLog.refId}`);
+      return router.push(`/request/${eventLog.refId}`);
     } else if (eventLog.refType === 'User') {
       return router.push(`/user/${eventLog.refId}`);
     }
