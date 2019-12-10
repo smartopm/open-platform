@@ -62,7 +62,7 @@ export function Component({ authState }) {
                 authState.user.userType.toLowerCase()
               ) ? (
                   <Fragment>
-                    <div className="card align-self-center text-center">
+                    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                       <Link to={"/map"} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
@@ -72,7 +72,7 @@ export function Component({ authState }) {
                         </div>
                       </Link>
                     </div>
-                    <div className="card align-self-center text-center">
+                    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                       <Link to={`/user/pending`} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
@@ -85,7 +85,7 @@ export function Component({ authState }) {
                   </Fragment>
                 ) : null}
 
-              <div className="card align-self-center text-center">
+              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
@@ -96,7 +96,7 @@ export function Component({ authState }) {
                 </Link>
               </div>
 
-              <div className="card align-self-center text-center">
+              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                 <Link to={"/support"} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
@@ -110,7 +110,8 @@ export function Component({ authState }) {
                 authState.user.userType.toLowerCase()
               ) ? (
                   <Fragment>
-                    <div className="card align-self-center text-center">
+                    <div
+                      className={`${css(styles.cardSize)} card align-self-center text-center`}>
                       <Link to={"/entry_logs"} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
@@ -167,5 +168,9 @@ const styles = StyleSheet.create({
   },
   homeIconColor: {
     color: "#25c0b0"
+  },
+  cardSize: {
+    width: 200,
+    height: 154
   }
 });
