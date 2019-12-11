@@ -11,6 +11,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import ExploreIcon from "../../../assets/images/icon_map";
 import PersonIcon from "@material-ui/icons/Person";
 import LogIcon from "@material-ui/icons/Assignment";
+import { Footer } from "../components/Footer.jsx";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -114,7 +115,7 @@ export function Component({ authState }) {
             </div>
           </div>
         </div>
-        <p>Powered by DoubleGDP </p>
+        <Footer position="5vh" />
       </div>
     </div>
   );

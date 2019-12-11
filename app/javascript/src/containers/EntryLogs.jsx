@@ -6,6 +6,7 @@ import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 import { AllEventLogsQuery } from "../graphql/queries.js";
 import ErrorPage from "../components/Error";
+import { Footer } from "../components/Footer";
 
 export default ({ history, match }) => {
   const subjects = ["user_entry", "visitor_entry"];
@@ -13,7 +14,7 @@ export default ({ history, match }) => {
 };
 
 // Todo: Find the total number of allEventLogs
-const limit = 5;
+const limit = 50;
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0);
   // const eventsPage =
@@ -151,6 +152,7 @@ export function IndexComponent({
           </nav>
         </div>
       </div>
+      <Footer position={"3vh"} />
     </div>
   );
 }
