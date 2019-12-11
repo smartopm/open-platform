@@ -1,48 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../components/Nav";
-
+import { StyleSheet, css } from "aphrodite";
 import Loading from "../components/Loading.jsx";
 import DateUtil from "../utils/dateutil.js";
 import { AllEventLogsQuery } from "../graphql/queries.js";
 import ErrorPage from "../components/Error";
 
 export default ({ history, match }) => {
-  const subjects = ['user_entry', 'visitor_entry']
+  const subjects = ["user_entry", "visitor_entry"];
   return allEventLogs(history, match, subjects);
 };
 
 // Todo: Find the total number of allEventLogs
-const limit = 50
+const limit = 5;
 const allEventLogs = (history, match, subjects) => {
-  const [offset, setOffset] = useState(0)
-  // const eventsPage = 
-  const refId = match.params.userId || null
+  const [offset, setOffset] = useState(0);
+  // const eventsPage =
+  const refId = match.params.userId || null;
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
-    variables: { subject: subjects, refId: refId, refType: null, offset, limit },
+    variables: {
+      subject: subjects,
+      refId: refId,
+      refType: null,
+      offset,
+      limit
+    },
     fetchPolicy: "cache-and-network"
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
   function handleNextPage() {
-    setOffset(offset + limit)
+    setOffset(offset + limit);
   }
   function handlePreviousPage() {
     if (offset < limit) {
       return;
     }
-    setOffset(offset - limit)
+    setOffset(offset - limit);
   }
-  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} />;
+  return (
+    <IndexComponent
+      data={data}
+      previousPage={handlePreviousPage}
+      offset={offset}
+      nextPage={handleNextPage}
+      router={history}
+    />
+  );
 };
 
-export function IndexComponent({ data, router, nextPage, previousPage, offset }) {
-
+export function IndexComponent({
+  data,
+  router,
+  nextPage,
+  previousPage,
+  offset
+}) {
   function routeToAction(eventLog) {
-    if (eventLog.refType === 'EntryRequest') {
+    if (eventLog.refType === "EntryRequest") {
       return router.push(`/request/${eventLog.refId}`);
-    } else if (eventLog.refType === 'User') {
+    } else if (eventLog.refType === "User") {
       return router.push(`/user/${eventLog.refId}`);
     }
   }
@@ -51,24 +70,53 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
       return;
     }
     return eventLogs.map(event => {
-      const source = event.subject === 'user_entry' ? 'Scan' : 'Manual'
-      const reason = event.entryRequest ? event.entryRequest.reason : ''
-      const visitorName = event.data.ref_name || event.data.visitor_name || event.data.name
-      return (<tr
-        key={event.id}
-        onClick={() => routeToAction(event)}
-        style={{
-          cursor: "pointer"
-        }}
-      >
-        <td>{visitorName}</td>
-        <td>{DateUtil.dateToString(new Date(event.createdAt))}</td>
-        <td>{DateUtil.dateTimeToString(new Date(event.createdAt))}</td>
-        <td>{reason}</td>
-        <td>{event.actingUser.name}</td>
-        <td>{source}</td>
-      </tr>
-    )});
+      const source = event.subject === "user_entry" ? "Scan" : "Manual";
+      const reason = event.entryRequest ? event.entryRequest.reason : "";
+      const visitorName =
+        event.data.ref_name || event.data.visitor_name || event.data.name;
+      return (
+        <Fragment key={event.id}>
+          <div className="container"
+            onClick={() => routeToAction(event)}
+            style={{
+              cursor: "pointer"
+            }}
+          >
+            <div className="row justify-content-between">
+              <div className="col-xs-8">
+                <span className={css(styles.logTitle)}>{visitorName}</span>
+              </div>
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>{DateUtil.dateToString(new Date(event.createdAt))}</span>
+              </div>
+            </div>
+            <div className="row justify-content-between">
+              <div className="col-xs-8">
+                <span className={css(styles.subTitle)}>{reason}</span>
+              </div>
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>
+                  {DateUtil.dateTimeToString(new Date(event.createdAt))}
+                </span>
+              </div>
+            </div>
+            <br />
+
+            <div className="row justify-content-between">
+              <div className="col-xs-8">
+                <span className={css(styles.subTitle)}><b>Guard</b>: {event.actingUser.name}</span>
+              </div>
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>
+                  <b>Source</b>: {source}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="border-top my-3"></div>
+        </Fragment>
+      );
+    });
   }
   return (
     <div>
@@ -79,28 +127,26 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
-      <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6 table-responsive">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Visitor</th>
-                <th scope="col">Date</th>
-                <th scope="col">Time</th>
-                <th scope="col">Reason</th>
-                <th scope="col">Reporter</th>
-                <th scope="col">Source</th>
-              </tr>
-            </thead>
-            <tbody>{logs(data.result)}</tbody>
-          </table>
-          <nav aria-label="Page navigation">
+      <div className="container">
+        <>
+          {logs(data.result)}
+        </>
+        <div className="d-flex justify-content-center">
+          <nav aria-label="center Page navigation">
             <ul className="pagination">
-              <li className={`page-item ${(offset < limit) && 'disabled'}`}>
-                <a className="page-link" onClick={previousPage} href="#">Previous</a>
+              <li className={`page-item ${offset < limit && "disabled"}`}>
+                <a className="page-link" onClick={previousPage} href="#">
+                  Previous
+                </a>
               </li>
-              <li className={`page-item ${(data.result.length < limit) && 'disabled'}`}>
-                <a className="page-link" onClick={nextPage} href="#">Next</a></li>
+              <li
+                className={`page-item ${data.result.length < limit &&
+                  "disabled"}`}
+              >
+                <a className="page-link" onClick={nextPage} href="#">
+                  Next
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -108,3 +154,17 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
     </div>
   );
 }
+
+const styles = StyleSheet.create({
+  logTitle: {
+    fontColor: "#1f2026",
+    fontSize: 16,
+    fontWeight: 500
+  },
+  subTitle: {
+    fontColor: "#818188",
+    fontSize: 14,
+    letterSpacing: 0.17,
+    fontWeight: 300
+  }
+});
