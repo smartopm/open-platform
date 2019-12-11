@@ -17,7 +17,6 @@ export default ({ history, match }) => {
 const limit = 50;
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0);
-  // const eventsPage =
   const refId = match.params.userId || null;
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
@@ -102,7 +101,6 @@ export function IndexComponent({
               </div>
             </div>
             <br />
-
             <div className="row justify-content-between">
               <div className="col-xs-8">
                 <span className={css(styles.subTitle)}>{event.actingUser.name}</span>
