@@ -105,17 +105,16 @@ export function IndexComponent({
 
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)}><b>Guard</b>: {event.actingUser.name}</span>
+                <span className={css(styles.subTitle)}>{event.actingUser.name}</span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
-                  <b>Source</b>: {source}
+                <span className={css(styles.subTitle)}> {source}
                 </span>
               </div>
             </div>
           </div>
-          <div className="border-top my-3"></div>
-        </Fragment>
+          <div className="border-top my-3" />
+        </Fragment >
       );
     });
   }
@@ -159,14 +158,14 @@ export function IndexComponent({
 
 const styles = StyleSheet.create({
   logTitle: {
-    fontColor: "#1f2026",
+    color: "#1f2026",
     fontSize: 16,
-    fontWeight: 500
+    fontWeight: 700
   },
   subTitle: {
-    fontColor: "#818188",
+    color: "#818188",
     fontSize: 14,
     letterSpacing: 0.17,
-    fontWeight: 300
+    fontWeight: 400
   }
 });
