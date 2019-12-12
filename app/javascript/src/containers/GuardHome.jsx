@@ -37,9 +37,13 @@ const BootstrapInput = withStyles(() => ({
 }))(InputBase)
 
 export default function GuardHome() {
+  const { t } = useTranslation();
+  return (<HomeGuard translate={t} />)
+}
+
+export function HomeGuard({ translate }) {
   const [redirect, setRedirect] = useState(false);
   const authState = useContext(Context);
-  const { t } = useTranslation();
   const hideGuardSwitching = false;
   const [id, setId] = React.useState(authState.user.id);
   const { data, loading, error } = useQuery(SecurityGuards)
@@ -97,7 +101,6 @@ export default function GuardHome() {
                     onChange={handleChange}
                     style={{
                       width: 180,
-                      // color: 'red'
                     }}
                     input={<BootstrapInput />}
                     IconComponent={() => <ArrowDropDownIcon style={{
@@ -150,7 +153,7 @@ export default function GuardHome() {
                     <h5 className="card-title">
                       <img src={QRIcon} alt="support icon" />
                     </h5>
-                    <p>{t("home.scan")}</p>
+                    <p>{translate("home.scan")}</p>
                   </div>
                 </Link>
               </div>
@@ -162,7 +165,7 @@ export default function GuardHome() {
                     <h5 className="card-title">
                       <img src={LogIcon} alt="support icon" />
                     </h5>
-                    <p>{t("home.log_entry")}</p>
+                    <p>{translate("home.log_entry")}</p>
                   </div>
                 </Link>
               </div>
@@ -174,7 +177,7 @@ export default function GuardHome() {
                     <h5 className="card-title">
                       <LogEntryIcon className={css(styles.homeIconColor)} fontSize="large" />
                     </h5>
-                    <p>{t("home.entry_logs")}</p>
+                    <p>{translate("home.entry_logs")}</p>
                   </div>
                 </Link>
               </div>

@@ -4,11 +4,13 @@
 
 describe("Nav component", () => {
   //const navProps = {
-    //navName: "",
-    //menuButton: ""
+  //navName: "",
+  //menuButton: ""
   //};
-  test.todo("should render properly, after we fix this test with Consumer Context")
+  test.todo(
+    "should render properly, after we fix this test with Consumer Context"
+  );
 
-    //const renderedWrapper = shallow(<Nav {...navProps} />);
-    //expect(renderedWrapper.find("nav")).toHaveLength(1);
+  //const renderedWrapper = shallow(<Nav {...navProps} />);
+  //expect(renderedWrapper.find("nav")).toHaveLength(1);
 });
