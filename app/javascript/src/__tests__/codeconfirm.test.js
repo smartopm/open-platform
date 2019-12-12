@@ -18,7 +18,7 @@ describe("Code Confirmation Screen", () => {
       </ApolloProvider>
     </MemoryRouter>
   );
-  it("renders without any problem ", () => {
+  it("renders and has a paragraph element ", () => {
     expect(wrapper.find("p")).toHaveLength(1);
   });
   it("contains a button", () => {
