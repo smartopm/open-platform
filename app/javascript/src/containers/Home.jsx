@@ -8,13 +8,14 @@ import Loading from "../components/Loading.jsx";
 import ScanIcon from "../../../assets/images/shape.svg";
 // import RequestIcon from "../../../assets/images/icon_request.svg";
 import HelpIcon from '@material-ui/icons/Help';
-import ExploreIcon from "../../../assets/images/icon_map";
+import ExploreIcon from "../../../assets/images/icon_map.svg";
 import PersonIcon from "@material-ui/icons/Person";
 import LogIcon from "@material-ui/icons/Assignment";
 import { Footer } from "../components/Footer.jsx";
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
+
   if (!authState.loggedIn) return <Loading />;
   return <Component authState={authState} />;
 }
