@@ -46,6 +46,7 @@ import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.doublegdp.com"];
+const GOOGLE_STREAM_ID = "G-E4KP1B4LDQ";
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -117,7 +118,7 @@ const Analytics = props => {
         page_path: location.pathname
       };
       if (liveAnalytics) {
-        gtag("config", "G-W8TMB8D2SL", pageData);
+        gtag("config", GOOGLE_STREAM_ID, pageData);
       } else {
         console.log("GA DEVELOPMENT MODE:", pageData);
       }
