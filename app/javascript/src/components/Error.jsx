@@ -20,7 +20,7 @@ export default function ErrorPage({ title }) {
         <div className="row d-flex justify-content-center" >
           <Link
             to="/"
-            className={`btn btn-lg btn-block ${css(styles.callButton)}`}
+            className={`btn btn-lg btn-block error-link ${css(styles.callButton)}`}
           >
             Home
             </Link>
