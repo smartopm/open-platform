@@ -10,7 +10,6 @@ import {
   Redirect,
   Route,
   useLocation,
-  useHistory
 } from "react-router-dom";
 import ApolloProvider from "../src/containers/Provider/ApolloProvider";
 import AuthStateProvider, {
@@ -91,13 +90,25 @@ const Logout = () => {
 const Analytics = props => {
   const gtag = window.gtag;
   const location = useLocation();
-  const history = useHistory();
   const [prevLocation, setLocation] = useState("");
   const liveAnalytics = (host => {
     return PRIMARY_DOMAINS.includes(host);
   })(window.location.host);
 
   const authState = useContext(AuthStateContext);
+
+  const sendPageView = () => {
+    const pageData = {
+      page_location: window.location.href,
+      page_path: location.pathname
+    };
+    if (liveAnalytics) {
+      console.debug("GA PRODUCTION MODE:", pageData);
+      gtag("config", GOOGLE_STREAM_ID, pageData);
+    } else {
+      console.log("GA DEVELOPMENT MODE:", pageData);
+    }
+  }
   
   useEffect(() => {
     const user = authState.user
@@ -113,18 +124,7 @@ const Analytics = props => {
   },[authState.user])
 
   if (location.pathname !== prevLocation) {
-    if (history.action === "PUSH" && typeof gtag === "function") {
-      const pageData = {
-        page_location: window.location.href,
-        page_path: location.pathname
-      };
-      if (liveAnalytics) {
-        console.debug("GA PRODUCTION MODE:", pageData);
-        gtag("config", GOOGLE_STREAM_ID, pageData);
-      } else {
-        console.log("GA DEVELOPMENT MODE:", pageData);
-      }
-    }
+    sendPageView();
     setLocation(location.pathname);
   }
 
