@@ -45,7 +45,7 @@ import GoogleAuthCallback from "../src/containers/GoogleAuthCallback";
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
 
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ["app.dgdp.site"];
+const PRIMARY_DOMAINS = ["app.doublegdp.com"];
 
 class DynamicImport extends Component {
   constructor(props) {
