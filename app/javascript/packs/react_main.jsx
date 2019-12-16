@@ -2,14 +2,13 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useContext, useState, useEffect, Component, Suspense } from "react";
+import React, { useContext, useEffect, Component, Suspense } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
   Switch,
   Redirect,
   Route,
-  useLocation,
 } from "react-router-dom";
 import ApolloProvider from "../src/containers/Provider/ApolloProvider";
 import AuthStateProvider, {
@@ -45,7 +44,6 @@ import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.doublegdp.com"];
-const GOOGLE_STREAM_ID = "G-E4KP1B4LDQ";
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -89,27 +87,12 @@ const Logout = () => {
 
 const Analytics = props => {
   const gtag = window.gtag;
-  const location = useLocation();
-  const [prevLocation, setLocation] = useState("");
   const liveAnalytics = (host => {
     return PRIMARY_DOMAINS.includes(host);
   })(window.location.host);
 
   const authState = useContext(AuthStateContext);
 
-  const sendPageView = () => {
-    const pageData = {
-      page_location: window.location.href,
-      page_path: location.pathname
-    };
-    if (liveAnalytics) {
-      console.debug("GA PRODUCTION MODE:", pageData);
-      gtag("config", GOOGLE_STREAM_ID, pageData);
-    } else {
-      console.log("GA DEVELOPMENT MODE:", pageData);
-    }
-  }
-  
   useEffect(() => {
     const user = authState.user
     if (user) {
@@ -122,11 +105,6 @@ const Analytics = props => {
       }
     }
   },[authState.user])
-
-  if (location.pathname !== prevLocation) {
-    sendPageView();
-    setLocation(location.pathname);
-  }
 
   return props.children;
 };
