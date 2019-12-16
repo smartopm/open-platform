@@ -103,6 +103,7 @@ const Analytics = props => {
     const user = authState.user
     if (user) {
       if (liveAnalytics) {
+        console.debug("GA PRODUCTION MODE: UserData:", user.id, user.userType);
         gtag('set', { 'user_id': user.id })
         gtag('set', 'user_properties', { Role: user.userType });
       } else {
@@ -118,6 +119,7 @@ const Analytics = props => {
         page_path: location.pathname
       };
       if (liveAnalytics) {
+        console.debug("GA PRODUCTION MODE:", pageData);
         gtag("config", GOOGLE_STREAM_ID, pageData);
       } else {
         console.log("GA DEVELOPMENT MODE:", pageData);
