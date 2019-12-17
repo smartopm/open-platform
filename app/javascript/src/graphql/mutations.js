@@ -173,7 +173,7 @@ export const SendOneTimePasscode = gql`
 export const EntryRequestCreate = gql`
   mutation EntryRequestCreateMutation(
     $name: String!
-    $reason: String!
+    $reason: String
     $vehiclePlate: String
     $nrc: String
     $otherReason: String

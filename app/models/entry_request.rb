@@ -9,6 +9,8 @@ class EntryRequest < ApplicationRecord
   before_validation :attach_community
   after_create :notify_admin, :log_entry_start
 
+  validates :name, presence: true
+
   default_scope { order(created_at: :asc) }
 
   class Unauthorized < StandardError; end

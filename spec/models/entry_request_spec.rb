@@ -18,6 +18,15 @@ RSpec.describe EntryRequest, type: :model do
       expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
+    it 'should work with only a name required' do
+      @entry_request = @guard.entry_requests.create(name: '')
+      expect(@entry_request.valid?).to be false
+      @entry_request = @guard.entry_requests.create(name: 'Visitor Joe')
+      expect(@entry_request.community_id).to eql @guard.community_id
+      expect(@entry_request.pending?).to be true
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
+    end
+
     it 'should handle an admin granting a request' do
       @entry_request = @guard.entry_requests.create(reason: 'Visiting',
                                                     name: 'Visitor Joe', nrc: '012345')

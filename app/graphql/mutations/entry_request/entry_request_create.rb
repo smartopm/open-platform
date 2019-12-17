@@ -8,7 +8,7 @@ module Mutations
       argument :nrc, String, required: false
       argument :phone_number, String, required: false
       argument :vehicle_plate, String, required: false
-      argument :reason, String, required: true
+      argument :reason, String, required: false
       argument :other_reason, String, required: false
       argument :concern_flag, GraphQL::Types::Boolean, required: false
 
