@@ -1,12 +1,12 @@
 import React, { useState, Fragment } from "react";
 import { useQuery } from "react-apollo";
-import Nav from "../components/Nav";
+import Nav from "../../components/Nav";
 import { StyleSheet, css } from "aphrodite";
-import Loading from "../components/Loading.jsx";
-import DateUtil from "../utils/dateutil.js";
-import { AllEventLogsQuery } from "../graphql/queries.js";
-import ErrorPage from "../components/Error";
-import { Footer } from "../components/Footer";
+import Loading from "../../components/Loading.jsx";
+import DateUtil from "../../utils/dateutil.js";
+import { AllEventLogsQuery } from "../../graphql/queries.js";
+import ErrorPage from "../../components/Error";
+import { Footer } from "../../components/Footer";
 
 export default ({ history, match }) => {
   const subjects = ["user_entry", "visitor_entry"];

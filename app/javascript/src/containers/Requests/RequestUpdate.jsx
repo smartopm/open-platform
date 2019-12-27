@@ -1,14 +1,14 @@
 import React, { Fragment, useState } from "react";
 import { useQuery, useMutation } from "react-apollo";
-import Nav from "../components/Nav";
+import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
-import { EntryRequestQuery } from "../graphql/queries.js";
+import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny
-} from "../graphql/mutations.js";
-import Loading from "../components/Loading";
+} from "../../graphql/mutations.js";
+import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 
 export default function RequestUpdate({ match, history }) {

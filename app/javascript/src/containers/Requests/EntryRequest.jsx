@@ -3,11 +3,11 @@ import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import SignaturePad from "react-signature-canvas";
-import { entryReason } from "../utils/constants";
-import { EntryRequestCreate } from "../graphql/mutations.js";
-import Nav from "../components/Nav";
-import { ReasonInputModal } from "../components/Dialog";
-import { Footer } from "../components/Footer";
+import { entryReason } from "../../utils/constants";
+import { EntryRequestCreate } from "../../graphql/mutations.js";
+import Nav from "../../components/Nav";
+import { ReasonInputModal } from "../../components/Dialog";
+import { Footer } from "../../components/Footer";
 
 export default function LogEntry({ history }) {
   const name = useFormInput("");

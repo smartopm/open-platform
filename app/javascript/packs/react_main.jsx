@@ -18,9 +18,9 @@ import Home from "../src/containers/Home";
 import UserShow from "../src/containers/UserShow";
 import IDCard from "../src/containers/IdCard";
 import IDPrint from "../src/containers/IdPrint";
-import EntryLogs from "../src/containers/EntryLogs";
-import UserLogs from "../src/containers/UserLogs";
-import EventLogs from "../src/containers/EventLogs";
+import EntryLogs from "../src/containers/AllLogs/EntryLogs";
+import UserLogs from "../src/containers/AllLogs/UserLogs";
+import EventLogs from "../src/containers/AllLogs/EventLogs";
 import Search from "../src/containers/Search";
 import UserEdit from "../src/containers/UserEdit";
 import PendingUsers from "../src/containers/PendingUsers";
@@ -33,12 +33,12 @@ import ConfirmCodeScreen from "../src/components/AuthScreens/ConfirmCodeScreen";
 import OneTimeLoginCode from "../src/components/AuthScreens/OneTimeLoginCode";
 import Support from "../src/containers/Support";
 import GuardHome from "../src/containers/GuardHome";
-import EntryRequest from "../src/containers/EntryRequest";
-import RequestUpdate from "../src/containers/RequestUpdate";
-import WaitScreen from "../src/containers/WaitingScreen";
-import RequestApproval from "../src/containers/RequestApproval";
+import EntryRequest from "../src/containers/Requests/EntryRequest";
+import RequestUpdate from "../src/containers/Requests/RequestUpdate";
+import WaitScreen from "../src/containers/Requests/WaitingScreen";
+import RequestApproval from "../src/containers/Requests/RequestApproval";
 import ErrorPage from "../src/components/Error";
-import GoogleAuthCallback from "../src/containers/GoogleAuthCallback";
+import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback";
 
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
 
