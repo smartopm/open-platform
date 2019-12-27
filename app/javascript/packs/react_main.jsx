@@ -39,6 +39,7 @@ import WaitScreen from "../src/containers/Requests/WaitingScreen";
 import RequestApproval from "../src/containers/Requests/RequestApproval";
 import ErrorPage from "../src/components/Error";
 import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback";
+import ShowRoom from '../src/containers/showroom/Home'
 
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
 
@@ -124,6 +125,8 @@ const App = () => {
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={GoogleAuthCallback} />
+                <Route path="/show_room" component={ShowRoom} />
+
                 <LoggedInOnly>
                   <Switch>
                     <Route path="/" exact component={Home} />
@@ -159,10 +162,12 @@ const App = () => {
                       component={RequestApproval}
                     />
 
+
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
                     />
+
                   </Switch>
                 </LoggedInOnly>
               </Switch>
