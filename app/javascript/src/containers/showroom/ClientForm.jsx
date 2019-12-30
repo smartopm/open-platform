@@ -1,5 +1,5 @@
 import React from 'react'
-// import { useForm } from " react-hook-form"
+import { useForm } from " react-hook-form"
 
 // Name
 // Surname
@@ -13,9 +13,12 @@ import React from 'react'
 
 
 export default function ClientForm(){
-    return (
-        <div>
+    const {register, handleSubmit, errors} = useForm()
+    const onSubmit = data => console.log(data)
 
-        </div>
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <input name="example" defaultValue="test" ref={register} />
+        </form>
     )
 }
