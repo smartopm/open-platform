@@ -8,7 +8,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Redirect,
-  Route,
+  Route
 } from "react-router-dom";
 import ApolloProvider from "../src/containers/Provider/ApolloProvider";
 import AuthStateProvider, {
@@ -39,9 +39,9 @@ import WaitScreen from "../src/containers/Requests/WaitingScreen";
 import RequestApproval from "../src/containers/Requests/RequestApproval";
 import ErrorPage from "../src/components/Error";
 import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback";
-import ShowRoom from '../src/containers/showroom/Home'
+import ShowRoom from "../src/containers/showroom/Home";
 
-import { AUTH_TOKEN_KEY } from "../src/utils/apollo"
+import { AUTH_TOKEN_KEY } from "../src/utils/apollo";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.doublegdp.com"];
@@ -80,11 +80,11 @@ const LoggedInOnly = props => {
 };
 
 const Logout = () => {
-  localStorage.removeItem(AUTH_TOKEN_KEY)
+  localStorage.removeItem(AUTH_TOKEN_KEY);
   const authState = useContext(AuthStateContext);
-  authState.setToken({ action: 'delete' })
+  authState.setToken({ action: "delete" });
   return <Redirect to="/login" />;
-}
+};
 
 const Analytics = props => {
   const gtag = window.gtag;
@@ -95,24 +95,28 @@ const Analytics = props => {
   const authState = useContext(AuthStateContext);
 
   useEffect(() => {
-    const user = authState.user
+    const user = authState.user;
     if (user) {
       if (liveAnalytics) {
         console.debug("GA PRODUCTION MODE: UserData:", user.id, user.userType);
-        gtag('set', { 'user_id': user.id })
-        gtag('set', 'user_properties', { Role: user.userType });
+        gtag("set", { user_id: user.id });
+        gtag("set", "user_properties", { Role: user.userType });
       } else {
-        console.log("GA DEVELOPMENT MODE: log user", user)
+        console.log("GA DEVELOPMENT MODE: log user", user);
       }
     }
-  },[authState.user])
+  }, [authState.user]);
 
   return props.children;
 };
 
 const App = () => {
   return (
-    <Suspense fallback={() => { return <Loading /> }}>
+    <Suspense
+      fallback={() => {
+        return <Loading />;
+      }}
+    >
       <ApolloProvider>
         <Router>
           <AuthStateProvider>
@@ -125,7 +129,6 @@ const App = () => {
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={GoogleAuthCallback} />
-                <Route path="/show_room" component={ShowRoom} />
 
                 <LoggedInOnly>
                   <Switch>
@@ -138,7 +141,11 @@ const App = () => {
                     <Route path="/entry_logs" component={EntryLogs} />
                     <Route path="/event_logs" component={EventLogs} />
                     <Route path="/user" exact component={UserEdit} />
-                    <Route path="/user/pending" exact component={PendingUsers} />
+                    <Route
+                      path="/user/pending"
+                      exact
+                      component={PendingUsers}
+                    />
                     <Route path="/user/new" exact component={UserEdit} />
                     <Route path="/user/:id" exact component={UserShow} />
                     <Route path="/user/:id/logs" exact component={UserLogs} />
@@ -162,12 +169,12 @@ const App = () => {
                       component={RequestApproval}
                     />
 
+                    <Route path="/show_room" component={ShowRoom} />
 
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
                     />
-
                   </Switch>
                 </LoggedInOnly>
               </Switch>
