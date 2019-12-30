@@ -30,5 +30,13 @@ export const entryReason = [
   "Passing through",
   "Other"
 ];
+// This is for the showRoom
+export const infoSource = [
+  "Family / Friend / Acquaintance",
+  "Social Media(Facebook, Twitter or Whatsapp)",
+  "Tv",
+  "Tv/Radio",
+  "Other"
+];
 
 export const ponisoNumber = "+260976064298";
