@@ -1,6 +1,7 @@
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
+import { Footer } from "../../components/Footer";
 
 
 // Todo: Add another step in this component(why are you here)
@@ -21,6 +22,7 @@ export default function ComingSoon({ history }) {
         </Button>
 
       </div>
+      <Footer position={"30vh"} />
     </div>
   );
 }

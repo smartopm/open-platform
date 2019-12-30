@@ -2,6 +2,7 @@ import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
+import { Footer } from "../../components/Footer";
 
 export default function VisitingReason({ history }) {
   return (
@@ -25,7 +26,7 @@ export default function VisitingReason({ history }) {
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          // onClick={() => history.push("/push")}
+          onClick={() => history.push("/sh_entry")}
         >
           Visiting the Nkwashi Showroom
         </Button>
@@ -46,6 +47,7 @@ export default function VisitingReason({ history }) {
           Other
         </Button>
       </div>
+      <Footer position={"5vh"} />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import { css, StyleSheet } from "aphrodite";
 import { infoSource } from "../../utils/constants";
+import { Footer } from "../../components/Footer";
 
 // Name
 // Surname
@@ -124,6 +125,7 @@ export default function ClientForm() {
           </Button>
         </div>
       </form>
+      <Footer position={"5vh"} />
     </div>
   );
 }
@@ -147,8 +149,9 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   infoText: {
-    marginBottom: 40,
-    marginTop: 50,
-    color: "#818188"
+    // marginBottom: 40,
+    // marginTop: 50,
+    color: "#818188",
+    margin: 50
   }
 });
