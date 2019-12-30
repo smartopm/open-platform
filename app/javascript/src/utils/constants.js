@@ -34,7 +34,6 @@ export const entryReason = [
 export const infoSource = [
   "Family / Friend / Acquaintance",
   "Social Media(Facebook, Twitter or Whatsapp)",
-  "Tv",
   "Tv/Radio",
   "Other"
 ];

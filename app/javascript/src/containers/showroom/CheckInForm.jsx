@@ -152,6 +152,6 @@ const styles = StyleSheet.create({
     // marginBottom: 40,
     // marginTop: 50,
     color: "#818188",
-    margin: 50
+    margin: 40
   }
 });
