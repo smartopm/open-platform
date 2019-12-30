@@ -42,8 +42,9 @@ import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback
 import ShowRoom from "../src/containers/showroom/Home";
 import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
 import ComingSoon from '../src/containers/showroom/ComingSoon'
-import VisitingClientForm from '../src/containers/showroom/ClientForm'
+import VisitingClientForm from '../src/containers/showroom/CheckInForm'
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo";
+import CheckInComplete from "../src/containers/showroom/CheckInComplete";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.doublegdp.com"];
@@ -174,6 +175,7 @@ const App = () => {
                     <Route path="/show_room" component={ShowRoom} />
                     <Route path="/sh_reason" component={VisitingReasonScreen} />
                     <Route path="/sh_entry" component={VisitingClientForm} />
+                    <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/soon" component={ComingSoon} />
                     
                     <Route

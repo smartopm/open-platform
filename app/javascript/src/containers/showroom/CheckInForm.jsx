@@ -15,11 +15,14 @@ import { Footer } from "../../components/Footer";
 // Reason for Visit
 // How did You Learn About Nkwashi (drop down)
 
-export default function ClientForm() {
+export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted, setSubmitted] = useState(false);
 
-  const onSubmit = data => console.log(data);
+  const onSubmit = data => {
+      history.push("/sh_complete")
+      console.log(data);
+  }
 
   return (
     <div className="container">

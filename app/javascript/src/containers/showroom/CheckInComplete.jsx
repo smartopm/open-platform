@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Footer } from "../../components/Footer";
 
-// Todo: Add another step in this component(why are you here)
+
 export default function CheckInComplete({ history }) {
-  const [time, setTime] = useState(100);
+  const [time, setTime] = useState(60);
 
   useEffect(() => {
     if (!time) return;
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#25c0b0",
     color: "#FFF",
-    width: "75%",
+    width: "85%",
     height: 51,
     boxShadow: "none",
     paddingLeft: 60,
