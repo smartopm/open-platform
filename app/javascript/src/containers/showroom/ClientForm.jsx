@@ -22,58 +22,78 @@ export default function ClientForm() {
 
   return (
     <div className="container">
+      <div className="row justify-content-center align-items-center">
+        <h3>Nkwashi Showroom Check-In</h3>
+
+        <p className={css(styles.infoText)}>
+          Please enter your contact information below so that we can follow-up
+          with you after today’s meeting and to more quickly set you up for
+          access at the gate when you visit Nkwashi in-person
+        </p>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
+          <label className="bmd-label-static" htmlFor="name">
+            NAME
+          </label>
           <input
             className="form-control"
             type="text"
             ref={register}
             name="name"
-            defaultValue="Name"
-            placeholder="Name"
+            defaultValue=""
             required
           />
         </div>
         <div className="form-group">
+          <label className="bmd-label-static" htmlFor="surname">
+            Surname
+          </label>
           <input
             className="form-control"
             type="text"
             ref={register}
             name="surname"
-            defaultValue="Surname"
-            placeholder="Surname"
+            defaultValue=""
             required
           />
         </div>
         <div className="form-group">
+          <label className="bmd-label-static" htmlFor="nrc">
+            NRC
+          </label>
           <input
             className="form-control"
             type="text"
             ref={register}
             name="nrc"
-            defaultValue="NRC"
-            placeholder="NRC"
+            defaultValue=""
             required
           />
         </div>
         <div className="form-group">
+          <label className="bmd-label-static" htmlFor="phone_number">
+            Phone Number
+          </label>
           <input
             className="form-control"
             type="text"
             ref={register}
             name="phone_number"
-            defaultValue="Phone Number"
-            placeholder="Phone Number"
+            defaultValue=""
             required
           />
         </div>
         <div className="form-group">
+          <label className="bmd-label-static" htmlFor="reason">
+            Reason for Visit
+          </label>
           <input
             className="form-control"
             type="text"
             ref={register}
             name="reason"
-            placeholder="Reason for visit"
+            defaultValue=""
             required
           />
         </div>
@@ -83,6 +103,7 @@ export default function ClientForm() {
             select
             label="How did You Learn About Nkwashi"
             name="reason"
+            value=""
             className={`${css(styles.selectInput)}`}
           >
             {infoSource.map(reason => (
@@ -96,7 +117,7 @@ export default function ClientForm() {
           <Button
             variant="contained"
             className={`btn ${css(styles.logButton)}`}
-            onClick={handleSubmit}
+            type="submit"
             disabled={isSubmitted}
           >
             {isSubmitted ? "Submitting ..." : " Check In"}
@@ -124,5 +145,10 @@ const styles = StyleSheet.create({
   },
   selectInput: {
     width: "100%"
+  },
+  infoText: {
+    marginBottom: 40,
+    marginTop: 50,
+    color: "#818188"
   }
 });
