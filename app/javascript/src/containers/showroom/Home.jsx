@@ -4,7 +4,7 @@ import { Button } from "@material-ui/core";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
 
 // Todo: Add another step in this component(why are you here)
-export default function ShowRoom() {
+export default function ShowRoom({ history }) {
   return (
     <div className={`${css(styles.welcomePage)}`}>
       <img className="nz-logo-nkwashi" src={logo} className={css(styles.nkLogo)} alt="nkwashi logo" />
@@ -16,9 +16,9 @@ export default function ShowRoom() {
       <Button
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
-          // onClick={() => history.push("/push")}
+          onClick={() => history.push("/sh_reason")}
         >
-          Get Started
+          Press Here to Check-In
         </Button>
 
       </div>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   nkLogo: {
     marginBottom: 50,
-    marginLeft: "27%"
+    marginLeft: "9vw"
   },
   getStartedButton: {
     backgroundColor: "#25c0b0",
@@ -44,6 +44,8 @@ const styles = StyleSheet.create({
     width: "75%",
     height: 51,
     boxShadow: "none",
+    paddingLeft: 60,
+    paddingRight: 60
   },
   buttonSection: {
     marginTop: "50%"

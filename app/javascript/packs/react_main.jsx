@@ -40,7 +40,7 @@ import RequestApproval from "../src/containers/Requests/RequestApproval";
 import ErrorPage from "../src/components/Error";
 import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback";
 import ShowRoom from "../src/containers/showroom/Home";
-
+import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo";
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -168,9 +168,10 @@ const App = () => {
                       path="/request_status/:id"
                       component={RequestApproval}
                     />
-
+                    {/* Showroom routes */}
                     <Route path="/show_room" component={ShowRoom} />
-
+                    <Route  path="/sh_reason" component={VisitingReasonScreen} />
+                    
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
