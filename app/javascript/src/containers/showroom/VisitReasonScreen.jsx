@@ -3,12 +3,19 @@ import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
 
-export default function VisitingReason() {
+export default function VisitingReason({ history }) {
   return (
     <div className={`${css(styles.welcomePage)}`}>
-         <img className="nz-logo-nkwashi" src={logo} className={css(styles.nkLogo)} alt="nkwashi logo" />
-      <div className={css(styles.reasonTitle)}>
-        <h3 className="text-center">Why are you here today?</h3>
+      <img
+        className="nz-logo-nkwashi"
+        src={logo}
+        className={css(styles.nkLogo)}
+        alt="nkwashi logo"
+      />
+      <div className="container">
+        <div className="row justify-content-center align-items-center">
+          <p className={css(styles.reasonTitle)}>Why are you here today?</p>
+        </div>
       </div>
       <div
         className={`row justify-content-center align-items-center ${css(
@@ -22,19 +29,19 @@ export default function VisitingReason() {
         >
           Visiting the Nkwashi Showroom
         </Button>
-        <br/>
+        <br />
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          // onClick={() => history.push("/push")}
-          >
+          onClick={() => history.push("/soon")}
+        >
           Payments & Account Management
         </Button>
-          <br/>
+        <br />
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          // onClick={() => history.push("/push")}
+          onClick={() => history.push("/soon")}
         >
           Other
         </Button>
@@ -61,7 +68,7 @@ const styles = StyleSheet.create({
     // width: "80%",
     height: 51,
     boxShadow: "none",
-    marginBottom: 30,
+    marginBottom: 30
     // paddingLeft: 60,
     // paddingRight: 60
   },
@@ -69,6 +76,6 @@ const styles = StyleSheet.create({
     marginTop: "35%"
   },
   reasonTitle: {
-      marginLeft:"10vw"
+    marginRight: "1%"
   }
 });
