@@ -17,7 +17,7 @@ export default function VisitingReason() {
       >
         <Button
           variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
+          className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           // onClick={() => history.push("/push")}
         >
           Visiting the Nkwashi Showroom
@@ -25,7 +25,7 @@ export default function VisitingReason() {
         <br/>
         <Button
           variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
+          className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           // onClick={() => history.push("/push")}
           >
           Payments & Account Management
@@ -33,7 +33,7 @@ export default function VisitingReason() {
           <br/>
         <Button
           variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
+          className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           // onClick={() => history.push("/push")}
         >
           Other
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     height: 51,
     boxShadow: "none",
     marginBottom: 30,
-    paddingLeft: 60,
-    paddingRight: 60
+    // paddingLeft: 60,
+    // paddingRight: 60
   },
   buttonSection: {
     marginTop: "35%"
