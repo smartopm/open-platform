@@ -8,9 +8,8 @@ export default function VisitingReason({ history }) {
   return (
     <div className={`${css(styles.welcomePage)}`}>
       <img
-        className="nz-logo-nkwashi"
+        className={`nz-logo-nkwashi ${css(styles.nkLogo)}`}
         src={logo}
-        className={css(styles.nkLogo)}
         alt="nkwashi logo"
       />
       <div className="container">

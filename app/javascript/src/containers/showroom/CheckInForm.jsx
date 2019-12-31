@@ -5,8 +5,7 @@ import { css, StyleSheet } from "aphrodite";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
 
-
-export default function ClientForm({ history }) {
+export default function ClientForm() {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted, setSubmitted] = useState(false);
 
@@ -39,9 +38,8 @@ export default function ClientForm({ history }) {
             name="name"
             defaultValue=""
           />
-
         </div>
-          {errors.name && <p className="text-danger">The name is required</p>}
+        {errors.name && <p className="text-danger">The name is required</p>}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="surname">
             Surname

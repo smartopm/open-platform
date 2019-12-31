@@ -8,20 +8,27 @@ import { Footer } from "../../components/Footer";
 export default function ShowRoom({ history }) {
   return (
     <div className={`${css(styles.welcomePage)}`}>
-      <img className="nz-logo-nkwashi" src={logo} className={css(styles.nkLogo)} alt="nkwashi logo" />
+      <img
+        src={logo}
+        className={`nz-logo-nkwashi ${css(styles.nkLogo)}`}
+        alt="nkwashi logo"
+      />
       <br />
       <div>
         <h5 className="text-center">Welcome to Thebe Investment Management</h5>
       </div>
-      <div className={`row justify-content-center align-items-center ${css(styles.buttonSection)}`}>
-      <Button
+      <div
+        className={`row justify-content-center align-items-center ${css(
+          styles.buttonSection
+        )}`}
+      >
+        <Button
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
         >
           Press Here to Check-In
         </Button>
-
       </div>
       <Footer position={"30vh"} />
     </div>
