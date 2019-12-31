@@ -5,24 +5,16 @@ import { css, StyleSheet } from "aphrodite";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
 
-// Name
-// Surname
-// NRC
-// Contact information
-// Phone number
-// Preferred email
-// Mailing address
-// Reason for Visit
-// How did You Learn About Nkwashi (drop down)
 
 export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted, setSubmitted] = useState(false);
 
   const onSubmit = data => {
-      history.push("/sh_complete")
-      console.log(data);
-  }
+    setSubmitted(!isSubmitted);
+    // history.push("/sh_complete");
+    console.log(data);
+  };
 
   return (
     <div className="container">
@@ -43,12 +35,13 @@ export default function ClientForm({ history }) {
           <input
             className="form-control"
             type="text"
-            ref={register}
+            ref={register({ required: true })}
             name="name"
             defaultValue=""
-            required
           />
+
         </div>
+          {errors.name && <p className="text-danger">The name is required</p>}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="surname">
             Surname
@@ -59,7 +52,6 @@ export default function ClientForm({ history }) {
             ref={register}
             name="surname"
             defaultValue=""
-            required
           />
         </div>
         <div className="form-group">
@@ -72,7 +64,6 @@ export default function ClientForm({ history }) {
             ref={register}
             name="nrc"
             defaultValue=""
-            required
           />
         </div>
         <div className="form-group">
@@ -85,7 +76,6 @@ export default function ClientForm({ history }) {
             ref={register}
             name="phone_number"
             defaultValue=""
-            required
           />
         </div>
         <div className="form-group">
@@ -98,7 +88,6 @@ export default function ClientForm({ history }) {
             ref={register}
             name="reason"
             defaultValue=""
-            required
           />
         </div>
         <div className="form-group">

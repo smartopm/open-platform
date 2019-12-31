@@ -14,7 +14,7 @@ export default function CheckInComplete({ history }) {
     const intervalId = setInterval(() => {
       setTime(time - 1);
     }, 1000);
-
+    
     return () => clearInterval(intervalId);
   }, [time]);
 
