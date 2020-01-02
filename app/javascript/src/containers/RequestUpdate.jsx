@@ -12,7 +12,8 @@ import Loading from "../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 
 export default function RequestUpdate({ match, history, location }) {
-  const previousRoute = location.state.from
+  const previousRoute = location.state ? location.state.from : "any";
+  const isFromLogs = previousRoute === "logs" || false;
 
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
@@ -20,7 +21,6 @@ export default function RequestUpdate({ match, history, location }) {
   const [updateEntryRequest] = useMutation(EntryRequestUpdate);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
-  const isFromLogs = previousRoute === "logs" || false
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -69,7 +69,10 @@ export default function RequestUpdate({ match, history, location }) {
 
   return (
     <Fragment>
-      <Nav navName={isFromLogs ? "Request Access" : "Approve Request" } menuButton="cancel" />
+      <Nav
+        navName={isFromLogs ? "Request Access" : "Approve Request"}
+        menuButton="cancel"
+      />
       <div className="container">
         <form>
           <div className="form-group">
@@ -79,7 +82,7 @@ export default function RequestUpdate({ match, history, location }) {
             <input
               className="form-control"
               type="text"
-              value={formData.guard ? formData.guard.name : ''}
+              value={formData.guard ? formData.guard.name : ""}
               disabled={true}
               name="name"
               required
@@ -149,22 +152,24 @@ export default function RequestUpdate({ match, history, location }) {
             </TextField>
           </div>
 
-          <div className="row justify-content-center align-items-center">
-            <Button
-              variant="contained"
-              onClick={handleGrantRequest}
-              className={`btn ${css(styles.grantButton)}`}
-            >
-              Grant
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleDenyRequest}
-              className={`btn  ${css(styles.denyButton)}`}
-            >
-              Deny
-            </Button>
-          </div>
+          {!isFromLogs && (
+            <div className="row justify-content-center align-items-center">
+              <Button
+                variant="contained"
+                onClick={handleGrantRequest}
+                className={`btn ${css(styles.grantButton)}`}
+              >
+                Grant
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleDenyRequest}
+                className={`btn  ${css(styles.denyButton)}`}
+              >
+                Deny
+              </Button>
+            </div>
+          )}
         </form>
       </div>
     </Fragment>
