@@ -11,19 +11,16 @@ import {
 import Loading from "../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 
-export default function RequestUpdate({ match, history }) {
-  // Todo: Get the request Id from the url
-  // Todo: Query the requests and display depending on the table
+export default function RequestUpdate({ match, history, location }) {
+  const previousRoute = location.state.from
 
-  //   request mock, to prototype the request form
-  // ideally this will come from the db
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
   });
   const [updateEntryRequest] = useMutation(EntryRequestUpdate);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
-
+  const isFromLogs = previousRoute === "logs" || false
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -72,7 +69,7 @@ export default function RequestUpdate({ match, history }) {
 
   return (
     <Fragment>
-      <Nav navName="Approve Request" menuButton="cancel" />
+      <Nav navName={isFromLogs ? "Request Access" : "Approve Request" } menuButton="cancel" />
       <div className="container">
         <form>
           <div className="form-group">
