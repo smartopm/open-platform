@@ -10,6 +10,7 @@ import {
 } from "../graphql/mutations.js";
 import Loading from "../components/Loading";
 import { StyleSheet, css } from "aphrodite";
+import DateUtil from "../utils/dateutil.js";
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state ? location.state.from : "any";
@@ -38,7 +39,6 @@ export default function RequestUpdate({ match, history, location }) {
   if (!formData.loaded && data) {
     setFormData({ ...data.result, loaded: true });
   }
-
   function handleInputChange(e) {
     const { name, value } = e.target;
     setFormData({
@@ -46,27 +46,28 @@ export default function RequestUpdate({ match, history, location }) {
       [name]: value
     });
   }
-
+  
   function handleUpdateRecord() {
     return updateEntryRequest({ variables: formData });
   }
-
+  
   function handleGrantRequest() {
     handleUpdateRecord()
-      .then(grantEntry({ variables: { id: match.params.id } }))
-      .then(() => {
-        history.push("/entry_logs", { tab: 1 });
-      });
+    .then(grantEntry({ variables: { id: match.params.id } }))
+    .then(() => {
+      history.push("/entry_logs", { tab: 1 });
+    });
   }
-
+  
   function handleDenyRequest() {
     handleUpdateRecord()
-      .then(denyEntry({ variables: { id: match.params.id } }))
-      .then(() => {
-        history.push("/entry_logs", { tab: 1 });
-      });
+    .then(denyEntry({ variables: { id: match.params.id } }))
+    .then(() => {
+      history.push("/entry_logs", { tab: 1 });
+    });
   }
-
+  console.log(formData);
+  
   return (
     <Fragment>
       <Nav
@@ -75,6 +76,25 @@ export default function RequestUpdate({ match, history, location }) {
       />
       <div className="container">
         <form>
+          {isFromLogs && (
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="date">
+                Date and time submitted
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                value={
+                  formData.guard
+                    ? `${new Date(formData.createdAt).toDateString()} at ${DateUtil.dateTimeToString(new Date(formData.createdAt))}`
+                    : ""
+                }
+                disabled={true}
+                name="date"
+                required
+              />
+            </div>
+          )}
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
               Guard
