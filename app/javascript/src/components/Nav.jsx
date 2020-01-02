@@ -22,31 +22,33 @@ export default withRouter(function Nav({
   const authState = useContext(AuthStateContext);
   return (
     <Component
-      {...{
-        children,
-        authState,
-        menuButton,
-        history,
-        navName,
-        backTo,
-        boxShadow
-      }}
+    {...{
+      children,
+      authState,
+      menuButton,
+      history,
+      navName,
+      backTo,
+      boxShadow
+    }}
     />
-  );
-});
-
-export function Component({
-  children,
-  authState,
-  menuButton,
-  navName,
-  backTo,
-  boxShadow
-}) {
-  const [state, setState] = React.useState(false);
-  const { values, handleSubmit } = useContext(FormContext);
-  function backButtonOrMenu() {
-    const to = backTo || "/";
+    );
+  });
+  
+  export function Component({
+    children,
+    authState,
+    menuButton,
+    navName,
+    backTo,
+    boxShadow,
+    history
+  }) {
+    const [state, setState] = React.useState(false);
+    const { values, handleSubmit } = useContext(FormContext);
+    const routeInfo = history.location.pathname.split("/");
+    function backButtonOrMenu() {
+      const to = backTo || "/";
     if (menuButton === "back" && navName === "Scan") {
       return (
         <a href="/" className={css(styles.buttonLeft)} >
@@ -58,6 +60,13 @@ export function Component({
       return (
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
+        </Link>
+      );
+    }
+    else if (menuButton === "cancel" && routeInfo.includes("request")) {
+      return (
+        <Link className={css(styles.buttonLeft)} to={"/entry_logs"}>
+           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </Link>
       );
     }
@@ -217,5 +226,16 @@ const styles = StyleSheet.create({
     ":hover": {
       cursor: "pointer"
     }
+  },
+  rightSideIcon: {
+    position: "absolute",
+    bottom: 0,
+    right: 5,
+    height: 30,
+    color: "#FFF",
+    ":hover": {
+      cursor: "pointer"
+    }
   }
+
 });
