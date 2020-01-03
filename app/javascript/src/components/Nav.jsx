@@ -217,5 +217,6 @@ const styles = StyleSheet.create({
     ":hover": {
       cursor: "pointer"
     }
-  }
+  },
+  
 });

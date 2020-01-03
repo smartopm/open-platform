@@ -6,7 +6,7 @@ import { Footer } from "../../components/Footer";
 
 
 export default function CheckInComplete({ history }) {
-  const [time, setTime] = useState(60);
+  const [time, setTime] = useState(10);
 
   useEffect(() => {
     if (!time) return;

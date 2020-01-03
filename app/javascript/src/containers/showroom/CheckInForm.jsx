@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { Button, TextField, MenuItem } from "@material-ui/core";
 import { css, StyleSheet } from "aphrodite";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
+import Nav from "../../components/Nav";
 
 export default function ClientForm() {
   const { register, handleSubmit, errors } = useForm();
@@ -16,6 +17,9 @@ export default function ClientForm() {
   };
 
   return (
+    <Fragment>
+      <Nav navName="Showroom Form" menuButton="back" backTo="/show_room" />
+   
     <div className="container">
       <div className="row justify-content-center align-items-center">
         <h3>Nkwashi Showroom Check-In</h3>
@@ -117,6 +121,7 @@ export default function ClientForm() {
       </form>
       <Footer position={"5vh"} />
     </div>
+    </Fragment>
   );
 }
 const styles = StyleSheet.create({
