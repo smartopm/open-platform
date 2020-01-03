@@ -31,6 +31,7 @@ const QUERY = gql`
       community {
         name
         logoUrl
+        timezone
       }
     }
   }
