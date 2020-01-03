@@ -29,7 +29,8 @@ function onEachFeature(feature, layer) {
   if (feature.properties.name) {
     layer.bindTooltip(feature.properties.name, {
       permanent: true,
-      offset: [-100, 0],
+      direction: 'center',
+      offset: [0, 0],
       className: "text-label",
     });
   }
@@ -47,7 +48,7 @@ export default function Explore() {
         border: none !important;
       }
       .text-label {
-        font-size: 2em;
+        font-size: 1.75em;
         background-color: none;
         border-color: none;
         background: none;
