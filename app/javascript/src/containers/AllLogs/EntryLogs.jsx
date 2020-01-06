@@ -9,7 +9,7 @@ import ErrorPage from "../../components/Error";
 import { Footer } from "../../components/Footer";
 
 export default ({ history, match }) => {
-  const subjects = ["user_entry", "visitor_entry"];
+  const subjects = ["user_entry", "visitor_entry", "showroom"];
   return allEventLogs(history, match, subjects);
 };
 
@@ -40,6 +40,7 @@ const allEventLogs = (history, match, subjects) => {
     }
     setOffset(offset - limit);
   }
+  console.log(data)
   return (
     <IndexComponent
       data={data}

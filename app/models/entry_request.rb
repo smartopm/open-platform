@@ -71,6 +71,20 @@ class EntryRequest < ApplicationRecord
     )
   end
 
+  # showroom
+  def log_showroom_entry
+    EventLog.create(
+      acting_user: user, community: user.community,
+      subject: 'showroom',
+      ref_id: self[:id], ref_type: 'EntryRequest',
+      data: {
+        # TODO: Find a proper action for showroom
+        action: '',
+        ref_name: self[:name],
+      }
+    )
+  end
+
   def log_decision(approved)
     EventLog.create(
       acting_user: grantor, community: user.community,
