@@ -11,7 +11,8 @@ module Mutations
       argument :reason, String, required: false
       argument :other_reason, String, required: false
       argument :concern_flag, GraphQL::Types::Boolean, required: false
-
+      argument :showroom, String, required: false
+      
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)

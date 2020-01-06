@@ -70,7 +70,8 @@ export function IndexComponent({
       return;
     }
     return eventLogs.map(event => {
-      const source = event.subject === "user_entry" ? "Scan" : "Manual";
+      console.log(event.subject)
+      const source = event.subject === "user_entry" ? "Scan" : event.subject === "showroom" ? "Showroom" : "Manual";
       const reason = event.entryRequest ? event.entryRequest.reason : "";
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name;
