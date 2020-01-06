@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 # Export Event logs as a CSV
 class CsvExportController < ApplicationController
   before_action :ensure_admin
@@ -10,7 +12,7 @@ class CsvExportController < ApplicationController
     # format into CSV
     # Send to browser as a file
     # send_data @users.to_csv, filename: "users-#{Date.today}.csv"
-    headers = %w[subject description user visitor data time]
+    headers = %w[subject description user visitor reason data time]
     csv_string = CSV.generate do |csv|
       csv << headers
       get_event_logs(params).each do |row|
@@ -29,12 +31,22 @@ class CsvExportController < ApplicationController
     event_logs_to_rows(events, @user.community.timezone)
   end
 
-  def event_logs_to_rows(event_logs, tz)
+  def event_logs_to_rows(event_logs, timezone)
     event_logs.map do |ev|
-      time = ev.created_at.in_time_zone(tz || 'UTC')
-      visitor = ev.visitor_name if ev.subject == 'visitor_entry'
-      [ev.subject, ev.to_sentence, ev.acting_user.name, visitor,
+      time = ev.created_at.in_time_zone(timezone || 'UTC')
+      visitor_details = get_visitor_details(ev)
+      [ev.subject, ev.to_sentence, ev.acting_user.name,
+       visitor_details[:name], visitor_details[:reason],
        time.strftime('%Y-%m-%d'), time.strftime('%H:%M')]
+    end
+  end
+
+  def get_visitor_details(event)
+    if event.subject == 'visitor_entry'
+      entry_request = EntryRequest.find(event.ref_id)
+      { name: entry_request.name, reason: entry_request.reason }
+    else
+      { name: nil, reason: nil }
     end
   end
 
