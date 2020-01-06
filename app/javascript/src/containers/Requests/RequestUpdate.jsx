@@ -10,20 +10,18 @@ import {
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
+import DateUtil from "../../utils/dateutil";
 
-export default function RequestUpdate({ match, history }) {
-  // Todo: Get the request Id from the url
-  // Todo: Query the requests and display depending on the table
+export default function RequestUpdate({ match, history, location }) {
+  const previousRoute = location.state ? location.state.from : "any";
+  const isFromLogs = previousRoute === "logs" || false;
 
-  //   request mock, to prototype the request form
-  // ideally this will come from the db
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
   });
   const [updateEntryRequest] = useMutation(EntryRequestUpdate);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
-
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -41,7 +39,6 @@ export default function RequestUpdate({ match, history }) {
   if (!formData.loaded && data) {
     setFormData({ ...data.result, loaded: true });
   }
-
   function handleInputChange(e) {
     const { name, value } = e.target;
     setFormData({
@@ -49,32 +46,54 @@ export default function RequestUpdate({ match, history }) {
       [name]: value
     });
   }
-
+  
   function handleUpdateRecord() {
     return updateEntryRequest({ variables: formData });
   }
-
+  
   function handleGrantRequest() {
     handleUpdateRecord()
-      .then(grantEntry({ variables: { id: match.params.id } }))
-      .then(() => {
-        history.push("/entry_logs", { tab: 1 });
-      });
+    .then(grantEntry({ variables: { id: match.params.id } }))
+    .then(() => {
+      history.push("/entry_logs", { tab: 1 });
+    });
   }
-
+  
   function handleDenyRequest() {
     handleUpdateRecord()
-      .then(denyEntry({ variables: { id: match.params.id } }))
-      .then(() => {
-        history.push("/entry_logs", { tab: 1 });
-      });
+    .then(denyEntry({ variables: { id: match.params.id } }))
+    .then(() => {
+      history.push("/entry_logs", { tab: 1 });
+    });
   }
-
+  
   return (
     <Fragment>
-      <Nav navName="Approve Request" menuButton="cancel" />
+      <Nav
+        navName={isFromLogs ? "Request Access" : "Approve Request"}
+        menuButton="cancel"
+      />
       <div className="container">
         <form>
+          {isFromLogs && (
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="date">
+                Date and time submitted
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                value={
+                  formData.guard
+                    ? `${new Date(formData.createdAt).toDateString()} at ${DateUtil.dateTimeToString(new Date(formData.createdAt))}`
+                    : ""
+                }
+                disabled={true}
+                name="date"
+                required
+              />
+            </div>
+          )}
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
               Guard
@@ -82,7 +101,7 @@ export default function RequestUpdate({ match, history }) {
             <input
               className="form-control"
               type="text"
-              value={formData.guard ? formData.guard.name : ''}
+              value={formData.guard ? formData.guard.name : ""}
               disabled={true}
               name="name"
               required
@@ -152,22 +171,24 @@ export default function RequestUpdate({ match, history }) {
             </TextField>
           </div>
 
-          <div className="row justify-content-center align-items-center">
-            <Button
-              variant="contained"
-              onClick={handleGrantRequest}
-              className={`btn ${css(styles.grantButton)}`}
-            >
-              Grant
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleDenyRequest}
-              className={`btn  ${css(styles.denyButton)}`}
-            >
-              Deny
-            </Button>
-          </div>
+          {!isFromLogs && (
+            <div className="row justify-content-center align-items-center">
+              <Button
+                variant="contained"
+                onClick={handleGrantRequest}
+                className={`btn ${css(styles.grantButton)}`}
+              >
+                Grant
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleDenyRequest}
+                className={`btn  ${css(styles.denyButton)}`}
+              >
+                Deny
+              </Button>
+            </div>
+          )}
         </form>
       </div>
     </Fragment>

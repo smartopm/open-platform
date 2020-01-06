@@ -34,7 +34,7 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   PHONE_TOKEN_LEN = 6
-  PHONE_TOKEN_EXPIRATION_MINUTES = 10
+  PHONE_TOKEN_EXPIRATION_MINUTES = 1440 # Valid for 24 hours
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
