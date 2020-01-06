@@ -10,11 +10,11 @@ class CsvExportController < ApplicationController
     # format into CSV
     # Send to browser as a file
     # send_data @users.to_csv, filename: "users-#{Date.today}.csv"
-    headers = %w[subject description user timestamp]
+    headers = %w[subject description user visitor data time]
     csv_string = CSV.generate do |csv|
       csv << headers
-      get_event_logs(params).each do |ev|
-        csv << [ev.subject, ev.to_sentence, ev.acting_user.name, ev.created_at]
+      get_event_logs(params).each do |row|
+        csv << row
       end
     end
     send_data csv_string, filename: "event_log-#{Time.zone.today}.csv"
@@ -24,8 +24,18 @@ class CsvExportController < ApplicationController
 
   def get_event_logs(_params)
     # TODO: use params to narrow it down later
-    EventLog.where(community_id: @user.community_id,
-                   created_at: 30.days.ago..Float::INFINITY).each
+    events = EventLog.where(community_id: @user.community_id,
+                            created_at: 30.days.ago..Float::INFINITY)
+    event_logs_to_rows(events, @user.community.timezone)
+  end
+
+  def event_logs_to_rows(event_logs, tz)
+    event_logs.map do |ev|
+      time = ev.created_at.in_time_zone(tz || 'UTC')
+      visitor = ev.visitor_name if ev.subject == 'visitor_entry'
+      [ev.subject, ev.to_sentence, ev.acting_user.name, visitor,
+       time.strftime('%Y-%m-%d'), time.strftime('%H:%M')]
+    end
   end
 
   def ensure_admin
