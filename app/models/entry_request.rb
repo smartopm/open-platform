@@ -71,20 +71,6 @@ class EntryRequest < ApplicationRecord
     )
   end
 
-  # showroom
-  def log_showroom_entry
-    EventLog.create(
-      acting_user: user, community: user.community,
-      subject: 'showroom',
-      ref_id: self[:id], ref_type: 'EntryRequest',
-      data: {
-        # TODO: Find a proper action for showroom
-        action: '',
-        ref_name: self[:name],
-      }
-    )
-  end
-
   def log_decision(approved)
     EventLog.create(
       acting_user: grantor, community: user.community,
@@ -99,6 +85,7 @@ class EntryRequest < ApplicationRecord
 
   # TODO: Build this into a proper notification scheme
   def notify_admin
+    unless source == 'showroom' return
     link = "https://#{ENV['HOST']}/request/#{id}/edit"
     Rails.logger.info "Sending entry request approval notification for #{link}"
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
