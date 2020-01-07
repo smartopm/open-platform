@@ -35,7 +35,7 @@ export default function ClientForm({history}) {
   }
   return (
     <Fragment>
-      <Nav navName="Showroom Form" menuButton="back" backTo="/sh_kiosk" />
+      <Nav navName="Showroom Form" menuButton="back" backTo="/showroom_kiosk" />
 
       <div className="container">
         <div className="row justify-content-center align-items-center">

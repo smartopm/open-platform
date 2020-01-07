@@ -2,13 +2,18 @@ import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
 import { Footer } from "../../components/Footer";
+import logo from "../../../../assets/images/logo_nkwashi.svg";
 
 
 // Todo: Add another step in this component(why are you here)
 export default function ComingSoon({ history }) {
   return (
     <div className={`${css(styles.welcomePage)}`}>
-     
+      <img
+        src={logo}
+        className={`nz-logo-nkwashi ${css(styles.nkLogo)}`}
+        alt="nkwashi logo"
+      />
       <div>
         <h5 className="text-center">Thanks for coming in! Our team will help you soon.</h5>
       </div>
@@ -36,8 +41,9 @@ const styles = StyleSheet.create({
     transform: " translate(-50%, -50%)"
   },
   nkLogo: {
-    marginBottom: 50,
-    marginLeft: "9vw"
+    marginBottom: 101,
+    marginLeft: "11.5vw",
+    margingTop: 100
   },
   getStartedButton: {
     backgroundColor: "#25c0b0",

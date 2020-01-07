@@ -32,7 +32,7 @@ export default function VisitingReason({ history }) {
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          onClick={() => history.push("/soon")}
+          onClick={() => history.push("/sh_soon")}
         >
           Payments & Account Management
         </Button>
@@ -40,7 +40,7 @@ export default function VisitingReason({ history }) {
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          onClick={() => history.push("/soon")}
+          onClick={() => history.push("/sh_soon")}
         >
           Other
         </Button>

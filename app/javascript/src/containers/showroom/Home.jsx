@@ -15,7 +15,7 @@ export default function ShowRoom({ history }) {
       />
       <br />
       <div>
-        <h5 className="text-center">Welcome to Thebe Investment Management</h5>
+        <h5 className={css(styles.homeTitle)}>Welcome to Thebe Investment Management</h5>
       </div>
       <div
         className={`row justify-content-center align-items-center ${css(
@@ -58,5 +58,8 @@ const styles = StyleSheet.create({
   },
   buttonSection: {
     marginTop: "50%"
+  },
+  homeTitle: {
+    marginTop: 60
   }
 });
