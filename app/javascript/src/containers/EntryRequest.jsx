@@ -25,7 +25,7 @@ export default function LogEntry({ history }) {
   function handleSubmit() {
     setSubmitted(!isSubmitted);
     const userData = {
-      name: capitalizeLastName(name.value),
+      name: name.value,
       vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
@@ -184,15 +184,6 @@ function useFormInput(initialValue) {
     setValue(event.target.value);
   };
   return { value, onChange: handleChange };
-}
-function capitalizeLastName(fullName) {
-  const names = fullName.trim().split(" ");
-  if (!names.length) {
-    return;
-  }
-  return names
-    .map((name, index) => (index === 1 ? name.toUpperCase() : name))
-    .join(" ");
 }
 
 
