@@ -82,6 +82,7 @@ export default function LogEntry({ history }) {
               {...name}
               name="_name"
               required
+              autoCapitalize="words"
             />
           </div>
           <div className="form-group">
