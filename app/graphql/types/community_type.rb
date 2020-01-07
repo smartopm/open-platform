@@ -7,5 +7,6 @@ module Types
     field :slug, String, null: false
     field :name, String, null: false
     field :logo_url, String, null: true
+    field :timezone, String, null: true
   end
 end

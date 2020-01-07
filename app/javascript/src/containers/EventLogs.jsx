@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useQuery } from "react-apollo";
+import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 import Nav from "../components/Nav";
 
 import Loading from "../components/Loading.jsx";
@@ -8,12 +9,13 @@ import { AllEventLogsQuery } from "../graphql/queries.js";
 import ErrorPage from "../components/Error";
 
 export default ({ history }) => {
-  return allEventLogs(history);
+  const authState = useContext(AuthStateContext);
+  return allEventLogs(history, authState);
 };
 
 // Todo: Find the total number of allEventLogs
 const limit = 30
-const allEventLogs = (history) => {
+const allEventLogs = (history, authState) => {
   const [offset, setOffset] = useState(0)
   // const eventsPage = 
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
@@ -32,10 +34,10 @@ const allEventLogs = (history) => {
     }
     setOffset(offset - limit)
   }
-  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} />;
+  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} userToken={authState.token} />;
 };
 
-export function IndexComponent({ data, router, nextPage, previousPage, offset }) {
+export function IndexComponent({ data, router, nextPage, previousPage, offset, userToken }) {
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
@@ -72,6 +74,7 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset })
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
+      <div><a href={`/csv_export/event_logs?token=${userToken}`}>Download</a></div>
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6 table-responsive">
           <table className="table">

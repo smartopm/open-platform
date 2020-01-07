@@ -31,6 +31,7 @@ const QUERY = gql`
       community {
         name
         logoUrl
+        timezone
       }
     }
   }
@@ -78,6 +79,7 @@ export function AuthStateProvider({ children, token, setToken }) {
     loggedIn: false,
     loaded: false,
     user: null,
+    token: null, 
     setToken
   });
 
@@ -93,6 +95,7 @@ export function AuthStateProvider({ children, token, setToken }) {
             user: data.currentUser,
             loaded: true,
             loggedIn: true,
+            token: token,
           });
         })
         .catch(err => {

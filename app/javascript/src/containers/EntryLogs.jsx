@@ -60,7 +60,7 @@ export function IndexComponent({
 }) {
   function routeToAction(eventLog) {
     if (eventLog.refType === "EntryRequest") {
-      return router.push(`/request/${eventLog.refId}`);
+      return router.push({pathname: `/request/${eventLog.refId}`, state: { from: 'logs' }});
     } else if (eventLog.refType === "User") {
       return router.push(`/user/${eventLog.refId}`);
     }
