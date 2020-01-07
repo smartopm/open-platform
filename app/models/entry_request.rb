@@ -7,7 +7,8 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :notify_admin, :log_entry_start
+  after_create :log_entry_start
+  after_create :notify_admin, unless: :showroom?
 
   validates :name, presence: true
 
@@ -47,6 +48,10 @@ class EntryRequest < ApplicationRecord
 
   def pending?
     self[:granted_state].nil? || self[:granted_state].zero?
+  end
+
+  def showroom?
+    self[:source] == 'showroom'
   end
 
   private

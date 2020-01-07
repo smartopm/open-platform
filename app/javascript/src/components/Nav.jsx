@@ -2,7 +2,7 @@ import React, { useContext, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import Avatar from "@material-ui/core/Avatar";
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
 import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
@@ -22,55 +22,52 @@ export default withRouter(function Nav({
   const authState = useContext(AuthStateContext);
   return (
     <Component
-    {...{
-      children,
-      authState,
-      menuButton,
-      history,
-      navName,
-      backTo,
-      boxShadow
-    }}
+      {...{
+        children,
+        authState,
+        menuButton,
+        history,
+        navName,
+        backTo,
+        boxShadow
+      }}
     />
-    );
-  });
-  
-  export function Component({
-    children,
-    authState,
-    menuButton,
-    navName,
-    backTo,
-    boxShadow,
-    history
-  }) {
-    const [state, setState] = React.useState(false);
-    const { values, handleSubmit } = useContext(FormContext);
-    const routeInfo = history.location.pathname.split("/");
-    function backButtonOrMenu() {
-      const to = backTo || "/";
+  );
+});
+
+export function Component({
+  children,
+  authState,
+  menuButton,
+  navName,
+  backTo,
+  boxShadow,
+  history
+}) {
+  const [state, setState] = React.useState(false);
+  const { values, handleSubmit } = useContext(FormContext);
+  const routeInfo = history.location.pathname.split("/");
+  function backButtonOrMenu() {
+    const to = backTo || "/";
     if (menuButton === "back" && navName === "Scan") {
       return (
-        <a href="/" className={css(styles.buttonLeft)} >
+        <a href="/" className={css(styles.buttonLeft)}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </a>
-      )
-    }
-    else if (menuButton === "back") {
+      );
+    } else if (menuButton === "back") {
       return (
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </Link>
       );
-    }
-    else if (menuButton === "cancel" && routeInfo.includes("request")) {
+    } else if (menuButton === "cancel" && routeInfo.includes("request")) {
       return (
         <Link className={css(styles.buttonLeft)} to={"/entry_logs"}>
-           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
+          <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </Link>
       );
-    }
-    else if (menuButton === "cancel") {
+    } else if (menuButton === "cancel") {
       return (
         <Link className={css(styles.buttonLeft)} to={to}>
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
@@ -93,22 +90,25 @@ export default withRouter(function Nav({
 
     return (
       <Fragment>
-        {
-          authState.user.userType === "security_guard" ? (
-            <MenuIcon
-              onClick={toggleDrawer}
-              className={`${css(styles.userAvatar)}`}
-            />
-          ) :
-            <Avatar
-              alt="Default Avatar"
-              onClick={toggleDrawer}
-              className={`${css(styles.userAvatar)}`}
-              src={avatarUrl({ user: authState.user })}
-            />
-        }
+        {authState.user.userType === "security_guard" ? (
+          <MenuIcon
+            onClick={toggleDrawer}
+            className={`${css(styles.userAvatar)}`}
+          />
+        ) : (
+          <Avatar
+            alt="Default Avatar"
+            onClick={toggleDrawer}
+            className={`${css(styles.userAvatar)}`}
+            src={avatarUrl({ user: authState.user })}
+          />
+        )}
         <NotificationsNoneOutlinedIcon
-          className={`${css(authState.user.userType === "security_guard" ? styles.rightSideIconGuard : styles.rightSideIconAdmin)}`}
+          className={`${css(
+            authState.user.userType === "security_guard"
+              ? styles.rightSideIconGuard
+              : styles.rightSideIconAdmin
+          )}`}
         />
       </Fragment>
     );
@@ -237,5 +237,4 @@ const styles = StyleSheet.create({
       cursor: "pointer"
     }
   }
-
 });

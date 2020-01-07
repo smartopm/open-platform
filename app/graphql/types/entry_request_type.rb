@@ -12,10 +12,12 @@ module Types
     field :vehicle_plate, String, null: true
     field :reason, String, null: true
     field :other_reason, String, null: true
+    field :subject, String, null: true
     field :concern_flag, GraphQL::Types::Boolean, null: true
     field :granted_state, Integer, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :granted_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :source, String, null: true
   end
 end
