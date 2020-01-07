@@ -178,6 +178,7 @@ export const EntryRequestCreate = gql`
     $nrc: String
     $otherReason: String
     $phoneNumber: String
+    $source: String
   ) {
     result: entryRequestCreate(
       name: $name
@@ -186,6 +187,7 @@ export const EntryRequestCreate = gql`
       nrc: $nrc
       otherReason: $otherReason
       phoneNumber: $phoneNumber
+      source: $source
     ) {
       entryRequest {
         ...EntryRequestFields

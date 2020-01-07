@@ -21,7 +21,7 @@ export default function ClientForm({history}) {
       nrc: data.nrc,
       reason: data.reason,
       // source: selectedSource,
-      subject: "showroom"
+      source: "showroom"
     };
     // history.push("/sh_complete");
     createEntryRequest({ variables: user }).then(() => {
