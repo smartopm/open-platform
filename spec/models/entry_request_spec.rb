@@ -66,10 +66,10 @@ RSpec.describe EntryRequest, type: :model do
     it 'should not notify for a showroom entry' do
       # But not for a showroom entry
       @entry_request = @guard.entry_requests.new(reason: 'Visiting',
-                                                 name: 'Visitor Joe', nrc: '012345', source: 'showroom')
+                                                 name: 'Visitor Joe', nrc: '012345',
+                                                 source: 'showroom')
       expect(@entry_request).not_to receive(:notify_admin)
       @entry_request.save
     end
-
   end
 end
