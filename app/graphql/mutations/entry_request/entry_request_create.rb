@@ -12,7 +12,7 @@ module Mutations
       argument :other_reason, String, required: false
       argument :concern_flag, GraphQL::Types::Boolean, required: false
       argument :source, String, required: false
-      
+
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
