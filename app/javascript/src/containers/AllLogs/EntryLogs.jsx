@@ -1,15 +1,15 @@
 import React, { useState, Fragment } from "react";
 import { useQuery } from "react-apollo";
-import Nav from "../components/Nav";
+import Nav from "../../components/Nav";
 import { StyleSheet, css } from "aphrodite";
-import Loading from "../components/Loading.jsx";
-import DateUtil from "../utils/dateutil.js";
-import { AllEventLogsQuery } from "../graphql/queries.js";
-import ErrorPage from "../components/Error";
-import { Footer } from "../components/Footer";
+import Loading from "../../components/Loading.jsx";
+import DateUtil from "../../utils/dateutil.js";
+import { AllEventLogsQuery } from "../../graphql/queries.js";
+import ErrorPage from "../../components/Error";
+import { Footer } from "../../components/Footer";
 
 export default ({ history, match }) => {
-  const subjects = ["user_entry", "visitor_entry"];
+  const subjects = ["user_entry", "visitor_entry", "showroom"];
   return allEventLogs(history, match, subjects);
 };
 
@@ -40,6 +40,7 @@ const allEventLogs = (history, match, subjects) => {
     }
     setOffset(offset - limit);
   }
+  console.log(data)
   return (
     <IndexComponent
       data={data}
@@ -70,7 +71,9 @@ export function IndexComponent({
       return;
     }
     return eventLogs.map(event => {
-      const source = event.subject === "user_entry" ? "Scan" : "Manual";
+      console.log(event.subject)
+      // Todo: To be followed up
+      const source = event.subject === "user_entry" ? "Scan" : event.subject === "showroom" ? "Showroom" : "Manual";
       const reason = event.entryRequest ? event.entryRequest.reason : "";
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name;

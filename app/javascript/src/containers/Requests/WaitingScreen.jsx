@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
 import { css, StyleSheet } from "aphrodite";
 import { addSeconds, format } from "date-fns";
-import { EntryRequestQuery } from "../graphql/queries.js";
-import { ponisoNumber } from "../utils/constants.js";
+import { EntryRequestQuery } from "../../graphql/queries";
+import { ponisoNumber } from "../../utils/constants.js";
 
 
 export default function HoldScreen({ match }) {

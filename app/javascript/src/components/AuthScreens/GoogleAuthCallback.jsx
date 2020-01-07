@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import { Redirect } from "react-router-dom";
-import { Context as AuthStateContext } from "./Provider/AuthStateProvider";
+import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
 export default function GoogleAuthCallback({match}) {
   const token = match.params.token

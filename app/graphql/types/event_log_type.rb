@@ -14,6 +14,7 @@ module Types
     field :subject, String, null: true
     field :data, GraphQL::Types::JSON, null: true
     field :sentence, String, null: true
+    field :source, String, null: true
 
     def sentence
       object.to_sentence

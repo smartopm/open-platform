@@ -1,16 +1,16 @@
 import React, { Fragment, useState } from "react";
 import { useQuery, useMutation } from "react-apollo";
-import Nav from "../components/Nav";
+import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
-import { EntryRequestQuery } from "../graphql/queries.js";
+import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny
-} from "../graphql/mutations.js";
-import Loading from "../components/Loading";
+} from "../../graphql/mutations.js";
+import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
-import DateUtil from "../utils/dateutil.js";
+import DateUtil from "../../utils/dateutil";
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state ? location.state.from : "any";
@@ -66,7 +66,6 @@ export default function RequestUpdate({ match, history, location }) {
       history.push("/entry_logs", { tab: 1 });
     });
   }
-  console.log(formData);
   
   return (
     <Fragment>
