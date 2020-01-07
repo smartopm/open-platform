@@ -18,5 +18,6 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :granted_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :source, String, null: true
   end
 end
