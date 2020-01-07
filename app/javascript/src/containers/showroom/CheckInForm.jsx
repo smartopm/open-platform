@@ -9,8 +9,8 @@ import Nav from "../../components/Nav";
 import { EntryRequestCreate } from "../../graphql/mutations.js";
 
 export default function ClientForm({history}) {
-  const { register, handleSubmit, errors, setValue } = useForm();
-  const [isSubmitted, setSubmitted] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
+  const [isSubmitted] = useState(false);
   const [selectedSource, setReason] = useState("")
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const onSubmit = data => {
