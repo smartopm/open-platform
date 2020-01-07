@@ -201,7 +201,7 @@ export const EntryRequestUpdate = gql`
   mutation EntryRequestUpdateMutation(
     $id: ID!
     $name: String!
-    $reason: String!
+    $reason: String
     $vehiclePlate: String
     $nrc: String
     $otherReason: String

@@ -37,8 +37,11 @@ class EventLog < ApplicationRecord
     send(method)
   end
 
+  def visitor_name
+    data['visitor_name'] || data['ref_name']
+  end
+
   def visitor_entry_to_sentence
-    visitor_name = data['visitor_name'] || data['ref_name']
     if data['action'] == 'started'
       "#{acting_user.name} started registering #{visitor_name} for entry."
     else

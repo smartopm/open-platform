@@ -36,7 +36,7 @@ Run this for db migration
 _SSL Setup_
 
 Caddy is being used to serve the application via SSL. If you like, you can rely
-on it's own self signed certificates which are available on localhost:443
+on its own self signed certificates which are available on localhost:443
 
 Rather than rely on self-signed certificates, we include certificates for
 dev.dgdp.site. They are encrypted with the development.key from above, and may
