@@ -85,7 +85,8 @@ class EntryRequest < ApplicationRecord
 
   # TODO: Build this into a proper notification scheme
   def notify_admin
-    unless source == 'showroom' return
+    return unless source == 'showroom'
+    
     link = "https://#{ENV['HOST']}/request/#{id}/edit"
     Rails.logger.info "Sending entry request approval notification for #{link}"
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
