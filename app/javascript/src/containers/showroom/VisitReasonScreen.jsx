@@ -6,22 +6,21 @@ import { Footer } from "../../components/Footer";
 
 export default function VisitingReason({ history }) {
   return (
-    <div className={`${css(styles.welcomePage)}`}>
+    <div 
+      className={`${css(styles.welcomePage)}`}
+    >
       <img
         className={`nz-logo-nkwashi ${css(styles.nkLogo)}`}
         src={logo}
         alt="nkwashi logo"
       />
-      <div className="container">
-        <div className="row justify-content-center align-items-center">
-          <p className={css(styles.reasonTitle)}>Why are you here today?</p>
-        </div>
-      </div>
       <div
         className={`row justify-content-center align-items-center ${css(
           styles.buttonSection
         )}`}
       >
+        <p className={css(styles.reasonTitle)} >Why are you here today?</p>
+    
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     transform: " translate(-50%, -50%)"
   },
   nkLogo: {
-    marginBottom: 50,
+    marginTop: "20%",
     marginLeft: "15vw"
   },
   getStartedButton: {
@@ -77,6 +76,6 @@ const styles = StyleSheet.create({
     marginTop: "35%"
   },
   reasonTitle: {
-    marginRight: "1%"
+    marginBottom: "20%"
   }
 });

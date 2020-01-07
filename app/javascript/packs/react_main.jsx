@@ -172,11 +172,11 @@ const App = () => {
                       component={RequestApproval}
                     />
                     {/* Showroom routes */}
-                    <Route path="/show_room" component={ShowRoom} />
+                    <Route path="/sh_kiosk" component={ShowRoom} />
                     <Route path="/sh_reason" component={VisitingReasonScreen} />
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
-                    <Route path="/soon" component={ComingSoon} />
+                    <Route path="/sh_soon" component={ComingSoon} />
                     
                     <Route
                       path="*"

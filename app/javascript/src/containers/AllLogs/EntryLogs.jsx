@@ -72,6 +72,7 @@ export function IndexComponent({
     }
     return eventLogs.map(event => {
       console.log(event.subject)
+      // Todo: To be followed up
       const source = event.subject === "user_entry" ? "Scan" : event.subject === "showroom" ? "Showroom" : "Manual";
       const reason = event.entryRequest ? event.entryRequest.reason : "";
       const visitorName =

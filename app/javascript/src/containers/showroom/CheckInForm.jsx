@@ -35,7 +35,7 @@ export default function ClientForm({history}) {
   }
   return (
     <Fragment>
-      <Nav navName="Showroom Form" menuButton="back" backTo="/show_room" />
+      <Nav navName="Showroom Form" menuButton="back" backTo="/sh_kiosk" />
 
       <div className="container">
         <div className="row justify-content-center align-items-center">
@@ -58,6 +58,7 @@ export default function ClientForm({history}) {
               ref={register({ required: true })}
               name="name"
               defaultValue=""
+              autoCapitalize="words"
             />
           </div>
           {errors.name && <p className="text-danger">The name is required</p>}
@@ -71,6 +72,7 @@ export default function ClientForm({history}) {
               ref={register}
               name="surname"
               defaultValue=""
+              autoCapitalize="words"
             />
           </div>
           <div className="form-group">
