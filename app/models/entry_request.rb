@@ -7,7 +7,8 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :notify_admin, :log_entry_start
+  after_create :log_entry_start
+  after_create :notify_admin, unless: :showroom?
 
   validates :name, presence: true
 
@@ -49,6 +50,10 @@ class EntryRequest < ApplicationRecord
     self[:granted_state].nil? || self[:granted_state].zero?
   end
 
+  def showroom?
+    self[:source] == 'showroom'
+  end
+
   private
 
   def can_grant?(grantor)
@@ -85,8 +90,6 @@ class EntryRequest < ApplicationRecord
 
   # TODO: Build this into a proper notification scheme
   def notify_admin
-    return unless self[:source] == 'showroom'
-
     link = "https://#{ENV['HOST']}/request/#{id}/edit"
     Rails.logger.info "Sending entry request approval notification for #{link}"
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
