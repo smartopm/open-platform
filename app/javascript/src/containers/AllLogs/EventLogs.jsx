@@ -39,13 +39,6 @@ const allEventLogs = (history, authState) => {
 
 export function IndexComponent({ data, router, nextPage, previousPage, offset, userToken }) {
 
-  function routeToAction(eventLog) {
-    if (eventLog.refType === 'EntryRequest') {
-      return router.push(`/entry_request/${eventLog.refId}`);
-    } else if (eventLog.refType === 'User') {
-      return router.push(`/user/${eventLog.refId}`);
-    }
-  }
   function logs(eventLogs) {
     if (!eventLogs) {
       return;
@@ -53,10 +46,6 @@ export function IndexComponent({ data, router, nextPage, previousPage, offset, u
     return eventLogs.map(entry => (
       <tr
         key={entry.id}
-        onClick={() => routeToAction(entry)}
-        style={{
-          cursor: "pointer"
-        }}
       >
         <td>{entry.subject}</td>
         <td>{entry.sentence}</td>
