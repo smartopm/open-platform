@@ -37,7 +37,7 @@ const allEventLogs = (history, authState) => {
   return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} userToken={authState.token} />;
 };
 
-export function IndexComponent({ data, router, nextPage, previousPage, offset, userToken }) {
+export function IndexComponent({ data, nextPage, previousPage, offset, userToken }) {
 
   function logs(eventLogs) {
     if (!eventLogs) {
