@@ -3,7 +3,7 @@ import { StyleSheet, css } from "aphrodite";
 
 export default function ClientList() {
   return (
-    <Fragment >
+    <Fragment>
       <div className="container">
         <div className="row justify-content-between">
           <div className="col-xs-8">
@@ -24,6 +24,10 @@ export default function ClientList() {
         <br />
       </div>
       <div className="border-top my-3" />
+
+      <div>
+        <Footer position={"3vh"} />
+      </div>
     </Fragment>
   );
 }

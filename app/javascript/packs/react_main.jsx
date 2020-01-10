@@ -46,6 +46,8 @@ import ComingSoon from '../src/containers/showroom/ComingSoon'
 import VisitingClientForm from '../src/containers/showroom/CheckInForm'
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo";
 import CheckInComplete from "../src/containers/showroom/CheckInComplete";
+import ClientList from "../src/components/CRM/ClientList";
+import ClientView from "../src/components/CRM/ClientView";
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ["app.doublegdp.com"];
@@ -173,12 +175,16 @@ const App = () => {
                       path="/request_status/:id"
                       component={RequestApproval}
                     />
-                    {/* Showroom routes */}
+                    {/* Showroom kiosk routes */}
                     <Route path="/showroom_kiosk" component={ShowRoom} />
                     <Route path="/sh_reason" component={VisitingReasonScreen} />
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
+
+                    {/* CRM */}
+                    <Route path="/crm_client_list" component={ClientList} />
+                    <Route path="/crm_client_view" component={ClientView} />
                     
                     <Route
                       path="*"
