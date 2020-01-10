@@ -7,7 +7,7 @@ RSpec.describe Note, type: :model do
   let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
 
   it 'should let an admin create a note for a user' do
-    current_user.notes.create(author_id: admin.id, body: "Test Note")
+    current_user.notes.create(author_id: admin.id, body: 'Test Note')
     expect(current_user.notes.length).to eql 1
   end
 end
