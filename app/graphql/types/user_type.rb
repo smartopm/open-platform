@@ -21,6 +21,11 @@ module Types
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
     field :avatar_url, String, null: true
     field :document_url, String, null: true
+    field :source, String, null: true
+    field :stage, String, null: true
+    field :owner_id, ID, null: true
+    field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?

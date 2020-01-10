@@ -21,11 +21,15 @@ RSpec.describe Types::QueryType do
         user(id:"#{current_user.id}") {
           id
           phoneNumber
+          notes {
+            body
+          }
         }
       })
     end
 
     it 'returns all items' do
+      current_user.notes.create(author_id: admin.id, body: 'test')
       result = DoubleGdpSchema.execute(query, context: { current_user: current_user }).as_json
       expect(result.dig('data', 'user', 'id')).to eql current_user.id
     end
@@ -38,11 +42,14 @@ RSpec.describe Types::QueryType do
     it 'hide priviledged information' do
       result = DoubleGdpSchema.execute(priviledged_query, context:
                                        { current_user: another_user }).as_json
+      current_user.notes.create(author_id: admin.id, body: 'test')
       expect(result.dig('data', 'user', 'id')).to_not be_nil
       expect(result.dig('data', 'user', 'phoneNumber')).to be_nil
+      expect(result.dig('data', 'user', 'notes')).to be_nil
 
       result = DoubleGdpSchema.execute(priviledged_query, context: { current_user: admin }).as_json
       expect(result.dig('data', 'user', 'phoneNumber')).to eql current_user.phone_number
+      expect(result.dig('data', 'user', 'notes').length).to eql 1
 
       # Visible to the owner
       result = DoubleGdpSchema.execute(priviledged_query, context:
