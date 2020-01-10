@@ -12,7 +12,8 @@ export const userType = {
   resident: "Resident",
   contractor: "Contractor",
   prospective_client: "Prospective Client",
-  client: "Client"
+  client: "Client",
+  lead: "Lead"
 };
 
 export const userState = {
