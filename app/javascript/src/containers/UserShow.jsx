@@ -2,6 +2,10 @@ import React, { Fragment, useContext } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-apollo";
 import { withStyles, Tab } from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { a11yProps, StyledTabs, TabPanel } from "../components/Tabs";
 import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js";
 
@@ -80,7 +84,9 @@ export function Component({
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  function handleClick(){
+    // handle menu here
+  }
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -88,19 +94,24 @@ export function Component({
         <div className="row">
         <div className="container book-box">
           <div className="row row-one">
-            <div className="col-md-3 col-sm-2 ">
-              <img
-                className="rounded-circle"
-                src={data.user.imageUrl}
-                
-              />
+            <div className="col ">
+             <Avatar user={data.user} style="small" />
             </div>
 
-            <div className="col-md-8 col-sm-8 ">
-              <h2>{data.user.name}</h2>
+            <div className="col">
+              <h4>{data.user.name}</h4>
               Last accessed: {expiresAtStr(data.user.lastActivityAt)}
             </div>
-            <div className="col-md-1 col-sm-2 "></div>
+            <div className="col">
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+            </div>
           </div>
         </div>
       </div>
