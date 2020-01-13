@@ -81,11 +81,19 @@ export function Component({
 }) {
 
   const [value, setValue] = React.useState(0);
+   const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  function handleClick(){
+  function handleOpenMenu(event){
     // handle menu here
+    setAnchorEl(event.currentTarget);
+  }
+  function handleClose(){
+    // handle menu here
+    setAnchorEl(null);
   }
   return (
     <div>
@@ -107,10 +115,78 @@ export function Component({
                 aria-label="more"
                 aria-controls="long-menu"
                 aria-haspopup="true"
-                onClick={handleClick}
+                onClick={handleOpenMenu}
                 >
                   <MoreVertIcon />
                 </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      // maxHeight: 180,
+                      width: 200,
+                    },
+                  }}
+                >
+                  {/* {options.map(option => ( */}
+                    <MenuItem key={"optionssdf"} onClick={onLogEntry}>
+                      Log This Entry
+                    </MenuItem>
+                    <MenuItem key={"options"}>
+                      <a
+                        href={`tel:${ponisoNumber}`}
+                        className={` ${css(
+                          styles.callButton
+                        )}`}
+                      >
+                        Call Poniso
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                        <Link
+                          to={`/user/${data.user.id}/logs`}
+                          className=" active"
+                         >
+                          User Logs
+                        </Link>
+                    </MenuItem>
+                    <MenuItem>
+                        <Link
+                          to={`/print/${data.user.id}`}
+                          className=" active"
+                        >
+                          Print
+                        </Link> 
+                    </MenuItem>
+                    <MenuItem>
+                        <a
+                          onClick={sendOneTimePasscode}
+                          className=" active"
+                         >
+                         Send One Time Passcode
+                        </a> 
+                    </MenuItem>
+                    <MenuItem>
+                         <a
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  "Are you sure you wish to delete this user?"
+                                )
+                              )
+                                onDelete();
+                            }}
+                            className=" active"
+                                    >
+                            Delete
+                          </a> 
+                    </MenuItem>
+                  {/* ))} */}
+                </Menu>
             </div>
           </div>
         </div>
