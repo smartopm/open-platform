@@ -14,16 +14,14 @@ export default function ClientForm({history}) {
   const [selectedSource, setReason] = useState("")
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const onSubmit = data => {
-    // setSubmitted(!isSubmitted);
     const user = {
-      name: data.name + data.surname.toUpperCase(),
+      name: `${data.name} ${data.surname}`,
       phoneNumber: data.phoneNumber,
       nrc: data.nrc,
       reason: data.reason,
-      // source: selectedSource,
       source: "showroom"
     };
-    // history.push("/sh_complete");
+
     createEntryRequest({ variables: user }).then(() => {
       // Send them to the temp final page
       history.push("/sh_complete/");

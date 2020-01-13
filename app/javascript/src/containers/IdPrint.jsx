@@ -9,6 +9,8 @@ import DateUtil from "../utils/dateutil.js";
 
 import { UserQuery } from "../graphql/queries";
 import ErrorPage from "../components/Error.jsx";
+import { QRCode } from "react-qr-svg";
+
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -116,7 +118,10 @@ export function Component({ data }) {
           </div>
 
           <div className="d-flex justify-content-center qr_code">
-            <img style={{ width: 256 }} src={qrCodeAddress(data.user.id)} />
+            <QRCode
+              style={{ width: 256 }}
+              value={qrCodeAddress(data.user.id)}
+            />
           </div>
         </div>
       </div>
