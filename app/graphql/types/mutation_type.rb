@@ -9,6 +9,8 @@ module Types
     field :user_delete, mutation: Mutations::User::Delete
     field :one_time_login, mutation: Mutations::User::OneTimeLogin
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
+
+    # Entry Requests
     field :entry_request_create, mutation: Mutations::EntryRequest::EntryRequestCreate
     field :entry_request_update, mutation: Mutations::EntryRequest::EntryRequestUpdate
     field :entry_request_grant, mutation: Mutations::EntryRequest::EntryRequestGrant
@@ -18,5 +20,9 @@ module Types
     field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart
     field :login_phone_complete, mutation: Mutations::Login::LoginPhoneComplete
     field :login_switch_user, mutation: Mutations::Login::LoginSwitchUser
+
+    # Notes
+    field :note_create, mutation: Mutations::Note::NoteCreate
+    field :note_update, mutation: Mutations::Note::NoteUpdate
   end
 end
