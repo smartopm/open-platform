@@ -16,7 +16,7 @@ export default function ClientForm({history}) {
   const onSubmit = data => {
     // setSubmitted(!isSubmitted);
     const user = {
-      name: data.name + data.surname.toUpperCase(),
+      name: `${data.name} ${data.surname}`,
       phoneNumber: data.phoneNumber,
       nrc: data.nrc,
       reason: data.reason,
