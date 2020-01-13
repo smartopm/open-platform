@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-apollo";
 
@@ -19,6 +19,7 @@ import {
 import { css, StyleSheet } from "aphrodite";
 import ErrorPage from "../components/Error.jsx";
 import { ponisoNumber } from "../utils/constants.js";
+import { Snackbar } from "@material-ui/core"
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -67,9 +68,24 @@ export function Component({
   authState,
   sendOneTimePasscode
 }) {
+
+// simulate the time takes to send the code to give feedback
+const [isSent, setSentStatus] = useState(false)
+  function handleSentStatus(){
+    setSentStatus(!isSent)
+  }
+
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
+
+      {/* Toast */}
+        <Snackbar open={isSent} anchorOrigin={{ vertical: "bottom", horizontal: "center" }} autoHideDuration={4000} onClose={handleSentStatus}>
+          <div className="alert alert-success">
+            <strong>Success!</strong> The passcode was sent
+          </div>
+        </Snackbar>
+         
       <div className="container">
         <div className="row justify-content-center id_card">
           <div className="card id_card_box col-10 col-sm-10 col-md-6">
@@ -179,12 +195,17 @@ export function Component({
             </div>
             <div className="row justify-content-center log-entry-form">
               <div className="col-10 col-sm-10 col-md-6">
-                <a
-                  onClick={sendOneTimePasscode}
-                  className="btn btn-primary btn-lg btn-block active"
+                <button
+                  onClick={() => {
+                    sendOneTimePasscode()
+                    handleSentStatus()
+                  }}
+                  className={`btn btn-primary btn-lg btn-block ${!isSent && "active"}`}
                 >
-                  Send One Time Passcode
-                </a>
+                  {
+                    isSent ? "The passcode was sent" : "Send One Time Passcode"
+                  }
+                </button>
               </div>
             </div>
             <div className="row justify-content-center log-entry-form">
