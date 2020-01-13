@@ -115,40 +115,34 @@ export function Component({
           </div>
         </div>
       </div>
+    <div className="container">
+          <StyledTabs
+            value={value}
+            onChange={handleChange}
+            aria-label="request tabs"
+            centered
+          >
+            <StyledTab label="Contact" {...a11yProps(0)} />
+            <StyledTab label="Notes" {...a11yProps(1)} />
+            <StyledTab label="Plots" {...a11yProps(2)} />
+            <StyledTab label="Payments" {...a11yProps(3)} />
+          </StyledTabs>
+    </div>  
 
-      <StyledTabs
-        value={value}
-        onChange={handleChange}
-        aria-label="request tabs"
-        centered
-      >
-        <StyledTab label="Content" {...a11yProps(0)} />
-        <StyledTab label="Notes" {...a11yProps(1)} />
-        <StyledTab label="Plots" {...a11yProps(2)} />
-        <StyledTab label="Interactions" {...a11yProps(4)} />
-        <StyledTab label="Payments" {...a11yProps(5)} />
-        <StyledTab label="Activity" {...a11yProps(3)} />
-      </StyledTabs>
 
       <TabPanel value={value} index={0}>
         <div className="container">
-        <h4 className="text-center">Content</h4>
+        <h4 className="text-center">Contact</h4>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <h4 className="text-center">Notes</h4>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <h4 className="text-center">Plots</h4>
+        <h4 className="text-center">Coming soon</h4>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <h4 className="text-center">Interactions</h4>
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        <h4 className="text-center">Payments</h4>
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        <h4 className="text-center">Activity</h4>
+        <h4 className="text-center">Coming soon</h4>
       </TabPanel>
       </Fragment>
       {/*
