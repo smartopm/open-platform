@@ -2,6 +2,7 @@ import React, { Fragment, useContext } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
+import { useForm } from 'react-hook-form'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -19,7 +20,8 @@ import { UserQuery } from '../graphql/queries'
 import {
   AddActivityLog,
   SendOneTimePasscode,
-  DeleteUser
+  DeleteUser,
+  createNote,
 } from '../graphql/mutations'
 import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
@@ -51,6 +53,7 @@ export default ({ match, history }) => {
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
     variables: { userId: id }
   })
+
   if (loading || entry.loading) return <Loading />
   if (entry.data) return <Redirect to="/" />
   if (error) return <ErrorPage title={error} />
@@ -61,6 +64,7 @@ export default ({ match, history }) => {
       onLogEntry={addLogEntry}
       onDelete={deleteUser}
       sendOneTimePasscode={sendOneTimePasscode}
+      // onSaveNote={}
     />
   )
 }
@@ -81,6 +85,16 @@ export function Component({
 }) {
   const [value, setValue] = React.useState(0)
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [noteCreate] = useMutation(createNote)
+
+  const { handleSubmit, register, errors } = useForm()
+  const onSaveNote = ({ note }) => {
+    noteCreate({
+      variables: { userId: data.user.id, body: note }
+    }).then(data => {
+      console.log(data)
+    })
+  }
   const open = Boolean(anchorEl)
 
   const handleChange = (event, newValue) => {
@@ -90,10 +104,12 @@ export function Component({
     // handle menu here
     setAnchorEl(event.currentTarget)
   }
-  function handleClose() {
+ 
+  function handleClose(event) {
     // handle menu here
     setAnchorEl(null)
   }
+ console.log(data)
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -238,24 +254,26 @@ export function Component({
         </TabPanel>
         <TabPanel value={value} index={1}>
           <div className="container">
-            <form>
-              <div className="form-group">
-                <label htmlFor="notes">Notes</label>
-                <textarea
-                  className="form-control"
-                  placeholder="Add your notes here"
-                  id="notes"
-                  rows="3"
-                />
-              </div>
-              <button
-                type="button"
-                style={{ float: 'right' }}
-                className="btn btn-outline-primary "
-              >
-                Save
-              </button>
-            </form>
+            <div className="form-group">
+              <label htmlFor="notes">Notes</label>
+              <br />
+              <textarea
+                className="form-control"
+                placeholder="Add your notes here"
+                id="notes"
+                rows="3"
+                ref={register}
+                name="note"
+              />
+            </div>
+            <button
+              type="button"
+              style={{ float: 'right' }}
+              className="btn btn-outline-primary "
+              onClick={handleSubmit(onSaveNote)}
+            >
+              Save
+            </button>
           </div>
         </TabPanel>
         <TabPanel value={value} index={2}>

@@ -272,3 +272,12 @@ export const switchGuards = gql`
     }
   }
 `
+export const createNote = gql`
+mutation noteCreate($userId: ID!, $body: String!) {
+  noteCreate(userId: $userId, body: $body) {
+    note {
+      body
+    }
+  }
+}
+`
