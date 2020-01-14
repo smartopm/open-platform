@@ -47,7 +47,8 @@ export default function LogEntry({ history }) {
   }, [business.value]);
 
   // Disable this temporarily until it's setup on the server
-  function clearSignature() { // eslint-disable-line no-unused-vars
+  function clearSignature() {
+    // eslint-disable-line no-unused-vars
     signRef.current.clear();
     setClearBtnActive(!isBtnActive);
   }
@@ -185,7 +186,6 @@ function useFormInput(initialValue) {
   };
   return { value, onChange: handleChange };
 }
-
 
 const styles = StyleSheet.create({
   logButton: {

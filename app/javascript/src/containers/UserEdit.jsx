@@ -1,92 +1,92 @@
-import React from "react";
-import { useLazyQuery, useMutation } from "react-apollo";
-import Nav from "../components/Nav";
-import UserForm from "../components/UserForm.jsx";
-import Loading from "../components/Loading.jsx";
-import crudHandler from "../graphql/crud_handler";
-import { useFileUpload } from "../graphql/useFileUpload";
-import { useApolloClient } from "react-apollo";
-import { UserQuery } from "../graphql/queries";
-import { UpdateUserMutation, CreateUserMutation } from "../graphql/mutations";
-import { ModalDialog } from "../components/Dialog";
+import React from 'react'
+import { useLazyQuery, useMutation } from 'react-apollo'
+import Nav from '../components/Nav'
+import UserForm from '../components/UserForm.jsx'
+import Loading from '../components/Loading.jsx'
+import crudHandler from '../graphql/crud_handler'
+import { useFileUpload } from '../graphql/useFileUpload'
+import { useApolloClient } from 'react-apollo'
+import { UserQuery } from '../graphql/queries'
+import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
+import { ModalDialog } from '../components/Dialog'
 
 const initialValues = {
-  name: "",
-  email: "",
-  phoneNumber: "",
-  requestReason: "",
-  userType: "",
-  state: "",
-  signedBlobId: "",
-  imageUrl: ""
-};
+  name: '',
+  email: '',
+  phoneNumber: '',
+  requestReason: '',
+  userType: '',
+  state: '',
+  signedBlobId: '',
+  imageUrl: ''
+}
 
 export const FormContext = React.createContext({
   values: initialValues,
   handleInputChange: () => {}
-});
+})
 
 export default function FormContainer({ match, history }) {
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
-    typeName: "user",
+    typeName: 'user',
     readLazyQuery: useLazyQuery(UserQuery),
     updateMutation: useMutation(UpdateUserMutation),
     createMutation: useMutation(CreateUserMutation)
-  });
+  })
 
-  let title = "New User";
+  let title = 'New User'
   if (result && result.id) {
-    title = "Editing User";
+    title = 'Editing User'
   }
-  const [data, setData] = React.useState(initialValues);
-  const [isModalOpen, setDenyModal] = React.useState(false);
-  const [modalAction, setModalAction] = React.useState("grant");
+  const [data, setData] = React.useState(initialValues)
+  const [isModalOpen, setDenyModal] = React.useState(false)
+  const [modalAction, setModalAction] = React.useState('grant')
 
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
-  });
+  })
 
   function handleModal(type) {
-    if (type === "grant") {
-      setModalAction("grant");
+    if (type === 'grant') {
+      setModalAction('grant')
     } else {
-      setModalAction("deny");
+      setModalAction('deny')
     }
-    setDenyModal(!isModalOpen);
+    setDenyModal(!isModalOpen)
   }
 
   function handleModalConfirm() {
     createOrUpdate({
       id: result.id,
-      state: modalAction === "grant" ? "valid" : "banned"
+      state: modalAction === 'grant' ? 'valid' : 'banned'
     })
       .then(() => {
-        setDenyModal(!isModalOpen);
+        setDenyModal(!isModalOpen)
       })
       .then(() => {
-        history.push("/user/pending");
-      });
+        history.push('/user/pending')
+      })
   }
 
   function handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
     const values = {
       ...data,
       avatarBlobId: signedBlobId
-    };
+    }
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
-        history.push(`/user/${data.result.user.id}`);
+        history.push(`/user/${data.result.user.id}`)
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
   }
   function handleInputChange(event) {
-    const { name, value } = event.target;
+    const { name, value } = event.target
     setData({
       ...data,
       [name]: value
-    });
+    })
   }
 
   // If we are in an edit flow and haven't loaded the data,
@@ -98,14 +98,14 @@ export default function FormContainer({ match, history }) {
   //
   if (match.params.id) {
     if (isLoading) {
-      return <Loading />;
+      return <Loading />
     } else if (!result.id && !error) {
-      loadRecord({ variables: { id: match.params.id } });
+      loadRecord({ variables: { id: match.params.id } })
     } else if (!data.dataLoaded && result.id) {
       setData({
         ...result,
         dataLoaded: true
-      });
+      })
     }
   }
 
@@ -132,7 +132,7 @@ export default function FormContainer({ match, history }) {
       />
       <UserForm />
     </FormContext.Provider>
-  );
+  )
 }
 
-FormContainer.displayName = "UserForm";
+FormContainer.displayName = 'UserForm'

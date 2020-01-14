@@ -64,10 +64,7 @@ module.exports = {
   // maxWorkers: "50%",
 
   // An array of directory names to be searched recursively up from the requiring module's location
-   moduleDirectories: [
-     "node_modules",
-     "app/javascript"
-   ],
+  moduleDirectories: ["node_modules", "app/javascript"],
 
   // An array of file extensions your modules use
   // moduleFileExtensions: [
@@ -81,9 +78,10 @@ module.exports = {
 
   // A map from regular expressions to module names that allow to stub out resources with a single module
   // moduleNameMapper: {},
-  "moduleNameMapper": {
-    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/app/javascript/src/utils/assetMapper.js",
-    "\\.(css|less)$": "<rootDir>/app/javascript/src/utils/assetMapper.js" 
+  moduleNameMapper: {
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
+      "<rootDir>/app/javascript/src/utils/assetMapper.js",
+    "\\.(css|less)$": "<rootDir>/app/javascript/src/utils/assetMapper.js"
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -120,9 +118,7 @@ module.exports = {
   // rootDir: ".",
 
   // A list of paths to directories that Jest should use to search for files in
-   roots: [
-     "./app/javascript"
-   ],
+  roots: ["./app/javascript"],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -131,9 +127,7 @@ module.exports = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: [
-    "<rootDir>/app/javascript/src/setupTests.js"
-  ],
+  setupFilesAfterEnv: ["<rootDir>/app/javascript/src/setupTests.js"],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
@@ -181,7 +175,7 @@ module.exports = {
   //   "/node_modules/"
   // ],
   //
-  "transformIgnorePatterns": [
+  transformIgnorePatterns: [
     "/node_modules/(?!@rails/activestorage/src).+\\.js$"
   ]
 

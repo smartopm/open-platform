@@ -1,11 +1,6 @@
-import React from "react";
-import {
-  DialogContent,
-  DialogActions,
-  Button,
-  Dialog
-} from "@material-ui/core";
-import PropTypes from "prop-types";
+import React from 'react'
+import { DialogContent, DialogActions, Button, Dialog } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
 export function ModalDialog({
   handleClose,
@@ -29,7 +24,7 @@ export function ModalDialog({
         <Button
           autoFocus
           onClick={handleConfirm}
-          color={action === "grant" ? "primary" : "secondary"}
+          color={action === 'grant' ? 'primary' : 'secondary'}
         >
           {action}
         </Button>
@@ -38,7 +33,7 @@ export function ModalDialog({
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 export function ReasonInputModal({ handleClose, open, children }) {
@@ -48,7 +43,7 @@ export function ReasonInputModal({ handleClose, open, children }) {
       aria-labelledby="simple-dialog-title"
       open={open}
       fullWidth={true}
-      maxWidth={"lg"}
+      maxWidth={'lg'}
     >
       <DialogContent>
         <p className="deny-msg">Other Business</p>
@@ -56,7 +51,7 @@ export function ReasonInputModal({ handleClose, open, children }) {
         {children}
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleClose} color={"primary"}>
+        <Button autoFocus onClick={handleClose} color={'primary'}>
           Save
         </Button>
         <Button className="btn-close" onClick={handleClose}>
@@ -64,7 +59,7 @@ export function ReasonInputModal({ handleClose, open, children }) {
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 ModalDialog.propTypes = {
@@ -73,9 +68,9 @@ ModalDialog.propTypes = {
   name: PropTypes.string.isRequired,
   action: PropTypes.string.isRequired,
   handleConfirm: PropTypes.func.isRequired
-};
+}
 ReasonInputModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
-};
+}

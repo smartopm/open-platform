@@ -1,21 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useQuery } from "react-apollo";
-import gql from "graphql-tag";
-import { StyleSheet, css } from "aphrodite";
-import { formatDistance } from "date-fns";
-import Nav from "../components/Nav.jsx";
-import Loading from "../components/Loading.jsx";
-import { CardContent, Card, Fab } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import Avatar from "../components/Avatar";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { useQuery } from 'react-apollo'
+import gql from 'graphql-tag'
+import { StyleSheet, css } from 'aphrodite'
+import { formatDistance } from 'date-fns'
+import Nav from '../components/Nav.jsx'
+import Loading from '../components/Loading.jsx'
+import { CardContent, Card, Fab } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
+import Avatar from '../components/Avatar'
 import {
   a11yProps,
   StyledTabs,
   StyledTab,
   TabPanel
-} from "../components/Tabs.jsx";
-import ErrorPage from "../components/Error.jsx";
+} from '../components/Tabs.jsx'
+import ErrorPage from '../components/Error.jsx'
 
 const QUERY = gql`
   {
@@ -30,7 +30,7 @@ const QUERY = gql`
       avatarUrl
     }
   }
-`;
+`
 
 function Results({ data, loading }) {
   function memberList(users) {
@@ -48,7 +48,7 @@ function Results({ data, loading }) {
                   <Avatar imageUrl={user.avatarUrl} user={user} />
                 </div>
                 <div className={` col }`}>
-                  <p className={""}>{user.name.split(" ")[0]}</p>
+                  <p className={''}>{user.name.split(' ')[0]}</p>
                   <br />
                   <p className={css(styles.small)}> {user.roleName} </p>
                 </div>
@@ -67,10 +67,10 @@ function Results({ data, loading }) {
           </CardContent>
         </Card>
       </Link>
-    ));
+    ))
   }
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   if (data) {
@@ -82,27 +82,27 @@ function Results({ data, loading }) {
           <h4 className="text-center">No Pending Users Found</h4>
         )}
       </div>
-    );
+    )
   }
-  return false;
+  return false
 }
 
 export default () => {
-  const { loading, error, data } = useQuery(QUERY, { variables: { name } });
-  const [value, setValue] = React.useState(0);
-  if (error) return <ErrorPage title={error.message} />;
+  const { loading, error, data } = useQuery(QUERY, { variables: { name } })
+  const [value, setValue] = React.useState(0)
+  if (error) return <ErrorPage title={error.message} />
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
 
   return (
     <div>
       <div
         style={{
-          backgroundColor: "#25c0b0"
+          backgroundColor: '#25c0b0'
         }}
       >
-        <Nav navName="Requests" menuButton="back" boxShadow={"none"} />
+        <Nav navName="Requests" menuButton="back" boxShadow={'none'} />
         <StyledTabs
           value={value}
           onChange={handleChange}
@@ -135,42 +135,42 @@ export default () => {
         <h4 className="text-center">Nothing yet</h4>
       </TabPanel>
     </div>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   results: {
-    margin: "1em 0",
+    margin: '1em 0',
     padding: 0
   },
   link: {
-    "text-decoration": "none",
-    color: "#222",
-    ":hover": {
-      "text-decoration": "none",
-      color: "#222"
+    'text-decoration': 'none',
+    color: '#222',
+    ':hover': {
+      'text-decoration': 'none',
+      color: '#222'
     }
   },
   small: {
-    color: "#666"
+    color: '#666'
   },
   avatar: {},
   vertCenter: {
-    alignItems: "center"
+    alignItems: 'center'
   },
   avatarImg: {
-    "border-radius": "50%",
-    width: "50px"
+    'border-radius': '50%',
+    width: '50px'
   },
   statusBadgePending: {
-    border: "1px dashed #25c0b0",
-    color: "#25c0b0",
-    borderRadius: "10px"
+    border: '1px dashed #25c0b0',
+    color: '#25c0b0',
+    borderRadius: '10px'
   },
   fabButton: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 8,
     right: 16,
-    backgroundColor: "#25c0b0"
+    backgroundColor: '#25c0b0'
   }
-});
+})

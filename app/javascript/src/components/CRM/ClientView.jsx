@@ -54,7 +54,7 @@ export default function ClientView() {
 
       <TabPanel value={value} index={0}>
         <div className="container">
-        <h4 className="text-center">Content</h4>
+          <h4 className="text-center">Content</h4>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>

@@ -6,7 +6,6 @@ import { addSeconds, format } from "date-fns";
 import { EntryRequestQuery } from "../../graphql/queries";
 import { ponisoNumber } from "../../utils/constants.js";
 
-
 export default function HoldScreen({ match }) {
   const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id },
@@ -49,16 +48,24 @@ function WaitScreen() {
         styles.waitPage
       )}`}
     >
-      <h4 className={`${css(styles.title)} text-center col-sm-12 `}>Waiting for Approval</h4>
+      <h4 className={`${css(styles.title)} text-center col-sm-12 `}>
+        Waiting for Approval
+      </h4>
       <br />
       <br />
       <br />
 
-      <h1 className={`${css(styles.clockStyles)} text-center col-sm-12`}>{formatTime(timeLeft)}</h1>
+      <h1 className={`${css(styles.clockStyles)} text-center col-sm-12`}>
+        {formatTime(timeLeft)}
+      </h1>
 
-      <span style={{
-        color: "#FFFFFF"
-      }}>{timeLeft === 0 && "No Response"}</span>
+      <span
+        style={{
+          color: "#FFFFFF"
+        }}
+      >
+        {timeLeft === 0 && "No Response"}
+      </span>
 
       <div className="col-10 col-sm-12">
         {timeLeft === 0 && (

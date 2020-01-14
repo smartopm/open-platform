@@ -41,9 +41,9 @@ import RequestApproval from "../src/containers/Requests/RequestApproval";
 import ErrorPage from "../src/components/Error";
 import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback";
 import ShowRoom from "../src/containers/showroom/Home";
-import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
-import ComingSoon from '../src/containers/showroom/ComingSoon'
-import VisitingClientForm from '../src/containers/showroom/CheckInForm'
+import VisitingReasonScreen from "../src/containers/showroom/VisitReasonScreen";
+import ComingSoon from "../src/containers/showroom/ComingSoon";
+import VisitingClientForm from "../src/containers/showroom/CheckInForm";
 import { AUTH_TOKEN_KEY } from "../src/utils/apollo";
 import CheckInComplete from "../src/containers/showroom/CheckInComplete";
 import ClientList from "../src/components/CRM/ClientList";
@@ -185,7 +185,7 @@ const App = () => {
                     {/* CRM */}
                     <Route path="/crm_client_list" component={ClientList} />
                     <Route path="/crm_client_view" component={ClientView} />
-                    
+
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}

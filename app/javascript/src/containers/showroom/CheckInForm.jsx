@@ -8,10 +8,10 @@ import { Footer } from "../../components/Footer";
 import Nav from "../../components/Nav";
 import { EntryRequestCreate } from "../../graphql/mutations.js";
 
-export default function ClientForm({history}) {
+export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted] = useState(false);
-  const [selectedSource, setReason] = useState("")
+  const [selectedSource, setReason] = useState("");
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const onSubmit = data => {
     const user = {
@@ -29,8 +29,8 @@ export default function ClientForm({history}) {
   };
 
   const handleSourceChange = event => {
-    setReason(event.target.value)
-  }
+    setReason(event.target.value);
+  };
   return (
     <Fragment>
       <Nav navName="Showroom Form" menuButton="back" backTo="/showroom_kiosk" />
@@ -111,21 +111,20 @@ export default function ClientForm({history}) {
           </div>
           <div className="form-group">
             <TextField
-            id="source"
-            select
-            label="How did You Learn About Nkwashi"
-            name="source"
-            value={selectedSource}
-            onChange={handleSourceChange}
-            className={`${css(styles.selectInput)}`}
-          >
-            {infoSource.map(source => (
-              <MenuItem key={source} value={source}>
-                {source}
-              </MenuItem>
-            ))}
-          </TextField>
-        
+              id="source"
+              select
+              label="How did You Learn About Nkwashi"
+              name="source"
+              value={selectedSource}
+              onChange={handleSourceChange}
+              className={`${css(styles.selectInput)}`}
+            >
+              {infoSource.map(source => (
+                <MenuItem key={source} value={source}>
+                  {source}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
           <div className="row justify-content-center align-items-center ">
             <Button

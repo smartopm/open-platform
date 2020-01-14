@@ -20,9 +20,7 @@ export function WelcomeScreen({ history }) {
         <div className={css(styles.overlaySection)}>
           <img className="nz-logo-nkwashi" src={logo} alt="nkwashi logo" />
           <p className={css(styles.welcomeText)}>
-            <strong>
-              Welcome to Nkwashi App
-            </strong>
+            <strong>Welcome to Nkwashi App</strong>
           </p>
           <p className={css(styles.subText)}>First smart city in Zambia</p>
         </div>

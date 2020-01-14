@@ -46,27 +46,27 @@ export default function RequestUpdate({ match, history, location }) {
       [name]: value
     });
   }
-  
+
   function handleUpdateRecord() {
     return updateEntryRequest({ variables: formData });
   }
-  
+
   function handleGrantRequest() {
     handleUpdateRecord()
-    .then(grantEntry({ variables: { id: match.params.id } }))
-    .then(() => {
-      history.push("/entry_logs", { tab: 1 });
-    });
+      .then(grantEntry({ variables: { id: match.params.id } }))
+      .then(() => {
+        history.push("/entry_logs", { tab: 1 });
+      });
   }
-  
+
   function handleDenyRequest() {
     handleUpdateRecord()
-    .then(denyEntry({ variables: { id: match.params.id } }))
-    .then(() => {
-      history.push("/entry_logs", { tab: 1 });
-    });
+      .then(denyEntry({ variables: { id: match.params.id } }))
+      .then(() => {
+        history.push("/entry_logs", { tab: 1 });
+      });
   }
-  
+
   return (
     <Fragment>
       <Nav
@@ -85,7 +85,11 @@ export default function RequestUpdate({ match, history, location }) {
                 type="text"
                 value={
                   formData.guard
-                    ? `${new Date(formData.createdAt).toDateString()} at ${DateUtil.dateTimeToString(new Date(formData.createdAt))}`
+                    ? `${new Date(
+                        formData.createdAt
+                      ).toDateString()} at ${DateUtil.dateTimeToString(
+                        new Date(formData.createdAt)
+                      )}`
                     : ""
                 }
                 disabled={true}
