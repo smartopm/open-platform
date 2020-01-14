@@ -130,56 +130,86 @@ export function Component({
                   }
                 }}
               >
-                <MenuItem key={'optionssdf'} onClick={onLogEntry}>
-                  Log This Entry
-                </MenuItem>
-                <MenuItem key={'options'}>
-                  <a
-                    href={`tel:${ponisoNumber}`}
-                    className={` ${css(styles.callButton)}`}
-                  >
-                    Call Poniso
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <Link
-                    to={`/user/${data.user.id}/logs`}
-                    className={css(styles.linkItem)}
-                  >
-                    User Logs
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link
-                    to={`/print/${data.user.id}`}
-                    className={css(styles.linkItem)}
-                  >
-                    Print
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    onClick={sendOneTimePasscode}
-                    className={css(styles.linkItem)}
-                  >
-                    Send One Time Passcode
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          'Are you sure you wish to delete this user?'
-                        )
-                      )
-                        onDelete()
-                    }}
-                    className={css(styles.linkItem)}
-                  >
-                    Delete
-                  </a>
-                </MenuItem>
+                {data.user.state === 'valid' &&
+                authState.user.userType === 'security_guard' ? (
+                  <MenuItem key={'log'} onClick={onLogEntry}>
+                    Log This Entry
+                  </MenuItem>
+                ) : null}
+                {authState.user.userType === 'security_guard' ? (
+                  <MenuItem key={'options'}>
+                    <a
+                      href={`tel:${ponisoNumber}`}
+                      className={` ${css(styles.callButton)}`}
+                    >
+                      Call Poniso
+                    </a>
+                  </MenuItem>
+                ) : null}
+
+                {authState.user.userType === 'admin' ? (
+                  <div>
+                    <MenuItem key={'options'}>
+                      <Link
+                        to={`/user/${data.user.id}/edit`}
+                        className={css(styles.linkItem)}
+                      >
+                        Edit
+                      </Link>
+                    </MenuItem>
+
+                    {data.user.phoneNumber ? (
+                      <MenuItem key={'options'}>
+                        <a
+                          className={`${css(styles.callButton)}`}
+                          href={`tel:+${data.user.phoneNumber}`}
+                        >
+                          Call {data.user.name}
+                        </a>
+                      </MenuItem>
+                    ) : null}
+
+                    <MenuItem>
+                      <Link
+                        to={`/user/${data.user.id}/logs`}
+                        className={css(styles.linkItem)}
+                      >
+                        User Logs
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        to={`/print/${data.user.id}`}
+                        className={css(styles.linkItem)}
+                      >
+                        Print
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        onClick={sendOneTimePasscode}
+                        className={css(styles.linkItem)}
+                      >
+                        Send One Time Passcode
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              'Are you sure you wish to delete this user?'
+                            )
+                          )
+                            onDelete()
+                        }}
+                        className={css(styles.linkItem)}
+                      >
+                        Delete
+                      </a>
+                    </MenuItem>
+                  </div>
+                ) : null}
               </Menu>
             </div>
           </div>
