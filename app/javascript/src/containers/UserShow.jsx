@@ -99,18 +99,18 @@ export function Component({
     <div>
       <Nav navName="Identification" menuButton="cancel" />
       <Fragment>
-        <div className="row">
-        <div className="container book-box">
-          <div className="row row-one">
-            <div className="col ">
+        <div className="container">
+          <div className="row d-flex justify-content-between">
+            <div className="col-4 ">
              <Avatar user={data.user} style="small" />
             </div>
 
-            <div className="col">
-              <h4>{data.user.name}</h4>
-              Last accessed: {expiresAtStr(data.user.lastActivityAt)}
+            <div className="col-4">
+              <h5>{data.user.name}</h5>
+              <br/>
+              <Status label={data.user.state} />
             </div>
-            <div className="col">
+            <div className="col-2 ml-auto">
               <IconButton
                 aria-label="more"
                 aria-controls="long-menu"
@@ -127,12 +127,11 @@ export function Component({
                   onClose={handleClose}
                   PaperProps={{
                     style: {
-                      // maxHeight: 180,
                       width: 200,
                     },
                   }}
                 >
-                  {/* {options.map(option => ( */}
+                  
                     <MenuItem key={"optionssdf"} onClick={onLogEntry}>
                       Log This Entry
                     </MenuItem>
@@ -149,7 +148,7 @@ export function Component({
                     <MenuItem>
                         <Link
                           to={`/user/${data.user.id}/logs`}
-                          className=" active"
+                          className={css(styles.linkItem)}
                          >
                           User Logs
                         </Link>
@@ -157,7 +156,7 @@ export function Component({
                     <MenuItem>
                         <Link
                           to={`/print/${data.user.id}`}
-                          className=" active"
+                          className={css(styles.linkItem)}
                         >
                           Print
                         </Link> 
@@ -165,7 +164,7 @@ export function Component({
                     <MenuItem>
                         <a
                           onClick={sendOneTimePasscode}
-                          className=" active"
+                          className={css(styles.linkItem)}
                          >
                          Send One Time Passcode
                         </a> 
@@ -180,18 +179,16 @@ export function Component({
                               )
                                 onDelete();
                             }}
-                            className=" active"
+                            className={css(styles.linkItem)}
                                     >
                             Delete
                           </a> 
                     </MenuItem>
-                  {/* ))} */}
                 </Menu>
             </div>
           </div>
         </div>
-      </div>
-    <div className="container">
+    
           <StyledTabs
             value={value}
             onChange={handleChange}
@@ -203,12 +200,15 @@ export function Component({
             <StyledTab label="Plots" {...a11yProps(2)} />
             <StyledTab label="Payments" {...a11yProps(3)} />
           </StyledTabs>
-    </div>  
 
 
       <TabPanel value={value} index={0}>
         <div className="container">
-        <h4 className="text-center">Contact</h4>
+          Name: {data.user.name} <br/>
+          Accounts: {data.user.name} <br/>
+          Phone: {data.user.phoneNumber} <br/>
+          Email: {data.user.email} <br/>
+          Social:  <br/>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -369,8 +369,12 @@ const styles = StyleSheet.create({
     textTransform: "unset"
   },
   callButton: {
-    backgroundColor: "#fafafa",
     color: "#ed5757",
-    textTransform: "unset"
+    textTransform: "unset",
+    textDecoration:"none"
+  },
+  linkItem: {
+    color: "#000000",
+    textDecoration: "none"
   }
 });
