@@ -132,12 +132,12 @@ export function Component({
               >
                 {data.user.state === 'valid' &&
                 authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'log'} onClick={onLogEntry}>
+                  <MenuItem key={'log_entry'} onClick={onLogEntry}>
                     Log This Entry
                   </MenuItem>
                 ) : null}
                 {authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'options'}>
+                  <MenuItem key={'call_p'}>
                     <a
                       href={`tel:${ponisoNumber}`}
                       className={` ${css(styles.callButton)}`}
@@ -149,7 +149,7 @@ export function Component({
 
                 {authState.user.userType === 'admin' ? (
                   <div>
-                    <MenuItem key={'options'}>
+                    <MenuItem key={'edit_user'}>
                       <Link
                         to={`/user/${data.user.id}/edit`}
                         className={css(styles.linkItem)}
@@ -159,9 +159,9 @@ export function Component({
                     </MenuItem>
 
                     {data.user.phoneNumber ? (
-                      <MenuItem key={'options'}>
+                      <MenuItem key={'call_user'}>
                         <a
-                          className={`${css(styles.callButton)}`}
+                          className={css(styles.linkItem)}
                           href={`tel:+${data.user.phoneNumber}`}
                         >
                           Call {data.user.name}
@@ -169,7 +169,7 @@ export function Component({
                       </MenuItem>
                     ) : null}
 
-                    <MenuItem>
+                    <MenuItem key={'user_logs'}>
                       <Link
                         to={`/user/${data.user.id}/logs`}
                         className={css(styles.linkItem)}
@@ -177,7 +177,7 @@ export function Component({
                         User Logs
                       </Link>
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem key={'print'}>
                       <Link
                         to={`/print/${data.user.id}`}
                         className={css(styles.linkItem)}
@@ -185,7 +185,7 @@ export function Component({
                         Print
                       </Link>
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem key={'send_code'}>
                       <a
                         onClick={sendOneTimePasscode}
                         className={css(styles.linkItem)}
@@ -193,7 +193,7 @@ export function Component({
                         Send One Time Passcode
                       </a>
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem key={'delete'}>
                       <a
                         onClick={() => {
                           if (
@@ -265,144 +265,6 @@ export function Component({
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
       </Fragment>
-      {/*
-       <div className="container">
-        <div className="row justify-content-center id_card">
-          <div className="card id_card_box col-10 col-sm-10 col-md-6">
-            <div className="d-flex justify-content-center">
-              <div className="member_type">{data.user.userType}</div>
-            </div>
-            <Avatar user={data.user} style="big" />
-            <div className="d-flex justify-content-center">
-              <h1>{data.user.name}</h1>
-            </div>
-            <div className="d-flex justify-content-center">
-              <div className="expires">
-                Exp: {expiresAtStr(data.user.expiresAt)}
-              </div>
-            </div>
-            <div className="d-flex justify-content-center last_accessed">
-              <div className="expires">
-                Last accessed: {expiresAtStr(data.user.lastActivityAt)}
-              </div>
-            </div>
-
-            <div className="d-flex justify-content-center">
-              <Status label={data.user.state} />
-            </div>
-
-            <div className="d-flex justify-content-center">
-              <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
-            </div>
-          </div>
-        </div>
-
-        {data.user.state === "valid" &&
-          authState.user.userType === "security_guard" ? (
-            <div className="row justify-content-center log-entry-form">
-              <div className="col-10 col-sm-10 col-md-6">
-                <a
-                  className={`btn btn-primary btn-lg btn-block active ${css(
-                    styles.logButton
-                  )}`}
-                  onClick={onLogEntry}
-                >
-                  Log This Entry
-              </a>
-              </div>
-            </div>
-          ) : null}
-        {authState.user.userType === "security_guard" ? (
-          <div className="row justify-content-center log-entry-form">
-            <div className="col-10 col-sm-10 col-md-6">
-              <a
-                href={`tel:${ponisoNumber}`}
-                className={`btn btn-primary btn-lg btn-block ${css(
-                  styles.callButton
-                )}`}
-              >
-                Call Poniso
-              </a>
-            </div>
-          </div>
-        ) : null}
-        {authState.user.userType === "admin" ? (
-          <Fragment>
-            <div className="row justify-content-center log-entry-form">
-              <div className="col-10 col-sm-10 col-md-6">
-                <Link
-                  to={`/user/${data.user.id}/edit`}
-                  className="btn btn-primary btn-lg btn-block active"
-                >
-                  Edit
-                </Link>
-              </div>
-            </div>
-
-            {data.user.phoneNumber ? (
-              <div className="row justify-content-center log-entry-form">
-                <div className="col-10 col-sm-10 col-md-6">
-                  <a
-                    className="btn btn-primary btn-lg btn-block active"
-                    href={`tel:+${data.user.phoneNumber}`}
-                  >
-                    Call {data.user.name}
-                  </a>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="row justify-content-center log-entry-form">
-              <div className="col-10 col-sm-10 col-md-6">
-                <Link
-                  to={`/user/${data.user.id}/logs`}
-                  className="btn btn-primary btn-lg btn-block active"
-                >
-                  User Logs
-                </Link>
-              </div>
-            </div>
-
-            <div className="row justify-content-center log-entry-form">
-              <div className="col-10 col-sm-10 col-md-6">
-                <Link
-                  to={`/print/${data.user.id}`}
-                  className="btn btn-primary btn-lg btn-block active"
-                >
-                  Print
-                </Link>
-              </div>
-            </div>
-            <div className="row justify-content-center log-entry-form">
-              <div className="col-10 col-sm-10 col-md-6">
-                <a
-                  onClick={sendOneTimePasscode}
-                  className="btn btn-primary btn-lg btn-block active"
-                >
-                  Send One Time Passcode
-                </a>
-              </div>
-            </div>
-            <div className="row justify-content-center log-entry-form">
-              <div className="col-10 col-sm-10 col-md-6">
-                <a
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you wish to delete this user?"
-                      )
-                    )
-                      onDelete();
-                  }}
-                  className="btn btn-primary btn-lg btn-block active"
-                >
-                  Delete
-                </a>
-              </div>
-            </div>
-          </Fragment>
-        ) : null}
-      </div> */}
     </div>
   )
 }
