@@ -14,8 +14,6 @@ import Loading from '../components/Loading.jsx'
 import Status from '../components/StatusBadge'
 import Avatar from '../components/Avatar'
 import DateUtil from '../utils/dateutil.js'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 
 import { UserQuery } from '../graphql/queries'
 import {
