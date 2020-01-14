@@ -16,6 +16,10 @@ export const UserFragment = {
       email
       avatarUrl
       imageUrl
+      notes {
+        body
+        id
+      }
     }
   `
 }

@@ -21,7 +21,7 @@ import {
   AddActivityLog,
   SendOneTimePasscode,
   DeleteUser,
-  createNote,
+  createNote
 } from '../graphql/mutations'
 import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
@@ -40,7 +40,9 @@ function expiresAtStr(datetime) {
 export default ({ match, history }) => {
   const id = match.params.id
   const authState = useContext(AuthStateContext)
-  const { loading, error, data } = useQuery(UserQuery, { variables: { id } })
+  const { loading, error, data, refetch } = useQuery(UserQuery, {
+    variables: { id }
+  })
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: { userId: id }
   })
@@ -64,7 +66,7 @@ export default ({ match, history }) => {
       onLogEntry={addLogEntry}
       onDelete={deleteUser}
       sendOneTimePasscode={sendOneTimePasscode}
-      // onSaveNote={}
+      refetch={refetch}
     />
   )
 }
@@ -81,7 +83,8 @@ export function Component({
   onLogEntry,
   onDelete,
   authState,
-  sendOneTimePasscode
+  sendOneTimePasscode,
+  refetch
 }) {
   const [value, setValue] = React.useState(0)
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -91,8 +94,8 @@ export function Component({
   const onSaveNote = ({ note }) => {
     noteCreate({
       variables: { userId: data.user.id, body: note }
-    }).then(data => {
-      console.log(data)
+    }).then(() => {
+      refetch()
     })
   }
   const open = Boolean(anchorEl)
@@ -104,12 +107,11 @@ export function Component({
     // handle menu here
     setAnchorEl(event.currentTarget)
   }
- 
+
   function handleClose(event) {
     // handle menu here
     setAnchorEl(null)
   }
- console.log(data)
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -261,7 +263,7 @@ export function Component({
                 className="form-control"
                 placeholder="Add your notes here"
                 id="notes"
-                rows="3"
+                rows="4"
                 ref={register}
                 name="note"
               />
@@ -274,6 +276,9 @@ export function Component({
             >
               Save
             </button>
+            <br />
+            {data.user.notes &&
+              data.user.notes.map(note => <p key={note.id}>{note.body}</p>)}
           </div>
         </TabPanel>
         <TabPanel value={value} index={2}>
