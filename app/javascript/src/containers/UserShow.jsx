@@ -14,6 +14,8 @@ import Loading from "../components/Loading.jsx";
 import Status from "../components/StatusBadge";
 import Avatar from "../components/Avatar";
 import DateUtil from "../utils/dateutil.js";
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 import { UserQuery } from "../graphql/queries";
 import {
@@ -212,7 +214,15 @@ export function Component({
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <h4 className="text-center">Notes</h4>
+        <div className="container">
+        <form>
+          <div className="form-group">
+            <label htmlFor="notes">Notes</label>
+            <textarea className="form-control" placeholder="Add your notes here" id="notes" rows="3"/>
+          </div>
+        <button type="button" style={{float: "right"}} className="btn btn-outline-primary ">Save</button>
+        </form>
+        </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <h4 className="text-center">Coming soon</h4>
