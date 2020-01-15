@@ -125,8 +125,15 @@ export function Component({
 
             <div className="col-4">
               <h5>{data.user.name}</h5>
-              <br />
-              <Status label={data.user.state} />
+                <div className="expires">
+                  Exp: {expiresAtStr(data.user.expiresAt)}
+                </div>
+                <div className="expires">
+                  Last accessed: {expiresAtStr(data.user.lastActivityAt)}
+                </div>
+               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
+               <br />
+               <Status label={data.user.state} />
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -330,7 +337,16 @@ export function Component({
             {data.user.notes &&
               data.user.notes
                 .reverse()
-                .map(note => <p key={note.id}>{note.body}</p>)}
+                .map(note => (
+                  <Fragment key={note.id}>
+                    <div  className={css(styles.commentBox)}>
+                      <p className="comment">
+                        {note.body}
+                      </p>
+                    </div>
+                    <br />
+                  </Fragment>
+                ))}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
@@ -357,5 +373,10 @@ const styles = StyleSheet.create({
   linkItem: {
     color: '#000000',
     textDecoration: 'none'
-  }
+  },
+  commentBox: {
+    borderLeft: "0.4px solid #25c0b0",
+    padding: "0.5%",
+    color: "gray"
+  },
 })

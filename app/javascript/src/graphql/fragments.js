@@ -19,6 +19,9 @@ export const UserFragment = {
       notes {
         body
         id
+        user {
+          name
+        }
       }
     }
   `
