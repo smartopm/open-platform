@@ -40,15 +40,12 @@ export function Component({
   authState,
   menuButton,
   navName,
-  backTo,
   boxShadow,
   history
 }) {
   const [state, setState] = React.useState(false)
   const { values, handleSubmit } = useContext(FormContext)
-  const routeInfo = history.location.pathname.split('/')
   function backButtonOrMenu() {
-    const to = backTo || '/'
     if (menuButton === 'back' && navName === 'Scan') {
       return (
         <a href="/" className={css(styles.buttonLeft)}>
@@ -57,28 +54,32 @@ export function Component({
       )
     } else if (menuButton === 'back') {
       return (
-        <Link className={css(styles.buttonLeft)} to={to}>
+        <span
+          className={css(styles.buttonLeft)}
+          onClick={() => history.goBack()}
+        >
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
-        </Link>
+        </span>
       )
-    } else if (menuButton === 'cancel' && routeInfo.includes('request')) {
+    }
+    else if (menuButton === 'cancel') {
       return (
-        <Link className={css(styles.buttonLeft)} to={'/entry_logs'}>
+        <span
+          className={css(styles.buttonLeft)}
+          onClick={() => history.goBack()}
+        >
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-        </Link>
-      )
-    } else if (menuButton === 'cancel') {
-      return (
-        <Link className={css(styles.buttonLeft)} to={to}>
-          <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-        </Link>
+        </span>
       )
     } else if (menuButton === 'edit') {
       return (
         <Fragment>
-          <Link className={css(styles.buttonLeft)} to={to}>
+          <span
+            className={css(styles.buttonLeft)}
+            onClick={() => history.goBack()}
+          >
             <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-          </Link>
+          </span>
           <span onClick={e => handleSubmit(e, values)}>
             <i className={`material-icons ${css(styles.rightSideIcon)}`}>
               check
@@ -199,7 +200,8 @@ const styles = StyleSheet.create({
     minHeight: '50px'
   },
   buttonLeft: {
-    color: '#FFF'
+    color: '#FFF',
+    cursor: "pointer"
   },
   icon: {
     lineHeight: '1.7em'
