@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { useState, Fragment } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
@@ -15,9 +15,11 @@ export default ({ history, match }) => {
 }
 
 // Todo: Find the total number of allEventLogs
-const limit = 50
+const initialLimit = 5 
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0)
+  const [limit, setLimit] = useState(initialLimit)
+  const [searchTerm, setSearchTerm] = useState('')
   const refId = match.params.userId || null
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
@@ -29,6 +31,7 @@ const allEventLogs = (history, match, subjects) => {
     },
     fetchPolicy: 'cache-and-network'
   })
+  
   const [createUser] = useMutation(CreateUserMutation)
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
@@ -58,6 +61,16 @@ const allEventLogs = (history, match, subjects) => {
       })
     }
   }
+  function handleLimit(){
+    // if (!searchTerm.length) {
+    //   setLimit(initialLimit)
+    // }
+    setLimit(1000)
+  }
+  function handleSearch(event) {
+    setSearchTerm(event.target.value)
+    handleLimit()
+  }
 
   return (
     <IndexComponent
@@ -67,6 +80,10 @@ const allEventLogs = (history, match, subjects) => {
       nextPage={handleNextPage}
       router={history}
       upgradeUser={upgradeUser}
+      handleLimit={handleLimit}
+      limit={limit}
+      searchTerm={searchTerm}
+      handleSearch={handleSearch}
     />
   )
 }
@@ -77,9 +94,12 @@ export function IndexComponent({
   nextPage,
   previousPage,
   offset,
-  upgradeUser
+  upgradeUser,
+  limit,
+  searchTerm,
+  handleSearch
 }) {
-  const [searchTerm, setSearchTerm] = useState('')
+
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -156,9 +176,7 @@ export function IndexComponent({
     })
   }
 
-  function handleSearch(event) {
-    setSearchTerm(event.target.value)
-  }
+
   const filteredEvents =
     data.result &&
     data.result.filter(log => {

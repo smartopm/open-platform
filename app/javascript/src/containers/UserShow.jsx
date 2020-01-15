@@ -334,6 +334,7 @@ export function Component({
               </button>
             </form>
             <br />
+            <br />
             {data.user.notes &&
               data.user.notes
                 .reverse()
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   },
   commentBox: {
-    borderLeft: "0.4px solid #25c0b0",
+    borderLeft: "2px solid #25c0b0",
     padding: "0.5%",
     color: "gray"
   },
