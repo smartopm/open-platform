@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react'
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../../components/Loading.jsx'
@@ -7,6 +7,7 @@ import DateUtil from '../../utils/dateutil.js'
 import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
+import { CreateUserMutation } from '../../graphql/mutations'
 
 export default ({ history, match }) => {
   const subjects = ['user_entry', 'visitor_entry', 'showroom']
@@ -28,6 +29,7 @@ const allEventLogs = (history, match, subjects) => {
     },
     fetchPolicy: 'cache-and-network'
   })
+  const [createUser] = useMutation(CreateUserMutation)
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
@@ -40,7 +42,22 @@ const allEventLogs = (history, match, subjects) => {
     }
     setOffset(offset - limit)
   }
-  console.log(data)
+  function upgradeUser(e, { data }){
+    // route the user to a confirmation screen
+    // pop a modal requesting for confirmation then continue
+    if (window.confirm(`Are you sure you wish to upgrade ${data.ref_name}?`)){
+      createUser({
+        variables: { 
+            name: data.ref_name,
+            state: "pending",
+            userType: "client"
+         }
+      }).then(res => {
+        console.log(res)
+      })
+    }
+  }
+  
   return (
     <IndexComponent
       data={data}
@@ -48,6 +65,7 @@ const allEventLogs = (history, match, subjects) => {
       offset={offset}
       nextPage={handleNextPage}
       router={history}
+      upgradeUser={upgradeUser}
     />
   )
 }
@@ -57,7 +75,8 @@ export function IndexComponent({
   router,
   nextPage,
   previousPage,
-  offset
+  offset,
+  upgradeUser
 }) {
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
@@ -69,12 +88,14 @@ export function IndexComponent({
       return router.push(`/user/${eventLog.refId}`)
     }
   }
+
+
   function logs(eventLogs) {
     if (!eventLogs) {
       return
     }
     return eventLogs.map(event => {
-      console.log(event.subject)
+     
       // Todo: To be followed up
       const source =
         event.subject === 'user_entry'
@@ -125,7 +146,9 @@ export function IndexComponent({
                 <span className={css(styles.subTitle)}> {source}</span>
               </div>
             </div>
+            <br />
           </div>
+            <a onClick={e => upgradeUser(e, event)}>Upgrade user</a>
           <div className="border-top my-3" />
         </Fragment>
       )
