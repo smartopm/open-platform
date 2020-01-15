@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
@@ -42,22 +42,23 @@ const allEventLogs = (history, match, subjects) => {
     }
     setOffset(offset - limit)
   }
-  function upgradeUser(e, { data }){
+  function upgradeUser(e, { data }) {
     // route the user to a confirmation screen
     // pop a modal requesting for confirmation then continue
-    if (window.confirm(`Are you sure you wish to upgrade ${data.ref_name}?`)){
+    if (window.confirm(`Are you sure you wish to upgrade ${data.ref_name}?`)) {
       createUser({
-        variables: { 
-            name: data.ref_name,
-            state: "pending",
-            userType: "client"
-         }
+        variables: {
+          name: data.ref_name,
+          state: 'pending',
+          userType: 'client'
+        }
       }).then(res => {
         console.log(res)
+        // TODO: Trigger a confirmation message from here
       })
     }
   }
-  
+
   return (
     <IndexComponent
       data={data}
@@ -78,6 +79,7 @@ export function IndexComponent({
   offset,
   upgradeUser
 }) {
+  const [searchTerm, setSearchTerm] = useState('')
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -89,13 +91,12 @@ export function IndexComponent({
     }
   }
 
-
   function logs(eventLogs) {
     if (!eventLogs) {
       return
     }
+
     return eventLogs.map(event => {
-     
       // Todo: To be followed up
       const source =
         event.subject === 'user_entry'
@@ -148,12 +149,23 @@ export function IndexComponent({
             </div>
             <br />
           </div>
-            <a onClick={e => upgradeUser(e, event)}>Upgrade user</a>
+          <a onClick={e => upgradeUser(e, event)}>Upgrade user</a>
           <div className="border-top my-3" />
         </Fragment>
       )
     })
   }
+
+  function handleSearch(event) {
+    setSearchTerm(event.target.value)
+  }
+  const filteredEvents =
+    data.result &&
+    data.result.filter(log => {
+      const visitorName =
+        log.data.ref_name || log.data.visitor_name || log.data.name
+      return visitorName.toLowerCase().includes(searchTerm.toLowerCase())
+    })
   return (
     <div>
       <div
@@ -164,7 +176,18 @@ export function IndexComponent({
         <Nav menuButton="back" navName="Logs" boxShadow={'none'} />
       </div>
       <div className="container">
-        <>{logs(data.result)}</>
+        <div className="form-group">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+            className="form-control"
+            placeholder="Filter Entries"
+          />
+        </div>
+      </div>
+      <div className="container">
+        <>{logs(filteredEvents)}</>
         <div className="d-flex justify-content-center">
           <nav aria-label="center Page navigation">
             <ul className="pagination">
@@ -174,7 +197,7 @@ export function IndexComponent({
                 </a>
               </li>
               <li
-                className={`page-item ${data.result.length < limit &&
+                className={`page-item ${filteredEvents.length < limit &&
                   'disabled'}`}
               >
                 <a className="page-link" onClick={nextPage} href="#">
