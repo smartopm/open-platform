@@ -94,12 +94,12 @@ export function Component({
   const { handleSubmit, register, reset } = useForm()
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
-      noteCreate({
-        variables: { userId, body: note }
-      }).then(() => {
-        refetch()
-        form.reset()
-      })
+    noteCreate({
+      variables: { userId, body: note }
+    }).then(() => {
+      refetch()
+      form.reset()
+    })
   }
   const open = Boolean(anchorEl)
 
@@ -248,10 +248,55 @@ export function Component({
 
         <TabPanel value={tabValue} index={0}>
           <div className="container">
-            Name: {data.user.name} <br />
-            Accounts: {data.user.name} <br />
-            Phone: {data.user.phoneNumber} <br />
-            Email: {data.user.email} <br />
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="name">
+                Name
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                defaultValue={data.user.name}
+                name="name"
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="Accounts">
+                Accounts
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                defaultValue={data.user.name}
+                name="accounts"
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="phoneNumber">
+                Phone Number
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                defaultValue={data.user.phoneNumber}
+                name="phoneNumber"
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="form-control"
+                type="email"
+                defaultValue={data.user.email}
+                name="email"
+                disabled
+              />
+            </div>
+            <br />
             Social: <br />
           </div>
         </TabPanel>
