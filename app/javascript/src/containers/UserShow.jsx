@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment, useContext, useState } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
@@ -9,7 +9,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { a11yProps, StyledTabs, TabPanel } from '../components/Tabs'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
-
 import Nav from '../components/Nav'
 import Loading from '../components/Loading.jsx'
 import Status from '../components/StatusBadge'
@@ -67,6 +66,7 @@ export default ({ match, history }) => {
       onDelete={deleteUser}
       sendOneTimePasscode={sendOneTimePasscode}
       refetch={refetch}
+      userId={id}
     />
   )
 }
@@ -84,32 +84,33 @@ export function Component({
   onDelete,
   authState,
   sendOneTimePasscode,
-  refetch
+  refetch,
+  userId
 }) {
-  const [value, setValue] = React.useState(0)
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const [noteCreate] = useMutation(createNote)
+  const [tabValue, setValue] = useState(0)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [noteCreate, { loading: mutationLoading }] = useMutation(createNote)
 
-  const { handleSubmit, register, errors } = useForm()
+  const { handleSubmit, register, reset } = useForm()
   const onSaveNote = ({ note }) => {
-    noteCreate({
-      variables: { userId: data.user.id, body: note }
-    }).then(() => {
-      refetch()
-    })
+    const form = document.getElementById('note-form')
+      noteCreate({
+        variables: { userId, body: note }
+      }).then(() => {
+        refetch()
+        form.reset()
+      })
   }
   const open = Boolean(anchorEl)
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_event, newValue) => {
     setValue(newValue)
   }
   function handleOpenMenu(event) {
-    // handle menu here
     setAnchorEl(event.currentTarget)
   }
 
-  function handleClose(event) {
-    // handle menu here
+  function handleClose() {
     setAnchorEl(null)
   }
   return (
@@ -234,7 +235,7 @@ export function Component({
         </div>
 
         <StyledTabs
-          value={value}
+          value={tabValue}
           onChange={handleChange}
           aria-label="request tabs"
           centered
@@ -245,7 +246,7 @@ export function Component({
           <StyledTab label="Payments" {...a11yProps(3)} />
         </StyledTabs>
 
-        <TabPanel value={value} index={0}>
+        <TabPanel value={tabValue} index={0}>
           <div className="container">
             Name: {data.user.name} <br />
             Accounts: {data.user.name} <br />
@@ -254,37 +255,43 @@ export function Component({
             Social: <br />
           </div>
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        <TabPanel value={tabValue} index={1}>
           <div className="container">
-            <div className="form-group">
-              <label htmlFor="notes">Notes</label>
-              <br />
-              <textarea
-                className="form-control"
-                placeholder="Add your notes here"
-                id="notes"
-                rows="4"
-                ref={register}
-                name="note"
-              />
-            </div>
-            <button
-              type="button"
-              style={{ float: 'right' }}
-              className="btn btn-outline-primary "
-              onClick={handleSubmit(onSaveNote)}
-            >
-              Save
-            </button>
+            <form id="note-form">
+              <div className="form-group">
+                <label htmlFor="notes">Notes</label>
+                <br />
+                <textarea
+                  className="form-control"
+                  placeholder="Add your notes here"
+                  id="notes"
+                  rows="4"
+                  ref={register({ required: true })}
+                  name="note"
+                />
+              </div>
+              <button
+                type="button"
+                style={{ float: 'right' }}
+                className="btn btn-outline-primary "
+                onClick={handleSubmit(onSaveNote)}
+                disabled={mutationLoading}
+              >
+                {/* Save */}
+                {mutationLoading ? 'Saving ...' : 'Save'}
+              </button>
+            </form>
             <br />
             {data.user.notes &&
-              data.user.notes.map(note => <p key={note.id}>{note.body}</p>)}
+              data.user.notes
+                .reverse()
+                .map(note => <p key={note.id}>{note.body}</p>)}
           </div>
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        <TabPanel value={tabValue} index={2}>
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
-        <TabPanel value={value} index={3}>
+        <TabPanel value={tabValue} index={3}>
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
       </Fragment>
