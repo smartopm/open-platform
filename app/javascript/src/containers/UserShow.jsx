@@ -320,18 +320,23 @@ export function Component({
                   rows="4"
                   ref={register({ required: true })}
                   name="note"
+                  readOnly={ authState.user.id !== userId}
                 />
               </div>
-              <button
-                type="button"
-                style={{ float: 'right' }}
-                className="btn btn-outline-primary "
-                onClick={handleSubmit(onSaveNote)}
-                disabled={mutationLoading}
-              >
-                {/* Save */}
-                {mutationLoading ? 'Saving ...' : 'Save'}
-              </button>
+              {
+                authState.user.id === userId && (
+                  <button
+                    type="button"
+                    style={{ float: 'right' }}
+                    className="btn btn-outline-primary "
+                    onClick={handleSubmit(onSaveNote)}
+                    disabled={mutationLoading}
+                  >
+                    {/* Save */}
+                    {mutationLoading ? 'Saving ...' : 'Save'}
+                  </button>
+                )
+              }
             </form>
             <br />
             <br />

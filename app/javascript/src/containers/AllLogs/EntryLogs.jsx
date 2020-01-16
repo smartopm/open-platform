@@ -15,7 +15,7 @@ export default ({ history, match }) => {
 }
 
 // Todo: Find the total number of allEventLogs
-const initialLimit = 5 
+const initialLimit = 50 
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
@@ -27,7 +27,8 @@ const allEventLogs = (history, match, subjects) => {
       refId: refId,
       refType: null,
       offset,
-      limit
+      // TODO: fix the delay when refetching
+      limit: searchTerm.length < 3 ? 1000 : initialLimit
     },
     fetchPolicy: 'cache-and-network'
   })
@@ -62,9 +63,6 @@ const allEventLogs = (history, match, subjects) => {
     }
   }
   function handleLimit(){
-    // if (!searchTerm.length) {
-    //   setLimit(initialLimit)
-    // }
     setLimit(1000)
   }
   function handleSearch(event) {
