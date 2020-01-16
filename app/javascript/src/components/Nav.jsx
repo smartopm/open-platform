@@ -61,8 +61,7 @@ export function Component({
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </span>
       )
-    }
-    else if (menuButton === 'cancel') {
+    } else if (menuButton === 'cancel') {
       return (
         <span
           className={css(styles.buttonLeft)}
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
   },
   buttonLeft: {
     color: '#FFF',
-    cursor: "pointer"
+    cursor: 'pointer'
   },
   icon: {
     lineHeight: '1.7em'

@@ -125,15 +125,15 @@ export function Component({
 
             <div className="col-4">
               <h5>{data.user.name}</h5>
-                <div className="expires">
-                  Exp: {expiresAtStr(data.user.expiresAt)}
-                </div>
-                <div className="expires">
-                  Last accessed: {expiresAtStr(data.user.lastActivityAt)}
-                </div>
-               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
-               <br />
-               <Status label={data.user.state} />
+              <div className="expires">
+                Exp: {expiresAtStr(data.user.expiresAt)}
+              </div>
+              <div className="expires">
+                Last accessed: {expiresAtStr(data.user.lastActivityAt)}
+              </div>
+              <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
+              <br />
+              <Status label={data.user.state} />
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -320,39 +320,33 @@ export function Component({
                   rows="4"
                   ref={register({ required: true })}
                   name="note"
-                  readOnly={ authState.user.id !== userId}
+                  readOnly={authState.user.id !== userId}
                 />
               </div>
-              {
-                authState.user.id === userId && (
-                  <button
-                    type="button"
-                    style={{ float: 'right' }}
-                    className="btn btn-outline-primary "
-                    onClick={handleSubmit(onSaveNote)}
-                    disabled={mutationLoading}
-                  >
-                    {/* Save */}
-                    {mutationLoading ? 'Saving ...' : 'Save'}
-                  </button>
-                )
-              }
+              {authState.user.id === userId && (
+                <button
+                  type="button"
+                  style={{ float: 'right' }}
+                  className="btn btn-outline-primary "
+                  onClick={handleSubmit(onSaveNote)}
+                  disabled={mutationLoading}
+                >
+                  {/* Save */}
+                  {mutationLoading ? 'Saving ...' : 'Save'}
+                </button>
+              )}
             </form>
             <br />
             <br />
             {data.user.notes &&
-              data.user.notes
-                .reverse()
-                .map(note => (
-                  <Fragment key={note.id}>
-                    <div  className={css(styles.commentBox)}>
-                      <p className="comment">
-                        {note.body}
-                      </p>
-                    </div>
-                    <br />
-                  </Fragment>
-                ))}
+              data.user.notes.reverse().map(note => (
+                <Fragment key={note.id}>
+                  <div className={css(styles.commentBox)}>
+                    <p className="comment">{note.body}</p>
+                  </div>
+                  <br />
+                </Fragment>
+              ))}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
@@ -381,8 +375,8 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   },
   commentBox: {
-    borderLeft: "2px solid #25c0b0",
-    padding: "0.5%",
-    color: "gray"
-  },
+    borderLeft: '2px solid #25c0b0',
+    padding: '0.5%',
+    color: 'gray'
+  }
 })
