@@ -91,7 +91,7 @@ export function Component({
   const [anchorEl, setAnchorEl] = useState(null)
   const [noteCreate, { loading: mutationLoading }] = useMutation(createNote)
 
-  const { handleSubmit, register, reset } = useForm()
+  const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
     noteCreate({

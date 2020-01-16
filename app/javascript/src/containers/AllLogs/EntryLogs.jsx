@@ -1,6 +1,5 @@
 import React, { useState, Fragment } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
-import { Link } from 'react-router-dom'
+import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../../components/Loading.jsx'
@@ -8,7 +7,6 @@ import DateUtil from '../../utils/dateutil.js'
 import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
-import { CreateUserMutation } from '../../graphql/mutations'
 
 export default ({ history, match }) => {
   const subjects = ['user_entry', 'visitor_entry', 'showroom']
@@ -34,7 +32,6 @@ const allEventLogs = (history, match, subjects) => {
     fetchPolicy: 'cache-and-network'
   })
 
-  const [createUser] = useMutation(CreateUserMutation)
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
@@ -46,22 +43,6 @@ const allEventLogs = (history, match, subjects) => {
       return
     }
     setOffset(offset - limit)
-  }
-  function upgradeUser(e, { data }) {
-    // route the user to a confirmation screen
-    // pop a modal requesting for confirmation then continue
-    if (window.confirm(`Are you sure you wish to upgrade ${data.ref_name}?`)) {
-      createUser({
-        variables: {
-          name: data.ref_name,
-          state: 'pending',
-          userType: 'client'
-        }
-      }).then(res => {
-        console.log(res)
-        // TODO: Trigger a confirmation message from here
-      })
-    }
   }
   function handleLimit() {
     setLimit(1000)
@@ -78,7 +59,6 @@ const allEventLogs = (history, match, subjects) => {
       offset={offset}
       nextPage={handleNextPage}
       router={history}
-      upgradeUser={upgradeUser}
       handleLimit={handleLimit}
       limit={limit}
       searchTerm={searchTerm}
@@ -93,7 +73,6 @@ export function IndexComponent({
   nextPage,
   previousPage,
   offset,
-  upgradeUser,
   limit,
   searchTerm,
   handleSearch
