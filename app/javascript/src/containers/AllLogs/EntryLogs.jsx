@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
+import { Link } from 'react-router-dom'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../../components/Loading.jsx'
@@ -15,7 +16,7 @@ export default ({ history, match }) => {
 }
 
 // Todo: Find the total number of allEventLogs
-const initialLimit = 50 
+const initialLimit = 50
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
@@ -32,7 +33,7 @@ const allEventLogs = (history, match, subjects) => {
     },
     fetchPolicy: 'cache-and-network'
   })
-  
+
   const [createUser] = useMutation(CreateUserMutation)
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
@@ -62,7 +63,7 @@ const allEventLogs = (history, match, subjects) => {
       })
     }
   }
-  function handleLimit(){
+  function handleLimit() {
     setLimit(1000)
   }
   function handleSearch(event) {
@@ -97,7 +98,6 @@ export function IndexComponent({
   searchTerm,
   handleSearch
 }) {
-
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -107,6 +107,12 @@ export function IndexComponent({
     } else if (eventLog.refType === 'User') {
       return router.push(`/user/${eventLog.refId}`)
     }
+  }
+  function enrollUser(e, id) {
+    return router.push({
+      pathname: `/request/${id}`,
+      state: { from: 'enroll' }
+    })
   }
 
   function logs(eventLogs) {
@@ -129,9 +135,9 @@ export function IndexComponent({
         <Fragment key={event.id}>
           <div
             className="container"
-            onClick={() => routeToAction(event)}
-            style={{
-              cursor: 'pointer'
+            onClick={event => {
+              event.stopPropagation()
+              routeToAction(event)
             }}
           >
             <div className="row justify-content-between">
@@ -162,18 +168,34 @@ export function IndexComponent({
                 </span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.subTitle)}> {source}</span>
+                <span className={css(styles.subTitle)}>
+                  {source !== 'Scan' ? (
+                    <Fragment>
+                      <span
+                        style={{
+                          cursor: 'pointer',
+                          color: '#009688'
+                        }}
+                        onClick={e => enrollUser(e, event.refId)}
+                      >
+                        Enroll user {" "}
+                      </span>
+                     | {" "} {source}
+                    </Fragment>
+                  ) : (
+                    source
+                  )}
+                </span>
               </div>
             </div>
             <br />
           </div>
-          <a onClick={e => upgradeUser(e, event)}>Upgrade user</a>
+
           <div className="border-top my-3" />
         </Fragment>
       )
     })
   }
-
 
   const filteredEvents =
     data.result &&

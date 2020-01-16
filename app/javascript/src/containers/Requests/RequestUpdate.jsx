@@ -70,7 +70,7 @@ export default function RequestUpdate({ match, history, location }) {
   return (
     <Fragment>
       <Nav
-        navName={isFromLogs ? "Request Access" : "Approve Request"}
+        navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
       />
       <div className="container">
