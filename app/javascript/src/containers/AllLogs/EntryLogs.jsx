@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useContext } from 'react'
 import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
@@ -7,6 +7,7 @@ import DateUtil from '../../utils/dateutil.js'
 import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 
 export default ({ history, match }) => {
   const subjects = ['user_entry', 'visitor_entry', 'showroom']
@@ -77,6 +78,7 @@ export function IndexComponent({
   searchTerm,
   handleSearch
 }) {
+  const authState = useContext(AuthStateContext)
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -87,7 +89,7 @@ export function IndexComponent({
       return router.push(`/user/${eventLog.refId}`)
     }
   }
-  function enrollUser(e, id) {
+  function enrollUser(id) {
     return router.push({
       pathname: `/request/${id}`,
       state: { from: 'enroll' }
@@ -112,13 +114,7 @@ export function IndexComponent({
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
         <Fragment key={event.id}>
-          <div
-            className="container"
-            onClick={event => {
-              event.stopPropagation()
-              routeToAction(event)
-            }}
-          >
+          <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
                 <span className={css(styles.logTitle)}>{visitorName}</span>
@@ -148,28 +144,39 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  {source !== 'Scan' ? (
+                  {source !== 'Scan' && authState.user.userType === 'admin' ? (
                     <Fragment>
                       <span
                         style={{
                           cursor: 'pointer',
                           color: '#009688'
                         }}
-                        onClick={e => enrollUser(e, event.refId)}
+                        onClick={() => enrollUser(event.refId)}
                       >
-                        Enroll user {" "}
+                        Enroll user{' '}
                       </span>
-                     | {" "} {source}
+                      | {source}
                     </Fragment>
                   ) : (
                     source
-                  )}
+                  )}{' '}
+                  |{' '}
+                  <span
+                    style={{
+                      cursor: 'pointer',
+                      color: '#009688'
+                    }}
+                    onClick={() => {
+                      routeToAction(event)
+                    }}
+                  >
+                    More Details
+                  </span>
                 </span>
               </div>
             </div>
             <br />
           </div>
-
           <div className="border-top my-3" />
         </Fragment>
       )

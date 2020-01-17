@@ -6,11 +6,13 @@ import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
-  EntryRequestDeny
+  EntryRequestDeny,
+  CreateUserMutation
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 import DateUtil from "../../utils/dateutil";
+
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state ? location.state.from : "any";
@@ -22,6 +24,8 @@ export default function RequestUpdate({ match, history, location }) {
   const [updateEntryRequest] = useMutation(EntryRequestUpdate);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
+  const [createUser] = useMutation(CreateUserMutation)
+  const [isLoading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -52,24 +56,44 @@ export default function RequestUpdate({ match, history, location }) {
   }
 
   function handleGrantRequest() {
+    setLoading(true)
     handleUpdateRecord()
       .then(grantEntry({ variables: { id: match.params.id } }))
       .then(() => {
         history.push("/entry_logs", { tab: 1 });
+        setLoading(false)
       });
   }
 
   function handleDenyRequest() {
+    setLoading(true)
     handleUpdateRecord()
       .then(denyEntry({ variables: { id: match.params.id } }))
       .then(() => {
         history.push("/entry_logs", { tab: 1 });
+        setLoading(false)
       });
   }
 
+  function handleEnrollUser(){
+    setLoading(true)
+    createUser({
+      variables: {
+        name: formData.name,
+        state: 'pending',
+        userType: 'client',
+        reason: formData.reason,
+        nrc: formData.nrc,
+        vehicle: formData.vehiclePlate
+      }
+    }).then(() => {
+      setLoading(false)
+    })
+  }
   return (
     <Fragment>
       <Nav
+      // navname should be enroll user if coming from entry_logs
         navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
       />
@@ -175,24 +199,41 @@ export default function RequestUpdate({ match, history, location }) {
             </TextField>
           </div>
 
-          {!isFromLogs && (
+          {previousRoute === 'enroll' ?
+
+            (
+            <div className="row justify-content-center align-items-center">
+              <Button
+                variant="contained"
+                onClick={handleEnrollUser}
+                className={`btn ${css(styles.grantButton)}`}
+                disabled={isLoading}
+              >
+               {isLoading ? 'Enrolling ...' : ' Enroll User'}
+              </Button>
+            </div>
+            )
+          : !/logs|enroll/.test(previousRoute) 
+          ? (
             <div className="row justify-content-center align-items-center">
               <Button
                 variant="contained"
                 onClick={handleGrantRequest}
                 className={`btn ${css(styles.grantButton)}`}
+                disabled={isLoading}
               >
-                Grant
+                { isLoading ? 'Granting ...' : 'Grant' }
               </Button>
               <Button
                 variant="contained"
                 onClick={handleDenyRequest}
                 className={`btn  ${css(styles.denyButton)}`}
+                disabled={isLoading}
               >
                 Deny
               </Button>
             </div>
-          )}
+          ): <span />}
         </form>
       </div>
     </Fragment>
