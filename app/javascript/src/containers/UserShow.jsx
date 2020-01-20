@@ -14,6 +14,7 @@ import Loading from '../components/Loading.jsx'
 import Status from '../components/StatusBadge'
 import Avatar from '../components/Avatar'
 import DateUtil from '../utils/dateutil.js'
+import DoneIcon from '@material-ui/icons/Done';
 
 import { UserQuery } from '../graphql/queries'
 import {
@@ -112,6 +113,10 @@ export function Component({
 
   function handleClose() {
     setAnchorEl(null)
+  }
+  function handleNoteAction(){
+    // handle the note actions here
+    console.log('note clicked ')
   }
   return (
     <div>
@@ -342,8 +347,11 @@ export function Component({
               data.user.notes.reverse().map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
-                    <p className="comment">{note.body}</p>
-                  </div>
+                   <p className="comment">{note.body}</p>
+                  </div> 
+                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
+                    <DoneIcon />
+                  </span>
                   <br />
                 </Fragment>
               ))}
@@ -378,5 +386,12 @@ const styles = StyleSheet.create({
     borderLeft: '2px solid #25c0b0',
     padding: '0.5%',
     color: 'gray'
+  },
+  actionIcon: {
+    float: 'right',
+    cursor: 'pointer',
+    ':hover': {
+      color: '#25c0b0'
+    }
   }
 })
