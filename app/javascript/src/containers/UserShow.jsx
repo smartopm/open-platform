@@ -15,6 +15,7 @@ import Status from '../components/StatusBadge'
 import Avatar from '../components/Avatar'
 import DateUtil from '../utils/dateutil.js'
 import DoneIcon from '@material-ui/icons/Done';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 import { UserQuery } from '../graphql/queries'
 import {
@@ -352,6 +353,10 @@ export function Component({
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
                     <DoneIcon />
                   </span>
+
+                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
+                    <ScheduleIcon />
+                  </span>
                   <br />
                 </Fragment>
               ))}
@@ -392,6 +397,7 @@ const styles = StyleSheet.create({
     cursor: 'pointer',
     ':hover': {
       color: '#25c0b0'
-    }
+    },
+    marginRight: 12
   }
 })
