@@ -46,6 +46,7 @@ import ComingSoon from '../src/containers/showroom/ComingSoon'
 import VisitingClientForm from '../src/containers/showroom/CheckInForm'
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
 import CheckInComplete from '../src/containers/showroom/CheckInComplete'
+import Todo from '../src/containers/Todo'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -179,6 +180,8 @@ const App = () => {
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
+
+                    <Route path="/todo" component={Todo} />
 
                     <Route
                       path="*"
