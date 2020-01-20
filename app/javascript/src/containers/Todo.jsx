@@ -1,12 +1,19 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from "aphrodite";
+import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
-export default function Todo() {
+export default function Todo({ history }) {
   const [checked, setChecked] = useState(false)
+  const authState = useContext(AuthStateContext)
   function todoAction() {
     setChecked(!checked)
   }
+  if (authState.user.userType !== 'admin') {
+    // re-route to home
+    history.push('/')
+  }
+  
   return (
     <Fragment>
       <Nav navName="Todo" menuButton="back" />
