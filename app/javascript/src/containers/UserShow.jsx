@@ -97,7 +97,7 @@ export function Component({
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
     noteCreate({
-      variables: { userId, body: note }
+      variables: { userId, body: note, flagged: true }
     }).then(() => {
       refetch()
       form.reset()
@@ -119,6 +119,8 @@ export function Component({
     // handle the note actions here
     console.log('note clicked ')
   }
+
+  console.table(data.user.notes)
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />

@@ -7,5 +7,6 @@ module Types
     field :user, Types::UserType, null: false
     field :owner, Types::UserType, null: false
     field :body, String, null: true
+    field :flagged, Boolean, null: true
   end
 end

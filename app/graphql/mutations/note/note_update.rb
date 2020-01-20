@@ -6,6 +6,7 @@ module Mutations
     class NoteUpdate < BaseMutation
       argument :id, ID, required: true
       argument :body, String, required: true
+      argument :flagged, Boolean, required: false
 
       field :note, Types::NoteType, null: true
 
@@ -13,7 +14,7 @@ module Mutations
         note = ::Note.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
-        return { note: note } if note.update(body: vals[:body])
+        return { note: note } if note.update(body: vals[:body], flagged: vals[:flagged])
 
         raise GraphQL::ExecutionError, note.errors.full_messages
       end
