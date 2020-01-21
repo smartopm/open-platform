@@ -5,16 +5,17 @@ module Mutations
     # Create a new request/pending member
     class NoteUpdate < BaseMutation
       argument :id, ID, required: true
-      argument :body, String, required: true
+      argument :body, String, required: false
       argument :flagged, Boolean, required: false
 
       field :note, Types::NoteType, null: true
 
-      def resolve(vals)
-        note = ::Note.find(vals.delete(:id))
+      def resolve(id:, **attributes)
+        note = ::Note.find(id)
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
-        return { note: note } if note.update(body: vals[:body], flagged: vals[:flagged], updated_at: DateTime.now)
+        # TODO: Find a way of adding an updated_at datetime
+        return { note: note } if note.update!(attributes)
 
         raise GraphQL::ExecutionError, note.errors.full_messages
       end
