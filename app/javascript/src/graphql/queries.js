@@ -126,6 +126,7 @@ export const flaggedNotes = gql`
         body
         createdAt
         id
+        completed
         user {
           name
           id

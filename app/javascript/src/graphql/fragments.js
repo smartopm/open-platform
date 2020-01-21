@@ -23,6 +23,7 @@ export const UserFragment = {
         user {
           name
         },
+        completed
         createdAt
       }
     }

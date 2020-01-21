@@ -129,6 +129,15 @@ export function Component({
     setLoading(true)
     noteUpdate({ variables: { id, flagged: true } }).then(({data})=> {
       setLoading(!isLoading)
+      refetch()
+    })
+  }
+
+  function handleonComplete(id, isCompleted){
+    setLoading(true)
+    noteUpdate({ variables: { id, completed: !isCompleted } }).then(({data})=> {
+      setLoading(!isLoading)
+      refetch()
     })
   }
   return (
@@ -371,12 +380,17 @@ export function Component({
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
                     <ScheduleIcon />
                   </span>
-                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
-                    <CheckBoxOutlineBlankIcon />
-                  </span>
-                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
-                    <CheckBoxIcon />
-                  </span>
+                  {
+                    note.completed 
+                    ? 
+                    <span className={css(styles.actionIcon)} onClick={() => handleonComplete(note.id, note.completed)} >
+                      <CheckBoxIcon />
+                    </span>
+                    :
+                    <span className={css(styles.actionIcon)} onClick={() => handleonComplete(note.id, note.completed)} >
+                      <CheckBoxOutlineBlankIcon />
+                    </span>
+                  }
                   <br />
                 </Fragment>
               ))}

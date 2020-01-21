@@ -282,8 +282,8 @@ mutation noteCreate($userId: ID!, $body: String!, $flagged: Boolean) {
 }
 `
 export const UpdateNote = gql`
-mutation noteupdate($id: ID!, $body: String, $flagged: Boolean) {
-  noteUpdate(id: $id, body: $body, flagged: $flagged){
+mutation noteupdate($id: ID!, $body: String, $flagged: Boolean, $completed: Boolean) {
+  noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed){
     note {
       flagged
       body
