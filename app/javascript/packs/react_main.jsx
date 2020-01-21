@@ -27,7 +27,6 @@ import PendingUsers from '../src/containers/PendingUsers'
 import Loading from '../src/components/Loading.jsx'
 import { WelcomeScreen } from '../src/components/AuthScreens/WelcomeScreen'
 import '../src/i18n'
-import Explore from '../src/containers/Explore'
 import Map from '../src/containers/Map'
 import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen'
@@ -155,8 +154,7 @@ const App = () => {
                     <Route path="/user/:id" exact component={UserShow} />
                     <Route path="/user/:id/logs" exact component={UserLogs} />
                     <Route path="/user/:id/edit" exact component={UserEdit} />
-                    <Route path="/map" component={Explore} />
-                    <Route path="/new_map" component={Map} />
+                    <Route path="/map" component={Map} />
                     <Route path="/support" component={Support} />
 
                     {/* new routes => guards */}
