@@ -13,6 +13,7 @@ module Mutations
       def resolve(vals)
         note = context[:current_user].notes.new(vals)
         note.author_id = context[:current_user].id
+        note.created_at = DateTime.now
         note.save
 
         return { note: note } if note.persisted?

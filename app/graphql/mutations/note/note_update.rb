@@ -14,7 +14,7 @@ module Mutations
         note = ::Note.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
-        return { note: note } if note.update(body: vals[:body], flagged: vals[:flagged])
+        return { note: note } if note.update(body: vals[:body], flagged: vals[:flagged], updated_at: DateTime.now)
 
         raise GraphQL::ExecutionError, note.errors.full_messages
       end

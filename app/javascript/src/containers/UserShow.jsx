@@ -16,6 +16,11 @@ import Avatar from '../components/Avatar'
 import DateUtil from '../utils/dateutil.js'
 import DoneIcon from '@material-ui/icons/Done';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+// import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+// import CheckBoxIcon from '@material-ui/icons/CheckBox';
+
+
 
 import { UserQuery } from '../graphql/queries'
 import {
@@ -353,7 +358,7 @@ export function Component({
                    <p className="comment">{note.body}</p>
                   </div> 
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
-                    <DoneIcon />
+                    <AddBoxIcon />
                   </span>
 
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
