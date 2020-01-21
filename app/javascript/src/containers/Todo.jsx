@@ -7,7 +7,6 @@ import { useQuery /*useMutation */ } from 'react-apollo'
 import { flaggedNotes } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-// } from '../graphql/mutations'
 
 export default function Todo({ history }) {
   const [checked, setChecked] = useState(false)
@@ -34,7 +33,7 @@ export default function Todo({ history }) {
               <div className="custom-control custom-checkbox text">
                 <input
                   type="checkbox"
-                  checked={checked}
+                  checked={note.completed}
                   onChange={() => todoAction(note.id)}
                   className="custom-control-input"
                   id={`todo-check-${note.id}`}
@@ -42,7 +41,7 @@ export default function Todo({ history }) {
                 <label
                   className="custom-control-label"
                   htmlFor={`todo-check-${note.id}`}
-                  style={{ textDecoration: checked && 'line-through' }}
+                  style={{ textDecoration: note.completed && 'line-through' }}
                 >
                   {note.body}
                 </label>
