@@ -73,5 +73,14 @@ module Types
         user_type: 'security_guard',
       )
     end
+
+    field :all_notes, [NoteType], null: false do
+      description 'Returns a list of all the notes'
+    end
+
+    def all_notes
+      Note.all
+    end
+
   end
 end
