@@ -14,7 +14,7 @@ export default function Todo({ history }) {
   const authState = useContext(AuthStateContext)
   const { loading, error, data } = useQuery(flaggedNotes)
 
-  function todoAction() {
+  function todoAction(id) {
     setChecked(!checked)
   }
   if (authState.user.userType !== 'admin') {
@@ -35,13 +35,13 @@ export default function Todo({ history }) {
                 <input
                   type="checkbox"
                   checked={checked}
-                  onChange={todoAction}
+                  onChange={() => todoAction(note.id)}
                   className="custom-control-input"
-                  id="todo-check"
+                  id={`todo-check-${note.id}`}
                 />
                 <label
                   className="custom-control-label"
-                  htmlFor="todo-check"
+                  htmlFor={`todo-check-${note.id}`}
                   style={{ textDecoration: checked && 'line-through' }}
                 >
                   {note.body}

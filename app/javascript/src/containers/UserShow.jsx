@@ -25,7 +25,8 @@ import {
   AddActivityLog,
   SendOneTimePasscode,
   DeleteUser,
-  createNote
+  CreateNote,
+  UpdateNote
 } from '../graphql/mutations'
 import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
@@ -94,7 +95,9 @@ export function Component({
 }) {
   const [tabValue, setValue] = useState(0)
   const [anchorEl, setAnchorEl] = useState(null)
-  const [noteCreate, { loading: mutationLoading }] = useMutation(createNote)
+  const [isLoading, setLoading] = useState(false)
+  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
+  const [noteUpdate, noteData] = useMutation(UpdateNote)
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
@@ -122,8 +125,12 @@ export function Component({
     // handle the note actions here
     console.log('note clicked ')
   }
-
-  console.table(data.user.notes)
+  function handleFlagNote(id){
+    setLoading(true)
+    noteUpdate({ variables: { id, flagged: true } }).then(({data})=> {
+      setLoading(!isLoading)
+    })
+  }
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -356,9 +363,11 @@ export function Component({
                    <p className="comment">{note.body}</p>
                    <i>created at: {formatDate(note.createdAt)}</i>
                   </div> 
-                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
-                    <AddBoxIcon />
-                  </span>
+                  { !note.flagged && 
+                      <span className={css(styles.actionIcon)} onClick={() => handleFlagNote(note.id)} >
+                        <AddBoxIcon />
+                      </span>
+                  }
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
                     <ScheduleIcon />
                   </span>

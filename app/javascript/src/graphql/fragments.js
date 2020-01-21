@@ -19,6 +19,7 @@ export const UserFragment = {
       notes {
         body
         id
+        flagged
         user {
           name
         },

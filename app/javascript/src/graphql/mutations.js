@@ -272,11 +272,22 @@ export const switchGuards = gql`
     }
   }
 `
-export const createNote = gql`
+export const CreateNote = gql`
 mutation noteCreate($userId: ID!, $body: String!, $flagged: Boolean) {
   noteCreate(userId: $userId, body: $body, flagged: $flagged) {
     note {
       body
+    }
+  }
+}
+`
+export const UpdateNote = gql`
+mutation noteupdate($id: ID!, $body: String, $flagged: Boolean) {
+  noteUpdate(id: $id, body: $body, flagged: $flagged){
+    note {
+      flagged
+      body
+      id
     }
   }
 }
