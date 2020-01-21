@@ -1,45 +1,47 @@
-import React, { Fragment, useContext, useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
-import { useQuery, useMutation } from 'react-apollo'
-import { withStyles, Tab } from '@material-ui/core'
-import { useForm } from 'react-hook-form'
-import IconButton from '@material-ui/core/IconButton'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import { a11yProps, StyledTabs, TabPanel } from '../components/Tabs'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
-import Nav from '../components/Nav'
-import Loading from '../components/Loading.jsx'
-import Status from '../components/StatusBadge'
-import Avatar from '../components/Avatar'
-import DateUtil from '../utils/dateutil.js'
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import React, { Fragment, useContext, useState } from "react"
+import { Redirect, Link } from "react-router-dom"
+import { useQuery, useMutation } from "react-apollo"
+import { withStyles, Tab } from "@material-ui/core"
+import { useForm } from "react-hook-form"
+import IconButton from "@material-ui/core/IconButton"
+import Menu from "@material-ui/core/Menu"
+import MenuItem from "@material-ui/core/MenuItem"
+import MoreVertIcon from "@material-ui/icons/MoreVert"
+import { a11yProps, StyledTabs, TabPanel } from "../components/Tabs"
+import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js"
+import Nav from "../components/Nav"
+import Loading, { CustomizedProgressBars } from "../components/Loading.jsx"
+import Status from "../components/StatusBadge"
+import Avatar from "../components/Avatar"
+import DateUtil from "../utils/dateutil.js"
+import ScheduleIcon from "@material-ui/icons/Schedule"
+import AddBoxIcon from "@material-ui/icons/AddBox"
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
+import CheckBoxIcon from "@material-ui/icons/CheckBox"
+import Tooltip from '@material-ui/core/Tooltip';
 
 
-import { UserQuery } from '../graphql/queries'
+
+import { UserQuery } from "../graphql/queries"
 import {
   AddActivityLog,
   SendOneTimePasscode,
   DeleteUser,
   CreateNote,
   UpdateNote
-} from '../graphql/mutations'
-import { css, StyleSheet } from 'aphrodite'
-import ErrorPage from '../components/Error.jsx'
-import { ponisoNumber } from '../utils/constants.js'
+} from "../graphql/mutations"
+import { css, StyleSheet } from "aphrodite"
+import ErrorPage from "../components/Error.jsx"
+import { ponisoNumber } from "../utils/constants.js"
 
 function formatDate(datetime) {
   if (datetime) {
     const date = DateUtil.fromISO8601(datetime)
     return (
-      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
     )
   }
-  return 'Never'
+  return "Never"
 }
 
 export default ({ match, history }) => {
@@ -54,7 +56,7 @@ export default ({ match, history }) => {
   const [deleteUser] = useMutation(DeleteUser, {
     variables: { id: id },
     onCompleted: () => {
-      history.push('/')
+      history.push("/")
     }
   })
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
@@ -62,7 +64,7 @@ export default ({ match, history }) => {
   })
 
   if (loading || entry.loading) return <Loading />
-  if (entry.data) return <Redirect to="/" />
+  if (entry.data) return <Redirect to='/' />
   if (error) return <ErrorPage title={error} />
   return (
     <Component
@@ -79,8 +81,8 @@ export default ({ match, history }) => {
 
 export const StyledTab = withStyles({
   root: {
-    textTransform: 'none',
-    color: 'inherit'
+    textTransform: "none",
+    color: "inherit"
   }
 })(props => <Tab {...props} />)
 
@@ -101,7 +103,7 @@ export function Component({
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form')
+    const form = document.getElementById("note-form")
     noteCreate({
       variables: { userId, body: note, flagged: false }
     }).then(() => {
@@ -121,58 +123,60 @@ export function Component({
   function handleClose() {
     setAnchorEl(null)
   }
-  function handleNoteAction(){
+  function handleNoteAction() {
     // handle the note actions here
-    console.log('note clicked ')
+    console.log("note clicked ")
   }
-  function handleFlagNote(id){
+  function handleFlagNote(id) {
     setLoading(true)
-    noteUpdate({ variables: { id, flagged: true } }).then(({data})=> {
+    noteUpdate({ variables: { id, flagged: true } }).then(({ data }) => {
       setLoading(!isLoading)
       refetch()
     })
   }
 
-  function handleonComplete(id, isCompleted){
+  function handleonComplete(id, isCompleted) {
     setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(({data})=> {
-      setLoading(!isLoading)
-      refetch()
-    })
+    noteUpdate({ variables: { id, completed: !isCompleted } }).then(
+      ({ data }) => {
+        setLoading(!isLoading)
+        refetch()
+      }
+    )
   }
   return (
     <div>
-      <Nav navName="Identification" menuButton="cancel" />
+      <Nav navName='Identification' menuButton='cancel' />
       <Fragment>
-        <div className="container">
-          <div className="row d-flex justify-content-between">
-            <div className="col-4 ">
-              <Avatar user={data.user} style="small" />
+        <div className='container'>
+          <div className='row d-flex justify-content-between'>
+            <div className='col-4 '>
+              <Avatar user={data.user} style='small' />
             </div>
 
-            <div className="col-4">
+            <div className='col-4'>
               <h5>{data.user.name}</h5>
-              <div className="expires">
+              <div className='expires'>
                 Exp: {formatDate(data.user.expiresAt)}
               </div>
-              <div className="expires">
+              <div className='expires'>
                 Last accessed: {formatDate(data.user.lastActivityAt)}
               </div>
               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
               <br />
               <Status label={data.user.state} />
             </div>
-            <div className="col-2 ml-auto">
+            <div className='col-2 ml-auto'>
               <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
+                aria-label='more'
+                aria-controls='long-menu'
+                aria-haspopup='true'
                 onClick={handleOpenMenu}
               >
                 <MoreVertIcon />
               </IconButton>
               <Menu
-                id="long-menu"
+                id='long-menu'
                 anchorEl={anchorEl}
                 keepMounted
                 open={open}
@@ -183,14 +187,14 @@ export function Component({
                   }
                 }}
               >
-                {data.user.state === 'valid' &&
-                authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                {data.user.state === "valid" &&
+                authState.user.userType === "security_guard" ? (
+                  <MenuItem key={"log_entry"} onClick={onLogEntry}>
                     Log This Entry
                   </MenuItem>
                 ) : null}
-                {authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'call_p'}>
+                {authState.user.userType === "security_guard" ? (
+                  <MenuItem key={"call_p"}>
                     <a
                       href={`tel:${ponisoNumber}`}
                       className={` ${css(styles.callButton)}`}
@@ -200,9 +204,9 @@ export function Component({
                   </MenuItem>
                 ) : null}
 
-                {authState.user.userType === 'admin' ? (
+                {authState.user.userType === "admin" ? (
                   <div>
-                    <MenuItem key={'edit_user'}>
+                    <MenuItem key={"edit_user"}>
                       <Link
                         to={`/user/${data.user.id}/edit`}
                         className={css(styles.linkItem)}
@@ -212,7 +216,7 @@ export function Component({
                     </MenuItem>
 
                     {data.user.phoneNumber ? (
-                      <MenuItem key={'call_user'}>
+                      <MenuItem key={"call_user"}>
                         <a
                           className={css(styles.linkItem)}
                           href={`tel:+${data.user.phoneNumber}`}
@@ -222,7 +226,7 @@ export function Component({
                       </MenuItem>
                     ) : null}
 
-                    <MenuItem key={'user_logs'}>
+                    <MenuItem key={"user_logs"}>
                       <Link
                         to={`/user/${data.user.id}/logs`}
                         className={css(styles.linkItem)}
@@ -230,7 +234,7 @@ export function Component({
                         User Logs
                       </Link>
                     </MenuItem>
-                    <MenuItem key={'print'}>
+                    <MenuItem key={"print"}>
                       <Link
                         to={`/print/${data.user.id}`}
                         className={css(styles.linkItem)}
@@ -238,7 +242,7 @@ export function Component({
                         Print
                       </Link>
                     </MenuItem>
-                    <MenuItem key={'send_code'}>
+                    <MenuItem key={"send_code"}>
                       <a
                         onClick={sendOneTimePasscode}
                         className={css(styles.linkItem)}
@@ -246,12 +250,12 @@ export function Component({
                         Send One Time Passcode
                       </a>
                     </MenuItem>
-                    <MenuItem key={'delete'}>
+                    <MenuItem key={"delete"}>
                       <a
                         onClick={() => {
                           if (
                             window.confirm(
-                              'Are you sure you wish to delete this user?'
+                              "Are you sure you wish to delete this user?"
                             )
                           )
                             onDelete()
@@ -271,62 +275,62 @@ export function Component({
         <StyledTabs
           value={tabValue}
           onChange={handleChange}
-          aria-label="request tabs"
+          aria-label='request tabs'
           centered
         >
-          <StyledTab label="Contact" {...a11yProps(0)} />
-          <StyledTab label="Notes" {...a11yProps(1)} />
-          <StyledTab label="Plots" {...a11yProps(2)} />
-          <StyledTab label="Payments" {...a11yProps(3)} />
+          <StyledTab label='Contact' {...a11yProps(0)} />
+          <StyledTab label='Notes' {...a11yProps(1)} />
+          <StyledTab label='Plots' {...a11yProps(2)} />
+          <StyledTab label='Payments' {...a11yProps(3)} />
         </StyledTabs>
 
         <TabPanel value={tabValue} index={0}>
-          <div className="container">
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="name">
+          <div className='container'>
+            <div className='form-group'>
+              <label className='bmd-label-static' htmlFor='name'>
                 Name
               </label>
               <input
-                className="form-control"
-                type="text"
+                className='form-control'
+                type='text'
                 defaultValue={data.user.name}
-                name="name"
+                name='name'
                 disabled
               />
             </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="Accounts">
+            <div className='form-group'>
+              <label className='bmd-label-static' htmlFor='Accounts'>
                 Accounts
               </label>
               <input
-                className="form-control"
-                type="text"
+                className='form-control'
+                type='text'
                 defaultValue={data.user.name}
-                name="accounts"
+                name='accounts'
                 disabled
               />
             </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="phoneNumber">
+            <div className='form-group'>
+              <label className='bmd-label-static' htmlFor='phoneNumber'>
                 Phone Number
               </label>
               <input
-                className="form-control"
-                type="text"
+                className='form-control'
+                type='text'
                 defaultValue={data.user.phoneNumber}
-                name="phoneNumber"
+                name='phoneNumber'
                 disabled
               />
             </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="email">
+            <div className='form-group'>
+              <label className='bmd-label-static' htmlFor='email'>
                 Email
               </label>
               <input
-                className="form-control"
-                type="email"
+                className='form-control'
+                type='email'
                 defaultValue={data.user.email}
-                name="email"
+                name='email'
                 disabled
               />
             </div>
@@ -335,31 +339,31 @@ export function Component({
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
-          <div className="container">
-            <form id="note-form">
-              <div className="form-group">
-                <label htmlFor="notes">Notes</label>
+          <div className='container'>
+            <form id='note-form'>
+              <div className='form-group'>
+                <label htmlFor='notes'>Notes</label>
                 <br />
                 <textarea
-                  className="form-control"
-                  placeholder="Add your notes here"
-                  id="notes"
-                  rows="4"
+                  className='form-control'
+                  placeholder='Add your notes here'
+                  id='notes'
+                  rows='4'
                   ref={register({ required: true })}
-                  name="note"
+                  name='note'
                   readOnly={authState.user.id !== userId}
                 />
               </div>
               {authState.user.id === userId && (
                 <button
-                  type="button"
-                  style={{ float: 'right' }}
-                  className="btn btn-outline-primary "
+                  type='button'
+                  style={{ float: "right" }}
+                  className='btn btn-outline-primary '
                   onClick={handleSubmit(onSaveNote)}
                   disabled={mutationLoading}
                 >
                   {/* Save */}
-                  {mutationLoading ? 'Saving ...' : 'Save'}
+                  {mutationLoading ? "Saving ..." : "Save"}
                 </button>
               )}
             </form>
@@ -369,38 +373,65 @@ export function Component({
               data.user.notes.reverse().map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
-                   <p className="comment">{note.body}</p>
-                   <i>created at: {formatDate(note.createdAt)}</i>
-                  </div> 
-                  { !note.flagged && 
-                      <span className={css(styles.actionIcon)} onClick={() => handleFlagNote(note.id)} >
-                        <AddBoxIcon />
-                      </span>
-                  }
-                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
-                    <ScheduleIcon />
+                    <p className='comment'>{note.body}</p>
+                    <i>created at: {formatDate(note.createdAt)}</i>
+                  </div>
+
+                  <span
+                    className={css(styles.actionIcon)}
+                    onClick={handleNoteAction}
+                  >
+                    <Tooltip title="Schedule" >
+                      <ScheduleIcon />
+                     </Tooltip>
                   </span>
-                  {
-                    note.completed 
-                    ? 
-                    <span className={css(styles.actionIcon)} onClick={() => handleonComplete(note.id, note.completed)} >
-                      <CheckBoxIcon />
-                    </span>
-                    :
-                    <span className={css(styles.actionIcon)} onClick={() => handleonComplete(note.id, note.completed)} >
-                      <CheckBoxOutlineBlankIcon />
-                    </span>
-                  }
-                  <br />
+                      {note.completed ? (
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() =>
+                            handleonComplete(note.id, note.completed)
+                          }
+                        >
+                        <Tooltip title="Mark this note as uncomplete" >
+                          <CheckBoxIcon />
+                        </Tooltip>
+                        </span>
+                      ) : (
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() =>
+                            handleonComplete(note.id, note.completed)
+                          }
+                        >
+                         <Tooltip title="Mark this note complete" >
+                            <CheckBoxOutlineBlankIcon />
+                          </Tooltip>
+                        </span>
+                      )}
+                      {
+                        !note.flagged 
+                        &&  
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() =>
+                            handleFlagNote(note.id)
+                          }
+                        >
+                         <Tooltip title="Flag this note as a todo ">
+                            <AddBoxIcon />
+                          </Tooltip>
+                        </span>
+                      }
+                      <br />
                 </Fragment>
               ))}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <h4 className="text-center">Coming soon</h4>
+          <h4 className='text-center'>Coming soon</h4>
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
-          <h4 className="text-center">Coming soon</h4>
+          <h4 className='text-center'>Coming soon</h4>
         </TabPanel>
       </Fragment>
     </div>
@@ -409,28 +440,28 @@ export function Component({
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: '#25c0b0',
-    textTransform: 'unset'
+    backgroundColor: "#25c0b0",
+    textTransform: "unset"
   },
   callButton: {
-    color: '#ed5757',
-    textTransform: 'unset',
-    textDecoration: 'none'
+    color: "#ed5757",
+    textTransform: "unset",
+    textDecoration: "none"
   },
   linkItem: {
-    color: '#000000',
-    textDecoration: 'none'
+    color: "#000000",
+    textDecoration: "none"
   },
   commentBox: {
-    borderLeft: '2px solid #25c0b0',
-    padding: '0.5%',
-    color: 'gray'
+    borderLeft: "2px solid #25c0b0",
+    padding: "0.5%",
+    color: "gray"
   },
   actionIcon: {
-    float: 'right',
-    cursor: 'pointer',
-    ':hover': {
-      color: '#25c0b0'
+    float: "right",
+    cursor: "pointer",
+    ":hover": {
+      color: "#25c0b0"
     },
     marginRight: 12
   }
