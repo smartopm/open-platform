@@ -7,6 +7,7 @@ module Mutations
       argument :id, ID, required: true
       argument :body, String, required: false
       argument :flagged, Boolean, required: false
+      argument :completed, Boolean, required: false
 
       field :note, Types::NoteType, null: true
 
