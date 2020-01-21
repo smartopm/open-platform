@@ -21,7 +21,8 @@ export const UserFragment = {
         id
         user {
           name
-        }
+        },
+        createdAt
       }
     }
   `

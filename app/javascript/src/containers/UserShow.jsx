@@ -14,12 +14,10 @@ import Loading from '../components/Loading.jsx'
 import Status from '../components/StatusBadge'
 import Avatar from '../components/Avatar'
 import DateUtil from '../utils/dateutil.js'
-import DoneIcon from '@material-ui/icons/Done';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-// import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-// import CheckBoxIcon from '@material-ui/icons/CheckBox';
-
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
 
 import { UserQuery } from '../graphql/queries'
@@ -33,7 +31,7 @@ import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
 
-function expiresAtStr(datetime) {
+function formatDate(datetime) {
   if (datetime) {
     const date = DateUtil.fromISO8601(datetime)
     return (
@@ -139,10 +137,10 @@ export function Component({
             <div className="col-4">
               <h5>{data.user.name}</h5>
               <div className="expires">
-                Exp: {expiresAtStr(data.user.expiresAt)}
+                Exp: {formatDate(data.user.expiresAt)}
               </div>
               <div className="expires">
-                Last accessed: {expiresAtStr(data.user.lastActivityAt)}
+                Last accessed: {formatDate(data.user.lastActivityAt)}
               </div>
               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
               <br />
@@ -356,13 +354,19 @@ export function Component({
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
                    <p className="comment">{note.body}</p>
+                   <i>created at: {formatDate(note.createdAt)}</i>
                   </div> 
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
                     <AddBoxIcon />
                   </span>
-
                   <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
                     <ScheduleIcon />
+                  </span>
+                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
+                    <CheckBoxOutlineBlankIcon />
+                  </span>
+                  <span className={css(styles.actionIcon)} onClick={handleNoteAction} >
+                    <CheckBoxIcon />
                   </span>
                   <br />
                 </Fragment>
