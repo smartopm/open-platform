@@ -130,7 +130,7 @@ export function Component({
   function handleFlagNote(id) {
     setLoading(true)
     noteUpdate({ variables: { id, flagged: true } }).then(({ data }) => {
-      setLoading(!isLoading)
+      setLoading(false)
       refetch()
     })
   }
@@ -139,7 +139,7 @@ export function Component({
     setLoading(true)
     noteUpdate({ variables: { id, completed: !isCompleted } }).then(
       ({ data }) => {
-        setLoading(!isLoading)
+        setLoading(false)
         refetch()
       }
     )
@@ -369,7 +369,7 @@ export function Component({
             </form>
             <br />
             <br />
-            {data.user.notes &&
+            {isLoading ? <Loading /> : data.user.notes ?
               data.user.notes.reverse().map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
@@ -424,7 +424,7 @@ export function Component({
                       }
                       <br />
                 </Fragment>
-              ))}
+              )) : 'No Notes Yet'}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>

@@ -90,5 +90,14 @@ module Types
       Note.where(flagged: true)
     end
 
+    field :entry_search, [EntryRequestType], null: true do
+      description 'Find an entry by user'
+      argument :name, String, required: true
+    end
+
+    def entry_search(name:)
+      EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
+    end
+
   end
 end

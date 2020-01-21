@@ -3,18 +3,28 @@ import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
-import { useQuery /*useMutation */ } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import { flaggedNotes } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
+import { UpdateNote } from "../graphql/mutations"
+
 
 export default function Todo({ history }) {
-  const [checked, setChecked] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
-  const { loading, error, data } = useQuery(flaggedNotes)
+  const { loading, error, data, refetch } = useQuery(flaggedNotes)
+  const [noteUpdate, ] = useMutation(UpdateNote)
 
-  function todoAction(id) {
-    setChecked(!checked)
+
+  function todoAction(id, isCompleted) {
+    setLoading(true)
+    noteUpdate({ variables: { id, completed: !isCompleted } }).then(
+      ({ data }) => {
+        setLoading(false)
+        refetch()
+      }
+    )
   }
   if (authState.user.userType !== 'admin') {
     // re-route to home
@@ -28,13 +38,13 @@ export default function Todo({ history }) {
       <Nav navName="Todo" menuButton="back" />
       <div className="container">
         <ul className={css(styles.list)}>
-          {data.flaggedNotes.map(note => (
+          { isLoading ? <Loading /> : data.flaggedNotes.map(note => (
             <li key={note.id} className={css(styles.listItem)}>
               <div className="custom-control custom-checkbox text">
                 <input
                   type="checkbox"
                   checked={note.completed}
-                  onChange={() => todoAction(note.id)}
+                  onChange={() => todoAction(note.id, note.completed)}
                   className="custom-control-input"
                   id={`todo-check-${note.id}`}
                 />
