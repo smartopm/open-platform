@@ -82,5 +82,13 @@ module Types
       Note.all
     end
 
+    field :flagged_notes, [NoteType], null: false do
+      description 'Returns a list of all the flagged notes, basically todos'
+    end
+
+    def flagged_notes
+      Note.where(flagged: true)
+    end
+
   end
 end

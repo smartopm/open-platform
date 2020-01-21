@@ -105,3 +105,31 @@ export const SecurityGuards = gql`
     }
   }
 `
+
+export const allNotes = gql`
+    {
+      allNotes{
+        body
+        createdAt
+        flagged
+        id
+        user {
+          name
+          id
+        }
+      }
+    }
+` 
+export const flaggedNotes = gql`
+    {
+      flaggedNotes{
+        body
+        createdAt
+        id
+        user {
+          name
+          id
+        }
+      }
+    }
+` 

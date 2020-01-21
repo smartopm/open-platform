@@ -100,7 +100,7 @@ export function Component({
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
     noteCreate({
-      variables: { userId, body: note, flagged: true }
+      variables: { userId, body: note, flagged: false }
     }).then(() => {
       refetch()
       form.reset()
