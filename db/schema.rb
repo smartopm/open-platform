@@ -91,8 +91,8 @@ ActiveRecord::Schema.define(version: 2020_01_21_101609) do
     t.uuid "user_id"
     t.uuid "author_id"
     t.text "body"
-    t.datetime "updated_at", precision: 6, null: false
     t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.boolean "flagged"
     t.boolean "completed"
   end
