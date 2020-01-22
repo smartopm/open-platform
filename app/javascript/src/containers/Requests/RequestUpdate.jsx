@@ -26,6 +26,7 @@ export default function RequestUpdate({ match, history, location }) {
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
   const [isLoading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -75,7 +76,7 @@ export default function RequestUpdate({ match, history, location }) {
       });
   }
 
-  function handleEnrollUser(){
+  function handleEnrollUser() {
     setLoading(true)
     createUser({
       variables: {
@@ -88,12 +89,13 @@ export default function RequestUpdate({ match, history, location }) {
       }
     }).then(() => {
       setLoading(false)
+      setMessage('User was successfully enrolled')
     })
   }
   return (
     <Fragment>
       <Nav
-      // navname should be enroll user if coming from entry_logs
+        // navname should be enroll user if coming from entry_logs
         navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
       />
@@ -110,10 +112,10 @@ export default function RequestUpdate({ match, history, location }) {
                 value={
                   formData.guard
                     ? `${new Date(
-                        formData.createdAt
-                      ).toDateString()} at ${DateUtil.dateTimeToString(
-                        new Date(formData.createdAt)
-                      )}`
+                      formData.createdAt
+                    ).toDateString()} at ${DateUtil.dateTimeToString(
+                      new Date(formData.createdAt)
+                    )}`
                     : ""
                 }
                 disabled={true}
@@ -202,38 +204,48 @@ export default function RequestUpdate({ match, history, location }) {
           {previousRoute === 'enroll' ?
 
             (
-            <div className="row justify-content-center align-items-center">
-              <Button
-                variant="contained"
-                onClick={handleEnrollUser}
-                className={`btn ${css(styles.grantButton)}`}
-                disabled={isLoading}
-              >
-               {isLoading ? 'Enrolling ...' : ' Enroll User'}
-              </Button>
-            </div>
+              <Fragment>
+                <div className="row justify-content-center align-items-center">
+                  <Button
+                    variant="contained"
+                    onClick={handleEnrollUser}
+                    className={`btn ${css(styles.grantButton)}`}
+                    disabled={isLoading || Boolean(message.length)}
+                  >
+                    {isLoading ? 'Enrolling ...' : ' Enroll User'}
+                  </Button>
+
+                </div>
+                <div className='row justify-content-center align-items-center'>
+                  <br />
+                  <br />
+                  {
+                    !isLoading && message.length ? <span>{message}</span> : <span />
+                  }
+                </div>
+              </Fragment>
             )
-          : !/logs|enroll/.test(previousRoute) 
-          ? (
-            <div className="row justify-content-center align-items-center">
-              <Button
-                variant="contained"
-                onClick={handleGrantRequest}
-                className={`btn ${css(styles.grantButton)}`}
-                disabled={isLoading}
-              >
-                { isLoading ? 'Granting ...' : 'Grant' }
+            : !/logs|enroll/.test(previousRoute)
+              ? (
+                <div className="row justify-content-center align-items-center">
+                  <Button
+                    variant="contained"
+                    onClick={handleGrantRequest}
+                    className={`btn ${css(styles.grantButton)}`}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Granting ...' : 'Grant'}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleDenyRequest}
+                    className={`btn  ${css(styles.denyButton)}`}
+                    disabled={isLoading}
+                  >
+                    Deny
               </Button>
-              <Button
-                variant="contained"
-                onClick={handleDenyRequest}
-                className={`btn  ${css(styles.denyButton)}`}
-                disabled={isLoading}
-              >
-                Deny
-              </Button>
-            </div>
-          ): <span />}
+                </div>
+              ) : <span />}
         </form>
       </div>
     </Fragment>
