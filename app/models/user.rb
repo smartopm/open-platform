@@ -164,9 +164,11 @@ class User < ApplicationRecord
     raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
     token = create_new_phone_token
-    msg = "Your login link for #{community.name} is https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
+    url = "https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
+    msg = "Your login link for #{community.name} is #{url}"
     Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
     Sms.send(self[:phone_number], msg)
+    url
   end
 
   def role?(roles)
