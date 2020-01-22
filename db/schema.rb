@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 2020_01_21_101609) do
     t.datetime "granted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -91,8 +92,8 @@ ActiveRecord::Schema.define(version: 2020_01_21_101609) do
     t.uuid "author_id"
     t.text "body"
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", precision: 6, null: false
     t.boolean "flagged"
-    t.datetime "created_at"
     t.boolean "completed"
   end
 
