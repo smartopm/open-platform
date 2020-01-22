@@ -19,8 +19,6 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@material-ui/icons/CheckBox"
 import Tooltip from '@material-ui/core/Tooltip';
 
-
-
 import { UserQuery } from "../graphql/queries"
 import {
   AddActivityLog,
@@ -59,7 +57,10 @@ export default ({ match, history }) => {
     }
   })
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
-    variables: { userId: id }
+    variables: { userId: id },
+    onCompleted: () => {
+      alert('The code was sent ')
+    }
   })
 
   if (loading || entry.loading) return <Loading />
@@ -240,7 +241,10 @@ export function Component({
                     </MenuItem>
                     <MenuItem key={"send_code"}>
                       <a
-                        onClick={sendOneTimePasscode}
+                        onClick={() => {
+                          sendOneTimePasscode()
+                          // alert('The code')
+                        }}
                         className={css(styles.linkItem)}
                       >
                         Send One Time Passcode
