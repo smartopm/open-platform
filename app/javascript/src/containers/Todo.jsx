@@ -14,13 +14,13 @@ export default function Todo({ history }) {
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
-  const [noteUpdate, ] = useMutation(UpdateNote)
+  const [noteUpdate,] = useMutation(UpdateNote)
 
 
   function todoAction(id, isCompleted) {
     setLoading(true)
     noteUpdate({ variables: { id, completed: !isCompleted } }).then(
-      ({ data }) => {
+      () => {
         setLoading(false)
         refetch()
       }
@@ -38,7 +38,7 @@ export default function Todo({ history }) {
       <Nav navName="Todo" menuButton="back" />
       <div className="container">
         <ul className={css(styles.list)}>
-          { isLoading ? <Loading /> : data.flaggedNotes.map(note => (
+          {isLoading ? <Loading /> : data.flaggedNotes.map(note => (
             <li key={note.id} className={css(styles.listItem)}>
               <div className="custom-control custom-checkbox text">
                 <input

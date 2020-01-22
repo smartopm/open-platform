@@ -98,6 +98,5 @@ module Types
     def entry_search(name:)
       EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
     end
-
   end
 end

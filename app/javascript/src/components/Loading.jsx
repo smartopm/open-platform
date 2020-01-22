@@ -1,9 +1,5 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import LinearProgress from '@material-ui/core/LinearProgress';
-
 
 export default function Loading() {
   return (
@@ -16,19 +12,6 @@ export default function Loading() {
       </div>
     </div>
   )
-}
-
-
-const ColorCircularProgress = withStyles({
-  root: {
-    color: '#00695c',
-  },
-})(CircularProgress);
-
-export function CustomizedProgressBars() {
-  return (
-    <ColorCircularProgress size={30} thickness={5} />
-  );
 }
 
 const styles = StyleSheet.create({

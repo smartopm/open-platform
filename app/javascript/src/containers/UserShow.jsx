@@ -10,11 +10,10 @@ import MoreVertIcon from "@material-ui/icons/MoreVert"
 import { a11yProps, StyledTabs, TabPanel } from "../components/Tabs"
 import { Context as AuthStateContext } from "./Provider/AuthStateProvider.js"
 import Nav from "../components/Nav"
-import Loading, { CustomizedProgressBars } from "../components/Loading.jsx"
+import Loading from "../components/Loading.jsx"
 import Status from "../components/StatusBadge"
 import Avatar from "../components/Avatar"
 import DateUtil from "../utils/dateutil.js"
-import ScheduleIcon from "@material-ui/icons/Schedule"
 import AddBoxIcon from "@material-ui/icons/AddBox"
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@material-ui/icons/CheckBox"
@@ -99,7 +98,7 @@ export function Component({
   const [anchorEl, setAnchorEl] = useState(null)
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const [noteUpdate, noteData] = useMutation(UpdateNote)
+  const [noteUpdate] = useMutation(UpdateNote)
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
@@ -123,13 +122,10 @@ export function Component({
   function handleClose() {
     setAnchorEl(null)
   }
-  function handleNoteAction() {
-    // handle the note actions here
-    console.log("note clicked ")
-  }
+
   function handleFlagNote(id) {
     setLoading(true)
-    noteUpdate({ variables: { id, flagged: true } }).then(({ data }) => {
+    noteUpdate({ variables: { id, flagged: true } }).then(() => {
       setLoading(false)
       refetch()
     })
@@ -138,7 +134,7 @@ export function Component({
   function handleonComplete(id, isCompleted) {
     setLoading(true)
     noteUpdate({ variables: { id, completed: !isCompleted } }).then(
-      ({ data }) => {
+      () => {
         setLoading(false)
         refetch()
       }
