@@ -188,11 +188,11 @@ export function Component({
                 }}
               >
                 {data.user.state === "valid" &&
-                authState.user.userType === "security_guard" ? (
-                  <MenuItem key={"log_entry"} onClick={onLogEntry}>
-                    Log This Entry
+                  authState.user.userType === "security_guard" ? (
+                    <MenuItem key={"log_entry"} onClick={onLogEntry}>
+                      Log This Entry
                   </MenuItem>
-                ) : null}
+                  ) : null}
                 {authState.user.userType === "security_guard" ? (
                   <MenuItem key={"call_p"}>
                     <a
@@ -370,59 +370,51 @@ export function Component({
             <br />
             <br />
             {isLoading ? <Loading /> : data.user.notes ?
-              data.user.notes.reverse().map(note => (
+              data.user.notes.map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
                     <p className='comment'>{note.body}</p>
                     <i>created at: {formatDate(note.createdAt)}</i>
                   </div>
 
-                  <span
-                    className={css(styles.actionIcon)}
-                    onClick={handleNoteAction}
-                  >
-                    <Tooltip title="Schedule" >
-                      <ScheduleIcon />
-                     </Tooltip>
-                  </span>
-                      {note.completed ? (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() =>
-                            handleonComplete(note.id, note.completed)
-                          }
-                        >
-                        <Tooltip title="Mark this note as uncomplete" >
-                          <CheckBoxIcon />
-                        </Tooltip>
-                        </span>
-                      ) : (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() =>
-                            handleonComplete(note.id, note.completed)
-                          }
-                        >
-                         <Tooltip title="Mark this note complete" >
-                            <CheckBoxOutlineBlankIcon />
-                          </Tooltip>
-                        </span>
-                      )}
-                      {
-                        !note.flagged 
-                        &&  
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() =>
-                            handleFlagNote(note.id)
-                          }
-                        >
-                         <Tooltip title="Flag this note as a todo ">
-                            <AddBoxIcon />
-                          </Tooltip>
-                        </span>
+                  {note.completed ? (
+                    <span
+                      className={css(styles.actionIcon)}
+                      onClick={() =>
+                        handleonComplete(note.id, note.completed)
                       }
-                      <br />
+                    >
+                      <Tooltip title="Mark this note as uncomplete" >
+                        <CheckBoxIcon />
+                      </Tooltip>
+                    </span>
+                  ) : !note.flagged ? <span /> : (
+                    <span
+                      className={css(styles.actionIcon)}
+                      onClick={() =>
+                        handleonComplete(note.id, note.completed)
+                      }
+                    >
+                      <Tooltip title="Mark this note complete" >
+                        <CheckBoxOutlineBlankIcon />
+                      </Tooltip>
+                    </span>
+                  )}
+                  {
+                    !note.flagged
+                    &&
+                    <span
+                      className={css(styles.actionIcon)}
+                      onClick={() =>
+                        handleFlagNote(note.id)
+                      }
+                    >
+                      <Tooltip title="Flag this note as a todo ">
+                        <AddBoxIcon />
+                      </Tooltip>
+                    </span>
+                  }
+                  <br />
                 </Fragment>
               )) : 'No Notes Yet'}
           </div>

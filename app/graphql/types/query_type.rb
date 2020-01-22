@@ -79,7 +79,7 @@ module Types
     end
 
     def all_notes
-      Note.all
+      Note.all.order(created_at: :desc)
     end
 
     field :flagged_notes, [NoteType], null: false do
@@ -87,7 +87,7 @@ module Types
     end
 
     def flagged_notes
-      Note.where(flagged: true)
+      Note.where(flagged: true).order(created_at: :desc)
     end
 
     field :entry_search, [EntryRequestType], null: true do

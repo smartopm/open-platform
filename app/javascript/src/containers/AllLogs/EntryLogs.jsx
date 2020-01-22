@@ -28,7 +28,7 @@ const allEventLogs = (history, match, subjects) => {
       refType: null,
       offset,
       // TODO: fix the delay when refetching
-      limit: searchTerm.length < 3 ? 1000 : initialLimit
+      limit: searchTerm.length < 4 ? 1000 : initialLimit
     },
     fetchPolicy: 'cache-and-network'
   })
@@ -107,8 +107,8 @@ export function IndexComponent({
         event.subject === 'user_entry'
           ? 'Scan'
           : event.subject === 'showroom'
-          ? 'Showroom'
-          : 'Manual'
+            ? 'Showroom'
+            : 'Manual'
       const reason = event.entryRequest ? event.entryRequest.reason : ''
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
@@ -158,8 +158,8 @@ export function IndexComponent({
                       | {source}
                     </Fragment>
                   ) : (
-                    source
-                  )}{' '}
+                      source
+                    )}{' '}
                   |{' '}
                   <span
                     style={{
