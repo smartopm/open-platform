@@ -125,8 +125,8 @@ export default function ConfirmCodeScreen({ match }) {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-              <span>Next</span>
-            )}
+                <span>Next</span>
+              )}
           </Button>
         </div>
       </div>

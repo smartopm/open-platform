@@ -166,6 +166,7 @@ export const SendOneTimePasscode = gql`
   mutation SendOneTimePasscode($userId: ID!) {
     oneTimeLogin(userId: $userId) {
       success
+      url
     }
   }
 `
@@ -273,22 +274,27 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-mutation noteCreate($userId: ID!, $body: String!, $flagged: Boolean) {
-  noteCreate(userId: $userId, body: $body, flagged: $flagged) {
-    note {
-      body
+  mutation noteCreate($userId: ID!, $body: String!, $flagged: Boolean) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged) {
+      note {
+        body
+      }
     }
   }
-}
 `
 export const UpdateNote = gql`
-mutation noteupdate($id: ID!, $body: String, $flagged: Boolean, $completed: Boolean) {
-  noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed){
-    note {
-      flagged
-      body
-      id
+  mutation noteupdate(
+    $id: ID!
+    $body: String
+    $flagged: Boolean
+    $completed: Boolean
+  ) {
+    noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed) {
+      note {
+        flagged
+        body
+        id
+      }
     }
   }
-}
 `

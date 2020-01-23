@@ -56,12 +56,7 @@ export default ({ match, history }) => {
       history.push("/")
     }
   })
-  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode, {
-    variables: { userId: id },
-    onCompleted: () => {
-      alert('The code was sent ')
-    }
-  })
+  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
   if (loading || entry.loading) return <Loading />
   if (entry.data) return <Redirect to='/' />
@@ -75,6 +70,7 @@ export default ({ match, history }) => {
       sendOneTimePasscode={sendOneTimePasscode}
       refetch={refetch}
       userId={id}
+      router={history}
     />
   )
 }
@@ -93,7 +89,8 @@ export function Component({
   authState,
   sendOneTimePasscode,
   refetch,
-  userId
+  userId,
+  router
 }) {
   const [tabValue, setValue] = useState(0)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -242,9 +239,18 @@ export function Component({
                     <MenuItem key={"send_code"}>
                       <a
                         onClick={() => {
-                          sendOneTimePasscode()
-                          // alert('The code')
-                        }}
+                          setLoading(true)
+                          sendOneTimePasscode({
+                            variables: { userId }
+                          }).then(_data => {
+                            setLoading(false)
+                            router.push(
+                              '/otp_sent',
+                              { url: _data.data.oneTimeLogin.url, user: data.user.name }
+                            )
+                          })
+                        }
+                        }
                         className={css(styles.linkItem)}
                       >
                         Send One Time Passcode

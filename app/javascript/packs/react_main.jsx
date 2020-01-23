@@ -46,6 +46,7 @@ import VisitingClientForm from '../src/containers/showroom/CheckInForm'
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
 import CheckInComplete from '../src/containers/showroom/CheckInComplete'
 import Todo from '../src/containers/Todo'
+import OTPFeedbackScreen from '../src/containers/OTPScreen'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -156,6 +157,7 @@ const App = () => {
                     <Route path="/user/:id/edit" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
                     <Route path="/support" component={Support} />
+                    <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
