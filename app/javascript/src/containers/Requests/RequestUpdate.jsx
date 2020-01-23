@@ -7,7 +7,7 @@ import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
-  CreateUserMutation
+  CreateUserMutation,
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
@@ -88,7 +88,6 @@ export default function RequestUpdate({ match, history, location }) {
         vehicle: formData.vehiclePlate
       }
     }).then(() => {
-      setLoading(false)
       setMessage('User was successfully enrolled')
     })
   }

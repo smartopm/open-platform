@@ -31,7 +31,7 @@ export default function OTPFeedbackScreen({ location }) {
         <br />
         {
           Boolean(msg.length) && (
-            <div className="alert alert-success" onClick={resendCode} role="alert">
+            <div className="alert alert-success" role="alert">
               {msg}
             </div>
           )
