@@ -79,7 +79,7 @@ module Types
     end
 
     def all_notes
-      Note.all.order(created_at: :desc)
+      Note.all.order(created_at: :asc)
     end
 
     field :flagged_notes, [NoteType], null: false do

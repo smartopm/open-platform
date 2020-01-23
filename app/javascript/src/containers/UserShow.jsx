@@ -376,7 +376,7 @@ export function Component({
             <br />
             <br />
             {isLoading ? <Loading /> : data.user.notes ?
-              data.user.notes.map(note => (
+              data.user.notes.reverse().map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
                     <p className='comment'>{note.body}</p>
