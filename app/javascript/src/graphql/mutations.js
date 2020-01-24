@@ -1,6 +1,6 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag'
 
-import { UserFragment, EntryRequestFragment } from "../graphql/fragments";
+import { UserFragment, EntryRequestFragment } from '../graphql/fragments'
 
 export const CreateUserMutation = gql`
   mutation CreateUserMutation(
@@ -31,7 +31,7 @@ export const CreateUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
@@ -64,7 +64,7 @@ export const UpdateUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const DeleteUser = gql`
   mutation DeleteUser($id: ID!) {
@@ -72,7 +72,7 @@ export const DeleteUser = gql`
       success
     }
   }
-`;
+`
 
 export const CreatePendingUserMutation = gql`
   mutation CreatePendingUserMutation(
@@ -91,7 +91,7 @@ export const CreatePendingUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const UpdatePendingUserMutation = gql`
   mutation UpdatePendingUserMutation(
@@ -112,7 +112,7 @@ export const UpdatePendingUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const CreateUpload = gql`
   mutation CreateUpload(
@@ -138,7 +138,7 @@ export const CreateUpload = gql`
       }
     }
   }
-`;
+`
 
 export const AttachAvatar = gql`
   mutation AttachAvatar($id: ID!, $signedBlobId: String!) {
@@ -149,7 +149,7 @@ export const AttachAvatar = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const AddActivityLog = gql`
   mutation ActivityLogMutation($userId: ID!, $note: String) {
@@ -160,15 +160,16 @@ export const AddActivityLog = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const SendOneTimePasscode = gql`
   mutation SendOneTimePasscode($userId: ID!) {
     oneTimeLogin(userId: $userId) {
       success
+      url
     }
   }
-`;
+`
 
 export const EntryRequestCreate = gql`
   mutation EntryRequestCreateMutation(
@@ -195,7 +196,7 @@ export const EntryRequestCreate = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`;
+`
 
 export const EntryRequestUpdate = gql`
   mutation EntryRequestUpdateMutation(
@@ -222,7 +223,7 @@ export const EntryRequestUpdate = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`;
+`
 
 export const EntryRequestGrant = gql`
   mutation EntryRequestGrantMutation($id: ID!) {
@@ -233,7 +234,7 @@ export const EntryRequestGrant = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`;
+`
 
 export const EntryRequestDeny = gql`
   mutation EntryRequestGrantMutation($id: ID!) {
@@ -244,7 +245,7 @@ export const EntryRequestDeny = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`;
+`
 
 export const loginPhone = gql`
   mutation loginPhoneStart($phoneNumber: String!) {
@@ -255,7 +256,7 @@ export const loginPhone = gql`
       }
     }
   }
-`;
+`
 
 export const loginPhoneConfirmCode = gql`
   mutation loginPhoneComplete($id: ID!, $token: String!) {
@@ -263,7 +264,7 @@ export const loginPhoneConfirmCode = gql`
       authToken
     }
   }
-`;
+`
 
 export const switchGuards = gql`
   mutation loginSwitchUser($id: ID!) {
@@ -271,4 +272,29 @@ export const switchGuards = gql`
       authToken
     }
   }
-`;
+`
+export const CreateNote = gql`
+  mutation noteCreate($userId: ID!, $body: String!, $flagged: Boolean) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged) {
+      note {
+        body
+      }
+    }
+  }
+`
+export const UpdateNote = gql`
+  mutation noteupdate(
+    $id: ID!
+    $body: String
+    $flagged: Boolean
+    $completed: Boolean
+  ) {
+    noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed) {
+      note {
+        flagged
+        body
+        id
+      }
+    }
+  }
+`

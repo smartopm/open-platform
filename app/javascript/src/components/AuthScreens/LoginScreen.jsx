@@ -16,7 +16,7 @@ export function LoginScreen({ history }) {
   const [loginPhoneStart] = useMutation(loginPhone);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [countryCode, setCountryCode] = useState(260)
+  const [countryCode, setCountryCode] = useState(260);
 
   function loginWithPhone(event, type = "input") {
     // submit on both click and Enter Key pressed
@@ -39,7 +39,7 @@ export function LoginScreen({ history }) {
     }
   }
   return (
-    <div style={{ height: "100vh" }} className="login-page" >
+    <div style={{ height: "100vh" }} className="login-page">
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to={"/welcome"}>
           <i className={`material-icons`}>arrow_back</i>
@@ -51,11 +51,7 @@ export function LoginScreen({ history }) {
             styles.welcomeContainer
           )}`}
         >
-          <h4
-            className={css(styles.welcomeText)}
-          >
-            Welcome to Nkwashi App
-          </h4>
+          <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
         </div>
         <div
           className={`${css(
@@ -69,7 +65,7 @@ export function LoginScreen({ history }) {
             maxLength={10}
             autoFocus
             style={{
-              width: "65%",
+              width: "65%"
             }}
             value={phoneNumber}
             onChange={e => setPhoneNumber(e.target.value)}
@@ -81,7 +77,7 @@ export function LoginScreen({ history }) {
                     native
                     value={countryCode}
                     style={{
-                      width: 85,
+                      width: 85
                     }}
                     onChange={e => setCountryCode(e.target.value)}
                   >
@@ -95,13 +91,7 @@ export function LoginScreen({ history }) {
         </div>
         <br />
         <br />
-        {error && (
-          <p
-            className=" text-center text-danger"
-          >
-            {error}
-          </p>
-        )}
+        {error && <p className=" text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
@@ -116,15 +106,15 @@ export function LoginScreen({ history }) {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Next</span>
-              )}
+              <span>Next</span>
+            )}
           </Button>
         </div>
 
         <div className="row justify-content-center align-items-center">
           <a className={css(styles.googleLink)} href={"/login_oauth"}>
             Or Login with Google instead
-            </a>
+          </a>
         </div>
       </div>
     </div>
@@ -149,7 +139,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     marginTop: 33,
-    color: "#1f2026",
+    color: "#1f2026"
     // fontSize: "1.3em",
   },
   flag: {
@@ -167,7 +157,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   phoneNumberInput: {
-    marginTop: 50,
+    marginTop: 50
   },
   googleLink: {
     margin: 40,

@@ -8,11 +8,11 @@ export default function OneTimeLoginCode({ match }) {
   const { id, code } = match.params;
   const authState = useContext(AuthStateContext);
   const [error, setError] = useState(null);
-  const [loginPhoneComplete, {called}] = useMutation(loginPhoneConfirmCode);
+  const [loginPhoneComplete, { called }] = useMutation(loginPhoneConfirmCode);
 
   // If logged in, redirect to dashboard
   if (authState.loggedIn) {
-    return <Redirect push to='/' />;
+    return <Redirect push to="/" />;
   }
 
   if (error || authState.error) {
@@ -23,15 +23,16 @@ export default function OneTimeLoginCode({ match }) {
     loginPhoneComplete({
       variables: { id, token: code }
     })
-    .then(({ data }) => {
-      authState.setToken({type:'update', token: data.loginPhoneComplete.authToken})
-    })
-    .catch(error => {
-      setError(error.message);
-    });
+      .then(({ data }) => {
+        authState.setToken({
+          type: "update",
+          token: data.loginPhoneComplete.authToken
+        });
+      })
+      .catch(error => {
+        setError(error.message);
+      });
   }
 
   return <></>; // Wait for the auth state to update and bypass this block
-
 }
-

@@ -1,21 +1,21 @@
-import React from "react";
-import { StyleSheet, css } from "aphrodite";
-import PropTypes from "prop-types";
+import React from 'react'
+import { StyleSheet, css } from 'aphrodite'
+import PropTypes from 'prop-types'
 
 export const avatarUrl = ({ imageUrl, user }) => {
   if (imageUrl) {
-    return imageUrl;
+    return imageUrl
   } else if (user && user.avatarUrl) {
-    return user.avatarUrl;
+    return user.avatarUrl
   } else if (user && user.imageUrl) {
-    return user.imageUrl;
+    return user.imageUrl
   } else {
-    return "/images/default_avatar.svg";
+    return '/images/default_avatar.svg'
   }
-};
+}
 
-export default function Avatar({ imageUrl, user, style = "small" }) {
-  if (style === "big") {
+export default function Avatar({ imageUrl, user, style = 'small' }) {
+  if (style === 'big') {
     return (
       <div className="d-flex justify-content-center">
         <img
@@ -23,7 +23,7 @@ export default function Avatar({ imageUrl, user, style = "small" }) {
           className={css(styles.avatarBig)}
         />
       </div>
-    );
+    )
   } else {
     return (
       <div className="d-flex justify-content-center">
@@ -32,7 +32,7 @@ export default function Avatar({ imageUrl, user, style = "small" }) {
           className={css(styles.avatarSmall)}
         />
       </div>
-    );
+    )
   }
 }
 
@@ -40,17 +40,17 @@ Avatar.propTypes = {
   imageUrl: PropTypes.string,
   user: PropTypes.object.isRequired,
   style: PropTypes.string
-};
+}
 
 const styles = StyleSheet.create({
   avatarSmall: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "8px"
+    width: '50px',
+    height: '50px',
+    borderRadius: '8px'
   },
   avatarBig: {
-    maxWidth: "200px",
-    maxHeight: "200px",
-    borderRadius: "8px"
+    maxWidth: '200px',
+    maxHeight: '200px',
+    borderRadius: '8px'
   }
-});
+})

@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import { StyleSheet, css } from "aphrodite";
-import { reasons, userState, userType } from "../utils/constants";
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-import { FormContext } from "../containers/UserEdit";
+import React, { useContext } from 'react'
+import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
+import { StyleSheet, css } from 'aphrodite'
+import { reasons, userState, userType } from '../utils/constants'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
+import { FormContext } from '../containers/UserEdit'
 
 export default function UserForm() {
   const {
@@ -13,13 +13,13 @@ export default function UserForm() {
     handleFileUpload,
     imageUrl,
     status
-  } = useContext(FormContext);
+  } = useContext(FormContext)
 
   return (
     <div className="container">
       <form>
         <div className="form-group">
-          {status === "DONE" ? (
+          {status === 'DONE' ? (
             <img
               src={imageUrl}
               alt="uploaded picture"
@@ -48,7 +48,7 @@ export default function UserForm() {
             className="form-control"
             type="text"
             onChange={handleInputChange}
-            value={values.name || ""}
+            value={values.name || ''}
             name="name"
             required
           />
@@ -62,7 +62,7 @@ export default function UserForm() {
             name="email"
             type="email"
             onChange={handleInputChange}
-            value={values.email || ""}
+            value={values.email || ''}
             required
           />
         </div>
@@ -74,7 +74,7 @@ export default function UserForm() {
             className="form-control"
             type="text"
             onChange={handleInputChange}
-            defaultValue={values.phoneNumber || ""}
+            defaultValue={values.phoneNumber || ''}
             name="phoneNumber"
             required
           />
@@ -85,7 +85,7 @@ export default function UserForm() {
             select
             label="Reason"
             name="requestReason"
-            value={values.requestReason || ""}
+            value={values.requestReason || ''}
             onChange={handleInputChange}
             margin="normal"
             className={`${css(styles.selectInput)}`}
@@ -102,7 +102,7 @@ export default function UserForm() {
             id="userType"
             select
             label="User Type"
-            value={values.userType || ""}
+            value={values.userType || ''}
             onChange={handleInputChange}
             margin="normal"
             name="userType"
@@ -121,7 +121,7 @@ export default function UserForm() {
             id="state"
             select
             label="State"
-            value={values.state || ""}
+            value={values.state || ''}
             onChange={handleInputChange}
             margin="normal"
             name="state"
@@ -150,44 +150,44 @@ export default function UserForm() {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   selectInput: {
-    width: "100%"
+    width: '100%'
   },
   photoUpload: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "20px",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
     borderWidth: 2,
     borderRadius: 2,
-    borderColor: "#eeeeee",
-    borderStyle: "dashed",
-    backgroundColor: "#fafafa",
-    color: "#bdbdbd",
-    outline: "none",
-    transition: "border .24s ease-in-out",
-    width: "40%"
+    borderColor: '#eeeeee',
+    borderStyle: 'dashed',
+    backgroundColor: '#fafafa',
+    color: '#bdbdbd',
+    outline: 'none',
+    transition: 'border .24s ease-in-out',
+    width: '40%'
   },
   idUpload: {
-    width: "80%",
-    padding: "60px"
+    width: '80%',
+    padding: '60px'
   },
   fileInput: {
     width: 0.1,
     height: 0.1,
     opacity: 0,
-    overflow: "hidden",
-    position: "absolute",
+    overflow: 'hidden',
+    position: 'absolute',
     zIndex: -1,
-    cursor: "pointer"
+    cursor: 'pointer'
   },
   uploadedImage: {
-    width: "40%",
+    width: '40%',
     borderRadius: 8
   }
-});
+})

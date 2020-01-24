@@ -1,27 +1,20 @@
 // It could be a live map, using a static image as a map for now
-import React from "react";
-import { StyleSheet, css } from "aphrodite";
-import Nav from "../components/Nav";
+import React from 'react'
+import { StyleSheet, css } from 'aphrodite'
+import Nav from '../components/Nav'
 
-import {
-  Map,
-  GeoJSON,
-  TileLayer,
-} from 'react-leaflet'
+import { Map, GeoJSON, TileLayer } from 'react-leaflet'
 
-import GeoJSONData from "../data/nkwashi_geo.json";
+import GeoJSONData from '../data/nkwashi_geo.json'
 
-const center = [
-  -15.524234821346493,
-  28.65281581878662
-]
+const center = [-15.524234821346493, 28.65281581878662]
 
 function geoJSONStyle(feature) {
   return {
     color: feature.properties.stroke,
     weight: 1,
     fillOpacity: 0.5,
-    fillColor: feature.properties.fill,
+    fillColor: feature.properties.fill
   }
 }
 
@@ -31,16 +24,17 @@ function onEachFeature(feature, layer) {
       permanent: true,
       direction: 'center',
       offset: [0, 0],
-      className: "text-label",
-    });
+      className: 'text-label'
+    })
   }
 }
 
 export default function Explore() {
   return (
     <div>
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
       .leaflet-tooltip-top:before, 
       .leaflet-tooltip-bottom:before, 
       .leaflet-tooltip-left:before, 
@@ -60,8 +54,9 @@ export default function Explore() {
         width: 100%;
         margin: 0 auto;
       }
-      `}}>
-      </style>
+      `
+        }}
+      ></style>
       <Nav navName="Explore" menuButton="back" />
       <Map center={center} zoom={13} className={css(styles.mapContainer)}>
         <TileLayer
@@ -76,10 +71,9 @@ export default function Explore() {
         {/* <Polygon color="purple" positions={multiPolygon}/> */}
       </Map>
     </div>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  mapContainer: {
-  }
-});
+  mapContainer: {}
+})

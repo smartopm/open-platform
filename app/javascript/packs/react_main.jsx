@@ -2,123 +2,124 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React, { useContext, useEffect, Component, Suspense } from "react";
-import ReactDOM from "react-dom";
+import React, { useContext, useEffect, Component, Suspense } from 'react'
+import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
   Switch,
   Redirect,
   Route
-} from "react-router-dom";
-import ApolloProvider from "../src/containers/Provider/ApolloProvider";
+} from 'react-router-dom'
+import ApolloProvider from '../src/containers/Provider/ApolloProvider'
 import AuthStateProvider, {
   Context as AuthStateContext
-} from "../src/containers/Provider/AuthStateProvider";
-import Home from "../src/containers/Home";
-import UserShow from "../src/containers/UserShow";
-import IDCard from "../src/containers/IdCard";
-import IDPrint from "../src/containers/IdPrint";
-import EntryLogs from "../src/containers/AllLogs/EntryLogs";
-import UserLogs from "../src/containers/AllLogs/UserLogs";
-import EventLogs from "../src/containers/AllLogs/EventLogs";
-import Search from "../src/containers/Search";
-import UserEdit from "../src/containers/UserEdit";
-import PendingUsers from "../src/containers/PendingUsers";
-import Loading from "../src/components/Loading.jsx";
-import { WelcomeScreen } from "../src/components/AuthScreens/WelcomeScreen";
-import "../src/i18n";
-import Explore from "../src/containers/Explore";
-import Map from "../src/containers/Map";
-import { LoginScreen } from "../src/components/AuthScreens/LoginScreen";
-import ConfirmCodeScreen from "../src/components/AuthScreens/ConfirmCodeScreen";
-import OneTimeLoginCode from "../src/components/AuthScreens/OneTimeLoginCode";
-import Support from "../src/containers/Support";
-import GuardHome from "../src/containers/GuardHome";
-import EntryRequest from "../src/containers/Requests/EntryRequest";
-import RequestUpdate from "../src/containers/Requests/RequestUpdate";
-import WaitScreen from "../src/containers/Requests/WaitingScreen";
-import RequestApproval from "../src/containers/Requests/RequestApproval";
-import ErrorPage from "../src/components/Error";
-import GoogleAuthCallback from "../src/components/AuthScreens/GoogleAuthCallback";
-import ShowRoom from "../src/containers/showroom/Home";
+} from '../src/containers/Provider/AuthStateProvider'
+import Home from '../src/containers/Home'
+import UserShow from '../src/containers/UserShow'
+import IDCard from '../src/containers/IdCard'
+import IDPrint from '../src/containers/IdPrint'
+import EntryLogs from '../src/containers/AllLogs/EntryLogs'
+import UserLogs from '../src/containers/AllLogs/UserLogs'
+import EventLogs from '../src/containers/AllLogs/EventLogs'
+import Search from '../src/containers/Search'
+import UserEdit from '../src/containers/UserEdit'
+import PendingUsers from '../src/containers/PendingUsers'
+import Loading from '../src/components/Loading.jsx'
+import { WelcomeScreen } from '../src/components/AuthScreens/WelcomeScreen'
+import '../src/i18n'
+import Map from '../src/containers/Map'
+import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
+import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen'
+import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode'
+import Support from '../src/containers/Support'
+import GuardHome from '../src/containers/GuardHome'
+import EntryRequest from '../src/containers/Requests/EntryRequest'
+import RequestUpdate from '../src/containers/Requests/RequestUpdate'
+import WaitScreen from '../src/containers/Requests/WaitingScreen'
+import RequestApproval from '../src/containers/Requests/RequestApproval'
+import ErrorPage from '../src/components/Error'
+import GoogleAuthCallback from '../src/components/AuthScreens/GoogleAuthCallback'
+import ShowRoom from '../src/containers/showroom/Home'
 import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
 import ComingSoon from '../src/containers/showroom/ComingSoon'
 import VisitingClientForm from '../src/containers/showroom/CheckInForm'
-import { AUTH_TOKEN_KEY } from "../src/utils/apollo";
-import CheckInComplete from "../src/containers/showroom/CheckInComplete";
+import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
+import CheckInComplete from '../src/containers/showroom/CheckInComplete'
+import Todo from '../src/containers/Todo'
+import OTPFeedbackScreen from '../src/containers/OTPScreen'
 
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ["app.doublegdp.com"];
+const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
 class DynamicImport extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       component: null
-    };
+    }
   }
   componentDidMount() {
     this.props.load().then(component => {
       this.setState(() => ({
         component: component.default ? component.default : component
-      }));
-    });
+      }))
+    })
   }
   render() {
-    return this.props.children(this.state.component);
+    return this.props.children(this.state.component)
   }
 }
 
 const Scan = props => (
-  <DynamicImport load={() => import("../src/containers/Scan.jsx")}>
+  <DynamicImport load={() => import('../src/containers/Scan.jsx')}>
     {Component => (Component === null ? <Loading /> : <Component {...props} />)}
   </DynamicImport>
-);
+)
 
 const LoggedInOnly = props => {
-  const authState = useContext(AuthStateContext);
+  const authState = useContext(AuthStateContext)
   if (authState.loggedIn) {
-    return props.children;
+    return props.children
   }
-  return <Redirect to="/login" />;
-};
+  return <Redirect to="/login" />
+}
 
 const Logout = () => {
-  localStorage.removeItem(AUTH_TOKEN_KEY);
-  const authState = useContext(AuthStateContext);
-  authState.setToken({ action: "delete" });
-  return <Redirect to="/login" />;
-};
+  localStorage.removeItem(AUTH_TOKEN_KEY)
+  const authState = useContext(AuthStateContext)
+  authState.setToken({ action: 'delete' })
+  return <Redirect to="/login" />
+}
 
 const Analytics = props => {
-  const gtag = window.gtag;
+  const gtag = window.gtag
   const liveAnalytics = (host => {
-    return PRIMARY_DOMAINS.includes(host);
-  })(window.location.host);
+    return PRIMARY_DOMAINS.includes(host)
+  })(window.location.host)
 
-  const authState = useContext(AuthStateContext);
+  const authState = useContext(AuthStateContext)
 
   useEffect(() => {
-    const user = authState.user;
+    const user = authState.user
     if (user) {
       if (liveAnalytics) {
-        console.debug("GA PRODUCTION MODE: UserData:", user.id, user.userType);
-        gtag("set", { user_id: user.id });
-        gtag("set", "user_properties", { Role: user.userType });
+        console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
+        gtag('set', { user_id: user.id })
+        gtag('set', 'user_properties', { Role: user.userType })
       } else {
-        console.log("GA DEVELOPMENT MODE: log user", user);
+        console.log('GA DEVELOPMENT MODE: log user', user)
       }
     }
-  }, [authState.user]);
+  }, [authState.user])
 
-  return props.children;
-};
+  return props.children
+}
 
 const App = () => {
   return (
     <Suspense
       fallback={() => {
-        return <Loading />;
+        return <Loading />
       }}
     >
       <ApolloProvider>
@@ -154,9 +155,9 @@ const App = () => {
                     <Route path="/user/:id" exact component={UserShow} />
                     <Route path="/user/:id/logs" exact component={UserLogs} />
                     <Route path="/user/:id/edit" exact component={UserEdit} />
-                    <Route path="/map" component={Explore} />
-                    <Route path="/new_map" component={Map} />
+                    <Route path="/map" component={Map} />
                     <Route path="/support" component={Support} />
+                    <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
@@ -173,13 +174,15 @@ const App = () => {
                       path="/request_status/:id"
                       component={RequestApproval}
                     />
-                    {/* Showroom routes */}
+                    {/* Showroom kiosk routes */}
                     <Route path="/showroom_kiosk" component={ShowRoom} />
                     <Route path="/sh_reason" component={VisitingReasonScreen} />
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
-                    
+
+                    <Route path="/todo" component={Todo} />
+
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
@@ -192,9 +195,9 @@ const App = () => {
         </Router>
       </ApolloProvider>
     </Suspense>
-  );
-};
+  )
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  ReactDOM.render(<App />, document.getElementById("root"));
-});
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(<App />, document.getElementById('root'))
+})

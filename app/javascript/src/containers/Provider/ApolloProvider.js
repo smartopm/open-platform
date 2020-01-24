@@ -1,6 +1,6 @@
-import React from 'react';
-import { ApolloProvider } from 'react-apollo';
-import { createCache, createClient } from '../../utils/apollo';
+import React from 'react'
+import { ApolloProvider } from 'react-apollo'
+import { createCache, createClient } from '../../utils/apollo'
 
 export default function Component({ children }) {
   return (
@@ -10,4 +10,4 @@ export default function Component({ children }) {
   )
 }
 
-Component.displayName = "ApolloProvider"
+Component.displayName = 'ApolloProvider'

@@ -1,18 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import PeopleIcon from "@material-ui/icons/People";
-import CropFreeIcon from "@material-ui/icons/CropFree";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import HelpIcon from "@material-ui/icons/Help";
-import { StyleSheet, css } from "aphrodite";
-import { Link } from "react-router-dom";
-import Avatar from "./Avatar.jsx";
-import { Footer } from "./Footer.jsx";
+import React from 'react'
+import PropTypes from 'prop-types'
+import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import PeopleIcon from '@material-ui/icons/People'
+import CropFreeIcon from '@material-ui/icons/CropFree'
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
+import HelpIcon from '@material-ui/icons/Help'
+import { StyleSheet, css } from 'aphrodite'
+import { Link } from 'react-router-dom'
+import Avatar from './Avatar.jsx'
+import { Footer } from './Footer.jsx'
 
 export const SideList = ({ toggleDrawer, user }) => (
   <div
@@ -64,17 +64,17 @@ export const SideList = ({ toggleDrawer, user }) => (
     </List>
     <Footer position="36vh" />
   </div>
-);
+)
 
 SideList.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired
-};
+}
 
 const styles = StyleSheet.create({
   link: {
-    color: "#000",
-    textDecoration: "none"
+    color: '#000',
+    textDecoration: 'none'
   },
   sidenav: {
     width: 300
@@ -82,4 +82,4 @@ const styles = StyleSheet.create({
   userInfo: {
     marginTop: 55
   }
-});
+})

@@ -14,10 +14,10 @@ export default ({ history }) => {
 };
 
 // Todo: Find the total number of allEventLogs
-const limit = 30
+const limit = 30;
 const allEventLogs = (history, authState) => {
-  const [offset, setOffset] = useState(0)
-  // const eventsPage = 
+  const [offset, setOffset] = useState(0);
+  // const eventsPage =
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: { subject: null, refId: null, refType: null, offset, limit },
     fetchPolicy: "cache-and-network"
@@ -26,27 +26,39 @@ const allEventLogs = (history, authState) => {
   if (error) return <ErrorPage title={error.message} />;
 
   function handleNextPage() {
-    setOffset(offset + limit)
+    setOffset(offset + limit);
   }
   function handlePreviousPage() {
     if (offset < limit) {
       return;
     }
-    setOffset(offset - limit)
+    setOffset(offset - limit);
   }
-  return <IndexComponent data={data} previousPage={handlePreviousPage} offset={offset} nextPage={handleNextPage} router={history} userToken={authState.token} />;
+  return (
+    <IndexComponent
+      data={data}
+      previousPage={handlePreviousPage}
+      offset={offset}
+      nextPage={handleNextPage}
+      router={history}
+      userToken={authState.token}
+    />
+  );
 };
 
-export function IndexComponent({ data, nextPage, previousPage, offset, userToken }) {
-
+export function IndexComponent({
+  data,
+  nextPage,
+  previousPage,
+  offset,
+  userToken
+}) {
   function logs(eventLogs) {
     if (!eventLogs) {
       return;
     }
     return eventLogs.map(entry => (
-      <tr
-        key={entry.id}
-      >
+      <tr key={entry.id}>
         <td>{entry.subject}</td>
         <td>{entry.sentence}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
@@ -63,7 +75,9 @@ export function IndexComponent({ data, nextPage, previousPage, offset, userToken
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
-      <div><a href={`/csv_export/event_logs?token=${userToken}`}>Download</a></div>
+      <div>
+        <a href={`/csv_export/event_logs?token=${userToken}`}>Download</a>
+      </div>
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6 table-responsive">
           <table className="table">
@@ -79,11 +93,19 @@ export function IndexComponent({ data, nextPage, previousPage, offset, userToken
           </table>
           <nav aria-label="Page navigation">
             <ul className="pagination">
-              <li className={`page-item ${(offset < limit) && 'disabled'}`}>
-                <a className="page-link" onClick={previousPage} href="#">Previous</a>
+              <li className={`page-item ${offset < limit && "disabled"}`}>
+                <a className="page-link" onClick={previousPage} href="#">
+                  Previous
+                </a>
               </li>
-              <li className={`page-item ${(data.result.length < limit) && 'disabled'}`}>
-                <a className="page-link" onClick={nextPage} href="#">Next</a></li>
+              <li
+                className={`page-item ${data.result.length < limit &&
+                  "disabled"}`}
+              >
+                <a className="page-link" onClick={nextPage} href="#">
+                  Next
+                </a>
+              </li>
             </ul>
           </nav>
         </div>

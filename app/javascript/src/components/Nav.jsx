@@ -1,15 +1,15 @@
-import React, { useContext, Fragment } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { StyleSheet, css } from "aphrodite";
-import Avatar from "@material-ui/core/Avatar";
-import MenuIcon from "@material-ui/icons/Menu";
-import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
-import { Context as AuthStateContext } from "../containers/Provider/AuthStateProvider.js";
-import logoUrl from "../../../assets/images/nkwashi_white_logo_transparent.png";
-import Drawer from "@material-ui/core/Drawer";
-import { SideList } from "./SideList.jsx";
-import { avatarUrl } from "./Avatar.jsx";
-import { FormContext } from "../containers/UserEdit.jsx";
+import React, { useContext, Fragment } from 'react'
+import { Link, withRouter } from 'react-router-dom'
+import { StyleSheet, css } from 'aphrodite'
+import Avatar from '@material-ui/core/Avatar'
+import MenuIcon from '@material-ui/icons/Menu'
+import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined'
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider.js'
+import logoUrl from '../../../assets/images/nkwashi_white_logo_transparent.png'
+import Drawer from '@material-ui/core/Drawer'
+import { SideList } from './SideList.jsx'
+import { avatarUrl } from './Avatar.jsx'
+import { FormContext } from '../containers/UserEdit.jsx'
 
 export default withRouter(function Nav({
   children,
@@ -19,7 +19,7 @@ export default withRouter(function Nav({
   backTo,
   boxShadow
 }) {
-  const authState = useContext(AuthStateContext);
+  const authState = useContext(AuthStateContext)
   return (
     <Component
       {...{
@@ -32,65 +32,65 @@ export default withRouter(function Nav({
         boxShadow
       }}
     />
-  );
-});
+  )
+})
 
 export function Component({
   children,
   authState,
   menuButton,
   navName,
-  backTo,
   boxShadow,
   history
 }) {
-  const [state, setState] = React.useState(false);
-  const { values, handleSubmit } = useContext(FormContext);
-  const routeInfo = history.location.pathname.split("/");
+  const [state, setState] = React.useState(false)
+  const { values, handleSubmit } = useContext(FormContext)
   function backButtonOrMenu() {
-    const to = backTo || "/";
-    if (menuButton === "back" && navName === "Scan") {
+    if (menuButton === 'back' && navName === 'Scan') {
       return (
         <a href="/" className={css(styles.buttonLeft)}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </a>
-      );
-    } else if (menuButton === "back") {
+      )
+    } else if (menuButton === 'back') {
       return (
-        <Link className={css(styles.buttonLeft)} to={to}>
+        <span
+          className={css(styles.buttonLeft)}
+          onClick={() => history.goBack()}
+        >
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
-        </Link>
-      );
-    } else if (menuButton === "cancel" && routeInfo.includes("request")) {
+        </span>
+      )
+    } else if (menuButton === 'cancel') {
       return (
-        <Link className={css(styles.buttonLeft)} to={"/entry_logs"}>
+        <span
+          className={css(styles.buttonLeft)}
+          onClick={() => history.goBack()}
+        >
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-        </Link>
-      );
-    } else if (menuButton === "cancel") {
-      return (
-        <Link className={css(styles.buttonLeft)} to={to}>
-          <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-        </Link>
-      );
-    } else if (menuButton === "edit") {
+        </span>
+      )
+    } else if (menuButton === 'edit') {
       return (
         <Fragment>
-          <Link className={css(styles.buttonLeft)} to={to}>
+          <span
+            className={css(styles.buttonLeft)}
+            onClick={() => history.goBack()}
+          >
             <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-          </Link>
+          </span>
           <span onClick={e => handleSubmit(e, values)}>
             <i className={`material-icons ${css(styles.rightSideIcon)}`}>
               check
             </i>
           </span>
         </Fragment>
-      );
+      )
     }
 
     return (
       <Fragment>
-        {authState.user.userType === "security_guard" ? (
+        {authState.user.userType === 'security_guard' ? (
           <MenuIcon
             onClick={toggleDrawer}
             className={`${css(styles.userAvatar)}`}
@@ -105,13 +105,13 @@ export function Component({
         )}
         <NotificationsNoneOutlinedIcon
           className={`${css(
-            authState.user.userType === "security_guard"
+            authState.user.userType === 'security_guard'
               ? styles.rightSideIconGuard
               : styles.rightSideIconAdmin
           )}`}
         />
       </Fragment>
-    );
+    )
   }
 
   function communityName() {
@@ -124,29 +124,29 @@ export function Component({
               className={css(styles.logo)}
             />
           </Link>
-        );
+        )
       }
       return (
         <Link to="/">
           <div>{authState.community.name}</div>
         </Link>
-      );
+      )
     }
     return (
       <Link to="/">
         <img src={logoUrl} className={css(styles.logo)} />
       </Link>
-    );
+    )
   }
   const toggleDrawer = event => {
     if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
     ) {
-      return;
+      return
     }
-    setState(!state);
-  };
+    setState(!state)
+  }
   return (
     <>
       <Drawer open={state} onClose={toggleDrawer}>
@@ -160,81 +160,82 @@ export function Component({
           {backButtonOrMenu()}
           <ul
             className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
-            style={{ margin: "auto" }}
+            style={{ margin: 'auto' }}
           >
             <li>{navName ? navName : communityName()}</li>
           </ul>
         </div>
 
-        <div className="nav navbar-nav" style={{ width: "100%" }}>
+        <div className="nav navbar-nav" style={{ width: '100%' }}>
           {children}
         </div>
       </nav>
     </>
-  );
+  )
 }
 
 Component.defaultProps = {
-  boxShadow: "0 2px 2px 0 rgba(0,0,0,.14)"
-};
+  boxShadow: '0 2px 2px 0 rgba(0,0,0,.14)'
+}
 
 const styles = StyleSheet.create({
   logo: {
-    height: "25px"
+    height: '25px'
   },
   topNav: {
-    width: "100%",
-    position: "relative"
+    width: '100%',
+    position: 'relative'
   },
   navTitle: {
-    top: "8px",
-    color: "#FFF"
+    top: '8px',
+    color: '#FFF'
   },
   arrow: {
-    color: "#fff",
-    "font-size": "1.5em"
+    color: '#fff',
+    'font-size': '1.5em'
   },
   navBar: {
-    backgroundColor: "#25c0b0",
-    minHeight: "50px"
+    backgroundColor: '#25c0b0',
+    minHeight: '50px'
   },
   buttonLeft: {
-    color: "#FFF"
+    color: '#FFF',
+    cursor: 'pointer'
   },
   icon: {
-    lineHeight: "1.7em"
+    lineHeight: '1.7em'
   },
   userAvatar: {
     width: 30,
     height: 30,
-    color: "#FFF"
+    color: '#FFF'
   },
   rightSideIconAdmin: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     right: 5,
     height: 30,
-    color: "#FFF",
-    ":hover": {
-      cursor: "pointer"
+    color: '#FFF',
+    ':hover': {
+      cursor: 'pointer'
     }
   },
   rightSideIconGuard: {
-    position: "absolute",
+    position: 'absolute',
     right: 5,
-    color: "#FFF",
-    ":hover": {
-      cursor: "pointer"
+    color: '#FFF',
+    ':hover': {
+      cursor: 'pointer'
     }
   },
   rightSideIcon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     right: 5,
     height: 30,
-    color: "#FFF",
-    ":hover": {
-      cursor: "pointer"
+    color: '#FFF',
+    ':hover': {
+      cursor: 'pointer'
     }
   }
-});
+})

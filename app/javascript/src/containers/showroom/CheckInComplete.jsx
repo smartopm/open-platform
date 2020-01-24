@@ -4,7 +4,6 @@ import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Footer } from "../../components/Footer";
 
-
 export default function CheckInComplete({ history }) {
   const [time, setTime] = useState(10);
 
@@ -14,7 +13,7 @@ export default function CheckInComplete({ history }) {
     const intervalId = setInterval(() => {
       setTime(time - 1);
     }, 1000);
-    
+
     return () => clearInterval(intervalId);
   }, [time]);
 

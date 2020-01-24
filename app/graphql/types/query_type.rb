@@ -73,5 +73,30 @@ module Types
         user_type: 'security_guard',
       )
     end
+
+    field :all_notes, [NoteType], null: false do
+      description 'Returns a list of all the notes'
+    end
+
+    def all_notes
+      Note.all.order(created_at: :asc)
+    end
+
+    field :flagged_notes, [NoteType], null: false do
+      description 'Returns a list of all the flagged notes, basically todos'
+    end
+
+    def flagged_notes
+      Note.where(flagged: true).order(completed: :asc)
+    end
+
+    field :entry_search, [EntryRequestType], null: true do
+      description 'Find an entry by user'
+      argument :name, String, required: true
+    end
+
+    def entry_search(name:)
+      EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
+    end
   end
 end

@@ -6,9 +6,7 @@ import { Footer } from "../../components/Footer";
 
 export default function VisitingReason({ history }) {
   return (
-    <div 
-      className={`${css(styles.welcomePage)}`}
-    >
+    <div className={`${css(styles.welcomePage)}`}>
       <img
         className={`nz-logo-nkwashi ${css(styles.nkLogo)}`}
         src={logo}
@@ -19,8 +17,8 @@ export default function VisitingReason({ history }) {
           styles.buttonSection
         )}`}
       >
-        <p className={css(styles.reasonTitle)} >Why are you here today?</p>
-    
+        <p className={css(styles.reasonTitle)}>Why are you here today?</p>
+
         <Button
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}

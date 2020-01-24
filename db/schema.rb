@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_07_135848) do
+ActiveRecord::Schema.define(version: 2020_01_21_101609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -87,6 +87,16 @@ ActiveRecord::Schema.define(version: 2020_01_07_135848) do
     t.index ["ref_id"], name: "index_event_logs_on_ref_id"
   end
 
+  create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.uuid "author_id"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "flagged"
+    t.boolean "completed"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -111,6 +121,11 @@ ActiveRecord::Schema.define(version: 2020_01_07_135848) do
     t.datetime "last_activity_at"
     t.string "state"
     t.datetime "expires_at"
+    t.string "source"
+    t.string "stage"
+    t.uuid "owner_id"
+    t.string "id_number"
+    t.datetime "followup_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

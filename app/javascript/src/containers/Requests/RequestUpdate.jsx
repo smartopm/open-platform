@@ -6,11 +6,13 @@ import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
-  EntryRequestDeny
+  EntryRequestDeny,
+  CreateUserMutation,
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 import DateUtil from "../../utils/dateutil";
+
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state ? location.state.from : "any";
@@ -22,6 +24,9 @@ export default function RequestUpdate({ match, history, location }) {
   const [updateEntryRequest] = useMutation(EntryRequestUpdate);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
+  const [createUser] = useMutation(CreateUserMutation)
+  const [isLoading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -46,31 +51,51 @@ export default function RequestUpdate({ match, history, location }) {
       [name]: value
     });
   }
-  
+
   function handleUpdateRecord() {
     return updateEntryRequest({ variables: formData });
   }
-  
+
   function handleGrantRequest() {
+    setLoading(true)
     handleUpdateRecord()
-    .then(grantEntry({ variables: { id: match.params.id } }))
-    .then(() => {
-      history.push("/entry_logs", { tab: 1 });
-    });
+      .then(grantEntry({ variables: { id: match.params.id } }))
+      .then(() => {
+        history.push("/entry_logs", { tab: 1 });
+        setLoading(false)
+      });
   }
-  
+
   function handleDenyRequest() {
+    setLoading(true)
     handleUpdateRecord()
-    .then(denyEntry({ variables: { id: match.params.id } }))
-    .then(() => {
-      history.push("/entry_logs", { tab: 1 });
-    });
+      .then(denyEntry({ variables: { id: match.params.id } }))
+      .then(() => {
+        history.push("/entry_logs", { tab: 1 });
+        setLoading(false)
+      });
   }
-  
+
+  function handleEnrollUser() {
+    setLoading(true)
+    createUser({
+      variables: {
+        name: formData.name,
+        state: 'pending',
+        userType: 'client',
+        reason: formData.reason,
+        nrc: formData.nrc,
+        vehicle: formData.vehiclePlate
+      }
+    }).then(() => {
+      setMessage('User was successfully enrolled')
+    })
+  }
   return (
     <Fragment>
       <Nav
-        navName={isFromLogs ? "Request Access" : "Approve Request"}
+        // navname should be enroll user if coming from entry_logs
+        navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
       />
       <div className="container">
@@ -85,7 +110,11 @@ export default function RequestUpdate({ match, history, location }) {
                 type="text"
                 value={
                   formData.guard
-                    ? `${new Date(formData.createdAt).toDateString()} at ${DateUtil.dateTimeToString(new Date(formData.createdAt))}`
+                    ? `${new Date(
+                      formData.createdAt
+                    ).toDateString()} at ${DateUtil.dateTimeToString(
+                      new Date(formData.createdAt)
+                    )}`
                     : ""
                 }
                 disabled={true}
@@ -171,24 +200,51 @@ export default function RequestUpdate({ match, history, location }) {
             </TextField>
           </div>
 
-          {!isFromLogs && (
-            <div className="row justify-content-center align-items-center">
-              <Button
-                variant="contained"
-                onClick={handleGrantRequest}
-                className={`btn ${css(styles.grantButton)}`}
-              >
-                Grant
+          {previousRoute === 'enroll' ?
+
+            (
+              <Fragment>
+                <div className="row justify-content-center align-items-center">
+                  <Button
+                    variant="contained"
+                    onClick={handleEnrollUser}
+                    className={`btn ${css(styles.grantButton)}`}
+                    disabled={isLoading || Boolean(message.length)}
+                  >
+                    {isLoading ? 'Enrolling ...' : ' Enroll User'}
+                  </Button>
+
+                </div>
+                <div className='row justify-content-center align-items-center'>
+                  <br />
+                  <br />
+                  {
+                    !isLoading && message.length ? <span>{message}</span> : <span />
+                  }
+                </div>
+              </Fragment>
+            )
+            : !/logs|enroll/.test(previousRoute)
+              ? (
+                <div className="row justify-content-center align-items-center">
+                  <Button
+                    variant="contained"
+                    onClick={handleGrantRequest}
+                    className={`btn ${css(styles.grantButton)}`}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Granting ...' : 'Grant'}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleDenyRequest}
+                    className={`btn  ${css(styles.denyButton)}`}
+                    disabled={isLoading}
+                  >
+                    Deny
               </Button>
-              <Button
-                variant="contained"
-                onClick={handleDenyRequest}
-                className={`btn  ${css(styles.denyButton)}`}
-              >
-                Deny
-              </Button>
-            </div>
-          )}
+                </div>
+              ) : <span />}
         </form>
       </div>
     </Fragment>

@@ -1,5 +1,5 @@
-import gql from "graphql-tag";
-import { UserFragment, EntryRequestFragment } from "./fragments";
+import gql from 'graphql-tag'
+import { UserFragment, EntryRequestFragment } from './fragments'
 
 export const UserQuery = gql`
   query User($id: ID!) {
@@ -8,7 +8,7 @@ export const UserQuery = gql`
     }
   }
   ${UserFragment.publicFields}
-`;
+`
 
 export const EntryRequestQuery = gql`
   query EntryRequest($id: ID!) {
@@ -20,7 +20,7 @@ export const EntryRequestQuery = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`;
+`
 
 export const AllEntryRequestsQuery = gql`
   query AllEntryRequests {
@@ -32,7 +32,7 @@ export const AllEntryRequestsQuery = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`;
+`
 
 export const AllEventLogsQuery = gql`
   query AllEventLogs(
@@ -66,7 +66,7 @@ export const AllEventLogsQuery = gql`
       }
     }
   }
-`;
+`
 
 export const AllEventLogsForUserQuery = gql`
   query AllEventLogsForUser(
@@ -94,7 +94,7 @@ export const AllEventLogsForUserQuery = gql`
       }
     }
   }
-`;
+`
 
 export const SecurityGuards = gql`
   {
@@ -104,4 +104,33 @@ export const SecurityGuards = gql`
       phoneNumber
     }
   }
-`;
+`
+
+export const allNotes = gql`
+    {
+      allNotes{
+        body
+        createdAt
+        flagged
+        id
+        user {
+          name
+          id
+        }
+      }
+    }
+` 
+export const flaggedNotes = gql`
+    {
+      flaggedNotes{
+        body
+        createdAt
+        id
+        completed
+        user {
+          name
+          id
+        }
+      }
+    }
+` 

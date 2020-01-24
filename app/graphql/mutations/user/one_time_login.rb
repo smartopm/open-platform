@@ -7,13 +7,17 @@ module Mutations
       argument :user_id, ID, required: true
 
       field :success, GraphQL::Types::Boolean, null: false
+      field :url, GraphQL::Types::String, null: false
 
       def resolve(vals)
         user = ::User.find(vals[:user_id])
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
-        user.send_one_time_login
-        { success: true }
+        url = user.send_one_time_login
+        {
+          url: url,
+          success: true,
+        }
       end
 
       def authorized?(_vals)

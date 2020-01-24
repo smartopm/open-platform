@@ -1,10 +1,23 @@
-
 // Handle basic CRUD for a record and form
-export default ({createMutation, readLazyQuery, updateMutation, typeName}) => {
+export default ({
+  createMutation,
+  readLazyQuery,
+  updateMutation,
+  typeName
+}) => {
   // Create a record or Modify an existing record
-  const [loadRecord, {loading: recordLoading, error: queryError, data: queryResult }] = readLazyQuery;
-  const [updateRecord, {loading: updateLoading, error: updateError, data: updatedResult }] = updateMutation;
-  const [createRecord, {loading: createLoading, error: createError, data: createdResult }] = createMutation;
+  const [
+    loadRecord,
+    { loading: recordLoading, error: queryError, data: queryResult }
+  ] = readLazyQuery
+  const [
+    updateRecord,
+    { loading: updateLoading, error: updateError, data: updatedResult }
+  ] = updateMutation
+  const [
+    createRecord,
+    { loading: createLoading, error: createError, data: createdResult }
+  ] = createMutation
   const isLoading = recordLoading || updateLoading || createLoading
   const returnedData = updatedResult || createdResult || queryResult
   let result = {}
@@ -20,12 +33,11 @@ export default ({createMutation, readLazyQuery, updateMutation, typeName}) => {
     let record = result
     if (record.id) {
       data.id = result.id // Ensure ID is set
-      return updateRecord({variables: data})
+      return updateRecord({ variables: data })
     } else {
-      return createRecord({variables: data})
+      return createRecord({ variables: data })
     }
   }
-
 
   return {
     isLoading,
@@ -35,5 +47,4 @@ export default ({createMutation, readLazyQuery, updateMutation, typeName}) => {
     createOrUpdate,
     loadRecord
   }
-
 }

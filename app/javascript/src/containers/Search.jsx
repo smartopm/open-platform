@@ -1,16 +1,16 @@
-import React, { useState, Fragment, useContext } from "react";
-import { Link } from "react-router-dom";
-import { useLazyQuery } from "react-apollo";
-import gql from "graphql-tag";
-import { StyleSheet, css } from "aphrodite";
+import React, { useState, Fragment, useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { useLazyQuery } from 'react-apollo'
+import gql from 'graphql-tag'
+import { StyleSheet, css } from 'aphrodite'
 
-import Loading from "../components/Loading.jsx";
-import StatusBadge from "../components/StatusBadge.jsx";
-import Avatar from "../components/Avatar.jsx";
-import ScanIcon from "../../../assets/images/shape.svg";
-import { Button } from "@material-ui/core";
-import ErrorPage from "../components/Error.jsx";
-import { Context } from "./Provider/AuthStateProvider.js";
+import Loading from '../components/Loading.jsx'
+import StatusBadge from '../components/StatusBadge.jsx'
+import Avatar from '../components/Avatar.jsx'
+import ScanIcon from '../../../assets/images/shape.svg'
+import { Button } from '@material-ui/core'
+import ErrorPage from '../components/Error.jsx'
+import { Context } from './Provider/AuthStateProvider.js'
 
 const QUERY = gql`
   query UserSearch($name: String!) {
@@ -24,7 +24,7 @@ const QUERY = gql`
       avatarUrl
     }
   }
-`;
+`
 
 function NewRequestButton() {
   return (
@@ -38,7 +38,7 @@ function NewRequestButton() {
         </Button>
       </Link>
     </div>
-  );
+  )
 }
 
 function Results({ data, loading, called }) {
@@ -66,10 +66,10 @@ function Results({ data, loading, called }) {
         ))}
         <br />
       </Fragment>
-    );
+    )
   }
   if (called && loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   if (called && data) {
@@ -78,34 +78,31 @@ function Results({ data, loading, called }) {
         {data.userSearch.length > 0 ? (
           memberList(data.userSearch)
         ) : (
-            <div className={`${css(styles.noResults)}`}>
-              <h4>No results found!</h4>
-            </div>
-          )}
+          <div className={`${css(styles.noResults)}`}>
+            <h4>No results found!</h4>
+          </div>
+        )}
         {/* only show this when the user is admin */}
-        {
-          authState.user.userType === "admin" && <NewRequestButton />
-        }
-
+        {authState.user.userType === 'admin' && <NewRequestButton />}
       </div>
-    );
+    )
   }
-  return false;
+  return false
 }
 
 export default function SearchContainer() {
   function updateSearch(e) {
-    const { value } = e.target;
-    setName(value || "");
+    const { value } = e.target
+    setName(value || '')
     if (value && value.length > 0) {
-      loadGQL({ variables: { name: value } });
+      loadGQL({ variables: { name: value } })
     }
   }
 
-  const [name, setName] = useState("");
-  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY);
+  const [name, setName] = useState('')
+  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY)
   if (error) {
-    return <ErrorPage title={error.message} />;
+    return <ErrorPage title={error.message} />
   }
 
   return (
@@ -133,87 +130,87 @@ export default function SearchContainer() {
         {name.length > 0 && <Results {...{ data, loading, called }} />}
       </div>
     </div>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   results: {
-    margin: "1em 0",
+    margin: '1em 0',
     padding: 0
   },
   link: {
-    "text-decoration": "none",
-    color: "#222",
-    ":hover": {
-      "text-decoration": "none",
-      color: "#222"
+    'text-decoration': 'none',
+    color: '#222',
+    ':hover': {
+      'text-decoration': 'none',
+      color: '#222'
     }
   },
   title: {
-    color: "#222",
-    "font-size": "0.9em",
-    lineHeight: "0.5em",
-    margin: "0.5em 0 0 0"
+    color: '#222',
+    'font-size': '0.9em',
+    lineHeight: '0.5em',
+    margin: '0.5em 0 0 0'
   },
   small: {
-    "font-size": "0.8em",
-    color: "#666"
+    'font-size': '0.8em',
+    color: '#666'
   },
   avatar: {},
   vertCenter: {
-    alignItems: "center"
+    alignItems: 'center'
   },
   avatarImg: {
-    "border-radius": "50%",
-    width: "50px"
+    'border-radius': '50%',
+    width: '50px'
   },
   statusBadgePending: {
-    border: "1px dashed #25c0b0",
-    color: "#25c0b0",
-    borderRadius: "10px"
+    border: '1px dashed #25c0b0',
+    color: '#25c0b0',
+    borderRadius: '10px'
   },
   inputGroup: {
-    border: "1px solid #AAA",
-    "border-radius": "5px",
-    position: "relative",
-    height: "48px",
-    backgroundColor: "#FFF"
+    border: '1px solid #AAA',
+    'border-radius': '5px',
+    position: 'relative',
+    height: '48px',
+    backgroundColor: '#FFF'
   },
   input: {
-    height: "36px",
-    border: "none",
-    width: "100%",
-    padding: "0.7em 0 0em 3em",
-    color: "#222",
-    "background-image": "none",
-    "::placeholder": {
-      color: "#999"
+    height: '36px',
+    border: 'none',
+    width: '100%',
+    padding: '0.7em 0 0em 3em',
+    color: '#222',
+    'background-image': 'none',
+    '::placeholder': {
+      color: '#999'
     }
   },
   cancelBtn: {
-    color: "#666",
-    position: "absolute",
-    left: "10px",
-    top: "12px",
-    bottom: "4px",
-    "z-index": 9
+    color: '#666',
+    position: 'absolute',
+    left: '10px',
+    top: '12px',
+    bottom: '4px',
+    'z-index': 9
   },
   scanIcon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 4,
     right: 5,
     width: 24,
     height: 35
   },
   noResults: {
-    margin: "4em 0",
-    textAlign: "center"
+    margin: '4em 0',
+    textAlign: 'center'
   },
   requestButton: {
-    backgroundColor: "#25c0b0",
-    color: "#FFF"
+    backgroundColor: '#25c0b0',
+    color: '#FFF'
   },
   requestLink: {
-    textDecorationLine: "none"
+    textDecorationLine: 'none'
   }
-});
+})

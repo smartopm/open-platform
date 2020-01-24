@@ -1,34 +1,33 @@
 // client
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient } from 'apollo-client'
 // cache
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory'
 // links
-import { HttpLink } from 'apollo-link-http';
-import { onError } from 'apollo-link-error';
-import { ApolloLink, Observable } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http'
+import { onError } from 'apollo-link-error'
+import { ApolloLink, Observable } from 'apollo-link'
 
 export const createCache = () => {
-  const cache = new InMemoryCache();
+  const cache = new InMemoryCache()
   if (process.env.NODE_ENV === 'development') {
-    window.secretVariableToStoreCache = cache;
+    window.secretVariableToStoreCache = cache
   }
-  return cache;
-};
+  return cache
+}
 
 export const AUTH_TOKEN_KEY = 'dgdp_auth_token'
 
 // getToken from meta tags
-const getAuthToken = () =>
-  window.localStorage.getItem(AUTH_TOKEN_KEY)
+const getAuthToken = () => window.localStorage.getItem(AUTH_TOKEN_KEY)
 
 const setTokenForOperation = async operation => {
   const authToken = getAuthToken()
   if (authToken) {
     operation.setContext({
       headers: {
-        authorization: authToken ? `Bearer ${authToken}` : "",
-      },
-    });
+        authorization: authToken ? `Bearer ${authToken}` : ''
+      }
+    })
   }
 }
 
@@ -37,50 +36,52 @@ const createLinkWithToken = () =>
   new ApolloLink(
     (operation, forward) =>
       new Observable(observer => {
-        let handle;
+        let handle
         Promise.resolve(operation)
           .then(setTokenForOperation)
           .then(() => {
             handle = forward(operation).subscribe({
               next: observer.next.bind(observer),
               error: observer.error.bind(observer),
-              complete: observer.complete.bind(observer),
-            });
+              complete: observer.complete.bind(observer)
+            })
           })
-          .catch(observer.error.bind(observer));
+          .catch(observer.error.bind(observer))
         return () => {
-          if (handle) handle.unsubscribe();
-        };
+          if (handle) handle.unsubscribe()
+        }
       })
-  );
+  )
 
-const logError = (error) => console.error(error);
+const logError = error => console.error(error)
 // create error link
-const createErrorLink = () => onError(({ graphQLErrors, networkError, operation }) => {
-  if (graphQLErrors) {
-    logError('GraphQL - Error', {
-      errors: graphQLErrors,
-      operationName: operation.operationName,
-      variables: operation.variables,
-    });
-  }
-  if (networkError) {
-    logError('GraphQL - NetworkError', networkError);
-  }
-})
+const createErrorLink = () =>
+  onError(({ graphQLErrors, networkError, operation }) => {
+    if (graphQLErrors) {
+      logError('GraphQL - Error', {
+        errors: graphQLErrors,
+        operationName: operation.operationName,
+        variables: operation.variables
+      })
+    }
+    if (networkError) {
+      logError('GraphQL - NetworkError', networkError)
+    }
+  })
 
-const createHttpLink = () => new HttpLink({
-  uri: '/graphql',
-  credentials: 'include',
-})
+const createHttpLink = () =>
+  new HttpLink({
+    uri: '/graphql',
+    credentials: 'include'
+  })
 
-export const createClient = (cache) => {
+export const createClient = cache => {
   return new ApolloClient({
     link: ApolloLink.from([
       createLinkWithToken(),
       createErrorLink(),
-      createHttpLink(),
+      createHttpLink()
     ]),
-    cache,
-  });
-};
+    cache
+  })
+}

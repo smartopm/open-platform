@@ -1,7 +1,7 @@
-import React from "react";
-import { css, StyleSheet } from "aphrodite";
-import { Link } from "react-router-dom";
-import { ponisoNumber } from "../utils/constants";
+import React from 'react'
+import { css, StyleSheet } from 'aphrodite'
+import { Link } from 'react-router-dom'
+import { ponisoNumber } from '../utils/constants'
 
 export default function RequestStatus(props) {
   return (
@@ -10,11 +10,11 @@ export default function RequestStatus(props) {
         styles.waitPage
       )}`}
       style={{
-        backgroundColor: props.isDenied ? "#ed5757" : "#25c0b0"
+        backgroundColor: props.isDenied ? '#ed5757' : '#25c0b0'
       }}
     >
       <h1 className={css(styles.title)}>
-        {props.isDenied ? "Denied" : "Approved"}
+        {props.isDenied ? 'Denied' : 'Approved'}
       </h1>
       <br />
       <div className="col-10 col-sm-10 col-md-6">
@@ -22,7 +22,7 @@ export default function RequestStatus(props) {
           to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.okButton)}`}
           style={{
-            backgroundColor: props.isDenied ? "#ed5757" : "#25c0b0"
+            backgroundColor: props.isDenied ? '#ed5757' : '#25c0b0'
           }}
         >
           Ok
@@ -39,26 +39,26 @@ export default function RequestStatus(props) {
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 const styles = StyleSheet.create({
   callButton: {
-    backgroundColor: "#ed5757",
-    textTransform: "unset",
-    color: "#FFFFFF",
-    border: "2px solid black",
-    borderColor: "#FFFFFF"
+    backgroundColor: '#ed5757',
+    textTransform: 'unset',
+    color: '#FFFFFF',
+    border: '2px solid black',
+    borderColor: '#FFFFFF'
   },
   okButton: {
-    textTransform: "unset",
-    color: "#FFFFFF",
-    border: "2px solid black",
-    borderColor: "#FFFFFF"
+    textTransform: 'unset',
+    color: '#FFFFFF',
+    border: '2px solid black',
+    borderColor: '#FFFFFF'
   },
   waitPage: {
-    height: "100vh"
+    height: '100vh'
   },
   title: {
-    color: "#FFFFFF"
+    color: '#FFFFFF'
   }
-});
+})

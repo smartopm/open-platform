@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import Nav from "../components/Nav";
+import React, { Fragment } from 'react'
+import Nav from '../components/Nav'
 
 export default function Support() {
   return (
@@ -10,11 +10,11 @@ export default function Support() {
       <br />
       <div className="justify-content-center align-items-center">
         <p className="text-center">
-          Please email{" "}
+          Please email{' '}
           <a href="mailto:support@doublegdp.com">support@doublegdp.com</a> for
           anything you need
         </p>
       </div>
     </Fragment>
-  );
+  )
 }

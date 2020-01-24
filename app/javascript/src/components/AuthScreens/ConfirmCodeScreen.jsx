@@ -1,4 +1,10 @@
-import React, { useState, useContext, useRef, useEffect, createRef } from "react";
+import React, {
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  createRef
+} from "react";
 import { Redirect } from "react-router-dom";
 import { Button, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
@@ -7,8 +13,7 @@ import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
-
-const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
+const randomCodeData = [1, 2, 3, 4, 5, 6, 7];
 
 export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext);
@@ -19,35 +24,38 @@ export default function ConfirmCodeScreen({ match }) {
 
   // generate refs to use later
   let elementsRef = useRef(randomCodeData.map(() => createRef()));
-  const submitRef = useRef(null)
+  const submitRef = useRef(null);
 
   useEffect(() => {
     // force focus to just be on the first element
     // check if the refs are not null to avoid breaking the app
     if (elementsRef.current[1].current) {
-      elementsRef.current[1].current.focus()
+      elementsRef.current[1].current.focus();
     }
-  }, [])
+  }, []);
 
   function handleConfirmCode() {
     setIsLoading(true);
 
     // Todo: Find more efficient way of getting values from the input
-    const code1 = elementsRef.current[1].current.value
-    const code2 = elementsRef.current[2].current.value
-    const code3 = elementsRef.current[3].current.value
-    const code4 = elementsRef.current[4].current.value
-    const code5 = elementsRef.current[5].current.value
-    const code6 = elementsRef.current[6].current.value
+    const code1 = elementsRef.current[1].current.value;
+    const code2 = elementsRef.current[2].current.value;
+    const code3 = elementsRef.current[3].current.value;
+    const code4 = elementsRef.current[4].current.value;
+    const code5 = elementsRef.current[5].current.value;
+    const code6 = elementsRef.current[6].current.value;
 
-    // Todo: refactor this 
-    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`
+    // Todo: refactor this
+    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`;
 
     loginPhoneComplete({
       variables: { id, token: code }
     })
       .then(({ data }) => {
-        authState.setToken({ type: 'update', token: data.loginPhoneComplete.authToken })
+        authState.setToken({
+          type: "update",
+          token: data.loginPhoneComplete.authToken
+        });
         setIsLoading(true);
       })
       .catch(error => {
@@ -58,7 +66,7 @@ export default function ConfirmCodeScreen({ match }) {
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    return <Redirect to='/' />
+    return <Redirect to="/" />;
   }
 
   return (
@@ -79,34 +87,29 @@ export default function ConfirmCodeScreen({ match }) {
         <br />
         <br />
         <div className="row justify-content-center align-items-center">
-
-          {
-            randomCodeData.map(item => (
-              <input
-                key={item}
-                name={`code${item}`}
-                maxLength="1"
-                type="tel"
-                autoFocus
-                ref={elementsRef.current[item]}
-                className={css(styles.newInput)}
-                onChange={() => item < 6 ? elementsRef.current[item + 1].current.focus() : submitRef.current.click()}
-                // hide the seventh input for the next ref to work [6]
-                hidden={item === 7 && true}
-              />
-            ))
-          }
+          {randomCodeData.map(item => (
+            <input
+              key={item}
+              name={`code${item}`}
+              maxLength="1"
+              type="tel"
+              autoFocus
+              ref={elementsRef.current[item]}
+              className={css(styles.newInput)}
+              onChange={() =>
+                item < 6
+                  ? elementsRef.current[item + 1].current.focus()
+                  : submitRef.current.click()
+              }
+              // hide the seventh input for the next ref to work [6]
+              hidden={item === 7 && true}
+            />
+          ))}
         </div>
 
         <br />
         <br />
-        {error && (
-          <p
-            className="text-center text-danger"
-          >
-            {error}
-          </p>
-        )}
+        {error && <p className="text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
@@ -130,8 +133,6 @@ export default function ConfirmCodeScreen({ match }) {
     </div>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   getStartedButton: {
@@ -180,13 +181,13 @@ const styles = StyleSheet.create({
     height: 60,
     fontSize: 27,
     textAlign: "center",
-    border: '2px solid #5189dd',
+    border: "2px solid #5189dd",
     borderRadius: 2,
     borderTop: "none",
     borderRight: "none",
     borderLeft: "none",
     // padding: 20,
-    margin: 9,
+    margin: 9
     // paddingRight: 13,
   }
 });

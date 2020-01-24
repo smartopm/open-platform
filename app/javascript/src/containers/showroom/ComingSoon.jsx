@@ -4,7 +4,6 @@ import { Button } from "@material-ui/core";
 import { Footer } from "../../components/Footer";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
 
-
 // Todo: Add another step in this component(why are you here)
 export default function ComingSoon({ history }) {
   return (
@@ -15,17 +14,22 @@ export default function ComingSoon({ history }) {
         alt="nkwashi logo"
       />
       <div>
-        <h5 className="text-center">Thanks for coming in! Our team will help you soon.</h5>
+        <h5 className="text-center">
+          Thanks for coming in! Our team will help you soon.
+        </h5>
       </div>
-      <div className={`row justify-content-center align-items-center ${css(styles.buttonSection)}`}>
-      <Button
+      <div
+        className={`row justify-content-center align-items-center ${css(
+          styles.buttonSection
+        )}`}
+      >
+        <Button
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
         >
           Go Back
         </Button>
-
       </div>
       <Footer position={"30vh"} />
     </div>

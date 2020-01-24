@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const UserFragment = {
   publicFields: gql`
@@ -16,8 +16,18 @@ export const UserFragment = {
       email
       avatarUrl
       imageUrl
+      notes {
+        body
+        id
+        flagged
+        user {
+          name
+        },
+        completed
+        createdAt
+      }
     }
-  `,
+  `
 }
 
 export const EntryRequestFragment = {
@@ -36,6 +46,5 @@ export const EntryRequestFragment = {
       updatedAt
       grantedAt
     }
-  `,
+  `
 }
-
