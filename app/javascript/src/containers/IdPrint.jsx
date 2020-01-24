@@ -117,7 +117,6 @@ export function Component({ data }) {
           </div>
 
           <div className="d-flex justify-content-center qr_code">
-            {/* <img style={{ width: 256 }} src={qrCodeAddress(data.user.id)} /> */}
             <QRCode
               style={{ width: 256 }}
               value={qrCodeAddress(data.user.id)}

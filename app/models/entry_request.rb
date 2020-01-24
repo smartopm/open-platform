@@ -7,7 +7,7 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :log_entry_start
+  after_create :log_entry
   after_create :notify_admin, unless: :showroom?
 
   validates :name, presence: true
@@ -64,6 +64,14 @@ class EntryRequest < ApplicationRecord
     self[:community_id] = user.community_id
   end
 
+  def log_entry
+    if showroom?
+      log_showroom_entry
+    else
+      log_entry_start
+    end
+  end
+
   def log_entry_start
     EventLog.create(
       acting_user: user, community: user.community,
@@ -71,6 +79,18 @@ class EntryRequest < ApplicationRecord
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
         action: 'started',
+        ref_name: self[:name],
+      }
+    )
+  end
+
+  def log_showroom_entry
+    EventLog.create(
+      acting_user: user, community: user.community,
+      subject: 'kiosk_registration',
+      ref_id: self[:id], ref_type: 'EntryRequest',
+      data: {
+        action: 'created',
         ref_name: self[:name],
       }
     )
