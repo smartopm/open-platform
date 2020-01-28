@@ -12,6 +12,7 @@ import {
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 import DateUtil from "../../utils/dateutil";
+import { ponisoNumber } from "../../utils/constants.js"
 
 
 export default function RequestUpdate({ match, history, location }) {
@@ -95,6 +96,7 @@ export default function RequestUpdate({ match, history, location }) {
       setMessage('User was successfully enrolled')
     })
   }
+  console.log(previousRoute)
   return (
     <Fragment>
       <Nav
@@ -231,22 +233,36 @@ export default function RequestUpdate({ match, history, location }) {
             : !/logs|enroll/.test(previousRoute)
               ? (
                 <div className="row justify-content-center align-items-center">
-                  <Button
-                    variant="contained"
-                    onClick={handleGrantRequest}
-                    className={`btn ${css(styles.grantButton)}`}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Granting ...' : 'Grant'}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleDenyRequest}
-                    className={`btn  ${css(styles.denyButton)}`}
-                    disabled={isLoading}
-                  >
-                    Deny
-              </Button>
+                  <div className="col">
+                    <Button
+                      variant="contained"
+                      onClick={handleGrantRequest}
+                      className={`btn ${css(styles.grantButton)}`}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Granting ...' : 'Grant'}
+                    </Button>
+                  </div>
+                  <div className="col">
+                    <Button
+                      variant="contained"
+                      onClick={handleDenyRequest}
+                      className={`btn  ${css(styles.denyButton)}`}
+                      disabled={isLoading}
+                    >
+                      Deny
+                    </Button>
+
+                  </div>
+                  <div className="col">
+                    <a
+                      href={`tel:${ponisoNumber}`}
+                      className={` ${css(styles.callButton)}`}
+                    >
+                      Call Poniso
+                    </a>
+
+                  </div>
                 </div>
               ) : <span />}
         </form>
@@ -269,11 +285,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#25c0b0",
     color: "#FFF",
     marginRight: 60,
-    width: "35%"
+    // width: "35%"
   },
   denyButton: {
-    backgroundColor: "rgb(230, 63, 69)",
+    // backgroundColor: "rgb(230, 63, 69)",
+    backgroundColor: "rgb(38, 38, 38)",
     color: "#FFF",
-    width: "35%"
+    // width: "35%"
+  },
+  callButton: {
+    color: "rgb(230, 63, 69)",
+    textTransform: "unset",
+    textDecoration: "none"
   }
 });

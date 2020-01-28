@@ -107,8 +107,8 @@ class EntryRequest < ApplicationRecord
     link = "https://#{ENV['HOST']}/request/#{id}/edit"
     Rails.logger.info "Sending entry request approval notification for #{link}"
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
-
+    Rails.logger.info "FYI #{name} - has been granted/denied entry by #{user.name}, for details click #{link}"
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-             "New entry request from #{name} - Approve or Deny at #{link}")
+             "FYI #{name} - has been granted/denied entry by #{user.name}, for details click #{link}")
   end
 end

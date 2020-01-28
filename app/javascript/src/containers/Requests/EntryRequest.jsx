@@ -36,7 +36,7 @@ export default function LogEntry({ history }) {
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
       // Send them to the wait page
-      history.push(`/request_wait/${data.result.entryRequest.id}`);
+      history.push(`/request/${data.result.entryRequest.id}`, { from: 'entry_request' });
     });
   }
 
