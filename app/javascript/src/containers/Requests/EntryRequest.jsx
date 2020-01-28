@@ -169,7 +169,7 @@ export default function LogEntry({ history }) {
               onClick={handleSubmit}
               disabled={isSubmitted}
             >
-              {isSubmitted ? "Submitting ..." : " Request Entry"}
+              {isSubmitted ? "Submitting ..." : " Submit"}
             </Button>
           </div>
         </form>

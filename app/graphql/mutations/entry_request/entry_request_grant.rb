@@ -20,7 +20,8 @@ module Mutations
       # TODO: Better auth here
       def authorized?(_vals)
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        # removed the admin to allow guards to approve
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
 
         true
       end

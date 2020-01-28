@@ -19,7 +19,6 @@ class EntryRequest < ApplicationRecord
   GRANT_STATE = %w[Pending Granted Denied].freeze
 
   def grant!(grantor)
-    can_grant?(grantor)
     update(
       grantor_id: grantor.id,
       granted_state: 1,
@@ -29,7 +28,6 @@ class EntryRequest < ApplicationRecord
   end
 
   def deny!(grantor)
-    can_grant?(grantor)
     update(
       grantor_id: grantor.id,
       granted_state: 2,
@@ -55,10 +53,6 @@ class EntryRequest < ApplicationRecord
   end
 
   private
-
-  def can_grant?(grantor)
-    raise Unauthorized unless grantor.admin?
-  end
 
   def attach_community
     self[:community_id] = user.community_id

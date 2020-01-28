@@ -63,6 +63,10 @@ export default function RequestUpdate({ match, history, location }) {
       .then(() => {
         history.push("/entry_logs", { tab: 1 });
         setLoading(false)
+      })
+      .catch(error => {
+        setLoading(false)
+        console.log(error.message)
       });
   }
 
