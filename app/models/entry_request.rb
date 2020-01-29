@@ -102,6 +102,13 @@ class EntryRequest < ApplicationRecord
     )
   end
 
+  def acknowledge!
+    update(
+      acknowledged: true,
+    )
+    log_decision(true)
+  end
+
   # TODO: Build this into a proper notification scheme
   def notify_admin
     link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"

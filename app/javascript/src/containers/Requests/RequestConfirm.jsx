@@ -67,7 +67,6 @@ export default function RequestConfirm({ match, history, location }) {
     return (
         <Fragment>
             <Nav
-                // navname should be enroll user if coming from entry_logs
                 navName={'Approve Request'}
                 menuButton='cancel'
             />
