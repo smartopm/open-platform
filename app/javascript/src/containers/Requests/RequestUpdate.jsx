@@ -15,11 +15,11 @@ import DateUtil from "../../utils/dateutil";
 import { ponisoNumber } from "../../utils/constants.js"
 
 
+// TODO: Check the time of the day and day of the week.
+
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state && location.state.from
   const isFromLogs = previousRoute === "logs" || false;
-  // check if user is poniso
-  const isFromHos = match.path.split('/').includes('request_hos')
 
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }

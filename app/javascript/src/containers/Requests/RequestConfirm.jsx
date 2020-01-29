@@ -3,20 +3,16 @@ import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { TextField, MenuItem, Button } from '@material-ui/core'
 import { EntryRequestQuery } from '../../graphql/queries.js'
-import {
-    EntryRequestUpdate,
-    EntryRequestGrant,
-} from '../../graphql/mutations.js'
+import { AcknowledgeRequest } from '../../graphql/mutations.js'
 import Loading from '../../components/Loading'
 import { StyleSheet, css } from 'aphrodite'
 import DateUtil from '../../utils/dateutil'
 
-export default function RequestConfirm({ match, history, location }) {
+export default function RequestConfirm({ match, history }) {
     const { loading, data } = useQuery(EntryRequestQuery, {
         variables: { id: match.params.id },
     })
-    const [updateEntryRequest] = useMutation(EntryRequestUpdate)
-    const [grantEntry] = useMutation(EntryRequestGrant)
+    const [acknowledgeRequest] = useMutation(AcknowledgeRequest)
     const [isLoading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
     const [formData, setFormData] = useState({
@@ -44,25 +40,25 @@ export default function RequestConfirm({ match, history, location }) {
         })
     }
 
-    function handleUpdateRecord() {
-        return updateEntryRequest({ variables: formData })
-    }
-
     function handleAcknowledgeRequest() {
         setLoading(true)
-        handleUpdateRecord()
-            .then(grantEntry({ variables: { id: match.params.id } }))
+        acknowledgeRequest({
+            variables: { id: match.params.id }
+        })
             .then(() => {
-                history.push('/entry_logs', { tab: 1 })
+                console.log('acknowledged')
                 setLoading(false)
             })
-            .catch((error) => {
+            .catch(() => {
+                console.log('an error happened')
                 setLoading(false)
-                console.log(error.message)
             })
     }
 
-    function handleFlagRequest() { }
+    function handleFlagRequest() {
+        // This should route to user_show page
+        // Maybe pull up a modal with a form to add a flagged note
+    }
 
     return (
         <Fragment>
@@ -91,7 +87,7 @@ export default function RequestConfirm({ match, history, location }) {
                             }
                             disabled={true}
                             name='date'
-                            required
+
                         />
                     </div>
                     <div className='form-group'>
@@ -104,7 +100,7 @@ export default function RequestConfirm({ match, history, location }) {
                             value={formData.guard ? formData.guard.name : ''}
                             disabled={true}
                             name='name'
-                            required
+
                         />
                     </div>
                     <div className='form-group'>
@@ -118,20 +114,22 @@ export default function RequestConfirm({ match, history, location }) {
                             value={formData.name}
                             onChange={handleInputChange}
                             name='name'
-                            required
+                            disabled={true}
+
                         />
                     </div>
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='nrc'>
                             NRC
-            </label>
+                        </label>
                         <input
                             className='form-control'
                             type='text'
                             value={formData.nrc || ''}
                             onChange={handleInputChange}
                             name='nrc'
-                            required
+                            disabled={true}
+
                         />
                     </div>
                     <div className='form-group'>
@@ -144,6 +142,7 @@ export default function RequestConfirm({ match, history, location }) {
                             value={formData.phoneNumber || ''}
                             onChange={handleInputChange}
                             name='phoneNumber'
+                            disabled={true}
                         />
                     </div>
                     <div className='form-group'>
@@ -156,6 +155,7 @@ export default function RequestConfirm({ match, history, location }) {
                             onChange={handleInputChange}
                             value={formData.vehiclePlate || ''}
                             name='vehiclePlate'
+                            disabled={true}
                         />
                     </div>
                     <div className='form-group'>
@@ -166,6 +166,7 @@ export default function RequestConfirm({ match, history, location }) {
                             name='reason'
                             value={formData.reason || ''}
                             onChange={handleInputChange}
+                            disabled={true}
                             className={`${css(styles.selectInput)}`}>
                             <MenuItem value={formData.reason}>{formData.reason}</MenuItem>
                         </TextField>
