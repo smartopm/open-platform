@@ -165,6 +165,7 @@ const App = () => {
                     {/* requests */}
                     <Route path="/entry_request" component={EntryRequest} />
                     <Route path="/request/:id" component={RequestUpdate} />
+                    <Route path="/request_hos/:id/" component={RequestUpdate} />
                     <Route path="/request_wait/:id" component={WaitScreen} />
                     <Route
                       path="/request_status/:id/edit"
