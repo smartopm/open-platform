@@ -52,6 +52,25 @@ class EntryRequest < ApplicationRecord
     self[:source] == 'showroom'
   end
 
+  def acknowledge!
+    update(
+      acknowledged: true,
+      id: id,
+    )
+    log_decision(true)
+  end
+
+  # TODO: Build this into a proper notification scheme
+  def notify_admin
+    link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"
+    Rails.logger.info "Sending entry request approval notification for #{link}"
+    return unless ENV['REQUEST_NOTIFICATION_NUMBER']
+
+    Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
+             "FYI #{name} - has been granted/denied entry by #{user.name},
+             for details click #{link}")
+  end
+
   private
 
   def attach_community
@@ -100,23 +119,5 @@ class EntryRequest < ApplicationRecord
         ref_name: self[:name],
       }
     )
-  end
-
-  def acknowledge!
-    update(
-      acknowledged: true,
-    )
-    log_decision(true)
-  end
-
-  # TODO: Build this into a proper notification scheme
-  def notify_admin
-    link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"
-    Rails.logger.info "Sending entry request approval notification for #{link}"
-    return unless ENV['REQUEST_NOTIFICATION_NUMBER']
-
-    Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-             "FYI #{name} - has been granted/denied entry by #{user.name},
-             for details click #{link}")
   end
 end
