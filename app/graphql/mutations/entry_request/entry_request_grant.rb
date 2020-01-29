@@ -12,8 +12,10 @@ module Mutations
         entry_request = ::EntryRequest.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless entry_request
 
-        return { entry_request: entry_request } if entry_request.grant!(context[:current_user])
-
+        if entry_request.grant!(context[:current_user])
+          entry_request.notify_admin
+          return { entry_request: entry_request }
+        end
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
 

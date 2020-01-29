@@ -109,6 +109,7 @@ class EntryRequest < ApplicationRecord
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
 
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-             "FYI #{name} - has been granted/denied entry by #{user.name}, for details click #{link}")
+             "FYI #{name} - has been granted/denied entry by #{user.name},
+             for details click #{link}")
   end
 end

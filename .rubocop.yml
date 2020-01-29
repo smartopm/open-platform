@@ -9,7 +9,7 @@ AllCops:
     - 'bin/**/*'
     - 'Gemfile'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 100
 
 # This is hard to keep in specs by their nature
@@ -31,4 +31,3 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   Enabled: true
   EnforcedStyleForMultiline: comma
-

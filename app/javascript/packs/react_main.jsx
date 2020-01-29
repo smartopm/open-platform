@@ -35,6 +35,7 @@ import Support from '../src/containers/Support'
 import GuardHome from '../src/containers/GuardHome'
 import EntryRequest from '../src/containers/Requests/EntryRequest'
 import RequestUpdate from '../src/containers/Requests/RequestUpdate'
+import RequestConfirm from '../src/containers/Requests/RequestConfirm'
 import WaitScreen from '../src/containers/Requests/WaitingScreen'
 import RequestApproval from '../src/containers/Requests/RequestApproval'
 import ErrorPage from '../src/components/Error'
@@ -165,7 +166,7 @@ const App = () => {
                     {/* requests */}
                     <Route path="/entry_request" component={EntryRequest} />
                     <Route path="/request/:id" component={RequestUpdate} />
-                    <Route path="/request_hos/:id/" component={RequestUpdate} />
+                    <Route path="/request_hos/:id/" component={RequestConfirm} />
                     <Route path="/request_wait/:id" component={WaitScreen} />
                     <Route
                       path="/request_status/:id/edit"
