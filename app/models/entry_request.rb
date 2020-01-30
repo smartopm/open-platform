@@ -24,7 +24,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    log_decision(true)
+    log_decision('granted')
   end
 
   def deny!(grantor)
@@ -33,7 +33,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    log_decision(false)
+    log_decision('denied')
   end
 
   def granted?
@@ -57,7 +57,7 @@ class EntryRequest < ApplicationRecord
       acknowledged: true,
       id: id,
     )
-    log_decision(true)
+    log_decision('acknowledged')
   end
 
   # TODO: Build this into a proper notification scheme
@@ -109,13 +109,13 @@ class EntryRequest < ApplicationRecord
     )
   end
 
-  def log_decision(approved)
+  def log_decision(decision)
     EventLog.create(
       acting_user: grantor, community: user.community,
       subject: 'visitor_entry',
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
-        action: approved ? 'granted' : 'denied',
+        action: decision,
         ref_name: self[:name],
       }
     )
