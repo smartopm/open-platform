@@ -23,7 +23,7 @@ const initialValues = {
 
 export const FormContext = React.createContext({
   values: initialValues,
-  handleInputChange: () => {}
+  handleInputChange: () => { }
 })
 
 export default function FormContainer({ match, history }) {

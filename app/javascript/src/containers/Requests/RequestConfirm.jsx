@@ -1,12 +1,14 @@
 import React, { Fragment, useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
-import Nav from '../../components/Nav'
 import { TextField, MenuItem, Button } from '@material-ui/core'
+import { StyleSheet, css } from 'aphrodite'
+import Nav from '../../components/Nav'
 import { EntryRequestQuery } from '../../graphql/queries.js'
 import { AcknowledgeRequest } from '../../graphql/mutations.js'
 import Loading from '../../components/Loading'
-import { StyleSheet, css } from 'aphrodite'
 import DateUtil from '../../utils/dateutil'
+import { ModalDialog } from '../../components/Dialog'
+
 
 export default function RequestConfirm({ match, history }) {
     const { loading, data } = useQuery(EntryRequestQuery, {
@@ -15,6 +17,8 @@ export default function RequestConfirm({ match, history }) {
     const [acknowledgeRequest] = useMutation(AcknowledgeRequest)
     const [isLoading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
+    const [isModalOpen, setModal] = useState(false)
+    const [modalAction, setModalAction] = useState('acknowledge')
     const [formData, setFormData] = useState({
         name: '',
         phoneNumber: '',
@@ -60,11 +64,45 @@ export default function RequestConfirm({ match, history }) {
         // Maybe pull up a modal with a form to add a flagged note
     }
 
+    function handleModal(_event, type) {
+        if (type === 'acknowledge') {
+            setModalAction('acknowledge')
+            console.log(type)
+        } else {
+            setModalAction('flag')
+            console.log(type)
+        }
+        setModal(!isModalOpen)
+    }
+
+    function handleModalConfirm() {
+        createOrUpdate({
+            id: result.id,
+            state: modalAction === 'grant' ? 'valid' : 'banned'
+        })
+            .then(() => {
+                setModal(!isModalOpen)
+            })
+            .then(() => {
+                history.push('/user/pending')
+            })
+    }
+
+
     return (
         <Fragment>
+
             <Nav
                 navName={'Approve Request'}
                 menuButton='cancel'
+            />
+
+            <ModalDialog
+                handleClose={handleModal}
+                handleConfirm={handleAcknowledgeRequest}
+                open={isModalOpen}
+                action={modalAction}
+                name={formData.name}
             />
             <div className='container'>
                 <form>
@@ -90,7 +128,7 @@ export default function RequestConfirm({ match, history }) {
 
                         />
                     </div>
-                    <div className='form-group'>
+                    {/* <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='_name'>
                             Guard
                         </label>
@@ -102,11 +140,11 @@ export default function RequestConfirm({ match, history }) {
                             name='name'
 
                         />
-                    </div>
+                    </div> */}
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='_name'>
                             NAME
-            </label>
+                        </label>
 
                         <input
                             className='form-control'
@@ -135,7 +173,7 @@ export default function RequestConfirm({ match, history }) {
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='phoneNumber'>
                             Phone N&#176;
-            </label>
+                        </label>
                         <input
                             className='form-control'
                             type='text'
@@ -148,7 +186,7 @@ export default function RequestConfirm({ match, history }) {
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='vehicle'>
                             VEHICLE PLATE N&#176;
-            </label>
+                        </label>
                         <input
                             className='form-control'
                             type='text'
@@ -175,7 +213,7 @@ export default function RequestConfirm({ match, history }) {
                         <div className='col'>
                             <Button
                                 variant='contained'
-                                onClick={handleAcknowledgeRequest}
+                                onClick={event => handleModal(event, 'acknowledge')}
                                 className={`btn ${css(styles.grantButton)}`}
                                 disabled={isLoading}>
                                 {isLoading ? 'Loading ...' : 'Acknowledge'}
@@ -184,11 +222,11 @@ export default function RequestConfirm({ match, history }) {
                         <div className='col'>
                             <Button
                                 variant='contained'
-                                onClick={handleFlagRequest}
+                                onClick={event => handleModal(event, 'flag')}
                                 className={`btn  ${css(styles.denyButton)}`}
                                 disabled={isLoading}>
                                 Flag
-              </Button>
+                            </Button>
                         </div>
                         <div className='col'>
                             <a
