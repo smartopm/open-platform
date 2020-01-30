@@ -180,11 +180,11 @@ export function Component({
                 }}
               >
                 {data.user.state === 'valid' &&
-                authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                    Log This Entry
+                  authState.user.userType === 'security_guard' ? (
+                    <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                      Log This Entry
                   </MenuItem>
-                ) : null}
+                  ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
                     <a
@@ -246,6 +246,8 @@ export function Component({
                               url: _data.data.oneTimeLogin.url,
                               user: data.user.name
                             })
+                          }).catch(() => {
+                            alert('Make sure the user has a phone number')
                           })
                         }}
                         className={css(styles.linkItem)}
@@ -354,21 +356,18 @@ export function Component({
                   rows="4"
                   ref={register({ required: true })}
                   name="note"
-                  readOnly={authState.user.id !== userId}
                 />
               </div>
-              {authState.user.id === userId && (
-                <button
-                  type="button"
-                  style={{ float: 'right' }}
-                  className="btn btn-outline-primary "
-                  onClick={handleSubmit(onSaveNote)}
-                  disabled={mutationLoading}
-                >
-                  {/* Save */}
-                  {mutationLoading ? 'Saving ...' : 'Save'}
-                </button>
-              )}
+              <button
+                type="button"
+                style={{ float: 'right' }}
+                className="btn btn-outline-primary "
+                onClick={handleSubmit(onSaveNote)}
+                disabled={mutationLoading}
+              >
+                {/* Save */}
+                {mutationLoading ? 'Saving ...' : 'Save'}
+              </button>
             </form>
             <br />
             <br />
@@ -394,15 +393,15 @@ export function Component({
                   ) : !note.flagged ? (
                     <span />
                   ) : (
-                    <span
-                      className={css(styles.actionIcon)}
-                      onClick={() => handleonComplete(note.id, note.completed)}
-                    >
-                      <Tooltip title="Mark this note complete">
-                        <CheckBoxOutlineBlankIcon />
-                      </Tooltip>
-                    </span>
-                  )}
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() => handleonComplete(note.id, note.completed)}
+                        >
+                          <Tooltip title="Mark this note complete">
+                            <CheckBoxOutlineBlankIcon />
+                          </Tooltip>
+                        </span>
+                      )}
                   {!note.flagged && (
                     <span
                       className={css(styles.actionIcon)}
@@ -417,8 +416,8 @@ export function Component({
                 </Fragment>
               ))
             ) : (
-              'No Notes Yet'
-            )}
+                  'No Notes Yet'
+                )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
