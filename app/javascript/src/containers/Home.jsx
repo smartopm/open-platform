@@ -6,7 +6,7 @@ import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading.jsx'
 import ScanIcon from '../../../assets/images/shape.svg'
-import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import ExploreIcon from '../../../assets/images/icon_map.svg'
 import PersonIcon from '@material-ui/icons/Person'
@@ -129,9 +129,8 @@ export function Component({ authState }) {
                 </Fragment>
               ) : null}
 
-              {
-                authState.user.userType === 'admin' && (
-                 <Fragment>
+              {authState.user.userType === 'admin' && (
+                <Fragment>
                   <div
                     className={`${css(
                       styles.cardSize
@@ -140,15 +139,17 @@ export function Component({ authState }) {
                     <Link to={'/todo'} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <PlaylistAddCheckIcon fontSize="large" className={css(styles.homeIconColor)} />
+                          <PlaylistAddCheckIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
                         </h5>
                         <p>{'Todo'}</p>
                       </div>
                     </Link>
                   </div>
                 </Fragment>
-                )
-              }
+              )}
             </div>
           </div>
         </div>

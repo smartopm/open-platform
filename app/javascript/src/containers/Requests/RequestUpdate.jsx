@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
@@ -13,7 +13,7 @@ import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 import DateUtil from "../../utils/dateutil";
 import { ponisoNumber } from "../../utils/constants.js"
-
+import { ModalDialog } from '../../components/Dialog'
 
 // TODO: Check the time of the day and day of the week.
 
@@ -30,6 +30,8 @@ export default function RequestUpdate({ match, history, location }) {
   const [createUser] = useMutation(CreateUserMutation)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [isModalOpen, setModal] = useState(false)
+  const [modalAction, setModalAction] = useState('grant')
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -69,7 +71,7 @@ export default function RequestUpdate({ match, history, location }) {
       })
       .catch(error => {
         setLoading(false)
-        console.log(error.message)
+        setMessage(error.message)
       });
   }
 
@@ -98,7 +100,17 @@ export default function RequestUpdate({ match, history, location }) {
       setMessage('User was successfully enrolled')
     })
   }
-  console.log(previousRoute)
+  function handleModal(_event, type) {
+    if (type === 'grant') {
+      setModalAction('grant')
+    } else {
+      setModalAction('deny')
+    }
+    setModal(!isModalOpen)
+  }
+
+
+
   return (
     <Fragment>
       <Nav
@@ -106,6 +118,27 @@ export default function RequestUpdate({ match, history, location }) {
         navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
       />
+
+      <ModalDialog
+        handleClose={handleModal}
+        handleConfirm={handleGrantRequest}
+        open={isModalOpen}
+        action={modalAction}
+        name={formData.name}
+      >
+        {
+          modalAction === 'grant' && (
+            <div>
+              <p>Current Time: <b>{new Date().toLocaleTimeString()}</b></p>
+              <u>Visiting Hours</u> <br />
+              Monday - Friday: <b>8:00 - 16:00</b> <br />
+              Saturday: <b>8:00 - 12:00</b> <br />
+              Sunday: <b>Off</b> <br />
+            </div>
+          )
+        }
+      </ModalDialog>
+
       <div className="container">
         <form>
           {isFromLogs && (
@@ -238,7 +271,7 @@ export default function RequestUpdate({ match, history, location }) {
                   <div className="col">
                     <Button
                       variant="contained"
-                      onClick={handleGrantRequest}
+                      onClick={(event => handleModal(event, 'grant'))}
                       className={`btn ${css(styles.grantButton)}`}
                       disabled={isLoading}
                     >
@@ -272,6 +305,7 @@ export default function RequestUpdate({ match, history, location }) {
     </Fragment>
   );
 }
+
 
 const styles = StyleSheet.create({
   logButton: {

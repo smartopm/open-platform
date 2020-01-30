@@ -20,17 +20,17 @@ export function ModalDialog({
         <p className="deny-msg">
           Are you sure you want to {action} access to <strong>{name}</strong> ?
         </p>
-        <div>
-          {
-            children
-          }
-        </div>
+        <div>{children}</div>
       </DialogContent>
       <DialogActions>
         <Button
           autoFocus
           onClick={handleConfirm}
-          color={new RegExp(action).test(/grant|acknowledge/) ? 'primary' : 'secondary'}
+          color={
+            new RegExp(action).test(/grant|acknowledge/)
+              ? 'primary'
+              : 'secondary'
+          }
         >
           {action}
         </Button>
