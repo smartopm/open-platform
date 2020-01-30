@@ -17,6 +17,7 @@ export default function RequestConfirm({ match, history }) {
     const [acknowledgeRequest] = useMutation(AcknowledgeRequest)
     const [isLoading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
+    const [note, setNote] = useState('')
     const [isModalOpen, setModal] = useState(false)
     const [modalAction, setModalAction] = useState('acknowledge')
     const [formData, setFormData] = useState({
@@ -50,12 +51,12 @@ export default function RequestConfirm({ match, history }) {
             variables: { id: match.params.id }
         })
             .then(() => {
-                console.log('acknowledged')
                 setLoading(false)
+                history.push('/')
             })
-            .catch(() => {
-                console.log('an error happened')
+            .catch(error => {
                 setLoading(false)
+                setMessage(error.message)
             })
     }
 
@@ -67,27 +68,17 @@ export default function RequestConfirm({ match, history }) {
     function handleModal(_event, type) {
         if (type === 'acknowledge') {
             setModalAction('acknowledge')
-            console.log(type)
         } else {
+            // save the note here
+            console.log('save note')
             setModalAction('flag')
-            console.log(type)
         }
         setModal(!isModalOpen)
     }
 
-    function handleModalConfirm() {
-        createOrUpdate({
-            id: result.id,
-            state: modalAction === 'grant' ? 'valid' : 'banned'
-        })
-            .then(() => {
-                setModal(!isModalOpen)
-            })
-            .then(() => {
-                history.push('/user/pending')
-            })
+    function handleNoteChange(event){
+        setNote(event.target.value)
     }
-
 
     return (
         <Fragment>
@@ -103,7 +94,24 @@ export default function RequestConfirm({ match, history }) {
                 open={isModalOpen}
                 action={modalAction}
                 name={formData.name}
-            />
+            >
+            {
+               modalAction === 'flag' && (
+                      <div className='form-group'>
+                        <label className='bmd-label-static' htmlFor='note'>
+                            Action Note
+                        </label>
+                        <input
+                            className='form-control'
+                            type='text'
+                            value={note}
+                            onChange={handleNoteChange}
+                            name='note'
+                        />
+                    </div> 
+               ) 
+            }
+            </ModalDialog>
             <div className='container'>
                 <form>
 
@@ -128,7 +136,8 @@ export default function RequestConfirm({ match, history }) {
 
                         />
                     </div>
-                    {/* <div className='form-group'>
+                    {/* 
+                    <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='_name'>
                             Guard
                         </label>
@@ -140,7 +149,8 @@ export default function RequestConfirm({ match, history }) {
                             name='name'
 
                         />
-                    </div> */}
+                    </div> 
+                    */}
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='_name'>
                             NAME

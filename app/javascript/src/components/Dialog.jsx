@@ -7,7 +7,8 @@ export function ModalDialog({
   open,
   handleConfirm,
   action,
-  name
+  name,
+  children
 }) {
   return (
     <Dialog
@@ -19,6 +20,11 @@ export function ModalDialog({
         <p className="deny-msg">
           Are you sure you want to {action} access to <strong>{name}</strong> ?
         </p>
+        <div>
+          {
+            children
+          }
+        </div>
       </DialogContent>
       <DialogActions>
         <Button
@@ -67,7 +73,8 @@ ModalDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   action: PropTypes.string.isRequired,
-  handleConfirm: PropTypes.func.isRequired
+  handleConfirm: PropTypes.func.isRequired,
+  children: PropTypes.node
 }
 ReasonInputModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
