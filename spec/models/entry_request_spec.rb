@@ -58,7 +58,7 @@ RSpec.describe EntryRequest, type: :model do
 
     it 'should notify an admin upon creation' do
       @entry_request = @guard.entry_requests.create(reason: 'Visiting',
-                                                 name: 'Visitor Joe', nrc: '012345')
+                                                    name: 'Visitor Joe', nrc: '012345')
 
       expect(@entry_request.grant!(@non_admin)).to receive(:notify_admin)
       @entry_request.save

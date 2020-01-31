@@ -50,16 +50,31 @@ export default function Todo({ history }) {
                   <label
                     className="custom-control-label"
                     htmlFor={`todo-check-${note.id}`}
-                    style={{ textDecoration: note.completed && 'line-through' }}
+                    style={{ textDecoration: note.completed && 'line-through', fontSize: 19 }}
                   >
                     {note.body}
                   </label>
+                  <br />
+                  <br />
+                  <span style={{ float: 'left' }}>
+                    created by:
+                    <i>
+                      {note.author.name}
+                    </i>
+                  </span>
+                  <span style={{ float: 'right' }}>
+                    associated with:
+                    <i>
+                      {note.user.name}
+                    </i>
+                  </span>
                 </div>
+                <br />
               </li>
             ))
           ) : (
-            <span>No Actions yet</span>
-          )}
+                <span>No Actions yet</span>
+              )}
         </ul>
       </div>
     </Fragment>
