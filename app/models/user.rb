@@ -48,6 +48,8 @@ class User < ApplicationRecord
   OAUTH_FIELDS_MAP = {
     email: ->(auth) { auth.info.email },
     name: ->(auth) { auth.info.name },
+    provider: ->(auth) { auth.provider },
+    uid: ->(auth) { auth.uid },
     image_url: ->(auth) { auth.info.image },
     token: ->(auth) { auth.credentials.token },
     oauth_expires: ->(auth) { auth.credentials.expires },
@@ -67,7 +69,6 @@ class User < ApplicationRecord
   def self.from_omniauth(auth)
     # Either create a User record or update it based on the provider (Google) and the UID
     user = find_or_initialize_from_oauth(auth)
-    user = where(provider: auth.provider, uid: auth.uid).first_or_initialize
     OAUTH_FIELDS_MAP.keys.each do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
@@ -80,7 +81,7 @@ class User < ApplicationRecord
     by_email = find_by(email: auth.info.email)
     return by_email if by_email
 
-    where(provider: auth.provider, uid: auth.uid).first_or_initialize
+    User.new
   end
 
   # We may want to do a bit more work here massaing the number entered
