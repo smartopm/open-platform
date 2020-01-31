@@ -80,6 +80,7 @@ class User < ApplicationRecord
   def self.find_or_initialize_from_oauth(auth)
     by_email = find_by(email: auth.info.email)
     return by_email if by_email
+
     User.new
   end
 
