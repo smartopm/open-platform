@@ -129,7 +129,7 @@ export function Component({
     })
   }
 
-  function handleonComplete(id, isCompleted) {
+  function handleOnComplete(id, isCompleted) {
     setLoading(true)
     noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
       setLoading(false)
@@ -384,7 +384,7 @@ export function Component({
                   {note.completed ? (
                     <span
                       className={css(styles.actionIcon)}
-                      onClick={() => handleonComplete(note.id, note.completed)}
+                      onClick={() => handleOnComplete(note.id, note.completed)}
                     >
                       <Tooltip title="Mark this note as uncomplete">
                         <CheckBoxIcon />
@@ -395,7 +395,7 @@ export function Component({
                   ) : (
                         <span
                           className={css(styles.actionIcon)}
-                          onClick={() => handleonComplete(note.id, note.completed)}
+                          onClick={() => handleOnComplete(note.id, note.completed)}
                         >
                           <Tooltip title="Mark this note complete">
                             <CheckBoxOutlineBlankIcon />

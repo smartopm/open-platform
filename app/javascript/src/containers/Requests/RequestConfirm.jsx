@@ -1,10 +1,11 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import { TextField, MenuItem, Button } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Nav from '../../components/Nav'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import { EntryRequestQuery } from '../../graphql/queries.js'
-import { AcknowledgeRequest } from '../../graphql/mutations.js'
+import { AcknowledgeRequest, CreateNote } from '../../graphql/mutations.js'
 import Loading from '../../components/Loading'
 import DateUtil from '../../utils/dateutil'
 import { ModalDialog } from '../../components/Dialog'
@@ -15,11 +16,13 @@ export default function RequestConfirm({ match, history }) {
         variables: { id: match.params.id },
     })
     const [acknowledgeRequest] = useMutation(AcknowledgeRequest)
+    const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
+    const authState = useContext(AuthStateContext)
     const [isLoading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
     const [note, setNote] = useState('')
     const [isModalOpen, setModal] = useState(false)
-    const [modalAction, setModalAction] = useState('acknowledge')
+    const [modalAction, setModalAction] = useState('flag')
     const [formData, setFormData] = useState({
         name: '',
         phoneNumber: '',
@@ -71,17 +74,23 @@ export default function RequestConfirm({ match, history }) {
 
     function flagNote() {
         // create a flagged todo note here
-        console.log('Hello this is flagging a note')
+
+        noteCreate({
+            variables: { userId: authState.user.id, body: note, flagged: true }
+        }).then(() => {
+            setModal(!isModalOpen)
+
+        }).catch(error => {
+            setMessage(error.message)
+        })
     }
 
     return (
         <Fragment>
-
             <Nav
                 navName={'Approve Request'}
                 menuButton='cancel'
             />
-
             <ModalDialog
                 handleClose={handleModal}
                 handleConfirm={flagNote}
