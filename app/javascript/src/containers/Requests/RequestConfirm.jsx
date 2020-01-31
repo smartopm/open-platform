@@ -101,16 +101,15 @@ export default function RequestConfirm({ match, history }) {
                 {
                     modalAction === 'flag' && (
                         <div className='form-group'>
-                            <label className='bmd-label-static' htmlFor='note'>
-                                Action Note
-                        </label>
                             <input
                                 className='form-control'
                                 type='text'
                                 value={note}
                                 onChange={handleNoteChange}
                                 name='note'
+                                placeholder='Type action note here'
                             />
+                            {mutationLoading && <p className='align-items-center'>Saving note ...</p>}
                         </div>
                     )
                 }

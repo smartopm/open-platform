@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
@@ -32,6 +32,8 @@ export default function RequestUpdate({ match, history, location }) {
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('grant')
+  const [date, setDate] = useState(new Date());
+
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -40,6 +42,20 @@ export default function RequestUpdate({ match, history, location }) {
     reason: "",
     loaded: false
   });
+
+
+  useEffect(() => {
+    var timerID = setInterval(() => tick(), 1000);
+
+    return function cleanup() {
+      clearInterval(timerID);
+    };
+  });
+
+  function tick() {
+    setDate(new Date());
+  }
+
 
   if (loading) {
     return <Loading />;
@@ -129,7 +145,7 @@ export default function RequestUpdate({ match, history, location }) {
         {
           modalAction === 'grant' && (
             <div>
-              <p>Current Time: <b>{new Date().toLocaleTimeString()}</b></p>
+              <p>Current Time: <b>{date.toLocaleTimeString()}</b></p>
               <u>Visiting Hours</u> <br />
               Monday - Friday: <b>8:00 - 16:00</b> <br />
               Saturday: <b>8:00 - 12:00</b> <br />
