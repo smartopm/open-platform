@@ -67,6 +67,14 @@ class EventLog < ApplicationRecord
     "User #{acting_user_name} was active"
   end
 
+  def acting_user_name
+    if deleted_user?
+      "Deleted User(#{acting_user_id})"
+    else
+      acting_user.name
+    end
+  end
+
   private
 
   def validate_acting_user
@@ -104,13 +112,5 @@ class EventLog < ApplicationRecord
 
   def deleted_user?
     return true if acting_user_id && acting_user.nil?
-  end
-
-  def acting_user_name
-    if deleted_user?
-      "Deleted User(#{acting_user_id})"
-    else
-      acting_user.name
-    end
   end
 end
