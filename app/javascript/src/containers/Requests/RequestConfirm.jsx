@@ -52,7 +52,7 @@ export default function RequestConfirm({ match, history }) {
         })
             .then(() => {
                 setLoading(false)
-                history.push('/')
+                history.push('/entry_logs')
             })
             .catch(error => {
                 setLoading(false)
@@ -65,19 +65,18 @@ export default function RequestConfirm({ match, history }) {
         // Maybe pull up a modal with a form to add a flagged note
     }
 
-    function handleModal(_event, type) {
-        if (type === 'acknowledge') {
-            setModalAction('acknowledge')
-        } else {
-            // save the note here
-            console.log('save note')
-            setModalAction('flag')
-        }
+    function handleModal() {
+        setModalAction('flag')
         setModal(!isModalOpen)
     }
 
-    function handleNoteChange(event){
+    function handleNoteChange(event) {
         setNote(event.target.value)
+    }
+
+    function flagNote() {
+        // create a flagged todo note here
+        console.log('Hello this is flagging a note')
     }
 
     return (
@@ -90,35 +89,34 @@ export default function RequestConfirm({ match, history }) {
 
             <ModalDialog
                 handleClose={handleModal}
-                handleConfirm={handleAcknowledgeRequest}
+                handleConfirm={flagNote}
                 open={isModalOpen}
                 action={modalAction}
                 name={formData.name}
             >
-            {
-               modalAction === 'flag' && (
-                      <div className='form-group'>
-                        <label className='bmd-label-static' htmlFor='note'>
-                            Action Note
+                {
+                    modalAction === 'flag' && (
+                        <div className='form-group'>
+                            <label className='bmd-label-static' htmlFor='note'>
+                                Action Note
                         </label>
-                        <input
-                            className='form-control'
-                            type='text'
-                            value={note}
-                            onChange={handleNoteChange}
-                            name='note'
-                        />
-                    </div> 
-               ) 
-            }
+                            <input
+                                className='form-control'
+                                type='text'
+                                value={note}
+                                onChange={handleNoteChange}
+                                name='note'
+                            />
+                        </div>
+                    )
+                }
             </ModalDialog>
             <div className='container'>
                 <form>
-
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='date'>
                             Date and time submitted
-              </label>
+                        </label>
                         <input
                             className='form-control'
                             type='text'
@@ -133,10 +131,9 @@ export default function RequestConfirm({ match, history }) {
                             }
                             disabled={true}
                             name='date'
-
                         />
                     </div>
-                    {/* 
+
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='_name'>
                             Guard
@@ -147,10 +144,9 @@ export default function RequestConfirm({ match, history }) {
                             value={formData.guard ? formData.guard.name : ''}
                             disabled={true}
                             name='name'
-
                         />
-                    </div> 
-                    */}
+                    </div>
+
                     <div className='form-group'>
                         <label className='bmd-label-static' htmlFor='_name'>
                             NAME
@@ -223,7 +219,7 @@ export default function RequestConfirm({ match, history }) {
                         <div className='col'>
                             <Button
                                 variant='contained'
-                                onClick={event => handleModal(event, 'acknowledge')}
+                                onClick={handleAcknowledgeRequest}
                                 className={`btn ${css(styles.grantButton)}`}
                                 disabled={isLoading}>
                                 {isLoading ? 'Loading ...' : 'Acknowledge'}
@@ -232,7 +228,7 @@ export default function RequestConfirm({ match, history }) {
                         <div className='col'>
                             <Button
                                 variant='contained'
-                                onClick={event => handleModal(event, 'flag')}
+                                onClick={handleModal}
                                 className={`btn  ${css(styles.denyButton)}`}
                                 disabled={isLoading}>
                                 Flag
