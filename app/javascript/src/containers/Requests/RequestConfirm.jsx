@@ -109,7 +109,7 @@ export default function RequestConfirm({ match, history }) {
                                 name='note'
                                 placeholder='Type action note here'
                             />
-                            {mutationLoading && <p className='align-items-center'>Saving note ...</p>}
+                            {mutationLoading && <p className='text-center'>Saving note ...</p>}
                         </div>
                     )
                 }
@@ -246,6 +246,9 @@ export default function RequestConfirm({ match, history }) {
                         </div>
                     </div>
                 </form>
+                {
+                    Boolean(message.length) && <p className='text-center text-danger'>{message}</p>
+                }
             </div>
         </Fragment>
     )
