@@ -109,7 +109,7 @@ export function IndexComponent({
           : event.subject === 'showroom'
             ? 'Showroom'
             : 'Manual'
-      const userType = event.data.type || ''
+
       const reason = event.entryRequest ? event.entryRequest.reason : ''
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name

@@ -60,11 +60,6 @@ export default function RequestConfirm({ match, history }) {
             })
     }
 
-    function handleFlagRequest() {
-        // This should route to user_show page
-        // Maybe pull up a modal with a form to add a flagged note
-    }
-
     function handleModal() {
         setModalAction('flag')
         setModal(!isModalOpen)

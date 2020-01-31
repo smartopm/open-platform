@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
