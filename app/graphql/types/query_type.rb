@@ -82,6 +82,15 @@ module Types
       Note.all.order(created_at: :asc)
     end
 
+    field :user_notes, [NoteType], null: false do
+      description 'Returns notes for the specific user'
+      argument :id, ID, required: true
+    end
+
+    def user_notes(id:)
+      Note.where(user_id: id).order(created_at: :asc)
+    end
+
     field :flagged_notes, [NoteType], null: false do
       description 'Returns a list of all the flagged notes, basically todos'
     end

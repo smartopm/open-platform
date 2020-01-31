@@ -5,7 +5,8 @@ module Types
   class NoteType < Types::BaseObject
     field :id, ID, null: false
     field :user, Types::UserType, null: false
-    field :owner, Types::UserType, null: false
+    field :user_id, ID, null: false
+    field :author, Types::UserType, null: false
     field :body, String, null: true
     field :flagged, Boolean, null: true
     field :completed, Boolean, null: true

@@ -108,6 +108,7 @@ export function Component({
       form.reset()
     })
   }
+
   const open = Boolean(anchorEl)
 
   const handleChange = (_event, newValue) => {
