@@ -8,7 +8,7 @@ class EntryRequest < ApplicationRecord
 
   before_validation :attach_community
   after_create :log_entry
-  after_create :notify_admin, unless: :showroom?
+  # after_create :notify_admin, unless: :showroom?
 
   validates :name, presence: true
 
@@ -24,6 +24,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 1,
       granted_at: Time.zone.now,
     )
+    notify_admin
     log_decision('granted')
   end
 
@@ -33,6 +34,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 2,
       granted_at: Time.zone.now,
     )
+    notify_admin
     log_decision('denied')
   end
 
