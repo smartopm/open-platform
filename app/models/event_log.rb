@@ -43,9 +43,9 @@ class EventLog < ApplicationRecord
 
   def visitor_entry_to_sentence
     if data['action'] == 'started'
-      "#{acting_user.name} started registering #{visitor_name} for entry."
+      "#{acting_user_name} started registering #{visitor_name} for entry."
     else
-      "#{acting_user.name} #{data['action']} #{visitor_name} for entry."
+      "#{acting_user_name} #{data['action']} #{visitor_name} for entry."
     end
   end
 
@@ -55,16 +55,24 @@ class EventLog < ApplicationRecord
   end
 
   def user_login_to_sentence
-    "User #{acting_user.name} logged in"
+    "User #{acting_user_name} logged in"
   end
 
   def user_switch_to_sentence
     user = User.find(ref_id)
-    "User #{acting_user.name} switched to user #{user.name}"
+    "User #{acting_user_name} switched to user #{user.name}"
   end
 
   def user_active_to_sentence
-    "User #{acting_user.name} was active"
+    "User #{acting_user_name} was active"
+  end
+
+  def acting_user_name
+    if deleted_user?
+      "Deleted User(#{acting_user_id})"
+    else
+      acting_user.name
+    end
   end
 
   private
@@ -100,5 +108,9 @@ class EventLog < ApplicationRecord
 
   def notify_slack
     SlackNotification.perform_later(community, to_sentence) if to_sentence
+  end
+
+  def deleted_user?
+    return true if acting_user_id && acting_user.nil?
   end
 end
