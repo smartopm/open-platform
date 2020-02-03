@@ -16,6 +16,7 @@ export const EntryRequestQuery = gql`
       ...EntryRequestFields
       guard: user {
         name
+        id
       }
     }
   }

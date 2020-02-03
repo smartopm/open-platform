@@ -50,7 +50,7 @@ export default function Todo({ history }) {
                   <label
                     className="custom-control-label"
                     htmlFor={`todo-check-${note.id}`}
-                    style={{ textDecoration: note.completed && 'line-through', fontSize: 19 }}
+                    style={{ textDecoration: note.completed && 'line-through', fontSize: 17 }}
                   >
                     {note.body}
                   </label>

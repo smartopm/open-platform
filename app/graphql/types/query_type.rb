@@ -96,7 +96,7 @@ module Types
     end
 
     def flagged_notes
-      Note.where(flagged: true).order(completed: :asc)
+      Note.where(flagged: true).order(completed: :asc, created_at: :desc)
     end
 
     field :entry_search, [EntryRequestType], null: true do

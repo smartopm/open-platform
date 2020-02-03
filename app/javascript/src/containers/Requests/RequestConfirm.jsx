@@ -3,7 +3,6 @@ import { useQuery, useMutation } from 'react-apollo'
 import { TextField, MenuItem, Button } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Nav from '../../components/Nav'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import { EntryRequestQuery } from '../../graphql/queries.js'
 import { AcknowledgeRequest, CreateNote } from '../../graphql/mutations.js'
 import Loading from '../../components/Loading'
@@ -17,7 +16,6 @@ export default function RequestConfirm({ match, history }) {
     })
     const [acknowledgeRequest] = useMutation(AcknowledgeRequest)
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-    const authState = useContext(AuthStateContext)
     const [isLoading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
     const [note, setNote] = useState('')
@@ -74,12 +72,10 @@ export default function RequestConfirm({ match, history }) {
 
     function flagNote() {
         // create a flagged todo note here
-
         noteCreate({
-            variables: { userId: authState.user.id, body: note, flagged: true }
+            variables: { userId: formData.guard.id, body: note, flagged: true }
         }).then(() => {
             setModal(!isModalOpen)
-
         }).catch(error => {
             setMessage(error.message)
         })
