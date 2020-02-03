@@ -2,6 +2,9 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import React, { useContext, useEffect, Component, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import {
