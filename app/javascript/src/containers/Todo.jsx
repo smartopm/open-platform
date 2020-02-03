@@ -2,8 +2,8 @@ import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
-
 import { useQuery, useMutation } from 'react-apollo'
+import { formatDistance } from 'date-fns'
 import { flaggedNotes } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
@@ -32,13 +32,13 @@ export default function Todo({ history }) {
   return (
     <Fragment>
       <Nav navName="Todo" menuButton="back" />
-      <div className="container">
+      <div className="container ">
         <ul className={css(styles.list)}>
           {isLoading ? (
             <Loading />
           ) : data.flaggedNotes.length ? (
             data.flaggedNotes.map(note => (
-              <li key={note.id} className={css(styles.listItem)}>
+              <li key={note.id} className={`${css(styles.listItem)} card`}>
                 <div className="custom-control custom-checkbox text">
                   <input
                     type="checkbox"
@@ -52,23 +52,39 @@ export default function Todo({ history }) {
                     htmlFor={`todo-check-${note.id}`}
                     style={{ textDecoration: note.completed && 'line-through', fontSize: 17 }}
                   >
-                    {note.body}
+                    {note.body}  {'  '}
+                    <br />
+                    <br />
+                    <span>
+                      By {' '}
+                      <i>
+                        {note.author.name}
+                      </i>
+                    </span>
                   </label>
                   <br />
+
                   <br />
-                  <span style={{ float: 'left' }}>
-                    created by:
+                  <span style={{ marginRight: 10 }}>
+                    Created  {' '}
                     <i>
-                      {note.author.name}
+                      {
+                        formatDistance(
+                          new Date(note.createdAt),
+                          new Date(),
+                          { addSuffix: true, includeSeconds: true }
+                        )
+                      }
                     </i>
                   </span>
                   <span style={{ float: 'right' }}>
-                    associated with:
+                    Associated with {' '}
                     <i>
                       {note.user.name}
                     </i>
                   </span>
                 </div>
+                <br />
                 <br />
               </li>
             ))

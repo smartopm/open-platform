@@ -76,8 +76,10 @@ export default function RequestConfirm({ match, history }) {
             variables: { userId: formData.guard.id, body: note, flagged: true }
         }).then(() => {
             setModal(!isModalOpen)
+            history.push('/entry_logs')
         }).catch(error => {
             setMessage(error.message)
+            setModal(!isModalOpen)
         })
     }
 
@@ -242,6 +244,7 @@ export default function RequestConfirm({ match, history }) {
                         </div>
                     </div>
                 </form>
+                <br />
                 {
                     Boolean(message.length) && <p className='text-center text-danger'>{message}</p>
                 }
