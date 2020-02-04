@@ -9,22 +9,26 @@ export default function OTPFeedbackScreen({ location }) {
   const userDetails = location.state
 
   function copyLink() {
-    navigator.clipboard.writeText(userDetails.url)
-    setMessage('Successfully copied the link')
+    if (userDetails.success) {
+      navigator.clipboard.writeText(userDetails.url)
+      setMessage('Successfully copied the link')
+    }
   }
 
   return (
     <Fragment>
-      <Nav navName="One Time Passcode Sent" menuButton="back" />
+      <Nav navName={userDetails.success ? "One Time Pass code Sent" : 'Error Sending Code'} menuButton="back" />
       <div className={css(styles.passcodeSection)}>
-        <p>
-          The One Time Passcode was successfully sent to{' '}
-          <span className={css(styles.user)}>{userDetails.user}</span>
-        </p>
+        {
+          userDetails.success && <p>
+            The One Time Pass code was successfully sent to{' '}
+            <span className={css(styles.user)}>{userDetails.user}</span>
+          </p>
+        }
         <br />
-        <Tooltip title="Click to copy">
+        <Tooltip title={userDetails.success ? "Click to copy" : ''}>
           <div>
-            Url:
+            {userDetails.success && 'Url: '}
             <span onClick={copyLink} className={css(styles.url)}>
               {' '}
               {userDetails.url}

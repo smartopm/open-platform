@@ -7,9 +7,8 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :log_entry
-  # after_create :notify_admin, unless: :showroom?
-
+  after_create :log_entry, :notify_admin
+  # after_update  :notify_admin
   validates :name, presence: true
 
   default_scope { order(created_at: :asc) }
@@ -24,7 +23,6 @@ class EntryRequest < ApplicationRecord
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    notify_admin
     log_decision('granted')
   end
 
@@ -34,7 +32,6 @@ class EntryRequest < ApplicationRecord
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    notify_admin
     log_decision('denied')
   end
 

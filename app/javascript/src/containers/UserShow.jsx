@@ -245,10 +245,16 @@ export function Component({
                             setLoading(false)
                             router.push('/otp_sent', {
                               url: _data.data.oneTimeLogin.url,
-                              user: data.user.name
+                              user: data.user.name,
+                              success: true
                             })
                           }).catch(() => {
-                            alert('Make sure the user has a phone number')
+                            // alert('Make sure the user has a phone number')
+                            router.push('/otp_sent', {
+                              url: 'The user has no Phone number added',
+                              user: data.user.name,
+                              success: false
+                            })
                           })
                         }}
                         className={css(styles.linkItem)}

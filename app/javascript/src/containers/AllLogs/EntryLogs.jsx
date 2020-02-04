@@ -27,7 +27,7 @@ const allEventLogs = (history, match, subjects) => {
       refId: refId,
       refType: null,
       offset,
-      // TODO: fix the delay when refetching
+      // TODO: fix the delay when re-fetching
       limit: searchTerm.length < 4 ? 1000 : initialLimit
     },
     fetchPolicy: 'cache-and-network'

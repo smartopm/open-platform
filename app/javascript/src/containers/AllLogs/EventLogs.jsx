@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
 import { Context as AuthStateContext } from "../Provider/AuthStateProvider.js";
-
 import Loading from "../../components/Loading.jsx";
 import DateUtil from "../../utils/dateutil.js";
 import { AllEventLogsQuery } from "../../graphql/queries.js";
@@ -17,7 +16,6 @@ export default ({ history }) => {
 const limit = 30;
 const allEventLogs = (history, authState) => {
   const [offset, setOffset] = useState(0);
-  // const eventsPage =
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: { subject: null, refId: null, refType: null, offset, limit },
     fetchPolicy: "cache-and-network"
