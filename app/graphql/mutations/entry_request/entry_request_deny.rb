@@ -13,7 +13,7 @@ module Mutations
         raise GraphQL::ExecutionError, 'NotFound' unless entry_request
 
         if entry_request.deny!(context[:current_user])
-          entry_request.notify_admin
+          entry_request.notify_admin(false)
           return { entry_request: entry_request }
         end
         raise GraphQL::ExecutionError, entry_request.errors.full_messages

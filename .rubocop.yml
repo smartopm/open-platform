@@ -9,7 +9,7 @@ AllCops:
     - 'bin/**/*'
     - 'Gemfile'
 
-Layout/LineLength:
+Metrics/LineLength:
   Max: 100
 
 # This is hard to keep in specs by their nature

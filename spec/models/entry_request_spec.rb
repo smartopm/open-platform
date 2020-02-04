@@ -53,27 +53,7 @@ RSpec.describe EntryRequest, type: :model do
       @entry_request = @guard.entry_requests.create(reason: 'Visiting',
                                                     name: 'Visitor Joe', nrc: '012345')
       expect { @entry_request.deny!(@non_admin) }
-        .not_to raise_exception(EntryRequest::Unauthorized)
+        .not_to raise_exception
     end
-
-    it 'should notify an admin upon granting' do
-      @entry_request = @guard.entry_requests.create(reason: 'Visiting',
-                                                    name: 'Visitor Joe', nrc: '012345')
-
-      expect(@entry_request.grant!(@non_admin)).to receive(:notify_admin)
-      @entry_request.save
-    end
-
-    # commented out this for approval, only notifying admins after granting/denying
-    # it 'should not notify for a showroom entry' do
-    #   # But not for a showroom entry
-    #   @entry_request = EntryRequest.new(reason: 'Visiting',
-    #                                     community: @guard.community,
-    #                                     user: @guard,
-    #                                     name: 'Visitor Joe', nrc: '012345',
-    #                                     source: 'showroom')
-    #   expect(@entry_request).not_to receive(:notify_admin)
-    #   @entry_request.save
-    # end
   end
 end

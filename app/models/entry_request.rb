@@ -7,8 +7,7 @@ class EntryRequest < ApplicationRecord
   belongs_to :grantor, class_name: 'User', optional: true
 
   before_validation :attach_community
-  after_create :log_entry, :notify_admin
-  # after_update  :notify_admin
+  after_create :log_entry
   validates :name, presence: true
 
   default_scope { order(created_at: :asc) }
@@ -60,13 +59,15 @@ class EntryRequest < ApplicationRecord
   end
 
   # TODO: Build this into a proper notification scheme
-  def notify_admin
-    link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"
-    Rails.logger.info "Sending entry request approval notification for #{link}"
+  def notify_admin(granted)
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
 
+    link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"
+    Rails.logger.info "Sending entry request approval notification for #{link}"
+
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-             "FYI #{name} - has been granted/denied entry by #{user.name},
+             "FYI #{name} -
+             has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
              for details click #{link}")
   end
 
