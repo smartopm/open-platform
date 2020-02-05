@@ -12,15 +12,17 @@ module Mutations
         entry_request = ::EntryRequest.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless entry_request
 
-        return { entry_request: entry_request } if entry_request.deny!(context[:current_user])
-
+        if entry_request.deny!(context[:current_user])
+          entry_request.notify_admin(false)
+          return { entry_request: entry_request }
+        end
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
 
       # TODO: Better auth here
       def authorized?(_vals)
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
 
         true
       end

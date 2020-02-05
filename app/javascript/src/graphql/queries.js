@@ -16,6 +16,7 @@ export const EntryRequestQuery = gql`
       ...EntryRequestFields
       guard: user {
         name
+        id
       }
     }
   }
@@ -107,30 +108,34 @@ export const SecurityGuards = gql`
 `
 
 export const allNotes = gql`
-    {
-      allNotes{
-        body
-        createdAt
-        flagged
+  {
+    allNotes {
+      body
+      createdAt
+      flagged
+      id
+      user {
+        name
         id
-        user {
-          name
-          id
-        }
       }
     }
-` 
+  }
+`
 export const flaggedNotes = gql`
-    {
-      flaggedNotes{
-        body
-        createdAt
+  {
+    flaggedNotes {
+      body
+      createdAt
+      id
+      completed
+      user {
         id
-        completed
-        user {
-          name
-          id
-        }
+        name
+      }
+      author {
+        id
+        name
       }
     }
-` 
+  }
+`

@@ -16,6 +16,7 @@ module Mutations
         note.author_id = context[:current_user].id
         note.created_at = DateTime.now
         note.completed = false
+        note.user_id = vals[:user_id]
         note.save
 
         return { note: note } if note.persisted?
@@ -26,7 +27,7 @@ module Mutations
       # TODO: Better auth here
       def authorized?(_vals)
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
         true
       end

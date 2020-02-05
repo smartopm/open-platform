@@ -27,7 +27,7 @@ const allEventLogs = (history, match, subjects) => {
       refId: refId,
       refType: null,
       offset,
-      // TODO: fix the delay when refetching
+      // TODO: fix the delay when re-fetching
       limit: searchTerm.length < 4 ? 1000 : initialLimit
     },
     fetchPolicy: 'cache-and-network'
@@ -109,6 +109,7 @@ export function IndexComponent({
           : event.subject === 'showroom'
             ? 'Showroom'
             : 'Manual'
+
       const reason = event.entryRequest ? event.entryRequest.reason : ''
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name

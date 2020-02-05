@@ -38,40 +38,22 @@ RSpec.describe EntryRequest, type: :model do
       expect(EventLog.where(ref_id: @entry_request.id).count).to eql 2
     end
 
-    it 'should handle an admin denying a request' do
+    it 'should handle a guard denying a request' do
       @entry_request = @guard.entry_requests.create(reason: 'Visiting',
                                                     name: 'Visitor Joe', nrc: '012345')
-      @entry_request.deny!(@admin)
+      @entry_request.deny!(@guard)
       expect(@entry_request.pending?).to be false
       expect(@entry_request.denied?).to be true
       expect(@entry_request.granted?).to be false
-      expect(@entry_request.grantor_id).to eql @admin.id
+      expect(@entry_request.grantor_id).to eql @guard.id
       expect(EventLog.where(ref_id: @entry_request.id).count).to eql 2
     end
 
-    it 'should prevent unauthorized granting' do
+    it 'should not throw error when guard grants entries' do
       @entry_request = @guard.entry_requests.create(reason: 'Visiting',
                                                     name: 'Visitor Joe', nrc: '012345')
       expect { @entry_request.deny!(@non_admin) }
-        .to raise_exception(EntryRequest::Unauthorized)
-    end
-
-    it 'should notify an admin upon creation' do
-      @entry_request = @guard.entry_requests.new(reason: 'Visiting',
-                                                 name: 'Visitor Joe', nrc: '012345')
-      expect(@entry_request).to receive(:notify_admin)
-      @entry_request.save
-    end
-
-    it 'should not notify for a showroom entry' do
-      # But not for a showroom entry
-      @entry_request = EntryRequest.new(reason: 'Visiting',
-                                        community: @guard.community,
-                                        user: @guard,
-                                        name: 'Visitor Joe', nrc: '012345',
-                                        source: 'showroom')
-      expect(@entry_request).not_to receive(:notify_admin)
-      @entry_request.save
+        .not_to raise_exception
     end
   end
 end
