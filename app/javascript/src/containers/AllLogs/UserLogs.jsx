@@ -16,7 +16,6 @@ export default ({ history, match }) => {
 const limit = 50;
 const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0);
-  // const eventsPage =
   const userId = match.params.id || null;
   const { loading, error, data } = useQuery(AllEventLogsForUserQuery, {
     variables: { subject: subjects, userId, offset, limit },

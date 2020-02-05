@@ -298,3 +298,13 @@ export const UpdateNote = gql`
     }
   }
 `
+export const AcknowledgeRequest = gql`
+    mutation EntryRequestAcknowledgeMutation($id: ID!) {
+      result: entryRequestAcknowledge(id: $id) {
+        entryRequest {
+          ...EntryRequestFields
+        }
+      }
+  }
+  ${EntryRequestFragment.publicFields}
+`

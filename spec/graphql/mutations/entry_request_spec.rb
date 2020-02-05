@@ -111,8 +111,8 @@ RSpec.describe Mutations::EntryRequest do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      expect(result.dig('data', 'result', 'entryRequest', 'id')).to be_nil
-      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
     end
   end
 
@@ -156,8 +156,8 @@ RSpec.describe Mutations::EntryRequest do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      expect(result.dig('data', 'result', 'entryRequest', 'id')).to be_nil
-      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
     end
   end
 end

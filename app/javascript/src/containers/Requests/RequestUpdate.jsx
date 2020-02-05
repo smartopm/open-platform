@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
@@ -12,10 +12,13 @@ import {
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 import DateUtil from "../../utils/dateutil";
+import { ponisoNumber } from "../../utils/constants.js"
+import { ModalDialog } from '../../components/Dialog'
 
+// TODO: Check the time of the day and day of the week.
 
 export default function RequestUpdate({ match, history, location }) {
-  const previousRoute = location.state ? location.state.from : "any";
+  const previousRoute = location.state && location.state.from
   const isFromLogs = previousRoute === "logs" || false;
 
   const { loading, data } = useQuery(EntryRequestQuery, {
@@ -27,6 +30,10 @@ export default function RequestUpdate({ match, history, location }) {
   const [createUser] = useMutation(CreateUserMutation)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [isModalOpen, setModal] = useState(false)
+  const [modalAction, setModalAction] = useState('grant')
+  const [date, setDate] = useState(new Date());
+
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -35,6 +42,20 @@ export default function RequestUpdate({ match, history, location }) {
     reason: "",
     loaded: false
   });
+
+
+  useEffect(() => {
+    var timerID = setInterval(() => tick(), 1000);
+
+    return function cleanup() {
+      clearInterval(timerID);
+    };
+  });
+
+  function tick() {
+    setDate(new Date());
+  }
+
 
   if (loading) {
     return <Loading />;
@@ -63,6 +84,10 @@ export default function RequestUpdate({ match, history, location }) {
       .then(() => {
         history.push("/entry_logs", { tab: 1 });
         setLoading(false)
+      })
+      .catch(error => {
+        setLoading(false)
+        setMessage(error.message)
       });
   }
 
@@ -91,6 +116,17 @@ export default function RequestUpdate({ match, history, location }) {
       setMessage('User was successfully enrolled')
     })
   }
+  function handleModal(_event, type) {
+    if (type === 'grant') {
+      setModalAction('grant')
+    } else {
+      setModalAction('deny')
+    }
+    setModal(!isModalOpen)
+  }
+
+
+
   return (
     <Fragment>
       <Nav
@@ -98,6 +134,27 @@ export default function RequestUpdate({ match, history, location }) {
         navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
       />
+
+      <ModalDialog
+        handleClose={handleModal}
+        handleConfirm={handleGrantRequest}
+        open={isModalOpen}
+        action={modalAction}
+        name={formData.name}
+      >
+        {
+          modalAction === 'grant' && (
+            <div>
+              <p>Current Time: <b>{date.toLocaleTimeString()}</b></p>
+              <u>Visiting Hours</u> <br />
+              Monday - Friday: <b>8:00 - 16:00</b> <br />
+              Saturday: <b>8:00 - 12:00</b> <br />
+              Sunday: <b>Off</b> <br />
+            </div>
+          )
+        }
+      </ModalDialog>
+
       <div className="container">
         <form>
           {isFromLogs && (
@@ -227,22 +284,36 @@ export default function RequestUpdate({ match, history, location }) {
             : !/logs|enroll/.test(previousRoute)
               ? (
                 <div className="row justify-content-center align-items-center">
-                  <Button
-                    variant="contained"
-                    onClick={handleGrantRequest}
-                    className={`btn ${css(styles.grantButton)}`}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Granting ...' : 'Grant'}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleDenyRequest}
-                    className={`btn  ${css(styles.denyButton)}`}
-                    disabled={isLoading}
-                  >
-                    Deny
-              </Button>
+                  <div className="col">
+                    <Button
+                      variant="contained"
+                      onClick={(event => handleModal(event, 'grant'))}
+                      className={`btn ${css(styles.grantButton)}`}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Granting ...' : 'Grant'}
+                    </Button>
+                  </div>
+                  <div className="col">
+                    <Button
+                      variant="contained"
+                      onClick={handleDenyRequest}
+                      className={`btn  ${css(styles.denyButton)}`}
+                      disabled={isLoading}
+                    >
+                      Deny
+                    </Button>
+
+                  </div>
+                  <div className="col">
+                    <a
+                      href={`tel:${ponisoNumber}`}
+                      className={` ${css(styles.callButton)}`}
+                    >
+                      Call Poniso
+                    </a>
+
+                  </div>
                 </div>
               ) : <span />}
         </form>
@@ -250,6 +321,7 @@ export default function RequestUpdate({ match, history, location }) {
     </Fragment>
   );
 }
+
 
 const styles = StyleSheet.create({
   logButton: {
@@ -265,11 +337,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#25c0b0",
     color: "#FFF",
     marginRight: 60,
-    width: "35%"
+    // width: "35%"
   },
   denyButton: {
-    backgroundColor: "rgb(230, 63, 69)",
+    // backgroundColor: "rgb(230, 63, 69)",
+    backgroundColor: "rgb(38, 38, 38)",
     color: "#FFF",
-    width: "35%"
+    // width: "35%"
+  },
+  callButton: {
+    color: "rgb(230, 63, 69)",
+    textTransform: "unset",
+    textDecoration: "none"
   }
 });

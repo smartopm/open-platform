@@ -8,8 +8,6 @@ class EntryRequest < ApplicationRecord
 
   before_validation :attach_community
   after_create :log_entry
-  after_create :notify_admin, unless: :showroom?
-
   validates :name, presence: true
 
   default_scope { order(created_at: :asc) }
@@ -19,23 +17,21 @@ class EntryRequest < ApplicationRecord
   GRANT_STATE = %w[Pending Granted Denied].freeze
 
   def grant!(grantor)
-    can_grant?(grantor)
     update(
       grantor_id: grantor.id,
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    log_decision(true)
+    log_decision('granted')
   end
 
   def deny!(grantor)
-    can_grant?(grantor)
     update(
       grantor_id: grantor.id,
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    log_decision(false)
+    log_decision('denied')
   end
 
   def granted?
@@ -54,11 +50,28 @@ class EntryRequest < ApplicationRecord
     self[:source] == 'showroom'
   end
 
-  private
-
-  def can_grant?(grantor)
-    raise Unauthorized unless grantor.admin?
+  def acknowledge!
+    update(
+      acknowledged: true,
+      id: id,
+    )
+    log_decision('acknowledged')
   end
+
+  # TODO: Build this into a proper notification scheme
+  def notify_admin(granted)
+    return unless ENV['REQUEST_NOTIFICATION_NUMBER']
+
+    link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"
+    Rails.logger.info "Sending entry request approval notification for #{link}"
+
+    Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
+             "FYI #{name} -
+             has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
+             for details click #{link}")
+  end
+
+  private
 
   def attach_community
     self[:community_id] = user.community_id
@@ -96,25 +109,15 @@ class EntryRequest < ApplicationRecord
     )
   end
 
-  def log_decision(approved)
+  def log_decision(decision)
     EventLog.create(
       acting_user: grantor, community: user.community,
       subject: 'visitor_entry',
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
-        action: approved ? 'granted' : 'denied',
+        action: decision,
         ref_name: self[:name],
       }
     )
-  end
-
-  # TODO: Build this into a proper notification scheme
-  def notify_admin
-    link = "https://#{ENV['HOST']}/request/#{id}/edit"
-    Rails.logger.info "Sending entry request approval notification for #{link}"
-    return unless ENV['REQUEST_NOTIFICATION_NUMBER']
-
-    Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-             "New entry request from #{name} - Approve or Deny at #{link}")
   end
 end
