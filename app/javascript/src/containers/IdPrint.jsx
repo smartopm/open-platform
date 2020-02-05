@@ -28,7 +28,7 @@ function qrCodeAddress(id_card_token) {
     window.location.hostname +
     '/user/' +
     id_card_token
-  return '/qr_code?data=' + encodeURIComponent(linkUrl) + '&size=100x100'
+  return linkUrl
 }
 
 function openImageInNewTab() {
