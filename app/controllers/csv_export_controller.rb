@@ -34,9 +34,10 @@ class CsvExportController < ApplicationController
   def event_logs_to_rows(event_logs, timezone)
     event_logs.map do |ev|
       time = ev.created_at.in_time_zone(timezone || 'UTC')
+      data = ev.data || {}
       visitor_details = get_visitor_details(ev)
-      [ev.subject, ev.to_sentence, ev.acting_user.name,
-       visitor_details[:name], visitor_details[:reason], ev.data[:type],
+      [ev.subject, ev.to_sentence, ev.acting_user&.name,
+       visitor_details[:name], visitor_details[:reason], data[:type],
        time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S')]
     end
   end
