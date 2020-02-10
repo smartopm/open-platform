@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 2020_01_28_144301) do
     t.datetime "granted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source"
     t.boolean "acknowledged"
   end
 
@@ -91,9 +92,9 @@ ActiveRecord::Schema.define(version: 2020_01_28_144301) do
     t.uuid "user_id"
     t.uuid "author_id"
     t.text "body"
+    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "flagged"
-    t.datetime "created_at"
     t.boolean "completed"
   end
 
