@@ -11,15 +11,18 @@ RSpec.describe Mutations::User do
         mutation CreateUserMutation(
             $name: String!,
             $reason: String!,
-            $vehicle: String
+            $vehicle: String,
+            $email: String
           ) {
           userCreate(
               name: $name,
               requestReason: $reason,
               vehicle: $vehicle,
+              email: $email
             ) {
             user {
               id
+              email
             }
           }
         }
@@ -43,6 +46,23 @@ RSpec.describe Mutations::User do
     it 'returns should not create an invalid pending user' do
       variables = {
         name: '',
+        reason: 'Resident',
+        vehicle: nil,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                              }).as_json
+      expect(result.dig('data', 'userCreate', 'user')).to be_nil
+      expect(result.dig('errors')).not_to be_empty
+    end
+
+    it 'should fail to create a duplicate email user' do
+      dup_email = 'mark@doublegdp.com'
+      create(:user, email: dup_email, community: current_user.community)
+      variables = {
+        name: 'Mark Percival',
+        email: dup_email,
         reason: 'Resident',
         vehicle: nil,
       }
