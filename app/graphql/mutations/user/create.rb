@@ -31,7 +31,11 @@ module Mutations
         user.community_id = context[:current_user].community_id
         attach_avatars(user, vals)
 
-        return { user: user } if user.save
+        begin
+          return { user: user } if user.save
+        rescue ActiveRecord::RecordNotUnique
+          raise GraphQL::ExecutionError, 'Duplicate email'
+        end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
