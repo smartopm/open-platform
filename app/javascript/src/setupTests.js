@@ -14,7 +14,10 @@ global.File = () => {
 
 configure({ adapter: new Adapter() })
 
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>')
+const url = 'http://localhost'
+
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>', { url })
+
 const { window } = jsdom
 
 function copyProps(src, target) {
