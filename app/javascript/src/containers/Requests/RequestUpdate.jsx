@@ -14,7 +14,7 @@ import { StyleSheet, css } from "aphrodite";
 import DateUtil from "../../utils/dateutil";
 import { ponisoNumber } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
-import { isWeekend, isSaturday, isSunday } from 'date-fns'
+import { isWeekend, isSaturday } from 'date-fns'
 
 // TODO: Check the time of the day and day of the week.
 
