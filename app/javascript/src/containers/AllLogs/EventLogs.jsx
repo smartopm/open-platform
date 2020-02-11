@@ -61,7 +61,7 @@ export function IndexComponent({
         <td>{entry.sentence}</td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
-        <td>{entry.data.type || 'Entry Request'}</td>
+        <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
       </tr>
     ));
   }

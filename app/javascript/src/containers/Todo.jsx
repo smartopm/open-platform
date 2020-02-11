@@ -32,7 +32,7 @@ export default function Todo({ history }) {
   return (
     <Fragment>
       <Nav navName="Todo" menuButton="back" />
-      <div className="">
+      <div className="container">
         <ul className={css(styles.list)}>
           {isLoading ? (
             <Loading />
