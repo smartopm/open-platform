@@ -86,7 +86,7 @@ export function IndexComponent({
                 <th scope="col">Description</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
-                <th scope="col">Type</th>
+                <th scope="col">User Type</th>
               </tr>
             </thead>
             <tbody>{logs(data.result)}</tbody>

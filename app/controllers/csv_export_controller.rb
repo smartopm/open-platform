@@ -12,7 +12,7 @@ class CsvExportController < ApplicationController
     # format into CSV
     # Send to browser as a file
     # send_data @users.to_csv, filename: "users-#{Date.today}.csv"
-    headers = %w[subject description user visitor reason data time]
+    headers = %w[subject description user visitor reason date time user_type]
     csv_string = CSV.generate do |csv|
       csv << headers
       get_event_logs(params).each do |row|
@@ -37,8 +37,8 @@ class CsvExportController < ApplicationController
       data = ev.data || {}
       visitor_details = get_visitor_details(ev)
       [ev.subject, ev.to_sentence, ev.acting_user&.name,
-       visitor_details[:name], visitor_details[:reason], data[:type],
-       time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S')]
+       visitor_details[:name], visitor_details[:reason],
+       time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'), data[:type]]
     end
   end
 
