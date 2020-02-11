@@ -71,6 +71,10 @@ class EntryRequest < ApplicationRecord
              for details click #{link}")
   end
 
+  def notify_client(number)
+    SMS.send(number, "https://#{ENV['HOST']}/feedback")
+  end
+
   private
 
   def attach_community
