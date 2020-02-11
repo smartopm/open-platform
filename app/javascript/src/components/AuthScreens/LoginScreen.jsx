@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -10,6 +10,8 @@ import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhone } from "../../graphql/mutations";
+import { getAuthToken } from "../../utils/apollo";
+
 
 export function LoginScreen({ history }) {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -38,6 +40,17 @@ export function LoginScreen({ history }) {
         });
     }
   }
+
+  useEffect(() => {
+    // check if user is logged in
+    const token = getAuthToken()
+    if (token) {
+      // return to home
+      history.push('/')
+    }
+  })
+
+
   return (
     <div style={{ height: "100vh" }} className="login-page">
       <nav className={`${css(styles.navBar)} navbar`}>
@@ -106,8 +119,8 @@ export function LoginScreen({ history }) {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-              <span>Next</span>
-            )}
+                <span>Next</span>
+              )}
           </Button>
         </div>
 

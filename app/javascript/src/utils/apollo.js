@@ -18,7 +18,7 @@ export const createCache = () => {
 export const AUTH_TOKEN_KEY = 'dgdp_auth_token'
 
 // getToken from meta tags
-const getAuthToken = () => window.localStorage.getItem(AUTH_TOKEN_KEY)
+export const getAuthToken = () => window.localStorage.getItem(AUTH_TOKEN_KEY)
 
 const setTokenForOperation = async operation => {
   const authToken = getAuthToken()
