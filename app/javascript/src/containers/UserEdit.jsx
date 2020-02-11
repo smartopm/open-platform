@@ -23,7 +23,7 @@ const initialValues = {
 
 export const FormContext = React.createContext({
   values: initialValues,
-  handleInputChange: () => {}
+  handleInputChange: () => { }
 })
 
 export default function FormContainer({ match, history }) {
@@ -41,6 +41,7 @@ export default function FormContainer({ match, history }) {
   const [data, setData] = React.useState(initialValues)
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
+  const [msg, setMsg] = React.useState('')
 
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -79,7 +80,9 @@ export default function FormContainer({ match, history }) {
         // setSubmitting(false);
         history.push(`/user/${data.result.user.id}`)
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        setMsg(err.message)
+      })
   }
   function handleInputChange(event) {
     const { name, value } = event.target
@@ -130,6 +133,10 @@ export default function FormContainer({ match, history }) {
         action={modalAction}
         name={data.name}
       />
+      <br />
+      {
+        Boolean(msg.length) && <p className='text-danger text-center'>{msg}</p>
+      }
       <UserForm />
     </FormContext.Provider>
   )
