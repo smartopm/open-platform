@@ -23,7 +23,7 @@ export function FeedbackSuccess(props) {
     const { classes } = props;
 
     const [time, setTime] = useState(10);
-
+    // TODO: @olivier ==> Create a custom hook out of this
     useEffect(() => {
         if (!time) return;
 
