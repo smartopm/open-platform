@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from "@material-ui/core/styles";
 import CheckIcon from '@material-ui/icons/Check';
 import IconButton from "@material-ui/core/IconButton";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
     checkedIcon: {
@@ -21,6 +22,20 @@ const styles = theme => ({
 export function FeedbackSuccess(props) {
     const { classes } = props;
 
+    const [time, setTime] = useState(10);
+
+    useEffect(() => {
+        if (!time) return;
+
+        const intervalId = setInterval(() => {
+            setTime(time - 1);
+        }, 1000);
+        return () => clearInterval(intervalId);
+    }, [time]);
+
+    if (time === 0) {
+        return <Redirect to="/" />;
+    }
     return (
         <div>
             <Nav navName='Feedback' menuButton='back' />
