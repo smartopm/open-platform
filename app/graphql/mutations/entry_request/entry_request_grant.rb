@@ -14,6 +14,7 @@ module Mutations
 
         if entry_request.grant!(context[:current_user])
           entry_request.notify_admin(true)
+          entry_request.send_feedback_link(entry_request.phone_number)
           return { entry_request: entry_request }
         end
         raise GraphQL::ExecutionError, entry_request.errors.full_messages

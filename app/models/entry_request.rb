@@ -67,8 +67,14 @@ class EntryRequest < ApplicationRecord
 
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
              "FYI #{name} -
-             has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
-             for details click #{link}")
+      has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
+      for details click #{link}")
+  end
+
+  def send_feedback_link(number)
+    feedback_link = "https://#{ENV['HOST']}/feedback"
+    Rails.logger.info "Phone number to send #{number}"
+    Sms.send(number, "Thank you for using our app, kindly using this link to give us feedback #{feedback_link}")
   end
 
   private
