@@ -24,7 +24,7 @@ export default function Todo({ history }) {
   }
   if (authState.user.userType !== 'admin') {
     // re-route to home
-    return history.push('/')
+    history.push('/')
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
