@@ -52,6 +52,7 @@ import CheckInComplete from '../src/containers/showroom/CheckInComplete'
 import Todo from '../src/containers/Todo'
 import OTPFeedbackScreen from '../src/containers/OTPScreen'
 import Feedback from '../src/containers/Feedback';
+import FeedbackSuccess from '../src/containers/FeedbackSuccess';
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -189,9 +190,10 @@ const App = () => {
 
                     <Route path="/todo" component={Todo} />
                     <Route path="/feedback" component={Feedback} />
+                    <Route path="/feedback_success" component={FeedbackSuccess} />
 
                     <Route
-                      path="*"
+                                      path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
                     />
                   </Switch>
