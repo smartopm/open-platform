@@ -5,7 +5,7 @@ module Types
     field :id, ID, null: false
     field :user, Types::UserType, null: false
     field :user_id, ID, null: false
-    field :like, Boolean, null: false
+    field :is_thumbs_up, Boolean, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_13_100039) do
+ActiveRecord::Schema.define(version: 2020_02_13_102452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 2020_02_13_100039) do
 
   create_table "feedbacks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "userId"
-    t.boolean "like"
+    t.boolean "is_thumbs_up"
     t.datetime "date"
     t.string "name"
     t.datetime "created_at", precision: 6, null: false

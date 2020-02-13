@@ -2,7 +2,6 @@
 
 module Mutations
   module Feedback
-    # Create a new request/pending member
     class FeedbackCreate < BaseMutation
       argument :isThumbsUp, Boolean, required: false
 
@@ -12,7 +11,7 @@ module Mutations
         feedback = context[:current_user].feedbacks.new(vals)
         feedback.user_id = context[:current_user].id
         feedback.created_at = DateTime.now
-        feedback.isThumbsUp = vals[:isThumbsUp]
+        feedback.is_thumbs_up = vals[:isThumbsUp]
         feedback.save
 
         return { feedback: feedback } if feedback.persisted?
