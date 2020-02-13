@@ -310,11 +310,12 @@ export const AcknowledgeRequest = gql`
 `
 
 export const createFeedback = gql`
-  mutation {
-    feedbackCreate(isThumbsUp: true) {
+  mutation FeedbackCreate($isThumbsUp: Boolean) {
+    feedbackCreate(isThumbsUp: $isThumbsUp) {
       feedback {
         user {
           id
+          name
         }
         createdAt
         isThumbsUp

@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from '@material-ui/core/styles'
 import ThumbDownIcon from '@material-ui/icons/ThumbDown'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import IconButton from '@material-ui/core/IconButton'
+import { useMutation } from 'react-apollo'
+import { createFeedback } from '../graphql/mutations'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
 const styles = (theme) => ({
     thumbDownButton: {
@@ -29,18 +32,33 @@ export function Feedback(props) {
     const { classes, history } = props
     const [isTextAreaOpen, setTextAreaOpen] = useState(false)
     const [feedback, setFeedback] = useState('')
+    const authState = useContext(AuthStateContext)
+    const [feedbackCreate] = useMutation(createFeedback)
+
+
 
     function handleThumbDown() {
         setTextAreaOpen(!isTextAreaOpen)
     }
 
     function handleThumbUp() {
-        history.push('/feedback_success')
+        feedbackCreate({ variables: { isThumbsUp: true } })
+            .then(() => {
+                history.push('/feedback_success')
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
     }
 
     function handleSubmitFeedback() {
-        // capture feedback and re-route user
-        history.push('/feedback_success')
+        feedbackCreate({ variables: { isThumbsUp: false } })
+            .then(() => {
+                history.push('/feedback_success')
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
     }
 
     return (
