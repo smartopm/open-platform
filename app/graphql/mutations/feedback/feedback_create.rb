@@ -13,8 +13,6 @@ module Mutations
           created_at: DateTime.now,
           is_thumbs_up: vals[:isThumbsUp],
         )
-        # feedback.save
-
         return { feedback: feedback } if feedback.persisted?
 
         raise GraphQL::ExecutionError, feedback.errors.full_messages
