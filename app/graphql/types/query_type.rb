@@ -5,7 +5,7 @@ module Types
   class QueryType < Types::BaseObject
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
-
+    # include Types::Queries::Feedback
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -106,6 +106,15 @@ module Types
 
     def entry_search(name:)
       EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
+    end
+
+    # feedback
+    field :get_feedback, [FeedbackType], null: true do
+      description 'Returns all feedback submitted by the user'
+    end
+
+    def get_feedback
+      Feedback.all.order(created_at: :asc)
     end
   end
 end
