@@ -299,12 +299,26 @@ export const UpdateNote = gql`
   }
 `
 export const AcknowledgeRequest = gql`
-    mutation EntryRequestAcknowledgeMutation($id: ID!) {
-      result: entryRequestAcknowledge(id: $id) {
-        entryRequest {
-          ...EntryRequestFields
-        }
+  mutation EntryRequestAcknowledgeMutation($id: ID!) {
+    result: entryRequestAcknowledge(id: $id) {
+      entryRequest {
+        ...EntryRequestFields
       }
+    }
   }
   ${EntryRequestFragment.publicFields}
+`
+
+export const createFeedback = gql`
+  mutation {
+    feedbackCreate(isThumbsUp: true) {
+      feedback {
+        user {
+          id
+        }
+        createdAt
+        isThumbsUp
+      }
+    }
+  }
 `

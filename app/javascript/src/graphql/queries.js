@@ -139,3 +139,15 @@ export const flaggedNotes = gql`
     }
   }
 `
+
+export const feedback = gql`
+  {
+    getFeedback {
+      isThumbsUp
+      user {
+        id
+      }
+      createdAt
+    }
+  }
+`
