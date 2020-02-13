@@ -51,8 +51,8 @@ import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
 import CheckInComplete from '../src/containers/showroom/CheckInComplete'
 import Todo from '../src/containers/Todo'
 import OTPFeedbackScreen from '../src/containers/OTPScreen'
-import Feedback from '../src/containers/Feedback';
-import FeedbackSuccess from '../src/containers/FeedbackSuccess';
+import Feedback from '../src/containers/Activity/Feedback';
+import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
