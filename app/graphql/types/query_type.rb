@@ -76,8 +76,8 @@ module Types
 
     field :all_notes, [NoteType], null: false do
       description 'Returns a list of all the notes'
-      argument :offset, ID, required: false
-      argument :limit, ID, required: false
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
     def all_notes(offset: 0, limit: 50)

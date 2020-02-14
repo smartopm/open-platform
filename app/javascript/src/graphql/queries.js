@@ -108,8 +108,8 @@ export const SecurityGuards = gql`
 `
 
 export const allNotes = gql`
-  {
-    allNotes {
+  query GetNotes($limit: Int, $offset: Int){
+    allNotes(limit: $limit, offset: $offset) {
       body
       createdAt
       flagged

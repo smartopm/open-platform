@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { allNotes } from '../../graphql/queries'
@@ -7,12 +7,27 @@ import ErrorPage from '../../components/Error'
 import DateUtil from '../../utils/dateutil.js'
 import { formatISO9075 } from 'date-fns'
 
+const limit = 20
 export default function Notes(params) {
-  const { loading, error, data,  } = useQuery(allNotes)
-  if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
+    const [offset, setOffset] = useState(0)
+    const { loading, error, data,  } = useQuery(allNotes, {
+        variables : { limit, offset }
+    })
 
-  return (
+    if (loading) return <Loading />
+    if (error) return <ErrorPage error={error.message} />
+
+    function handleNextPage() {
+        setOffset(offset + limit)
+    }
+    function handlePreviousPage() {
+        if (offset < limit) {
+            return
+        }
+        setOffset(offset - limit)
+    }
+
+    return (
         <Fragment>
             <Nav navName='Notes' menuButton='back' /> 
 
@@ -34,6 +49,25 @@ export default function Notes(params) {
                         ))
                     )
                 }
+                <div className="d-flex justify-content-center">
+                    <nav aria-label="center Page navigation">
+                        <ul className="pagination">
+                        <li className={`page-item ${offset < limit && 'disabled'}`}>
+                            <a className="page-link" onClick={handlePreviousPage} href="#">
+                            Previous
+                            </a>
+                        </li>
+                        <li
+                            className={`page-item ${data.allNotes.length < limit &&
+                            'disabled'}`}
+                        >
+                            <a className="page-link" onClick={handleNextPage} href="#">
+                            Next
+                            </a>
+                        </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </Fragment>
     )
