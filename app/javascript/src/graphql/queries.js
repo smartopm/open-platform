@@ -108,7 +108,7 @@ export const SecurityGuards = gql`
 `
 
 export const allNotes = gql`
-  query GetNotes($limit: Int, $offset: Int){
+  query GetNotes($limit: Int, $offset: Int) {
     allNotes(limit: $limit, offset: $offset) {
       body
       createdAt
@@ -147,9 +147,11 @@ export const flaggedNotes = gql`
 export const allFeedback = gql`
   {
     getFeedback {
+      id
       isThumbsUp
       user {
         id
+        name
       }
       createdAt
     }
