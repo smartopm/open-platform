@@ -33,7 +33,7 @@ export default function Notes() {
 
             <div className='container'>
                 {
-                    Boolean(data.allNotes.length) && (
+                    Boolean(data.allNotes.length) ? (
                         data.allNotes.map(note => (
                             <div key={note.id}>
                             <hr />
@@ -47,6 +47,13 @@ export default function Notes() {
                                 </p>
                             </div>
                         ))
+                    ) : (
+                       <>
+                        <br />
+                            <p className='text-center'>
+                            No Notes Yet
+                        </p>
+                       </>
                     )
                 }
                 <div className="d-flex justify-content-center">

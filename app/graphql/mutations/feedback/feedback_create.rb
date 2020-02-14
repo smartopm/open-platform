@@ -3,7 +3,7 @@
 module Mutations
   module Feedback
     class FeedbackCreate < BaseMutation
-      argument :isThumbsUp, Boolean, required: true
+      argument :is_thumbs_up, Boolean, required: true
 
       field :feedback, Types::FeedbackType, null: true
 
@@ -11,9 +11,10 @@ module Mutations
         feedback = ::Feedback.new(
           user_id: context[:current_user].id,
           created_at: DateTime.now,
-          is_thumbs_up: vals[:isThumbsUp],
+          is_thumbs_up: vals[:is_thumbs_up],
         )
         feedback.save
+
         return { feedback: feedback } if feedback.persisted?
 
         raise GraphQL::ExecutionError, feedback.errors.full_messages

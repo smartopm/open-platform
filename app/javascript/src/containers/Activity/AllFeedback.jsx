@@ -12,11 +12,10 @@ export default function FeedbackPage() {
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
-    console.log(data)
 
     return (
         <Fragment>
-            <Nav navName='Notes' menuButton='back' /> 
+            <Nav navName='Feedback' menuButton='back' /> 
                 Feedback Page
         </Fragment>
     )
