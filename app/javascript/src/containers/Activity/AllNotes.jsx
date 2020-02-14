@@ -8,7 +8,7 @@ import DateUtil from '../../utils/dateutil.js'
 import { formatISO9075 } from 'date-fns'
 
 export default function Notes(params) {
- const { loading, error, data,  } = useQuery(allNotes)
+  const { loading, error, data,  } = useQuery(allNotes)
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
 

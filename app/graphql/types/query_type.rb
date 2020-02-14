@@ -76,10 +76,13 @@ module Types
 
     field :all_notes, [NoteType], null: false do
       description 'Returns a list of all the notes'
+      argument :offset, ID, required: false
+      argument :limit, ID, required: false
     end
 
-    def all_notes
+    def all_notes(offset: 0, limit: 50)
       Note.all.order(created_at: :asc)
+          .limit(limit).offset(offset)
     end
 
     field :user_notes, [NoteType], null: false do
