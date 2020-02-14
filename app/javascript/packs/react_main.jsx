@@ -54,6 +54,7 @@ import OTPFeedbackScreen from '../src/containers/OTPScreen'
 import Feedback from '../src/containers/Activity/Feedback'
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
 import AllNotes from '../src/containers/Activity/AllNotes'
+import FeedbackPage from '../src/containers/Activity/AllFeedback'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -193,6 +194,7 @@ const App = () => {
                     <Route path="/feedback" component={Feedback} />
                     <Route path="/feedback_success" component={FeedbackSuccess} />
                     <Route path="/notes" component={AllNotes} />
+                    <Route path="/feedbacks" component={FeedbackPage} />
 
                     <Route
                       path="*"

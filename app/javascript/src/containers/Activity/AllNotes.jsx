@@ -8,7 +8,7 @@ import DateUtil from '../../utils/dateutil.js'
 import { formatISO9075 } from 'date-fns'
 
 const limit = 20
-export default function Notes(params) {
+export default function Notes() {
     const [offset, setOffset] = useState(0)
     const { loading, error, data,  } = useQuery(allNotes, {
         variables : { limit, offset }

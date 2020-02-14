@@ -144,7 +144,7 @@ export const flaggedNotes = gql`
   }
 `
 
-export const feedback = gql`
+export const allFeedback = gql`
   {
     getFeedback {
       isThumbsUp
