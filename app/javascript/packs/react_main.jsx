@@ -51,9 +51,9 @@ import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
 import CheckInComplete from '../src/containers/showroom/CheckInComplete'
 import Todo from '../src/containers/Todo'
 import OTPFeedbackScreen from '../src/containers/OTPScreen'
-import Feedback from '../src/containers/Activity/Feedback';
-import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
-
+import Feedback from '../src/containers/Activity/Feedback'
+import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
+import AllNotes from '../src/containers/Activity/AllNotes'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -188,12 +188,14 @@ const App = () => {
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
 
+                    {/* activity */}
                     <Route path="/todo" component={Todo} />
                     <Route path="/feedback" component={Feedback} />
                     <Route path="/feedback_success" component={FeedbackSuccess} />
+                    <Route path="/notes" component={AllNotes} />
 
                     <Route
-                                      path="*"
+                      path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
                     />
                   </Switch>

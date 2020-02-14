@@ -118,6 +118,10 @@ export const allNotes = gql`
         name
         id
       }
+      author {
+        name
+        id
+      }
     }
   }
 `
