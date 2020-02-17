@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'json'
 
 # Export Event logs as a CSV
 class CsvExportController < ApplicationController
@@ -29,16 +30,16 @@ class CsvExportController < ApplicationController
     events = EventLog.where(community_id: @user.community_id,
                             created_at: 30.days.ago..Float::INFINITY)
     event_logs_to_rows(events, @user.community.timezone)
-  end
+end
 
   def event_logs_to_rows(event_logs, timezone)
     event_logs.map do |ev|
       time = ev.created_at.in_time_zone(timezone || 'UTC')
-      data = ev.data || {}
+      data = ev.data || {} 
       visitor_details = get_visitor_details(ev)
       [ev.subject, ev.to_sentence, ev.acting_user&.name,
        visitor_details[:name], visitor_details[:reason],
-       time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'), data[:type]]
+       time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'), data['type']]
     end
   end
 
