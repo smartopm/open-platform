@@ -99,6 +99,7 @@ class EntryRequest < ApplicationRecord
       data: {
         action: 'started',
         ref_name: self[:name],
+        type: user.user_type,
       }
     )
   end
@@ -111,6 +112,7 @@ class EntryRequest < ApplicationRecord
       data: {
         action: 'created',
         ref_name: self[:name],
+        type: user.user_type,
       }
     )
   end
@@ -123,6 +125,7 @@ class EntryRequest < ApplicationRecord
       data: {
         action: decision,
         ref_name: self[:name],
+        type: user.user_type,
       }
     )
   end
