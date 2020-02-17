@@ -16,11 +16,11 @@ module Mutations
         feedback.save
         user = ::User.find(context[:current_user].id)
         ::EventLog.create(acting_user_id: context[:current_user].id,
-                          community_id: user.community_id, subject: 'user_entry',
+                          community_id: user.community_id, subject: 'user_feedback',
                           ref_id: user.id,
                           ref_type: 'User',
                           data: {
-                            ref_name: user.name, note: 'feedback', type: user.user_type
+                            ref_name: user.name, note: vals[:is_thumbs_up] ? 'thumbs up' : 'thumbs down', type: user.user_type
                           })
 
         return { feedback: feedback } if feedback.persisted?
