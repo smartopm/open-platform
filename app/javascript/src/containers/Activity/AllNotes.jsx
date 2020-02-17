@@ -4,14 +4,13 @@ import { useQuery } from 'react-apollo'
 import { allNotes } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
-import DateUtil from '../../utils/dateutil.js'
 import { formatISO9075 } from 'date-fns'
 
 const limit = 20
 export default function Notes() {
     const [offset, setOffset] = useState(0)
-    const { loading, error, data,  } = useQuery(allNotes, {
-        variables : { limit, offset }
+    const { loading, error, data, } = useQuery(allNotes, {
+        variables: { limit, offset }
     })
 
     if (loading) return <Loading />
@@ -29,17 +28,17 @@ export default function Notes() {
 
     return (
         <Fragment>
-            <Nav navName='Notes' menuButton='back' /> 
+            <Nav navName='Notes' menuButton='back' />
 
             <div className='container'>
                 {
-                    Boolean(data.allNotes.length) ? (
+                    data.allNotes.length ? (
                         data.allNotes.map(note => (
                             <div key={note.id}>
-                            <hr />
+                                <hr />
                                 <p>
-                                 <b><a href={`/user/${note.author.id}`}>{note.author.name}</a> </b> created a note for <b><a href={`/user/${note.user.id}`}>{note.user.name}</a></b> on {' '} 
-                                    <i style={{ color: 'grey' }}>{ formatISO9075(new Date(note.createdAt))}</i>
+                                    <b><a href={`/user/${note.author.id}`}>{note.author.name}</a> </b> created a note for <b><a href={`/user/${note.user.id}`}>{note.user.name}</a></b> on {' '}
+                                    <i style={{ color: 'grey' }}>{formatISO9075(new Date(note.createdAt))}</i>
                                     <br />
                                     {
                                         note.body
@@ -48,30 +47,30 @@ export default function Notes() {
                             </div>
                         ))
                     ) : (
-                       <>
-                        <br />
-                            <p className='text-center'>
-                            No Notes Yet
+                            <>
+                                <br />
+                                <p className='text-center'>
+                                    No Notes Yet
                         </p>
-                       </>
-                    )
+                            </>
+                        )
                 }
                 <div className="d-flex justify-content-center">
                     <nav aria-label="center Page navigation">
                         <ul className="pagination">
-                        <li className={`page-item ${offset < limit && 'disabled'}`}>
-                            <a className="page-link" onClick={handlePreviousPage} href="#">
-                            Previous
+                            <li className={`page-item ${offset < limit && 'disabled'}`}>
+                                <a className="page-link" onClick={handlePreviousPage} href="#">
+                                    Previous
                             </a>
-                        </li>
-                        <li
-                            className={`page-item ${data.allNotes.length < limit &&
-                            'disabled'}`}
-                        >
-                            <a className="page-link" onClick={handleNextPage} href="#">
-                            Next
+                            </li>
+                            <li
+                                className={`page-item ${data.allNotes.length < limit &&
+                                    'disabled'}`}
+                            >
+                                <a className="page-link" onClick={handleNextPage} href="#">
+                                    Next
                             </a>
-                        </li>
+                            </li>
                         </ul>
                     </nav>
                 </div>

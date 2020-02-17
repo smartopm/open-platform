@@ -10,7 +10,8 @@ class EventLog < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
-  VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_active user_feedback].freeze
+  VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch
+                      user_active user_feedback].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them

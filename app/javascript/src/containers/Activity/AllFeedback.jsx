@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { allFeedback } from '../../graphql/queries'
@@ -17,8 +17,8 @@ export default function FeedbackPage() {
             <Nav navName='Feedback' menuButton='back' />
             <div className='container'>
                 {
-                    Boolean(data.getFeedback.length) ? (
-                        data.getFeedback.map(feedback => (
+                    data.usersFeedback.length ? (
+                        data.usersFeedback.map(feedback => (
                             <div key={feedback.id}>
                                 <hr />
                                 <p>

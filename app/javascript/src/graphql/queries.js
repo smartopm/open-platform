@@ -146,7 +146,7 @@ export const flaggedNotes = gql`
 
 export const allFeedback = gql`
   {
-    getFeedback {
+    usersFeedback {
       id
       isThumbsUp
       user {

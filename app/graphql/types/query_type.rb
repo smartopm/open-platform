@@ -112,11 +112,11 @@ module Types
     end
 
     # feedback
-    field :get_feedback, [FeedbackType], null: true do
+    field :users_feedback, [FeedbackType], null: true do
       description 'Returns all feedback submitted by the user'
     end
 
-    def get_feedback
+    def users_feedback
       Feedback.all.order(created_at: :asc)
     end
   end
