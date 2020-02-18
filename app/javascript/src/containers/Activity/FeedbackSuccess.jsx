@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from "@material-ui/core/styles";
 import CheckIcon from '@material-ui/icons/Check';
 import IconButton from "@material-ui/core/IconButton";
 import { Redirect } from "react-router-dom";
+import useTimer from '../../utils/customHooks'
 
 const styles = theme => ({
     checkedIcon: {
@@ -19,19 +20,10 @@ const styles = theme => ({
         fontSize: "3em"
     },
 });
+
 export function FeedbackSuccess(props) {
     const { classes } = props;
-
-    const [time, setTime] = useState(10);
-    // TODO: @olivier ==> Create a custom hook out of this
-    useEffect(() => {
-        if (!time) return;
-
-        const intervalId = setInterval(() => {
-            setTime(time - 1);
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, [time]);
+    const time = useTimer(10, 1000)
 
     if (time === 0) {
         return <Redirect to="/" />;

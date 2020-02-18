@@ -5,6 +5,7 @@ import { css, StyleSheet } from "aphrodite";
 import { addSeconds, format } from "date-fns";
 import { EntryRequestQuery } from "../../graphql/queries";
 import { ponisoNumber } from "../../utils/constants.js";
+import useTimer from "../../utils/customHooks";
 
 export default function HoldScreen({ match }) {
   const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {
@@ -31,16 +32,7 @@ export default function HoldScreen({ match }) {
 }
 
 function WaitScreen() {
-  const [timeLeft, setTimeLeft] = useState(180);
-
-  useEffect(() => {
-    if (!timeLeft) return;
-    const intervalId = setInterval(() => {
-      setTimeLeft(timeLeft - 1);
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [timeLeft]);
+  const timeLeft = useTimer(180, 1000)
 
   return (
     <div
