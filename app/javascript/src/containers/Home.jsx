@@ -11,6 +11,8 @@ import HelpIcon from '@material-ui/icons/Help'
 import ExploreIcon from '../../../assets/images/icon_map.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import LogIcon from '@material-ui/icons/Assignment'
+import NotesIcon from '@material-ui/icons/Notes';
+import FeedbackIcon from '@material-ui/icons/Feedback';
 import { Footer } from '../components/Footer.jsx'
 
 export default function Home() {
@@ -157,7 +159,7 @@ export function Component({ authState }) {
                     <Link to={'/notes'} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <PlaylistAddCheckIcon
+                          <NotesIcon
                             fontSize="large"
                             className={css(styles.homeIconColor)}
                           />
@@ -174,7 +176,7 @@ export function Component({ authState }) {
                     <Link to={'/feedbacks'} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <PlaylistAddCheckIcon
+                          <FeedbackIcon
                             fontSize="large"
                             className={css(styles.homeIconColor)}
                           />
