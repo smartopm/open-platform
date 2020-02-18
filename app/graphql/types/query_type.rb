@@ -114,10 +114,13 @@ module Types
     # feedback
     field :users_feedback, [FeedbackType], null: true do
       description 'Returns all feedback submitted by the user'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
-    def users_feedback
+    def users_feedback(offset: 0, limit: 50)
       Feedback.all.order(created_at: :asc)
+              .limit(limit).offset(offset)
     end
   end
 end

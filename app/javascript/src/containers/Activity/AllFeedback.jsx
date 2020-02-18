@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { allFeedback } from '../../graphql/queries'
@@ -6,12 +6,25 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { formatISO9075 } from 'date-fns'
 
+const limit = 20
 export default function FeedbackPage() {
-    const { loading, error, data, } = useQuery(allFeedback)
+    const [offset, setOffset] = useState(0)
+    const { loading, error, data, } = useQuery(allFeedback, {
+        variables: { limit, offset }
+    })
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
 
+    function handleNextPage() {
+        setOffset(offset + limit)
+    }
+    function handlePreviousPage() {
+        if (offset < limit) {
+            return
+        }
+        setOffset(offset - limit)
+    }
     return (
         <Fragment>
             <Nav navName='Feedback' menuButton='back' />
@@ -23,7 +36,10 @@ export default function FeedbackPage() {
                                 <hr />
                                 <p>
                                     <b> <a href={`/user/${feedback.user.id}`}>{feedback.user.name}</a> </b> gave a thumbs {feedback.isThumbsUp ? '👍 up' : '👎🏾 down'} on <i style={{ color: 'grey' }}>{formatISO9075(new Date(feedback.createdAt))}</i>
-
+                                    <br />
+                                    {
+                                        feedback.review && <span> Review: {feedback.review} </span>
+                                    }
                                 </p>
                             </div>
                         ))
@@ -36,6 +52,25 @@ export default function FeedbackPage() {
                             </Fragment>
                         )
                 }
+                <div className="d-flex justify-content-center">
+                    <nav aria-label="center Page navigation">
+                        <ul className="pagination">
+                            <li className={`page-item ${offset < limit && 'disabled'}`}>
+                                <a className="page-link" onClick={handlePreviousPage} href="#">
+                                    Previous
+                                </a>
+                            </li>
+                            <li
+                                className={`page-item ${data.usersFeedback.length < limit &&
+                                    'disabled'}`}
+                            >
+                                <a className="page-link" onClick={handleNextPage} href="#">
+                                    Next
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </Fragment>
     )

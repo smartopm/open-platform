@@ -145,8 +145,8 @@ export const flaggedNotes = gql`
 `
 
 export const allFeedback = gql`
-  {
-    usersFeedback {
+  query getFeedback($limit: Int, $offset: Int) {
+    usersFeedback(limit: $limit, offset: $offset) {
       id
       isThumbsUp
       user {
@@ -154,6 +154,7 @@ export const allFeedback = gql`
         name
       }
       createdAt
+      review
     }
   }
 `

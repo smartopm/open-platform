@@ -5,6 +5,7 @@ module Mutations
     # Create feedback and update eventlogs
     class FeedbackCreate < BaseMutation
       argument :is_thumbs_up, Boolean, required: true
+      argument :review, String, required: false
 
       field :feedback, Types::FeedbackType, null: true
 
@@ -13,6 +14,7 @@ module Mutations
           user_id: context[:current_user].id,
           created_at: DateTime.now,
           is_thumbs_up: vals[:is_thumbs_up],
+          review: vals[:review],
         )
         feedback.save
         log_feedback(vals[:is_thumbs_up])

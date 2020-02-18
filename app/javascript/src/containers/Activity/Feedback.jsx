@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from '@material-ui/core/styles'
 import ThumbDownIcon from '@material-ui/icons/ThumbDown'
@@ -7,6 +6,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import IconButton from '@material-ui/core/IconButton'
 import { useMutation } from 'react-apollo'
 import { createFeedback } from '../../graphql/mutations'
+import Nav from '../../components/Nav'
 
 const redLike = 'rgb(299, 63, 69)'
 const greenLike = 'rgb(37, 192, 176)'
@@ -38,8 +38,6 @@ export function Feedback(props) {
     const [feedback, setFeedback] = useState('')
     const [feedbackCreate] = useMutation(createFeedback)
 
-
-
     function handleThumbDown() {
         setTextAreaOpen(!isTextAreaOpen)
     }
@@ -55,6 +53,16 @@ export function Feedback(props) {
     }
 
     function handleSubmitFeedback() {
+        feedbackCreate({ variables: { isThumbsUp: false, review: feedback } })
+            .then(() => {
+                history.push('/feedback_success')
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
+    }
+
+    function handleSkipReview() {
         feedbackCreate({ variables: { isThumbsUp: false } })
             .then(() => {
                 history.push('/feedback_success')
@@ -112,7 +120,7 @@ export function Feedback(props) {
                             type='button'
                             style={{ float: 'left' }}
                             className='btn btn-outline-primary '
-                            onClick={() => history.push('/feedback_success')}
+                            onClick={handleSkipReview}
                         >
                             Skip
                         </button>
