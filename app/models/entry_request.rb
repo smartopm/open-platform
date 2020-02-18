@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # rubocop:disable Metrics/ClassLength
-
 # Record of visitor entries to a community
 class EntryRequest < ApplicationRecord
   belongs_to :user

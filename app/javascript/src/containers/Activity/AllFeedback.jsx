@@ -28,12 +28,12 @@ export default function FeedbackPage() {
                             </div>
                         ))
                     ) : (
-                            <>
+                            <Fragment>
                                 <br />
                                 <p className='text-center'>
                                     No Feedback Yet
                                 </p>
-                            </>
+                            </Fragment>
                         )
                 }
             </div>
