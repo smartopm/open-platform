@@ -63,21 +63,21 @@ export function Component({ authState }) {
               {!['security_guard', 'resident'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                <div
-                  className={`${css(
-                    styles.cardSize
-                  )} card align-self-center text-center`}
-                >
-                  <Link to={'/map'} className={`card-link`}>
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <img src={ExploreIcon} alt="map icon" />
-                      </h5>
-                      <p>{t('home.explore')}</p>
-                    </div>
-                  </Link>
-                </div>
-              ) : null}
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={'/map'} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <img src={ExploreIcon} alt="map icon" />
+                        </h5>
+                        <p>{t('home.explore')}</p>
+                      </div>
+                    </Link>
+                  </div>
+                ) : null}
 
               <div
                 className={`${css(
@@ -111,23 +111,23 @@ export function Component({ authState }) {
               {['security_guard', 'admin'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                <Fragment>
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <Link to={'/entry_logs'} className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <LogIcon className={css(styles.homeIconColor)} />
-                        </h5>
-                        <p>{t('home.entry_logs')}</p>
-                      </div>
-                    </Link>
-                  </div>
-                </Fragment>
-              ) : null}
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/entry_logs'} className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <LogIcon className={css(styles.homeIconColor)} />
+                          </h5>
+                          <p>{t('home.entry_logs')}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
 
               {authState.user.userType === 'admin' && (
                 <Fragment>
@@ -145,6 +145,41 @@ export function Component({ authState }) {
                           />
                         </h5>
                         <p>{'Todo'}</p>
+                      </div>
+                    </Link>
+                  </div>
+                  {/* Notes */}
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={'/notes'} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <PlaylistAddCheckIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>{'Notes'}</p>
+                      </div>
+                    </Link>
+                  </div>
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={'/feedbacks'} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <PlaylistAddCheckIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>{'Feedback'}</p>
                       </div>
                     </Link>
                   </div>
