@@ -8,20 +8,25 @@ import IconButton from '@material-ui/core/IconButton'
 import { useMutation } from 'react-apollo'
 import { createFeedback } from '../../graphql/mutations'
 
+const redLike = 'rgb(299, 63, 69)'
+const greenLike = 'rgb(37, 192, 176)'
+
 const styles = (theme) => ({
     thumbDownButton: {
         margin: theme.spacing(1),
-        border: 'red solid',
+        border: `${redLike} solid`,
         borderRadius: 90,
         borderWidth: 'thick',
         padding: 25,
+        color: redLike
     },
     thumbUpButton: {
         margin: theme.spacing(1),
-        border: 'green solid',
+        border: `${greenLike} solid`,
         borderRadius: 90,
         borderWidth: 'thick',
         padding: 25,
+        color: greenLike
     },
     largeIcon: {
         fontSize: '3em',

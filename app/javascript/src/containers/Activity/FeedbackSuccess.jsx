@@ -9,11 +9,11 @@ import { Redirect } from "react-router-dom";
 const styles = theme => ({
     checkedIcon: {
         margin: theme.spacing(1),
-        border: 'green solid',
+        border: 'rgb(37, 192, 176) solid',
         borderRadius: 90,
         borderWidth: 'thick',
         padding: 25,
-        color: 'green'
+        color: 'rgb(37, 192, 176)'
     },
     largeIcon: {
         fontSize: "3em"
