@@ -7,6 +7,7 @@ import { UserQuery } from '../graphql/queries'
 import { Context } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav.jsx'
 import ErrorPage from '../components/Error.jsx'
+import { isTimeValid, getWeekDay } from './Requests/RequestUpdate.jsx'
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -40,6 +41,8 @@ export default () => {
 }
 
 export function Component({ data }) {
+  const date = new Date()
+
   return (
     <div>
       <Nav navName="Identify" menuButton="back" />
@@ -70,8 +73,20 @@ export function Component({ data }) {
               value={qrCodeAddress(data.user.id)}
             />
           </div>
+          {/* check the time and advise the user */}
+          {
+            !isTimeValid(date) && (
+              <div className='align-content-center'>
+                <br />
+                <p>Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)}`} at <b> {DateUtil.dateTimeToString(date)} </b>
+                  <br />
+                  Note: The current time is outside of normal visiting hours.
+                </p>
+              </div>
+            )
+          }
         </div>
       </div>
-    </div>
+    </div >
   )
 }

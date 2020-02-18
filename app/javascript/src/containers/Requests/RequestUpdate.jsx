@@ -322,14 +322,14 @@ export default function RequestUpdate({ match, history, location }) {
 }
 
 
-function isTimeValid(date) {
+export function isTimeValid(date) {
   const currentHour = date.getHours()
   if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)
   if (isSaturday(date)) return (currentHour > 8 && currentHour < 12)
   return true
 }
 
-function getWeekDay(date) {
+export function getWeekDay(date) {
   var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   let day = date.getDay();
   return weekdays[day];
