@@ -5,6 +5,9 @@ import { allFeedback } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { formatISO9075 } from 'date-fns'
+import ThumbDownIcon from '@material-ui/icons/ThumbDown'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+
 
 const limit = 20
 export default function FeedbackPage() {
@@ -35,7 +38,7 @@ export default function FeedbackPage() {
                             <div key={feedback.id}>
                                 <hr />
                                 <p>
-                                    <b> <a href={`/user/${feedback.user.id}`}>{feedback.user.name}</a> </b> gave a thumbs {feedback.isThumbsUp ? '👍 up' : '👎🏾 down'} on <i style={{ color: 'grey' }}>{formatISO9075(new Date(feedback.createdAt))}</i>
+                                    <b> <a href={`/user/${feedback.user.id}`}>{feedback.user.name}</a> </b> gave a thumbs {feedback.isThumbsUp ? <>Up <ThumbUpIcon /> </> : <>Down <ThumbDownIcon /> </>} on <i style={{ color: 'grey' }}>{formatISO9075(new Date(feedback.createdAt))}</i>
                                     <br />
                                     {
                                         feedback.review && <span> Review: {feedback.review} </span>
