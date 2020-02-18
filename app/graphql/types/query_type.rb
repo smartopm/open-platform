@@ -22,8 +22,7 @@ module Types
     # Get a member's information
     field :user_search, [UserType], null: true do
       description 'Find a user by name'
-      argument :query, String, required: false
-      # argument :phone_number, String, required: false
+      argument :query, String, required: true
     end
 
     def user_search(query:)
