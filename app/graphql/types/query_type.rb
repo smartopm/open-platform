@@ -22,11 +22,12 @@ module Types
     # Get a member's information
     field :user_search, [UserType], null: true do
       description 'Find a user by name'
-      argument :name, String, required: true
+      argument :query, String, required: false
+      # argument :phone_number, String, required: false
     end
 
-    def user_search(name:)
-      User.where('name ILIKE ?', '%' + name + '%')
+    def user_search(query:)
+      User.where('name ILIKE :query OR phone_number ILIKE :query', query: "%#{query}%")
           .where(community_id: context[:current_user].community_id).limit(20)
     end
 
