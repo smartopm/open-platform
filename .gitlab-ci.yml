@@ -28,7 +28,3 @@ test:
     - bundle exec rake lint
     - bundle exec rake
 
-pronto:
-  script:
-    - git fetch
-    - bundle exec pronto run -c=origin/master --exit-code
