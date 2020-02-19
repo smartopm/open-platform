@@ -13,7 +13,7 @@ export const userType = {
   contractor: 'Contractor',
   prospective_client: 'Prospective Client',
   client: 'Client',
-  lead: 'Lead'
+  visitor: 'Visitor'
 }
 
 export const userState = {
