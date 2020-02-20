@@ -7,7 +7,7 @@ import { UserQuery } from '../graphql/queries'
 import { Context } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav.jsx'
 import ErrorPage from '../components/Error.jsx'
-import { isTimeValid, getWeekDay } from './Requests/RequestUpdate.jsx'
+import { isTimeValid } from './Requests/RequestUpdate.jsx'
 
 function expiresAtStr(datetime) {
   if (datetime) {

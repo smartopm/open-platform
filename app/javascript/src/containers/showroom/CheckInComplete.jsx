@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
