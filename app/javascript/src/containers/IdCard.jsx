@@ -74,13 +74,16 @@ export function Component({ data }) {
             />
           </div>
           {/* check the time and advise the user */}
+          <br />
+          <br />
           {
             !isTimeValid(date) && (
-              <div className='align-content-center'>
-                <br />
-                <p>Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)}`} at <b> {DateUtil.dateTimeToString(date)} </b>
-                  <br />
-                  Note: The current time is outside of normal visiting hours.
+              <div className='d-flex justify-content-center'>
+                <p>
+                  <u>Visiting Hours</u> <br />
+                  Monday - Friday: <b>8:00 - 16:00</b> <br />
+                  Saturday: <b>8:00 - 12:00</b> <br />
+                  Sunday: <b>Off</b> <br />
                 </p>
               </div>
             )
