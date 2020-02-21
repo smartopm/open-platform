@@ -67,8 +67,8 @@ RSpec.describe Types::QueryType do
       @current_user = @admin_user
 
       @query =
-        %(query($name: String!) {
-          userSearch(name: $name) {
+        %(query($query: String!) {
+          userSearch(query: $query) {
             id
             name
             userType
@@ -76,17 +76,13 @@ RSpec.describe Types::QueryType do
         })
     end
 
-    it 'returns all entry logs' do
+    it 'returns user who matches the query ' do
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
                                        },
-                                               variables: { name: 'Joe' }).as_json
+                                               variables: { query: 'Joe' }).as_json
+
       expect(result.dig('data', 'userSearch').length).to eql 1
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @current_user,
-                                       },
-                                               variables: { name: 'Steve' }).as_json
-      expect(result.dig('data', 'userSearch').length).to eql 0
     end
 
     it 'should fail if no logged in' do
@@ -266,6 +262,30 @@ RSpec.describe Types::QueryType do
     it 'should fail if no logged in' do
       result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'securityGuards')).to be_nil
+    end
+  end
+
+  describe 'feedback' do
+    before :each do
+      @query =
+        %(query {
+                usersFeedback {
+                  review
+                  isThumbsUp
+                  user {
+                    name
+                  }
+                }
+            })
+    end
+
+    it 'returns all user feedback' do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @current_user,
+                                       }).as_json
+
+      expect(result.dig('data', 'usersFeedback')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
     end
   end
 end

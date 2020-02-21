@@ -7,6 +7,7 @@ import { UserQuery } from '../graphql/queries'
 import { Context } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav.jsx'
 import ErrorPage from '../components/Error.jsx'
+import { isTimeValid } from './Requests/RequestUpdate.jsx'
 
 function expiresAtStr(datetime) {
   if (datetime) {
@@ -40,6 +41,8 @@ export default () => {
 }
 
 export function Component({ data }) {
+  const date = new Date()
+
   return (
     <div>
       <Nav navName="Identify" menuButton="back" />
@@ -70,8 +73,23 @@ export function Component({ data }) {
               value={qrCodeAddress(data.user.id)}
             />
           </div>
+          {/* check the time and advise the user */}
+          <br />
+          <br />
+          {
+            !isTimeValid(date) && (
+              <div className='d-flex justify-content-center'>
+                <p>
+                  <u>Visiting Hours</u> <br />
+                  Monday - Friday: <b>8:00 - 16:00</b> <br />
+                  Saturday: <b>8:00 - 12:00</b> <br />
+                  Sunday: <b>Off</b> <br />
+                </p>
+              </div>
+            )
+          }
         </div>
       </div>
-    </div>
+    </div >
   )
 }

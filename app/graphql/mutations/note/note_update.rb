@@ -15,7 +15,7 @@ module Mutations
         note = ::Note.find(id)
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
-        # TODO: Find a way of adding an updated_at datetime
+        # TODO: @olivier Find a way of adding an updated_at datetime
         return { note: note } if note.update!(attributes)
 
         raise GraphQL::ExecutionError, note.errors.full_messages

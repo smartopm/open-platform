@@ -145,11 +145,10 @@ export default function RequestUpdate({ match, history, location }) {
         {
           (modalAction === 'grant' && !isTimeValid(date)) && (
             <div>
-              <p>Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)} at ${DateUtil.dateTimeToString(date)}`}</p>
-              <u>Visiting Hours</u> <br />
-              Monday - Friday: <b>8:00 - 16:00</b> <br />
-              Saturday: <b>8:00 - 12:00</b> <br />
-              Sunday: <b>Off</b> <br />
+              <p>Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)}`} at <b> {DateUtil.dateTimeToString(date)} </b></p>
+              <p>
+                The current time is outside of normal visiting hours. Are you sure you wish proceed?
+              </p>
             </div>
           )
         }
@@ -323,14 +322,14 @@ export default function RequestUpdate({ match, history, location }) {
 }
 
 
-function isTimeValid(date) {
+export function isTimeValid(date) {
   const currentHour = date.getHours()
   if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)
   if (isSaturday(date)) return (currentHour > 8 && currentHour < 12)
   return true
 }
 
-function getWeekDay(date) {
+export function getWeekDay(date) {
   var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   let day = date.getDay();
   return weekdays[day];

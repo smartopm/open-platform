@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
     transform: " translate(-50%, -50%)"
   },
   nkLogo: {
-    marginBottom: 101,
+    marginBottom: 70,
     marginLeft: "11.5vw",
-    margingTop: 100
+    margingTop: 70
   },
   getStartedButton: {
     backgroundColor: "#25c0b0",

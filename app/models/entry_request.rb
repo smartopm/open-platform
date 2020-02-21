@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 # Record of visitor entries to a community
 class EntryRequest < ApplicationRecord
   belongs_to :user
@@ -67,8 +68,15 @@ class EntryRequest < ApplicationRecord
 
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
              "FYI #{name} -
-             has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
-             for details click #{link}")
+      has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
+      for details click #{link}")
+  end
+
+  def send_feedback_link(number)
+    feedback_link = "https://#{ENV['HOST']}/feedback"
+    Rails.logger.info "Phone number to send #{number}"
+    Sms.send(number, "Thank you for using our app, kindly using this
+                      link to give us feedback #{feedback_link}")
   end
 
   private
@@ -93,6 +101,7 @@ class EntryRequest < ApplicationRecord
       data: {
         action: 'started',
         ref_name: self[:name],
+        type: user.user_type,
       }
     )
   end
@@ -105,6 +114,7 @@ class EntryRequest < ApplicationRecord
       data: {
         action: 'created',
         ref_name: self[:name],
+        type: user.user_type,
       }
     )
   end
@@ -117,7 +127,10 @@ class EntryRequest < ApplicationRecord
       data: {
         action: decision,
         ref_name: self[:name],
+        type: user.user_type,
       }
     )
   end
 end
+
+# rubocop:enable Metrics/ClassLength

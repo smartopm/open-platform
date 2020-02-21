@@ -103,7 +103,7 @@ RSpec.describe Mutations::EntryRequest do
       expect(result.dig('errors')).to be_nil
     end
 
-    it 'returns a error for non-admin grants' do
+    it 'returns no error for non-admin grants' do
       variables = {
         id: entry_request.id,
       }
