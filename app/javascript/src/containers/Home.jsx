@@ -168,25 +168,25 @@ export function Component({ authState }) {
                       </div>
                     </Link>
                   </div>
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <Link to={'/feedbacks'} className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <FeedbackIcon
-                            fontSize="large"
-                            className={css(styles.homeIconColor)}
-                          />
-                        </h5>
-                        <p>{'Feedback'}</p>
-                      </div>
-                    </Link>
-                  </div>
                 </Fragment>
               )}
+              <div
+                className={`${css(
+                  styles.cardSize
+                )} card align-self-center text-center`}
+              >
+                <Link to={authState.user.userType === 'admin' ? '/feedbacks' : '/feedback'} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <FeedbackIcon
+                        fontSize="large"
+                        className={css(styles.homeIconColor)}
+                      />
+                    </h5>
+                    <p>{'Feedback'}</p>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
