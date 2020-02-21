@@ -25,7 +25,8 @@ class User < ApplicationRecord
   # Track changes to the User
   has_paper_trail
 
-  VALID_USER_TYPES = %w[security_guard admin resident contractor prospective_client client].freeze
+  VALID_USER_TYPES = %w[security_guard admin resident contractor
+                        prospective_client client visitor].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }

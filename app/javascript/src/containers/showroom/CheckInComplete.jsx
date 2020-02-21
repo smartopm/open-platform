@@ -1,21 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Footer } from "../../components/Footer";
+import useTimer from "../../utils/customHooks";
 
 export default function CheckInComplete({ history }) {
-  const [time, setTime] = useState(10);
-
-  useEffect(() => {
-    if (!time) return;
-
-    const intervalId = setInterval(() => {
-      setTime(time - 1);
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [time]);
+  const time = useTimer(10, 1000)
 
   if (time === 0) {
     return <Redirect to="/sh_reason" />;

@@ -38,7 +38,7 @@ class CsvExportController < ApplicationController
       visitor_details = get_visitor_details(ev)
       [ev.subject, ev.to_sentence, ev.acting_user&.name,
        visitor_details[:name], visitor_details[:reason],
-       time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'), data[:type]]
+       time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'), data['type']]
     end
   end
 

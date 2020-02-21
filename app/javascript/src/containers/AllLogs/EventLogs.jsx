@@ -58,7 +58,11 @@ export function IndexComponent({
     return eventLogs.map(entry => (
       <tr key={entry.id}>
         <td>{entry.subject}</td>
-        <td>{entry.sentence}</td>
+        <td>
+          {
+            entry.subject === 'user_feedback' ? `${entry.sentence} ${entry.data.note}` : entry.sentence
+          }
+        </td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.data ? entry.data.type : 'Entry Request'}</td>

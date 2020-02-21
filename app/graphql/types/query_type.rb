@@ -5,7 +5,7 @@ module Types
   class QueryType < Types::BaseObject
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
-
+    # include Types::Queries::Feedback
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -22,11 +22,11 @@ module Types
     # Get a member's information
     field :user_search, [UserType], null: true do
       description 'Find a user by name'
-      argument :name, String, required: true
+      argument :query, String, required: true
     end
 
-    def user_search(name:)
-      User.where('name ILIKE ?', '%' + name + '%')
+    def user_search(query:)
+      User.where('name ILIKE :query OR phone_number ILIKE :query', query: "%#{query}%")
           .where(community_id: context[:current_user].community_id).limit(20)
     end
 
@@ -76,10 +76,13 @@ module Types
 
     field :all_notes, [NoteType], null: false do
       description 'Returns a list of all the notes'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
-    def all_notes
+    def all_notes(offset: 0, limit: 50)
       Note.all.order(created_at: :asc)
+          .limit(limit).offset(offset)
     end
 
     field :user_notes, [NoteType], null: false do
@@ -106,6 +109,18 @@ module Types
 
     def entry_search(name:)
       EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
+    end
+
+    # feedback
+    field :users_feedback, [FeedbackType], null: true do
+      description 'Returns all feedback submitted by the user'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
+
+    def users_feedback(offset: 0, limit: 50)
+      Feedback.all.order(created_at: :asc)
+              .limit(limit).offset(offset)
     end
   end
 end

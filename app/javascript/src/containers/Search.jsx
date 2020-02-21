@@ -13,8 +13,8 @@ import ErrorPage from '../components/Error.jsx'
 import { Context } from './Provider/AuthStateProvider.js'
 
 const QUERY = gql`
-  query UserSearch($name: String!) {
-    userSearch(name: $name) {
+  query UserSearch($query: String!) {
+    userSearch(query: $query) {
       id
       userType
       name
@@ -78,10 +78,10 @@ function Results({ data, loading, called }) {
         {data.userSearch.length > 0 ? (
           memberList(data.userSearch)
         ) : (
-          <div className={`${css(styles.noResults)}`}>
-            <h4>No results found!</h4>
-          </div>
-        )}
+            <div className={`${css(styles.noResults)}`}>
+              <h4>No results found!</h4>
+            </div>
+          )}
         {/* only show this when the user is admin */}
         {authState.user.userType === 'admin' && <NewRequestButton />}
       </div>
@@ -95,7 +95,7 @@ export default function SearchContainer() {
     const { value } = e.target
     setName(value || '')
     if (value && value.length > 0) {
-      loadGQL({ variables: { name: value } })
+      loadGQL({ variables: { query: value } })
     }
   }
 
