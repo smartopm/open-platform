@@ -30,7 +30,7 @@ module Mutations
       def resolve(vals)
         user = ::User.new(vals.except(*ATTACHMENTS.keys))
         user.community_id = context[:current_user].community_id
-        user.expires_at = 1.day.from_now if vals[:user_type] == 'prospective_client'
+        user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
         attach_avatars(user, vals)
 
         begin
