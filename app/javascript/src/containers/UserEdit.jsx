@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLazyQuery, useMutation } from 'react-apollo'
+import { addDays, format } from 'date-fns'
 import Nav from '../components/Nav'
 import UserForm from '../components/UserForm.jsx'
 import Loading from '../components/Loading.jsx'
@@ -9,6 +10,8 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
+import { parseISO } from 'date-fns/esm/fp'
+import { formatISO } from 'date-fns/esm'
 
 const initialValues = {
   name: '',
@@ -73,8 +76,11 @@ export default function FormContainer({ match, history }) {
     event.preventDefault()
     const values = {
       ...data,
-      avatarBlobId: signedBlobId
+      avatarBlobId: signedBlobId,
+      expiresAt: addDays(new Date(data.expiresAt), data.days ? Number(data.days) : 0).toISOString()
     }
+    // console.log(new Date(addDays(new Date(data.expiresAt), data.days ? Number(data.days) : 0)))
+    // console.log(values.expiresAt.toISOString())
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
@@ -90,6 +96,7 @@ export default function FormContainer({ match, history }) {
       ...data,
       [name]: value
     })
+
   }
 
   // If we are in an edit flow and haven't loaded the data,

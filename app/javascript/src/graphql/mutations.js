@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { GraphQLDateTime } from 'graphql-iso-date'
 
 import { UserFragment, EntryRequestFragment } from '../graphql/fragments'
 
@@ -34,6 +35,7 @@ export const CreateUserMutation = gql`
 `
 
 export const UpdateUserMutation = gql`
+  scalar DateTime
   mutation UpdateUserMutation(
     $id: ID!
     $name: String
@@ -45,6 +47,7 @@ export const UpdateUserMutation = gql`
     $state: String
     $avatarBlobId: String
     $documentBlobId: String
+    $expiresAt: DateTime
   ) {
     result: userUpdate(
       id: $id
@@ -57,6 +60,7 @@ export const UpdateUserMutation = gql`
       state: $state
       avatarBlobId: $avatarBlobId
       documentBlobId: $documentBlobId
+      expiresAt: $expiresAt
     ) {
       user {
         ...UserFields

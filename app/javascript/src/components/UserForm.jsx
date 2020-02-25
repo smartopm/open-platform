@@ -5,7 +5,10 @@ import { StyleSheet, css } from 'aphrodite'
 import { reasons, userState, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
+import DateUtil from '../utils/dateutil'
 
+
+// TODO: @olivier ==> Allow admin to extend or reduce expiration time of the user
 export default function UserForm() {
   const {
     values,
@@ -14,7 +17,6 @@ export default function UserForm() {
     imageUrl,
     status
   } = useContext(FormContext)
-
   return (
     <div className="container">
       <form>
@@ -26,19 +28,19 @@ export default function UserForm() {
               className={`${css(styles.uploadedImage)}`}
             />
           ) : (
-            <div className={`${css(styles.photoUpload)}`}>
-              <input
-                type="file"
-                accepts="image/*"
-                capture
-                id="file"
-                onChange={handleFileUpload}
-                className={`${css(styles.fileInput)}`}
-              />
-              <PhotoCameraIcon />
-              <label htmlFor="file">Take a photo</label>
-            </div>
-          )}
+              <div className={`${css(styles.photoUpload)}`}>
+                <input
+                  type="file"
+                  accepts="image/*"
+                  capture
+                  id="file"
+                  onChange={handleFileUpload}
+                  className={`${css(styles.fileInput)}`}
+                />
+                <PhotoCameraIcon />
+                <label htmlFor="file">Take a photo</label>
+              </div>
+            )}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -133,6 +135,23 @@ export default function UserForm() {
               </MenuItem>
             ))}
           </TextField>
+        </div>
+        <div className='form-group'>
+          {
+            values.expiresAt && (
+              <div className="form-group">
+                <label htmlFor="days">Extend Expiration Date By</label>
+                <br />
+                <select id="days" name='days' onChange={handleInputChange}>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20].map(val => (
+                    <option key={val} value={val}>
+                      {`${val} ${val === 1 ? 'day' : 'days'} `}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )
+          }
         </div>
         <div className="form-group">
           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
