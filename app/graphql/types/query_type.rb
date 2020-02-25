@@ -19,6 +19,15 @@ module Types
       User.find(id) if context[:current_user]
     end
 
+    # Get a list of all users information
+    field :users, [UserType], null: true do
+      description 'Get a list of all the users'
+    end
+
+    def users
+      User.all
+    end
+
     # Get a member's information
     field :user_search, [UserType], null: true do
       description 'Find a user by name'

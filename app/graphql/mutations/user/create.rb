@@ -26,9 +26,11 @@ module Mutations
         security_guard: { except: %i[state user_type] },
       }.freeze
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = ::User.new(vals.except(*ATTACHMENTS.keys))
         user.community_id = context[:current_user].community_id
+        user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
         attach_avatars(user, vals)
 
         begin
@@ -39,6 +41,7 @@ module Mutations
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
