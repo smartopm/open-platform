@@ -161,6 +161,9 @@ export const allFeedback = gql`
 
 export const UsersQuery = gql`
   query users {
-    ...UserFields
+    users {
+      ...UserFields
+    }
   }
+  ${UserFragment.publicFields}
 `
