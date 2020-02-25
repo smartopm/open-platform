@@ -321,7 +321,7 @@ export default function RequestUpdate({ match, history, location }) {
   );
 }
 
-
+// TODO: move these to date utils folder
 export function isTimeValid(date) {
   const currentHour = date.getHours()
   if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)

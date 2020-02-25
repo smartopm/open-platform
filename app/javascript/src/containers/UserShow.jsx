@@ -31,15 +31,6 @@ import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
 
-function formatDate(datetime) {
-  if (datetime) {
-    const date = DateUtil.fromISO8601(datetime)
-    return (
-      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-    )
-  }
-  return 'Never'
-}
 
 export default ({ match, history }) => {
   const id = match.params.id
@@ -137,7 +128,7 @@ export function Component({
       refetch()
     })
   }
-  
+
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" />
@@ -151,10 +142,10 @@ export function Component({
             <div className="col-4">
               <h5>{data.user.name}</h5>
               <div className="expires">
-                Exp: {formatDate(data.user.expiresAt)}
+                Exp: {DateUtil.formatDate(data.user.expiresAt)}
               </div>
               <div className="expires">
-                Last accessed: {formatDate(data.user.lastActivityAt)}
+                Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
               </div>
               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
               <br />
@@ -386,7 +377,7 @@ export function Component({
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
                     <p className="comment">{note.body}</p>
-                    <i>created at: {formatDate(note.createdAt)}</i>
+                    <i>created at: {DateUtil.formatDate(note.createdAt)}</i>
                   </div>
 
                   {note.completed ? (

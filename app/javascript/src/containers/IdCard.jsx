@@ -9,16 +9,6 @@ import Nav from '../components/Nav.jsx'
 import ErrorPage from '../components/Error.jsx'
 import { isTimeValid } from './Requests/RequestUpdate.jsx'
 
-function expiresAtStr(datetime) {
-  if (datetime) {
-    const date = DateUtil.fromISO8601(datetime)
-    return (
-      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-    )
-  }
-  return 'Never'
-}
-
 function qrCodeAddress(id_card_token) {
   return (
     window.location.protocol +
@@ -61,7 +51,7 @@ export function Component({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Exp: {expiresAtStr(data.user.expiresAt)}
+              Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
             </div>
           </div>
           <br />

@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 2020_02_18_100747) do
     t.datetime "granted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source"
     t.boolean "acknowledged"
   end
 
