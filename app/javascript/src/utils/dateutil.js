@@ -12,6 +12,7 @@ function fromISO8601(isostr) {
 
 function isExpired(date) {
   const now = new Date()
+  if (!date) return false
   return now > date
 }
 
@@ -35,11 +36,22 @@ function dateTimeToString(date) {
   return date.getHours() + ':' + pad('00', date.getMinutes())
 }
 
+function formatDate(datetime) {
+  if (datetime) {
+    const date = fromISO8601(datetime)
+    return (
+      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    )
+  }
+  return 'Never'
+}
+
 export default {
   fromISO8601,
   dateTimeToString,
   dateToString,
-  isExpired
+  isExpired,
+  formatDate
 }
 
 // pad("00", "1") => "01"

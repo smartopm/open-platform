@@ -158,3 +158,12 @@ export const allFeedback = gql`
     }
   }
 `
+
+export const UsersQuery = gql`
+  query users {
+    users {
+      ...UserFields
+    }
+  }
+  ${UserFragment.publicFields}
+`
