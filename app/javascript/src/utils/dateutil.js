@@ -35,11 +35,22 @@ function dateTimeToString(date) {
   return date.getHours() + ':' + pad('00', date.getMinutes())
 }
 
+function formatDate(datetime) {
+  if (datetime) {
+    const date = fromISO8601(datetime)
+    return (
+      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    )
+  }
+  return 'Never'
+}
+
 export default {
   fromISO8601,
   dateTimeToString,
   dateToString,
-  isExpired
+  isExpired,
+  formatDate
 }
 
 // pad("00", "1") => "01"

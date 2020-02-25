@@ -15,36 +15,29 @@ export default function UsersList() {
         <Fragment>
             <Nav navName='Users' menuButton='back' />
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Expires At</th>
-                        <th>User Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.users.map((user) => (
-                            <tr key={user.id}>
-                                <td>{user.name}</td>
-                                <td>{formatDate(user.expiresAt)}</td>
-                                <td>{user.userType}</td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
+            <div className="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Expires At</th>
+                            <th>User Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            data.users.map((user) => (
+                                <tr key={user.id}>
+                                    <td>{user.name}</td>
+                                    <td>{DateUtil.formatDate(user.expiresAt)}</td>
+                                    <td>{user.userType}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
         </Fragment>
     )
 }
 
-function formatDate(datetime) {
-    if (datetime) {
-        const date = DateUtil.fromISO8601(datetime)
-        return (
-            date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-        )
-    }
-    return 'Never'
-}
