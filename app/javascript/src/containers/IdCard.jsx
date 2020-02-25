@@ -51,7 +51,7 @@ export function Component({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Expiration: {DateUtil.isExpired ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
+              Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
             </div>
           </div>
           <br />
