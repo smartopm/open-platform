@@ -6,6 +6,8 @@ services:
       - pgdata:/var/lib/postgresql/data
     expose:
       - "5432"
+    env_file:
+      - '.env.docker'
   redis:
     image: redis
     expose:
