@@ -5,8 +5,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { reasons, userState, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
-import DateUtil from '../utils/dateutil'
-
+import { formatISO9075 } from 'date-fns'
 
 // TODO: @olivier ==> Allow admin to extend or reduce expiration time of the user
 export default function UserForm() {
@@ -17,6 +16,7 @@ export default function UserForm() {
     imageUrl,
     status
   } = useContext(FormContext)
+
   return (
     <div className="container">
       <form>
@@ -136,19 +136,38 @@ export default function UserForm() {
             ))}
           </TextField>
         </div>
+        <div className="form-group">
+          <label className="bmd-label-static" htmlFor="Expiration">
+            Expiration Date
+          </label>
+          <input
+            className="form-control"
+            name="Expiration"
+            type="text"
+            defaultValue={formatISO9075(new Date(values.expiresAt))}
+            readOnly
+          />
+        </div>
         <div className='form-group'>
           {
             values.expiresAt && (
               <div className="form-group">
-                <label htmlFor="days">Extend Expiration Date By</label>
-                <br />
-                <select id="days" name='days' onChange={handleInputChange}>
+                <TextField
+                  id="state"
+                  select
+                  label="Choose number of days to extend expiry date"
+                  value={values.days || 1}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="days"
+                  className={`${css(styles.selectInput)}`}
+                >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20].map(val => (
-                    <option key={val} value={val}>
+                    <MenuItem key={val} value={val}>
                       {`${val} ${val === 1 ? 'day' : 'days'} `}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
+                </TextField>
               </div>
             )
           }

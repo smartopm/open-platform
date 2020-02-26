@@ -12,7 +12,7 @@ module Mutations
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
-      argument :expires_at, GraphQL::Types::ISO8601DateTime, required: false
+      argument :expires_at, String, required: false
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
 

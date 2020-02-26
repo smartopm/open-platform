@@ -35,7 +35,6 @@ export const CreateUserMutation = gql`
 `
 
 export const UpdateUserMutation = gql`
-  scalar DateTime
   mutation UpdateUserMutation(
     $id: ID!
     $name: String
@@ -47,7 +46,7 @@ export const UpdateUserMutation = gql`
     $state: String
     $avatarBlobId: String
     $documentBlobId: String
-    $expiresAt: DateTime
+    $expiresAt: String
   ) {
     result: userUpdate(
       id: $id
