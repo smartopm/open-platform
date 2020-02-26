@@ -1,6 +1,4 @@
 import gql from 'graphql-tag'
-import { GraphQLDateTime } from 'graphql-iso-date'
-
 import { UserFragment, EntryRequestFragment } from '../graphql/fragments'
 
 export const CreateUserMutation = gql`
