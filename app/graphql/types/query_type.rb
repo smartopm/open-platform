@@ -30,7 +30,7 @@ module Types
 
     # Get a member's information
     field :user_search, [UserType], null: true do
-      description 'Find a user by name'
+      description 'Find a user by name, phone number or user type'
       argument :query, String, required: true
     end
 
