@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, Fragment } from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import { reasons, userState, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
+import { formatISO9075 } from 'date-fns'
 
 export default function UserForm() {
   const {
@@ -26,19 +27,19 @@ export default function UserForm() {
               className={`${css(styles.uploadedImage)}`}
             />
           ) : (
-            <div className={`${css(styles.photoUpload)}`}>
-              <input
-                type="file"
-                accepts="image/*"
-                capture
-                id="file"
-                onChange={handleFileUpload}
-                className={`${css(styles.fileInput)}`}
-              />
-              <PhotoCameraIcon />
-              <label htmlFor="file">Take a photo</label>
-            </div>
-          )}
+              <div className={`${css(styles.photoUpload)}`}>
+                <input
+                  type="file"
+                  accepts="image/*"
+                  capture
+                  id="file"
+                  onChange={handleFileUpload}
+                  className={`${css(styles.fileInput)}`}
+                />
+                <PhotoCameraIcon />
+                <label htmlFor="file">Take a photo</label>
+              </div>
+            )}
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -134,6 +135,42 @@ export default function UserForm() {
             ))}
           </TextField>
         </div>
+        {
+          values.userType === 'prospective_client' && (
+            <Fragment>
+              <div className="form-group">
+                <label className="bmd-label-static" htmlFor="Expiration">
+                  Expiration Date
+                </label>
+                <input
+                  className="form-control"
+                  name="Expiration"
+                  type="text"
+                  defaultValue={values.expiresAt ? formatISO9075(new Date(values.expiresAt)) : 'Not Set'}
+                  readOnly
+                />
+              </div>
+              <div className="form-group">
+                <TextField
+                  id="state"
+                  select
+                  label="Choose number of days to extend expiry date"
+                  value={values.days || 1}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="days"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20].map(val => (
+                    <MenuItem key={val} value={val}>
+                      {`${val} ${val === 1 ? 'day' : 'days'} `}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+            </Fragment>
+          )
+        }
         <div className="form-group">
           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
             <input
