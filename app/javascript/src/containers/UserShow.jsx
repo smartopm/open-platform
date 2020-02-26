@@ -142,7 +142,7 @@ export function Component({
             <div className="col-4">
               <h5>{data.user.name}</h5>
               <div className="expires">
-                Exp: {DateUtil.formatDate(data.user.expiresAt)}
+                Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
