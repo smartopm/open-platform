@@ -12,8 +12,8 @@ function fromISO8601(isostr) {
 
 function isExpired(date) {
   const now = new Date()
-  if (!date) return false
-  return now > date
+  if (!date) return
+  return now > new Date(date)
 }
 
 function dateToString(date) {
