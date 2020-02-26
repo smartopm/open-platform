@@ -35,7 +35,8 @@ module Types
     end
 
     def user_search(query:)
-      User.where('name ILIKE :query OR phone_number ILIKE :query OR user_type ILIKE :query', query: "%#{query}%")
+      User.where('name ILIKE :query OR phone_number ILIKE :query OR user_type ILIKE :query',
+                 query: "%#{query}%")
           .where(community_id: context[:current_user].community_id).limit(20)
     end
 
@@ -90,7 +91,7 @@ module Types
     end
 
     def all_notes(offset: 0, limit: 50)
-      Note.all.order(created_at: :asc)
+      Note.all.order(created_at: :desc)
           .limit(limit).offset(offset)
     end
 
@@ -128,7 +129,7 @@ module Types
     end
 
     def users_feedback(offset: 0, limit: 50)
-      Feedback.all.order(created_at: :asc)
+      Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
     end
   end
