@@ -100,7 +100,7 @@ module Types
     end
 
     def user_notes(id:)
-      Note.where(user_id: id).order(created_at: :asc)
+      Note.where(user_id: id).order(created_at: :desc)
     end
 
     field :flagged_notes, [NoteType], null: false do
