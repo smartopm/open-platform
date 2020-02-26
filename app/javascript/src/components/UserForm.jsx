@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, Fragment } from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
@@ -7,7 +7,6 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
 import { formatISO9075 } from 'date-fns'
 
-// TODO: @olivier ==> Allow admin to extend or reduce expiration time of the user
 export default function UserForm() {
   const {
     values,
@@ -136,21 +135,21 @@ export default function UserForm() {
             ))}
           </TextField>
         </div>
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="Expiration">
-            Expiration Date
-          </label>
-          <input
-            className="form-control"
-            name="Expiration"
-            type="text"
-            defaultValue={formatISO9075(new Date(values.expiresAt))}
-            readOnly
-          />
-        </div>
-        <div className='form-group'>
-          {
-            values.expiresAt && (
+        {
+          values.expiresAt && (
+            <Fragment>
+              <div className="form-group">
+                <label className="bmd-label-static" htmlFor="Expiration">
+                  Expiration Date
+                </label>
+                <input
+                  className="form-control"
+                  name="Expiration"
+                  type="text"
+                  defaultValue={formatISO9075(new Date(values.expiresAt))}
+                  readOnly
+                />
+              </div>
               <div className="form-group">
                 <TextField
                   id="state"
@@ -169,9 +168,9 @@ export default function UserForm() {
                   ))}
                 </TextField>
               </div>
-            )
-          }
-        </div>
+            </Fragment>
+          )
+        }
         <div className="form-group">
           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
             <input
