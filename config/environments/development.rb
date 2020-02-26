@@ -59,9 +59,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.hosts << "dev.dgdp.site"
-  config.hosts << "vpn.dgdp.site"  # For external (phone) testing, will point to 10.133.7.1
-  config.hosts << "olivier.dgdp.site"
+  config.hosts << /[a-z0-9]+\.dgdp\.site/
 
   Rails.application.routes.default_url_options[:host] = ENV['HOST'] || 'dev.dgdp.site'
   Rails.application.routes.default_url_options[:protocol] = 'https'
