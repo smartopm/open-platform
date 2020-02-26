@@ -136,7 +136,7 @@ export default function UserForm() {
           </TextField>
         </div>
         {
-          values.expiresAt && (
+          values.userType === 'prospective_client' && (
             <Fragment>
               <div className="form-group">
                 <label className="bmd-label-static" htmlFor="Expiration">
@@ -146,7 +146,7 @@ export default function UserForm() {
                   className="form-control"
                   name="Expiration"
                   type="text"
-                  defaultValue={formatISO9075(new Date(values.expiresAt))}
+                  defaultValue={values.expiresAt ? formatISO9075(new Date(values.expiresAt)) : 'Not Set'}
                   readOnly
                 />
               </div>

@@ -35,7 +35,7 @@ module Types
     end
 
     def user_search(query:)
-      User.where('name ILIKE :query OR phone_number ILIKE :query', query: "%#{query}%")
+      User.where('name ILIKE :query OR phone_number ILIKE :query OR user_type ILIKE :query', query: "%#{query}%")
           .where(community_id: context[:current_user].community_id).limit(20)
     end
 
