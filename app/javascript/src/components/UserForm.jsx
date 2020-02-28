@@ -155,13 +155,13 @@ export default function UserForm() {
                   id="state"
                   select
                   label="Choose number of days to extend expiry date"
-                  value={values.days || 1}
+                  value={values.days || 0}
                   onChange={handleInputChange}
                   margin="normal"
                   name="days"
                   className={`${css(styles.selectInput)}`}
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20].map(val => (
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20].map(val => (
                     <MenuItem key={val} value={val}>
                       {`${val} ${val === 1 ? 'day' : 'days'} `}
                     </MenuItem>

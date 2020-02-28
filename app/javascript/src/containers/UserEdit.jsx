@@ -75,7 +75,7 @@ export default function FormContainer({ match, history }) {
     const values = {
       ...data,
       avatarBlobId: signedBlobId,
-      expiresAt: data.expiresAt ? addDays(new Date(data.expiresAt), data.days ? Number(data.days) : 0).toISOString() : new Date().toISOString()
+      expiresAt: data.expiresAt ? addDays(new Date(data.expiresAt), data.days ? Number(data.days) : 0).toISOString() : addDays(new Date(), 1).toISOString()
     }
 
     createOrUpdate(values)
