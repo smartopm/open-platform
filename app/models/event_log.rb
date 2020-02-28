@@ -11,7 +11,7 @@ class EventLog < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch
-                      user_active user_feedback].freeze
+                      user_active user_feedback showroom_entry user_update].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -69,7 +69,19 @@ class EventLog < ApplicationRecord
   end
 
   def user_feedback_to_sentence
-    "User #{acting_user_name} gave feedback"
+    # send a message of the newest feedback
+    feedback = Feedback.last
+    "User #{acting_user_name} gave thumbs #{feedback.is_thumbs_up == true ? 'up' : 'down'} feedback"
+  end
+
+  def showroom_entry_to_sentence
+    user = EntryRequest.last
+    "User #{user.name} was recorded in the showroom"
+  end
+
+  def user_update_to_sentence
+    user = User.find(ref_id)
+    "User #{user.name} was updated by #{acting_user_name}"
   end
 
   def acting_user_name

@@ -75,7 +75,7 @@ class EntryRequest < ApplicationRecord
   def send_feedback_link(number)
     feedback_link = "https://#{ENV['HOST']}/feedback"
     Rails.logger.info "Phone number to send #{number}"
-    Sms.send(number, "Thank you for using our app, kindly using this
+    Sms.send(number, "Thank you for using our app, kindly use this
                       link to give us feedback #{feedback_link}")
   end
 
@@ -113,12 +113,12 @@ class EntryRequest < ApplicationRecord
   def log_showroom_entry
     EventLog.create(
       acting_user: user, community: user.community,
-      subject: 'kiosk_registration',
+      subject: 'showroom_entry',
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
         action: 'created',
         ref_name: self[:name],
-        type: user.user_type,
+        type: 'showroom',
       }
     )
   end

@@ -381,7 +381,7 @@ export function Component({
             {isLoading ? (
               <Loading />
             ) : data.user.notes ? (
-              data.user.notes.reverse().map(note => (
+              data.user.notes.map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
                     <p className="comment">{note.body}</p>
@@ -393,7 +393,7 @@ export function Component({
                       className={css(styles.actionIcon)}
                       onClick={() => handleOnComplete(note.id, note.completed)}
                     >
-                      <Tooltip title="Mark this note as uncomplete">
+                      <Tooltip title="Mark this note as incomplete">
                         <CheckBoxIcon />
                       </Tooltip>
                     </span>
