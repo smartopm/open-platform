@@ -34,11 +34,10 @@ module Mutations
 
       def send_notifications(number)
         feedback_link = "https://#{ENV['HOST']}/feedback"
-        Rails.logger.info "Phone number to send #{number}"
-        if number
-          Sms.send(number, "Thank you for using our app, kindly use this
-                          link to give us feedback #{feedback_link}")
-        end
+        return if number.nil?
+
+        Sms.send(number, "Thank you for using our app, kindly use this
+                              link to give us feedback #{feedback_link}")
       end
     end
   end
