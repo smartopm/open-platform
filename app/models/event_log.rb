@@ -11,7 +11,7 @@ class EventLog < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch
-                      user_active user_feedback kiosk_registration].freeze
+                      user_active user_feedback showroom_entry].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -74,7 +74,7 @@ class EventLog < ApplicationRecord
     "User #{acting_user_name} gave thumbs #{feedback.is_thumbs_up == true ? 'up' : 'down'} feedback"
   end
 
-  def kiosk_registration_to_sentence
+  def showroom_entry_to_sentence
     user = EntryRequest.last
     "User #{user.name} was recorded in the showroom"
   end

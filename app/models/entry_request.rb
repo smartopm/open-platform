@@ -113,7 +113,7 @@ class EntryRequest < ApplicationRecord
   def log_showroom_entry
     EventLog.create(
       acting_user: user, community: user.community,
-      subject: 'kiosk_registration',
+      subject: 'showroom_entry',
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
         action: 'created',
