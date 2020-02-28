@@ -12,6 +12,7 @@ module Mutations
 
       def resolve(user_id:, note: nil)
         user = ::User.find(user_id)
+        # entry_request = ::EntryRequest.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'User not found' unless user
 
         event_log = instantiate_event_log(context[:current_user], user, note)
@@ -29,6 +30,11 @@ module Mutations
                      data: {
                        ref_name: user.name, note: note, type: user.user_type
                      })
+      end
+
+      def send_notifications(entry_request)
+        entry_request.notify_admin(true)
+        entry_request.send_feedback_link(entry_request.phone_number) if entry_request.phone_number
       end
     end
   end

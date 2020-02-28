@@ -90,6 +90,8 @@ class EntryRequest < ApplicationRecord
   end
 
   def log_entry
+    Rails.logger.info self[:name]
+    Rails.logger.info "checking if we are getting the correct source here"
     if showroom?
       log_showroom_entry
     else
@@ -111,6 +113,7 @@ class EntryRequest < ApplicationRecord
   end
 
   def log_showroom_entry
+    Rails.logger.info "logging the showroom ....."
     EventLog.create(
       acting_user: user, community: user.community,
       subject: 'kiosk_registration',
