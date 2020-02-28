@@ -142,14 +142,22 @@ export function Component({
             <div className="col-4">
               <h5>{data.user.name}</h5>
               <div className="expires">
-                Exp: {DateUtil.formatDate(data.user.expiresAt)}
+                Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
               </div>
               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
               <br />
-              <Status label={data.user.state} />
+              {
+                DateUtil.isExpired(data.user.expiresAt) ? (
+                  <p className={css(styles.badge, styles.statusBadgeBanned)}>
+                    Expired
+                  </p>
+                )
+                  :
+                  <Status label={data.user.state} />
+              }
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -456,5 +464,15 @@ const styles = StyleSheet.create({
       color: '#25c0b0'
     },
     marginRight: 12
+  },
+  badge: {
+    margin: '0',
+    padding: '0 0.7em',
+    borderRadius: '14px'
+  },
+  statusBadgeBanned: {
+    border: '1px solid #ed5757',
+    color: '#fff',
+    backgroundColor: '#ed5757'
   }
 })

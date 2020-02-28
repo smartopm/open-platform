@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLazyQuery, useMutation } from 'react-apollo'
+import { addDays } from 'date-fns'
 import Nav from '../components/Nav'
 import UserForm from '../components/UserForm.jsx'
 import Loading from '../components/Loading.jsx'
@@ -73,8 +74,10 @@ export default function FormContainer({ match, history }) {
     event.preventDefault()
     const values = {
       ...data,
-      avatarBlobId: signedBlobId
+      avatarBlobId: signedBlobId,
+      expiresAt: data.expiresAt ? addDays(new Date(data.expiresAt), data.days ? Number(data.days) : 0).toISOString() : addDays(new Date(), 1).toISOString()
     }
+
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
@@ -90,6 +93,7 @@ export default function FormContainer({ match, history }) {
       ...data,
       [name]: value
     })
+
   }
 
   // If we are in an edit flow and haven't loaded the data,
