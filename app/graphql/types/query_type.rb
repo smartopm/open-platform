@@ -22,10 +22,13 @@ module Types
     # Get a list of all users information
     field :users, [UserType], null: true do
       description 'Get a list of all the users'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
-    def users
-      User.all
+    def users(offset: 0, limit: 100)
+      User.all.order(created_at: :desc)
+          .limit(limit).offset(offset)
     end
 
     # Get a member's information
@@ -109,7 +112,7 @@ module Types
     end
 
     def flagged_notes
-      Note.where(flagged: true).order(completed: :asc, created_at: :desc)
+      Note.where(flagged: true).order(completed: :desc, created_at: :desc)
     end
 
     field :entry_search, [EntryRequestType], null: true do
