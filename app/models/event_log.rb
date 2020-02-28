@@ -69,7 +69,9 @@ class EventLog < ApplicationRecord
   end
 
   def user_feedback_to_sentence
-    "User #{acting_user_name} gave feedback"
+    # send a message of the newest feedback
+    feedback = Feedback.first
+    "User #{acting_user_name} gave thumbs #{feedback.is_thumbs_up == true ? 'up' : 'down'} feedback"
   end
 
   def kiosk_registration_to_sentence
