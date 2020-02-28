@@ -70,7 +70,7 @@ class EventLog < ApplicationRecord
 
   def user_feedback_to_sentence
     # send a message of the newest feedback
-    feedback = Feedback.first
+    feedback = Feedback.last
     "User #{acting_user_name} gave thumbs #{feedback.is_thumbs_up == true ? 'up' : 'down'} feedback"
   end
 
