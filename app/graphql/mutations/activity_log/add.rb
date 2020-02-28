@@ -12,11 +12,11 @@ module Mutations
 
       def resolve(user_id:, note: nil)
         user = ::User.find(user_id)
-        # entry_request = ::EntryRequest.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'User not found' unless user
 
         event_log = instantiate_event_log(context[:current_user], user, note)
 
+        send_notifications(user.phone_number)
         return { event_log: event_log, user: user } if event_log.save
 
         raise GraphQL::ExecutionError, event_log.errors.full_messages
@@ -32,9 +32,13 @@ module Mutations
                      })
       end
 
-      def send_notifications(entry_request)
-        entry_request.notify_admin(true)
-        entry_request.send_feedback_link(entry_request.phone_number) if entry_request.phone_number
+      def send_notifications(number)
+            feedback_link = "https://#{ENV['HOST']}/feedback"
+            Rails.logger.info "Phone number to send #{number}"
+            if number
+              Sms.send(number, "Thank you for using our app, kindly using this
+                              link to give us feedback #{feedback_link}")
+            end
       end
     end
   end
