@@ -75,7 +75,7 @@ class EntryRequest < ApplicationRecord
   def send_feedback_link(number)
     feedback_link = "https://#{ENV['HOST']}/feedback"
     Rails.logger.info "Phone number to send #{number}"
-    Sms.send(number, "Thank you for using our app, kindly using this
+    Sms.send(number, "Thank you for using our app, kindly use this
                       link to give us feedback #{feedback_link}")
   end
 
