@@ -16,12 +16,11 @@ module Mutations
 
       def resolve(vals)
         showroom = ::Showroom.create(vals)
-       
+
         return { showroom: showroom } if showroom.persisted?
 
         raise GraphQL::ExecutionError, showroom.errors.full_messages
       end
-
     end
   end
 end
