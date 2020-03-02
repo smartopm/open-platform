@@ -23,6 +23,8 @@ module Mutations
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
         attach_avatars(user, vals)
+
+        log_user_update(user)
         return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
         raise GraphQL::ExecutionError, user.errors.full_messages
@@ -32,6 +34,16 @@ module Mutations
         ATTACHMENTS.each_pair do |key, attr|
           user.send(attr).attach(vals[key]) if vals[key]
         end
+      end
+
+      def log_user_update(user)
+        ::EventLog.create(acting_user_id: context[:current_user].id,
+                          community_id: user.community_id, subject: 'user_update',
+                          ref_id: user.id,
+                          ref_type: 'User',
+                          data: {
+                            ref_name: user.name, note: '', type: user.user_type
+                          })
       end
 
       def authorized?(vals)
