@@ -22,7 +22,7 @@ export default function ClientForm({ history }) {
       email: data.email,
       homeAddress: data.homeAddress,
       reason: data.reason,
-      source: data.source
+      source: 'showroom'
     };
 
     createEntryShowroom({ variables: user }).then(() => {
