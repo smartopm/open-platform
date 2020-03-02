@@ -6,13 +6,14 @@ import { useMutation } from "react-apollo";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
 import Nav from "../../components/Nav";
-import { createShowroomEntry } from "../../graphql/mutations.js";
+import { createShowroomEntry, EntryRequestCreate } from "../../graphql/mutations.js";
 
 export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted] = useState(false);
   const [selectedSource, setReason] = useState("");
   const [createEntryShowroom] = useMutation(createShowroomEntry);
+  const [createEntryRequest] = useMutation(EntryRequestCreate);
   const onSubmit = data => {
     const user = {
       name: `${data.name} ${data.surname}`,
@@ -25,9 +26,11 @@ export default function ClientForm({ history }) {
     };
 
     createEntryShowroom({ variables: user }).then(() => {
-      // Send them to the temp final page
-      history.push("/sh_complete/");
-    });
+      return createEntryRequest({ variables: user })
+    })
+      .then(() => {
+        history.push("/sh_complete/");
+      })
   };
 
   const handleSourceChange = event => {
