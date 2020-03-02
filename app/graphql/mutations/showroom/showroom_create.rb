@@ -16,6 +16,7 @@ module Mutations
 
       def resolve(vals)
         showroom = ::Showroom.new(vals)
+        showroom.user_id = context[:current_user].id
         showroom.save
        
         return { showroom: showroom } if showroom.persisted?
