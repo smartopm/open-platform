@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
+
 # A list of all activity for a particular community
 class EventLog < ApplicationRecord
   belongs_to :community
@@ -80,8 +82,12 @@ class EventLog < ApplicationRecord
   end
 
   def user_update_to_sentence
-    user = User.find(ref_id)
-    "User #{user.name} was updated by #{acting_user_name}"
+    user = User.find_by(id: ref_id)
+    if user
+      "User #{user.name} was updated by #{acting_user_name}"
+    else
+      "Deleted user was updated by #{acting_user_name}"
+    end
   end
 
   def acting_user_name
@@ -131,3 +137,4 @@ class EventLog < ApplicationRecord
     return true if acting_user_id && acting_user.nil?
   end
 end
+# rubocop:enable Metrics/ClassLength
