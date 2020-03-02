@@ -1,0 +1,2 @@
+class Showroom < ApplicationRecord
+end
