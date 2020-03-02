@@ -342,6 +342,7 @@ export const createShowroomEntry = gql`
       nrc: $nrc
       reason: $reason
       source: $source
+      phoneNumber: $phoneNumber
     ) {
       showroom {
         name
