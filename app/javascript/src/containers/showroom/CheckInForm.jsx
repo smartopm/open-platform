@@ -6,18 +6,20 @@ import { useMutation } from "react-apollo";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
 import Nav from "../../components/Nav";
-import { EntryRequestCreate } from "../../graphql/mutations.js";
+import { EntryRequestCreate, createShowroomEntry } from "../../graphql/mutations.js";
 
 export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted] = useState(false);
   const [selectedSource, setReason] = useState("");
-  const [createEntryRequest] = useMutation(EntryRequestCreate);
+  const [createEntryRequest] = useMutation(EntryRequestCreate, createShowroomEntry);
   const onSubmit = data => {
     const user = {
       name: `${data.name} ${data.surname}`,
       phoneNumber: data.phoneNumber,
       nrc: data.nrc,
+      email: data.email,
+      homeAddress: data.homeAddress,
       reason: data.reason,
       source: "showroom"
     };
@@ -74,6 +76,18 @@ export default function ClientForm({ history }) {
             />
           </div>
           <div className="form-group">
+            <label className="bmd-label-static" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              ref={register}
+              name="email"
+              defaultValue=""
+            />
+          </div>
+          <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
               NRC
             </label>
@@ -95,6 +109,19 @@ export default function ClientForm({ history }) {
               ref={register}
               name="phoneNumber"
               defaultValue=""
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="homeAddress">
+              Home Address
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              ref={register}
+              name="homeAddress"
+              defaultValue=""
+              placeholder="Plot 89, St Luis street, Meanwood, Lusaka"
             />
           </div>
           <div className="form-group">
