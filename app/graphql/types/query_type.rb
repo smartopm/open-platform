@@ -5,7 +5,6 @@ module Types
   class QueryType < Types::BaseObject
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
-    # include Types::Queries::Feedback
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -134,6 +133,14 @@ module Types
     def users_feedback(offset: 0, limit: 50)
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
+    end
+
+    field :showroom_entries, [ShowroomType], null: true do
+      description 'Get all showroom entries'
+    end
+
+    def showroom_entries
+      Showroom.all
     end
   end
 end
