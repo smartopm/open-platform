@@ -324,3 +324,13 @@ export const createFeedback = gql`
     }
   }
 `
+
+export const createShowroomEntry = gql`
+  mutation ShowroomEntryCreate {
+    showroomEntryCreate(name: "hello") {
+      entries {
+        id
+      }
+    }
+  }
+`

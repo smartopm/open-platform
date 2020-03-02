@@ -12,12 +12,10 @@ module Mutations
       argument :reason, String, required: false
       argument :source, String, required: false
 
-      field :entries, Types::ShowroomType, null: true
+      field :showroom, Types::ShowroomType, null: true
 
       def resolve(vals)
-        showroom = ::Showroom.new(vals)
-        showroom.user_id = context[:current_user].id
-        showroom.save
+        showroom = ::Showroom.create(vals)
        
         return { showroom: showroom } if showroom.persisted?
 
