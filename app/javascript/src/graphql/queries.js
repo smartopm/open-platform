@@ -167,3 +167,18 @@ export const UsersQuery = gql`
   }
   ${UserFragment.publicFields}
 `
+
+export const ShowroomEntriesQuery = gql`
+  {
+    showroomEntries {
+      id
+      name
+      phoneNumber
+      createdAt
+      email
+      nrc
+      reason
+      source
+    }
+  }
+`

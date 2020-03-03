@@ -56,6 +56,7 @@ import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
 import AllNotes from '../src/containers/Activity/AllNotes'
 import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users';
+import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -189,6 +190,7 @@ const App = () => {
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
+                    <Route path="/showroom_logs" component={ShowroomLogs} />
 
                     {/* activity */}
                     <Route path="/todo" component={Todo} />

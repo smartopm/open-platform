@@ -324,3 +324,30 @@ export const createFeedback = gql`
     }
   }
 `
+
+export const createShowroomEntry = gql`
+  mutation ShowroomEntryCreate(
+    $name: String
+    $email: String
+    $homeAddress: String
+    $phoneNumber: String
+    $nrc: String
+    $reason: String
+    $source: String
+  ) {
+    showroomEntryCreate(
+      name: $name
+      email: $email
+      homeAddress: $homeAddress
+      nrc: $nrc
+      reason: $reason
+      source: $source
+      phoneNumber: $phoneNumber
+    ) {
+      showroom {
+        name
+        id
+      }
+    }
+  }
+`
