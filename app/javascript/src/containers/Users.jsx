@@ -14,9 +14,13 @@ import { ModalDialog } from "../components/Dialog";
 
 const useStyles = makeStyles({
     table: {
-        minWidth: 500
+        display: 'block',
+        width: '100%',
+        overflowX: 'auto',
+        
     }
 });
+
 const StyledTableCell = withStyles(theme => ({
     head: {
         backgroundColor: '#25c0b0',
@@ -96,80 +100,84 @@ export default function UsersList() {
     if (error) return <ErrorPage error={error.message} />
 
     return (
-        <Fragment>
-            <Nav navName='Users' menuButton='back' />
 
-            <div className="container">
-                <ModalDialog
-                    handleClose={handleModal}
-                    handleConfirm={handleClick}
-                    open={isDialogOpen}
-                >
+        
+            <Fragment>
+                <Nav navName='Users' menuButton='back' />
 
-                    <div className='form-group'>
+                <div className="container">
+                    <ModalDialog
+                        handleClose={handleModal}
+                        handleConfirm={handleClick}
+                        open={isDialogOpen}
+                    >
 
-                        <h6>Add note for <strong>{userName}</strong> </h6>
-                        <input
-                            className='form-control'
-                            type='text'
-                            value={note}
-                            onChange={event => setNote(event.target.value)}
-                            name='note'
-                            placeholder='Type action note here'
-                        />
-                        {mutationLoading && <p className='text-center'>Saving note ...</p>}
-                    </div>
+                        <div className='form-group'>
 
-                </ModalDialog>
+                            <h6>Add note for <strong>{userName}</strong> </h6>
+                            <input
+                                className='form-control'
+                                type='text'
+                                value={note}
+                                onChange={event => setNote(event.target.value)}
+                                name='note'
+                                placeholder='Type action note here'
+                            />
+                            {mutationLoading && <p className='text-center'>Saving note ...</p>}
+                        </div>
+
+                    </ModalDialog>
 
 
-                <Table className={classes.table} aria-label="customized table">
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell>Name</StyledTableCell>
-                            <StyledTableCell align="right">Role</StyledTableCell>
-                            <StyledTableCell align="right">Phone Number</StyledTableCell>
-                            <StyledTableCell align="right">Email</StyledTableCell>
-                            <StyledTableCell align="right">Date</StyledTableCell>
-                            <StyledTableCell align="right">Note</StyledTableCell>
-                            <StyledTableCell align="right">Add Note</StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.users.map(user => (
-                            <StyledTableRow key={user.id}>
-                                <StyledTableCell component="th" scope="row">
-                                    {user.name}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">{user.roleName}</StyledTableCell>
-                                <StyledTableCell align="right">{user.phoneNumber || "None"}</StyledTableCell>
-                                <StyledTableCell align="right">{user.email}</StyledTableCell>
-                                <StyledTableCell align="right">{user.notes[0] ? DateUtil.formatDate(user.notes[0].createdAt) : "N/A"}</StyledTableCell>
-                                <StyledTableCell align="right">{user.notes[0] ? user.notes[0].body : "None"}</StyledTableCell>
-                                <StyledTableCell align="right">
+                    <Table className={classes.table} aria-label="customized table">
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell>Name</StyledTableCell>
+                                <StyledTableCell align="right">Role</StyledTableCell>
+                                <StyledTableCell align="right">Phone Number</StyledTableCell>
+                                <StyledTableCell align="right">Email</StyledTableCell>
+                                <StyledTableCell align="right">Date</StyledTableCell>
+                                <StyledTableCell align="right">Note</StyledTableCell>
+                                <StyledTableCell align="right">Add Note</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.users.map(user => (
+                                <StyledTableRow key={user.id}>
+                                    <StyledTableCell component="th" scope="row">
+                                        {user.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">{user.roleName}</StyledTableCell>
+                                    <StyledTableCell align="right">{user.phoneNumber || "None"}</StyledTableCell>
+                                    <StyledTableCell align="right">{user.email}</StyledTableCell>
+                                    <StyledTableCell align="right">{user.notes[0] ? DateUtil.formatDate(user.notes[0].createdAt) : "N/A"}</StyledTableCell>
+                                    <StyledTableCell align="right">{user.notes[0] ? user.notes[0].body : "None"}</StyledTableCell>
+                                    <StyledTableCell align="right">
 
-                                    <Button color="secondary" onClick={() => handleModal(user.id, user.name)}>
-                                        +
+                                        <Button color="secondary" onClick={() => handleModal(user.id, user.name)}>
+                                            +
                                     </Button>
 
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, 50, 100]}
-                    component="div"
-                    count={data.users.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                        component="div"
+                        count={data.users.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
 
 
-            </div>
-        </Fragment >
+                </div>
+            </Fragment >
+
+        
     )
 }
 
