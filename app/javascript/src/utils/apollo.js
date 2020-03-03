@@ -1,5 +1,6 @@
 // client
 import { ApolloClient } from 'apollo-client'
+import 'isomorphic-unfetch'
 // cache
 import { InMemoryCache } from 'apollo-cache-inmemory'
 // links

@@ -1,5 +1,5 @@
 import React from 'react'
-import { DialogContent, DialogActions, Button, Dialog } from '@material-ui/core'
+import { DialogContent, DialogActions, Button, Dialog,DialogTitle, TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
 export function ModalDialog({
@@ -17,9 +17,13 @@ export function ModalDialog({
       open={open}
     >
       <DialogContent>
-        <p className="deny-msg">
-          Are you sure you want to {action} access to <strong>{name}</strong> ?
-        </p>
+        {
+          Boolean(name.length) && (
+            <p className="deny-msg">
+              Are you sure you want to {action} access to <strong>{name}</strong> ?
+            </p>
+          )
+        }
         <div>{children}</div>
       </DialogContent>
       <DialogActions>
@@ -68,16 +72,24 @@ export function ReasonInputModal({ handleClose, open, children }) {
   )
 }
 
+
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
-  action: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  action: PropTypes.string,
   handleConfirm: PropTypes.func.isRequired,
   children: PropTypes.node
 }
+
+ModalDialog.defaultProps = {
+  name: '',
+  action: 'Save'
+}
+
 ReasonInputModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
 }
+
