@@ -61,10 +61,10 @@ export default function RequestConfirm({ match, history }) {
             })
     }
 
-    function handleModal() {
-        setModalAction('flag')
-        setModal(!isModalOpen)
-    }
+        function handleModal() {
+            setModalAction('flag')
+            setModal(!isModalOpen)
+        }
 
     function handleNoteChange(event) {
         setNote(event.target.value)
@@ -74,7 +74,7 @@ export default function RequestConfirm({ match, history }) {
         // create a flagged todo note here
         noteCreate({
             variables: { userId: formData.guard.id, body: note, flagged: true }
-        }).then(() => {
+        }).then(() => { 
             setModal(!isModalOpen)
             history.push('/entry_logs')
         }).catch(error => {

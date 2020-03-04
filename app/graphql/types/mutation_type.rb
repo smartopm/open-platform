@@ -28,5 +28,8 @@ module Types
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate
+
+    # showroom
+    field :showroom_entry_create, mutation: Mutations::Showroom::ShowroomCreate
   end
 end
