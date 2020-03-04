@@ -90,7 +90,7 @@ function Results({ data, loading, called }) {
   return false
 }
 
-export default function SearchContainer() {
+export default function SearchContainer({ location }) {
   function updateSearch(e) {
     const { value } = e.target
     setName(value || '')
@@ -116,7 +116,7 @@ export default function SearchContainer() {
           value={name}
           autoFocus
         />
-        <Link to="/" className={css(styles.cancelBtn)}>
+        <Link to={location.state.from} className={css(styles.cancelBtn)}>
           <i className="material-icons">arrow_back</i>
         </Link>
         <Link to="/scan">
