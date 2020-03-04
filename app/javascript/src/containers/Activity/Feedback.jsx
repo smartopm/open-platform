@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { useMutation } from 'react-apollo'
 import { createFeedback } from '../../graphql/mutations'
 import Nav from '../../components/Nav'
+import { CircularProgress } from '@material-ui/core'
 
 const redLike = 'rgb(299, 63, 69)'
 const greenLike = 'rgb(37, 192, 176)'
@@ -36,6 +37,7 @@ export function Feedback(props) {
     const { classes, history } = props
     const [isTextAreaOpen, setTextAreaOpen] = useState(false)
     const [feedback, setFeedback] = useState('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const [feedbackCreate] = useMutation(createFeedback)
 
     function handleThumbDown() {
@@ -43,6 +45,7 @@ export function Feedback(props) {
     }
 
     function handleThumbUp() {
+        setIsSubmitting(true)
         feedbackCreate({ variables: { isThumbsUp: true } })
             .then(() => {
                 history.push('/feedback_success')
@@ -92,7 +95,9 @@ export function Feedback(props) {
                             className={classes.thumbUpButton}
                             aria-label='Thumb Up'
                         >
-                            <ThumbUpIcon className={classes.largeIcon} />
+                            {
+                                isSubmitting ? <CircularProgress size={70} /> : <ThumbUpIcon className={classes.largeIcon} />
+                            }
                         </IconButton>
                     </div>
                 </div>
