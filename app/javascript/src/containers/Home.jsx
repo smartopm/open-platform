@@ -35,7 +35,14 @@ export function Component({ authState }) {
   }
 
   if (redirect) {
-    return <Redirect push to={redirect} />
+    return (
+      <Redirect push
+        to={{
+          pathname: redirect,
+          state: { from: '/' }
+        }}
+      />
+    )
   }
 
   return (

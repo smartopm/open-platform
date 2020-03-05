@@ -1,6 +1,5 @@
 import React from 'react'
 import { useLazyQuery, useMutation } from 'react-apollo'
-import { addDays } from 'date-fns'
 import Nav from '../components/Nav'
 import UserForm from '../components/UserForm.jsx'
 import Loading from '../components/Loading.jsx'

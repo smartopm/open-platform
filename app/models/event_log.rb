@@ -53,8 +53,7 @@ class EventLog < ApplicationRecord
   end
 
   def user_entry_to_sentence
-    user = User.find(ref_id)
-    "User #{user.name} was recorded entering by #{acting_user.name}"
+    "User #{ref_user_name} was recorded entering by #{acting_user_name}"
   end
 
   def user_login_to_sentence
@@ -62,8 +61,7 @@ class EventLog < ApplicationRecord
   end
 
   def user_switch_to_sentence
-    user = User.find(ref_id)
-    "User #{acting_user_name} switched to user #{user.name}"
+    "User #{acting_user_name} switched to user #{ref_user_name}"
   end
 
   def user_active_to_sentence
@@ -82,11 +80,15 @@ class EventLog < ApplicationRecord
   end
 
   def user_update_to_sentence
+    "#{ref_user_name} was updated by #{acting_user_name}"
+  end
+
+  def ref_user_name
     user = User.find_by(id: ref_id)
     if user
-      "User #{user.name} was updated by #{acting_user_name}"
+      user.name
     else
-      "Deleted user was updated by #{acting_user_name}"
+      "Deleted User(#{ref_id})"
     end
   end
 
