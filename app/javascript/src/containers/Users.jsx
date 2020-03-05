@@ -200,25 +200,16 @@ export default function UsersList() {
                                     {user.name}
                                 </StyledTableCell>
                                 <StyledTableCell align="right">{user.roleName}</StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {user.phoneNumber || 'None'}
-                                </StyledTableCell>
+                                <StyledTableCell align="right">{user.phoneNumber || "None"}</StyledTableCell>
                                 <StyledTableCell align="right">{user.email}</StyledTableCell>
+                                <StyledTableCell align="right">{user.notes && user.notes[0] ? DateUtil.formatDate(user.notes[0].createdAt) : "N/A"}</StyledTableCell>
+                                <StyledTableCell align="right">{user.notes && user.notes[0] ? user.notes[0].body : "None"}</StyledTableCell>
                                 <StyledTableCell align="right">
-                                    {user.notes[0]
-                                        ? DateUtil.formatDate(user.notes[0].createdAt)
-                                        : 'N/A'}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {user.notes[0] ? user.notes[0].body : 'None'}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Button
-                                        color="secondary"
-                                        onClick={() => handleModal(user.id, user.name)}
-                                    >
+
+                                    <Button color="secondary" onClick={() => handleModal(user.id, user.name)}>
                                         +
-                  </Button>
+                                    </Button>
+
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
