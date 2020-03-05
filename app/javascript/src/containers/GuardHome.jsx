@@ -67,7 +67,14 @@ export function HomeGuard({ translate }) {
       })
   }
   if (redirect) {
-    return <Redirect push to={redirect} />
+    return (
+      <Redirect push
+        to={{
+          pathname: redirect,
+          state: { from: '/guard_home' }
+        }}
+      />
+    )
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
