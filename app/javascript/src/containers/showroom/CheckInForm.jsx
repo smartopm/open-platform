@@ -48,7 +48,7 @@ export default function ClientForm({ history }) {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="name">
-              NAME
+              Name
             </label>
             <input
               className="form-control"
