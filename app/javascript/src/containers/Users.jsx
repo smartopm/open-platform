@@ -22,7 +22,6 @@ import {
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog } from '../components/Dialog'
-import { testdata } from './testdata.js'
 
 
 
