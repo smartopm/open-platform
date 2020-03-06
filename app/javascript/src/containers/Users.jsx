@@ -90,11 +90,18 @@ export default function UsersList() {
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
     const handleChangePage = (event, newPage) => {
+
+        if (data.users.length > offset) {
+            setOffSet(limit + offset)
+        }
         setPage(newPage)
     }
 
     const handleChangeRowsPerPage = event => {
         setRowsPerPage(+event.target.value)
+        if (rowsPerPage > limit) {
+            setOffSet(limit + offset);
+        }
         setPage(0)
     }
 
