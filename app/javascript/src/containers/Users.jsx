@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import DateUtil from '../utils/dateutil'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery } from '../graphql/queries'
@@ -22,6 +22,8 @@ import {
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog } from '../components/Dialog'
+
+
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -79,6 +81,7 @@ export default function UsersList() {
     const { loading, error, data, refetch } = useQuery(UsersQuery, {
         variables: { limit, offset }
     })
+
     const [page, setPage] = React.useState(0)
     const [note, setNote] = useState('')
     const [userId, setId] = useState('')
@@ -87,17 +90,18 @@ export default function UsersList() {
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
     const handleChangePage = (event, newPage) => {
-        if (rowsPerPage < offset) {
-            return
-        } else {
-            setOffSet(offset + limit)
-        }
 
+        if (data.users.length > offset) {
+            setOffSet(limit + offset)
+        }
         setPage(newPage)
     }
 
     const handleChangeRowsPerPage = event => {
         setRowsPerPage(+event.target.value)
+        if (rowsPerPage > limit) {
+            setOffSet(limit + offset);
+        }
         setPage(0)
     }
 
@@ -194,31 +198,27 @@ export default function UsersList() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.users.map(user => (
+
+
+                        {data.users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
                             <StyledTableRow key={user.id}>
+
                                 <StyledTableCell component="th" scope="row">
-                                    {user.name}
+                                    <Link to={`/user/${user.id}`}
+                                        key={user.id}> {user.name} </Link>
                                 </StyledTableCell>
+
                                 <StyledTableCell align="right">{user.roleName}</StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {user.phoneNumber || 'None'}
-                                </StyledTableCell>
+                                <StyledTableCell align="right">{user.phoneNumber || "None"}</StyledTableCell>
                                 <StyledTableCell align="right">{user.email}</StyledTableCell>
+                                <StyledTableCell align="right">{user.notes && user.notes[0] ? DateUtil.formatDate(user.notes[0].createdAt) : "N/A"}</StyledTableCell>
+                                <StyledTableCell align="right">{user.notes && user.notes[0] ? user.notes[0].body : "None"}</StyledTableCell>
                                 <StyledTableCell align="right">
-                                    {user.notes[0]
-                                        ? DateUtil.formatDate(user.notes[0].createdAt)
-                                        : 'N/A'}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {user.notes[0] ? user.notes[0].body : 'None'}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Button
-                                        color="secondary"
-                                        onClick={() => handleModal(user.id, user.name)}
-                                    >
+
+                                    <Button color="secondary" onClick={() => handleModal(user.id, user.name)}>
                                         +
-                  </Button>
+                                    </Button>
+
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}

@@ -75,8 +75,10 @@ class EntryRequest < ApplicationRecord
   def send_feedback_link(number)
     feedback_link = "https://#{ENV['HOST']}/feedback"
     Rails.logger.info "Phone number to send #{number}"
-    Sms.send(number, "Thank you for using our app, kindly use this
-                      link to give us feedback #{feedback_link}")
+    # disabled rubocop to keep the structure of the message
+    # rubocop:disable LineLength
+    Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
+    # rubocop:enable LineLength
   end
 
   def notify_client(number)

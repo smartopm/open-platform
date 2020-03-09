@@ -1,11 +1,10 @@
-import React, { useContext, Fragment } from 'react'
+import React, { useContext } from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import { reasons, userState, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
-import { formatISO9075 } from 'date-fns'
 
 export default function UserForm() {
   const {
@@ -135,42 +134,22 @@ export default function UserForm() {
             ))}
           </TextField>
         </div>
-        {
-          values.userType === 'prospective_client' && (
-            <Fragment>
-              <div className="form-group">
-                <label className="bmd-label-static" htmlFor="Expiration">
-                  Expiration Date
-                </label>
-                <input
-                  className="form-control"
-                  name="Expiration"
-                  type="text"
-                  defaultValue={values.expiresAt ? formatISO9075(new Date(values.expiresAt)) : 'Not Set'}
-                  readOnly
-                />
-              </div>
-              <div className="form-group">
-                <TextField
-                  id="state"
-                  select
-                  label="Choose number of days to extend expiry date"
-                  value={values.days || 0}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  name="days"
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20].map(val => (
-                    <MenuItem key={val} value={val}>
-                      {`${val} ${val === 1 ? 'day' : 'days'} `}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-            </Fragment>
-          )
-        }
+        <div className="form-group">
+          <label className="bmd-label-static" htmlFor="expiresAt">
+            Expiration Date
+          </label>
+          <input
+            className="form-control"
+            name="expiresAt"
+            type="text"
+            pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
+            placeholder='YYYYY-MM-DD'
+            defaultValue={values.expiresAt || 'YYYYY-MM-DD'}
+            onChange={handleInputChange}
+            title="Date must be of this format YYYY-MM-DD"
+          />
+        </div>
+
         <div className="form-group">
           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
             <input
