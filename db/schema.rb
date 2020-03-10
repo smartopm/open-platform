@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_02_140800) do
+ActiveRecord::Schema.define(version: 2020_03_10_125732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2020_03_02_140800) do
     t.boolean "flagged"
     t.datetime "created_at"
     t.boolean "completed"
+    t.datetime "due_date"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
