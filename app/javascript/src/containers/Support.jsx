@@ -9,10 +9,25 @@ export default function Support() {
       <br />
       <br />
       <div className="justify-content-center align-items-center">
+        <h3 className="text-center"> Please reach us on</h3>
+        <br />
         <p className="text-center">
-          Please email{' '}
-          <a href="mailto:support@doublegdp.com">support@doublegdp.com</a> for
-          anything you need
+          Email:{' '}
+          <a href="mailto:support@doublegdp.com">support@doublegdp.com</a>
+        </p>
+        <p className="text-center">
+          Tel:{' '}
+          <a href="tel:+260976261199">+260 976 261199</a>
+
+          <p className="text-center">
+            Cel:{' '}
+            <a href="tel:+260974624243">+260 974 624243</a>
+          </p>
+
+        </p>
+        <p className="text-center">
+          WhatsApp:{' '}
+          <a href="https://api.whatsapp.com/send?phone=260974624243"> +260 974 624243</a>
         </p>
       </div>
     </Fragment>
