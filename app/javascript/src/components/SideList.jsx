@@ -41,7 +41,11 @@ export const SideList = ({ toggleDrawer, user }) => (
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <Link to="/search" className={`${css(styles.link)}`}>
+        <Link
+          to={{
+            pathname: 'search',
+            state: { from: '/' }
+          }} className={`${css(styles.link)}`}>
           <ListItemText primary="Search People" />
         </Link>
       </ListItem>
