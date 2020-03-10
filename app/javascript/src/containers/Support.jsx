@@ -8,7 +8,7 @@ export default function Support() {
       <br />
       <br />
       <br />
-      <div className="justify-content-center align-items-left">
+      <div className="justify-content-center align-items-center">
         <h3 className="text-center"> Please reach us on</h3>
         <br />
         <p className="text-center">
