@@ -48,22 +48,26 @@ export function Component({ authState }) {
   return (
     <div>
       <Nav>
-        <div className={css(styles.inputGroup)}>
-          <input
-            className={`form-control ${css(styles.input)}`}
-            onFocus={inputToSearch}
-            type="text"
-            placeholder="Search"
-          />
-          <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
-          <Link to="/scan">
-            <img
-              src={ScanIcon}
-              alt="scan icon"
-              className={` ${css(styles.scanIcon)}`}
-            />
-          </Link>
-        </div>
+        {
+          ['security_guard', 'admin'].includes(authState.user.userType.toLowerCase()) && (
+            <div className={css(styles.inputGroup)}>
+              <input
+                className={`form-control ${css(styles.input)}`}
+                onFocus={inputToSearch}
+                type="text"
+                placeholder="Search"
+              />
+              <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
+              <Link to="/scan">
+                <img
+                  src={ScanIcon}
+                  alt="scan icon"
+                  className={` ${css(styles.scanIcon)}`}
+                />
+              </Link>
+            </div>
+          )
+        }
       </Nav>
       <div className="container">
         <div className="row justify-content-center">
