@@ -3,7 +3,6 @@ import { Link, Redirect } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo'
 import gql from 'graphql-tag'
 import { StyleSheet, css } from 'aphrodite'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import Loading from '../components/Loading.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
 import Avatar from '../components/Avatar.jsx'
@@ -103,6 +102,7 @@ export default function SearchContainer({ location }) {
   const [name, setName] = useState('')
   const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY)
   const authState = useContext(Context)
+
   if (!['security_guard', 'admin'].includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
   }

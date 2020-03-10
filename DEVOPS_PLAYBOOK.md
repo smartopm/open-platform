@@ -26,7 +26,7 @@ Normally, you'll want to push to `staging`, ensure that things are working norma
 
 ### Running migrations
 
-Migrations are tricky on Heroku. If you push to production and the code requires a miration, Rails will refuse to start until the migration is run. In order to avoid downtime, you should push to staging, run the migrations, then push to production.
+Migrations are tricky on Heroku. If you push to production and the code requires a migration, Rails will refuse to start until the migration is run. In order to avoid downtime, you should push to staging, run the migrations, then push to production.
 
 #### Breaking migrations
 
@@ -43,7 +43,6 @@ To see a list of releases run:
 To rollback to another version:
 
 `heroku rollback vXX --app double-gdp-fe`
-
 
 # Database
 
