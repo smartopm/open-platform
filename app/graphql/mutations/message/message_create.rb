@@ -8,7 +8,7 @@ module Mutations
       argument :sms_content, String, required: true
       argument :receiver_id, String, required: true
 
-      field :messages, Types::MessageType, null: true
+      field :message, Types::MessageType, null: true
 
       def resolve(vals)
         message = context[:current_user].messages.new(vals)
