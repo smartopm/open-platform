@@ -36,6 +36,19 @@ class Sms
     client.sms.send(from: from, to: to, text: message)
   end
 
+  def self.send_to_many(recipients, message)
+    raise SmsError, '`to` can\'t be nil or empty' if recipients.empty?
+
+    return if Rails.env.test?
+
+    # This is likely to be resource intensive
+    recipients.each do |user|
+      to = clean_number(user)
+      client = Nexmo::Client.new(api_key: config[:api_key], api_secret: config[:api_secret])
+      client.sms.send(to: to, text: message)
+    end
+  end
+
   # Ensure that we give Nexmo a properly formatted number
   # Strip anything that's not a number
   # Ex '+260 971501212' => '260971501212'
