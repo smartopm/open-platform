@@ -10,11 +10,12 @@ module Mutations
       field :messages, Types::MessageType, null: true
 
       def resolve(vals)
-        message = ::Message.new(
-        #   user_id: context[:current_user].id,
-          receiver: vals[:to],
-          sms_content: vals[:sms_content],
-        )
+        # message = ::Message.new(
+        # #   user_id: context[:current_user].id,
+        #   receiver: vals[:to],
+        #   sms_content: vals[:sms_content],
+        # )
+        message = context[:current_user].messages.new(vals)
        
         message.save
         # message.send_sms(vals[:to], vals[:sms_content])
