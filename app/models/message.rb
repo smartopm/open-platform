@@ -3,6 +3,7 @@
 # Messages being sent out
 class Message < ApplicationRecord
   belongs_to :user
+  
   default_scope { order(created_at: :desc) }
 
   class Unauthorized < StandardError; end
