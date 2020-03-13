@@ -18,6 +18,7 @@ class User < ApplicationRecord
                                     dependent: :destroy, inverse_of: :user
 
   has_many :notes, dependent: :destroy
+  has_many :messages, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
