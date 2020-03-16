@@ -28,8 +28,6 @@ RSpec.describe Mutations::Message do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      Rails.logger.info result
-      Rails.logger.info "Testing the message"
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message', 'smsContent')).to eql variables[:smsContent]
       expect(result.dig('errors')).to be_nil
