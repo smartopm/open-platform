@@ -200,6 +200,9 @@ const App = () => {
                     <Route path="/feedback_success" component={FeedbackSuccess} />
                     <Route path="/notes" component={AllNotes} />
                     <Route path="/feedbacks" component={FeedbackPage} />
+
+                    {/* {SMS page} */}
+                    {/* <Route path="/messages" component={Messages} /> */}
                     <Route path="/messages" component={AllMessages} />
                     <Route path="/message/:id" component={UserMessages} />
 
