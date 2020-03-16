@@ -6,7 +6,7 @@ module Mutations
     class MessageCreate < BaseMutation
       argument :receiver, String, required: true
       argument :sms_content, String, required: true
-      argument :receiver_id, String, required: false
+      argument :receiver_id, ID, required: true
 
       field :message, Types::MessageType, null: true
 
