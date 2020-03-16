@@ -6,8 +6,8 @@ module Types
     field :id, ID, null: false
     field :user, Types::UserType, null: false
     field :sender, Types::UserType, null: false
-    field :user_id, ID, null: true
-    field :receiver_id, ID, null: true
+    field :user_id, ID, null: false
+    field :sender_id, ID, null: false
     field :receiver, String, null: false
     field :sms_content, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
