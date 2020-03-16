@@ -28,13 +28,13 @@ export default function Messages() {
                                 <Grid item xs container direction="column" spacing={2}>
                                     <Grid item xs>
                                         <Typography gutterBottom variant="subtitle1">
-                                            Standard license
+                                            Client Name
                   </Typography>
                                         <Typography variant="body2" gutterBottom>
-                                            By: 1920x1080 • JPEG
+                                            Last Message
                   </Typography>
                                         <Typography variant="body2" color="textSecondary">
-                                            Created: <i>1030114</i>
+                                            Created: <i>Date </i>
                                         </Typography>
                                     </Grid>
                                     <Grid item />
@@ -44,10 +44,10 @@ export default function Messages() {
                                         variant="body2"
                                         style={{ cursor: "pointer", marginBottom: 30 }}
                                     >
-                                        Due Date: Remove
-                </Typography>
+
+                                    </Typography>
                                     <Typography variant="subtitle1">
-                                        <i>$19.00</i>
+                                        <i>Status</i>
                                     </Typography>
                                 </Grid>
                             </Grid>
