@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
-import { makeStyles } from "@material-ui/core/styles";
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useQuery, useMutation } from 'react-apollo'
 import { formatDistance } from 'date-fns'
@@ -9,21 +8,10 @@ import { flaggedNotes } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UpdateNote } from '../graphql/mutations'
-import { Grid, Typography, Checkbox, Divider, List, ListItem } from "@material-ui/core";
 
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
-    margin: "auto"
-  }
-}));
 
 
 export default function Todo({ history }) {
-  const classes = useStyles();
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
