@@ -5,11 +5,18 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import { useHistory } from "react-router-dom";
 
 
-export default function UserMessageItem({ name, imageUrl, senderName, message }) {
+export default function UserMessageItem({ id, name, imageUrl, senderName, message }) {
+    let history = useHistory();
+
+    function readMessages() {
+        history.push(`/message/${id}`)
+    }
+
     return (
-        <ListItem alignItems="flex-start">
+        <ListItem alignItems="flex-start" onClick={readMessages} >
             <ListItemAvatar>
                 <Avatar alt={name} src={imageUrl} />
             </ListItemAvatar>
