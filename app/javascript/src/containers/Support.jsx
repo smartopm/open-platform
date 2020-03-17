@@ -4,7 +4,7 @@ import Nav from '../components/Nav'
 export default function Support() {
   return (
     <Fragment>
-      <Nav navName="Support" menuButton="back" />
+      <Nav navName="Contact" menuButton="back" />
       <br />
       <br />
       <br />
