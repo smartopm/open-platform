@@ -11,12 +11,9 @@ module Mutations
       field :message, Types::MessageType, null: true
 
       def resolve(vals)
-        message = context[:current_user].messages.new(vals)
-        message.sender_id = context[:current_user].id
-        message.user_id = vals[:user_id]
+        message = context[:current_user].construct_message(vals)
         message.save
-        message.send_sms(vals[:receiver], vals[:message])
-        
+        message.send_sms
         return { message: message } if message.persisted?
 
         raise GraphQL::ExecutionError, message.errors.full_messages
