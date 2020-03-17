@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 2020_03_10_125732) do
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "userId"
+    t.string "userId"
     t.string "name"
     t.string "email"
     t.string "home_address"
