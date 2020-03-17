@@ -8,6 +8,7 @@ import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
 import { BubbleGroup, Message } from 'react-chat-ui'
+import Button from '@material-ui/core/Button';
 
 export default function UserMessages() {
     const { id } = useParams()
@@ -15,9 +16,9 @@ export default function UserMessages() {
     const authState = useContext(AuthStateContext)
     let history = useHistory();
 
-    if (authState.user.userType !== 'admin') {
-        history.push('/')
-    }
+    // if (authState.user.userType !== 'admin') {
+    //     history.push('/')
+    // }
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
@@ -48,6 +49,7 @@ export default function UserMessages() {
                     shrink: true,
                 }}
             />
+            <Button color="primary">Send</Button>
         </Fragment>
     )
 }
