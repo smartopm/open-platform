@@ -203,3 +203,16 @@ export const MessagesQuery = gql`
     }
   }
 `
+
+export const UserMessageQuery = gql`
+  query userMessages($id: ID) {
+    userMessages(id: $id) {
+      id
+      smsContent
+      sender {
+        name
+        id
+      }
+    }
+  }
+`
