@@ -19,6 +19,7 @@ export default function MessageList({ messages }) {
                             imageUrl={message.imageUrl}
                             message={message.messages.length ? message.messages[0].message : ''}
                             senderName={message.messages.length ? message.messages[0].user.name : ''}
+                            messageCount={message.messages.length}
                         />
                         <Divider variant="inset" component="li" />
                     </React.Fragment>

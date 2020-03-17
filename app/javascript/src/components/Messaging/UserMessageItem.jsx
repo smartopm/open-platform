@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { useHistory } from "react-router-dom";
 
 
-export default function UserMessageItem({ id, name, imageUrl, senderName, message }) {
+export default function UserMessageItem({ id, name, imageUrl, senderName, message, messageCount }) {
     let history = useHistory();
 
     function readMessages() {
@@ -21,7 +21,7 @@ export default function UserMessageItem({ id, name, imageUrl, senderName, messag
                 <Avatar alt={name} src={imageUrl} />
             </ListItemAvatar>
             <ListItemText
-                primary={name}
+                primary={`${name}  (${messageCount})`}
                 secondary={
                     <React.Fragment>
                         <Typography
@@ -41,6 +41,7 @@ export default function UserMessageItem({ id, name, imageUrl, senderName, messag
 
 UserMessageItem.propTypes = {
     name: PropTypes.string.isRequired,
+    messageCount: PropTypes.number.isRequired,
     imageUrl: PropTypes.string,
     senderName: PropTypes.string,
     message: PropTypes.string,

@@ -22,7 +22,13 @@ export default function UserMessages() {
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
-    const messages = data.userMessages.length && data.userMessages.map(message => new Message({ ...message }))
+    const messages = data.userMessages.length && data.userMessages.map(message => {
+        return new Message({
+            id: message.id,
+            message: message.message,
+            senderName: message.sender.name
+        })
+    })
     return (
         <Fragment>
             <BubbleGroup
