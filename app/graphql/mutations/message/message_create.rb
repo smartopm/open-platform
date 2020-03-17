@@ -4,7 +4,7 @@ module Mutations
   module Message
     # Create Message
     class MessageCreate < BaseMutation
-      argument :receiver, String, required: true
+      argument :receiver, String, required: false
       argument :message, String, required: true
       argument :user_id, ID, required: true
 
@@ -15,6 +15,9 @@ module Mutations
         message.sender_id = context[:current_user].id
         message.user_id = vals[:user_id]
         message.save
+
+        return unless vals[:receiver]
+
         message.send_sms(vals[:receiver], vals[:message])
         
         return { message: message } if message.persisted?

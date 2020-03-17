@@ -1,6 +1,6 @@
-import React, { useContext, Fragment } from 'react'
+import React, { useContext, Fragment, useState } from 'react'
 import { useParams } from "react-router-dom"
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import { useHistory } from "react-router-dom"
 import { UserMessageQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
@@ -8,12 +8,23 @@ import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
 import { BubbleGroup, Message } from 'react-chat-ui'
+import { MessageCreate } from '../../graphql/mutations'
+import { Button } from '@material-ui/core'
 
 export default function UserMessages() {
     const { id } = useParams()
-    const { loading, error, data } = useQuery(UserMessageQuery, { variables: { id } })
+    const { loading, error, data, refetch } = useQuery(UserMessageQuery, { variables: { id } })
+    const [messageCreate] = useMutation(MessageCreate)
+    const [message, setMessage] = useState('')
     const authState = useContext(AuthStateContext)
     let history = useHistory();
+    console.log(data)
+    function sendMessage() {
+        messageCreate({ variables: { receiver: '', message, userId: id } }).then(res => {
+            console.log(res)
+            refetch()
+        })
+    }
 
     if (authState.user.userType !== 'admin') {
         history.push('/')
@@ -42,13 +53,15 @@ export default function UserMessages() {
                     <span>No Messages for this user</span>
             }
 
+            <Button color="primary" onClick={sendMessage}>Send</Button>
             <TextField
                 id="standard-full-width"
                 label="Label"
                 style={{ bottom: 0, position: 'fixed' }}
                 placeholder="Placeholder"
-                // add character count here
-                helperText="120"
+                value={message}
+                onChange={event => setMessage(event.target.value)}
+                helperText={`Character count: ${message.length}`}
                 fullWidth
                 multiline
                 rows={3}
