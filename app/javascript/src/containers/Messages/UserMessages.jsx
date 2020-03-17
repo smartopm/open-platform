@@ -1,12 +1,13 @@
-import React, { useContext, Fragment } from 'react';
-import { useParams } from "react-router-dom";
+import React, { useContext, Fragment } from 'react'
+import { useParams } from "react-router-dom"
 import { useQuery } from 'react-apollo'
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom"
 import { UserMessageQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
-import TextField from '@material-ui/core/TextField';
+import TextField from '@material-ui/core/TextField'
+import { BubbleGroup, Message } from 'react-chat-ui'
 
 export default function UserMessages() {
     const { id } = useParams()
@@ -20,15 +21,16 @@ export default function UserMessages() {
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
+    const messages = data.userMessages.length && data.userMessages.map(message => new Message({ ...message }))
     return (
         <Fragment>
-            <ul>
-                {
-                    data.userMessages.length && data.userMessages.map(message => (
-                        <li key={message.id}>{message.message}</li>
-                    ))
-                }
-            </ul>
+            <BubbleGroup
+                maxHeight={250}
+                messages={messages}
+                showSenderName
+                senderName={authState.user.name}
+                id={authState.user.id}
+            />
             <br />
             <TextField
                 id="standard-full-width"
