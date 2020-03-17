@@ -182,3 +182,22 @@ export const ShowroomEntriesQuery = gql`
     }
   }
 `
+
+export const Messages = gql`
+  {
+    messages {
+      sender {
+        name
+        imageUrl
+        phoneNumber
+      }
+      user {
+        name
+        imageUrl
+        phoneNumber
+      }
+      id
+      userId
+    }
+  }
+`
