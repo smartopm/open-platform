@@ -42,9 +42,9 @@ export function sortNestedMessages(prop, messages) {
     messages.sort(function (a, b) {
         let i = 0;
         while (i < len) { a = a[prop[i]]; b = b[prop[i]]; i++; }
-        if (a < b) {
+        if (a > b) {
             return -1;
-        } else if (a > b) {
+        } else if (a < b) {
             return 1;
         } else {
             return 0;
