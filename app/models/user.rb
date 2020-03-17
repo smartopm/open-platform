@@ -95,6 +95,13 @@ class User < ApplicationRecord
     find_by(id: token)
   end
 
+  def construct_message(vals)
+    mess = messages.new(vals)
+    mess[:user_id] = vals[:user_id]
+    mess.sender_id = self[:id]
+    mess
+  end
+
   def id_card_token
     # May want to do more to secure this in the future with some extra token
     self[:id]
