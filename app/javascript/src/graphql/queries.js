@@ -183,7 +183,7 @@ export const ShowroomEntriesQuery = gql`
   }
 `
 
-export const Messages = gql`
+export const MessagesQuery = gql`
   {
     messages {
       sender {
@@ -195,9 +195,11 @@ export const Messages = gql`
         name
         imageUrl
         phoneNumber
+        id
       }
       id
       userId
+      smsContent
     }
   }
 `

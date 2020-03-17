@@ -31,7 +31,7 @@ export default function UserMessageItem({ id, name, imageUrl, senderName, messag
                         >
                             {senderName}
                         </Typography>
-                        {message}
+                        {`  ${message}`}
                     </React.Fragment>
                 }
             />

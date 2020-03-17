@@ -8,13 +8,14 @@ export default function MessageList({ messages }) {
     return (
         <List>
             {
-                messages.map(message => (
+                messages.length && messages.map(message => (
                     <React.Fragment key={message.id}>
                         <UserMessageItem
-                            name={"receiver"}
-                            // imageUrl={}
+                            id={message.user.id}
+                            name={message.user.name}
+                            imageUrl={message.user.imageUrl}
                             message={message.smsContent}
-                            senderName={message.user.name}
+                            senderName={message.sender.name}
                         />
                         <Divider variant="inset" component="li" />
                     </React.Fragment>
@@ -23,7 +24,10 @@ export default function MessageList({ messages }) {
         </List>
     )
 }
+MessageList.defaultProps = {
+    messages: []
+}
 
 MessageList.propTypes = {
-    messages: PropTypes.Array.isRequired,
+    messages: PropTypes.array.isRequired,
 }
