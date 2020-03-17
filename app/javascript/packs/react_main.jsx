@@ -165,7 +165,7 @@ const App = () => {
                     <Route path="/user/:id/logs" exact component={UserLogs} />
                     <Route path="/user/:id/edit" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
-                    <Route path="/support" component={Support} />
+                    <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     {/* new routes => guards */}

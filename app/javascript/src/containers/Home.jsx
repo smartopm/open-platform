@@ -112,12 +112,12 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={'/support'} className={`card-link`}>
+                <Link to={'/contact'} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <HelpIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t('home.support')}</p>
+                    <p>{'Contact'}</p>
                   </div>
                 </Link>
               </div>
