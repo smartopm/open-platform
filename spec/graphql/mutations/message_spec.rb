@@ -8,11 +8,11 @@ RSpec.describe Mutations::Message do
 
     let(:query) do
       <<~GQL
-        mutation messageCreate($receiver: String!, $smsContent: String, $receiverId: ID) {
-            messageCreate(receiver:$receiver", smsContent: $smsContent, receiverId: $receiverId){
+        mutation messageCreate($receiver: String!, $message: String, $receiverId: ID) {
+            messageCreate(receiver:$receiver", message: $message, receiverId: $receiverId){
                 message {
                     id
-                    smsContent
+                    message
                 }
             }
         }
@@ -22,7 +22,7 @@ RSpec.describe Mutations::Message do
     it 'creates a message' do
       variables = {
         receiver: '260971500748',
-        smsContent: 'Hello You, hope you are well',
+        message: 'Hello You, hope you are well',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -30,7 +30,7 @@ RSpec.describe Mutations::Message do
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
-                        'smsContent')).to eql variables[:smsContent]
+                        'message')).to eql variables[:message]
       expect(result.dig('errors')).to be_nil
     end
   end

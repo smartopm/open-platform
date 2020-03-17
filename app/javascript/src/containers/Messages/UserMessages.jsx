@@ -23,7 +23,7 @@ export default function UserMessages() {
         <ul>
             {
                 data.userMessages.length && data.userMessages.map(message => (
-                    <li key={message.id}>{message.smsContent}</li>
+                    <li key={message.id}>{message.message}</li>
                 ))
             }
         </ul>

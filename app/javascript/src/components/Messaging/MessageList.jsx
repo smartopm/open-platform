@@ -14,7 +14,7 @@ export default function MessageList({ messages }) {
                             id={message.user.id}
                             name={message.user.name}
                             imageUrl={message.user.imageUrl}
-                            message={message.smsContent}
+                            message={message.message}
                             senderName={message.sender.name}
                         />
                         <Divider variant="inset" component="li" />

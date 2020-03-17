@@ -9,7 +9,7 @@ module Types
     field :user_id, ID, null: false
     field :sender_id, ID, null: false
     field :receiver, String, null: false
-    field :sms_content, String, null: true
+    field :message, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

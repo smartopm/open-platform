@@ -7,7 +7,7 @@ RSpec.describe Message, type: :model do
   it 'should create a message record' do
     Message.create(
       receiver: '260971500748',
-      sms_content: 'Testing out message',
+      message: 'Testing out message',
     )
     result = Message.first
     expect(Message.all.count).to eql 1

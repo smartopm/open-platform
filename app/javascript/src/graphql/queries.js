@@ -199,7 +199,7 @@ export const MessagesQuery = gql`
       }
       id
       userId
-      smsContent
+      message
     }
   }
 `
@@ -208,7 +208,7 @@ export const UserMessageQuery = gql`
   query userMessages($id: ID!) {
     userMessages(id: $id) {
       id
-      smsContent
+      message
       sender {
         name
         id
