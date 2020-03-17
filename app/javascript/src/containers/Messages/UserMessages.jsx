@@ -31,13 +31,17 @@ export default function UserMessages() {
     })
     return (
         <Fragment>
-            <BubbleGroup
-                maxHeight={250}
-                messages={messages}
-                showSenderName
-                senderName={authState.user.name}
-                id={authState.user.id}
-            />
+            {
+                data.userMessages.length ? <BubbleGroup
+                    maxHeight={250}
+                    messages={messages}
+                    showSenderName
+                    senderName={authState.user.name}
+                    id={authState.user.id}
+                />
+                    :
+                    <span>No Messages for this user</span>
+            }
             <br />
             <TextField
                 id="standard-full-width"
