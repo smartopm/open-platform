@@ -43,5 +43,5 @@ UserMessageItem.propTypes = {
     name: PropTypes.string.isRequired,
     imageUrl: PropTypes.string,
     senderName: PropTypes.string,
-    message: PropTypes.string.isRequired,
+    message: PropTypes.string,
 }

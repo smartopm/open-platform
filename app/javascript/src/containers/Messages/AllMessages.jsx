@@ -18,6 +18,6 @@ export default function AllMessages() {
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
-    return <MessageList messages={data.messages} />
+    return <MessageList messages={data.users} />
 }
 

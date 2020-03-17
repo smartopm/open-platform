@@ -16,9 +16,9 @@ export default function UserMessages() {
     const authState = useContext(AuthStateContext)
     let history = useHistory();
 
-    // if (authState.user.userType !== 'admin') {
-    //     history.push('/')
-    // }
+    if (authState.user.userType !== 'admin') {
+        history.push('/')
+    }
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />

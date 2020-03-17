@@ -185,21 +185,22 @@ export const ShowroomEntriesQuery = gql`
 
 export const MessagesQuery = gql`
   {
-    messages {
-      sender {
-        name
-        imageUrl
-        phoneNumber
-      }
-      user {
-        name
-        imageUrl
-        phoneNumber
-        id
-      }
+    users {
       id
-      userId
-      message
+      name
+      imageUrl
+      phoneNumber
+      messages {
+        id
+        message
+        createdAt
+        user {
+          name
+          imageUrl
+          phoneNumber
+          id
+        }
+      }
     }
   }
 `
