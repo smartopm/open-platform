@@ -8,7 +8,6 @@ import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
 import { BubbleGroup, Message } from 'react-chat-ui'
-import Button from '@material-ui/core/Button';
 
 export default function UserMessages() {
     const { id } = useParams()
@@ -42,11 +41,11 @@ export default function UserMessages() {
                     :
                     <span>No Messages for this user</span>
             }
-            <br />
+
             <TextField
                 id="standard-full-width"
                 label="Label"
-                style={{ margin: 8 }}
+                style={{ bottom: 0, position: 'fixed' }}
                 placeholder="Placeholder"
                 // add character count here
                 helperText="120"
@@ -59,7 +58,7 @@ export default function UserMessages() {
                     shrink: true,
                 }}
             />
-            <Button color="primary">Send</Button>
+
         </Fragment>
     )
 }
