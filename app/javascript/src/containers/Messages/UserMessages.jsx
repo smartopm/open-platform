@@ -21,12 +21,12 @@ export default function UserMessages() {
     const { state } = useLocation()
 
     function sendMessage() {
-        const receiver = authState.user.userType === 'admin' ? state.phoneNumber : ''
+        const receiver = authState.user.userType === 'admin' ? state.clientNumber : ''
         messageCreate({ variables: { receiver, message, userId: id } }).then(res => {
             refetch()
+            console.log(res)
         })
     }
-    console.log(state)
     if (authState.user.userType !== 'admin') {
         history.push('/')
     }
