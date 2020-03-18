@@ -10,6 +10,12 @@ import TextField from '@material-ui/core/TextField'
 import { BubbleGroup, Message } from 'react-chat-ui'
 import { MessageCreate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '../../components/Avatar'
+import Typography from '@material-ui/core/Typography';
 
 export default function UserMessages() {
     const { id } = useParams()
@@ -42,17 +48,32 @@ export default function UserMessages() {
     })
     return (
         <Fragment>
-            {
-                data.userMessages.length ? <BubbleGroup
-                    maxHeight={250}
-                    messages={messages}
-                    showSenderName
-                    senderName={authState.user.name}
-                    id={authState.user.id}
-                />
-                    :
-                    <span>No Messages for this user</span>
-            }
+            <List>
+                {
+                    data.userMessages.length ? data.userMessages.map(message => (
+                        <ListItem alignItems="flex-start" key={message.id}>
+                            <ListItemAvatar style={{ marginRight: 25 }}>
+                                <Avatar user={message.sender} />
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        <Typography
+                                            component="h4"
+                                            variant="body2"
+                                            color="textPrimary"
+                                        >
+                                        </Typography>
+                                        <span>{message.sender.name} <i>{message.createdAt}</i></span>
+                                    </React.Fragment>
+                                }
+                                secondary={message.message}
+                            />
+                        </ListItem>
+                    )) : <span>No Messages for this user</span>
+                }
+
+            </List>
 
             <Button color="primary" onClick={sendMessage}>Send</Button>
             <TextField

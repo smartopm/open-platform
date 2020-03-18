@@ -210,6 +210,7 @@ export const UserMessageQuery = gql`
     userMessages(id: $id) {
       id
       message
+      createdAt
       sender {
         name
         id
