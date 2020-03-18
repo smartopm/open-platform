@@ -7,7 +7,6 @@ import Nav from '../Nav';
 
 export default function MessageList({ messages }) {
     const _messages = sortNestedMessages('messages', messages)
-    console.log(_messages)
     return (
         <Fragment>
             <Nav navName="Messages" menuButton="back" />
@@ -19,8 +18,7 @@ export default function MessageList({ messages }) {
                                 id={message.id}
                                 name={message.name}
                                 imageUrl={message.imageUrl}
-                                message={message.messages.length ? message.messages[0].message : ''}
-                                senderName={message.messages.length ? message.messages[0].user.name : ''}
+                                message={message.messages.length ? message.messages[message.messages.length - 1].message : ''}
                                 messageCount={message.messages.length}
                                 clientNumber={message.phoneNumber}
                             />

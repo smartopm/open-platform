@@ -43,7 +43,7 @@ export default function UserMessages() {
             <div className={css(styles.messageSection)}>
                 <List>
                     {
-                        data.userMessages.length ? data.userMessages.reverse().map(message => (
+                        data.userMessages.length ? data.userMessages.map(message => (
                             <ListItem alignItems="flex-start" key={message.id}>
                                 <ListItemAvatar style={{ marginRight: 10 }}>
                                     <Avatar user={message.sender} />
@@ -69,6 +69,9 @@ export default function UserMessages() {
 
                 </List>
             </div>
+
+
+
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                     <Avatar user={authState.user} />
@@ -95,8 +98,8 @@ export default function UserMessages() {
                 onClick={sendMessage}
                 style={{ marginTop: -37, marginRight: 34, float: 'right' }}
             >
-                Send</Button>
-
+                Send
+                </Button>
         </Fragment>
     )
 }
