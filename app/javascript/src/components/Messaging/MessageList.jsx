@@ -20,6 +20,7 @@ export default function MessageList({ messages }) {
                             message={message.messages.length ? message.messages[0].message : ''}
                             senderName={message.messages.length ? message.messages[0].user.name : ''}
                             messageCount={message.messages.length}
+                            clientNumber={message.phoneNumber}
                         />
                         <Divider variant="inset" component="li" />
                     </React.Fragment>

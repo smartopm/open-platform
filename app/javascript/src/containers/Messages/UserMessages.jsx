@@ -1,5 +1,5 @@
 import React, { useContext, Fragment, useState } from 'react'
-import { useParams } from "react-router-dom"
+import { useParams, useLocation } from "react-router-dom"
 import { useQuery, useMutation } from 'react-apollo'
 import { useHistory } from "react-router-dom"
 import { UserMessageQuery } from '../../graphql/queries'
@@ -17,15 +17,16 @@ export default function UserMessages() {
     const [messageCreate] = useMutation(MessageCreate)
     const [message, setMessage] = useState('')
     const authState = useContext(AuthStateContext)
-    let history = useHistory();
-    console.log(data)
+    const history = useHistory();
+    const { state } = useLocation()
+
     function sendMessage() {
-        messageCreate({ variables: { receiver: '', message, userId: id } }).then(res => {
-            console.log(res)
+        const receiver = authState.user.userType === 'admin' ? state.phoneNumber : ''
+        messageCreate({ variables: { receiver, message, userId: id } }).then(res => {
             refetch()
         })
     }
-
+    console.log(state)
     if (authState.user.userType !== 'admin') {
         history.push('/')
     }

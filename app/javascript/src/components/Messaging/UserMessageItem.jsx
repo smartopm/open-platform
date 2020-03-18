@@ -8,11 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import { useHistory } from "react-router-dom";
 
 
-export default function UserMessageItem({ id, name, imageUrl, senderName, message, messageCount }) {
+export default function UserMessageItem({ id, name, imageUrl, senderName, message, messageCount, clientNumber }) {
     let history = useHistory();
 
     function readMessages() {
-        history.push(`/message/${id}`)
+        history.push({
+            pathname: `/message/${id}`,
+            state: { clientNumber }
+        })
     }
 
     return (
@@ -45,4 +48,5 @@ UserMessageItem.propTypes = {
     imageUrl: PropTypes.string,
     senderName: PropTypes.string,
     message: PropTypes.string,
+    clientNumber: PropTypes.string,
 }
