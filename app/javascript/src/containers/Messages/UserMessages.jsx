@@ -7,7 +7,6 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
-import { BubbleGroup, Message } from 'react-chat-ui'
 import { MessageCreate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
 import List from '@material-ui/core/List';
@@ -39,13 +38,7 @@ export default function UserMessages() {
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
-    const messages = data.userMessages.length && data.userMessages.map(message => {
-        return new Message({
-            id: message.id,
-            message: message.message,
-            senderName: message.sender.name
-        })
-    })
+
     return (
         <Fragment>
             <List>
