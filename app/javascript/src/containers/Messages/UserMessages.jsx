@@ -31,9 +31,9 @@ export default function UserMessages() {
 
     function sendMessage() {
         const receiver = authState.user.userType === 'admin' ? state.clientNumber : ''
-        messageCreate({ variables: { receiver, message, userId: id } }).then(res => {
+        messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
+            setMessage('')
             refetch()
-            console.log(res)
         })
     }
 
