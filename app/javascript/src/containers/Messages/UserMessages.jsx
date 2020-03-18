@@ -15,6 +15,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '../../components/Avatar'
 import Typography from '@material-ui/core/Typography';
+import { formatDistance } from 'date-fns'
+import { css, StyleSheet } from 'aphrodite'
+
 
 export default function UserMessages() {
     const { id } = useParams()
@@ -51,13 +54,14 @@ export default function UserMessages() {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        <Typography
-                                            component="h4"
-                                            variant="body2"
-                                            color="textPrimary"
-                                        >
-                                        </Typography>
-                                        <span>{message.sender.name} <i>{message.createdAt}</i></span>
+                                        <span>
+                                            {message.sender.name}
+                                            <span className={css(styles.timeStamp)}>{`${formatDistance(
+                                                new Date(message.createdAt),
+                                                new Date()
+                                            )} ago`}
+                                            </span>
+                                        </span>
                                     </React.Fragment>
                                 }
                                 secondary={message.message}
@@ -91,3 +95,10 @@ export default function UserMessages() {
     )
 }
 
+const styles = StyleSheet.create({
+    timeStamp: {
+        float: 'right',
+        fontSize: 14,
+        color: '#737380'
+    }
+})
