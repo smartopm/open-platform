@@ -13,7 +13,7 @@ module Mutations
       def resolve(vals)
         message = context[:current_user].construct_message(vals)
         message.save
-        message.send_sms
+        # message.send_sms
         return { message: message } if message.persisted?
 
         raise GraphQL::ExecutionError, message.errors.full_messages
