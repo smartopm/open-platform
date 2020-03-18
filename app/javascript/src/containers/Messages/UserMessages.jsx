@@ -1,7 +1,6 @@
 import React, { useContext, Fragment, useState } from 'react'
 import { useParams, useLocation } from "react-router-dom"
 import { useQuery, useMutation } from 'react-apollo'
-import { useHistory } from "react-router-dom"
 import { UserMessageQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
@@ -25,9 +24,7 @@ export default function UserMessages() {
     const [messageCreate] = useMutation(MessageCreate)
     const [message, setMessage] = useState('')
     const authState = useContext(AuthStateContext)
-    const history = useHistory();
     const { state } = useLocation()
-
 
     function sendMessage() {
         const receiver = authState.user.userType === 'admin' ? state.clientNumber : ''
@@ -35,10 +32,6 @@ export default function UserMessages() {
             setMessage('')
             refetch()
         })
-    }
-
-    if (authState.user.userType !== 'admin') {
-        history.push('/')
     }
 
     if (loading) return <Loading />

@@ -42,7 +42,6 @@
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-apollo": "^3.1.1",
-    "react-chat-ui": "^0.3.2",
     "react-dom": "^16.9.0",
     "react-hook-form": "^4.4.1",
     "react-i18next": "^11.0.1",
