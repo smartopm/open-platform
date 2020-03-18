@@ -1,32 +1,35 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types'
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import UserMessageItem from './UserMessageItem';
+import Nav from '../Nav';
 
 export default function MessageList({ messages }) {
     const _messages = sortNestedMessages('messages', messages)
     console.log(_messages)
     return (
-        // <div />
-        <List>
-            {
-                _messages.length && _messages.map(message => (
-                    <React.Fragment key={message.id}>
-                        <UserMessageItem
-                            id={message.id}
-                            name={message.name}
-                            imageUrl={message.imageUrl}
-                            message={message.messages.length ? message.messages[0].message : ''}
-                            senderName={message.messages.length ? message.messages[0].user.name : ''}
-                            messageCount={message.messages.length}
-                            clientNumber={message.phoneNumber}
-                        />
-                        <Divider variant="inset" component="li" />
-                    </React.Fragment>
-                ))
-            }
-        </List>
+        <Fragment>
+            <Nav navName="Messages" menuButton="back" />
+            <List>
+                {
+                    _messages.length && _messages.map(message => (
+                        <React.Fragment key={message.id}>
+                            <UserMessageItem
+                                id={message.id}
+                                name={message.name}
+                                imageUrl={message.imageUrl}
+                                message={message.messages.length ? message.messages[0].message : ''}
+                                senderName={message.messages.length ? message.messages[0].user.name : ''}
+                                messageCount={message.messages.length}
+                                clientNumber={message.phoneNumber}
+                            />
+                            <Divider variant="inset" component="li" />
+                        </React.Fragment>
+                    ))
+                }
+            </List>
+        </Fragment>
     )
 }
 MessageList.defaultProps = {

@@ -16,6 +16,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '../../components/Avatar'
 import { formatDistance } from 'date-fns'
 import { css, StyleSheet } from 'aphrodite'
+import Nav from '../../components/Nav'
 
 
 export default function UserMessages() {
@@ -45,6 +46,7 @@ export default function UserMessages() {
 
     return (
         <Fragment>
+            <Nav navName="My Messages" menuButton="back" />
             <div className={css(styles.messageSection)}>
                 <List>
                     {
