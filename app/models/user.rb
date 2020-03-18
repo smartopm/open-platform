@@ -38,7 +38,7 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   PHONE_TOKEN_LEN = 6
-  PHONE_TOKEN_EXPIRATION_MINUTES = 1440 # Valid for 24 hours
+  PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
@@ -93,6 +93,13 @@ class User < ApplicationRecord
 
   def self.lookup_by_id_card_token(token)
     find_by(id: token)
+  end
+
+  def construct_message(vals)
+    mess = messages.new(vals)
+    mess[:user_id] = vals[:user_id]
+    mess.sender_id = self[:id]
+    mess
   end
 
   def id_card_token

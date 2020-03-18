@@ -9,7 +9,7 @@ class Message < ApplicationRecord
 
   class Unauthorized < StandardError; end
 
-  def send_sms(to, msg)
-    Sms.send(to, msg)
+  def send_sms
+    Sms.send(receiver, message)
   end
 end
