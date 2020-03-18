@@ -10,6 +10,8 @@ class Message < ApplicationRecord
   class Unauthorized < StandardError; end
 
   def send_sms
+    return if receiver.empty?
+    
     Sms.send(receiver, message)
   end
 end
