@@ -351,3 +351,22 @@ export const createShowroomEntry = gql`
     }
   }
 `
+
+export const MessageCreate = gql`
+  mutation messageCreate($receiver: String, $message: String!, $userId: ID!) {
+    messageCreate(receiver: $receiver, message: $message, userId: $userId) {
+      message {
+        id
+        message
+        sender {
+          id
+          name
+        }
+        user {
+          id
+          name
+        }
+      }
+    }
+  }
+`

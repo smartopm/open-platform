@@ -18,6 +18,7 @@ class User < ApplicationRecord
                                     dependent: :destroy, inverse_of: :user
 
   has_many :notes, dependent: :destroy
+  has_many :messages, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
@@ -92,6 +93,13 @@ class User < ApplicationRecord
 
   def self.lookup_by_id_card_token(token)
     find_by(id: token)
+  end
+
+  def construct_message(vals)
+    mess = messages.new(vals)
+    mess[:user_id] = vals[:user_id]
+    mess.sender_id = self[:id]
+    mess
   end
 
   def id_card_token

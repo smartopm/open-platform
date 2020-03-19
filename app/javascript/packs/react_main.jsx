@@ -57,6 +57,8 @@ import AllNotes from '../src/containers/Activity/AllNotes'
 import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
+import AllMessages from '../src/containers/Messages/AllMessages';
+import UserMessages from '../src/containers/Messages/UserMessages';
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -198,6 +200,11 @@ const App = () => {
                     <Route path="/feedback_success" component={FeedbackSuccess} />
                     <Route path="/notes" component={AllNotes} />
                     <Route path="/feedbacks" component={FeedbackPage} />
+
+                    {/* {SMS page} */}
+                    {/* <Route path="/messages" component={Messages} /> */}
+                    <Route path="/messages" component={AllMessages} />
+                    <Route path="/message/:id" component={UserMessages} />
 
                     {/* users */}
                     <Route path="/users" component={UsersList} />
