@@ -64,7 +64,8 @@ export default function UserMessages() {
                                     secondary={message.message}
                                 />
                             </ListItem>
-                        )) : <span>No Messages for this user</span>
+                        )) : <ListItem alignItems="center"><span >There are no messages for {state.clientName}</span></ListItem>
+
                     }
 
                 </List>

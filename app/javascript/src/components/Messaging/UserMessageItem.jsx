@@ -13,7 +13,7 @@ export default function UserMessageItem({ id, name, imageUrl, message, messageCo
     function readMessages() {
         history.push({
             pathname: `/message/${id}`,
-            state: { clientNumber }
+            state: { clientNumber, clientName: name }
         })
     }
 

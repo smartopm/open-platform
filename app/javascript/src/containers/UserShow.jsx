@@ -211,7 +211,10 @@ export function Component({
                       <Link
                         to={{
                           pathname: `/message/${data.user.id}`,
-                          state: { clientNumber: data.user.phoneNumber }
+                          state: {
+                            clientNumber: data.user.phoneNumber,
+                            clientName: data.user.name
+                          }
                         }}
                         className={css(styles.linkItem)}
                       >
