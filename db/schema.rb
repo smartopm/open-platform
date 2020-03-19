@@ -16,18 +16,6 @@ ActiveRecord::Schema.define(version: 2020_03_17_102221) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "Messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "receiver"
-    t.string "sender"
-    t.string "sms_content"
-    t.string "sms_type"
-    t.uuid "message_id"
-    t.string "status"
-    t.datetime "sent_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
