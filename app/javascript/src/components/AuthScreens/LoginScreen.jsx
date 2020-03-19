@@ -32,7 +32,10 @@ export function LoginScreen({ history }) {
           return data;
         })
         .then(data => {
-          history.push("/code/" + data.loginPhoneStart.user.id);
+          history.push({
+            pathname: "/code/" + data.loginPhoneStart.user.id,
+            state: { phoneNumber: `${countryCode}${phoneNumber}` }
+          });
         })
         .catch(error => {
           setError(error.message);
