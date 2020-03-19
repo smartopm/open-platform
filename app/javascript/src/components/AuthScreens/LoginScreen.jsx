@@ -65,6 +65,8 @@ export function LoginScreen({ history }) {
           )}`}
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
+
+          
         </div>
         <div
           className={`${css(
