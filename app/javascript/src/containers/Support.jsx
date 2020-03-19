@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Typography } from '@material-ui/core'
 import Nav from '../components/Nav'
 
 export default function Support() {
@@ -6,10 +7,17 @@ export default function Support() {
     <Fragment>
       <Nav navName="Contact" menuButton="back" />
       <br />
-      <br />
-      <br />
-      <div className="justify-content-center align-items-center">
-        <h3 className="text-center"> Please reach us on</h3>
+      <div className="justify-content-center align-items-center container">
+
+        <Typography  paragraph
+          variant="body1" color="textSecondary" component="p">
+          Nkwashi partners with DoubleGDP on this mobile app to better connect with clients and residents,
+          and to deliver efficient and responsive public services. Today we have digital IDs to make gate access faster, easier, and more secure than paper logs. We also have registration kiosk at the showroom and support desk functionality to ensure your queries are answered to your satisfaction.
+          </Typography>
+
+          <Typography variant="body1" color="textSecondary" component="p" align="center">
+          We love receiving questions and feedback. You can contact us through any of the following channels:
+          </Typography>
         <br />
         <p className="text-center">
           Email:{' '}
