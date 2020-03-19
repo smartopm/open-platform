@@ -209,7 +209,10 @@ export function Component({
                     </MenuItem>
                     <MenuItem key={'edit_user'}>
                       <Link
-                        to={`/message/${data.user.id}`}
+                        to={{
+                          pathname: `/message/${data.user.id}`,
+                          state: { clientNumber: data.user.phoneNumber }
+                        }}
                         className={css(styles.linkItem)}
                       >
                         Send SMS to {data.user.name}
