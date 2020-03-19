@@ -12,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode, loginPhone } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
+import useTimer from "../../utils/customHooks";
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7];
 
@@ -24,6 +25,8 @@ export default function ConfirmCodeScreen({ match }) {
   const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation()
+  const timer = useTimer(10, 1000)
+
   // generate refs to use later
   let elementsRef = useRef(randomCodeData.map(() => createRef()));
   const submitRef = useRef(null);
@@ -150,19 +153,23 @@ export default function ConfirmCodeScreen({ match }) {
         </div>
 
         {/* show a button to re-send code */}
-        <div
-          className={`row justify-content-center align-items-center ${css(
-            styles.linksSection
-          )}`}
-        >
-          <Button
-            onClick={resendCode}
-            disabled={isLoading}
-          >
-            {isLoading ? 'loading ...' : 'Re-send the code'}
+        {
+          timer === 0 && (
+            <div
+              className={`row justify-content-center align-items-center ${css(
+                styles.linksSection
+              )}`}
+            >
+              <Button
+                onClick={resendCode}
+                disabled={isLoading}
+              >
+                {isLoading ? 'loading ...' : 'Re-send the code'}
 
-          </Button>
-        </div>
+              </Button>
+            </div>
+          )
+        }
       </div>
     </div>
   );
