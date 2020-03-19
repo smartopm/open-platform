@@ -214,6 +214,8 @@ export const UserMessageQuery = gql`
       sender {
         name
         id
+        avatarUrl
+        imageUrl
       }
     }
   }
