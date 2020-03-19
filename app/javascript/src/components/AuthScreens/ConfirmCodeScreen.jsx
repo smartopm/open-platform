@@ -21,6 +21,7 @@ export default function ConfirmCodeScreen({ match }) {
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
   const [resendCodeToPhone] = useMutation(loginPhone);
   const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation()
   // generate refs to use later
@@ -41,6 +42,7 @@ export default function ConfirmCodeScreen({ match }) {
       variables: { phoneNumber: state.phoneNumber }
     }).then(() => {
       setIsLoading(false);
+      setMsg(`We have resent the code to +${state.phoneNumber}`)
     }).catch(error => {
       setError(error.message);
       setIsLoading(false);
@@ -126,6 +128,7 @@ export default function ConfirmCodeScreen({ match }) {
 
 
         {error && <p className="text-center text-danger">{error}</p>}
+        {msg && <p className="text-center text-primary">{msg}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
