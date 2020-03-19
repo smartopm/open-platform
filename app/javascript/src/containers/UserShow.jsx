@@ -207,7 +207,7 @@ export function Component({
                         Edit
                       </Link>
                     </MenuItem>
-                    <MenuItem key={'edit_user'}>
+                    <MenuItem key={'send_sms'}>
                       <Link
                         to={{
                           pathname: `/message/${data.user.id}`,
