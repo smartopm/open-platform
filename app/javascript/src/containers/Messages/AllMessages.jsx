@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import { useQuery } from 'react-apollo'
 import { useHistory } from "react-router-dom";
 import { MessagesQuery } from '../../graphql/queries'
@@ -15,9 +15,23 @@ export default function AllMessages() {
     if (authState.user.userType !== 'admin') {
         history.push('/')
     }
-
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
-    return <MessageList messages={data.users} />
+
+    const _messages = filterMessages(data.users)
+
+    return (
+        <Fragment>
+            <MessageList messages={_messages} />
+
+        </Fragment>
+
+    )
+}
+export function filterMessages(messages) {
+    const filteredMessages = messages.filter(function (message) {
+        return message.messages.length !== 0
+    })
+    return filteredMessages;
 }
 

@@ -160,8 +160,8 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int) {
-    users(limit: $limit, offset: $offset) {
+  {
+    users {
       ...UserFields
     }
   }
@@ -182,7 +182,7 @@ export const ShowroomEntriesQuery = gql`
     }
   }
 `
-
+// don't put in fragments to avoid high load of user data
 export const MessagesQuery = gql`
   {
     users {

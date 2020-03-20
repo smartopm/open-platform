@@ -1,4 +1,4 @@
-Thank you for contributing to DoubleGDP source code
+> Thank you for contributing to DoubleGDP source code
 
 **Describe changes made and the chosen implementation strategy**
 
