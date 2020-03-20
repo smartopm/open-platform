@@ -1,4 +1,4 @@
-import React, { useContext, Fragment, useState } from 'react';
+import React, { useContext, Fragment } from 'react';
 import { useQuery } from 'react-apollo'
 import { useHistory } from "react-router-dom";
 import { MessagesQuery } from '../../graphql/queries'
