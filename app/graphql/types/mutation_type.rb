@@ -31,5 +31,8 @@ module Types
 
     # showroom
     field :showroom_entry_create, mutation: Mutations::Showroom::ShowroomCreate
+
+    # messages
+    field :message_create, mutation: Mutations::Message::MessageCreate
   end
 end

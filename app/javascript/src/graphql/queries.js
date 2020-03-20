@@ -182,3 +182,41 @@ export const ShowroomEntriesQuery = gql`
     }
   }
 `
+
+export const MessagesQuery = gql`
+  {
+    users {
+      id
+      name
+      imageUrl
+      phoneNumber
+      messages {
+        id
+        message
+        createdAt
+        user {
+          name
+          imageUrl
+          phoneNumber
+          id
+        }
+      }
+    }
+  }
+`
+
+export const UserMessageQuery = gql`
+  query userMessages($id: ID!) {
+    userMessages(id: $id) {
+      id
+      message
+      createdAt
+      sender {
+        name
+        id
+        avatarUrl
+        imageUrl
+      }
+    }
+  }
+`
