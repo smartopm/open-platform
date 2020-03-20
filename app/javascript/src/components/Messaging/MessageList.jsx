@@ -51,4 +51,3 @@ MessageList.propTypes = {
     messages: PropTypes.array.isRequired,
 }
 
-
