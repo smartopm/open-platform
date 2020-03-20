@@ -1,31 +1,46 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types'
-import List from '@material-ui/core/List';
+import MaterialList from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
+import { List } from "react-virtualized";
 import UserMessageItem from './UserMessageItem';
 import Nav from '../Nav';
+import { useWindowDimensions } from '../../utils/customHooks';
 
 export default function MessageList({ messages }) {
+    const { height, width } = useWindowDimensions()
+
+    const listHeight = height;
+    const rowHeight = 70;
+    const rowWidth = width;
+    function renderRow({ index, key, style }) {
+        return (
+            <div key={key} style={style} className="row">
+                <div className="content">
+                    <UserMessageItem
+                        id={messages[index].id}
+                        name={messages[index].name}
+                        imageUrl={messages[index].imageUrl}
+                        message={messages[index].messages.length ? messages[index].messages[messages.length - 1].message : ''}
+                        messageCount={messages[index].messages.length}
+                        clientNumber={messages[index].phoneNumber}
+                    />
+                </div>
+            </div>
+        );
+    }
     return (
         <Fragment>
             <Nav navName="Messages" menuButton="back" />
-            <List>
-                {
-                    messages.length && messages.map(message => (
-                        <React.Fragment key={message.id}>
-                            <UserMessageItem
-                                id={message.id}
-                                name={message.name}
-                                imageUrl={message.imageUrl}
-                                message={message.messages.length ? message.messages[message.messages.length - 1].message : ''}
-                                messageCount={message.messages.length}
-                                clientNumber={message.phoneNumber}
-                            />
-                            <Divider variant="inset" component="li" />
-                        </React.Fragment>
-                    ))
-                }
-            </List>
+            <MaterialList>
+                <List
+                    width={rowWidth}
+                    height={listHeight}
+                    rowHeight={rowHeight}
+                    rowRenderer={renderRow}
+                    rowCount={messages.length}
+                    overscanRowCount={3} />
+            </MaterialList>
         </Fragment>
     )
 }
@@ -36,4 +51,5 @@ MessageList.defaultProps = {
 MessageList.propTypes = {
     messages: PropTypes.array.isRequired,
 }
+
 
