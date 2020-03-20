@@ -160,10 +160,63 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users {
-    users {
+  query users($limit: Int, $offset: Int) {
+    users(limit: $limit, offset: $offset) {
       ...UserFields
     }
   }
   ${UserFragment.publicFields}
+`
+
+export const ShowroomEntriesQuery = gql`
+  {
+    showroomEntries {
+      id
+      name
+      phoneNumber
+      createdAt
+      email
+      nrc
+      reason
+      source
+    }
+  }
+`
+
+export const MessagesQuery = gql`
+  {
+    users {
+      id
+      name
+      imageUrl
+      phoneNumber
+      messages {
+        id
+        message
+        createdAt
+        user {
+          name
+          imageUrl
+          phoneNumber
+          id
+        }
+      }
+    }
+  }
+`
+
+export const UserMessageQuery = gql`
+  query userMessages($id: ID!) {
+    userMessages(id: $id) {
+      id
+      message
+      createdAt
+      sender {
+        name
+        id
+        avatarUrl
+        imageUrl
+      }
+    }
+  }
 `

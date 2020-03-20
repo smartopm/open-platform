@@ -36,8 +36,10 @@ module Mutations
         feedback_link = "https://#{ENV['HOST']}/feedback"
         return if number.nil?
 
-        Sms.send(number, "Thank you for using our app, kindly use this
-                              link to give us feedback #{feedback_link}")
+        # disabled rubocop to keep the structure of the message
+        # rubocop:disable LineLength
+        Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
+        # rubocop:enable LineLength
       end
     end
   end

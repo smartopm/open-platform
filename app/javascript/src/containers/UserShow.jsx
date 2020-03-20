@@ -184,7 +184,7 @@ export function Component({
                   authState.user.userType === 'security_guard' ? (
                     <MenuItem key={'log_entry'} onClick={onLogEntry}>
                       Log This Entry
-                  </MenuItem>
+                    </MenuItem>
                   ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
@@ -205,6 +205,20 @@ export function Component({
                         className={css(styles.linkItem)}
                       >
                         Edit
+                      </Link>
+                    </MenuItem>
+                    <MenuItem key={'send_sms'}>
+                      <Link
+                        to={{
+                          pathname: `/message/${data.user.id}`,
+                          state: {
+                            clientNumber: data.user.phoneNumber,
+                            clientName: data.user.name
+                          }
+                        }}
+                        className={css(styles.linkItem)}
+                      >
+                        Send SMS to {data.user.name}
                       </Link>
                     </MenuItem>
 

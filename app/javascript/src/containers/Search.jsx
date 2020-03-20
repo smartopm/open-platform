@@ -1,9 +1,8 @@
 import React, { useState, Fragment, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo'
 import gql from 'graphql-tag'
 import { StyleSheet, css } from 'aphrodite'
-
 import Loading from '../components/Loading.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
 import Avatar from '../components/Avatar.jsx'
@@ -90,7 +89,8 @@ function Results({ data, loading, called }) {
   return false
 }
 
-export default function SearchContainer() {
+export default function SearchContainer({ location }) {
+
   function updateSearch(e) {
     const { value } = e.target
     setName(value || '')
@@ -101,6 +101,11 @@ export default function SearchContainer() {
 
   const [name, setName] = useState('')
   const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY)
+  const authState = useContext(Context)
+
+  if (!['security_guard', 'admin'].includes(authState.user.userType.toLowerCase())) {
+    return <Redirect to='/' />
+  }
   if (error) {
     return <ErrorPage title={error.message} />
   }
@@ -116,7 +121,7 @@ export default function SearchContainer() {
           value={name}
           autoFocus
         />
-        <Link to="/" className={css(styles.cancelBtn)}>
+        <Link to={location.state.from} className={css(styles.cancelBtn)}>
           <i className="material-icons">arrow_back</i>
         </Link>
         <Link to="/scan">

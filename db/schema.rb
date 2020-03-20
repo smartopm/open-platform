@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_18_100747) do
+ActiveRecord::Schema.define(version: 2020_03_17_102221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -97,6 +97,16 @@ ActiveRecord::Schema.define(version: 2020_02_18_100747) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "receiver"
+    t.text "message"
+    t.string "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "user_id"
+    t.uuid "sender_id"
+  end
+
   create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.uuid "author_id"
@@ -105,6 +115,20 @@ ActiveRecord::Schema.define(version: 2020_02_18_100747) do
     t.boolean "flagged"
     t.datetime "created_at"
     t.boolean "completed"
+    t.datetime "due_date"
+  end
+
+  create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "userId"
+    t.string "name"
+    t.string "email"
+    t.string "home_address"
+    t.string "phone_number"
+    t.string "nrc"
+    t.string "reason"
+    t.string "source"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

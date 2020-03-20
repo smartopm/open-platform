@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
+
 # A list of all activity for a particular community
 class EventLog < ApplicationRecord
   belongs_to :community
@@ -51,8 +53,7 @@ class EventLog < ApplicationRecord
   end
 
   def user_entry_to_sentence
-    user = User.find(ref_id)
-    "User #{user.name} was recorded entering by #{acting_user.name}"
+    "User #{ref_user_name} was recorded entering by #{acting_user_name}"
   end
 
   def user_login_to_sentence
@@ -60,8 +61,7 @@ class EventLog < ApplicationRecord
   end
 
   def user_switch_to_sentence
-    user = User.find(ref_id)
-    "User #{acting_user_name} switched to user #{user.name}"
+    "User #{acting_user_name} switched to user #{ref_user_name}"
   end
 
   def user_active_to_sentence
@@ -80,8 +80,16 @@ class EventLog < ApplicationRecord
   end
 
   def user_update_to_sentence
-    user = User.find(ref_id)
-    "User #{user.name} was updated by #{acting_user_name}"
+    "#{ref_user_name} was updated by #{acting_user_name}"
+  end
+
+  def ref_user_name
+    user = User.find_by(id: ref_id)
+    if user
+      user.name
+    else
+      "Deleted User(#{ref_id})"
+    end
   end
 
   def acting_user_name
@@ -131,3 +139,4 @@ class EventLog < ApplicationRecord
     return true if acting_user_id && acting_user.nil?
   end
 end
+# rubocop:enable Metrics/ClassLength
