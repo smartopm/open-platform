@@ -160,8 +160,8 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int) {
-    users(limit: $limit, offset: $offset) {
+  {
+    users {
       ...UserFields
     }
   }

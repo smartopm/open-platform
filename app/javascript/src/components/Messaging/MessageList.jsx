@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types'
 import MaterialList from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import { List } from "react-virtualized";
 import UserMessageItem from './UserMessageItem';
 import Nav from '../Nav';
@@ -21,7 +20,7 @@ export default function MessageList({ messages }) {
                         id={messages[index].id}
                         name={messages[index].name}
                         imageUrl={messages[index].imageUrl}
-                        message={messages[index].messages.length ? messages[index].messages[messages.length - 1].message : ''}
+                        message={messages[index].messages.length ? messages[index].messages[0].message : ''}
                         messageCount={messages[index].messages.length}
                         clientNumber={messages[index].phoneNumber}
                     />
