@@ -6,13 +6,12 @@ import UserMessageItem from './UserMessageItem';
 import Nav from '../Nav';
 
 export default function MessageList({ messages }) {
-    const _messages = filterMessages(messages)
     return (
         <Fragment>
             <Nav navName="Messages" menuButton="back" />
             <List>
                 {
-                    _messages.length && _messages.map(message => (
+                    messages.length && messages.map(message => (
                         <React.Fragment key={message.id}>
                             <UserMessageItem
                                 id={message.id}
@@ -38,9 +37,3 @@ MessageList.propTypes = {
     messages: PropTypes.array.isRequired,
 }
 
-export function filterMessages(messages) {
-    const filteredMessages = messages.filter(function (message) {
-        return message.messages.length !== 0
-    })
-    return filteredMessages;
-}

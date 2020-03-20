@@ -26,7 +26,7 @@ module Types
       argument :limit, Integer, required: false
     end
 
-    def users(offset: 0, limit: 100)
+    def users(offset: 0, limit: 2000)
       User.all.order(created_at: :desc)
           .limit(limit).offset(offset)
     end
