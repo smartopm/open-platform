@@ -6,7 +6,7 @@ import UserMessageItem from './UserMessageItem';
 import Nav from '../Nav';
 
 export default function MessageList({ messages }) {
-    const _messages = sortNestedMessages('messages', messages)
+    const _messages = filterMessages(messages)
     return (
         <Fragment>
             <Nav navName="Messages" menuButton="back" />
@@ -38,20 +38,9 @@ MessageList.propTypes = {
     messages: PropTypes.array.isRequired,
 }
 
-export function sortNestedMessages(prop, messages) {
-    prop = prop.split('.');
-    let len = prop.length;
-
-    messages.sort(function (a, b) {
-        let i = 0;
-        while (i < len) { a = a[prop[i]]; b = b[prop[i]]; i++; }
-        if (a > b) {
-            return -1;
-        } else if (a < b) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-    return messages;
+export function filterMessages(messages) {
+    const filteredMessages = messages.filter(function (message) {
+        return message.messages.length !== 0
+    })
+    return filteredMessages;
 }
