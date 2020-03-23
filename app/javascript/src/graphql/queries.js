@@ -185,8 +185,8 @@ export const ShowroomEntriesQuery = gql`
 `
 // don't put in fragments to avoid high load of user data
 // export const MessagesQuery = gql`
-//   query usersMessages($limit: Int, $offset: Int) {
-//     users(limit: $limit, offset: $offset) {
+// query usersMessages($limit: Int, $offset: Int) {
+//   users(limit: $limit, offset: $offset) {
 //       id
 //       name
 //       imageUrl
@@ -208,8 +208,8 @@ export const ShowroomEntriesQuery = gql`
 // `
 
 export const MessagesQuery = gql`
-  {
-    messages {
+  query messages($limit: Int, $offset: Int) {
+    messages(limit: $limit, offset: $offset) {
       id
       message
       createdAt

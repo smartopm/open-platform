@@ -7,7 +7,7 @@ import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import MessageList from '../../components/Messaging/MessageList'
 
-const limit = 2
+const limit = 10
 export default function AllMessages() {
     const [offset, setOffset] = useState(0)
     const { loading, error, data } = useQuery(MessagesQuery, {
@@ -47,7 +47,8 @@ export default function AllMessages() {
                             </a>
                         </li>
                         <li
-                            className={`page-item`}
+                            className={`page-item ${data.messages.length < limit &&
+                                'disabled'}`}
                         >
                             <a className="page-link" onClick={handleNextPage} href="#">
                                 Next

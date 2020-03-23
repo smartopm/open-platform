@@ -20,9 +20,8 @@ export default function MessageList({ messages }) {
                     <UserMessageItem
                         id={messages[index].user.id}
                         name={messages[index].user.name}
-                        imageUrl={messages[index].user.imageUrl}
+                        user={messages[index].user}
                         message={messages[index].message}
-                        // messageCount={messages[index].messages.length}
                         clientNumber={messages[index].user.phoneNumber}
                     />
                 </div>
@@ -44,7 +43,11 @@ export default function MessageList({ messages }) {
                             overscanRowCount={3} />
                     </MaterialList>
                 )
-                    : <p className='text-center'>Some users dont have messages, try Next Page</p>
+                    : (
+                        <div>
+                            <p className='text-center'>No messages</p>
+                        </div>
+                    )
             }
         </Fragment>
     )

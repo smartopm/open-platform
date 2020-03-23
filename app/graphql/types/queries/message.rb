@@ -8,6 +8,8 @@ module Types::Queries::Message
     # Get messages
     field :messages, [Types::MessageType], null: true do
       description 'Get a list of messages'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
     # Get messages for one user
@@ -17,8 +19,9 @@ module Types::Queries::Message
     end
   end
 
-  def messages
+  def messages(offset: 0, limit: 100)
     message = Message.all
+                     .limit(limit).offset(offset)
     return message.index_by {|mess| mess[:user_id]}.values
   end
 
