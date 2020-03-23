@@ -25,7 +25,6 @@ export default function AllMessages() {
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
 
-
     function handleNextPage() {
         setOffset(offset + limit)
     }
@@ -35,27 +34,24 @@ export default function AllMessages() {
         }
         setOffset(offset - limit)
     }
-    const _messages = filterMessages(data.users)
-    // console.log(data.users)
-    // console.log(_messages)
+
     return (
         <Fragment>
-            <MessageList messages={_messages} />
+            <MessageList messages={data.messages} />
             <div className="d-flex justify-content-center">
                 <nav aria-label="center Page navigation">
                     <ul className="pagination">
                         <li className={`page-item ${offset < limit && 'disabled'}`}>
                             <a className="page-link" onClick={handlePreviousPage} href="#">
                                 Previous
-                </a>
+                            </a>
                         </li>
                         <li
-                            className={`page-item ${_messages.length < limit &&
-                                'disabled'}`}
+                            className={`page-item`}
                         >
                             <a className="page-link" onClick={handleNextPage} href="#">
                                 Next
-                </a>
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -64,19 +60,3 @@ export default function AllMessages() {
 
     )
 }
-export function filterMessages(messages) {
-    const filteredMessages = messages.filter(function (message) {
-        if (message.messages.length !== 0) {
-            return true
-        }
-        return message
-    })
-    return filteredMessages.sort(function (a, b) {
-        // if (a) {
-
-        // }
-        console.log(a)
-        console.log(b)
-    })
-}
-

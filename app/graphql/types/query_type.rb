@@ -27,6 +27,8 @@ module Types
     end
 
     def users(offset: 0, limit: 100)
+      Rails.logger.info object.as_json
+      Rails.logger.debug limit
       User.all.order(created_at: :desc)
           .limit(limit).offset(offset)
     end

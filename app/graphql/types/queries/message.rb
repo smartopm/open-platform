@@ -18,7 +18,8 @@ module Types::Queries::Message
   end
 
   def messages
-    Message.all
+    message = Message.all
+    return message.index_by {|mess| mess[:user_id]}.values
   end
 
   def user_messages(id:)
