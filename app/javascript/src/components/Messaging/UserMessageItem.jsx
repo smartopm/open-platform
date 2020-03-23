@@ -26,13 +26,19 @@ export default function UserMessageItem({ id, name, user, message, clientNumber 
                 primary={`${name}`}
                 secondary={
                     <React.Fragment>
-                        {`  ${message}`}
+                        {`  ${truncateString(message)}`}
                     </React.Fragment>
                 }
             />
         </ListItem>
     )
 }
+
+function truncateString(message) {
+    if (!message) return
+    if (message.length <= 40) return message
+    return `${message.substring(0, 40)}...`
+};
 
 UserMessageItem.propTypes = {
     name: PropTypes.string.isRequired,

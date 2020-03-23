@@ -10,7 +10,7 @@ export default function MessageList({ messages }) {
     const { height, width } = useWindowDimensions()
 
     const listHeight = height;
-    const rowHeight = 100;
+    const rowHeight = 70;
     const rowWidth = width;
     function renderRow({ index, key, style }) {
         return (
