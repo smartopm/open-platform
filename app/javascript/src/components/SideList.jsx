@@ -53,8 +53,8 @@ export const SideList = ({ toggleDrawer, user }) => (
         <ListItemIcon>
           <HelpIcon />
         </ListItemIcon>
-        <Link to="/support" className={`${css(styles.link)}`}>
-          <ListItemText primary="Support" />
+        <Link to="/contact" className={`${css(styles.link)}`}>
+          <ListItemText primary="Contact" />
         </Link>
       </ListItem>
       <ListItem button>
