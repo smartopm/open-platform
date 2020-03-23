@@ -22,7 +22,7 @@ module Types::Queries::Message
   def messages(offset: 0, limit: 100)
     message = Message.all
                      .limit(limit).offset(offset)
-    return message.index_by {|mess| mess[:user_id]}.values
+    message.index_by { |mess| mess[:user_id] }.values
   end
 
   def user_messages(id:)
