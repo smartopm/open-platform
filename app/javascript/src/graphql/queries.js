@@ -160,11 +160,12 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  {
-    users {
+  query users($limit: Int, $offset: Int) {
+    users(limit: $limit, offset: $offset) {
       ...UserFields
     }
   }
+
   ${UserFragment.publicFields}
 `
 
@@ -184,8 +185,8 @@ export const ShowroomEntriesQuery = gql`
 `
 // don't put in fragments to avoid high load of user data
 export const MessagesQuery = gql`
-  {
-    users {
+  query usersMessages($limit: Int, $offset: Int) {
+    users(limit: $limit, offset: $offset) {
       id
       name
       imageUrl
