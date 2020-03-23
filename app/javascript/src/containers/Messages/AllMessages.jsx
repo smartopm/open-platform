@@ -7,7 +7,7 @@ import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import MessageList from '../../components/Messaging/MessageList'
 
-const limit = 10
+const limit = 50
 export default function AllMessages() {
     const [offset, setOffset] = useState(0)
     const { loading, error, data } = useQuery(MessagesQuery, {
