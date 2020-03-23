@@ -6,26 +6,31 @@ import { useMutation } from "react-apollo";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
 import Nav from "../../components/Nav";
-import { EntryRequestCreate } from "../../graphql/mutations.js";
+import { createShowroomEntry, EntryRequestCreate } from "../../graphql/mutations.js";
 
 export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted] = useState(false);
   const [selectedSource, setReason] = useState("");
+  const [createEntryShowroom] = useMutation(createShowroomEntry);
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const onSubmit = data => {
     const user = {
       name: `${data.name} ${data.surname}`,
       phoneNumber: data.phoneNumber,
       nrc: data.nrc,
+      email: data.email,
+      homeAddress: data.homeAddress,
       reason: data.reason,
-      source: "showroom"
+      source: 'showroom'
     };
 
-    createEntryRequest({ variables: user }).then(() => {
-      // Send them to the temp final page
-      history.push("/sh_complete/");
-    });
+    createEntryShowroom({ variables: user }).then(() => {
+      return createEntryRequest({ variables: user })
+    })
+      .then(() => {
+        history.push("/sh_complete/");
+      })
   };
 
   const handleSourceChange = event => {
@@ -74,6 +79,18 @@ export default function ClientForm({ history }) {
             />
           </div>
           <div className="form-group">
+            <label className="bmd-label-static" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              ref={register}
+              name="email"
+              defaultValue=""
+            />
+          </div>
+          <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
               NRC
             </label>
@@ -95,6 +112,19 @@ export default function ClientForm({ history }) {
               ref={register}
               name="phoneNumber"
               defaultValue=""
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="homeAddress">
+              Home Address
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              ref={register}
+              name="homeAddress"
+              defaultValue=""
+              placeholder="Plot 89, St Luis street, Meanwood, Lusaka"
             />
           </div>
           <div className="form-group">

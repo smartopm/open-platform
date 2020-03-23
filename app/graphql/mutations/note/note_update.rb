@@ -8,6 +8,7 @@ module Mutations
       argument :body, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
+      argument :due_date, GraphQL::Types::ISO8601DateTime, required: false
 
       field :note, Types::NoteType, null: true
 

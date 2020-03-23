@@ -9,6 +9,8 @@ import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UpdateNote } from '../graphql/mutations'
 
+
+
 export default function Todo({ history }) {
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
@@ -38,6 +40,7 @@ export default function Todo({ history }) {
             <Loading />
           ) : data.flaggedNotes.length ? (
             data.flaggedNotes.map(note => (
+
               <li key={note.id} className={`${css(styles.listItem)} card`}>
                 <div className="custom-control custom-checkbox text">
                   <input

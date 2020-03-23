@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import QrReader from 'react-qr-reader'
+import { Redirect } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FormControlLabel, Switch } from '@material-ui/core'
 import Nav from '../components/Nav'
 import { Footer } from '../components/Footer'
+import { Context } from './Provider/AuthStateProvider.js'
+
 
 export default function QRScan() {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)
   const [isTorchOn, setToggleTorch] = useState(false)
   const { t } = useTranslation()
+  const authState = useContext(Context)
+
 
   useEffect(() => {
     const video = document.querySelector('video')
@@ -61,6 +66,10 @@ export default function QRScan() {
     console.error(err)
   }
 
+  if (!['security_guard', 'admin'].includes(authState.user.userType.toLowerCase())) {
+    return <Redirect to='/' />
+  }
+
   return (
     <div>
       <Nav navName="Scan" menuButton="back" />
@@ -68,39 +77,39 @@ export default function QRScan() {
       {scanned ? (
         <h1 className="text-center">Decoding...</h1>
       ) : (
-        <>
-          <video
-            style={{
-              display: 'none'
-            }}
-          ></video>
-          <QrReader
-            delay={100}
-            torch={true}
-            onError={handleError}
-            onScan={handleScan}
-            style={{ width: '100%' }}
-          />
-          {error && <p className="text-center text-danger">{error}</p>}
-
-          <div
-            className="row justify-content-center align-items-center "
-            style={{
-              marginTop: 60
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isTorchOn}
-                  onChange={() => setToggleTorch(!isTorchOn)}
-                />
-              }
-              label={t('scan.torch')}
+          <>
+            <video
+              style={{
+                display: 'none'
+              }}
+            ></video>
+            <QrReader
+              delay={100}
+              torch={true}
+              onError={handleError}
+              onScan={handleScan}
+              style={{ width: '100%' }}
             />
-          </div>
-        </>
-      )}
+            {error && <p className="text-center text-danger">{error}</p>}
+
+            <div
+              className="row justify-content-center align-items-center "
+              style={{
+                marginTop: 60
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isTorchOn}
+                    onChange={() => setToggleTorch(!isTorchOn)}
+                  />
+                }
+                label={t('scan.torch')}
+              />
+            </div>
+          </>
+        )}
       <Footer position="5vh" />
     </div>
   )
