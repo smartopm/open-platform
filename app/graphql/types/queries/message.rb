@@ -20,13 +20,15 @@ module Types::Queries::Message
   end
 
   def messages(offset: 0, limit: 100)
-    inner_query = Message.all.joins([:user, :sender]).select('DISTINCT ON(GREATEST(messages.user_id , messages.sender_id),
-    LEAST(messages.user_id ,messages.sender_id) ) 
-    GREATEST(messages.user_id , messages.sender_id) as larger,
-    LEAST(messages.user_id , messages.sender_id) as smaller,
-    messages.id').where("users.user_type='admin' or senders_messages.user_type='admin'").unscope(:order).order("larger ASC, 
-    smaller ASC, messages.created_at DESC, messages.id DESC").limit(limit).offset(offset)
-    message = Message.joins([:user, :sender]).includes([:user, :sender]).order("messages.created_at DESC").find(inner_query.collect(&:id))
+    iq =
+      Message.all.joins(:user, :sender).select('DISTINCT ON
+  (GREATEST(messages.user_id,messages.sender_id), LEAST(messages.user_id,messages.sender_id))
+  GREATEST(messages.user_id,messages.sender_id) as lg,
+  LEAST(messages.user_id,messages.sender_id) as sm, messages.id')
+             .where("users.user_type='admin' OR senders_messages.user_type='admin'").unscope(:order)
+             .order('lg,sm,messages.created_at DESC').limit(limit).offset(offset)
+    Message.joins(:user, :sender).includes(:user, :sender)
+           .order('messages.created_at DESC').find(iq.collect(&:id))
   end
 
   def user_messages(id:)
