@@ -13,6 +13,7 @@ import PersonIcon from '@material-ui/icons/Person'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes';
 import FeedbackIcon from '@material-ui/icons/Feedback';
+import ForumIcon from '@material-ui/icons/Forum';
 import { Footer } from '../components/Footer.jsx'
 
 export default function Home() {
@@ -112,12 +113,12 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={'/support'} className={`card-link`}>
+                <Link to={'/contact'} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <HelpIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t('home.support')}</p>
+                    <p>{'Contact'}</p>
                   </div>
                 </Link>
               </div>
@@ -198,6 +199,25 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
+
+              <div
+                className={`${css(
+                  styles.cardSize
+                )} card align-self-center text-center`}
+              >
+                <Link to={'/messages'} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <ForumIcon
+                        fontSize="large"
+                        className={css(styles.homeIconColor)}
+                      />
+                    </h5>
+                    <p>{'SMS'}</p>
+                  </div>
+                </Link>
+              </div>
+
             </div>
           </div>
         </div>

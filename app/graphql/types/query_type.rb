@@ -5,6 +5,7 @@ module Types
   class QueryType < Types::BaseObject # rubocop:disable Metrics/ClassLength
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
+    include Types::Queries::Message
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -25,9 +26,8 @@ module Types
       argument :limit, Integer, required: false
     end
 
-    def users(offset: 0, limit: 100)
+    def users
       User.all.order(created_at: :desc)
-          .limit(limit).offset(offset)
     end
 
     # Get a member's information
@@ -83,7 +83,7 @@ module Types
       User.where(
         community_id: context[:current_user].community_id,
         user_type: 'security_guard',
-      )
+      ).order(name: :asc)
     end
 
     field :all_notes, [NoteType], null: false do

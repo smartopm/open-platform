@@ -4,7 +4,8 @@ import {
   TextField,
   InputAdornment,
   CircularProgress,
-  Select
+  Select,
+Typography
 } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link } from "react-router-dom";
@@ -65,6 +66,15 @@ export function LoginScreen({ history }) {
           )}`}
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
+          <Typography color="textSecondary" variant="body2">
+          The Nkwashi app, powered by DoubleGDP, provides clients and visitors with fast, easy, and secure access to the site through a digital ID / QR Code.
+          </Typography>
+
+          <br />
+          <br />
+          <Typography color="textSecondary" variant="body1">
+          Please log in with your phone number here:
+          </Typography>
         </div>
         <div
           className={`${css(
@@ -141,7 +151,7 @@ const styles = StyleSheet.create({
     width: "55%",
     height: 51,
     boxShadow: "none",
-    marginTop: 80
+    marginTop: 50
   },
   linksSection: {
     marginTop: 20
@@ -170,7 +180,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   phoneNumberInput: {
-    marginTop: 50
+    marginTop: 30
   },
   googleLink: {
     margin: 40,

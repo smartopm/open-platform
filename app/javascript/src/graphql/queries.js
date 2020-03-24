@@ -160,8 +160,8 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int) {
-    users(limit: $limit, offset: $offset) {
+  {
+    users {
       ...UserFields
     }
   }
@@ -179,6 +179,44 @@ export const ShowroomEntriesQuery = gql`
       nrc
       reason
       source
+    }
+  }
+`
+// don't put in fragments to avoid high load of user data
+export const MessagesQuery = gql`
+  {
+    users {
+      id
+      name
+      imageUrl
+      phoneNumber
+      messages {
+        id
+        message
+        createdAt
+        user {
+          name
+          imageUrl
+          phoneNumber
+          id
+        }
+      }
+    }
+  }
+`
+
+export const UserMessageQuery = gql`
+  query userMessages($id: ID!) {
+    userMessages(id: $id) {
+      id
+      message
+      createdAt
+      sender {
+        name
+        id
+        avatarUrl
+        imageUrl
+      }
     }
   }
 `
