@@ -25,13 +25,23 @@ module Types::Queries::Message
   (GREATEST(messages.user_id,messages.sender_id), LEAST(messages.user_id,messages.sender_id))
   GREATEST(messages.user_id,messages.sender_id) as lg,
   LEAST(messages.user_id,messages.sender_id) as sm, messages.id')
-             .where("users.user_type='admin' OR senders_messages.user_type='admin'").unscope(:order)
-             .order('lg,sm,messages.created_at DESC').limit(limit).offset(offset)
-    Message.joins(:user, :sender).includes(:user, :sender)
+             .where("users.user_type='admin' OR senders_messages.user_type='admin'")
+             .unscope(:order).order('lg ASC,sm ASC,messages.created_at DESC')
+             .limit(limit).offset(offset)
+    Message.joins(:user, :sender).includes(:user, :sender).unscope(:order)
            .order('messages.created_at DESC').find(iq.collect(&:id))
   end
 
   def user_messages(id:)
-    Message.where(user_id: id)
+    iq =
+      Message.all.joins(:user, :sender).select('DISTINCT ON
+  (GREATEST(messages.user_id,messages.sender_id), LEAST(messages.user_id,messages.  sender_id))
+  GREATEST(messages.user_id,messages.sender_id) as lg,
+  LEAST(messages.user_id,messages.sender_id) as sm, messages.id')
+             .where('user_id=? OR sender_id=?', id, id)
+             .unscope(:order).order('lg ASC,sm ASC,messages.created_at DESC')
+             .limit(100).offset(0)
+    Message.joins(:user, :sender).includes(:user, :sender).unscope(:order)
+           .order('messages.created_at DESC').find(iq.collect(&:id))
   end
 end
