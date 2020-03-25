@@ -37,6 +37,6 @@ module Types::Queries::Message
     Message.joins(:user, :sender).includes(:user, :sender)
            .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
            .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
-           .order('messages.created_at DESC').limit(50)
+           .order('messages.created_at ASC').limit(50)
   end
 end
