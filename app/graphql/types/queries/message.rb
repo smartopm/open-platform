@@ -34,9 +34,9 @@ module Types::Queries::Message
 
   def user_messages(id:)
     com_id = context[:current_user].community_id
-    Message.joins(:user, :sender).includes(:user, :sender).unscope(:order).
-    where('(user_id=? OR sender_id=?)', id, id).
-    where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id).
-    order('messages.created_at DESC').limit(50)
+    Message.joins(:user, :sender).includes(:user, :sender)
+           .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
+           .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
+           .order('messages.created_at DESC').limit(50)
   end
 end
