@@ -39,7 +39,8 @@ export default function Support() {
       pathname: `/message/${authState.user.id}`,
       state: {
         clientName: authState.user.name,
-        clientNumber: CSMNumber
+        clientNumber: CSMNumber,
+        from: 'contact'
       }
     })
   }
