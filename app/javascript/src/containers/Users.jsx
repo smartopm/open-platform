@@ -108,7 +108,7 @@ export default function UsersList() {
     function handleModal(userId = '', username = '') {
         // setModalAction('Create Note')
         setId(userId)
-        setName(username)
+        setName(username)  
         setIsDialogOpen(!isDialogOpen)
     }
 
