@@ -26,8 +26,9 @@ module Types
       argument :limit, Integer, required: false
     end
 
-    def users
+    def users(offset: 0, limit: 100)
       User.all.order(created_at: :desc)
+          .limit(limit).offset(offset)
     end
 
     # Get a member's information

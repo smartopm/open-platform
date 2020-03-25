@@ -205,7 +205,7 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={'/messages'} className={`card-link`}>
+                <Link to={authState.user.userType === 'admin' ? '/messages' : `/message/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <ForumIcon
@@ -213,7 +213,7 @@ export function Component({ authState }) {
                         className={css(styles.homeIconColor)}
                       />
                     </h5>
-                    <p>{'SMS'}</p>
+                    <p>{authState.user.userType === 'admin' ? 'SMS' : 'My Messages'}</p>
                   </div>
                 </Link>
               </div>
