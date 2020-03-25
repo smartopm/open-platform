@@ -27,7 +27,7 @@ export default function UserMessages() {
     const { state } = useLocation()
 
     function sendMessage() {
-        const receiver = authState.user.userType === 'admin' ? state.clientNumber : ''
+        const receiver = state.clientNumber || ''
         messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
             setMessage('')
             refetch()
