@@ -31,6 +31,8 @@ const allEventLogs = (history, authState) => {
       return;
     }
     setOffset(offset - limit);
+    
+    
   }
   return (
     <IndexComponent
