@@ -79,7 +79,7 @@ RSpec.describe Types::Queries::Message do
 
     it 'when user retrieves msg list' do
       result = DoubleGdpSchema.execute(cuser_msgs, context: { current_user: current_user }).as_json
-      expect(result.dig('data', 'userMessages').length).to eql 1
+      expect(result.dig('data', 'userMessages').length).to eql 2
       expect(result.dig('data', 'userMessages', 0, 'id')).to eql cuser_adm_msg.id
       expect(result.dig('data', 'userMessages', 0, 'sender', 'id')).to eql current_user.id
       expect(result.dig('data', 'userMessages', 0, 'user', 'id')).to eql admin.id
