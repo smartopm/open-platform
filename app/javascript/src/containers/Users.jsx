@@ -73,35 +73,24 @@ const StyledTableRow = withStyles(theme => ({
 
 export default function UsersList() {
     const classes = useStyles()
-    const limit = 50
-    const [offset, setOffSet] = useState(0)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [redirect, setRedirect] = useState(false)
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-    const { loading, error, data, refetch } = useQuery(UsersQuery, {
-        variables: { limit, offset }
-    })
+    const { loading, error, data, refetch } = useQuery(UsersQuery)
 
-    const [page, setPage] = React.useState(0)
+    const [page, setPage] = useState(0)
     const [note, setNote] = useState('')
     const [userId, setId] = useState('')
     const [userName, setName] = useState('')
 
-    const [rowsPerPage, setRowsPerPage] = React.useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
 
     const handleChangePage = (event, newPage) => {
-
-        if (data.users.length > offset) {
-            setOffSet(limit + offset)
-        }
         setPage(newPage)
     }
 
     const handleChangeRowsPerPage = event => {
-        setRowsPerPage(+event.target.value)
-        if (rowsPerPage > limit) {
-            setOffSet(limit + offset);
-        }
+        setRowsPerPage(Number(event.target.value))
         setPage(0)
     }
 
@@ -119,7 +108,7 @@ export default function UsersList() {
     function handleModal(userId = '', username = '') {
         // setModalAction('Create Note')
         setId(userId)
-        setName(username)
+        setName(username)  
         setIsDialogOpen(!isDialogOpen)
     }
 
@@ -225,7 +214,7 @@ export default function UsersList() {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                    rowsPerPageOptions={[1, 2, 5, 10, 25, 50, 100, 200, 500, 1000]}
                     component="div"
                     count={data.users.length}
                     rowsPerPage={rowsPerPage}

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '../Avatar'
 import { useHistory } from "react-router-dom";
 
 
-export default function UserMessageItem({ id, name, imageUrl, message, messageCount, clientNumber }) {
+export default function UserMessageItem({ id, name, user, message, clientNumber }) {
     let history = useHistory();
 
     function readMessages() {
@@ -20,13 +20,13 @@ export default function UserMessageItem({ id, name, imageUrl, message, messageCo
     return (
         <ListItem alignItems="flex-start" onClick={readMessages} >
             <ListItemAvatar>
-                <Avatar alt={name} src={imageUrl} />
+                <Avatar user={user} />
             </ListItemAvatar>
             <ListItemText
-                primary={`${name}  (${messageCount})`}
+                primary={`${name}`}
                 secondary={
                     <React.Fragment>
-                        {`  ${message}`}
+                        {`  ${truncateString(message)}`}
                     </React.Fragment>
                 }
             />
@@ -34,9 +34,15 @@ export default function UserMessageItem({ id, name, imageUrl, message, messageCo
     )
 }
 
+function truncateString(message) {
+    if (!message) return
+    if (message.length <= 40) return message
+    return `${message.substring(0, 40)}...`
+};
+
 UserMessageItem.propTypes = {
     name: PropTypes.string.isRequired,
-    messageCount: PropTypes.number.isRequired,
+    user: PropTypes.object,
     imageUrl: PropTypes.string,
     message: PropTypes.string,
     clientNumber: PropTypes.string,

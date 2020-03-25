@@ -84,7 +84,7 @@ module Types
       User.where(
         community_id: context[:current_user].community_id,
         user_type: 'security_guard',
-      )
+      ).order(name: :asc)
     end
 
     field :all_notes, [NoteType], null: false do

@@ -26,6 +26,7 @@ module Types
     field :owner_id, ID, null: true
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
     field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
+    field :messages_count, Int, null: true
     field :messages, [Types::MessageType], null: true, visible: { roles: %i[admin], user: :id }
 
     def avatar_url
@@ -33,6 +34,10 @@ module Types
 
       Rails.application.routes.url_helpers
            .rails_blob_url(object.avatar)
+    end
+
+    def messages_count
+      object.messages.size
     end
 
     def document_url

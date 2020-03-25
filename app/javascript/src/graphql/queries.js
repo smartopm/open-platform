@@ -165,6 +165,7 @@ export const UsersQuery = gql`
       ...UserFields
     }
   }
+
   ${UserFragment.publicFields}
 `
 
@@ -179,30 +180,46 @@ export const ShowroomEntriesQuery = gql`
       nrc
       reason
       source
+      homeAddress
     }
   }
 `
+// don't put in fragments to avoid high load of user data
+// export const MessagesQuery = gql`
+// query usersMessages($limit: Int, $offset: Int) {
+//   users(limit: $limit, offset: $offset) {
+//       id
+//       name
+//       imageUrl
+//       phoneNumber
+//       messages {
+//         id
+//         message
+//         createdAt
+//         user {
+//           name
+//           imageUrl
+//           phoneNumber
+//           id
+//         }
+//       }
+//       messagesCount
+//     }
+//   }
+// `
 
 export const MessagesQuery = gql`
-  {
-    users {
+  query messages($limit: Int, $offset: Int) {
+    messages(limit: $limit, offset: $offset) {
       id
-      name
-      imageUrl
-      phoneNumber
-      messages {
-        id
-        message
-        createdAt
-        user {
-          name
-          imageUrl
-          phoneNumber
-          id
-        }
+      message
+      createdAt
+      user {
+        ...UserFields
       }
     }
   }
+  ${UserFragment.publicFields}
 `
 
 export const UserMessageQuery = gql`
