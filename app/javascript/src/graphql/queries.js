@@ -180,6 +180,7 @@ export const ShowroomEntriesQuery = gql`
       nrc
       reason
       source
+      homeAddress
     }
   }
 `
