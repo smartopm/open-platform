@@ -27,7 +27,7 @@ export default function UserMessages() {
     const { state } = useLocation()
 
     function sendMessage() {
-        const receiver = authState.user.userType === 'admin' ? state.clientNumber : ''
+        const receiver = state.clientNumber || ''
         messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
             setMessage('')
             refetch()
@@ -64,8 +64,7 @@ export default function UserMessages() {
                                     secondary={message.message}
                                 />
                             </ListItem>
-                        )) : <ListItem alignItems="center"><span >There are no messages for {state.clientName}</span></ListItem>
-
+                        )) : <p className="text-center"><span >{state.from ? 'Send Message to Support, You should receive an answer soon' : `There are no messages yet for ${state.clientName}`}</span></p>
                     }
 
                 </List>
