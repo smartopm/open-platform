@@ -79,9 +79,7 @@ export default function UsersList() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [redirect, setRedirect] = useState(false)
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-    const { loading, error, data, refetch } = useQuery(UsersQuery, {
-        variables: { limit, offset }
-    })
+    const { loading, error, data, refetch } = useQuery(UsersQuery)
 
     const [note, setNote] = useState('')
     const [userId, setId] = useState('')
@@ -112,7 +110,7 @@ export default function UsersList() {
 
     function handleModal(userId = '', username = '') {
         setId(userId)
-        setName(username)
+        setName(username)  
         setIsDialogOpen(!isDialogOpen)
     }
 
@@ -202,25 +200,16 @@ export default function UsersList() {
                                 </StyledTableCell>
 
                                 <StyledTableCell align="right">{user.roleName}</StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {user.phoneNumber || 'None'}
-                                </StyledTableCell>
+                                <StyledTableCell align="right">{user.phoneNumber || "None"}</StyledTableCell>
                                 <StyledTableCell align="right">{user.email}</StyledTableCell>
+                                <StyledTableCell align="right">{user.notes && user.notes[0] ? DateUtil.formatDate(user.notes[0].createdAt) : "N/A"}</StyledTableCell>
+                                <StyledTableCell align="right">{user.notes && user.notes[0] ? user.notes[0].body : "None"}</StyledTableCell>
                                 <StyledTableCell align="right">
-                                    {user.notes[0]
-                                        ? DateUtil.formatDate(user.notes[0].createdAt)
-                                        : 'N/A'}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    {user.notes[0] ? user.notes[0].body : 'None'}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Button
-                                        color="secondary"
-                                        onClick={() => handleModal(user.id, user.name)}
-                                    >
+
+                                    <Button color="secondary" onClick={() => handleModal(user.id, user.name)}>
                                         +
-                  </Button>
+                                    </Button>
+
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}

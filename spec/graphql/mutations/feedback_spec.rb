@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Mutations::Note do
-  describe 'creating an note' do
+  describe 'creating feedback review' do
     let!(:user) { create(:user_with_community) }
 
     let(:query) do

@@ -16,6 +16,7 @@ module Mutations
 
         event_log = instantiate_event_log(context[:current_user], user, note)
 
+        send_notifications(user.phone_number)
         return { event_log: event_log, user: user } if event_log.save
 
         raise GraphQL::ExecutionError, event_log.errors.full_messages
@@ -29,6 +30,16 @@ module Mutations
                      data: {
                        ref_name: user.name, note: note, type: user.user_type
                      })
+      end
+
+      def send_notifications(number)
+        feedback_link = "https://#{ENV['HOST']}/feedback"
+        return if number.nil?
+
+        # disabled rubocop to keep the structure of the message
+        # rubocop:disable LineLength
+        Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
+        # rubocop:enable LineLength
       end
     end
   end

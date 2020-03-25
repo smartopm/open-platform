@@ -27,7 +27,7 @@ class CsvExportController < ApplicationController
   def get_event_logs(_params)
     # TODO: use params to narrow it down later
     events = EventLog.where(community_id: @user.community_id,
-                            created_at: 30.days.ago..Float::INFINITY)
+                            created_at: 14.days.ago..Float::INFINITY)
     event_logs_to_rows(events, @user.community.timezone)
   end
 

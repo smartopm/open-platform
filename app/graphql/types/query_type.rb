@@ -2,10 +2,10 @@
 
 module Types
   # QueryType
-  class QueryType < Types::BaseObject
+  class QueryType < Types::BaseObject # rubocop:disable Metrics/ClassLength
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
-    # include Types::Queries::Feedback
+    include Types::Queries::Message
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -84,7 +84,7 @@ module Types
       User.where(
         community_id: context[:current_user].community_id,
         user_type: 'security_guard',
-      )
+      ).order(name: :asc)
     end
 
     field :all_notes, [NoteType], null: false do
@@ -134,6 +134,14 @@ module Types
     def users_feedback(offset: 0, limit: 50)
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
+    end
+
+    field :showroom_entries, [ShowroomType], null: true do
+      description 'Get all showroom entries'
+    end
+
+    def showroom_entries
+      Showroom.all
     end
   end
 end

@@ -324,3 +324,49 @@ export const createFeedback = gql`
     }
   }
 `
+
+export const createShowroomEntry = gql`
+  mutation ShowroomEntryCreate(
+    $name: String
+    $email: String
+    $homeAddress: String
+    $phoneNumber: String
+    $nrc: String
+    $reason: String
+    $source: String
+  ) {
+    showroomEntryCreate(
+      name: $name
+      email: $email
+      homeAddress: $homeAddress
+      nrc: $nrc
+      reason: $reason
+      source: $source
+      phoneNumber: $phoneNumber
+    ) {
+      showroom {
+        name
+        id
+      }
+    }
+  }
+`
+
+export const MessageCreate = gql`
+  mutation messageCreate($receiver: String, $message: String!, $userId: ID!) {
+    messageCreate(receiver: $receiver, message: $message, userId: $userId) {
+      message {
+        id
+        message
+        sender {
+          id
+          name
+        }
+        user {
+          id
+          name
+        }
+      }
+    }
+  }
+`
