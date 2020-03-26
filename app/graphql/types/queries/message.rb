@@ -20,14 +20,9 @@ module Types::Queries::Message
   end
 
   def messages(offset: 0, limit: 100)
-    iq =
-      Message.all.joins(:user, :sender).select('DISTINCT ON
-  (GREATEST(messages.user_id,messages.sender_id), LEAST(messages.user_id,messages.sender_id))
-  GREATEST(messages.user_id,messages.sender_id) as lg,
-  LEAST(messages.user_id,messages.sender_id) as sm, messages.id')
-             .where("users.user_type='admin' OR senders_messages.user_type='admin'")
-             .unscope(:order).order('lg ASC,sm ASC,messages.created_at DESC')
-             .limit(limit).offset(offset)
+    com_id = context[:current_user].community_id
+    iq = Message.users_newest_msgs(offset, limit, com_id)
+
     Message.joins(:user, :sender).includes(:user, :sender).unscope(:order)
            .order('messages.created_at DESC').find(iq.collect(&:id))
   end
