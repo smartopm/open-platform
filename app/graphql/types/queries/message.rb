@@ -33,15 +33,10 @@ module Types::Queries::Message
   end
 
   def user_messages(id:)
-    iq =
-      Message.all.joins(:user, :sender).select('DISTINCT ON
-  (GREATEST(messages.user_id,messages.sender_id), LEAST(messages.user_id,messages.  sender_id))
-  GREATEST(messages.user_id,messages.sender_id) as lg,
-  LEAST(messages.user_id,messages.sender_id) as sm, messages.id')
-             .where('user_id=? OR sender_id=?', id, id)
-             .unscope(:order).order('lg ASC,sm ASC,messages.created_at DESC')
-             .limit(100).offset(0)
-    Message.joins(:user, :sender).includes(:user, :sender).unscope(:order)
-           .order('messages.created_at DESC').find(iq.collect(&:id))
+    com_id = context[:current_user].community_id
+    Message.joins(:user, :sender).includes(:user, :sender)
+           .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
+           .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
+           .order('messages.created_at ASC').limit(50)
   end
 end
