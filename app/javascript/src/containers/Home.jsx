@@ -205,7 +205,16 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={authState.user.userType === 'admin' ? '/messages' : `/message/${authState.user.id}`} className={`card-link`}>
+                <Link to={
+                  {
+                    pathname: authState.user.userType === 'admin' ? '/messages' : `/message/${authState.user.id}`,
+                    state: {
+                      clientName: authState.user.name,
+                      clientNumber: authState.user.phoneNumber,
+                      from: 'home'
+                    }
+                  }
+                } className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <ForumIcon

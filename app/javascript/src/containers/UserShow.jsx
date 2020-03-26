@@ -213,7 +213,8 @@ export function Component({
                           pathname: `/message/${data.user.id}`,
                           state: {
                             clientNumber: data.user.phoneNumber,
-                            clientName: data.user.name
+                            clientName: data.user.name,
+                            from: 'user_profile'
                           }
                         }}
                         className={css(styles.linkItem)}

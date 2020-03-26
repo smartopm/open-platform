@@ -13,7 +13,11 @@ export default function UserMessageItem({ id, name, user, message, clientNumber 
     function readMessages() {
         history.push({
             pathname: `/message/${id}`,
-            state: { clientNumber, clientName: name }
+            state: {
+                clientNumber,
+                clientName: name,
+                from: 'message_list'
+            }
         })
     }
 
