@@ -2,7 +2,7 @@
 
 module Types
   # QueryType
-  class QueryType < Types::BaseObject # rubocop:disable Metrics/ClassLength
+  class QueryType < Types::BaseObject
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
     include Types::Queries::Message
