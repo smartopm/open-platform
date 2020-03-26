@@ -9,6 +9,13 @@ class Message < ApplicationRecord
 
   class Unauthorized < StandardError; end
 
+  def self.users_newest_msgs(offset, limit, com_id)
+    Message.all.joins(:user, :sender)
+           .select('DISTINCT ON (user_id) user_id, messages.id').unscope(:order)
+           .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
+           .order('user_id ASC, messages.created_at DESC').limit(limit).offset(offset)
+  end
+
   def send_sms
     return if receiver.nil?
 
