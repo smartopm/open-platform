@@ -92,7 +92,10 @@ const LoggedInOnly = props => {
   if (authState.loggedIn) {
     return props.children
   }
-  return <Redirect to="/login" />
+  return <Redirect to={{
+    pathname: '/login',
+    state: { from: props.location }
+  }} />
 }
 
 const Logout = () => {

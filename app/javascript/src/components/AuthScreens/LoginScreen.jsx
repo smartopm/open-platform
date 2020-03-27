@@ -5,22 +5,25 @@ import {
   InputAdornment,
   CircularProgress,
   Select,
-Typography
+  Typography
 } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhone } from "../../graphql/mutations";
 import { getAuthToken } from "../../utils/apollo";
 
 
-export function LoginScreen({ history }) {
+export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loginPhoneStart] = useMutation(loginPhone);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState(260);
+  const history = useHistory()
+  const { state } = useLocation()
 
+  console.log(state)
   function loginWithPhone(event, type = "input") {
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === "btnClick") {
@@ -35,7 +38,10 @@ export function LoginScreen({ history }) {
         .then(data => {
           history.push({
             pathname: "/code/" + data.loginPhoneStart.user.id,
-            state: { phoneNumber: `${countryCode}${phoneNumber}` }
+            state: {
+              phoneNumber: `${countryCode}${phoneNumber}`,
+              from: `${!state ? '/' : state.from.pathname}`
+            }
           });
         })
         .catch(error => {
@@ -44,13 +50,12 @@ export function LoginScreen({ history }) {
         });
     }
   }
-
   useEffect(() => {
     // check if user is logged in
     const token = getAuthToken()
     if (token) {
       // return to home
-      history.push('/')
+      history.push(`${!state ? '/' : state.from.pathname}`)
     }
   })
 
@@ -70,13 +75,13 @@ export function LoginScreen({ history }) {
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
           <Typography color="textSecondary" variant="body2">
-          The Nkwashi app, powered by DoubleGDP, provides clients and visitors with fast, easy, and secure access to the site through a digital ID / QR Code.
+            The Nkwashi app, powered by DoubleGDP, provides clients and visitors with fast, easy, and secure access to the site through a digital ID / QR Code.
           </Typography>
 
           <br />
           <br />
           <Typography color="textSecondary" variant="body1">
-          Please log in with your phone number here:
+            Please log in with your phone number here:
           </Typography>
         </div>
         <div

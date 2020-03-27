@@ -84,7 +84,7 @@ export default function ConfirmCodeScreen({ match }) {
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    return <Redirect to="/" />;
+    return <Redirect to={state.from} />;
   }
 
   return (
