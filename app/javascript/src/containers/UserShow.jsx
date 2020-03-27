@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
@@ -88,6 +88,7 @@ export function Component({
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
+  const params = useParams() // get timestamp and dg
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
