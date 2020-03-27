@@ -90,6 +90,8 @@ export function Component({
   const [noteUpdate] = useMutation(UpdateNote)
   // eslint-disable-next-line
   const params = useParams() // get timestamp and dg 
+  // pass timestamp and dg=true to the addActivityLog mutation
+  // save that in the eventlogs and identify back on the front-end
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
