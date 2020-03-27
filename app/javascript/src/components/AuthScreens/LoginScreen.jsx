@@ -23,7 +23,6 @@ export function LoginScreen() {
   const history = useHistory()
   const { state } = useLocation()
 
-  console.log(state)
   function loginWithPhone(event, type = "input") {
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === "btnClick") {
