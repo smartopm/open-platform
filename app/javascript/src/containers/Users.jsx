@@ -14,7 +14,6 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    TablePagination,
     Button,
     Divider,
     IconButton,
@@ -71,30 +70,34 @@ const StyledTableRow = withStyles(theme => ({
     }
 }))(TableRow)
 
+   
+
 export default function UsersList() {
     const classes = useStyles()
+    const limit = 30
+    const [offset, setOffSet] = useState(0)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [redirect, setRedirect] = useState(false)
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
     const { loading, error, data, refetch } = useQuery(UsersQuery)
 
-    const [page, setPage] = useState(0)
     const [note, setNote] = useState('')
     const [userId, setId] = useState('')
     const [userName, setName] = useState('')
 
-    const [rowsPerPage, setRowsPerPage] = useState(5)
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
+ function handleChangePage (){
+        setOffSet(offset + limit);
+
     }
 
-    const handleChangeRowsPerPage = event => {
-        setRowsPerPage(Number(event.target.value))
-        setPage(0)
+    function handlePreviousPage  ()  {
+        if (offset < limit) {
+            return;
+        }
+        setOffSet(offset - limit);
     }
 
-    //Creates new note and updates the tables
     function handleClick() {
         noteCreate({
             variables: { userId, body: note, flagged: false }
@@ -106,7 +109,6 @@ export default function UsersList() {
     }
 
     function handleModal(userId = '', username = '') {
-        // setModalAction('Create Note')
         setId(userId)
         setName(username)  
         setIsDialogOpen(!isDialogOpen)
@@ -189,7 +191,7 @@ export default function UsersList() {
                     <TableBody>
 
 
-                        {data.users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
+                        {data.users.map(user => (
                             <StyledTableRow key={user.id}>
 
                                 <StyledTableCell component="th" scope="row">
@@ -213,15 +215,28 @@ export default function UsersList() {
                         ))}
                     </TableBody>
                 </Table>
-                <TablePagination
-                    rowsPerPageOptions={[1, 2, 5, 10, 25, 50, 100, 200, 500, 1000]}
-                    component="div"
-                    count={data.users.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
+
+                <div className="container row justify-content-center">
+                <nav aria-label="Page navigation" >
+                    <ul className="pagination  ">
+                        <li className={`page-item ${offset < limit && "disabled"}`}>
+                            <a className="page-link" onClick={handlePreviousPage} href="#">
+                                Previous
+                </a>
+                        </li>
+                        <li
+                            className={`page-item ${data.users.length < limit &&
+                                "disabled"}`}
+                        >
+                            <a className="page-link" onClick={handleChangePage} href="#">
+                                Next
+                </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                </div>
+
             </div>
         </Fragment>
     )
