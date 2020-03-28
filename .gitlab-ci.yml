@@ -22,7 +22,7 @@ before_script:
   - yarn install
 
 test:
-  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+  rails_coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
   script:
     - yarn lint
     - yarn test
