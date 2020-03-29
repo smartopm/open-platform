@@ -23,11 +23,13 @@ export default function UserMessages() {
     const { loading, error, data, refetch } = useQuery(UserMessageQuery, { variables: { id } })
     const [messageCreate] = useMutation(MessageCreate)
     const [message, setMessage] = useState('')
+    const [isMsgLoading, setLoading] = useState(false)
     const [errmsg, setError] = useState('')
     const authState = useContext(AuthStateContext)
     const { state } = useLocation()
 
     function sendMessage() {
+        setLoading(true)
         const receiver = state && state.clientNumber || ''
         if (!message.length) {
             setError('The message must contain some text')
@@ -36,6 +38,7 @@ export default function UserMessages() {
         messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
             setMessage('')
             refetch()
+            setLoading(false)
         })
     }
 
@@ -101,6 +104,7 @@ export default function UserMessages() {
             <Button
                 color="primary"
                 onClick={sendMessage}
+                disabled={isMsgLoading}
                 style={{ marginTop: -37, marginRight: 34, float: 'right' }}
             >
                 Send
