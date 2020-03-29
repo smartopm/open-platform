@@ -23,11 +23,16 @@ export default function UserMessages() {
     const { loading, error, data, refetch } = useQuery(UserMessageQuery, { variables: { id } })
     const [messageCreate] = useMutation(MessageCreate)
     const [message, setMessage] = useState('')
+    const [errmsg, setError] = useState('')
     const authState = useContext(AuthStateContext)
     const { state } = useLocation()
 
     function sendMessage() {
         const receiver = state && state.clientNumber || ''
+        if (!message.length) {
+            setError('The message must contain some text')
+            return
+        }
         messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
             setMessage('')
             refetch()
@@ -100,6 +105,9 @@ export default function UserMessages() {
             >
                 Send
                 </Button>
+            {
+                errmsg && <p className="text-center text-danger">{errmsg}</p>
+            }
         </Fragment>
     )
 }
