@@ -27,7 +27,7 @@ export default function UserMessages() {
     const { state } = useLocation()
 
     function sendMessage() {
-        const receiver = state.clientNumber || ''
+        const receiver = state && state.clientNumber || ''
         messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
             setMessage('')
             refetch()
