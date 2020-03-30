@@ -72,7 +72,7 @@ export default function UserMessages() {
                                     secondary={message.message}
                                 />
                             </ListItem>
-                        )) : <p className="text-center"><span >{state.from === 'contact' ? 'Send Message to Support, You should receive an answer soon' : `There are no messages yet for ${state.clientName}`}</span></p>
+                        )) : <p className="text-center"><span >{state && state.from === 'contact' ? 'Send Message to Support, You should receive an answer soon' : `There are no messages yet for ${state.clientName}`}</span></p>
                     }
 
                 </List>
