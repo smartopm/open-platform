@@ -28,7 +28,7 @@ RSpec.describe Mutations::ActivityLog::Add do
     it 'returns should create an activity log' do
       variables = {
         userId: user.id,
-        timestamp: ((Time.now.to_f * 1000).floor).to_s,
+        timestamp: (Time.now.to_f * 1000).floor.to_s,
         digital: true,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,

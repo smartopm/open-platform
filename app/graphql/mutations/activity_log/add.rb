@@ -16,7 +16,6 @@ module Mutations
         user = ::User.find(user_id)
         raise GraphQL::ExecutionError, 'User not found' unless user
 
-
         event_log = instantiate_event_log(context[:current_user], user, note, timestamp, digital)
 
         send_notifications(user.phone_number)
@@ -30,13 +29,8 @@ module Mutations
                      community_id: user.community_id, subject: 'user_entry',
                      ref_id: user.id,
                      ref_type: 'User',
-                     data: {
-                       ref_name: user.name,
-                       note: note,
-                       type: user.user_type,
-                       timestamp: timestamp,
-                       digital: digital
-                     })
+                     data: { ref_name: user.name, note: note, type: user.user_type,
+                              timestamp: timestamp, digital: digital })
       end
 
       def send_notifications(number)
