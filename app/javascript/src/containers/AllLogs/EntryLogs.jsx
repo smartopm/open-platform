@@ -108,10 +108,13 @@ export function IndexComponent({
           : event.subject === 'showroom'
             ? 'Showroom'
             : 'Manual'
-
+      const isDigital = source === 'Scan' ? event.data.digital : null
+      const scan_time = source === 'Scan' ? event.data.timestamp : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
+
+      console.log({ isDigital, scan_time })
       return (
         <Fragment key={event.id}>
           <div className="container">
@@ -158,7 +161,7 @@ export function IndexComponent({
                       | {source}
                     </Fragment>
                   ) : (
-                      source
+                      source === 'Scan' ? `${isDigital ? 'Digital' : 'Print'} Scan` : source
                     )}{' '}
                   |{' '}
                   <span
