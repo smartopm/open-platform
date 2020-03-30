@@ -161,7 +161,7 @@ export function IndexComponent({
                       | {source}
                     </Fragment>
                   ) : (
-                      source === 'Scan' ? `${isDigital ? 'Digital' : 'Print'} Scan` : source
+                      source === 'Scan' && isDigital !== null ? `${isDigital ? 'Digital' : 'Print'} Scan` : source
                     )}{' '}
                   |{' '}
                   <span
