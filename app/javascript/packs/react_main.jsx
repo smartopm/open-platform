@@ -166,7 +166,7 @@ const App = () => {
                       component={PendingUsers}
                     />
                     <Route path="/user/new" exact component={UserEdit} />
-                    <Route path="/user/:id" exact component={UserShow} />
+                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
                     <Route path="/user/:id/logs" exact component={UserLogs} />
                     <Route path="/user/:id/edit" exact component={UserEdit} />
                     <Route path="/map" component={Map} />

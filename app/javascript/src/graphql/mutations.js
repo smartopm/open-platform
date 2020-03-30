@@ -153,8 +153,18 @@ export const AttachAvatar = gql`
 `
 
 export const AddActivityLog = gql`
-  mutation ActivityLogMutation($userId: ID!, $note: String) {
-    activityLogAdd(userId: $userId, note: $note) {
+  mutation ActivityLogMutation(
+    $userId: ID!
+    $timestamp: String!
+    $digital: Boolean!
+    $note: String
+  ) {
+    activityLogAdd(
+      userId: $userId
+      timestamp: $timestamp
+      digital: $digital
+      note: $note
+    ) {
       user {
         ...UserFields
       }

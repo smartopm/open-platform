@@ -22,23 +22,19 @@ function expiresAtStr(datetime) {
 }
 
 function qrCodeAddress(id_card_token) {
-  const linkUrl =
-    window.location.protocol +
-    '//' +
-    window.location.hostname +
-    '/user/' +
-    id_card_token
+  const timestamp = Date.now()
+  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${id_card_token}/${timestamp}`
   return linkUrl
 }
 
 function openImageInNewTab() {
   html2canvas(document.getElementById('idCard'), { allowTaint: true }).then(
-    function(canvas) {
+    function (canvas) {
       let d = canvas.toDataURL('image/png')
       let w = window.open('about:blank')
       let image = new Image()
       image.src = d
-      setTimeout(function() {
+      setTimeout(function () {
         w.document.write(image.outerHTML)
       }, 0)
     }
@@ -56,14 +52,14 @@ export default ({ match }) => {
 }
 
 function toTitleCase(str) {
-  return str.replace(/\w\S*/g, function(txt) {
+  return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
   })
 }
 
 function downloadBtn() {
   html2canvas(document.getElementById('idCard'), { allowTaint: true }).then(
-    function(canvas) {
+    function (canvas) {
       let dt = canvas.toDataURL('image/png')
       /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
       let dlDt = dt.replace(

@@ -108,7 +108,7 @@ export function IndexComponent({
           : event.subject === 'showroom'
             ? 'Showroom'
             : 'Manual'
-
+      const isDigital = source === 'Scan' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
@@ -158,7 +158,7 @@ export function IndexComponent({
                       | {source}
                     </Fragment>
                   ) : (
-                      source
+                      source === 'Scan' && isDigital !== null ? `${isDigital ? 'Digital' : 'Print'} Scan` : source
                     )}{' '}
                   |{' '}
                   <span
