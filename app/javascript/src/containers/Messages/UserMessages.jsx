@@ -23,14 +23,22 @@ export default function UserMessages() {
     const { loading, error, data, refetch } = useQuery(UserMessageQuery, { variables: { id } })
     const [messageCreate] = useMutation(MessageCreate)
     const [message, setMessage] = useState('')
+    const [isMsgLoading, setLoading] = useState(false)
+    const [errmsg, setError] = useState('')
     const authState = useContext(AuthStateContext)
     const { state } = useLocation()
 
     function sendMessage() {
-        const receiver = state.clientNumber || ''
+        setLoading(true)
+        const receiver = state && state.clientNumber || ''
+        if (!message.length) {
+            setError('The message must contain some text')
+            return
+        }
         messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
             setMessage('')
             refetch()
+            setLoading(false)
         })
     }
 
@@ -64,7 +72,7 @@ export default function UserMessages() {
                                     secondary={message.message}
                                 />
                             </ListItem>
-                        )) : <p className="text-center"><span >{state.from === 'contact' ? 'Send Message to Support, You should receive an answer soon' : `There are no messages yet for ${state.clientName}`}</span></p>
+                        )) : <p className="text-center"><span >{state && state.from === 'contact' ? 'Send Message to Support, You should receive an answer soon' : `There are no messages yet for ${state.clientName}`}</span></p>
                     }
 
                 </List>
@@ -96,10 +104,14 @@ export default function UserMessages() {
             <Button
                 color="primary"
                 onClick={sendMessage}
+                disabled={isMsgLoading}
                 style={{ marginTop: -37, marginRight: 34, float: 'right' }}
             >
                 Send
                 </Button>
+            {
+                errmsg && <p className="text-center text-danger">{errmsg}</p>
+            }
         </Fragment>
     )
 }
