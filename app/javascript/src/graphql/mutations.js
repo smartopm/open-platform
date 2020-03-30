@@ -155,8 +155,8 @@ export const AttachAvatar = gql`
 export const AddActivityLog = gql`
   mutation ActivityLogMutation(
     $userId: ID!
-    $timestamp: String!
-    $digital: Boolean!
+    $timestamp: String
+    $digital: Boolean
     $note: String
   ) {
     activityLogAdd(

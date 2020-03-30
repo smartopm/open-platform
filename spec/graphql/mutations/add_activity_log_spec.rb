@@ -11,7 +11,7 @@ RSpec.describe Mutations::ActivityLog::Add do
 
     let(:query) do
       <<~GQL
-        mutation AddActivityLogMutation($userId: ID!, $timestamp: String!, $digital: Boolean!, $note: String) {
+        mutation AddActivityLogMutation($userId: ID!, $timestamp: String, $digital: Boolean, $note: String) {
           activityLogAdd(userId: $userId, timestamp: $timestamp, digital: $digital, note: $note) {
             eventLog {
               actingUser {
