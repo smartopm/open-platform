@@ -68,7 +68,9 @@ export function IndexComponent({
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? 'Digital' : 'Print'} Scan` : 'N/A'}</td>
-        <td>{entry.subject === 'user_entry' && entry.data.timestamp ? `${entry.data.timestamp && new Date(Number(entry.data.timestamp)).toLocaleDateString()} ` : 'N/A'}</td>
+        <td>{entry.subject === 'user_entry' && entry.data.timestamp
+          ? `${entry.data.timestamp && `${new Date(Number(entry.data.timestamp)).toLocaleDateString()} 
+            ${new Date(Number(entry.data.timestamp)).toLocaleTimeString()}`} ` : 'N/A'}</td>
         <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
       </tr>
     ));
