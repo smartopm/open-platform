@@ -32,11 +32,16 @@ import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
 
 
-export default ({ match, history }) => {
-  const id = match.params.id
+export default ({ history }) => {
+  const { id, dg, tm } = useParams() // get timestamp and dg 
+
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(UserQuery, {
-    variables: { id }
+    variables: {
+      id,
+      digital: Boolean(dg) || false,
+      timestamp: tm
+    }
   })
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: { userId: id }
@@ -88,10 +93,8 @@ export function Component({
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
-  // eslint-disable-next-line
-  const params = useParams() // get timestamp and dg 
-  // pass timestamp and dg=true to the addActivityLog mutation
-  // save that in the eventlogs and identify back on the front-end
+
+
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
