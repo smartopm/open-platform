@@ -22,10 +22,14 @@ before_script:
   - yarn install
 
 test:
-  rails_coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
   script:
     - yarn lint
     - yarn test
     - bundle exec rake lint
     - bundle exec rake
+   artifacts:
+    paths:
+      - "coverage/"
+    name: "Pipeline $CI_PIPELINE_ID Coverage Report"
 
