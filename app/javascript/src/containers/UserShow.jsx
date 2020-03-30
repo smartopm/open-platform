@@ -34,17 +34,16 @@ import { ponisoNumber } from '../utils/constants.js'
 
 export default ({ history }) => {
   const { id, dg, tm } = useParams() // get timestamp and dg 
-
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(UserQuery, {
+    variables: { id }
+  })
+  const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
-      id,
+      userId: id,
       digital: Boolean(dg) || false,
       timestamp: tm
     }
-  })
-  const [addLogEntry, entry] = useMutation(AddActivityLog, {
-    variables: { userId: id }
   })
   const [deleteUser] = useMutation(DeleteUser, {
     variables: { id: id },
