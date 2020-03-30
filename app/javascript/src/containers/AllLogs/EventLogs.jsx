@@ -6,6 +6,8 @@ import Loading from "../../components/Loading.jsx";
 import DateUtil from "../../utils/dateutil.js";
 import { AllEventLogsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
+import GetAppIcon from '@material-ui/icons/GetApp';
+import Fab from "@material-ui/core/Fab";
 
 export default ({ history }) => {
   const authState = useContext(AuthStateContext);
@@ -80,9 +82,6 @@ export function IndexComponent({
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
-      <div>
-        <a href={`/ csv_export / event_logs ? token = ${userToken}`}>Download</a>
-      </div>
       <div className="row justify-content-center">
         <div className="col-11 col-sm-11 table-responsive">
           <table className="table">
@@ -116,7 +115,22 @@ export function IndexComponent({
               </li>
             </ul>
           </nav>
+
         </div>
+        <Fab
+          variant="extended"
+          style={{
+            position: 'fixed',
+            bottom: 24,
+            right: 57,
+            backgroundColor: 'rgb(37, 192, 176)',
+            color: '#FFFFFF'
+          }}
+          href={`/csv_export/event_logs?token=${userToken}`}
+        >
+          <GetAppIcon />
+          {' '}Download
+      </Fab>
       </div>
     </div >
   );
