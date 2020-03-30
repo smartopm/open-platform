@@ -28,7 +28,7 @@ test:
     - yarn test
     - bundle exec rake lint
     - bundle exec rake
-   artifacts:
+  artifacts:
     paths:
       - "coverage/"
     name: "Pipeline $CI_PIPELINE_ID Coverage Report"
