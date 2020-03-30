@@ -30,7 +30,7 @@ module Mutations
                      ref_id: user.id,
                      ref_type: 'User',
                      data: { ref_name: user.name, note: note, type: user.user_type,
-                              timestamp: timestamp, digital: digital })
+                             timestamp: timestamp, digital: digital })
       end
 
       def send_notifications(number)
