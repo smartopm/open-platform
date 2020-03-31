@@ -33,8 +33,8 @@ const allEventLogs = (history, authState) => {
       return;
     }
     setOffset(offset - limit);
-    
-    
+
+
   }
   return (
     <IndexComponent
@@ -71,8 +71,8 @@ export function IndexComponent({
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? 'Digital' : 'Print'} Scan` : 'N/A'}</td>
         <td>{entry.subject === 'user_entry' && entry.data.timestamp
-          ? `${entry.data.timestamp && `${new Date(Number(entry.data.timestamp)).toLocaleDateString()} 
-            ${new Date(Number(entry.data.timestamp)).toLocaleTimeString()}`} ` : 'N/A'}</td>
+          ? `${entry.data.timestamp && `${DateUtil.dateToString(new Date(Number(entry.data.timestamp)))} 
+            ${DateUtil.dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}</td>
         <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
       </tr>
     ));

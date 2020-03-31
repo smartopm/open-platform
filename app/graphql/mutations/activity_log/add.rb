@@ -6,13 +6,13 @@ module Mutations
     class Add < BaseMutation
       argument :user_id, ID, required: true
       argument :note, String, required: false
-      argument :timestamp, String, required: true
-      argument :digital, Boolean, required: true
+      argument :timestamp, String, required: false
+      argument :digital, Boolean, required: false
 
       field :user, Types::UserType, null: true
       field :event_log, Types::EventLogType, null: true
 
-      def resolve(user_id:, note: nil, timestamp:, digital:)
+      def resolve(user_id:, note: nil, timestamp: nil, digital: nil)
         user = ::User.find(user_id)
         raise GraphQL::ExecutionError, 'User not found' unless user
 
