@@ -6,6 +6,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
 import DateUtil from '../../utils/dateutil.js'
+import { isYesterday, isToday } from 'date-fns'
 
 export default function UserMessageItem({
   id,
@@ -43,9 +44,11 @@ export default function UserMessageItem({
                   float: 'right'
                 }}
               >
-                {`${DateUtil.dateToString(
-                  new Date(dateMessageCreated)
-                )} ${DateUtil.dateTimeToString(new Date(dateMessageCreated))} `}
+                {isToday(new Date(dateMessageCreated))
+                  ? DateUtil.dateTimeToString(new Date(dateMessageCreated))
+                  : isYesterday(new Date(dateMessageCreated))
+                  ? 'Yesterday'
+                  : DateUtil.dateToString(new Date(dateMessageCreated))}
               </span>
             </span>
           </React.Fragment>
