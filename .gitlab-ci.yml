@@ -21,35 +21,23 @@ before_script:
   - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
   - yarn install
 
-rspec:
-  stage: test
-  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
-  script:
-    - bundle exec rake lint
-    - bundle exec rake
-  artifacts:
-    paths:
-      - "coverage/rspec"
-    name: "Pipeline $CI_PIPELINE_ID Coverage Report"
-    expire_in: 60 sec
-
-jest:
+mrspec:
   stage: test
   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
   script:
     - yarn lint
     - yarn test --coverage
+    - bundle exec rake lint
+    - bundle exec rake
   artifacts:
     paths:
-      - "coverage/jest"
+      - "coverage"
     name: "Pipeline $CI_PIPELINE_ID Coverage Report"
     expire_in: 60 sec
-
-pages:
-  stage: test
-  script:
-    - mv coverage/ public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 5 mins
+  pages:
+    script:
+      - mv coverage/ public/
+    artifacts:
+      paths:
+        - public
+      expire_in: 5 mins
