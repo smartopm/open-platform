@@ -289,8 +289,9 @@ export const UpdateNote = gql`
     $body: String
     $flagged: Boolean
     $completed: Boolean
+    $dueDate: String
   ) {
-    noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed) {
+    noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed, dueDate: $dueDate) {
       note {
         flagged
         body

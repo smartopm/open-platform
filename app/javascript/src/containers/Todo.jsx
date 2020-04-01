@@ -37,23 +37,29 @@ export default function Todo({ history }) {
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
   const [noteUpdate] = useMutation(UpdateNote)
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [userId, setUserId] = React.useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   function todoAction(id, isCompleted) {
     setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
+    noteUpdate({ variables: { userId, completed: !isCompleted } }).then(() => {
       setLoading(false)
       refetch()
     })
   }
 
-  function handleModal() {
-
+  function handleModal(id) {
+    setUserId(id)
     setIsDialogOpen(!isDialogOpen)
   }
 
   function saveDate() {
 
+    noteUpdate({variables: {userId, dueDate: selectedDate}}).then(() => {
+      refetch()
+      setIsDialogOpen(!isDialogOpen)
+      
+    })
 
   }
 
@@ -126,7 +132,7 @@ export default function Todo({ history }) {
                       </span>
                     </label>
                     <span style={{ float: 'right' }}>
-                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={handleModal} />}
+                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={()=>handleModal(note.id)} />}
                     </span>
                     <br />
 
