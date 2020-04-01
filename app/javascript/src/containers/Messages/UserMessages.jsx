@@ -47,7 +47,11 @@ export default function UserMessages() {
 
   return (
     <Fragment>
-      <Nav navName="My Messages" menuButton="back" />
+      <Nav navName="Messages History" menuButton="back">
+        <span className="text-center text-white">
+          {(state && state.clientName) || ''}
+        </span>
+      </Nav>
       <div className={css(styles.messageSection)}>
         <List>
           {data.userMessages.length ? (
