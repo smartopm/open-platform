@@ -54,7 +54,7 @@ test:rspec:
     paths:
       - "coverage/"
     name: "Rails $CI_PIPELINE_ID Coverage Report"
-    expire_in: 200 sec
+    expire_in: 24 hours
 
 test:jest:
   extends: .base_db
@@ -68,4 +68,4 @@ test:jest:
     paths:
       - "coverage/"
     name: "Jest $CI_PIPELINE_ID Coverage Report"
-    expire_in: 200 sec
+    expire_in: 24 hours
