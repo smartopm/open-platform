@@ -8,10 +8,11 @@ import React, {
 import { Redirect } from "react-router-dom";
 import { Button, CircularProgress } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useMutation } from "react-apollo";
-import { loginPhoneConfirmCode } from "../../graphql/mutations";
+import { loginPhoneConfirmCode, loginPhone } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
+import useTimer from "../../utils/customHooks";
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7];
 
@@ -19,8 +20,12 @@ export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext);
   const { id } = match.params;
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
+  const [resendCodeToPhone] = useMutation(loginPhone);
   const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { state } = useLocation()
+  const timer = useTimer(10, 1000)
 
   // generate refs to use later
   let elementsRef = useRef(randomCodeData.map(() => createRef()));
@@ -33,6 +38,19 @@ export default function ConfirmCodeScreen({ match }) {
       elementsRef.current[1].current.focus();
     }
   }, []);
+
+  function resendCode() {
+    setIsLoading(true);
+    resendCodeToPhone({
+      variables: { phoneNumber: state.phoneNumber }
+    }).then(() => {
+      setIsLoading(false);
+      setMsg(`We have resent the code to +${state.phoneNumber}`)
+    }).catch(error => {
+      setError(error.message);
+      setIsLoading(false);
+    });
+  }
 
   function handleConfirmCode() {
     setIsLoading(true);
@@ -66,7 +84,7 @@ export default function ConfirmCodeScreen({ match }) {
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    return <Redirect to="/" />;
+    return <Redirect to={state.from} />;
   }
 
   return (
@@ -109,7 +127,11 @@ export default function ConfirmCodeScreen({ match }) {
 
         <br />
         <br />
+
+
+
         {error && <p className="text-center text-danger">{error}</p>}
+        {msg && <p className="text-center text-primary">{msg}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
             styles.linksSection
@@ -129,6 +151,25 @@ export default function ConfirmCodeScreen({ match }) {
               )}
           </Button>
         </div>
+
+        {/* show a button to re-send code */}
+        {
+          timer === 0 && (
+            <div
+              className={`row justify-content-center align-items-center ${css(
+                styles.linksSection
+              )}`}
+            >
+              <Button
+                onClick={resendCode}
+                disabled={isLoading}
+              >
+                {isLoading ? 'loading ...' : 'Re-send the code'}
+
+              </Button>
+            </div>
+          )
+        }
       </div>
     </div>
   );

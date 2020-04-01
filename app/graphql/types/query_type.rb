@@ -5,7 +5,8 @@ module Types
   class QueryType < Types::BaseObject
     include Types::Queries::EventLog
     include Types::Queries::EntryRequest
-    # include Types::Queries::Feedback
+    include Types::Queries::Message
+    include Types::Queries::Showroom
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -84,7 +85,7 @@ module Types
       User.where(
         community_id: context[:current_user].community_id,
         user_type: 'security_guard',
-      )
+      ).order(name: :asc)
     end
 
     field :all_notes, [NoteType], null: false do

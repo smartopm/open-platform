@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
-import { makeStyles } from "@material-ui/core/styles";
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useQuery, useMutation } from 'react-apollo'
 import { formatDistance } from 'date-fns'
@@ -11,6 +10,7 @@ import ErrorPage from '../components/Error'
 import { UpdateNote } from '../graphql/mutations'
 import EditIcon from '@material-ui/icons/Edit';
 import { ModalDialog } from '../components/Dialog'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -31,12 +31,12 @@ const useStyles = makeStyles({
 
 
 export default function Todo({ history }) {
-  const classes = useStyles();
+  const classes = useStyles()
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
   const [noteUpdate] = useMutation(UpdateNote)
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [userId, setUserId] = React.useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -54,17 +54,19 @@ export default function Todo({ history }) {
   }
 
   function saveDate() {
+    console.log(new Date(selectedDate).toUTCString());
+    
 
-    noteUpdate({variables: {userId, dueDate: selectedDate}}).then(() => {
+    noteUpdate({ variables: { userId, dueDate: selectedDate } }).then(() => {
       refetch()
       setIsDialogOpen(!isDialogOpen)
-      
+
     })
 
   }
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(new Date(date).toISOString());
   };
   if (authState.user.userType !== 'admin') {
     // re-route to home
@@ -85,7 +87,7 @@ export default function Todo({ history }) {
 
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-              disableToolbar
+              
               variant="inline"
               format="MM/dd/yyyy"
               margin="normal"
@@ -132,38 +134,47 @@ export default function Todo({ history }) {
                       </span>
                     </label>
                     <span style={{ float: 'right' }}>
-                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={()=>handleModal(note.id)} />}
+                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={() => handleModal(note.id)} />}
                     </span>
                     <br />
+                    <br />
+                    <span>
+                      By {' '}
+                      <i>
+                        {note.author.name}
+                      </i>
+                    </span>
+                   
+                  <br />
 
-                    <br />
-                    <span style={{ marginRight: 10 }}>
-                      Created  {' '}
-                      <i>
-                        {
-                          formatDistance(
-                            new Date(note.createdAt),
-                            new Date(),
-                            { addSuffix: true, includeSeconds: true }
-                          )
-                        }
-                      </i>
-                    </span>
-                    <span style={{ float: 'right' }}>
-                      Associated with {' '}
-                      <i>
-                        {note.user.name}
-                      </i>
-                    </span>
-                  </div>
                   <br />
-                  <br />
-                </li>
-              ))
-            ) : (
-                  <span>No Actions yet</span>
-                )}
-          </ul>
+                  <span style={{ marginRight: 10 }}>
+                    Created  {' '}
+                    <i>
+                      {
+                        formatDistance(
+                          new Date(note.createdAt),
+                          new Date(),
+                          { addSuffix: true, includeSeconds: true }
+                        )
+                      }
+                    </i>
+                  </span>
+                  <span style={{ float: 'right' }}>
+                    Associated with {' '}
+                    <i>
+                      {note.user.name}
+                    </i>
+                  </span>
+                </div>
+                <br />
+                <br />
+              </li>
+            ))
+          ) : (
+                <span>No Actions yet</span>
+              )}
+        </ul>
         </div>
       </div>
     </Fragment>

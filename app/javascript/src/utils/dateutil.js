@@ -40,7 +40,11 @@ function formatDate(datetime) {
   if (datetime) {
     const date = fromISO8601(datetime)
     return (
-      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+      date.getFullYear() +
+      '-' +
+      pad('00', date.getMonth() + 1) +
+      '-' +
+      pad('00', date.getDate())
     )
   }
   return 'Never'

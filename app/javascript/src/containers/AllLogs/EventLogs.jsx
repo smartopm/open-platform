@@ -6,6 +6,8 @@ import Loading from "../../components/Loading.jsx";
 import DateUtil from "../../utils/dateutil.js";
 import { AllEventLogsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
+import GetAppIcon from '@material-ui/icons/GetApp';
+import Fab from "@material-ui/core/Fab";
 
 export default ({ history }) => {
   const authState = useContext(AuthStateContext);
@@ -31,6 +33,8 @@ const allEventLogs = (history, authState) => {
       return;
     }
     setOffset(offset - limit);
+
+
   }
   return (
     <IndexComponent
@@ -65,6 +69,10 @@ export function IndexComponent({
         </td>
         <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
         <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
+        <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? 'Digital' : 'Print'} Scan` : 'N/A'}</td>
+        <td>{entry.subject === 'user_entry' && entry.data.timestamp
+          ? `${entry.data.timestamp && `${DateUtil.dateToString(new Date(Number(entry.data.timestamp)))} 
+            ${DateUtil.dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}</td>
         <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
       </tr>
     ));
@@ -78,11 +86,8 @@ export function IndexComponent({
       >
         <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
       </div>
-      <div>
-        <a href={`/csv_export/event_logs?token=${userToken}`}>Download</a>
-      </div>
       <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6 table-responsive">
+        <div className="col-11 col-sm-11 table-responsive">
           <table className="table">
             <thead>
               <tr>
@@ -90,6 +95,8 @@ export function IndexComponent({
                 <th scope="col">Description</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
+                <th scope="col">Scan Type</th>
+                <th scope="col">QR Timestamp</th>
                 <th scope="col">User Type</th>
               </tr>
             </thead>
@@ -112,8 +119,23 @@ export function IndexComponent({
               </li>
             </ul>
           </nav>
+
         </div>
+        <Fab
+          variant="extended"
+          style={{
+            position: 'fixed',
+            bottom: 24,
+            right: 57,
+            backgroundColor: 'rgb(37, 192, 176)',
+            color: '#FFFFFF'
+          }}
+          href={`/csv_export/event_logs?token=${userToken}`}
+        >
+          <GetAppIcon />
+          {' '}Download
+      </Fab>
       </div>
-    </div>
+    </div >
   );
 }

@@ -39,6 +39,7 @@ yarn-debug.log*
 /certs/vpn.dgdp.site/privkey.pem
 /certs/olivier.dgdp.site/privkey.pem
 /certs/dennis.dgdp.site/privkey.pem
+/certs/nick.dgdp.site/privkey.pem
 
 # .env files for local development
 .env.*.local

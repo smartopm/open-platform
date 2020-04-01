@@ -10,13 +10,8 @@ import ErrorPage from '../components/Error.jsx'
 import { isTimeValid } from './Requests/RequestUpdate.jsx'
 
 function qrCodeAddress(id_card_token) {
-  return (
-    window.location.protocol +
-    '//' +
-    window.location.hostname +
-    '/user/' +
-    id_card_token
-  )
+  const timestamp = Date.now()
+  return `${window.location.protocol}//${window.location.hostname}/user/${id_card_token}/${timestamp}/dg`
 }
 
 export default () => {
