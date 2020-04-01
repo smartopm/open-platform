@@ -2,7 +2,6 @@ stages:
   - build
   - test
   - report
-  - deploy
 
 image: "ruby:2.6"
 
@@ -70,16 +69,3 @@ test:jest:
       - "coverage/"
     name: "Jest $CI_PIPELINE_ID Coverage Report"
     expire_in: 200 sec
-
-pages:
-  extends: .base_minimal
-  stage: report
-  script:
-    - mv coverage/lcov-report public/lcov-report
-    - mv coverage/clover.xml public/lcov-report/clover.xml
-    - mv coverage/coverage-final.json public/lcov-report/coverage-final.json
-    - mv coverage/lcov.info public/lcov-report/lcov.info
-    - mv coverage/ public/rspec
-  artifacts:
-    paths:
-      - public
