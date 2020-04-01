@@ -10,12 +10,11 @@ import { MessageCreate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../../components/Avatar'
-import { formatDistance } from 'date-fns'
 import { css, StyleSheet } from 'aphrodite'
 import Nav from '../../components/Nav'
+import UserMessageItem from '../../components/Messaging/UserMessageItem'
 
 export default function UserMessages() {
   const { id } = useParams()
@@ -48,7 +47,7 @@ export default function UserMessages() {
 
   return (
     <Fragment>
-      <Nav navName="Message History" menuButton="back">
+      <Nav navName="Messages History" menuButton="back">
         <span className="text-center text-white">
           {(state && state.clientName) || ''}
         </span>
@@ -57,27 +56,16 @@ export default function UserMessages() {
         <List>
           {data.userMessages.length ? (
             data.userMessages.map(message => (
-              <ListItem alignItems="flex-start" key={message.id}>
-                <ListItemAvatar style={{ marginRight: 10 }}>
-                  <Avatar user={message.sender} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <React.Fragment>
-                      <span>
-                        {message.sender.name}
-                        <span className={css(styles.timeStamp)}>
-                          {`${formatDistance(
-                            new Date(message.createdAt),
-                            new Date()
-                          )} ago`}
-                        </span>
-                      </span>
-                    </React.Fragment>
-                  }
-                  secondary={message.message}
-                />
-              </ListItem>
+              <UserMessageItem
+                key={message.id}
+                id={message.sender.id}
+                name={message.sender.name}
+                user={message.sender}
+                message={message.message}
+                clientNumber={message.sender.phoneNumber}
+                dateMessageCreated={message.createdAt}
+                isTruncate={false}
+              />
             ))
           ) : (
             <p className="text-center">
