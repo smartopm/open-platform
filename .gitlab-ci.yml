@@ -46,6 +46,7 @@ image: "ruby:2.6"
 test:rspec:
   extends: .base_db
   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+  stage: test
   allow_failure: false
   script:
     - bundle exec rake lint
@@ -74,7 +75,11 @@ pages:
   extends: .base_minimal
   stage: report
   script:
-    - mv coverage/ public/
+    - mv coverage/lcov-report public/lcov-report
+    - mv coverage/lcov-report/clover.xml public/lcov-report/clover.xml
+    - mv coverage/lcov-report/coverage-final.json public/lcov-report/coverage-final.json
+    - mv coverage/lcov-report/lcov.info public/lcov-report/lcov.info
+    - mv coverage/ public/rspec
   artifacts:
     paths:
       - public
