@@ -43,13 +43,10 @@ export default function UserMessageItem({
             <span>
               {name}
               <span className={css(styles.timeStamp)}>
-                {isToday(new Date(dateMessageCreated))
-                  ? `Today at ${DateUtil.dateTimeToString(
-                      new Date(dateMessageCreated)
-                    )}`
-                  : isYesterday(new Date(dateMessageCreated))
-                  ? 'Yesterday'
-                  : DateUtil.dateToString(new Date(dateMessageCreated))}
+                <DateContainer
+                  date={dateMessageCreated}
+                  isComplex={isTruncate}
+                />
               </span>
             </span>
           </React.Fragment>
@@ -68,6 +65,26 @@ function truncateString(message) {
   if (!message) return
   if (message.length <= 40) return message
   return `${message.substring(0, 40)}...`
+}
+
+export function DateContainer({ date, isComplex }) {
+  if (isComplex) {
+    return (
+      <span>
+        {isToday(new Date(date))
+          ? `Today at ${DateUtil.dateTimeToString(new Date(date))}`
+          : isYesterday(new Date(date))
+          ? 'Yesterday'
+          : DateUtil.dateToString(new Date(date))}
+      </span>
+    )
+  }
+  return (
+    <span>
+      {`${DateUtil.dateToString(new Date(date))} 
+            ${DateUtil.dateTimeToString(new Date(date))}`}
+    </span>
+  )
 }
 
 UserMessageItem.propTypes = {
