@@ -34,10 +34,11 @@ mrspec:
       - "coverage"
     name: "Pipeline $CI_PIPELINE_ID Coverage Report"
     expire_in: 60 sec
-  pages:
-    script:
-      - mv coverage/ public/
-    artifacts:
-      paths:
-        - public
-      expire_in: 5 mins
+
+pages:
+  stage: deploy
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
