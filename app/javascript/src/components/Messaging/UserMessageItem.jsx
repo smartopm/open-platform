@@ -7,6 +7,7 @@ import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
 import DateUtil from '../../utils/dateutil.js'
 import { isYesterday, isToday } from 'date-fns'
+import { css, StyleSheet } from 'aphrodite'
 
 export default function UserMessageItem({
   id,
@@ -14,11 +15,13 @@ export default function UserMessageItem({
   user,
   message,
   clientNumber,
-  dateMessageCreated
+  dateMessageCreated,
+  isTruncate
 }) {
   let history = useHistory()
 
-  function readMessages() {
+  function handleReadMessages() {
+    if (!isTruncate) return // we will be on user messages page
     history.push({
       pathname: `/message/${id}`,
       state: {
@@ -30,7 +33,7 @@ export default function UserMessageItem({
   }
 
   return (
-    <ListItem alignItems="flex-start" onClick={readMessages}>
+    <ListItem alignItems="flex-start" onClick={handleReadMessages}>
       <ListItemAvatar>
         <Avatar user={user} />
       </ListItemAvatar>
@@ -39,13 +42,7 @@ export default function UserMessageItem({
           <React.Fragment>
             <span>
               {name}
-              <span
-                style={{
-                  float: 'right',
-                  fontSize: 14,
-                  color: '#737380'
-                }}
-              >
+              <span className={css(styles.timeStamp)}>
                 {isToday(new Date(dateMessageCreated))
                   ? `Today at ${DateUtil.dateTimeToString(
                       new Date(dateMessageCreated)
@@ -58,7 +55,9 @@ export default function UserMessageItem({
           </React.Fragment>
         }
         secondary={
-          <React.Fragment>{`  ${truncateString(message)}`}</React.Fragment>
+          <React.Fragment>{`  ${
+            isTruncate ? truncateString(message) : message
+          }`}</React.Fragment>
         }
       />
     </ListItem>
@@ -77,5 +76,18 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
-  dateMessageCreated: PropTypes.string
+  dateMessageCreated: PropTypes.string,
+  isTruncate: PropTypes.bool.isRequired
 }
+
+const styles = StyleSheet.create({
+  timeStamp: {
+    float: 'right',
+    fontSize: 14,
+    color: '#737380'
+  },
+  messageSection: {
+    overflow: 'auto',
+    maxHeight: '74vh'
+  }
+})
