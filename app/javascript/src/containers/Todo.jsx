@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
-import { makeStyles } from "@material-ui/core/styles";
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useQuery, useMutation } from 'react-apollo'
 import { formatDistance } from 'date-fns'
@@ -9,14 +8,13 @@ import { flaggedNotes } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UpdateNote } from '../graphql/mutations'
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from '../components/Dialog'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns';
-
+import DateFnsUtils from '@date-io/date-fns'
 
 const useStyles = makeStyles({
   root: {
@@ -26,17 +24,16 @@ const useStyles = makeStyles({
     width: '100%',
     overflowX: 'auto'
   }
-
-});
-
+})
 
 export default function Todo({ history }) {
-  const classes = useStyles();
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
   const [noteUpdate] = useMutation(UpdateNote)
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date('2014-08-18T21:11:54')
+  )
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   function todoAction(id, isCompleted) {
@@ -48,18 +45,14 @@ export default function Todo({ history }) {
   }
 
   function handleModal() {
-
     setIsDialogOpen(!isDialogOpen)
   }
 
-  function saveDate() {
+  function saveDate() {}
 
-
+  const handleDateChange = date => {
+    setSelectedDate(date)
   }
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
   if (authState.user.userType !== 'admin') {
     // re-route to home
     history.push('/')
@@ -71,12 +64,11 @@ export default function Todo({ history }) {
     <Fragment>
       <Nav navName="Todo" menuButton="back" />
       <div className="container">
-
-        <ModalDialog open={isDialogOpen}
+        <ModalDialog
+          open={isDialogOpen}
           handleClose={handleModal}
           handleConfirm={saveDate}
         >
-
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               disableToolbar
@@ -88,7 +80,7 @@ export default function Todo({ history }) {
               value={selectedDate}
               onChange={handleDateChange}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -100,7 +92,6 @@ export default function Todo({ history }) {
               <Loading />
             ) : data.flaggedNotes.length ? (
               data.flaggedNotes.map(note => (
-
                 <li key={note.id} className={`${css(styles.listItem)} card`}>
                   <div className="custom-control custom-checkbox text">
                     <input
@@ -113,50 +104,41 @@ export default function Todo({ history }) {
                     <label
                       className="custom-control-label"
                       htmlFor={`todo-check-${note.id}`}
-                      style={{ textDecoration: note.completed && 'line-through', fontSize: 17 }}
+                      style={{
+                        textDecoration: note.completed && 'line-through',
+                        fontSize: 17
+                      }}
                     >
-                      {note.body}  {'  '}
+                      {note.body} {'  '}
                       <br />
                       <br />
                       <span>
-                        By {' '}
-                        <i>
-                          {note.author.name}
-                        </i>
+                        By <i>{note.author.name}</i>
                       </span>
                     </label>
                     <span style={{ float: 'right' }}>
-                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={handleModal} />}
+                      {note.dueDate || (
+                        <EditIcon
+                          fontSize="small"
+                          color="inherit"
+                          onClick={handleModal}
+                        />
+                      )}
                     </span>
                     <br />
-
                     <br />
-                    <span style={{ marginRight: 10 }}>
-                      Created  {' '}
-                      <i>
-                        {
-                          formatDistance(
-                            new Date(note.createdAt),
-                            new Date(),
-                            { addSuffix: true, includeSeconds: true }
-                          )
-                        }
-                      </i>
+                    <span>
+                      By <i>{note.author.name}</i>
                     </span>
-                    <span style={{ float: 'right' }}>
-                      Associated with {' '}
-                      <i>
-                        {note.user.name}
-                      </i>
-                    </span>
-                  </div>
+                  </label>
                   <br />
+
                   <br />
                 </li>
               ))
             ) : (
-                  <span>No Actions yet</span>
-                )}
+              <span>No Actions yet</span>
+            )}
           </ul>
         </div>
       </div>

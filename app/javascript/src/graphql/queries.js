@@ -165,5 +165,75 @@ export const UsersQuery = gql`
       ...UserFields
     }
   }
+
   ${UserFragment.publicFields}
+`
+
+export const ShowroomEntriesQuery = gql`
+  {
+    showroomEntries {
+      id
+      name
+      phoneNumber
+      createdAt
+      email
+      nrc
+      reason
+      source
+      homeAddress
+    }
+  }
+`
+// don't put in fragments to avoid high load of user data
+// export const MessagesQuery = gql`
+// query usersMessages($limit: Int, $offset: Int) {
+//   users(limit: $limit, offset: $offset) {
+//       id
+//       name
+//       imageUrl
+//       phoneNumber
+//       messages {
+//         id
+//         message
+//         createdAt
+//         user {
+//           name
+//           imageUrl
+//           phoneNumber
+//           id
+//         }
+//       }
+//       messagesCount
+//     }
+//   }
+// `
+
+export const MessagesQuery = gql`
+  query messages($limit: Int, $offset: Int) {
+    messages(limit: $limit, offset: $offset) {
+      id
+      message
+      createdAt
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${UserFragment.publicFields}
+`
+
+export const UserMessageQuery = gql`
+  query userMessages($id: ID!) {
+    userMessages(id: $id) {
+      id
+      message
+      createdAt
+      sender {
+        name
+        id
+        avatarUrl
+        imageUrl
+      }
+    }
+  }
 `

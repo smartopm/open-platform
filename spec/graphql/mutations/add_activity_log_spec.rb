@@ -11,12 +11,13 @@ RSpec.describe Mutations::ActivityLog::Add do
 
     let(:query) do
       <<~GQL
-        mutation AddActivityLogMutation($userId: ID!, $note: String) {
-          activityLogAdd(userId: $userId, note: $note) {
+        mutation AddActivityLogMutation($userId: ID!, $timestamp: String, $digital: Boolean, $note: String) {
+          activityLogAdd(userId: $userId, timestamp: $timestamp, digital: $digital, note: $note) {
             eventLog {
               actingUser {
                 id
               }
+              data
               id
             }
           }
@@ -27,6 +28,8 @@ RSpec.describe Mutations::ActivityLog::Add do
     it 'returns should create an activity log' do
       variables = {
         userId: user.id,
+        timestamp: (Time.now.to_f * 1000).floor.to_s,
+        digital: true,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -35,6 +38,8 @@ RSpec.describe Mutations::ActivityLog::Add do
       expect(result.dig('errors')).to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'actingUser', 'id')).to eql user.id
+      expect(result.dig('data', 'activityLogAdd', 'eventLog', 'data')).not_to be_nil
+      expect(result.dig('data', 'activityLogAdd', 'eventLog', 'data', 'digital')).to eql true
     end
 
     it 'returns should not create an invalid activity log' do

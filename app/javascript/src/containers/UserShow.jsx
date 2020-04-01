@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
@@ -32,14 +32,18 @@ import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
 
 
-export default ({ match, history }) => {
-  const id = match.params.id
+export default ({ history }) => {
+  const { id, dg, tm } = useParams() // get timestamp and dg 
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id }
   })
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
-    variables: { userId: id }
+    variables: {
+      userId: id,
+      digital: Boolean(dg) || false,
+      timestamp: tm
+    }
   })
   const [deleteUser] = useMutation(DeleteUser, {
     variables: { id: id },
@@ -88,6 +92,8 @@ export function Component({
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
+
+
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
@@ -184,7 +190,7 @@ export function Component({
                   authState.user.userType === 'security_guard' ? (
                     <MenuItem key={'log_entry'} onClick={onLogEntry}>
                       Log This Entry
-                  </MenuItem>
+                    </MenuItem>
                   ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
@@ -205,6 +211,21 @@ export function Component({
                         className={css(styles.linkItem)}
                       >
                         Edit
+                      </Link>
+                    </MenuItem>
+                    <MenuItem key={'send_sms'}>
+                      <Link
+                        to={{
+                          pathname: `/message/${data.user.id}`,
+                          state: {
+                            clientNumber: data.user.phoneNumber,
+                            clientName: data.user.name,
+                            from: 'user_profile'
+                          }
+                        }}
+                        className={css(styles.linkItem)}
+                      >
+                        Send SMS to {data.user.name}
                       </Link>
                     </MenuItem>
 
@@ -381,7 +402,7 @@ export function Component({
             {isLoading ? (
               <Loading />
             ) : data.user.notes ? (
-              data.user.notes.reverse().map(note => (
+              data.user.notes.map(note => (
                 <Fragment key={note.id}>
                   <div className={css(styles.commentBox)}>
                     <p className="comment">{note.body}</p>
@@ -393,7 +414,7 @@ export function Component({
                       className={css(styles.actionIcon)}
                       onClick={() => handleOnComplete(note.id, note.completed)}
                     >
-                      <Tooltip title="Mark this note as uncomplete">
+                      <Tooltip title="Mark this note as incomplete">
                         <CheckBoxIcon />
                       </Tooltip>
                     </span>

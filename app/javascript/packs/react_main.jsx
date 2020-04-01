@@ -56,7 +56,9 @@ import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
 import AllNotes from '../src/containers/Activity/AllNotes'
 import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users';
-import Messages from '../src/containers/Messages';
+import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
+import AllMessages from '../src/containers/Messages/AllMessages';
+import UserMessages from '../src/containers/Messages/UserMessages';
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -90,7 +92,10 @@ const LoggedInOnly = props => {
   if (authState.loggedIn) {
     return props.children
   }
-  return <Redirect to="/login" />
+  return <Redirect to={{
+    pathname: '/login',
+    state: { from: props.location }
+  }} />
 }
 
 const Logout = () => {
@@ -161,11 +166,11 @@ const App = () => {
                       component={PendingUsers}
                     />
                     <Route path="/user/new" exact component={UserEdit} />
-                    <Route path="/user/:id" exact component={UserShow} />
+                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
                     <Route path="/user/:id/logs" exact component={UserLogs} />
                     <Route path="/user/:id/edit" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
-                    <Route path="/support" component={Support} />
+                    <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     {/* new routes => guards */}
@@ -190,6 +195,7 @@ const App = () => {
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
+                    <Route path="/showroom_logs" component={ShowroomLogs} />
 
                     {/* activity */}
                     <Route path="/todo" component={Todo} />
@@ -199,7 +205,9 @@ const App = () => {
                     <Route path="/feedbacks" component={FeedbackPage} />
 
                     {/* {SMS page} */}
-                    <Route path="/messages" component={Messages} />
+                    {/* <Route path="/messages" component={Messages} /> */}
+                    <Route path="/messages" component={AllMessages} />
+                    <Route path="/message/:id" component={UserMessages} />
 
                     {/* users */}
                     <Route path="/users" component={UsersList} />

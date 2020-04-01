@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { allFeedback } from '../../graphql/queries'
@@ -7,15 +7,20 @@ import ErrorPage from '../../components/Error'
 import { formatISO9075 } from 'date-fns'
 import ThumbDownIcon from '@material-ui/icons/ThumbDown'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import { Redirect } from 'react-router'
 
 
 const limit = 20
 export default function FeedbackPage() {
     const [offset, setOffset] = useState(0)
+    const authState = useContext(AuthStateContext)
     const { loading, error, data, } = useQuery(allFeedback, {
         variables: { limit, offset }
     })
-
+    if (authState.user.userType === 'security_guard') {
+        return <Redirect push to="/guard_home" />
+    }
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
 

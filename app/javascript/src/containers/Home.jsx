@@ -49,22 +49,26 @@ export function Component({ authState }) {
   return (
     <div>
       <Nav>
-        <div className={css(styles.inputGroup)}>
-          <input
-            className={`form-control ${css(styles.input)}`}
-            onFocus={inputToSearch}
-            type="text"
-            placeholder="Search"
-          />
-          <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
-          <Link to="/scan">
-            <img
-              src={ScanIcon}
-              alt="scan icon"
-              className={` ${css(styles.scanIcon)}`}
-            />
-          </Link>
-        </div>
+        {
+          ['security_guard', 'admin'].includes(authState.user.userType.toLowerCase()) && (
+            <div className={css(styles.inputGroup)}>
+              <input
+                className={`form-control ${css(styles.input)}`}
+                onFocus={inputToSearch}
+                type="text"
+                placeholder="Search"
+              />
+              <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
+              <Link to="/scan">
+                <img
+                  src={ScanIcon}
+                  alt="scan icon"
+                  className={` ${css(styles.scanIcon)}`}
+                />
+              </Link>
+            </div>
+          )
+        }
       </Nav>
       <div className="container">
         <div className="row justify-content-center">
@@ -109,12 +113,12 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={'/support'} className={`card-link`}>
+                <Link to={'/contact'} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <HelpIcon className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t('home.support')}</p>
+                    <p>{'Contact'}</p>
                   </div>
                 </Link>
               </div>
@@ -201,7 +205,16 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={'/messages'} className={`card-link`}>
+                <Link to={
+                  {
+                    pathname: authState.user.userType === 'admin' ? '/messages' : `/message/${authState.user.id}`,
+                    state: {
+                      clientName: authState.user.name,
+                      clientNumber: authState.user.phoneNumber,
+                      from: 'home'
+                    }
+                  }
+                } className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <ForumIcon
@@ -209,7 +222,7 @@ export function Component({ authState }) {
                         className={css(styles.homeIconColor)}
                       />
                     </h5>
-                    <p>{'SMS'}</p>
+                    <p>{authState.user.userType === 'admin' ? 'SMS' : 'My Messages'}</p>
                   </div>
                 </Link>
               </div>
