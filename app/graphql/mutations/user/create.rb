@@ -33,6 +33,9 @@ module Mutations
         user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
         attach_avatars(user, vals)
 
+        Rails.logger.info "here we should create user account"
+        log_user_enrolled(user)
+        
         begin
           return { user: user } if user.save
         rescue ActiveRecord::RecordNotUnique
@@ -47,6 +50,16 @@ module Mutations
         ATTACHMENTS.each_pair do |key, attr|
           user.send(attr).attach(vals[key]) if vals[key]
         end
+      end
+
+      def log_user_enrolled(user)
+        ::EventLog.create(acting_user_id: context[:current_user].id,
+                          community_id: user.community_id, subject: 'user_enrolled',
+                          ref_id: user.id,
+                          ref_type: 'User',
+                          data: {
+                            ref_name: user.name, note: '', type: user.user_type
+                          })
       end
 
       def authorized?(vals)
