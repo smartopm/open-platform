@@ -11,7 +11,7 @@ image: "ruby:2.6"
   cache: {}
 
 .base:
-  image: ruby:2.6.3
+  image: "ruby:2.6"
   cache:
     key: gems_and_packages
     paths:
@@ -76,9 +76,9 @@ pages:
   stage: report
   script:
     - mv coverage/lcov-report public/lcov-report
-    - mv coverage/lcov-report/clover.xml public/lcov-report/clover.xml
-    - mv coverage/lcov-report/coverage-final.json public/lcov-report/coverage-final.json
-    - mv coverage/lcov-report/lcov.info public/lcov-report/lcov.info
+    - mv coverage/clover.xml public/lcov-report/clover.xml
+    - mv coverage/coverage-final.json public/lcov-report/coverage-final.json
+    - mv coverage/lcov.info public/lcov-report/lcov.info
     - mv coverage/ public/rspec
   artifacts:
     paths:
