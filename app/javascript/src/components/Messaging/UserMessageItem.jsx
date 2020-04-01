@@ -5,9 +5,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
-import DateUtil from '../../utils/dateutil.js'
-import { isYesterday, isToday } from 'date-fns'
 import { css, StyleSheet } from 'aphrodite'
+import DateContainer from '../DateContainer'
 
 export default function UserMessageItem({
   id,
@@ -65,26 +64,6 @@ function truncateString(message) {
   if (!message) return
   if (message.length <= 40) return message
   return `${message.substring(0, 40)}...`
-}
-
-export function DateContainer({ date, isComplex }) {
-  if (isComplex) {
-    return (
-      <span>
-        {isToday(new Date(date))
-          ? `Today at ${DateUtil.dateTimeToString(new Date(date))}`
-          : isYesterday(new Date(date))
-          ? 'Yesterday'
-          : DateUtil.dateToString(new Date(date))}
-      </span>
-    )
-  }
-  return (
-    <span>
-      {`${DateUtil.dateToString(new Date(date))} 
-            ${DateUtil.dateTimeToString(new Date(date))}`}
-    </span>
-  )
 }
 
 UserMessageItem.propTypes = {
