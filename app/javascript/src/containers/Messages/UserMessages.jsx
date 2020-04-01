@@ -63,10 +63,6 @@ export default function UserMessages() {
                       <span>
                         {message.sender.name}
                         <span className={css(styles.timeStamp)}>
-                          {/* {`${formatDistance(
-                                                    new Date(message.createdAt),
-                                                    new Date()
-                                                )} ago`} */}
                           {`${DateUtil.dateToString(
                             new Date(message.createdAt)
                           )} ${DateUtil.dateTimeToString(

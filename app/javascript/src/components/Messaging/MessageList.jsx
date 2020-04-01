@@ -18,6 +18,7 @@ export default function MessageList({ messages }) {
               user={message.user}
               message={message.message}
               clientNumber={message.user.phoneNumber}
+              dateMessageCreated={message.createdAt}
             />
           ))
         ) : (

@@ -5,14 +5,15 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
-import { ListItemSecondaryAction } from '@material-ui/core'
+import DateUtil from '../../utils/dateutil.js'
 
 export default function UserMessageItem({
   id,
   name,
   user,
   message,
-  clientNumber
+  clientNumber,
+  dateMessageCreated
 }) {
   let history = useHistory()
 
@@ -42,7 +43,9 @@ export default function UserMessageItem({
                   float: 'right'
                 }}
               >
-                Testing the position of this.
+                {`${DateUtil.dateToString(
+                  new Date(dateMessageCreated)
+                )} ${DateUtil.dateTimeToString(new Date(dateMessageCreated))} `}
               </span>
             </span>
           </React.Fragment>
@@ -66,5 +69,6 @@ UserMessageItem.propTypes = {
   user: PropTypes.object,
   imageUrl: PropTypes.string,
   message: PropTypes.string,
-  clientNumber: PropTypes.string
+  clientNumber: PropTypes.string,
+  dateMessageCreated: PropTypes.string
 }
