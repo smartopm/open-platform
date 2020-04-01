@@ -1,3 +1,9 @@
+stages:
+  - build
+  - test
+  - report
+  - deploy
+
 image: "ruby:2.6"
 
 services:
@@ -31,12 +37,12 @@ mrspec:
     - bundle exec rake
   artifacts:
     paths:
-      - "coverage"
+      - "coverage/"
     name: "Pipeline $CI_PIPELINE_ID Coverage Report"
-    expire_in: 60 sec
+    expire_in: 200 sec
 
 pages:
-  stage: deploy
+  stage: report
   script:
     - mv coverage/ public/
   artifacts:
