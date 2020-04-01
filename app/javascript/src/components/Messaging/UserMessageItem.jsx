@@ -41,11 +41,15 @@ export default function UserMessageItem({
               {name}
               <span
                 style={{
-                  float: 'right'
+                  float: 'right',
+                  fontSize: 14,
+                  color: '#737380'
                 }}
               >
                 {isToday(new Date(dateMessageCreated))
-                  ? DateUtil.dateTimeToString(new Date(dateMessageCreated))
+                  ? `Today at ${DateUtil.dateTimeToString(
+                      new Date(dateMessageCreated)
+                    )}`
                   : isYesterday(new Date(dateMessageCreated))
                   ? 'Yesterday'
                   : DateUtil.dateToString(new Date(dateMessageCreated))}
