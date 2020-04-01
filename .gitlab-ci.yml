@@ -1,30 +1,71 @@
+stages:
+  - build
+  - test
+  - report
+
 image: "ruby:2.6"
 
-services:
-  - postgres:latest
-  - redis:latest
+.base_minimal:
+  image: alpine:latest
+  cache: {}
 
-variables:
-  POSTGRES_DB: dgdp_test
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: "6f5e79b56aca56ecc1cdaa46f126370f"
-  REDIS_URL: localhost:6379
+.base:
+  image: "ruby:2.6"
+  cache:
+    key: gems_and_packages
+    paths:
+      - apt-cache/
+      - vendor/ruby
+    policy: pull
+  before_script:
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
 
-before_script:
-  - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
-  - ruby -v
-  - which ruby
-  - gem install bundler --no-document
-  - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
-  - RAILS_ENV=test bundle exec rake db:create db:schema:load
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-  - yarn install
+.base_db:
+  extends: .base
+  services:
+    - postgres:latest
+    - redis:latest
+  variables:
+    POSTGRES_DB: dgdp_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: "6f5e79b56aca56ecc1cdaa46f126370f"
+    REDIS_URL: localhost:6379
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
+    - ruby -v
+    - which ruby
+    - gem install bundler --no-document
+    - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
+    - RAILS_ENV=test bundle exec rake db:create db:schema:load
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
 
-test:
+test:rspec:
+  extends: .base_db
+  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+  stage: test
+  allow_failure: false
   script:
-    - yarn lint
-    - yarn test
     - bundle exec rake lint
     - bundle exec rake
+  artifacts:
+    paths:
+      - "coverage/"
+    name: "Rails $CI_PIPELINE_ID Coverage Report"
+    expire_in: 24 hours
 
+test:jest:
+  extends: .base_db
+  stage: test
+  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
+  allow_failure: false
+  script:
+    - yarn lint
+    - yarn test --coverage
+  artifacts:
+    paths:
+      - "coverage/"
+    name: "Jest $CI_PIPELINE_ID Coverage Report"
+    expire_in: 24 hours
