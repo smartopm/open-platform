@@ -9,17 +9,25 @@ import { flaggedNotes } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UpdateNote } from '../graphql/mutations'
-import { Grid, Typography, Checkbox, Divider, List, ListItem } from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
+import { ModalDialog } from '../components/Dialog'
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
-    margin: "auto"
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'right',
+    width: '100%',
+    overflowX: 'auto'
   }
-}));
+
+});
 
 
 export default function Todo({ history }) {
@@ -28,6 +36,8 @@ export default function Todo({ history }) {
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
   const [noteUpdate] = useMutation(UpdateNote)
+  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   function todoAction(id, isCompleted) {
     setLoading(true)
@@ -36,6 +46,20 @@ export default function Todo({ history }) {
       refetch()
     })
   }
+
+  function handleModal() {
+
+    setIsDialogOpen(!isDialogOpen)
+  }
+
+  function saveDate() {
+
+
+  }
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
   if (authState.user.userType !== 'admin') {
     // re-route to home
     history.push('/')
@@ -47,11 +71,35 @@ export default function Todo({ history }) {
     <Fragment>
       <Nav navName="Todo" menuButton="back" />
       <div className="container">
-        <ul className={css(styles.list)}>
-          {isLoading ? (
-            <Loading />
-          ) : data.flaggedNotes.length ? (
-            data.flaggedNotes.map(note => (
+
+        <ModalDialog open={isDialogOpen}
+          handleClose={handleModal}
+          handleConfirm={saveDate}
+        >
+
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Date picker inline"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
+        </ModalDialog>
+
+        <div classes={classes.root}>
+          <ul className={css(styles.list)}>
+            {isLoading ? (
+              <Loading />
+            ) : data.flaggedNotes.length ? (
+              data.flaggedNotes.map(note => (
 
                 <li key={note.id} className={`${css(styles.listItem)} card`}>
                   <div className="custom-control custom-checkbox text">
@@ -77,6 +125,9 @@ export default function Todo({ history }) {
                         </i>
                       </span>
                     </label>
+                    <span style={{ float: 'right' }}>
+                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={handleModal} />}
+                    </span>
                     <br />
 
                     <br />
@@ -102,11 +153,12 @@ export default function Todo({ history }) {
                   <br />
                   <br />
                 </li>
-            ))
-          ) : (
-                <span>No Actions yet</span>
-              )}
-        </ul>
+              ))
+            ) : (
+                  <span>No Actions yet</span>
+                )}
+          </ul>
+        </div>
       </div>
     </Fragment>
   )
