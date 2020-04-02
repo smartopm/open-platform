@@ -31,13 +31,13 @@ import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
 
-
 export default ({ history }) => {
-  const { id, dg, tm } = useParams() // get timestamp and dg 
+  const { id, dg, tm } = useParams() // get timestamp and dg
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id }
   })
+  console.log({ tm, dg })
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
       userId: id,
@@ -93,8 +93,6 @@ export function Component({
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
 
-
-
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
@@ -148,22 +146,25 @@ export function Component({
             <div className="col-4">
               <h5>{data.user.name}</h5>
               <div className="expires">
-                Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
+                Expiration:{' '}
+                {DateUtil.isExpired(data.user.expiresAt) ? (
+                  <span className="text-danger">Already Expired</span>
+                ) : (
+                  DateUtil.formatDate(data.user.expiresAt)
+                )}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
               </div>
               <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
               <br />
-              {
-                DateUtil.isExpired(data.user.expiresAt) ? (
-                  <p className={css(styles.badge, styles.statusBadgeBanned)}>
-                    Expired
-                  </p>
-                )
-                  :
-                  <Status label={data.user.state} />
-              }
+              {DateUtil.isExpired(data.user.expiresAt) ? (
+                <p className={css(styles.badge, styles.statusBadgeBanned)}>
+                  Expired
+                </p>
+              ) : (
+                <Status label={data.user.state} />
+              )}
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -187,11 +188,11 @@ export function Component({
                 }}
               >
                 {data.user.state === 'valid' &&
-                  authState.user.userType === 'security_guard' ? (
-                    <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                      Log This Entry
-                    </MenuItem>
-                  ) : null}
+                authState.user.userType === 'security_guard' ? (
+                  <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                    Log This Entry
+                  </MenuItem>
+                ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
                     <a
@@ -262,21 +263,23 @@ export function Component({
                           setLoading(true)
                           sendOneTimePasscode({
                             variables: { userId }
-                          }).then(_data => {
-                            setLoading(false)
-                            router.push('/otp_sent', {
-                              url: _data.data.oneTimeLogin.url,
-                              user: data.user.name,
-                              success: true
-                            })
-                          }).catch(() => {
-                            // alert('Make sure the user has a phone number')
-                            router.push('/otp_sent', {
-                              url: 'The user has no Phone number added',
-                              user: data.user.name,
-                              success: false
-                            })
                           })
+                            .then(_data => {
+                              setLoading(false)
+                              router.push('/otp_sent', {
+                                url: _data.data.oneTimeLogin.url,
+                                user: data.user.name,
+                                success: true
+                              })
+                            })
+                            .catch(() => {
+                              // alert('Make sure the user has a phone number')
+                              router.push('/otp_sent', {
+                                url: 'The user has no Phone number added',
+                                user: data.user.name,
+                                success: false
+                              })
+                            })
                         }}
                         className={css(styles.linkItem)}
                       >
@@ -421,15 +424,15 @@ export function Component({
                   ) : !note.flagged ? (
                     <span />
                   ) : (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() => handleOnComplete(note.id, note.completed)}
-                        >
-                          <Tooltip title="Mark this note complete">
-                            <CheckBoxOutlineBlankIcon />
-                          </Tooltip>
-                        </span>
-                      )}
+                    <span
+                      className={css(styles.actionIcon)}
+                      onClick={() => handleOnComplete(note.id, note.completed)}
+                    >
+                      <Tooltip title="Mark this note complete">
+                        <CheckBoxOutlineBlankIcon />
+                      </Tooltip>
+                    </span>
+                  )}
                   {!note.flagged && (
                     <span
                       className={css(styles.actionIcon)}
@@ -444,8 +447,8 @@ export function Component({
                 </Fragment>
               ))
             ) : (
-                  'No Notes Yet'
-                )}
+              'No Notes Yet'
+            )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
