@@ -42,10 +42,7 @@ export default function UserMessageItem({
             <span>
               {name}
               <span className={css(styles.timeStamp)}>
-                <DateContainer
-                  date={dateMessageCreated}
-                  isComplex={isTruncate}
-                />
+                <DateContainer date={dateMessageCreated} />
               </span>
             </span>
           </React.Fragment>
