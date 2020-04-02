@@ -84,8 +84,8 @@ class EventLog < ApplicationRecord
   end
 
   def user_enrolled_to_sentence
-    # new_user = User.order("created_at").last
-    "#{ref_user_name} was enrolled"
+    new_user = User.order('created_at').last
+    "#{new_user[:name]} was enrolled"
   end
 
   def ref_user_name
