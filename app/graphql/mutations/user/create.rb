@@ -32,8 +32,6 @@ module Mutations
         user.community_id = context[:current_user].community_id
         user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
         attach_avatars(user, vals)
-
-        Rails.logger.info 'here we should create user account'
         log_user_enrolled(user)
 
         begin
