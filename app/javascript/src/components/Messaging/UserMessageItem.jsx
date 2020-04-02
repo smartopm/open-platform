@@ -5,17 +5,22 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
+import { css, StyleSheet } from 'aphrodite'
+import DateContainer from '../DateContainer'
 
 export default function UserMessageItem({
   id,
   name,
   user,
   message,
-  clientNumber
+  clientNumber,
+  dateMessageCreated,
+  isTruncate
 }) {
   let history = useHistory()
 
-  function readMessages() {
+  function handleReadMessages() {
+    if (!isTruncate) return // we will be on user messages page
     history.push({
       pathname: `/message/${id}`,
       state: {
@@ -27,14 +32,28 @@ export default function UserMessageItem({
   }
 
   return (
-    <ListItem alignItems="flex-start" onClick={readMessages}>
+    <ListItem alignItems="flex-start" onClick={handleReadMessages}>
       <ListItemAvatar>
         <Avatar user={user} />
       </ListItemAvatar>
       <ListItemText
-        primary={`${name}`}
+        primary={
+          <React.Fragment>
+            <span>
+              {name}
+              <span className={css(styles.timeStamp)}>
+                <DateContainer
+                  date={dateMessageCreated}
+                  isComplex={isTruncate}
+                />
+              </span>
+            </span>
+          </React.Fragment>
+        }
         secondary={
-          <React.Fragment>{`  ${truncateString(message)}`}</React.Fragment>
+          <React.Fragment>{`  ${
+            isTruncate ? truncateString(message) : message
+          }`}</React.Fragment>
         }
       />
     </ListItem>
@@ -52,5 +71,19 @@ UserMessageItem.propTypes = {
   user: PropTypes.object,
   imageUrl: PropTypes.string,
   message: PropTypes.string,
-  clientNumber: PropTypes.string
+  clientNumber: PropTypes.string,
+  dateMessageCreated: PropTypes.string,
+  isTruncate: PropTypes.bool.isRequired
 }
+
+const styles = StyleSheet.create({
+  timeStamp: {
+    float: 'right',
+    fontSize: 14,
+    color: '#737380'
+  },
+  messageSection: {
+    overflow: 'auto',
+    maxHeight: '74vh'
+  }
+})
