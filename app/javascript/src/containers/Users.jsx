@@ -190,7 +190,6 @@ export default function UsersList() {
                     </TableHead>
                     <TableBody>
 
-
                         {data.users.map(user => (
                             <StyledTableRow key={user.id}>
 
