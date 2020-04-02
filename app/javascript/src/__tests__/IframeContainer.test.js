@@ -8,7 +8,6 @@ describe('iframe container component', () => {
     height: 200,
     width: 345
   }
-  // it should render perfectly
   const iframe = mount(<IframeContainer {...props} />)
   it('renders correctly', () => {
     expect(iframe).toMatchSnapshot()
@@ -18,5 +17,9 @@ describe('iframe container component', () => {
     expect(link).toBe(props.link)
     expect(height).toBe(props.height)
     expect(width).toBe(props.width)
+  })
+  it('renders only one div element and one iframe element ', () => {
+    expect(iframe.find('iframe')).toHaveLength(1)
+    expect(iframe.find('div')).toHaveLength(1)
   })
 })
