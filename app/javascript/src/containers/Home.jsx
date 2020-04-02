@@ -247,10 +247,7 @@ export function Component({ authState }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link
-                  to="https://doublegdp.gitlab.io/nkwashi-content/"
-                  className={`card-link`}
-                >
+                <Link to="/news" className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <ForumIcon

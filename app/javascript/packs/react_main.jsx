@@ -2,8 +2,8 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import React, { useContext, useEffect, Component, Suspense } from 'react'
 import ReactDOM from 'react-dom'
@@ -55,10 +55,11 @@ import Feedback from '../src/containers/Activity/Feedback'
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
 import AllNotes from '../src/containers/Activity/AllNotes'
 import FeedbackPage from '../src/containers/Activity/AllFeedback'
-import UsersList from '../src/containers/Users';
-import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
-import AllMessages from '../src/containers/Messages/AllMessages';
-import UserMessages from '../src/containers/Messages/UserMessages';
+import UsersList from '../src/containers/Users'
+import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
+import AllMessages from '../src/containers/Messages/AllMessages'
+import UserMessages from '../src/containers/Messages/UserMessages'
+import NewsContentPage from '../src/containers/NewsContentPage'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -92,10 +93,14 @@ const LoggedInOnly = props => {
   if (authState.loggedIn) {
     return props.children
   }
-  return <Redirect to={{
-    pathname: '/login',
-    state: { from: props.location }
-  }} />
+  return (
+    <Redirect
+      to={{
+        pathname: '/login',
+        state: { from: props.location }
+      }}
+    />
+  )
 }
 
 const Logout = () => {
@@ -179,7 +184,10 @@ const App = () => {
                     {/* requests */}
                     <Route path="/entry_request" component={EntryRequest} />
                     <Route path="/request/:id" component={RequestUpdate} />
-                    <Route path="/request_hos/:id/" component={RequestConfirm} />
+                    <Route
+                      path="/request_hos/:id/"
+                      component={RequestConfirm}
+                    />
                     <Route path="/request_wait/:id" component={WaitScreen} />
                     <Route
                       path="/request_status/:id/edit"
@@ -200,7 +208,10 @@ const App = () => {
                     {/* activity */}
                     <Route path="/todo" component={Todo} />
                     <Route path="/feedback" component={Feedback} />
-                    <Route path="/feedback_success" component={FeedbackSuccess} />
+                    <Route
+                      path="/feedback_success"
+                      component={FeedbackSuccess}
+                    />
                     <Route path="/notes" component={AllNotes} />
                     <Route path="/feedbacks" component={FeedbackPage} />
 
@@ -211,6 +222,7 @@ const App = () => {
 
                     {/* users */}
                     <Route path="/users" component={UsersList} />
+                    <Route path="/news" component={NewsContentPage} />
 
                     <Route
                       path="*"
