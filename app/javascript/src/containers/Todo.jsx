@@ -11,12 +11,12 @@ import { UpdateNote } from '../graphql/mutations'
 import EditIcon from '@material-ui/icons/Edit';
 import { ModalDialog } from '../components/Dialog'
 import { makeStyles } from '@material-ui/core/styles'
+import DateUtil from '../utils/dateutil'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns';
-
+import DateFnsUtils from '@date-io/date-fns'
 
 const useStyles = makeStyles({
   root: {
@@ -37,27 +37,25 @@ export default function Todo({ history }) {
   const { loading, error, data, refetch } = useQuery(flaggedNotes)
   const [noteUpdate] = useMutation(UpdateNote)
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [userId, setUserId] = React.useState('')
+  const [userId, setUserId] = React.useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   function todoAction(id, isCompleted) {
     setLoading(true)
-    noteUpdate({ variables: { userId, completed: !isCompleted } }).then(() => {
+    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
       setLoading(false)
       refetch()
     })
   }
 
-  function handleModal(id) {
-    setUserId(id)
+  function handleModal(Uid) {
+    setUserId(Uid)
     setIsDialogOpen(!isDialogOpen)
   }
 
   function saveDate() {
-    console.log(new Date(selectedDate).toUTCString());
-    
-
-    noteUpdate({ variables: { userId, dueDate: selectedDate } }).then(() => {
+    let id = userId
+    noteUpdate({ variables: { id, dueDate: selectedDate } }).then(() => {
       refetch()
       setIsDialogOpen(!isDialogOpen)
 
@@ -79,15 +77,14 @@ export default function Todo({ history }) {
     <Fragment>
       <Nav navName="Todo" menuButton="back" />
       <div className="container">
-
-        <ModalDialog open={isDialogOpen}
+        <ModalDialog
+          open={isDialogOpen}
           handleClose={handleModal}
           handleConfirm={saveDate}
         >
-
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-              
+
               variant="inline"
               format="MM/dd/yyyy"
               margin="normal"
@@ -96,7 +93,7 @@ export default function Todo({ history }) {
               value={selectedDate}
               onChange={handleDateChange}
               KeyboardButtonProps={{
-                'aria-label': 'change date',
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -108,7 +105,6 @@ export default function Todo({ history }) {
               <Loading />
             ) : data.flaggedNotes.length ? (
               data.flaggedNotes.map(note => (
-
                 <li key={note.id} className={`${css(styles.listItem)} card`}>
                   <div className="custom-control custom-checkbox text">
                     <input
@@ -121,64 +117,66 @@ export default function Todo({ history }) {
                     <label
                       className="custom-control-label"
                       htmlFor={`todo-check-${note.id}`}
-                      style={{ textDecoration: note.completed && 'line-through', fontSize: 17 }}
+                      style={{
+                        textDecoration: note.completed && 'line-through',
+                        fontSize: 17
+                      }}
                     >
-                      {note.body}  {'  '}
+                      {note.body} {'  '}
                       <br />
                       <br />
                       <span>
-                        By {' '}
-                        <i>
-                          {note.author.name}
-                        </i>
+                        By <i>{note.author.name}</i>
                       </span>
                     </label>
-                    <span style={{ float: 'right' }}>
-                      {note.dueDate || <EditIcon fontSize="small" color="inherit" onClick={() => handleModal(note.id)} />}
-                    </span>
+                    
+                    {note.dueDate ?
+                      <label
+                        style={{ float: 'right', fontSize: 17 }}>
+                        <span >
+                          Due Date:{' '+DateUtil.formatDate(note.dueDate)}
+                      </span>
+                      </label> : <EditIcon style={{float: 'right'}} fontSize="small" color="inherit" onClick={() => handleModal(note.id)} />}
                     <br />
                     <br />
                     <span>
-                      By {' '}
+                      By <i>{note.author.name}</i>
+                    </span>
+
+                    <br />
+
+                    <br />
+                    <span style={{ marginRight: 10 }}>
+                      Created  {' '}
                       <i>
-                        {note.author.name}
+                        {
+                          formatDistance(
+                            new Date(note.createdAt),
+                            new Date(),
+                            { addSuffix: true, includeSeconds: true }
+                          )
+                        }
                       </i>
                     </span>
-                   
+                    <span style={{ float: 'right' }}>
+                      Associated with {' '}
+                      <i>
+                        {note.user.name}
+                      </i>
+                    </span>
+                  </div>
                   <br />
-
                   <br />
-                  <span style={{ marginRight: 10 }}>
-                    Created  {' '}
-                    <i>
-                      {
-                        formatDistance(
-                          new Date(note.createdAt),
-                          new Date(),
-                          { addSuffix: true, includeSeconds: true }
-                        )
-                      }
-                    </i>
-                  </span>
-                  <span style={{ float: 'right' }}>
-                    Associated with {' '}
-                    <i>
-                      {note.user.name}
-                    </i>
-                  </span>
-                </div>
-                <br />
-                <br />
-              </li>
-            ))
-          ) : (
-                <span>No Actions yet</span>
-              )}
-        </ul>
+                </li>
+              ))
+            ) : (
+                  <span>No Actions yet</span>
+                )}
+          </ul>
         </div>
       </div>
     </Fragment>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
