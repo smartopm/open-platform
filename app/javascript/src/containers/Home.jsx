@@ -9,6 +9,7 @@ import ScanIcon from '../../../assets/images/shape.svg'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import ExploreIcon from '../../../assets/images/icon_map.svg'
+import NewsIcon from '../../../assets/images/iconfinder.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
@@ -250,10 +251,11 @@ export function Component({ authState }) {
                 <Link to="/news" className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <ForumIcon
+                      {/* <NewsIcon
                         fontSize="large"
                         className={css(styles.homeIconColor)}
-                      />
+                      /> */}
+                      <img src={NewsIcon} className={css(styles.homeIconColor)} alt=""/>
                     </h5>
                     <p>News</p>
                   </div>
