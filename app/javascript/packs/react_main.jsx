@@ -59,6 +59,7 @@ import UsersList from '../src/containers/Users'
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
+import NewsContentPage from '../src/containers/NewsContentPage'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -221,6 +222,7 @@ const App = () => {
 
                     {/* users */}
                     <Route path="/users" component={UsersList} />
+                    <Route path="/news" component={NewsContentPage} />
 
                     <Route
                       path="*"
