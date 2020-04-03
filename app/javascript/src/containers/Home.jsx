@@ -124,6 +124,20 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
+              <div
+                className={`${css(
+                  styles.cardSize
+                )} card align-self-center text-center`}
+              >
+                <Link to="/news" className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <img src={NewsIcon} className={css(styles.homeIconColor)} alt=""/>
+                    </h5>
+                    <p>News</p>
+                  </div>
+                </Link>
+              </div>
               {['security_guard', 'admin'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
@@ -240,24 +254,6 @@ export function Component({ authState }) {
                         ? 'SMS'
                         : 'My Messages'}
                     </p>
-                  </div>
-                </Link>
-              </div>
-              <div
-                className={`${css(
-                  styles.cardSize
-                )} card align-self-center text-center`}
-              >
-                <Link to="/news" className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      {/* <NewsIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      /> */}
-                      <img src={NewsIcon} className={css(styles.homeIconColor)} alt=""/>
-                    </h5>
-                    <p>News</p>
                   </div>
                 </Link>
               </div>
