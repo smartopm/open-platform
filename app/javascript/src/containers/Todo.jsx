@@ -84,12 +84,11 @@ export default function Todo({ history }) {
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-
               variant="inline"
               format="MM/dd/yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Date picker inline"
+              label="Pick due date for this todo"
               value={selectedDate}
               onChange={handleDateChange}
               KeyboardButtonProps={{
@@ -129,14 +128,23 @@ export default function Todo({ history }) {
                         By <i>{note.author.name}</i>
                       </span>
                     </label>
-                    
-                    {note.dueDate ?
-                      <label
-                        style={{ float: 'right', fontSize: 17 }}>
-                        <span >
-                          Due Date:{' '+DateUtil.formatDate(note.dueDate)}
+
+                    <label
+                      style={{ float: 'right', fontSize: 17 }}>
+                      <span >
+                        Due at:{' ' + DateUtil.formatDate(note.dueDate)}
                       </span>
-                      </label> : <EditIcon style={{float: 'right'}} fontSize="small" color="inherit" onClick={() => handleModal(note.id)} />}
+                    </label>
+                    {'  '}
+                    <EditIcon
+                      style={{
+                        float: 'right',
+                        cursor: 'pointer'
+                      }}
+                      fontSize="small"
+                      color="inherit"
+                      onClick={() => handleModal(note.id)} />
+
                     <br />
                     <br />
                     <span>
