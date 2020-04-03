@@ -1,3 +1,10 @@
+import { utcToZonedTime, format } from 'date-fns-tz'
+
+const timeZone = 'Africa/Lusaka'
+
+const zonedDate = date => utcToZonedTime(date, timeZone)
+const datePattern = 'yyyy-mm-dd HH:mm'
+
 function fromISO8601(isostr) {
   var parts = isostr.match(/\d+/g)
   return new Date(
@@ -17,37 +24,28 @@ function isExpired(date) {
 }
 
 function dateToString(date) {
+  console.log(date)
   if (!(date instanceof Date)) {
-    date = fromISO8601(date)
+    // date = fromISO8601(date)
+    return
   }
-  return (
-    date.getFullYear() +
-    '-' +
-    pad('00', date.getMonth() + 1) +
-    '-' +
-    pad('00', date.getDate())
-  )
+  const output = format(zonedDate(date), datePattern, { timeZone })
+  return output
 }
 
 function dateTimeToString(date) {
   if (!(date instanceof Date)) {
-    date = fromISO8601(date)
+    // date = fromISO8601(date)
+    // throw new Error('The provided date is not valid')
+    return
   }
-  return date.getHours() + ':' + pad('00', date.getMinutes())
+  const timePattern = 'HH:mm'
+  const output = format(zonedDate(date), timePattern, { timeZone })
+  return output
 }
 
 function formatDate(datetime) {
-  if (datetime) {
-    const date = fromISO8601(datetime)
-    return (
-      date.getFullYear() +
-      '-' +
-      pad('00', date.getMonth() + 1) +
-      '-' +
-      pad('00', date.getDate())
-    )
-  }
-  return 'Never'
+  return dateToString(datetime)
 }
 
 export default {
