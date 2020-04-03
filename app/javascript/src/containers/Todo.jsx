@@ -10,7 +10,8 @@ import ErrorPage from '../components/Error'
 import { UpdateNote } from '../graphql/mutations'
 import EditIcon from '@material-ui/icons/Edit';
 import { ModalDialog } from '../components/Dialog'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core'
 import DateUtil from '../utils/dateutil'
 import {
   KeyboardDatePicker,
@@ -27,6 +28,32 @@ const useStyles = makeStyles({
     overflowX: 'auto'
   }
 
+});
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiPickersToolbar: {
+      toolbar: {
+        backgroundColor: '#25c0b0',
+      },
+    },
+    MuiPickersDay: {
+      day: {
+        color: '#25c0b0',
+      },
+      daySelected: {
+        backgroundColor: '#25c0b0',
+      },
+      current: {
+        color: '#25c0b0',
+      },
+    },
+    MuiPickersModal: {
+      dialogAction: {
+        color: '#25c0b0',
+      },
+    },
+  }
 });
 
 
@@ -82,20 +109,22 @@ export default function Todo({ history }) {
           handleClose={handleModal}
           handleConfirm={saveDate}
         >
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              variant="inline"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="Pick due date for this todo"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change date'
-              }}
-            />
-          </MuiPickersUtilsProvider>
+          <ThemeProvider theme={theme}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Pick due date for this todo"
+                value={selectedDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date'
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </ThemeProvider>
         </ModalDialog>
 
         <div classes={classes.root}>
