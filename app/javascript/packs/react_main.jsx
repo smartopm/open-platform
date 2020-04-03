@@ -222,7 +222,8 @@ const App = () => {
 
                     {/* users */}
                     <Route path="/users" component={UsersList} />
-                    <Route path="/news" component={NewsContentPage} />
+                    <Route path="/news/" exact component={NewsContentPage} />
+                    <Route path="/news/:link" exact component={NewsContentPage} />
 
                     <Route
                       path="*"

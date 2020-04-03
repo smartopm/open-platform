@@ -9,6 +9,7 @@ import ScanIcon from '../../../assets/images/shape.svg'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import ExploreIcon from '../../../assets/images/icon_map.svg'
+import NewsIcon from '../../../assets/images/iconfinder.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
@@ -120,6 +121,20 @@ export function Component({ authState }) {
                       <HelpIcon className={css(styles.homeIconColor)} />
                     </h5>
                     <p>{'Contact'}</p>
+                  </div>
+                </Link>
+              </div>
+              <div
+                className={`${css(
+                  styles.cardSize
+                )} card align-self-center text-center`}
+              >
+                <Link to="/news" className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <img src={NewsIcon} className={css(styles.homeIconColor)} alt=""/>
+                    </h5>
+                    <p>News</p>
                   </div>
                 </Link>
               </div>
@@ -239,23 +254,6 @@ export function Component({ authState }) {
                         ? 'SMS'
                         : 'My Messages'}
                     </p>
-                  </div>
-                </Link>
-              </div>
-              <div
-                className={`${css(
-                  styles.cardSize
-                )} card align-self-center text-center`}
-              >
-                <Link to="/news" className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <ForumIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    </h5>
-                    <p>News</p>
                   </div>
                 </Link>
               </div>
