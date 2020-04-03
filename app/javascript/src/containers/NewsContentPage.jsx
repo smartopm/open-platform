@@ -6,7 +6,7 @@ import { useWindowDimensions } from '../utils/customHooks'
 export default function NewsContentPage() {
   const { width, height } = useWindowDimensions()
   const { link } = useParams()
-  const url = `https://doublegdp.gitlab.io/nkwashi-content/${link}`
+  const url = `https://doublegdp.gitlab.io/nkwashi-content/${link || ''}`
 
   return (
     <IframeContainer
