@@ -109,8 +109,6 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     generate_events('user_enrolled', enrolled_user) if enrolled_user.save
-
-    
     enrolled_user
   end
   # rubocop:enable Metrics/AbcSize
