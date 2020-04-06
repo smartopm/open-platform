@@ -8,12 +8,15 @@ import { Context } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav.jsx'
 import ErrorPage from '../components/Error.jsx'
 import { isTimeValid } from './Requests/RequestUpdate.jsx'
+import {Typography } from '@material-ui/core'
+import Avatar from '../components/Avatar.jsx'
 
 function qrCodeAddress(id_card_token) {
   const timestamp = Date.now()
   return `${window.location.protocol}//${window.location.hostname}/user/${id_card_token}/${timestamp}/dg`
 }
 
+  
 export default () => {
   const authState = useContext(Context)
   const { loading, error, data } = useQuery(UserQuery, {
@@ -34,23 +37,37 @@ export function Component({ data }) {
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
-            className="d-flex justify-content-center"
+            className="d-flex "
             style={{ marginBottom: '1em' }}
           >
-            <div className="member_type">{data.user.userType}</div>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h1>
-              <strong>{data.user.name}</strong>
-            </h1>
-          </div>
-          <div className="d-flex justify-content-center">
-            <div className="expires">
-              Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
+          
+            <div className="row" style={{width: 280, marginLeft: "8%"}}>
+             
+                <div className="col-4 ">
+                <Avatar user={data.user} style="medium" />
+                </div>
+
+                <div className="col-8 p-50">
+                    <Typography
+                      gutterBottom
+                      variant="subtitle1"
+                      style={{ fontWeight: "bold"}}
+                    >
+                      {data.user.name}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      {data.user.userType}
+                    </Typography>
+                    <Typography variant="body2">
+                      Expiration: {DateUtil.isExpired(data.user.expiresAt) ? <span className='text-danger'>Already Expired</span> : DateUtil.formatDate(data.user.expiresAt)}
+                    </Typography>
+               </div>
+              
             </div>
+
           </div>
           <br />
-          <br />
+
 
           <div className="d-flex justify-content-center qr_code">
             <QRCode

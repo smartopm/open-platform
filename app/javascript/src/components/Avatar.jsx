@@ -24,12 +24,21 @@ export default function Avatar({ imageUrl, user, style = 'small' }) {
         />
       </div>
     )
-  } else {
+  } else if (style==='small') {
     return (
       <div className="d-flex justify-content-center">
         <img
           src={avatarUrl({ imageUrl, user })}
           className={css(styles.avatarSmall)}
+        />
+      </div>
+    )
+  }else if(style==='medium'){
+    return (
+      <div style={{width: 80}}>
+        <img
+          src={avatarUrl({ imageUrl, user })}
+          className={css(styles.avatarMedium)}
         />
       </div>
     )
@@ -46,6 +55,11 @@ const styles = StyleSheet.create({
   avatarSmall: {
     width: '50px',
     height: '50px',
+    borderRadius: '8px'
+  },
+  avatarMedium: {
+     width: '80px',
+    height: '80px',
     borderRadius: '8px'
   },
   avatarBig: {
