@@ -7,6 +7,7 @@ import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
+import {truncateString, findLinkAndReplace} from '../../utils/helpers'
 
 export default function UserMessageItem({
   id,
@@ -48,20 +49,17 @@ export default function UserMessageItem({
           </React.Fragment>
         }
         secondary={
-          <React.Fragment>{`  ${
-            isTruncate ? truncateString(message) : message
-          }`}</React.Fragment>
+          <React.Fragment>{
+            isTruncate ? truncateString(message) : 
+            <span dangerouslySetInnerHTML={{ __html: findLinkAndReplace(message)}} />
+          }</React.Fragment>
         }
       />
     </ListItem>
   )
 }
 
-function truncateString(message) {
-  if (!message) return
-  if (message.length <= 40) return message
-  return `${message.substring(0, 40)}...`
-}
+
 
 UserMessageItem.propTypes = {
   name: PropTypes.string.isRequired,
