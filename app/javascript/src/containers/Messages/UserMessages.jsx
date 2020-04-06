@@ -20,7 +20,7 @@ export default function UserMessages() {
   const { id } = useParams()
   const { loading, error, data, refetch } = useQuery(UserMessageQuery, {
     variables: { id }
-  })
+  }, )
   const [messageCreate] = useMutation(MessageCreate)
   const [message, setMessage] = useState('')
   const [isMsgLoading, setLoading] = useState(false)
@@ -41,13 +41,14 @@ export default function UserMessages() {
       setLoading(false)
     })
   }
-useEffect(() => {
-  if (id === authState.user.id) {
-    console.log('I have rendered')
-    // update the message here
-  }
-})
   
+  useEffect(() => {
+    if (!loading && id === authState.user.id) {
+      console.log('I have rendered')
+      // update the message here
+      console.log(getLastId(data.userMessages))
+    }
+  })
 
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
@@ -118,6 +119,14 @@ useEffect(() => {
       {errmsg && <p className="text-center text-danger">{errmsg}</p>}
     </Fragment>
   )
+}
+
+function getLastId(messages){
+  if (!messages.length) {
+    return 
+  }
+  const lastMessage = messages[messages.length - 1]
+  return lastMessage.id
 }
 
 const styles = StyleSheet.create({

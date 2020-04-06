@@ -10,6 +10,7 @@ module Types
     field :sender_id, ID, null: false
     field :receiver, String, null: false
     field :message, String, null: true
+    field :is_read, Boolean, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

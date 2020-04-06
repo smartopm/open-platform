@@ -34,5 +34,6 @@ module Types
 
     # messages
     field :message_create, mutation: Mutations::Message::MessageCreate
+    field :message_update, mutation: Mutations::Message::MessageUpdate
   end
 end
