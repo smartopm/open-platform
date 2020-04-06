@@ -108,9 +108,9 @@ class User < ApplicationRecord
     ATTACHMENTS.each_pair do |key, attr|
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
-    return nil unless enrolled_user.save
+    generate_events('user_enrolled', enrolled_user) if enrolled_user.save
 
-    generate_events('user_enrolled', enrolled_user)
+    
     enrolled_user
   end
   # rubocop:enable Metrics/AbcSize
