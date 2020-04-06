@@ -132,6 +132,7 @@ export const flaggedNotes = gql`
       createdAt
       id
       completed
+      dueDate
       user {
         id
         name
