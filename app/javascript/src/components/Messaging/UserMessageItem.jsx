@@ -48,13 +48,21 @@ export default function UserMessageItem({
           </React.Fragment>
         }
         secondary={
-          <React.Fragment>{`  ${
-            isTruncate ? truncateString(message) : message
-          }`}</React.Fragment>
+          <React.Fragment>{
+            isTruncate ? truncateString(message) : 
+            <span dangerouslySetInnerHTML={{ __html: findLinkAndReplace(message)}} />
+          }</React.Fragment>
         }
       />
     </ListItem>
   )
+}
+
+function findLinkAndReplace(msg) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return msg.replace(urlRegex, function(url) {
+        return `<a href="${url}">${url}</a>`
+    })
 }
 
 function truncateString(message) {
