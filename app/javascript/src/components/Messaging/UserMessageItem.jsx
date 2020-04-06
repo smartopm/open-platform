@@ -15,7 +15,8 @@ export default function UserMessageItem({
   message,
   clientNumber,
   dateMessageCreated,
-  isTruncate
+  isTruncate,
+  isRead
 }) {
   let history = useHistory()
 
@@ -50,7 +51,11 @@ export default function UserMessageItem({
         secondary={
           <React.Fragment>{`  ${
             isTruncate ? truncateString(message) : message
-          }`}</React.Fragment>
+          }`}
+             <span className={css(styles.timeStamp)}>
+              {isRead === null ? "N/A" : isRead ? "Seen" : "Not Seen"}
+              </span>
+          </React.Fragment>
         }
       />
     </ListItem>
@@ -70,7 +75,8 @@ UserMessageItem.propTypes = {
   message: PropTypes.string,
   clientNumber: PropTypes.string,
   dateMessageCreated: PropTypes.string,
-  isTruncate: PropTypes.bool.isRequired
+  isTruncate: PropTypes.bool.isRequired,
+  isRead: PropTypes.bool
 }
 
 const styles = StyleSheet.create({

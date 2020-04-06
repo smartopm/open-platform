@@ -52,7 +52,6 @@ export default function UserMessages() {
   
   useEffect(() => {
     if (!loading && id === authState.user.id && !updated) {
-      console.log(getLastId(data.userMessages))
       updateMessage()
     }
   })
@@ -80,6 +79,7 @@ export default function UserMessages() {
                 clientNumber={message.sender.phoneNumber}
                 dateMessageCreated={message.createdAt}
                 isTruncate={false}
+                isRead={message.isRead}
               />
             ))
           ) : (
