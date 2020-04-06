@@ -1,4 +1,5 @@
 export function findLinkAndReplace(msg) {
+    if (!msg) return
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     return msg.replace(urlRegex, function(url) {
         return `<a href="${url}">${url}</a>`

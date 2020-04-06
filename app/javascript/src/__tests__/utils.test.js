@@ -1,8 +1,25 @@
 import { findLinkAndReplace, truncateString } from '../utils/helpers'
 
-
-describe('string utilities', () => {
+const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
+describe('find links and replace with anchor tag', () => {
     // find link in a text and replace
-    const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
-    
+    it('should match the snapshot', () => {
+        expect(findLinkAndReplace(message)).toMatchSnapshot()
+    })
+
+    it('should find link and replace it with anchor tag', () => {
+        expect(findLinkAndReplace(message)).toContain('<a href')
+    })
+    it('should return nothing when no message is provided', () => {
+        expect(findLinkAndReplace()).toBe(undefined)
+    });
+})
+
+describe('truncate messages', () => {
+    it('should match the snapshot', () => {
+        expect(truncateString(message)).toMatchSnapshot()
+    })
+    it('should find link and replace it with anchor tag', () => {
+        expect(truncateString(message)).toBe('Please share your feedback with this 30 ...')
+    })
 })
