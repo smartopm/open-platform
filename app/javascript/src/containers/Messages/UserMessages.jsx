@@ -1,4 +1,4 @@
-import React, { useContext, Fragment, useState } from 'react'
+import React, { useContext, Fragment, useState, useEffect } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserMessageQuery } from '../../graphql/queries'
@@ -41,6 +41,13 @@ export default function UserMessages() {
       setLoading(false)
     })
   }
+useEffect(() => {
+  if (id === authState.user.id) {
+    console.log('I have rendered')
+    // update the message here
+  }
+})
+  
 
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
