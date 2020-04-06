@@ -33,7 +33,7 @@ export function Component({ data }) {
 
   return (
     <div>
-      <Nav navName="Identify" menuButton="back" />
+      <Nav navName="Identity" menuButton="back" />
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
