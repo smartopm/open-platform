@@ -1,3 +1,5 @@
+// keep string methods [helpers]
+
 export function findLinkAndReplace(msg) {
     if (!msg) return
     const urlRegex = /(https?:\/\/[^\s]+)/g;
