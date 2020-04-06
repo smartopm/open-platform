@@ -6,7 +6,7 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
-import { MessageCreate } from '../../graphql/mutations'
+import { MessageCreate, MessageUpdate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -22,9 +22,11 @@ export default function UserMessages() {
     variables: { id }
   }, )
   const [messageCreate] = useMutation(MessageCreate)
+  const [messageUpdate] = useMutation(MessageUpdate)
   const [message, setMessage] = useState('')
   const [isMsgLoading, setLoading] = useState(false)
   const [errmsg, setError] = useState('')
+  const [updated, setUpdated] = useState(false)
   const authState = useContext(AuthStateContext)
   const { state } = useLocation()
 
@@ -41,12 +43,17 @@ export default function UserMessages() {
       setLoading(false)
     })
   }
+
+  function updateMessage(){
+    messageUpdate({ variables: { id: getLastId(data.userMessages) } }).then(() => {
+      setUpdated(true)
+    })
+  }
   
   useEffect(() => {
-    if (!loading && id === authState.user.id) {
-      console.log('I have rendered')
-      // update the message here
+    if (!loading && id === authState.user.id && !updated) {
       console.log(getLastId(data.userMessages))
+      updateMessage()
     }
   })
 
