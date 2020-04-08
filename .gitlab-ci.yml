@@ -63,7 +63,7 @@ test:jest:
   allow_failure: false
   script:
     - yarn lint
-    - yarn test --coverage
+    - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
   artifacts:
     paths:
       - "coverage/"
