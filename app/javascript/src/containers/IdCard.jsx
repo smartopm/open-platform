@@ -70,7 +70,6 @@ export function Component({ data }) {
             
               <EmojiObjectsOutlinedIcon color="disabled" style={{ height: 40, width: 40, margin: 40 }} />
             </div>
-
             <div className="col-8 p-0 justify-content-center" style={{ width: 256, marginRight: "10%" }}>
               <Typography color="textSecondary" variant="body2" style={{ fontSize: 13 }}>
                 This &quot;QR Code&quot; is a unique identifier for you Nkwashi account
@@ -92,6 +91,6 @@ export function Component({ data }) {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
