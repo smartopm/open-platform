@@ -26,27 +26,16 @@ module Mutations
         security_guard: { except: %i[state user_type] },
       }.freeze
 
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        user = ::User.new(vals.except(*ATTACHMENTS.keys))
-        user.community_id = context[:current_user].community_id
-        user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
-        attach_avatars(user, vals)
-
+        user = nil
         begin
-          return { user: user } if user.save
+          user = context[:current_user].enroll_user(vals)
+          return { user: user } if user.present?
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, 'Duplicate email'
         end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
-      end
-      # rubocop:enable Metrics/AbcSize
-
-      def attach_avatars(user, vals)
-        ATTACHMENTS.each_pair do |key, attr|
-          user.send(attr).attach(vals[key]) if vals[key]
-        end
       end
 
       def authorized?(vals)

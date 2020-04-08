@@ -143,4 +143,49 @@ RSpec.describe User, type: :model do
       expect(@user.errors.messages[:phone_number]).to_not be_empty
     end
   end
+
+  describe 'User with user_type roles' do
+    before :each do
+      @security_guard = FactoryBot.create(:security_guard)
+      @admin = FactoryBot.create(:admin_user, community: @security_guard.community)
+      @user = FactoryBot.create(:user, community: @security_guard.community)
+    end
+
+    it 'should know if user an admin' do
+      @user.update(user_type: 'admin')
+      expect(@user.admin?).to be true
+    end
+
+    it 'should be able to check if user belongs to a role?' do
+      expect(@admin.role?(%i[security_guard admin])).to be true
+      expect(@admin.role?([:security_guard])).to be false
+    end
+
+    it 'should allow users to become other users' do
+      expect(@admin.can_become?(@security_guard)).to be true
+      expect(@user.can_become?(@security_guard)).to be false
+      expect(@security_guard.can_become?(@admin)).to be false
+    end
+
+    it 'should allow admin to enroll users' do
+      vals = {
+        name: 'Mark Percival',
+        email: 'mark@doublegdp.com',
+        request_reason: 'Resident',
+        vehicle: nil,
+      }
+      @nuser = @admin.enroll_user(vals)
+      expect(@nuser.community_id).to be @admin.community_id
+      expect(@nuser.id).to_not be_empty
+      @nuser1 = nil
+      begin
+        @nuser1 = @admin.enroll_user(vals)
+      rescue ActiveRecord::RecordNotUnique
+        expect(@nuser1).to be nil
+      end
+      @el = EventLog.where(acting_user_id: @admin.id).last
+      expect(@nuser.id).to eq @el.ref_id
+      expect(@admin.id).to eq @el.acting_user_id
+    end
+  end
 end
