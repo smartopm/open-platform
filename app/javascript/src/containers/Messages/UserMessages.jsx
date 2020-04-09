@@ -124,5 +124,3 @@ const styles = StyleSheet.create({
     maxHeight: '74vh'
   }
 })
-
-
