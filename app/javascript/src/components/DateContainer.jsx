@@ -2,7 +2,7 @@ import React from 'react'
 import { isYesterday, isToday } from 'date-fns'
 import { PropTypes } from 'prop-types'
 
-import { utcToZonedTime, format } from 'date-fns-tz'
+import { utcToZonedTime, format, toDate } from 'date-fns-tz'
 import dateutil from '../utils/dateutil'
 
 const timeZone = 'Africa/Lusaka'
@@ -16,13 +16,16 @@ const dateTimeToString = date =>
   })
 
 export default function DateContainer({ date }) {
+  const utcDate = toDate(date, { timeZone: 'UTC' })
+  const zonedDate = utcToZonedTime(utcDate, timeZone)
+
   return (
     <span>
       {isToday(new Date(date))
         ? `Today at ${dateTimeToString(new Date(date))}`
-        : isYesterday(new Date(date))
+        : isYesterday(new Date(zonedDate))
         ? 'Yesterday'
-        : dateutil.dateToString(new Date(date))}
+        : dateutil.dateToString(new Date(zonedDate))}
     </span>
   )
 }
