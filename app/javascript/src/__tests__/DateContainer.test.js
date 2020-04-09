@@ -3,7 +3,7 @@ import { mount } from 'enzyme'
 import DateContainer from '../components/DateContainer'
 import DateUtils from '../utils/dateutil'
 
-import { utcToZonedTime, format, toDate } from 'date-fns-tz'
+import { utcToZonedTime } from 'date-fns-tz'
 
 
 const timeZone = 'Africa/Lusaka'
