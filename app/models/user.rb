@@ -47,6 +47,11 @@ class User < ApplicationRecord
     'thebe-im.com': 'Nkwashi',
   }.freeze
 
+  ATTACHMENTS = {
+    avatar_blob_id: :avatar,
+    document_blob_id: :document,
+  }.freeze
+
   OAUTH_FIELDS_MAP = {
     email: ->(auth) { auth.info.email },
     name: ->(auth) { auth.info.name },
@@ -93,6 +98,29 @@ class User < ApplicationRecord
 
   def self.lookup_by_id_card_token(token)
     find_by(id: token)
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def enroll_user(vals)
+    enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
+    enrolled_user.community_id = community_id
+    enrolled_user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
+    ATTACHMENTS.each_pair do |key, attr|
+      enrolled_user.send(attr).attach(vals[key]) if vals[key]
+    end
+    generate_events('user_enrolled', enrolled_user) if enrolled_user.save
+    enrolled_user
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def generate_events(event_tag, target_user)
+    ::EventLog.create(acting_user_id: id,
+                      community_id: target_user.community_id, subject: event_tag,
+                      ref_id: target_user.id,
+                      ref_type: 'User',
+                      data: {
+                        ref_name: target_user.name, note: '', type: target_user.user_type
+                      })
   end
 
   def construct_message(vals)

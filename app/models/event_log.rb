@@ -12,7 +12,7 @@ class EventLog < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
-  VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch
+  VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
@@ -81,6 +81,11 @@ class EventLog < ApplicationRecord
 
   def user_update_to_sentence
     "#{ref_user_name} was updated by #{acting_user_name}"
+  end
+
+  def user_enrolled_to_sentence
+    new_user = User.order('created_at').last
+    "#{new_user[:name]} was enrolled"
   end
 
   def ref_user_name
