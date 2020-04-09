@@ -10,7 +10,7 @@ const timeZone = 'Africa/Lusaka'
 const zonedDate = date => utcToZonedTime(date, timeZone)
 const timePattern = 'HH:mm'
 
-const dateTimeToString = date =>
+export const dateTimeToString = date =>
   format(zonedDate(date), timePattern, {
     timeZone
   })
