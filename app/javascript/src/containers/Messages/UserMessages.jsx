@@ -20,12 +20,11 @@ export default function UserMessages() {
   const { id } = useParams()
   const { loading, error, data, refetch } = useQuery(UserMessageQuery, {
     variables: { id }
-  }, )
+  })
   const [messageCreate] = useMutation(MessageCreate)
   const [message, setMessage] = useState('')
   const [isMsgLoading, setLoading] = useState(false)
   const [errmsg, setError] = useState('')
-  const [updated, setUpdated] = useState(false)
   const authState = useContext(AuthStateContext)
   const { state } = useLocation()
 
@@ -116,7 +115,6 @@ export default function UserMessages() {
     </Fragment>
   )
 }
-
 
 const styles = StyleSheet.create({
   timeStamp: {
