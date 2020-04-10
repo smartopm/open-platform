@@ -382,14 +382,3 @@ export const MessageCreate = gql`
     }
   }
 `
-// This in the backend only updates the read status
-export const MessageUpdate = gql`
-  mutation messageUpdate($id: ID!) {
-      messageUpdate(id:$id){
-        message {
-          message
-          isRead
-        }
-      }
-    }
-` 
