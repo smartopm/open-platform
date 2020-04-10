@@ -33,7 +33,8 @@ module Types::Queries::Message
                       .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
                       .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
                       .order('messages.created_at ASC').limit(50)
-    messages.update_all(is_read: true)
+
+    messages.update_all(is_read: false) unless context[:current_user].admin?
     messages
   end
 end
