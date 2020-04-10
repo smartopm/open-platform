@@ -16,12 +16,12 @@ class Message < ApplicationRecord
            .order('user_id ASC, messages.created_at DESC').limit(limit).offset(offset)
   end
 
-  def send_sms(name)
+  def send_sms
     return if receiver.nil?
 
     text = 'Click this link to reply to this message in our app '
     link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{name} from Nkwashi said: \n#{message} \n\n#{text} \n#{link}"
+    new_message = "#{user[:name]} from Nkwashi said: \n#{message} \n\n#{text} \n#{link}"
     Sms.send(receiver, new_message)
   end
 end
