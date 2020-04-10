@@ -25,6 +25,7 @@ RSpec.describe Types::Queries::Message do
           id
           message
           createdAt
+          isRead
           user {
             id
           }
@@ -57,6 +58,7 @@ RSpec.describe Types::Queries::Message do
           id
           message
           createdAt
+          isRead
           user {
             id
           }
@@ -90,6 +92,15 @@ RSpec.describe Types::Queries::Message do
       expect(result.dig('data', 'userMessages', 0, 'id')).to eql auser_adm_msg.id
       expect(result.dig('data', 'userMessages', 0, 'sender', 'id')).to eql another_user.id
       expect(result.dig('data', 'userMessages', 0, 'user', 'id')).to eql another_user.id
+    end
+
+    it 'should update messages with is_read status when non-admin user retrieves them' do
+      result = DoubleGdpSchema.execute(auser_msgs, context: { current_user: another_user }).as_json
+      expect(result.dig('data', 'userMessages', 0, 'isRead')).to eql true
+    end
+    it 'is_read status is not updated when admin queries messages' do
+      result = DoubleGdpSchema.execute(auser_msgs, context: { current_user: admin }).as_json
+      expect(result.dig('data', 'userMessages', 0, 'isRead')).to eql false
     end
   end
 end

@@ -8,5 +8,6 @@ FactoryBot.define do
   factory :message do
     receiver { 'Mark Test' }
     message { generate(:t_message) }
+    is_read { false }
   end
 end
