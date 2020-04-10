@@ -37,7 +37,7 @@ export default ({ history }) => {
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id }
   })
-  console.log({ tm, dg })
+
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
       userId: id,
@@ -54,8 +54,10 @@ export default ({ history }) => {
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
   if (loading || entry.loading) return <Loading />
+  if (error) {
+    return <ErrorPage title={error.message || error} />
+  }
   if (entry.data) return <Redirect to="/" />
-  if (error) return <ErrorPage title={error} />
   return (
     <Component
       data={data}
@@ -150,8 +152,8 @@ export function Component({
                 {DateUtil.isExpired(data.user.expiresAt) ? (
                   <span className="text-danger">Already Expired</span>
                 ) : (
-                    DateUtil.formatDate(data.user.expiresAt)
-                  )}
+                  DateUtil.formatDate(data.user.expiresAt)
+                )}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
@@ -163,8 +165,8 @@ export function Component({
                   Expired
                 </p>
               ) : (
-                  <Status label={data.user.state} />
-                )}
+                <Status label={data.user.state} />
+              )}
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -188,11 +190,11 @@ export function Component({
                 }}
               >
                 {data.user.state === 'valid' &&
-                  authState.user.userType === 'security_guard' ? (
-                    <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                      Log This Entry
-                    </MenuItem>
-                  ) : null}
+                authState.user.userType === 'security_guard' ? (
+                  <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                    Log This Entry
+                  </MenuItem>
+                ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
                     <a
@@ -424,15 +426,15 @@ export function Component({
                   ) : !note.flagged ? (
                     <span />
                   ) : (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() => handleOnComplete(note.id, note.completed)}
-                        >
-                          <Tooltip title="Mark this note complete">
-                            <CheckBoxOutlineBlankIcon />
-                          </Tooltip>
-                        </span>
-                      )}
+                    <span
+                      className={css(styles.actionIcon)}
+                      onClick={() => handleOnComplete(note.id, note.completed)}
+                    >
+                      <Tooltip title="Mark this note complete">
+                        <CheckBoxOutlineBlankIcon />
+                      </Tooltip>
+                    </span>
+                  )}
                   {!note.flagged && (
                     <span
                       className={css(styles.actionIcon)}
@@ -447,8 +449,8 @@ export function Component({
                 </Fragment>
               ))
             ) : (
-                  'No Notes Yet'
-                )}
+              'No Notes Yet'
+            )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
