@@ -54,10 +54,10 @@ export default ({ history }) => {
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
   if (loading || entry.loading) return <Loading />
-  if (error) {
-    return <ErrorPage title={error.message || error} />
-  }
   if (entry.data) return <Redirect to="/" />
+  if (error) {
+    return <ErrorPage title={error.message || error} /> // error could be a string sometimes
+  }
   return (
     <Component
       data={data}
