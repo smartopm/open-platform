@@ -1,4 +1,4 @@
-import React, { useContext, Fragment, useState } from 'react'
+import React, { useContext, Fragment, useState, useEffect } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserMessageQuery } from '../../graphql/queries'
@@ -6,7 +6,7 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
-import { MessageCreate } from '../../graphql/mutations'
+import { MessageCreate, MessageUpdate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -20,11 +20,13 @@ export default function UserMessages() {
   const { id } = useParams()
   const { loading, error, data, refetch } = useQuery(UserMessageQuery, {
     variables: { id }
-  })
+  }, )
   const [messageCreate] = useMutation(MessageCreate)
+  const [messageUpdate] = useMutation(MessageUpdate)
   const [message, setMessage] = useState('')
   const [isMsgLoading, setLoading] = useState(false)
   const [errmsg, setError] = useState('')
+  const [updated, setUpdated] = useState(false)
   const authState = useContext(AuthStateContext)
   const { state } = useLocation()
 
@@ -41,6 +43,18 @@ export default function UserMessages() {
       setLoading(false)
     })
   }
+
+  function updateMessage(){
+    messageUpdate({ variables: { id: getLastId(data.userMessages) } }).then(() => {
+      setUpdated(true)
+    })
+  }
+  
+  useEffect(() => {
+    if (!loading && id === authState.user.id && !updated) {
+      updateMessage()
+    }
+  })
 
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
@@ -65,6 +79,7 @@ export default function UserMessages() {
                 clientNumber={message.sender.phoneNumber}
                 dateMessageCreated={message.createdAt}
                 isTruncate={false}
+                isRead={message.isRead}
               />
             ))
           ) : (
@@ -111,6 +126,14 @@ export default function UserMessages() {
       {errmsg && <p className="text-center text-danger">{errmsg}</p>}
     </Fragment>
   )
+}
+
+function getLastId(messages){
+  if (!messages.length) {
+    return 
+  }
+  const lastMessage = messages[messages.length - 1]
+  return lastMessage.id
 }
 
 const styles = StyleSheet.create({
