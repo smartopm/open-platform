@@ -1,12 +1,12 @@
-import React, { useContext, Fragment, useState, useEffect } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import React, { useContext, Fragment, useState } from 'react'
+import { useParams, useLocation, Link } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserMessageQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
-import { MessageCreate, MessageUpdate } from '../../graphql/mutations'
+import { MessageCreate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -22,7 +22,6 @@ export default function UserMessages() {
     variables: { id }
   }, )
   const [messageCreate] = useMutation(MessageCreate)
-  const [messageUpdate] = useMutation(MessageUpdate)
   const [message, setMessage] = useState('')
   const [isMsgLoading, setLoading] = useState(false)
   const [errmsg, setError] = useState('')
@@ -44,26 +43,16 @@ export default function UserMessages() {
     })
   }
 
-  function updateMessage(){
-    messageUpdate({ variables: { id: getLastId(data.userMessages) } }).then(() => {
-      setUpdated(true)
-    })
-  }
-  
-  useEffect(() => {
-    if (!loading && id === authState.user.id && !updated) {
-      updateMessage()
-    }
-  })
-
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
 
   return (
     <Fragment>
       <Nav navName="Messages History" menuButton="back">
-        <span className="text-center text-white">
-          {(state && state.clientName) || ''}
+        <span className="text-center">
+          <Link to={`/user/${id}`} className={css(styles.linkedName)}>
+            {(state && state.clientName) || ''}
+          </Link>
         </span>
       </Nav>
       <div className={css(styles.messageSection)}>
@@ -128,13 +117,6 @@ export default function UserMessages() {
   )
 }
 
-function getLastId(messages){
-  if (!messages.length) {
-    return 
-  }
-  const lastMessage = messages[messages.length - 1]
-  return lastMessage.id
-}
 
 const styles = StyleSheet.create({
   timeStamp: {
@@ -145,7 +127,9 @@ const styles = StyleSheet.create({
   messageSection: {
     overflow: 'auto',
     maxHeight: '74vh'
+  },
+  linkedName: {
+    textDecoration: 'none',
+    color: '#FFFFFF'
   }
 })
-
-
