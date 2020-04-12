@@ -152,7 +152,7 @@ export function Component({ authState }) {
                         <h5 className="card-title">
                           <LogIcon className={css(styles.homeIconColor)} />
                         </h5>
-                        <p>{t('home.entry_logs')}</p>
+                        <p>{'Log Book'}</p>
                       </div>
                     </Link>
                   </div>

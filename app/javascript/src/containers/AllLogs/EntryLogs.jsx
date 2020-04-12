@@ -8,9 +8,13 @@ import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
+import NewReleasesOutlinedIcon from '@material-ui/icons/NewReleasesOutlined';
+import IconButton from '@material-ui/core/IconButton';
+
 
 export default ({ history, match }) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom']
+  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_enrolled']
   return allEventLogs(history, match, subjects)
 }
 
@@ -20,6 +24,7 @@ const allEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
   const [searchTerm, setSearchTerm] = useState('')
+
   const refId = match.params.userId || null
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
@@ -31,6 +36,10 @@ const allEventLogs = (history, match, subjects) => {
     },
     fetchPolicy: 'cache-and-network'
   })
+
+  console.log(data);
+
+
 
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
@@ -52,6 +61,7 @@ const allEventLogs = (history, match, subjects) => {
     handleLimit()
   }
 
+
   return (
     <IndexComponent
       data={data}
@@ -63,6 +73,7 @@ const allEventLogs = (history, match, subjects) => {
       limit={limit}
       searchTerm={searchTerm}
       handleSearch={handleSearch}
+
     />
   )
 }
@@ -78,6 +89,7 @@ export function IndexComponent({
   handleSearch
 }) {
   const authState = useContext(AuthStateContext)
+  const [newIsSelected, setNewIsSelected] = useState(false)
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -88,12 +100,19 @@ export function IndexComponent({
       return router.push(`/user/${eventLog.refId}`)
     }
   }
+
+
   function enrollUser(id) {
     return router.push({
       pathname: `/request/${id}`,
       state: { from: 'enroll' }
     })
   }
+
+  function buttonSelected() {
+    setNewIsSelected(!newIsSelected)
+  }
+  console.log(newIsSelected);
 
   function logs(eventLogs) {
     if (!eventLogs) {
@@ -197,7 +216,7 @@ export function IndexComponent({
           backgroundColor: '#25c0b0'
         }}
       >
-        <Nav menuButton="back" navName="Logs" boxShadow={'none'} />
+        <Nav menuButton="back" navName="Log Book" boxShadow={'none'} />
       </div>
       <div className="container">
         <div className="form-group">
@@ -210,6 +229,22 @@ export function IndexComponent({
           />
         </div>
       </div>
+      <div className="d-flex justify-content-center">
+        <div className="col-4 d-flex justify-content-center container">
+          <IconButton>
+            <AssignmentTurnedInOutlinedIcon />
+          </IconButton>
+        </div>
+        <div className="col-4 d-flex justify-content-center container">
+          <IconButton onClick={buttonSelected}>
+            <NewReleasesOutlinedIcon />
+          </IconButton>
+        </div>
+        <div className="col-4 d-flex justify-content-center container">
+
+        </div>
+      </div>
+
       <div className="container">
         <>{logs(filteredEvents)}</>
         <div className="d-flex justify-content-center">
