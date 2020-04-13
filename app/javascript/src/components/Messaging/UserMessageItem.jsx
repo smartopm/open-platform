@@ -50,15 +50,17 @@ export default function UserMessageItem({
         }
         secondary={
           <React.Fragment>
-            {isTruncate ? (
-              truncateString(message)
-            ) : (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: findLinkAndReplace(message)
-                }}
-              />
-            )}
+            <span className="nz_msg">
+              {isTruncate ? (
+                truncateString(message)
+              ) : (
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: findLinkAndReplace(message)
+                  }}
+                />
+              )}
+            </span>
           </React.Fragment>
         }
       />
