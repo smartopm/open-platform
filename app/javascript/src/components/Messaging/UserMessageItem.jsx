@@ -17,7 +17,8 @@ export default function UserMessageItem({
   clientNumber,
   dateMessageCreated,
   isTruncate,
-  isRead
+  isRead,
+  updatedAt
 }) {
   let history = useHistory()
 
@@ -50,16 +51,30 @@ export default function UserMessageItem({
           </React.Fragment>
         }
         secondary={
-          <React.Fragment>{
-            isTruncate ? truncateString(message) : 
-            <React.Fragment>
-            <span dangerouslySetInnerHTML={{ __html: findLinkAndReplace(message)}} />
-              <span className={css(styles.timeStamp)}>
-                {isRead === null ? 'N/A' : isRead ? 'Seen' : 'Not Seen'}
-              </span>
-            </React.Fragment>
-          }</React.Fragment>
-
+          <React.Fragment>
+            {isTruncate ? (
+              truncateString(message)
+            ) : (
+              <React.Fragment>
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: findLinkAndReplace(message)
+                  }}
+                />
+                <span className={css(styles.timeStamp)}>
+                  {isRead === null ? (
+                    'N/A'
+                  ) : isRead ? (
+                    <React.Fragment>
+                      Seen: <DateContainer date={updatedAt} />
+                    </React.Fragment>
+                  ) : (
+                    'Not Seen'
+                  )}
+                </span>
+              </React.Fragment>
+            )}
+          </React.Fragment>
         }
       />
     </ListItem>
@@ -73,6 +88,7 @@ UserMessageItem.propTypes = {
   message: PropTypes.string,
   clientNumber: PropTypes.string,
   dateMessageCreated: PropTypes.string,
+  updatedAt: PropTypes.string,
   isTruncate: PropTypes.bool.isRequired,
   isRead: PropTypes.bool
 }

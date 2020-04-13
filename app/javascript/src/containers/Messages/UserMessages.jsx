@@ -66,6 +66,7 @@ export default function UserMessages() {
                 message={message.message}
                 clientNumber={message.sender.phoneNumber}
                 dateMessageCreated={message.createdAt}
+                updatedAt={message.updatedAt}
                 isTruncate={false}
                 isRead={message.isRead}
               />
