@@ -43,7 +43,7 @@ export default function UserMessageItem({
       <ListItemText
         primary={
           <React.Fragment>
-            <span>
+            <span className="nz_msg_owner">
               {name}
               <span className={css(styles.timeStamp)}>
                 <DateContainer date={dateMessageCreated} />
@@ -53,29 +53,30 @@ export default function UserMessageItem({
         }
         secondary={
           <React.Fragment>
-            {isTruncate ? (
-              truncateString(message)
-            ) : (
-              <React.Fragment>
+            <span className="nz_msg">
+              {isTruncate ? (
+                truncateString(message)
+              ) : (
                 <span
                   dangerouslySetInnerHTML={{
                     __html: findLinkAndReplace(message)
                   }}
                 />
-                {isAdmin && (
-                  <span className={css(styles.timeStamp)}>
-                    {isRead === null ? (
-                      'N/A'
-                    ) : isRead ? (
-                      <React.Fragment>
-                        Seen: <DateContainer date={updatedAt} />
-                      </React.Fragment>
-                    ) : (
-                      'Not Seen'
-                    )}
-                  </span>
+              )}
+            </span>
+
+            {isAdmin && (
+              <span className={css(styles.timeStamp)}>
+                {isRead === null ? (
+                  'N/A'
+                ) : isRead ? (
+                  <React.Fragment>
+                    Seen: <DateContainer date={updatedAt} />
+                  </React.Fragment>
+                ) : (
+                  'Not Seen'
                 )}
-              </React.Fragment>
+              </span>
             )}
           </React.Fragment>
         }
@@ -90,11 +91,15 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
-  dateMessageCreated: PropTypes.string,
   updatedAt: PropTypes.string,
   isTruncate: PropTypes.bool.isRequired,
   isRead: PropTypes.bool,
-  isAdmin: PropTypes.bool
+  isAdmin: PropTypes.bool,
+  dateMessageCreated: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
+  isTruncate: PropTypes.bool.isRequired
 }
 
 const styles = StyleSheet.create({
