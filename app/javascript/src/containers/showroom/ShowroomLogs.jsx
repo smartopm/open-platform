@@ -5,6 +5,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { ShowroomEntriesQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
+import {dateTimeToString} from '../../components/DateContainer'
 import DateUtil from '../../utils/dateutil'
 import TblPagination from '../../components/TblPagination'
 import {
@@ -115,7 +116,7 @@ export default function ShowroomLogs() {
                                         <StyledTableCell align="right">{entry.homeAddress}</StyledTableCell>
                                         <StyledTableCell align="right">{entry.reason}</StyledTableCell>
                                         <StyledTableCell align="right">{DateUtil.dateToString(new Date(entry.createdAt))}</StyledTableCell>
-                                        <StyledTableCell align="right">{DateUtil.dateTimeToString(new Date(entry.createdAt))}</StyledTableCell>
+                                        <StyledTableCell align="right">{dateTimeToString(entry.createdAt)}</StyledTableCell>
 
                                     </StyledTableRow>
                                 ))}
