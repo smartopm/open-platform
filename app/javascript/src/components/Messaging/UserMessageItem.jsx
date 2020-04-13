@@ -7,7 +7,7 @@ import Avatar from '../Avatar'
 import { useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
-import {truncateString, findLinkAndReplace} from '../../utils/helpers'
+import { truncateString, findLinkAndReplace } from '../../utils/helpers'
 
 export default function UserMessageItem({
   id,
@@ -40,7 +40,7 @@ export default function UserMessageItem({
       <ListItemText
         primary={
           <React.Fragment>
-            <span>
+            <span className="nz_msg_owner">
               {name}
               <span className={css(styles.timeStamp)}>
                 <DateContainer date={dateMessageCreated} />
@@ -49,17 +49,22 @@ export default function UserMessageItem({
           </React.Fragment>
         }
         secondary={
-          <React.Fragment>{
-            isTruncate ? truncateString(message) : 
-            <span dangerouslySetInnerHTML={{ __html: findLinkAndReplace(message)}} />
-          }</React.Fragment>
+          <React.Fragment>
+            {isTruncate ? (
+              truncateString(message)
+            ) : (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: findLinkAndReplace(message)
+                }}
+              />
+            )}
+          </React.Fragment>
         }
       />
     </ListItem>
   )
 }
-
-
 
 UserMessageItem.propTypes = {
   name: PropTypes.string.isRequired,
@@ -67,7 +72,10 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
-  dateMessageCreated: PropTypes.string,
+  dateMessageCreated: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]),
   isTruncate: PropTypes.bool.isRequired
 }
 
