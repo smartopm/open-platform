@@ -18,7 +18,8 @@ export default function UserMessageItem({
   dateMessageCreated,
   isTruncate,
   isRead,
-  updatedAt
+  updatedAt,
+  isAdmin
 }) {
   let history = useHistory()
 
@@ -61,17 +62,19 @@ export default function UserMessageItem({
                     __html: findLinkAndReplace(message)
                   }}
                 />
-                <span className={css(styles.timeStamp)}>
-                  {isRead === null ? (
-                    'N/A'
-                  ) : isRead ? (
-                    <React.Fragment>
-                      Seen: <DateContainer date={updatedAt} />
-                    </React.Fragment>
-                  ) : (
-                    'Not Seen'
-                  )}
-                </span>
+                {isAdmin && (
+                  <span className={css(styles.timeStamp)}>
+                    {isRead === null ? (
+                      'N/A'
+                    ) : isRead ? (
+                      <React.Fragment>
+                        Seen: <DateContainer date={updatedAt} />
+                      </React.Fragment>
+                    ) : (
+                      'Not Seen'
+                    )}
+                  </span>
+                )}
               </React.Fragment>
             )}
           </React.Fragment>
@@ -90,7 +93,8 @@ UserMessageItem.propTypes = {
   dateMessageCreated: PropTypes.string,
   updatedAt: PropTypes.string,
   isTruncate: PropTypes.bool.isRequired,
-  isRead: PropTypes.bool
+  isRead: PropTypes.bool,
+  isAdmin: PropTypes.bool
 }
 
 const styles = StyleSheet.create({

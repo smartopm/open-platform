@@ -69,6 +69,7 @@ export default function UserMessages() {
                 updatedAt={message.updatedAt}
                 isTruncate={false}
                 isRead={message.isRead}
+                isAdmin={authState.user.userType === 'admin'}
               />
             ))
           ) : (
