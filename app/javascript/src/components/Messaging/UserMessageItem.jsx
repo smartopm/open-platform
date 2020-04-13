@@ -98,8 +98,7 @@ UserMessageItem.propTypes = {
   dateMessageCreated: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(Date)
-  ]),
-  isTruncate: PropTypes.bool.isRequired
+  ])
 }
 
 const styles = StyleSheet.create({
