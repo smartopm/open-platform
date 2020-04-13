@@ -176,7 +176,7 @@ export default function UsersList() {
                         </IconButton>
                     </Fragment>
                 </div>
-                <Table className={classes.table} aria-label="customized table">
+                <Table stickyHeader className={classes.table} aria-label="customized table">
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Name</StyledTableCell>
