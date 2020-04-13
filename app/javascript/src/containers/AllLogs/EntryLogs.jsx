@@ -8,9 +8,6 @@ import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined'
-import NewReleasesOutlinedIcon from '@material-ui/icons/NewReleasesOutlined'
-import IconButton from '@material-ui/core/IconButton'
 import {
   StyledTabs,
   StyledTab,
@@ -19,21 +16,22 @@ import {
 } from '../../components/Tabs'
 
 export default ({ history, match }) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_enrolled']
-  return allEventLogs(history, match, subjects)
+  return allEventLogs(history, match)
 }
 
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50
-const allEventLogs = (history, match, subjects) => {
+const allEventLogs = (history, match) => {
+  const subjects = ['user_entry', 'visitor_entry', 'showroom']
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
   const [searchTerm, setSearchTerm] = useState('')
+  const [value, setvalue] = useState(0)
 
   const refId = match.params.userId || null
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: subjects,
+      subject: value === 0 ? subjects : 'user_enrolled',
       refId: refId,
       refType: null,
       offset,
@@ -64,6 +62,10 @@ const allEventLogs = (history, match, subjects) => {
     handleLimit()
   }
 
+  function handleChange(_event, newValue) {
+    setvalue(newValue)
+  }
+
   return (
     <IndexComponent
       data={data}
@@ -75,6 +77,8 @@ const allEventLogs = (history, match, subjects) => {
       limit={limit}
       searchTerm={searchTerm}
       handleSearch={handleSearch}
+      handleTabValue={handleChange}
+      tabValue={value}
     />
   )
 }
@@ -87,10 +91,12 @@ export function IndexComponent({
   offset,
   limit,
   searchTerm,
-  handleSearch
+  handleSearch,
+  tabValue,
+  handleTabValue
 }) {
   const authState = useContext(AuthStateContext)
-  const [value, setvalue] = useState(0)
+
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -109,13 +115,9 @@ export function IndexComponent({
     })
   }
 
-  function handleChange(_event, newValue) {
-    setvalue(newValue)
-  }
-
   function logs(eventLogs) {
     if (!eventLogs) {
-      return
+      return 'No Entry logs yet'
     }
 
     return eventLogs.map(event => {
@@ -132,87 +134,70 @@ export function IndexComponent({
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
         <Fragment key={event.id}>
-          <div>
-            <StyledTabs
-              value={value}
-              onChange={handleChange}
-              aria-label="simple tabs example"
-              centered
-            >
-              <StyledTab label=" Entry Logs" {...a11yProps(0)} />
-              <StyledTab label="New Users" {...a11yProps(1)} />
-            </StyledTabs>
-            <TabPanel value={value} index={0}>
-              <div className="container">
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.logTitle)}>{visitorName}</span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {DateUtil.dateToString(new Date(event.createdAt))}
-                    </span>
-                  </div>
-                </div>
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.subTitle)}>{reason}</span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {DateUtil.dateTimeToString(new Date(event.createdAt))}
-                    </span>
-                  </div>
-                </div>
-                <br />
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.subTitle)}>
-                      {event.actingUser.name}
-                    </span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {source !== 'Scan' &&
-                      authState.user.userType === 'admin' ? (
-                        <Fragment>
-                          <span
-                            style={{
-                              cursor: 'pointer',
-                              color: '#009688'
-                            }}
-                            onClick={() => enrollUser(event.refId)}
-                          >
-                            Enroll user{' '}
-                          </span>
-                          | {source}
-                        </Fragment>
-                      ) : source === 'Scan' && isDigital !== null ? (
-                        `${isDigital ? 'Digital' : 'Print'} Scan`
-                      ) : (
-                        source
-                      )}{' '}
-                      |{' '}
+          <div className="container">
+            <div className="row justify-content-between">
+              <div className="col-xs-8">
+                <span className={css(styles.logTitle)}>{visitorName}</span>
+              </div>
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>
+                  {DateUtil.dateToString(new Date(event.createdAt))}
+                </span>
+              </div>
+            </div>
+            <div className="row justify-content-between">
+              <div className="col-xs-8">
+                <span className={css(styles.subTitle)}>{reason}</span>
+              </div>
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>
+                  {DateUtil.dateTimeToString(new Date(event.createdAt))}
+                </span>
+              </div>
+            </div>
+            <br />
+            <div className="row justify-content-between">
+              <div className="col-xs-8">
+                <span className={css(styles.subTitle)}>
+                  {event.actingUser.name}
+                </span>
+              </div>
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>
+                  {source !== 'Scan' && authState.user.userType === 'admin' ? (
+                    <Fragment>
                       <span
                         style={{
                           cursor: 'pointer',
                           color: '#009688'
                         }}
-                        onClick={() => {
-                          routeToAction(event)
-                        }}
+                        onClick={() => enrollUser(event.refId)}
                       >
-                        More Details
+                        Enroll user{' '}
                       </span>
-                    </span>
-                  </div>
-                </div>
-                <br />
+                      | {source}
+                    </Fragment>
+                  ) : source === 'Scan' && isDigital !== null ? (
+                    `${isDigital ? 'Digital' : 'Print'} Scan`
+                  ) : (
+                    source
+                  )}{' '}
+                  |{' '}
+                  <span
+                    style={{
+                      cursor: 'pointer',
+                      color: '#009688'
+                    }}
+                    onClick={() => {
+                      routeToAction(event)
+                    }}
+                  >
+                    More Details
+                  </span>
+                </span>
               </div>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              New Users
-            </TabPanel>
+            </div>
+            <br />
           </div>
 
           <div className="border-top my-3" />
@@ -248,28 +233,43 @@ export function IndexComponent({
           />
         </div>
       </div>
+      <div>
+        <StyledTabs
+          value={tabValue}
+          onChange={handleTabValue}
+          aria-label="simple tabs example"
+          centered
+        >
+          <StyledTab label=" Entry Logs" {...a11yProps(0)} />
+          <StyledTab label="New Users" {...a11yProps(1)} />
+        </StyledTabs>
+        <TabPanel value={tabValue} index={0}>
+          <>{logs(filteredEvents)}</>
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          {/* Todo: Handle the listing of enrolled users here */}
+          enrolled users: {data && data.result && data.result.length}
+        </TabPanel>
+      </div>
 
-      <div className="container">
-        <>{logs(filteredEvents)}</>
-        <div className="d-flex justify-content-center">
-          <nav aria-label="center Page navigation">
-            <ul className="pagination">
-              <li className={`page-item ${offset < limit && 'disabled'}`}>
-                <a className="page-link" onClick={previousPage} href="#">
-                  Previous
-                </a>
-              </li>
-              <li
-                className={`page-item ${filteredEvents.length < limit &&
-                  'disabled'}`}
-              >
-                <a className="page-link" onClick={nextPage} href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+      <div className="d-flex justify-content-center">
+        <nav aria-label="center Page navigation">
+          <ul className="pagination">
+            <li className={`page-item ${offset < limit && 'disabled'}`}>
+              <a className="page-link" onClick={previousPage} href="#">
+                Previous
+              </a>
+            </li>
+            <li
+              className={`page-item ${filteredEvents.length < limit &&
+                'disabled'}`}
+            >
+              <a className="page-link" onClick={nextPage} href="#">
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
       <Footer position={'3vh'} />
     </div>
