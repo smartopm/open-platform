@@ -23,7 +23,6 @@ import { UserQuery } from '../graphql/queries'
 import {
   AddActivityLog,
   SendOneTimePasscode,
-  DeleteUser,
   CreateNote,
   UpdateNote
 } from '../graphql/mutations'
@@ -37,7 +36,7 @@ export default ({ history }) => {
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id }
   })
-  console.log({ tm, dg })
+
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
       userId: id,
@@ -45,23 +44,19 @@ export default ({ history }) => {
       timestamp: tm
     }
   })
-  const [deleteUser] = useMutation(DeleteUser, {
-    variables: { id: id },
-    onCompleted: () => {
-      history.push('/')
-    }
-  })
+
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
   if (loading || entry.loading) return <Loading />
   if (entry.data) return <Redirect to="/" />
-  if (error) return <ErrorPage title={error} />
+  if (error) {
+    return <ErrorPage title={error.message || error} /> // error could be a string sometimes
+  }
   return (
     <Component
       data={data}
       authState={authState}
       onLogEntry={addLogEntry}
-      onDelete={deleteUser}
       sendOneTimePasscode={sendOneTimePasscode}
       refetch={refetch}
       userId={id}
@@ -80,7 +75,6 @@ export const StyledTab = withStyles({
 export function Component({
   data,
   onLogEntry,
-  onDelete,
   authState,
   sendOneTimePasscode,
   refetch,
@@ -284,21 +278,6 @@ export function Component({
                         className={css(styles.linkItem)}
                       >
                         Send One Time Passcode
-                      </a>
-                    </MenuItem>
-                    <MenuItem key={'delete'}>
-                      <a
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              'Are you sure you wish to delete this user?'
-                            )
-                          )
-                            onDelete()
-                        }}
-                        className={css(styles.linkItem)}
-                      >
-                        Delete
                       </a>
                     </MenuItem>
                   </div>
