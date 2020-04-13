@@ -8,13 +8,11 @@ import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
-import NewReleasesOutlinedIcon from '@material-ui/icons/NewReleasesOutlined';
-import IconButton from '@material-ui/core/IconButton';
+
 
 
 export default ({ history, match }) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_enrolled']
+  const subjects = ['user_entry', 'visitor_entry', 'showroom']
   return allEventLogs(history, match, subjects)
 }
 
@@ -36,9 +34,6 @@ const allEventLogs = (history, match, subjects) => {
     },
     fetchPolicy: 'cache-and-network'
   })
-
-  console.log(data);
-
 
 
   if (loading) return <Loading />
@@ -109,10 +104,7 @@ export function IndexComponent({
     })
   }
 
-  function buttonSelected() {
-    setNewIsSelected(!newIsSelected)
-  }
-  console.log(newIsSelected);
+
 
   function logs(eventLogs) {
     if (!eventLogs) {
@@ -121,16 +113,18 @@ export function IndexComponent({
 
     return eventLogs.map(event => {
       // Todo: To be followed up
-      const source =
-        event.subject === 'user_entry'
-          ? 'Scan'
-          : event.subject === 'showroom'
-            ? 'Showroom'
-            : 'Manual'
-      const isDigital = source === 'Scan' ? event.data.digital : null
-      const reason = event.entryRequest ? event.entryRequest.reason : ''
-      const visitorName =
-        event.data.ref_name || event.data.visitor_name || event.data.name
+        const source =
+          event.subject === 'user_entry'
+            ? 'Scan'
+            : event.subject === 'showroom'
+              ? 'Showroom'
+              : 'Manual'
+        const isDigital = source === 'Scan' ? event.data.digital : null
+        const reason = event.entryRequest ? event.entryRequest.reason : ''
+        const visitorName =
+          event.data.ref_name || event.data.visitor_name || event.data.name
+  
+
       return (
         <Fragment key={event.id}>
           <div className="container">
@@ -196,7 +190,7 @@ export function IndexComponent({
             </div>
             <br />
           </div>
-          <div className="border-top my-3" />
+          <div className="border-top my-3" /> 
         </Fragment>
       )
     })
@@ -227,21 +221,6 @@ export function IndexComponent({
             className="form-control"
             placeholder="Filter Entries"
           />
-        </div>
-      </div>
-      <div className="d-flex justify-content-center">
-        <div className="col-4 d-flex justify-content-center container">
-          <IconButton>
-            <AssignmentTurnedInOutlinedIcon />
-          </IconButton>
-        </div>
-        <div className="col-4 d-flex justify-content-center container">
-          <IconButton onClick={buttonSelected}>
-            <NewReleasesOutlinedIcon />
-          </IconButton>
-        </div>
-        <div className="col-4 d-flex justify-content-center container">
-
         </div>
       </div>
 
