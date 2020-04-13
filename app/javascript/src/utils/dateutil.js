@@ -33,7 +33,7 @@ function dateTimeToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }
-  return date.getHours() + ':' + pad('00', date.getMinutes())
+  return pad('00', date.getHours()) + ':' + pad('00', date.getMinutes())
 }
 
 function formatDate(datetime) {
