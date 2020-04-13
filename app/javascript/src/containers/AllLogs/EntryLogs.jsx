@@ -8,10 +8,15 @@ import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
-import NewReleasesOutlinedIcon from '@material-ui/icons/NewReleasesOutlined';
-import IconButton from '@material-ui/core/IconButton';
-
+import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined'
+import NewReleasesOutlinedIcon from '@material-ui/icons/NewReleasesOutlined'
+import IconButton from '@material-ui/core/IconButton'
+import {
+  StyledTabs,
+  StyledTab,
+  TabPanel,
+  a11yProps
+} from '../../components/Tabs'
 
 export default ({ history, match }) => {
   const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_enrolled']
@@ -37,9 +42,7 @@ const allEventLogs = (history, match, subjects) => {
     fetchPolicy: 'cache-and-network'
   })
 
-  console.log(data);
-
-
+  console.log(data)
 
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
@@ -61,7 +64,6 @@ const allEventLogs = (history, match, subjects) => {
     handleLimit()
   }
 
-
   return (
     <IndexComponent
       data={data}
@@ -73,7 +75,6 @@ const allEventLogs = (history, match, subjects) => {
       limit={limit}
       searchTerm={searchTerm}
       handleSearch={handleSearch}
-
     />
   )
 }
@@ -89,7 +90,7 @@ export function IndexComponent({
   handleSearch
 }) {
   const authState = useContext(AuthStateContext)
-  const [newIsSelected, setNewIsSelected] = useState(false)
+  const [value, setvalue] = useState(0)
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
       return router.push({
@@ -101,7 +102,6 @@ export function IndexComponent({
     }
   }
 
-
   function enrollUser(id) {
     return router.push({
       pathname: `/request/${id}`,
@@ -109,10 +109,9 @@ export function IndexComponent({
     })
   }
 
-  function buttonSelected() {
-    setNewIsSelected(!newIsSelected)
+  function handleChange(_event, newValue) {
+    setvalue(newValue)
   }
-  console.log(newIsSelected);
 
   function logs(eventLogs) {
     if (!eventLogs) {
@@ -125,77 +124,97 @@ export function IndexComponent({
         event.subject === 'user_entry'
           ? 'Scan'
           : event.subject === 'showroom'
-            ? 'Showroom'
-            : 'Manual'
+          ? 'Showroom'
+          : 'Manual'
       const isDigital = source === 'Scan' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
         <Fragment key={event.id}>
-          <div className="container">
-            <div className="row justify-content-between">
-              <div className="col-xs-8">
-                <span className={css(styles.logTitle)}>{visitorName}</span>
-              </div>
-              <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
-                  {DateUtil.dateToString(new Date(event.createdAt))}
-                </span>
-              </div>
-            </div>
-            <div className="row justify-content-between">
-              <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>{reason}</span>
-              </div>
-              <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
-                  {DateUtil.dateTimeToString(new Date(event.createdAt))}
-                </span>
-              </div>
-            </div>
-            <br />
-            <div className="row justify-content-between">
-              <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>
-                  {event.actingUser.name}
-                </span>
-              </div>
-              <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
-                  {source !== 'Scan' && authState.user.userType === 'admin' ? (
-                    <Fragment>
+          <div>
+            <StyledTabs
+              value={value}
+              onChange={handleChange}
+              aria-label="simple tabs example"
+              centered
+            >
+              <StyledTab label=" Entry Logs" {...a11yProps(0)} />
+              <StyledTab label="New Users" {...a11yProps(1)} />
+            </StyledTabs>
+            <TabPanel value={value} index={0}>
+              <div className="container">
+                <div className="row justify-content-between">
+                  <div className="col-xs-8">
+                    <span className={css(styles.logTitle)}>{visitorName}</span>
+                  </div>
+                  <div className="col-xs-4">
+                    <span className={css(styles.subTitle)}>
+                      {DateUtil.dateToString(new Date(event.createdAt))}
+                    </span>
+                  </div>
+                </div>
+                <div className="row justify-content-between">
+                  <div className="col-xs-8">
+                    <span className={css(styles.subTitle)}>{reason}</span>
+                  </div>
+                  <div className="col-xs-4">
+                    <span className={css(styles.subTitle)}>
+                      {DateUtil.dateTimeToString(new Date(event.createdAt))}
+                    </span>
+                  </div>
+                </div>
+                <br />
+                <div className="row justify-content-between">
+                  <div className="col-xs-8">
+                    <span className={css(styles.subTitle)}>
+                      {event.actingUser.name}
+                    </span>
+                  </div>
+                  <div className="col-xs-4">
+                    <span className={css(styles.subTitle)}>
+                      {source !== 'Scan' &&
+                      authState.user.userType === 'admin' ? (
+                        <Fragment>
+                          <span
+                            style={{
+                              cursor: 'pointer',
+                              color: '#009688'
+                            }}
+                            onClick={() => enrollUser(event.refId)}
+                          >
+                            Enroll user{' '}
+                          </span>
+                          | {source}
+                        </Fragment>
+                      ) : source === 'Scan' && isDigital !== null ? (
+                        `${isDigital ? 'Digital' : 'Print'} Scan`
+                      ) : (
+                        source
+                      )}{' '}
+                      |{' '}
                       <span
                         style={{
                           cursor: 'pointer',
                           color: '#009688'
                         }}
-                        onClick={() => enrollUser(event.refId)}
+                        onClick={() => {
+                          routeToAction(event)
+                        }}
                       >
-                        Enroll user{' '}
+                        More Details
                       </span>
-                      | {source}
-                    </Fragment>
-                  ) : (
-                      source === 'Scan' && isDigital !== null ? `${isDigital ? 'Digital' : 'Print'} Scan` : source
-                    )}{' '}
-                  |{' '}
-                  <span
-                    style={{
-                      cursor: 'pointer',
-                      color: '#009688'
-                    }}
-                    onClick={() => {
-                      routeToAction(event)
-                    }}
-                  >
-                    More Details
-                  </span>
-                </span>
+                    </span>
+                  </div>
+                </div>
+                <br />
               </div>
-            </div>
-            <br />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              New Users
+            </TabPanel>
           </div>
+
           <div className="border-top my-3" />
         </Fragment>
       )
@@ -227,21 +246,6 @@ export function IndexComponent({
             className="form-control"
             placeholder="Filter Entries"
           />
-        </div>
-      </div>
-      <div className="d-flex justify-content-center">
-        <div className="col-4 d-flex justify-content-center container">
-          <IconButton>
-            <AssignmentTurnedInOutlinedIcon />
-          </IconButton>
-        </div>
-        <div className="col-4 d-flex justify-content-center container">
-          <IconButton onClick={buttonSelected}>
-            <NewReleasesOutlinedIcon />
-          </IconButton>
-        </div>
-        <div className="col-4 d-flex justify-content-center container">
-
         </div>
       </div>
 
