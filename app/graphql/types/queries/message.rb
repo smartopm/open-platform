@@ -29,12 +29,14 @@ module Types::Queries::Message
 
   def user_messages(id:)
     com_id = context[:current_user].community_id
-    messages = Message.joins(:user, :sender).includes(:user, :sender)
-                      .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
-                      .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
-                      .order('messages.created_at ASC').limit(50)
+    messages =
+      Message.joins(:user, :sender).includes(:user, :sender)
+             .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
+             .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
+             .order('messages.created_at ASC').limit(50)
 
-    messages.update_all(is_read: true) unless context[:current_user].admin?
+    # messages.update_all(is_read: true) unless context[:current_user].admin?
+    messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
   end
 end

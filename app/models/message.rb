@@ -16,6 +16,10 @@ class Message < ApplicationRecord
            .order('user_id ASC, messages.created_at DESC').limit(limit).offset(offset)
   end
 
+  def mark_as_read
+    update(is_read: true) unless is_read
+  end
+
   def send_sms
     return if receiver.nil?
 
