@@ -35,7 +35,6 @@ module Types::Queries::Message
              .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
              .order('messages.created_at ASC').limit(50)
 
-    # messages.update_all(is_read: true) unless context[:current_user].admin?
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
   end

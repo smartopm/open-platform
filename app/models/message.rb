@@ -17,7 +17,7 @@ class Message < ApplicationRecord
   end
 
   def mark_as_read
-    update(is_read: true) unless is_read
+    update(is_read: true, read_at: DateTime.now) unless is_read
   end
 
   def send_sms
