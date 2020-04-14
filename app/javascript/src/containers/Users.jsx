@@ -28,7 +28,8 @@ const useStyles = makeStyles(theme => ({
     table: {
         display: 'block',
         width: '100%',
-        overflowX: 'auto'
+        overflowX: 'auto', 
+        height: 500
     },
     root: {
         padding: '2px 4px',
