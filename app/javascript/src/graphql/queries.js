@@ -206,7 +206,7 @@ export const UserMessageQuery = gql`
       id
       message
       createdAt
-      updatedAt
+      readAt
       isRead
       sender {
         name

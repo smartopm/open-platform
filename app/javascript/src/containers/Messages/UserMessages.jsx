@@ -66,7 +66,7 @@ export default function UserMessages() {
                 message={message.message}
                 clientNumber={message.sender.phoneNumber}
                 dateMessageCreated={message.createdAt}
-                updatedAt={message.updatedAt}
+                readAt={message.readAt}
                 isTruncate={false}
                 isRead={message.isRead}
                 isAdmin={authState.user.userType === 'admin'}

@@ -18,7 +18,7 @@ export default function UserMessageItem({
   dateMessageCreated,
   isTruncate,
   isRead,
-  updatedAt,
+  readAt,
   isAdmin
 }) {
   let history = useHistory()
@@ -71,7 +71,7 @@ export default function UserMessageItem({
                   'N/A'
                 ) : isRead ? (
                   <React.Fragment>
-                    Seen: <DateContainer date={updatedAt} />
+                    Seen: <DateContainer date={readAt} />
                   </React.Fragment>
                 ) : (
                   'Not Seen'
@@ -91,7 +91,7 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
-  updatedAt: PropTypes.string,
+  readAt: PropTypes.string,
   isTruncate: PropTypes.bool.isRequired,
   isRead: PropTypes.bool,
   isAdmin: PropTypes.bool,

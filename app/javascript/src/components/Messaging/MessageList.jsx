@@ -19,7 +19,7 @@ export default function MessageList({ messages }) {
               message={message.message}
               clientNumber={message.user.phoneNumber}
               dateMessageCreated={message.createdAt}
-              updatedAt={message.updatedAt}
+              readAt={message.readAt}
               isTruncate={true}
             />
           ))
