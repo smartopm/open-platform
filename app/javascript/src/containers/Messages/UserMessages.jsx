@@ -1,5 +1,5 @@
 import React, { useContext, Fragment, useState } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams, useLocation, Link } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserMessageQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
@@ -48,8 +48,10 @@ export default function UserMessages() {
   return (
     <Fragment>
       <Nav navName="Messages History" menuButton="back">
-        <span className="text-center text-white">
-          {(state && state.clientName) || ''}
+        <span className="text-center">
+          <Link to={`/user/${id}`} className={css(styles.linkedName)}>
+            {(state && state.clientName) || ''}
+          </Link>
         </span>
       </Nav>
       <div className={css(styles.messageSection)}>
@@ -122,7 +124,9 @@ const styles = StyleSheet.create({
   messageSection: {
     overflow: 'auto',
     maxHeight: '74vh'
+  },
+  linkedName: {
+    textDecoration: 'none',
+    color: '#FFFFFF'
   }
 })
-
-

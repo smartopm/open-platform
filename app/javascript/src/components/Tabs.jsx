@@ -20,11 +20,11 @@ export function TabPanel(props) {
 
 export const StyledTabs = withStyles({
   indicator: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgb(37, 192, 176)',
     '& > div': {
       maxWidth: 40,
       width: '100%',
-      backgroundColor: '#FFF'
+      backgroundColor: 'rgb(37, 192, 176)'
     }
   }
 })(props => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />)
@@ -32,7 +32,7 @@ export const StyledTabs = withStyles({
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
-    color: '#fff',
+    color: '#rgb(37, 192, 176)',
     display: 'flex',
     justifyContent: 'center'
   }
