@@ -66,7 +66,7 @@ export default function UserMessageItem({
             </span>
 
             {isAdmin && (
-              <span className={css(styles.timeStamp)}>
+              <span className={`nz_read ${css(styles.timeStamp)}`}>
                 {isRead === null ? (
                   'N/A'
                 ) : isRead ? (

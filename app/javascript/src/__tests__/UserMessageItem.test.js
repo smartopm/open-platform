@@ -13,7 +13,8 @@ describe('user message item component', () => {
     message,
     clientNumber: '2603434343',
     dateMessageCreated: new Date(),
-    isTruncate: false
+    isTruncate: false,
+    isAdmin: true
   }
   const messageItem = mount(
     <BrowserRouter>
@@ -42,6 +43,11 @@ describe('user message item component', () => {
     expect(messageItem.find('.nz_msg').text()).toBe(message)
   })
 
+  it('displayes not seen if message not seen yet by the user', () => {
+    expect(messageItem.find('.nz_read').text()).toBe('Not Seen')
+  })
+
+
   // new data
 
   const new_data = {
@@ -51,7 +57,10 @@ describe('user message item component', () => {
     message,
     clientNumber: '2603434343',
     dateMessageCreated: new Date(),
-    isTruncate: true
+    isTruncate: true,
+    isAdmin: true,
+    isRead: true,
+    readAt: new Date()
   }
 
   const truncateMessageItem = mount(
@@ -59,10 +68,14 @@ describe('user message item component', () => {
       <UserMessageItem {...new_data} />
     </BrowserRouter>
   )
-
+  // nz_read
   it('message should be truncated when isTruncate is true', () => {
     expect(truncateMessageItem.find('.nz_msg').text()).toBe(
       'Please share your feedback with this 30 ...'
     )
+  })
+
+  it('shows admin the time when message was read at', () => {
+    expect(truncateMessageItem.find('.nz_read').text()).toContain('Seen')
   })
 })
