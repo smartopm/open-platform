@@ -43,7 +43,9 @@ export default function UserMessages() {
   }
 
   if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
+  if (error){
+    return <ErrorPage error={error.message} />
+  }
 
   return (
     <Fragment>
@@ -66,7 +68,10 @@ export default function UserMessages() {
                 message={message.message}
                 clientNumber={message.sender.phoneNumber}
                 dateMessageCreated={message.createdAt}
+                readAt={message.readAt}
                 isTruncate={false}
+                isRead={message.isRead}
+                isAdmin={authState.user.userType === 'admin'}
               />
             ))
           ) : (
