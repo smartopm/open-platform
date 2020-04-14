@@ -6,6 +6,7 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import MessageList from '../../components/Messaging/MessageList'
+import Nav from '../../components/Nav'
 
 const limit = 50
 export default function AllMessages() {
@@ -37,6 +38,7 @@ export default function AllMessages() {
 
     return (
         <Fragment>
+            <Nav navName="Messages" menuButton="back" />
             <MessageList messages={data.messages} />
             <div className="d-flex justify-content-center">
                 <nav aria-label="center Page navigation">

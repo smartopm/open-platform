@@ -43,7 +43,9 @@ export default function UserMessages() {
   }
 
   if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
+  if (error){
+    return <ErrorPage error={error.message} />
+  }
 
   return (
     <Fragment>

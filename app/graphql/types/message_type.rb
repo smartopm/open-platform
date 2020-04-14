@@ -12,6 +12,6 @@ module Types
     field :message, String, null: true
     field :is_read, Boolean, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :read_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :read_at, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

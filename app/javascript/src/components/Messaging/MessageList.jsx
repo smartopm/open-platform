@@ -1,13 +1,11 @@
-import React, { Fragment } from 'react'
+import React  from 'react'
 import PropTypes from 'prop-types'
 import MaterialList from '@material-ui/core/List'
 import UserMessageItem from './UserMessageItem'
-import Nav from '../Nav'
+
 
 export default function MessageList({ messages }) {
   return (
-    <Fragment>
-      <Nav navName="Messages" menuButton="back" />
       <MaterialList>
         {messages.length ? (
           messages.map(message => (
@@ -25,11 +23,10 @@ export default function MessageList({ messages }) {
           ))
         ) : (
           <div>
-            <p className="text-center">No messages</p>
+            <p className="text-center nz_no_msg">No messages</p>
           </div>
         )}
       </MaterialList>
-    </Fragment>
   )
 }
 MessageList.defaultProps = {
