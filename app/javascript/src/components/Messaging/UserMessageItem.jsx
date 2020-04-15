@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
 import { truncateString, findLinkAndReplace } from '../../utils/helpers'
+import { useWindowDimensions } from '../../utils/customHooks'
 
 export default function UserMessageItem({
   id,
@@ -22,6 +23,7 @@ export default function UserMessageItem({
   isAdmin
 }) {
   let history = useHistory()
+  const { width } = useWindowDimensions()
 
   function handleReadMessages() {
     if (!isTruncate) return // we will be on user messages page
@@ -55,7 +57,7 @@ export default function UserMessageItem({
           <React.Fragment>
             <span className="nz_msg">
               {isTruncate ? (
-                truncateString(message)
+                truncateString(message, width / 10)
               ) : (
                 <span
                   dangerouslySetInnerHTML={{

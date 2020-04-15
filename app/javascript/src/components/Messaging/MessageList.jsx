@@ -6,7 +6,8 @@ import UserMessageItem from './UserMessageItem'
 
 export default function MessageList({ messages }) {
   return (
-      <MaterialList>
+   
+        <MaterialList>
         {messages.length ? (
           messages.map(message => (
             <UserMessageItem
