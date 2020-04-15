@@ -45,6 +45,11 @@ export default function UserMessageItem({
           <React.Fragment>
             <span className="nz_msg_owner">
               {name}
+              {isTruncate && (
+                <span className={css(styles.ownerType)}>
+                  {user.userType || ''}
+                </span>
+              )}
               <span className={css(styles.timeStamp)}>
                 <DateContainer date={dateMessageCreated} />
               </span>
@@ -91,10 +96,7 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
-  readAt: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]),
+  readAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   isTruncate: PropTypes.bool.isRequired,
   isRead: PropTypes.bool,
   isAdmin: PropTypes.bool,
@@ -113,5 +115,9 @@ const styles = StyleSheet.create({
   messageSection: {
     overflow: 'auto',
     maxHeight: '74vh'
+  },
+  ownerType: {
+    marginLeft: 20,
+    color: '#737380'
   }
 })
