@@ -82,6 +82,6 @@ describe('user message item component', () => {
   })
 
   it('shows admin the user type of the message owner', () => {
-    expect(truncateMessageItem.find('.nz_msg_owner').text()).toContain('client')
+    expect(truncateMessageItem.find('.nz_msg_owner').text()).toContain('Client')
   })
 })
