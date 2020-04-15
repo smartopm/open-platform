@@ -78,6 +78,22 @@ https://nick.dgdp.site {
   }
 }
 
+https://yoram.dgdp.site {
+  tls /root/certs/yoram.dgdp.site/cert.pem /root/certs/yoram.dgdp.site/privkey.pem
+  log stdout
+  errors stdout
+  proxy /packs webpacker:3035 {
+    transparent
+  }
+  proxy /sockjs-node webpacker:3035 {
+    transparent
+    websocket
+  }
+  proxy / rails:3000 {
+    transparent
+  }
+}
+
 
 localhost:443 {
   tls self_signed
