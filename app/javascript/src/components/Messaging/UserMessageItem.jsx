@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
 import { truncateString, findLinkAndReplace } from '../../utils/helpers'
-import { useWindowDimensions } from '../../utils/customHooks'
 
 export default function UserMessageItem({
   id,
@@ -20,10 +19,10 @@ export default function UserMessageItem({
   isTruncate,
   isRead,
   readAt,
-  isAdmin
+  isAdmin,
+  count
 }) {
   let history = useHistory()
-  const { width } = useWindowDimensions()
 
   function handleReadMessages() {
     if (!isTruncate) return // we will be on user messages page
@@ -39,7 +38,7 @@ export default function UserMessageItem({
 
   return (
     <ListItem alignItems="flex-start" onClick={handleReadMessages}>
-      <ListItemAvatar>
+      <ListItemAvatar style={{ marginRight: 8 }}>
         <Avatar user={user} />
       </ListItemAvatar>
       <ListItemText
@@ -57,7 +56,7 @@ export default function UserMessageItem({
           <React.Fragment>
             <span className="nz_msg">
               {isTruncate ? (
-                truncateString(message, width / 10)
+                truncateString(message, count)
               ) : (
                 <span
                   dangerouslySetInnerHTML={{
@@ -103,7 +102,8 @@ UserMessageItem.propTypes = {
   dateMessageCreated: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(Date)
-  ])
+  ]),
+  count: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
