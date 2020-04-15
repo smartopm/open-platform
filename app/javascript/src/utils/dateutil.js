@@ -1,3 +1,5 @@
+import {dateTimeToString as newTime} from '../components/DateContainer'
+
 function fromISO8601(isostr) {
   var parts = isostr.match(/\d+/g)
   return new Date(
@@ -30,10 +32,7 @@ function dateToString(date) {
 }
 
 function dateTimeToString(date) {
-  if (!(date instanceof Date)) {
-    date = fromISO8601(date)
-  }
-  return pad('00', date.getHours()) + ':' + pad('00', date.getMinutes())
+  return newTime(date)
 }
 
 function formatDate(datetime) {
