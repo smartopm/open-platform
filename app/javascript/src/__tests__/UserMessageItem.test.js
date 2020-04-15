@@ -60,7 +60,8 @@ describe('user message item component', () => {
     isTruncate: true,
     isAdmin: true,
     isRead: true,
-    readAt: new Date()
+    readAt: new Date(),
+    count: 40
   }
 
   const truncateMessageItem = mount(
