@@ -8,8 +8,8 @@ export function findLinkAndReplace(msg) {
     })
 }
 
-export function truncateString(message) {
+export function truncateString(message, count) {
   if (!message) return
-  if (message.length <= 40) return message
-  return `${message.substring(0, 40)}...`
+  if (message.length <= count) return message
+  return `${message.substring(0, count)}...`
 }

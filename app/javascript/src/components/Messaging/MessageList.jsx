@@ -1,11 +1,13 @@
-import React  from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import MaterialList from '@material-ui/core/List'
 import UserMessageItem from './UserMessageItem'
-
+import { useWindowDimensions } from '../../utils/customHooks'
 
 export default function MessageList({ messages }) {
+  const { width } = useWindowDimensions()
   return (
+    <div className={width > 1000 ? 'container' : 'container-fluid'}>
       <MaterialList>
         {messages.length ? (
           messages.map(message => (
@@ -19,6 +21,7 @@ export default function MessageList({ messages }) {
               dateMessageCreated={message.createdAt}
               readAt={message.readAt}
               isTruncate={true}
+              count={width / 10}
             />
           ))
         ) : (
@@ -27,6 +30,7 @@ export default function MessageList({ messages }) {
           </div>
         )}
       </MaterialList>
+    </div>
   )
 }
 MessageList.defaultProps = {

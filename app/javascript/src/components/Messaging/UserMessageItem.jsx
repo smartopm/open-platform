@@ -20,7 +20,8 @@ export default function UserMessageItem({
   isTruncate,
   isRead,
   readAt,
-  isAdmin
+  isAdmin,
+  count
 }) {
   let history = useHistory()
 
@@ -38,7 +39,7 @@ export default function UserMessageItem({
 
   return (
     <ListItem alignItems="flex-start" onClick={handleReadMessages}>
-      <ListItemAvatar>
+      <ListItemAvatar style={{ marginRight: 8 }}>
         <Avatar user={user} />
       </ListItemAvatar>
       <ListItemText
@@ -61,7 +62,7 @@ export default function UserMessageItem({
           <React.Fragment>
             <span className="nz_msg">
               {isTruncate ? (
-                truncateString(message)
+                truncateString(message, count)
               ) : (
                 <span
                   dangerouslySetInnerHTML={{
@@ -104,7 +105,8 @@ UserMessageItem.propTypes = {
   dateMessageCreated: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(Date)
-  ])
+  ]),
+  count: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
