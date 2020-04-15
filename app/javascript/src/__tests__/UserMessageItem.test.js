@@ -53,7 +53,9 @@ describe('user message item component', () => {
   const new_data = {
     id: 2,
     name: 'brieen',
-    user: {},
+    user: {
+      userType: 'client'
+    },
     message,
     clientNumber: '2603434343',
     dateMessageCreated: new Date(),
@@ -77,5 +79,9 @@ describe('user message item component', () => {
 
   it('shows admin the time when message was read at', () => {
     expect(truncateMessageItem.find('.nz_read').text()).toContain('Seen')
+  })
+
+  it('shows admin the user type of the message owner', () => {
+    expect(truncateMessageItem.find('.nz_msg_owner').text()).toContain('Client')
   })
 })
