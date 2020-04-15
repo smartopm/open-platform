@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
 import { truncateString, findLinkAndReplace } from '../../utils/helpers'
+import { userType } from '../../utils/constants'
 
 export default function UserMessageItem({
   id,
@@ -47,7 +48,7 @@ export default function UserMessageItem({
               {name}
               {isTruncate && (
                 <span className={css(styles.ownerType)}>
-                  {user.userType || ''}
+                  {userType[user.userType] || ''}
                 </span>
               )}
               <span className={css(styles.timeStamp)}>
