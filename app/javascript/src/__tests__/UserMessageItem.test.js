@@ -44,7 +44,7 @@ describe('user message item component', () => {
   })
 
   it('displayes not seen if message not seen yet by the user', () => {
-    expect(messageItem.find('.nz_read').text()).toBe('Not Seen')
+    expect(messageItem.find('.nz_read').text()).toBe('Not Read')
   })
 
 
@@ -76,6 +76,6 @@ describe('user message item component', () => {
   })
 
   it('shows admin the time when message was read at', () => {
-    expect(truncateMessageItem.find('.nz_read').text()).toContain('Seen')
+    expect(truncateMessageItem.find('.nz_read').text()).toContain('Read')
   })
 })

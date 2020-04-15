@@ -46,7 +46,7 @@ export default function UserMessageItem({
             <span className="nz_msg_owner">
               {name}
               <span className={css(styles.timeStamp)}>
-                <DateContainer date={dateMessageCreated} />
+               Sent: <DateContainer date={dateMessageCreated} />
               </span>
             </span>
           </React.Fragment>
@@ -67,14 +67,12 @@ export default function UserMessageItem({
 
             {isAdmin && (
               <span className={`nz_read ${css(styles.timeStamp)}`}>
-                {isRead === null ? (
-                  'N/A'
-                ) : isRead ? (
+                { isRead && readAt ? (
                   <React.Fragment>
-                    Seen: <DateContainer date={readAt} />
+                    Read: <DateContainer date={readAt} />
                   </React.Fragment>
                 ) : (
-                  'Not Seen'
+                  'Not Read'
                 )}
               </span>
             )}
