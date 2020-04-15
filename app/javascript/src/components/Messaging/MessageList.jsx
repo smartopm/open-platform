@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import MaterialList from '@material-ui/core/List'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import SearchIcon from '@material-ui/icons/Search'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import UserMessageItem from './UserMessageItem'
 import { useWindowDimensions } from '../../utils/customHooks'
 
@@ -13,17 +16,17 @@ export default function MessageList({ messages }) {
   }
 
   function filter(messages) {
-    const { message, user: { phoneNumber, name } } = messages
+    const {
+      message,
+      user: { phoneNumber, name }
+    } = messages
     return (
-      message
-        .toLowerCase()
-        .includes(searchTerm.trim().toLocaleLowerCase()) ||
-      name
-        .toLowerCase()
-        .includes(searchTerm.trim().toLocaleLowerCase()) ||
-        phoneNumber && phoneNumber // we have users that don't have their phones attached to them
-        .toLowerCase()
-        .includes(searchTerm.trim().toLocaleLowerCase())
+      message.toLowerCase().includes(searchTerm.trim().toLocaleLowerCase()) ||
+      name.toLowerCase().includes(searchTerm.trim().toLocaleLowerCase()) ||
+      (phoneNumber &&
+        phoneNumber // we have users that don't have their phones attached to them, prevent throwing here
+          .toLowerCase()
+          .includes(searchTerm.trim().toLocaleLowerCase()))
     )
   }
 
@@ -31,11 +34,22 @@ export default function MessageList({ messages }) {
 
   return (
     <div className={width > 1000 ? 'container' : 'container-fluid'}>
-      <input
-        type="text"
-        placeholder="Search"
+      <br />
+      <OutlinedInput
         value={searchTerm}
         onChange={handleChange}
+        endAdornment={
+          <InputAdornment position="end">
+            <SearchIcon />
+          </InputAdornment>
+        }
+        aria-describedby="search messages input"
+        inputProps={{
+          'aria-label': 'search'
+        }}
+        fullWidth
+        labelWidth={0}
+        placeholder="search message content, user name and phone number"
       />
       <MaterialList>
         {messagess.length ? (
@@ -55,7 +69,11 @@ export default function MessageList({ messages }) {
           ))
         ) : (
           <div>
-            <p className="text-center nz_no_msg">No messages</p>
+            <p className="text-center nz_no_msg">
+              {
+                searchTerm ? <span>No messages found with <strong>{searchTerm}</strong> </span>: 'No messages'
+              }
+            </p>
           </div>
         )}
       </MaterialList>
