@@ -21,7 +21,7 @@ describe('date container component', () => {
   it('renders a span just yesterday time if date was from yesterday', () => {
     // get yesterday's date
     const date = new Date()
-    const previousDate = date.setDate(date.getDate() - 1)
+    const previousDate = date.setDate(zonedDate(date).getDate() - 1)
     const component = mount(<DateContainer date={previousDate} />)
     expect(component.find('span').text()).toContain('Yesterday')
   })
@@ -29,7 +29,7 @@ describe('date container component', () => {
   it('renders date for older dates', () => {
     // get old date
     const date = new Date()
-    const oldDate = date.setDate(date.getDate() - 2)
+    const oldDate = date.setDate(zonedDate(date).getDate() - 2)
     const component = mount(<DateContainer date={oldDate} />)
     expect(component.find('span').text()).toContain(
       DateUtils.dateToString(zonedDate(oldDate))
