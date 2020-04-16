@@ -24,7 +24,7 @@ export default function DateContainer({ date }) {
       {isToday(new Date(date))
         ? `Today at ${dateTimeToString(new Date(date))}`
         : isYesterday(new Date(zonedDate))
-        ? 'Yesterday'
+        ? `Yesterday at ${dateTimeToString(new Date(date))}`
         : dateutil.dateToString(new Date(zonedDate))}
     </span>
   )
