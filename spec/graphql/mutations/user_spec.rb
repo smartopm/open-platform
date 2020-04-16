@@ -12,17 +12,20 @@ RSpec.describe Mutations::User do
             $name: String!,
             $reason: String!,
             $vehicle: String,
+            $phoneNumber: String!
             $email: String
           ) {
           userCreate(
               name: $name,
               requestReason: $reason,
               vehicle: $vehicle,
+              phoneNumber: $phoneNumber
               email: $email
             ) {
             user {
               id
               email
+              phoneNumber
             }
           }
         }
@@ -34,12 +37,14 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Resident',
         vehicle: nil,
+        phoneNumber: '26923422232'
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
+      expect(result.dig('data', 'userCreate', 'user', 'phoneNumber')).to eql '26923422232'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -65,6 +70,7 @@ RSpec.describe Mutations::User do
         email: dup_email,
         reason: 'Resident',
         vehicle: nil,
+        phoneNumber: '26923422232'
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -259,12 +265,14 @@ RSpec.describe Mutations::User do
             $reason: String!,
             $vehicle: String
             $avatarBlobId: String
+            $phoneNumber: String!
           ) {
           userCreate(
               name: $name,
               requestReason: $reason,
               vehicle: $vehicle,
               avatarBlobId: $avatarBlobId,
+              phoneNumber: $phoneNumber
             ) {
             user {
               id
@@ -307,6 +315,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
+        phoneNumber: '26923422232'
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
