@@ -37,7 +37,7 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '26923422232'
+        phoneNumber: '26923422232',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -70,7 +70,7 @@ RSpec.describe Mutations::User do
         email: dup_email,
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '26923422232'
+        phoneNumber: '26923422232',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -315,7 +315,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
-        phoneNumber: '26923422232'
+        phoneNumber: '26923422232',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
