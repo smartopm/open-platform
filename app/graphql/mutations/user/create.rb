@@ -11,7 +11,7 @@ module Mutations
     class Create < BaseMutation
       argument :name, String, required: true
       argument :email, String, required: false
-      argument :phone_number, String, required: false
+      argument :phone_number, String, required: true
       argument :user_type, String, required: false
       argument :state, String, required: false
       argument :request_reason, String, required: false
