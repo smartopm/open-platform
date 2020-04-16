@@ -103,6 +103,21 @@ const LoggedInOnly = props => {
   )
 }
 
+const AdminRoutes = props => {
+  const authState = useContext(AuthStateContext)
+  if (authState.user.userType === 'admin') {
+    return props.children
+  }
+  return (
+    <Redirect
+      to={{
+        pathname: '/',
+        state: { from: props.location }
+      }}
+    />
+  )
+}
+
 const Logout = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY)
   const authState = useContext(AuthStateContext)
@@ -163,17 +178,9 @@ const App = () => {
                     <Route path="/print/:id" component={IDPrint} />
                     <Route path="/entry_logs/:userId" component={EntryLogs} />
                     <Route path="/entry_logs" component={EntryLogs} />
-                    <Route path="/event_logs" component={EventLogs} />
+
                     <Route path="/user" exact component={UserEdit} />
-                    <Route
-                      path="/user/pending"
-                      exact
-                      component={PendingUsers}
-                    />
-                    <Route path="/user/new" exact component={UserEdit} />
-                    <Route path="/user/:id/edit" exact component={UserEdit} />
-                    <Route path="/user/:id/logs" exact component={UserLogs} />
-                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+
                     <Route path="/map" component={Map} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
@@ -203,7 +210,6 @@ const App = () => {
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
-                    <Route path="/showroom_logs" component={ShowroomLogs} />
 
                     {/* activity */}
                     <Route path="/todo" component={Todo} />
@@ -212,18 +218,41 @@ const App = () => {
                       path="/feedback_success"
                       component={FeedbackSuccess}
                     />
-                    <Route path="/notes" component={AllNotes} />
-                    <Route path="/feedbacks" component={FeedbackPage} />
 
                     {/* {SMS page} */}
                     {/* <Route path="/messages" component={Messages} /> */}
-                    <Route path="/messages" component={AllMessages} />
+
                     <Route path="/message/:id" component={UserMessages} />
 
                     {/* users */}
-                    <Route path="/users" component={UsersList} />
                     <Route path="/news/" exact component={NewsContentPage} />
                     <Route path="/news/:link" component={NewsContentPage} />
+
+                    <AdminRoutes>
+                      <Switch>
+                        <Route path="/users" component={UsersList} />
+                        <Route path="/messages" component={AllMessages} />
+                        <Route path="/showroom_logs" component={ShowroomLogs} />
+                        <Route path="/notes" component={AllNotes} />
+                        <Route path="/feedbacks" component={FeedbackPage} />
+                        <Route
+                          path="/user/:id/edit"
+                          exact
+                          component={UserEdit}
+                        />
+                        <Route path="/user/new" exact component={UserEdit} />
+                        <Route
+                          path="/user/pending"
+                          exact
+                          component={PendingUsers}
+                        />
+                        <Route path="/event_logs" component={EventLogs} />
+                      </Switch>
+                    </AdminRoutes>
+
+                    {/* The following routes should come after /user/* paths */}
+                    <Route path="/user/:id/logs" exact component={UserLogs} />
+                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
 
                     <Route
                       path="*"
