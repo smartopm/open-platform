@@ -126,7 +126,7 @@ export default function FormContainer({ match, history }) {
         status
       }}
     >
-      <Nav navName={title} menuButton="edit" />
+      <Nav navName={title} menuButton="edit" backTo={`/user/${match.params.id}`} />
 
       <ModalDialog
         handleClose={handleModal}
