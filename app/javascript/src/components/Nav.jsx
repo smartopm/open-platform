@@ -41,10 +41,13 @@ export function Component({
   menuButton,
   navName,
   boxShadow,
-  history
+  history,
+  backTo
 }) {
   const [state, setState] = React.useState(false)
   const { values, handleSubmit } = useContext(FormContext)
+
+
   function backButtonOrMenu() {
     if (menuButton === 'back' && navName === 'Scan') {
       return (
@@ -56,7 +59,7 @@ export function Component({
       return (
         <span
           className={css(styles.buttonLeft)}
-          onClick={() => history.goBack()}
+          onClick={() => history.push(backTo)}
         >
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </span>
@@ -65,7 +68,7 @@ export function Component({
       return (
         <span
           className={css(styles.buttonLeft)}
-          onClick={() => history.goBack()}
+          onClick={() => history.push(backTo)}
         >
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </span>
@@ -75,7 +78,7 @@ export function Component({
         <Fragment>
           <span
             className={css(styles.buttonLeft)}
-            onClick={() => history.goBack()}
+            onClick={() => history.push(backTo)}
           >
             <i className={`material-icons ${css(styles.icon)}`}>clear</i>
           </span>
@@ -87,6 +90,9 @@ export function Component({
         </Fragment>
       )
     }
+
+
+
 
     return (
       <Fragment>
