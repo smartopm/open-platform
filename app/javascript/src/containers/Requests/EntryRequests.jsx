@@ -78,7 +78,7 @@ export function UserComponent({ data }) {
 
   return (
     <div>
-      <Nav menuButton="back" />
+      <Nav menuButton="back" backTo="/"/>
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6">
           <table className="table">

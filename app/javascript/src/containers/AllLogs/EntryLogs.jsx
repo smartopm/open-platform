@@ -222,7 +222,7 @@ export function IndexComponent({
           backgroundColor: '#25c0b0'
         }}
       >
-        <Nav menuButton="back" navName="Log Book" boxShadow={'none'} />
+        <Nav menuButton="back" navName="Log Book" boxShadow={'none'}  backTo="/"/>
       </div>
       <div className="container">
         <div className="form-group">

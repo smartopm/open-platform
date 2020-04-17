@@ -85,7 +85,7 @@ export function IndexComponent({
           backgroundColor: "#25c0b0"
         }}
       >
-        <Nav menuButton="back" navName="Logs" boxShadow={"none"} />
+        <Nav menuButton="back" navName="Logs" boxShadow={"none"}  backTo="/" />
       </div>
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6 table-responsive">

@@ -35,7 +35,7 @@ export default function FeedbackPage() {
     }
     return (
         <Fragment>
-            <Nav navName='Feedback' menuButton='back' />
+            <Nav navName='Feedback' menuButton='back'  backTo="/" />
             <div className='container'>
                 {
                     data.usersFeedback.length ? (
