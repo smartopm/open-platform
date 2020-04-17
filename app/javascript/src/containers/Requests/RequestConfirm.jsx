@@ -88,6 +88,7 @@ export default function RequestConfirm({ match, history }) {
             <Nav
                 navName={'Approve Request'}
                 menuButton='cancel'
+                backTo="/entry_request"
             />
             <ModalDialog
                 handleClose={handleModal}

@@ -30,7 +30,7 @@ export function FeedbackSuccess(props) {
     }
     return (
         <div>
-            <Nav navName='Feedback' menuButton='back' />
+            <Nav navName='Feedback' menuButton='cancel' backTo="/" />
             <div className={`container ${css(style.feedbackPage)}`}>
                 <p className='text-center'>Thank you for your feedback</p>
                 <div className="row justify-content-around">

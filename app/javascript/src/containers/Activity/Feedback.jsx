@@ -77,7 +77,7 @@ export function Feedback(props) {
 
     return (
         <div>
-            <Nav navName='Feedback' menuButton='back' />
+            <Nav navName='Feedback' menuButton='back' backTo="/" />
             <div className={`container ${css(style.feedbackPage)}`}>
                 <div className='row justify-content-around'>
                     <div className='col-4'>

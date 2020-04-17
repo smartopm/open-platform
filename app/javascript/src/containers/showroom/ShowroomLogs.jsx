@@ -82,7 +82,7 @@ export default function ShowroomLogs() {
                     backgroundColor: "#25c0b0"
                 }}
             >
-                <Nav menuButton="back" navName="Showroom Logs" boxShadow={"none"} />
+                <Nav menuButton="back" navName="Showroom Logs" boxShadow={"none"} backTo="/" />
             </div>
             <div className="row justify-content-center">
                 <div className="container">
