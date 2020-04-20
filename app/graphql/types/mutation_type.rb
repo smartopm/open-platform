@@ -37,6 +37,5 @@ module Types
 
     # temperature capture
     field :temperature_update, mutation: Mutations::Temperature::TemperatureUpdate
-
   end
 end

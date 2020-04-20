@@ -293,7 +293,13 @@ export const UpdateNote = gql`
     $completed: Boolean
     $dueDate: String
   ) {
-    noteUpdate(id: $id, body: $body, flagged: $flagged, completed: $completed, dueDate: $dueDate) {
+    noteUpdate(
+      id: $id
+      body: $body
+      flagged: $flagged
+      completed: $completed
+      dueDate: $dueDate
+    ) {
       note {
         flagged
         body
@@ -370,6 +376,16 @@ export const MessageCreate = gql`
           id
           name
         }
+      }
+    }
+  }
+`
+
+export const TemperateRecord = gql`
+  mutation temperatureUpdate($userId: ID!, $temp: Integer!) {
+    temperatureUpdate(userId: $userId, temp: $temp) {
+      eventLog {
+        sentence
       }
     }
   }
