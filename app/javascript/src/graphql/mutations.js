@@ -382,7 +382,7 @@ export const MessageCreate = gql`
 `
 
 export const TemperateRecord = gql`
-  mutation temperatureUpdate($refId: ID!, $temp: Integer!, $refName: String!) {
+  mutation temperatureUpdate($refId: ID!, $temp: String!, $refName: String!) {
     temperatureUpdate(refId: $refId, temp: $temp, refName: $refName) {
       eventLog {
         sentence
