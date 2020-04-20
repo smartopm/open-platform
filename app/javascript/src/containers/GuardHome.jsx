@@ -13,6 +13,7 @@ import { ponisoNumber } from '../utils/constants'
 import Avatar from '../components/Avatar'
 import { Context } from './Provider/AuthStateProvider'
 import { FormControl, Select, InputBase, MenuItem } from '@material-ui/core'
+import PersonIcon from '@material-ui/icons/Person'
 import { useQuery, useMutation } from 'react-apollo'
 import { SecurityGuards } from '../graphql/queries'
 import Loading from '../components/Loading'
@@ -68,7 +69,8 @@ export function HomeGuard({ translate }) {
   }
   if (redirect) {
     return (
-      <Redirect push
+      <Redirect
+        push
         to={{
           pathname: redirect,
           state: { from: '/guard_home' }
@@ -159,6 +161,20 @@ export function HomeGuard({ translate }) {
                       <img src={QRIcon} alt="support icon" />
                     </h5>
                     <p>{translate('home.scan')}</p>
+                  </div>
+                </Link>
+              </div>
+              <div
+                className={`${css(
+                  styles.cardSize
+                )} card align-self-center text-center`}
+              >
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <PersonIcon className={css(styles.homeIconColor)} fontSize="large" />
+                    </h5>
+                    <p>{translate('home.identity')}</p>
                   </div>
                 </Link>
               </div>
