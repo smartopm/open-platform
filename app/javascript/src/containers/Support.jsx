@@ -45,7 +45,7 @@ export default function Support() {
   }
   return (
     <Fragment>
-      <Nav navName="Contact" menuButton="back" />
+      <Nav navName="Contact" menuButton="back"  backTo="/"/>
       <br />
 
       <div className="justify-content-center align-items-center container">

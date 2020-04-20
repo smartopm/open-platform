@@ -17,7 +17,7 @@ export default function OTPFeedbackScreen({ location }) {
 
   return (
     <Fragment>
-      <Nav navName={userDetails.success ? "One Time Pass code Sent" : 'Error Sending Code'} menuButton="back" />
+      <Nav navName={userDetails.success ? "One Time Pass code Sent" : 'Error Sending Code'} menuButton="back" backTo="/" />
       <div className={css(styles.passcodeSection)}>
         {
           userDetails.success && <p>

@@ -135,7 +135,7 @@ export default function UsersList() {
     }
     return (
         <Fragment>
-            <Nav navName="Users" menuButton="back" />
+            <Nav navName="Users" menuButton="back" backTo="/" />
             <div className="container">
                 <ModalDialog
                     handleClose={handleModal}

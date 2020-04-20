@@ -147,6 +147,7 @@ export default function RequestUpdate({ match, history, location }) {
         // navname should be enroll user if coming from entry_logs
         navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
         menuButton="cancel"
+        backTo="/entry_request"
       />
 
       <ModalDialog

@@ -246,13 +246,19 @@ const App = () => {
                           exact
                           component={PendingUsers}
                         />
+                        {/* The following routes should come after /user/* paths */}
+                        <Route
+                          path="/user/:id/logs"
+                          exact
+                          component={UserLogs}
+                        />
+                        <Route
+                          path="/user/:id/:tm?/:dg?"
+                          component={UserShow}
+                        />
                         <Route path="/event_logs" component={EventLogs} />
                       </Switch>
                     </AdminRoutes>
-
-                    {/* The following routes should come after /user/* paths */}
-                    <Route path="/user/:id/logs" exact component={UserLogs} />
-                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
 
                     <Route
                       path="*"

@@ -13,6 +13,7 @@ import { ponisoNumber } from '../utils/constants'
 import Avatar from '../components/Avatar'
 import { Context } from './Provider/AuthStateProvider'
 import { FormControl, Select, InputBase, MenuItem } from '@material-ui/core'
+import PersonIcon from '@material-ui/icons/Person'
 import { useQuery, useMutation } from 'react-apollo'
 import { SecurityGuards } from '../graphql/queries'
 import Loading from '../components/Loading'
@@ -68,7 +69,8 @@ export function HomeGuard({ translate }) {
   }
   if (redirect) {
     return (
-      <Redirect push
+      <Redirect
+        push
         to={{
           pathname: redirect,
           state: { from: '/guard_home' }
@@ -167,6 +169,23 @@ export function HomeGuard({ translate }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
+                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      <PersonIcon
+                        className={css(styles.homeIconColor)}
+                        fontSize="large"
+                      />
+                    </h5>
+                    <p>{translate('home.identity')}</p>
+                  </div>
+                </Link>
+              </div>
+              <div
+                className={`${css(
+                  styles.cardSize
+                )} card align-self-center text-center`}
+              >
                 <Link to={`/entry_request`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
@@ -243,9 +262,6 @@ const styles = StyleSheet.create({
     bottom: 11,
     'z-index': 9
   },
-  bellIcon: {
-    color: '#25c0b0'
-  },
   scanIcon: {
     position: 'absolute',
     marginTop: 75,
@@ -256,22 +272,7 @@ const styles = StyleSheet.create({
   homeIconColor: {
     color: '#25c0b0'
   },
-  grantIcon: {
-    color: '#25c0b0',
-    marginRight: 60,
-    width: '35%',
-    fontSize: '4em'
-  },
-  denyIcon: {
-    color: 'rgb(299, 63, 69)',
-    width: '35%',
-    fontSize: '4em'
-  },
-  callButton: {
-    backgroundColor: '#fafafa',
-    color: '#ed5757',
-    textTransform: 'unset'
-  },
+
   link: {
     color: '#FFFFFF',
     textDecoration: 'none',

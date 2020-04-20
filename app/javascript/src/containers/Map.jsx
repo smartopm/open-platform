@@ -57,7 +57,7 @@ export default function Explore() {
       `
         }}
       ></style>
-      <Nav navName="Explore" menuButton="back" />
+      <Nav navName="Explore" menuButton="back"  backTo="/" />
       <Map center={center} zoom={13} className={css(styles.mapContainer)}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
