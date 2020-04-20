@@ -49,7 +49,7 @@ export default function UserMessages() {
 
   return (
     <Fragment>
-      <Nav navName="Messages History" menuButton="back">
+      <Nav navName="Messages History" menuButton="back" backTo="/messages" >
         <span className="text-center">
           <Link to={`/user/${id}`} className={css(styles.linkedName)}>
             {(state && state.clientName) || ''}

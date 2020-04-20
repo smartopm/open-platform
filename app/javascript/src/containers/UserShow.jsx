@@ -129,7 +129,7 @@ export function Component({
 
   return (
     <div>
-      <Nav navName="Identification" menuButton="cancel" />
+      <Nav navName="Identification" menuButton="cancel" backTo="/"/>
       <Fragment>
         <div className="container">
           <div className="row d-flex justify-content-between">

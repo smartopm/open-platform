@@ -102,7 +102,7 @@ export default function Todo({ history }) {
 
   return (
     <Fragment>
-      <Nav navName="Todo" menuButton="back" />
+      <Nav navName="Todo" menuButton="back" backTo="/" />
       <div className="container">
         <ModalDialog
           open={isDialogOpen}

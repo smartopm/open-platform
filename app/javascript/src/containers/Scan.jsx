@@ -72,7 +72,7 @@ export default function QRScan() {
 
   return (
     <div>
-      <Nav navName="Scan" menuButton="back" />
+      <Nav navName="Scan" menuButton="back" backTo="/" />
 
       {scanned ? (
         <h1 className="text-center">Decoding...</h1>

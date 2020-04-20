@@ -70,7 +70,7 @@ export default function LogEntry({ history }) {
           />
         </div>
       </ReasonInputModal>
-      <Nav navName="New Log" menuButton="cancel" />
+      <Nav navName="New Log" menuButton="cancel" backTo="/" />
       <div className="container">
         <form>
           <div className="form-group">

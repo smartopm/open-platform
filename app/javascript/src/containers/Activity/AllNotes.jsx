@@ -28,7 +28,7 @@ export default function Notes() {
 
     return (
         <Fragment>
-            <Nav navName='Notes' menuButton='back' />
+            <Nav navName='Notes' menuButton='back' backTo="/" />
 
             <div className='container'>
                 {

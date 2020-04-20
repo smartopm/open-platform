@@ -38,7 +38,7 @@ export default function AllMessages() {
 
     return (
         <Fragment>
-            <Nav navName="Messages" menuButton="back" />
+            <Nav navName="Messages" menuButton="back" backTo="/" />
             <MessageList messages={data.messages} />
             <div className="d-flex justify-content-center">
                 <nav aria-label="center Page navigation">
