@@ -15,6 +15,7 @@ import DateUtil from "../../utils/dateutil";
 import { ponisoNumber } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
 import { isWeekend, isSaturday } from 'date-fns'
+import CaptureTemp from "../../components/CaptureTemp";
 
 // TODO: Check the time of the day and day of the week.
 
@@ -34,6 +35,7 @@ export default function RequestUpdate({ match, history, location }) {
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('grant')
   const [date, setDate] = useState(new Date());
+  const [tempValue, setTempValue] = useState(0)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -124,6 +126,14 @@ export default function RequestUpdate({ match, history, location }) {
       setModalAction('deny')
     }
     setModal(!isModalOpen)
+  }
+
+  function handleClick(){
+    console.log(tempValue);
+    
+  }
+  function handleTempInput(e){
+    setTempValue(e.target.value)
   }
 
 
@@ -254,6 +264,10 @@ export default function RequestUpdate({ match, history, location }) {
             >
               <MenuItem value={formData.reason}>{formData.reason}</MenuItem>
             </TextField>
+          </div>
+
+          <div>
+            <CaptureTemp handleClick={handleClick} handleTempInput={handleTempInput} />
           </div>
 
           {previousRoute === 'enroll' ?
