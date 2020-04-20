@@ -4,9 +4,9 @@ module Mutations
   module Temperature
     # Create an event for temperature record
     class TemperatureUpdate < BaseMutation
-      argument :temp, Integer, required: true
+      argument :temp, String, required: true
       argument :ref_id, ID, required: true
-      argument :ref_name, ID, required: true
+      argument :ref_name, String, required: true
 
       field :event_log, Types::EventLogType, null: true
 
