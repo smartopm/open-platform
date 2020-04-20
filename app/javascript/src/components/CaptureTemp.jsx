@@ -5,15 +5,19 @@ import PropTypes from 'prop-types'
 export default function CaptureTemp({ handleClick, handleTempInput }) {
 
     return (
-        <div>
-            <div className="form-group row d-flex flex-row-reverse p-2" >
-               
-                <Button variant="contained" color="inherit" onClick={handleClick} >log temperature</Button>
-                <TextField label="°C" id="filled-required" style = {{width: 100}} onChange={handleTempInput} />
+        
+            <div className="row flex-row col" >
+
+
+                <TextField label="°C" className="tempvalue" variant="outlined"
+                    size="small" style={{ width: 80, marginRight: 30 }} InputLabelProps={{
+                        shrink: true,
+                    }} onChange={handleTempInput} />
+
+                <Button className="button" variant="contained" color="inherit" onClick={handleClick} >log temperature</Button>
 
             </div>
 
-        </div>
     );
 
 }

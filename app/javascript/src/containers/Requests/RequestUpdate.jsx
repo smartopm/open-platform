@@ -36,7 +36,7 @@ export default function RequestUpdate({ match, history, location }) {
   const [modalAction, setModalAction] = useState('grant')
   const [date, setDate] = useState(new Date());
   const [tempValue, setTempValue] = useState(0)
-
+  const [isClicked, setIsClicked] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -95,6 +95,7 @@ export default function RequestUpdate({ match, history, location }) {
   }
 
   function handleDenyRequest() {
+    setIsClicked(!isClicked)
     setLoading(true)
     handleUpdateRecord()
       .then(denyEntry({ variables: { id: match.params.id } }))
@@ -102,6 +103,7 @@ export default function RequestUpdate({ match, history, location }) {
         history.push("/entry_logs", { tab: 1 });
         setLoading(false)
       });
+      
   }
 
   function handleEnrollUser() {
@@ -126,16 +128,18 @@ export default function RequestUpdate({ match, history, location }) {
       setModalAction('deny')
     }
     setModal(!isModalOpen)
+    !isModalOpen ? setIsClicked(!isClicked) : setIsClicked(isClicked) 
   }
 
   function handleClick(){
-    console.log(tempValue);
+
+    setIsClicked(!isClicked)
     
   }
   function handleTempInput(e){
     setTempValue(e.target.value)
   }
-
+          
 
   return (
     <Fragment>
@@ -266,9 +270,6 @@ export default function RequestUpdate({ match, history, location }) {
             </TextField>
           </div>
 
-          <div>
-            <CaptureTemp handleClick={handleClick} handleTempInput={handleTempInput} />
-          </div>
 
           {previousRoute === 'enroll' ?
 
@@ -330,6 +331,10 @@ export default function RequestUpdate({ match, history, location }) {
                 </div>
               ) : <span />}
         </form>
+
+        {
+          isClicked ? <CaptureTemp handleClick={handleClick} handleTempInput={handleTempInput} /> : <span />
+        }
       </div>
     </Fragment>
   );
