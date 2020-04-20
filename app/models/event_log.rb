@@ -84,7 +84,7 @@ class EventLog < ApplicationRecord
   end
 
   def user_temp_to_sentence
-    "Temperate for #{ref_user_name} was recorded by #{acting_user_name}"
+    "Temperature for #{visitor_name} was recorded by #{acting_user_name}"
   end
 
   def user_enrolled_to_sentence
