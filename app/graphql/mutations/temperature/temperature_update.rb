@@ -25,7 +25,7 @@ module Mutations
                        data: {
                          ref_name: name,
                          note: temp,
-                         type: 'Temp',
+                         type: 'Temp', # we don't have specific user type here
                        })
       end
 
