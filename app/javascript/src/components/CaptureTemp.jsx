@@ -10,6 +10,7 @@ export default function CaptureTemp({ refId, refName }) {
     const [recordTemp, { loading: mutationLoading }] = useMutation(TemperateRecord)
     const [open, setOpen] = useState(false)
     const [tempValue, setTempValue] = useState('')
+    const [disbaled, setdisabled] = useState('')
 
     function handleClick() {
 
@@ -18,17 +19,19 @@ export default function CaptureTemp({ refId, refName }) {
         }).then(() => {
             setOpen(!open)
             setTempValue('')
+            setdisabled('none')
+
         })
     }
         return (
 
-            <div className="row flex-row col" >
+            <div className="row flex-row col-4 pl-10" style={{pointerEvents: disbaled}}>
                 <TextField required label="°C" className="tempvalue" variant="outlined" value={tempValue}
                     size="small" style={{ width: 80, marginRight: 30 }} InputLabelProps={{
                         shrink: true,
                     }} onChange={()=>setTempValue(event.target.value)} />
 
-                <Button className="button" variant="contained" color="inherit" onClick={handleClick} >log temperature</Button>
+                <Button className="button" variant="contained" color="inherit" onClick={handleClick} >log</Button>
 
                 {mutationLoading && <Loading />}
 
@@ -46,6 +49,7 @@ export default function CaptureTemp({ refId, refName }) {
                 </Snackbar>
 
             </div>
+        
 
         );
 

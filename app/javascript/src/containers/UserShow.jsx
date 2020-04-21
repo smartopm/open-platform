@@ -18,6 +18,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import Tooltip from '@material-ui/core/Tooltip'
+import CaptureTemp from '../components/CaptureTemp'
 
 import { UserQuery } from '../graphql/queries'
 import {
@@ -86,6 +87,7 @@ export function Component({
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
+  const [recordTemp, setRecordTemp] = useState(false)
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
@@ -100,6 +102,9 @@ export function Component({
 
   const open = Boolean(anchorEl)
 
+  function takeTemp() {
+    setRecordTemp(!recordTemp)
+  }
   const handleChange = (_event, newValue) => {
     setValue(newValue)
   }
@@ -129,7 +134,7 @@ export function Component({
 
   return (
     <div>
-      <Nav navName="Identification" menuButton="cancel" backTo="/"/>
+      <Nav navName="Identification" menuButton="cancel" backTo="/" />
       <Fragment>
         <div className="container">
           <div className="row d-flex justify-content-between">
@@ -144,8 +149,8 @@ export function Component({
                 {DateUtil.isExpired(data.user.expiresAt) ? (
                   <span className="text-danger">Already Expired</span>
                 ) : (
-                  DateUtil.formatDate(data.user.expiresAt)
-                )}
+                    DateUtil.formatDate(data.user.expiresAt)
+                  )}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
@@ -157,8 +162,8 @@ export function Component({
                   Expired
                 </p>
               ) : (
-                <Status label={data.user.state} />
-              )}
+                  <Status label={data.user.state} />
+                )}
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -182,11 +187,16 @@ export function Component({
                 }}
               >
                 {data.user.state === 'valid' &&
-                authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                    Log This Entry
-                  </MenuItem>
-                ) : null}
+                  authState.user.userType === 'security_guard' ? (
+                    <div>
+                      <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                        Log This Entry
+                    </MenuItem>
+                      <MenuItem key={'log_temperature'} onClick={takeTemp}>
+                        Log Temperature
+                    </MenuItem>
+                    </div>
+                  ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
                     <a
@@ -350,7 +360,10 @@ export function Component({
               />
             </div>
             <br />
-            Social: <br />
+            <div className=" row d-flex justify-content-between">
+              <span>Social: </span> <br />
+              {recordTemp && <CaptureTemp refId={data.user.id} refName={data.user.name} />}
+            </div>
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
@@ -403,15 +416,15 @@ export function Component({
                   ) : !note.flagged ? (
                     <span />
                   ) : (
-                    <span
-                      className={css(styles.actionIcon)}
-                      onClick={() => handleOnComplete(note.id, note.completed)}
-                    >
-                      <Tooltip title="Mark this note complete">
-                        <CheckBoxOutlineBlankIcon />
-                      </Tooltip>
-                    </span>
-                  )}
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() => handleOnComplete(note.id, note.completed)}
+                        >
+                          <Tooltip title="Mark this note complete">
+                            <CheckBoxOutlineBlankIcon />
+                          </Tooltip>
+                        </span>
+                      )}
                   {!note.flagged && (
                     <span
                       className={css(styles.actionIcon)}
@@ -426,8 +439,8 @@ export function Component({
                 </Fragment>
               ))
             ) : (
-              'No Notes Yet'
-            )}
+                  'No Notes Yet'
+                )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
