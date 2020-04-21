@@ -16,7 +16,7 @@ import NotesIcon from '@material-ui/icons/Notes'
 import FeedbackIcon from '@material-ui/icons/Feedback'
 import ForumIcon from '@material-ui/icons/Forum'
 import { Footer } from '../components/Footer.jsx'
-
+import ReactGA from 'react-ga';
 export default function Home() {
   const authState = useContext(AuthStateContext)
 
@@ -30,7 +30,9 @@ export function Component({ authState }) {
   function inputToSearch() {
     setRedirect('/search')
   }
-
+  ReactGA('send', 'pageview', {
+    'dimension5': 'this is a test'
+  });
   // TODO: Make this just a conditional part of Home
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />

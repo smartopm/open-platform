@@ -60,8 +60,10 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
+import ReactGA from 'react-ga';
+import createHistory from 'history/createBrowserHistory'
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['app.doublegdp.com']
+const PRIMARY_DOMAINS = ['yoram.dgdp.site']
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -109,6 +111,12 @@ const Logout = () => {
   authState.setToken({ action: 'delete' })
   return <Redirect to="/login" />
 }
+const history = createHistory()
+ReactGA.initialize('UA-163895873-1');
+history.listen((location, action) => {
+    ReactGA.pageview(location.pathname + location.search);
+    console.log(location.pathname)
+});
 
 const Analytics = props => {
   const gtag = window.gtag
@@ -142,7 +150,7 @@ const App = () => {
       }}
     >
       <ApolloProvider>
-        <Router>
+        <Router history={history}>
           <AuthStateProvider>
             <Analytics>
               {/* onboarding */}
