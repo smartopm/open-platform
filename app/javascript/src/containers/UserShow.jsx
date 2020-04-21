@@ -29,6 +29,7 @@ import {
 import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
+import ShiftButtons from '../components/TimeTracker/ShiftButtons'
 
 export default ({ history }) => {
   const { id, dg, tm } = useParams() // get timestamp and dg
@@ -285,6 +286,9 @@ export function Component({
               </Menu>
             </div>
           </div>
+          {/*  */}
+          <br/>
+              <ShiftButtons />
         </div>
 
         <StyledTabs
