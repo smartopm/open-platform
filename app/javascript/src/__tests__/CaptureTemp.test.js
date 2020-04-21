@@ -1,23 +1,25 @@
 import React from 'react'
-import { mount } from 'enzyme'
+import { shallow } from 'enzyme'
 import CaptureTemp from '../components/CaptureTemp'
 
 
 
 describe('temperature component', () => {
-    it('component is mounted', ()=>{
-        const wrapper = mount(<CaptureTemp />)
+    it('component is mounted', () => {
+        const wrapper = shallow(<CaptureTemp />)
         expect(wrapper.find('.button'))
     })
+
+    const screenProps = {
+        handleClick: jest.fn(),
+        handleTempInput: jest.fn()
+    }
+    const wrapper = shallow(<CaptureTemp {...screenProps} />)
     it('It should get the temperature value', () => {
-        const screenProps= {
-            handleClick: jest.fn(),
-            handleTempInput: jest.fn()
-        }
-        const wrapper = mount(<CaptureTemp {...screenProps}/>)
-        wrapper.find('button').simulate('click')
-        const value = wrapper.find('.tempvalue')
-        expect(value).toBe(value>0)
+        const {handleClick,handleTempInput} = wrapper.props()
+        expect(handleClick).toBeUndefined()
+        expect(handleTempInput).toBeUndefined()
         
+
     })
 });
