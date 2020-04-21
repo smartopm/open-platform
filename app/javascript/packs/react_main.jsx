@@ -63,7 +63,7 @@ import NewsContentPage from '../src/containers/NewsContentPage'
 import ReactGA from 'react-ga';
 import createHistory from 'history/createBrowserHistory'
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['yoram.dgdp.site']
+const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -112,7 +112,7 @@ const Logout = () => {
   return <Redirect to="/login" />
 }
 const history = createHistory()
-ReactGA.initialize('UA-163895873-1');
+ReactGA.initialize('G-E4KP1B4LDQ');
 history.listen((location, action) => {
     ReactGA.pageview(location.pathname + location.search);
     console.log(location.pathname)
