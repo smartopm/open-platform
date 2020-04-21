@@ -1,15 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
-import { TextField, MenuItem, Button, Snackbar, SnackbarContent } from "@material-ui/core";
-import CheckCircleIconBase from "@material-ui/icons/CheckCircle";
+import { TextField, MenuItem, Button} from "@material-ui/core";
+
 import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
-  CreateUserMutation,
-  TemperateRecord
+  CreateUserMutation
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
@@ -32,15 +31,12 @@ export default function RequestUpdate({ match, history, location }) {
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
-  const [recordTemp, { loading: mutationLoading }] = useMutation(TemperateRecord)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('grant')
   const [date, setDate] = useState(new Date());
-  const [tempValue, setTempValue] = useState('')
   const [isClicked, setIsClicked] = useState(false)
-  const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -135,21 +131,6 @@ export default function RequestUpdate({ match, history, location }) {
     !isModalOpen ? setIsClicked(!isClicked) : setIsClicked(isClicked)
   }
 
-  function handleClick() {
-
-    recordTemp({
-      variables: { refId: match.params.id, temp: tempValue, refName: formData.name }
-    }).then(() => {
-
-      setIsClicked(!isClicked)
-      setOpen(!open)
-    })
-
-
-  }
-  function handleTempInput(e) {
-    setTempValue(e.target.value)
-  }
 
 
   return (
@@ -345,19 +326,9 @@ export default function RequestUpdate({ match, history, location }) {
         </form>
 
         {
-          isClicked ? <CaptureTemp handleClick={handleClick} handleTempInput={handleTempInput} mutationLoading={mutationLoading} /> : <span />
+          isClicked ? <CaptureTemp refId={match.params.id} refName={formData.name}  /> : <span />
         }
-        <Snackbar anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }} open={open} autoHideDuration={6000} onClose={()=>setOpen(!open)} >
-          <SnackbarContent style={{
-            backgroundColor:'#25c0b0',
-            }}
-            
-          message={ <div className="row d-flex m-20"> <CheckCircleIconBase /> <span className="justify-content-center" id="client-snackbar">Temperature recorded</span> </div>}
-          />
-        </Snackbar>
+        
       </div>
     </Fragment>
   );
