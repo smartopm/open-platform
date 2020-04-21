@@ -28,7 +28,7 @@ const QUERY = gql`
 function NewRequestButton() {
   return (
     <div className="d-flex justify-content-center">
-      <Link className={css(styles.requestLink)} to="/user/new">
+      <Link className={css(styles.requestLink)} to="/new/user">
         <Button
           variant="contained"
           className={`btn ${css(styles.requestButton)}`}
