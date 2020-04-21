@@ -219,15 +219,16 @@ const App = () => {
                       component={FeedbackSuccess}
                     />
 
-                    {/* {SMS page} */}
-                    {/* <Route path="/messages" component={Messages} /> */}
-
                     <Route path="/message/:id" component={UserMessages} />
 
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
                     <Route path="/news/:link" component={NewsContentPage} />
-
+                    
+                    <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
+                    <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
+                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                    
                     <AdminRoutes>
                       <Switch>
                         <Route path="/users" component={UsersList} />
@@ -235,31 +236,19 @@ const App = () => {
                         <Route path="/showroom_logs" component={ShowroomLogs} />
                         <Route path="/notes" component={AllNotes} />
                         <Route path="/feedbacks" component={FeedbackPage} />
+                        <Route path="/event_logs" component={EventLogs} />
+
+                        <Route path="/new/user" exact component={UserEdit} />
                         <Route
-                          path="/user/:id/edit"
-                          exact
-                          component={UserEdit}
-                        />
-                        <Route path="/user/new" exact component={UserEdit} />
-                        <Route
-                          path="/user/pending"
+                          path="/pending"
                           exact
                           component={PendingUsers}
                         />
-                        {/* The following routes should come after /user/* paths */}
-                        <Route
-                          path="/user/:id/logs"
-                          exact
-                          component={UserLogs}
-                        />
-                        <Route
-                          path="/user/:id/:tm?/:dg?"
-                          component={UserShow}
-                        />
-                        <Route path="/event_logs" component={EventLogs} />
+
                       </Switch>
                     </AdminRoutes>
 
+                    
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}

@@ -1,65 +1,56 @@
-import React, { useContext, Fragment, useState } from 'react';
+import React, { Fragment, useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { useHistory } from "react-router-dom";
 import { MessagesQuery } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import MessageList from '../../components/Messaging/MessageList'
 import Nav from '../../components/Nav'
 
 const limit = 50
 export default function AllMessages() {
-    const [offset, setOffset] = useState(0)
-    const { loading, error, data } = useQuery(MessagesQuery, {
-        variables: {
-            offset,
-            limit
-        }
-    })
-    const authState = useContext(AuthStateContext)
-    let history = useHistory();
-
-    if (authState.user.userType !== 'admin') {
-        history.push('/')
+  const [offset, setOffset] = useState(0)
+  const { loading, error, data } = useQuery(MessagesQuery, {
+    variables: {
+      offset,
+      limit
     }
-    if (loading) return <Loading />
-    if (error) return <ErrorPage error={error.message} />
+  })
+  if (loading) return <Loading />
+  if (error) return <ErrorPage error={error.message} />
 
-    function handleNextPage() {
-        setOffset(offset + limit)
+  function handleNextPage() {
+    setOffset(offset + limit)
+  }
+  function handlePreviousPage() {
+    if (offset < limit) {
+      return
     }
-    function handlePreviousPage() {
-        if (offset < limit) {
-            return
-        }
-        setOffset(offset - limit)
-    }
+    setOffset(offset - limit)
+  }
 
-    return (
-        <Fragment>
-            <Nav navName="Messages" menuButton="back" backTo="/" />
-            <MessageList messages={data.messages} />
-            <div className="d-flex justify-content-center">
-                <nav aria-label="center Page navigation">
-                    <ul className="pagination">
-                        <li className={`page-item ${offset < limit && 'disabled'}`}>
-                            <a className="page-link" onClick={handlePreviousPage} href="#">
-                                Previous
-                            </a>
-                        </li>
-                        <li
-                            className={`page-item ${data.messages.length < limit &&
-                                'disabled'}`}
-                        >
-                            <a className="page-link" onClick={handleNextPage} href="#">
-                                Next
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </Fragment>
-
-    )
+  return (
+    <Fragment>
+      <Nav navName="Messages" menuButton="back" backTo="/" />
+      <MessageList messages={data.messages} />
+      <div className="d-flex justify-content-center">
+        <nav aria-label="center Page navigation">
+          <ul className="pagination">
+            <li className={`page-item ${offset < limit && 'disabled'}`}>
+              <a className="page-link" onClick={handlePreviousPage} href="#">
+                Previous
+              </a>
+            </li>
+            <li
+              className={`page-item ${data.messages.length < limit &&
+                'disabled'}`}
+            >
+              <a className="page-link" onClick={handleNextPage} href="#">
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </Fragment>
+  )
 }
