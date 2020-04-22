@@ -63,8 +63,7 @@ import NewsContentPage from '../src/containers/NewsContentPage'
 import ReactGA from 'react-ga';
 import createHistory from 'history/createBrowserHistory'
 // Prevent Google Analytics reporting from staging and dev domains
-// const PRIMARY_DOMAINS = ['app.doublegdp.com']
-const PRIMARY_DOMAINS = ['yoram.dgdp.site']
+const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -149,7 +148,8 @@ const Analytics = props => {
         })
       } else {
         ReactGA.event({
-          user: user.userType
+          Role: user.userType,
+          user_id: user.id
         })
         console.log('GA DEVELOPMENT MODE: log user', user)
       }
