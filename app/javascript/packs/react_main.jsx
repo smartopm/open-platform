@@ -111,9 +111,10 @@ const Logout = () => {
   authState.setToken({ action: 'delete' })
   return <Redirect to="/login" />
 }
+//page tracking
 const history = createHistory()
-ReactGA.initialize('G-E4KP1B4LDQ');
-history.listen((location, action) => {
+ReactGA.initialize('UA-163895873-1');
+history.listen((location) => {
     ReactGA.pageview(location.pathname + location.search);
     console.log(location.pathname)
 });
