@@ -36,7 +36,7 @@ export default function CaptureTemp({ refId, refName }) {
                 {mutationLoading && <Loading />}
 
 
-                <Snackbar anchorOrigin={{
+                <Snackbar className="snackBar" anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',
                 }} open={open} autoHideDuration={6000} onClose={() => setOpen(!open)} >

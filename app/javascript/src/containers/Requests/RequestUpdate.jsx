@@ -325,9 +325,9 @@ export default function RequestUpdate({ match, history, location }) {
               ) : <span />}
         </form>
 
-        {
-          isClicked ? <CaptureTemp refId={match.params.id} refName={formData.name}  /> : <span />
-        }
+        
+           <CaptureTemp refId={match.params.id} refName={formData.name}  />
+        
         
       </div>
     </Fragment>

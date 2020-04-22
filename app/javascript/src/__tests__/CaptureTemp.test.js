@@ -2,10 +2,14 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import CaptureTemp from '../components/CaptureTemp'
 import { MockedProvider } from '@apollo/react-testing'
-
+import { TemperateRecord } from '../graphql/mutations'
+import wait from 'waait'
 
 describe('temperature component', () => {
 
+    const mock= [{
+
+    }]
     const screenProps = {
         refId: 1,
         refName: 'Test name'
@@ -18,8 +22,6 @@ describe('temperature component', () => {
         )
         expect(wrapper.find('.button'))
     })
-
-
     const wrapper = shallow(
         <MockedProvider mock={[]}>
             <CaptureTemp {...screenProps} />

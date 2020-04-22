@@ -192,9 +192,6 @@ export function Component({
                       <MenuItem key={'log_entry'} onClick={onLogEntry}>
                         Log This Entry
                     </MenuItem>
-                      <MenuItem key={'log_temperature'} onClick={takeTemp}>
-                        Log Temperature
-                    </MenuItem>
                     </div>
                   ) : null}
                 {authState.user.userType === 'security_guard' ? (
@@ -362,7 +359,7 @@ export function Component({
             <br />
             <div className=" row d-flex justify-content-between">
               <span>Social: </span> <br />
-              {recordTemp && <CaptureTemp refId={data.user.id} refName={data.user.name} />}
+              <CaptureTemp refId={data.user.id} refName={data.user.name} />
             </div>
           </div>
         </TabPanel>
