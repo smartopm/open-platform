@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mutations
-  module TimeSheet
+  module Timesheet
     # Create a new request/pending member
     class TrackTime < BaseMutation
       argument :user_id, ID, required: true
@@ -21,7 +21,7 @@ module Mutations
         raise GraphQL::ExecutionError, event_log.errors.full_messages
       end
 
-      def instantiate_event_log(current_user, user)
+      def instantiate_event_log(current_user, user, start_date, end_date)
         EventLog.new(acting_user_id: current_user.id,
                      community_id: user.community_id, subject: 'user_shift',
                      ref_id: user.id,
