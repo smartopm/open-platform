@@ -9,7 +9,7 @@ class Message < ApplicationRecord
 
   class Unauthorized < StandardError; end
 
-  def self.users_newest_msgs(offset, limit, com_id)
+  def self.users_newest_msgs(query, offset, limit, com_id)
     Message.find_by_sql(["SELECT messages.* FROM messages
       INNER JOIN ( SELECT user_id, max(messages.created_at) as max_date FROM messages
       INNER JOIN users ON users.id = messages.user_id INNER JOIN users senders_messages

@@ -187,8 +187,8 @@ export const ShowroomEntriesQuery = gql`
 `
 
 export const MessagesQuery = gql`
-  query messages($limit: Int, $offset: Int) {
-    messages(limit: $limit, offset: $offset) {
+  query messages($searchCrit: String, $limit: Int, $offset: Int) {
+    messages(query: $searchCrit, limit: $limit, offset: $offset) {
       id
       message
       createdAt
