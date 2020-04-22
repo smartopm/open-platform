@@ -14,7 +14,7 @@ import { AllEventLogsQuery } from '../../graphql/queries'
 // most importantly we need to find a way to get the last or current shift for this user
 export default function ShiftButtons({ userId }) {
   const [trackShift] = useMutation(TrackTime)
-  const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
+  const { loading, data } = useQuery(AllEventLogsQuery, {
     variables: { refId: userId, subject: "user_shift", refType: null }
   })
 
