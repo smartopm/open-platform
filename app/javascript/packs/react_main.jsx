@@ -11,7 +11,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Redirect,
-  Route
+  Route,
+  useHistory 
 } from 'react-router-dom'
 import ApolloProvider from '../src/containers/Provider/ApolloProvider'
 import AuthStateProvider, {
@@ -61,9 +62,8 @@ import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
 import ReactGA from 'react-ga';
-import createHistory from 'history/createBrowserHistory'
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['app.doublegdp.com']
+const PRIMARY_DOMAINS = ['yoram.dgdp.site']
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -112,20 +112,7 @@ const Logout = () => {
   return <Redirect to="/login" />
 }
 //page tracking
-const history = createHistory()
 ReactGA.initialize('UA-163895873-1');
-history.listen((location) => {
-  if(location.pathname.includes('/user')) {
-    let rootURL = location.pathname.split('/')[1]
-    let userPage = location.pathname.split('/')[3]
-
-    let pageHit = `/${rootURL}/${userPage}`
-    ReactGA.pageview(pageHit)
-  } else {
-    ReactGA.set({ page: location.pathname });
-    ReactGA.pageview(location.pathname)
-  }
-});
 
 const Analytics = props => {
   const gtag = window.gtag
@@ -134,9 +121,11 @@ const Analytics = props => {
   })(window.location.host)
 
   const authState = useContext(AuthStateContext)
+  const history = useHistory()
 
   useEffect(() => {
     const user = authState.user
+    
     if (user) {
       if (liveAnalytics) {
         console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
@@ -152,9 +141,23 @@ const Analytics = props => {
           user_id: user.id
         })
         console.log('GA DEVELOPMENT MODE: log user', user)
+       
       }
     }
-  }, [authState.user])
+    return history.listen((location) => {
+      if(location.pathname.includes('/user')) {
+        let [,rootURL, , userPage] = location.pathname.split('/')
+    
+        let pageHit = `/${rootURL}/${userPage}`
+        ReactGA.pageview(pageHit)
+      } else {
+        console.log({ page: location.pathname })
+
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname)
+      }
+    });
+  }, [authState.user, history])
 
   return props.children
 }
