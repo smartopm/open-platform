@@ -161,7 +161,7 @@ export function Component({ authState }) {
                   </Fragment>
                 ) : null}
 
-              {['security_guard', 'admin'].includes(
+              {['security_guard','contractor'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
 
@@ -171,7 +171,7 @@ export function Component({ authState }) {
                         styles.cardSize
                       ), "time_card"} card align-self-center text-center`}
                     >
-                      <Link to={'/time_card'} className={`card-link`}>
+                      <Link to={`/time_card/${authState.user.id}`} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
                             <LogIcon className={css(styles.homeIconColor)} />
