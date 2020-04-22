@@ -60,6 +60,7 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
+import TimeCard from '../src/containers/TimeCard';
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -180,7 +181,7 @@ const App = () => {
                     <Route path="/entry_logs" component={EntryLogs} />
 
                     <Route path="/user" exact component={UserEdit} />
-
+                    <Route path="/time_card" exact component={TimeCard}/>
                     <Route path="/map" component={Map} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
