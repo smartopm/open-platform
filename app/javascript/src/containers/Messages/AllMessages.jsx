@@ -13,7 +13,7 @@ const limit = 50
 export default function AllMessages() {
   const [offset, setOffset] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
-  const { loading, error, data } = useQuery(MessagesQuery, {
+  const { loading, error, data, refetch } = useQuery(MessagesQuery, {
     variables: {
       searchTerm,
       offset,
