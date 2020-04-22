@@ -10,7 +10,7 @@ module Mutations
 
       field :event_log, Types::EventLogType, null: true
 
-      def resolve(user_id:, start_date:, end_date:)
+      def resolve(user_id:, start_date: nil, end_date: nil)
         user = ::User.find(user_id)
         raise GraphQL::ExecutionError, 'User not found' unless user
 

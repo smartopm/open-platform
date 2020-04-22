@@ -390,3 +390,15 @@ export const TemperateRecord = gql`
     }
   }
 `
+
+export const TrackTime = gql`
+  mutation($userId: ID!, $startDate: String, $endDate: String) {
+    trackTime(userId: $userId, startDate: $startDate, endDate: $endDate){
+      eventLog {
+        data
+        refId
+        subject
+      }
+    }
+  }
+`

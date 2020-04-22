@@ -288,7 +288,7 @@ export function Component({
           </div>
           {/*  */}
           <br/>
-              <ShiftButtons />
+              <ShiftButtons userId={userId} />
         </div>
 
         <StyledTabs

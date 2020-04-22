@@ -2,26 +2,47 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
-import { useState } from 'react'
+import { useMutation, useQuery } from 'react-apollo'
+import { TrackTime } from '../../graphql/mutations'
+import { AllEventLogsQuery } from '../../graphql/queries'
 
-export default function ShiftButtons() {
-  const [shift, setShift] = useState({
-    shiftEnd: false,
-    shiftStart: false
+// have mutations here for managing shifts
+// have queries that checks if a specific shift is in progress
+// have a user_id
+
+// we can disable the start shift for a day once started
+// most importantly we need to find a way to get the last or current shift for this user
+export default function ShiftButtons({ userId }) {
+  const [trackShift] = useMutation(TrackTime)
+  const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
+    variables: { refId: userId, subject: "user_shift", refType: null }
   })
+
+
   function handleStartShift() {
-    setShift({
-      ...shift,
-      shiftStart: true
+    trackShift({
+      variables: {
+        userId,
+        startDate: new Date()
+      }
+    }).then(data => {
+      console.log(data)
     })
   }
 
   function handleEndShift() {
-    setShift({
-      ...shift,
-      shiftEnd: true
+    trackShift({
+      variables: {
+        userId,
+        endDate: new Date()
+      }
+    }).then(data => {
+      console.log(data)
     })
   }
+
+  console.log(loading)
+  console.log(data)
   return (
     <Grid
       container
