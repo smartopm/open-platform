@@ -36,7 +36,13 @@ export default ({ history }) => {
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id }
   })
-
+  //GA-event Digital scanning
+  ReactGA.event({
+    category:'IDScanning',
+    action: 'DigitalScan',
+    eventLabel: tm,
+    nonInteraction: true
+  });
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
       userId: id,
@@ -63,12 +69,6 @@ export default ({ history }) => {
       router={history}
     />
   )
-  ReactGA.event({
-    category:'IDScanning',
-    action: 'DigitalScan',
-    eventLabel: tm,
-    nonInteraction: true
-  });
 }
 export const StyledTab = withStyles({
   root: {
