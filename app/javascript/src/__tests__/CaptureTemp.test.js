@@ -7,20 +7,23 @@ import wait from 'waait'
 
 describe('temperature component', () => {
 
-    const sentence = {data: {
-        "temperatureUpdate": {
-          "eventLog": {
-            "sentence": "Temperature for Dennis was recorded by Dennis Mubamba"
-          }
-        }
-      }}
-    const mock= [{
+    
+    const mock = [{
         request: {
-            query: TemperateRecord, 
-            variable: {refId: "1", temp: "36.5", refName: "Tet Name"},
-            
-        }, 
-        result: {data: {sentence}}
+            query: TemperateRecord,
+            variable: { refId: "1", temp: "36.5", refName: "Test Name" },
+            __typename: 'EventLog'
+
+        },
+        result: {
+            data: {
+                temperatureUpdate: {
+                    eventLog: {
+                        sentence: "Temperature for Dennis was recorded by Dennis Mubamba"
+                    }
+                }
+            }
+        }
 
     }]
     const screenProps = {
@@ -29,14 +32,14 @@ describe('temperature component', () => {
     }
     it('component is mounted', () => {
         const wrapper = shallow(
-            <MockedProvider mock={[]}>
+            <MockedProvider mock={[]} >
                 <CaptureTemp {...screenProps} />
             </MockedProvider>
         )
         expect(wrapper.find('.button'))
     })
     const wrapper = shallow(
-        <MockedProvider mock={mock} addTypename={false}>
+        <MockedProvider mock={[mock]} addTypename={false}>
             <CaptureTemp {...screenProps} />
         </MockedProvider>)
     it('It should get the temperature value', () => {
@@ -55,8 +58,13 @@ describe('temperature component', () => {
         await wait(0)
 
         expect(callMut).toBe(true)
+        expect(wrapper.find(tempvalue).toBe(null))
         const tree = wrapper.toJSON()
         expect(tree.children).toContain('Temperature')
+
+
     });
-    
+
+
+
 });
