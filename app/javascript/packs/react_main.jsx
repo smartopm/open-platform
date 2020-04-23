@@ -133,7 +133,7 @@ const Analytics = props => {
         gtag('set', 'user_properties', { Role: user.userType })
         
         ReactGA.event({
-          category:'UserType',
+          category:'LoggedInUserType',
           action: user.userType,
           eventLabel: user.id,
           nonInteraction: true
