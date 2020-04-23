@@ -51,7 +51,7 @@ export function Component({ authState }) {
   return (
     <div>
       <Nav>
-        {['security_guard', 'admin'].includes(
+        {['security_guard', 'admin', 'custodian'].includes(
           authState.user.userType.toLowerCase()
         ) && (
           <div className={css(styles.inputGroup)}>
@@ -138,7 +138,7 @@ export function Component({ authState }) {
                   </div>
                 </Link>
               </div>
-              {['security_guard', 'admin'].includes(
+              {['security_guard', 'admin', 'custodian'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
                 <Fragment>

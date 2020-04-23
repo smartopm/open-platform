@@ -390,10 +390,11 @@ export const TemperateRecord = gql`
     }
   }
 `
-
-export const TrackTime = gql`
-  mutation($userId: ID!, $startDate: String, $endDate: String) {
-    trackTime(userId: $userId, startDate: $startDate, endDate: $endDate){
+// Start shift
+// End shift
+export const StartShiftMutation = gql`
+  mutation($userId: ID!, $startDate: String) {
+    startShift(userId: $userId, startDate: $startDate){
       eventLog {
         data
         refId
@@ -401,4 +402,14 @@ export const TrackTime = gql`
       }
     }
   }
+`
+
+export const EndShiftMutation = gql`
+    mutation($logId: ID!, $endDate: String!) {
+      endShift(logId: $logId, endDate:$endDate){
+        eventLog {
+          data
+        }
+      }
+    }
 `
