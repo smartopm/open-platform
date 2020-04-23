@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
-import { TrackTime } from '../../graphql/mutations'
+import { StartShiftMutation, EndShiftMutation } from '../../graphql/mutations'
 import { AllEventLogsQuery } from '../../graphql/queries'
+import { Typography } from '@material-ui/core'
 
 // have mutations here for managing shifts
 // have queries that checks if a specific shift is in progress
@@ -13,14 +14,16 @@ import { AllEventLogsQuery } from '../../graphql/queries'
 // we can disable the start shift for a day once started
 // most importantly we need to find a way to get the last or current shift for this user
 export default function ShiftButtons({ userId }) {
-  const [trackShift] = useMutation(TrackTime)
-  const { loading, data } = useQuery(AllEventLogsQuery, {
-    variables: { refId: userId, subject: "user_shift", refType: null }
+  const [startShift] = useMutation(StartShiftMutation)
+  const [endShift] = useMutation(EndShiftMutation)
+  const { loading, data, error } = useQuery(AllEventLogsQuery, {
+    variables: { refId: userId, subject: "user_shift", refType: null, limit: 1, offset: 0 }
   })
+  const [message, setMessage] = useState("")
 
 
   function handleStartShift() {
-    trackShift({
+    startShift({
       variables: {
         userId,
         startDate: new Date()
@@ -31,18 +34,24 @@ export default function ShiftButtons({ userId }) {
   }
 
   function handleEndShift() {
-    trackShift({
+    const [ log ] = data.result
+    if (!log) {
+      setMessage('You can\'t end shift that is not started')
+      return 
+    }
+    endShift({
       variables: {
-        userId,
+        logId: log.id,
         endDate: new Date()
       }
     }).then(data => {
       console.log(data)
     })
   }
-
-  console.log(loading)
+  if (loading) return '<Loading />'
+  if (error) return console.log(error.message)
   console.log(data)
+
   return (
     <Grid
       container
@@ -60,6 +69,9 @@ export default function ShiftButtons({ userId }) {
         <Button onClick={handleEndShift} className={css(styles.endBtn)}>
           End Shift
         </Button>
+          {
+            Boolean(message.length) && <Typography color={'secondary'}>{message}</Typography>
+          }
       </Grid>
     </Grid>
   )
