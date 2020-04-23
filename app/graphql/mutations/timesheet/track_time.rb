@@ -29,7 +29,7 @@ module Mutations
                      data: {
                        ref_name: user.name,
                        type: user.user_type,
-                       shift: { start_date: start_date, end_date: end_date },
+                       shift: { start_date: Time.now, end_date: end_date },
                      })
       end
 
