@@ -18,7 +18,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import Tooltip from '@material-ui/core/Tooltip'
-
+import ReactGA from 'react-ga';
 import { UserQuery } from '../graphql/queries'
 import {
   AddActivityLog,
@@ -63,8 +63,13 @@ export default ({ history }) => {
       router={history}
     />
   )
+  ReactGA.event({
+    category:'IDScanning',
+    action: 'DigitalScan',
+    eventLabel: tm,
+    nonInteraction: true
+  });
 }
-
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',

@@ -63,7 +63,7 @@ import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
 import ReactGA from 'react-ga';
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['app.doublegdp.com']
+const PRIMARY_DOMAINS = ['yoram.dgdp.site']
 
 class DynamicImport extends Component {
   constructor(props) {
@@ -131,21 +131,20 @@ const Analytics = props => {
         console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
         gtag('set', { user_id: user.id })
         gtag('set', 'user_properties', { Role: user.userType })
+        
         ReactGA.event({
-          Role: user.userType,
-          user_id: user.id
+          category:'UserType',
+          action: user.userType,
+          eventLabel: user.id,
+          nonInteraction: true
         })
       } else {
-        ReactGA.event({
-          Role: user.userType,
-          user_id: user.id
-        })
         console.log('GA DEVELOPMENT MODE: log user', user)
        
       }
     }
     return history.listen((location) => {
-      if(location.pathname.includes('/user')) {
+      if(location.pathname.includes('/id') ||location.pathname.includes('/user') ) {
         let [,rootURL, , userPage] = location.pathname.split('/')
     
         let pageHit = `/${rootURL}/${userPage}`
