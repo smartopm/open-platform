@@ -40,7 +40,7 @@ export default ({ history }) => {
   ReactGA.event({
     category:'IDScanning',
     action: 'DigitalScan',
-    eventLabel: tm,
+    eventLabel: tm+dg,
     nonInteraction: true
   });
   const [addLogEntry, entry] = useMutation(AddActivityLog, {

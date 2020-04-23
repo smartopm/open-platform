@@ -63,7 +63,7 @@ import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
 import ReactGA from 'react-ga';
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['yoram.dgdp.site']
+const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
 class DynamicImport extends Component {
   constructor(props) {
