@@ -40,5 +40,6 @@ module Types
 
     # track time
     field :track_time, mutation: Mutations::Timesheet::TrackTime
+    field :track_time_update, mutation: Mutations::Timesheet::TrackTimeUpdate
   end
 end

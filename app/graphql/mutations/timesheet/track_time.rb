@@ -2,7 +2,7 @@
 
 module Mutations
   module Timesheet
-    # Create a new request/pending member
+    # Create timesheet record
     class TrackTime < BaseMutation
       argument :user_id, ID, required: true
       argument :start_date, String, required: false
