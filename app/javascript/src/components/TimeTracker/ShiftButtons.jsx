@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { StartShiftMutation, EndShiftMutation } from '../../graphql/mutations'
 import { AllEventLogsQuery } from '../../graphql/queries'
-import { Typography } from '@material-ui/core'
+import  Typography from '@material-ui/core/Typography'
 
 // have mutations here for managing shifts
 // have queries that checks if a specific shift is in progress
@@ -20,9 +20,21 @@ export default function ShiftButtons({ userId }) {
     variables: { refId: userId, subject: "user_shift", refType: null, limit: 1, offset: 0 }
   })
   const [message, setMessage] = useState("")
+  const [isInProgress, setInProgress] = useState(false)
 
+  useEffect(() => {
+      if (!loading && data && data.result.length) {
+        const {start_date, end_date} = data.result[0].data.shift
+          if (start_date && end_date === null) {
+            console.log(end_date)
+            setInProgress(true)
+          }
+        return
+      }
+  })
 
   function handleStartShift() {
+    setInProgress(true)
     startShift({
       variables: {
         userId,
@@ -36,9 +48,10 @@ export default function ShiftButtons({ userId }) {
   function handleEndShift() {
     const [ log ] = data.result
     if (!log) {
-      setMessage('You can\'t end shift that is not started')
+      setMessage('You can\'t end shift that is not in progress')
       return 
     }
+    setInProgress(false)
     endShift({
       variables: {
         logId: log.id,
@@ -46,11 +59,12 @@ export default function ShiftButtons({ userId }) {
       }
     }).then(data => {
       console.log(data)
+      
     })
   }
   if (loading) return '<Loading />'
   if (error) return console.log(error.message)
-  console.log(data)
+
 
   return (
     <Grid
@@ -61,8 +75,10 @@ export default function ShiftButtons({ userId }) {
       alignItems="center"
     >
       <Grid item xs>
-        <Button onClick={handleStartShift} className={css(styles.startBtn)}>
-          Start Shift
+        <Button onClick={handleStartShift} className={css(styles.startBtn)} disabled={isInProgress}>
+          {
+           !isInProgress && 'Start Shift' || 'Shift In-Progress'
+          }
         </Button>
       </Grid>
       <Grid item xs>
