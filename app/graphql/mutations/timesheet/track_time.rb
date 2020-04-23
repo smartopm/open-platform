@@ -33,10 +33,9 @@ module Mutations
                      })
       end
 
-      # TODO: update admin ==> custodian when role is implemented
       def authorized?(_vals)
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.custodian?
 
         true
       end

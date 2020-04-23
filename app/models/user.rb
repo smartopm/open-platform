@@ -27,7 +27,7 @@ class User < ApplicationRecord
   has_paper_trail
 
   VALID_USER_TYPES = %w[security_guard admin resident contractor
-                        prospective_client client visitor].freeze
+                        prospective_client client visitor custodian].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
@@ -137,6 +137,10 @@ class User < ApplicationRecord
 
   def admin?
     self[:user_type] == 'admin'
+  end
+
+  def custodian?
+    self[:user_type] == 'custodian'
   end
 
   def role_name
