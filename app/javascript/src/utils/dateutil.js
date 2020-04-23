@@ -1,4 +1,7 @@
 import {dateTimeToString as newTime} from '../components/DateContainer'
+import { isWeekend, isSaturday } from 'date-fns'
+
+// TODO: @olivier => write tests for these
 
 function fromISO8601(isostr) {
   var parts = isostr.match(/\d+/g)
@@ -48,6 +51,25 @@ function formatDate(datetime) {
   }
   return 'Never'
 }
+
+
+export function isTimeValid(date) {
+  const currentHour = date.getHours()
+  if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)
+  if (isSaturday(date)) return (currentHour > 8 && currentHour < 12)
+  return true
+}
+
+export function getWeekDay(date) {
+  let new_date
+  if (!(date instanceof Date)) {
+    new_date = new Date(date)
+  }
+  var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  let day = new_date.getDay();
+  return weekdays[day];
+}
+
 
 export default {
   fromISO8601,

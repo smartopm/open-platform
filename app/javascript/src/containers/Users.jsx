@@ -22,9 +22,9 @@ import {
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog } from '../components/Dialog'
 
+// TODO: @olivier => move the shareable utilities in their own file
 
-
-const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
     table: {
         display: 'block',
         width: '100%',
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const StyledTableCell = withStyles(theme => ({
+export const StyledTableCell = withStyles(theme => ({
     head: {
         backgroundColor: '#25c0b0',
         color: theme.palette.common.white,
@@ -63,7 +63,7 @@ const StyledTableCell = withStyles(theme => ({
     }
 }))(TableCell)
 
-const StyledTableRow = withStyles(theme => ({
+export const StyledTableRow = withStyles(theme => ({
     root: {
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.background.default

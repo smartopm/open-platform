@@ -60,6 +60,7 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
+import TimeSheetLog from '../src/components/TimeTracker/TimeSheetLog'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -102,7 +103,7 @@ const LoggedInOnly = props => {
     />
   )
 }
-
+// TODO: @olivier: fix the user type here
 const AdminRoutes = props => {
   const authState = useContext(AuthStateContext)
   if (authState.user.userType === 'admin' || authState.user.userType === 'custodian') {
@@ -244,6 +245,7 @@ const App = () => {
                           exact
                           component={PendingUsers}
                         />
+                        <Route path="/timesheet" component={TimeSheetLog} />
 
                       </Switch>
                     </AdminRoutes>
