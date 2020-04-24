@@ -19,7 +19,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import Tooltip from '@material-ui/core/Tooltip'
 import CaptureTemp from '../components/CaptureTemp'
-
+import ReactGA from 'react-ga';
 import { UserQuery } from '../graphql/queries'
 import {
   AddActivityLog,
