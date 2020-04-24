@@ -2,12 +2,13 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
+
 import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
-  CreateUserMutation,
+  CreateUserMutation
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
@@ -15,6 +16,7 @@ import DateUtil from "../../utils/dateutil";
 import { ponisoNumber } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
 import { isWeekend, isSaturday } from 'date-fns'
+import CaptureTemp from "../../components/CaptureTemp";
 
 // TODO: Check the time of the day and day of the week.
 
@@ -34,7 +36,7 @@ export default function RequestUpdate({ match, history, location }) {
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('grant')
   const [date, setDate] = useState(new Date());
-
+  const [isClicked, setIsClicked] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -93,6 +95,7 @@ export default function RequestUpdate({ match, history, location }) {
   }
 
   function handleDenyRequest() {
+    setIsClicked(!isClicked)
     setLoading(true)
     handleUpdateRecord()
       .then(denyEntry({ variables: { id: match.params.id } }))
@@ -100,6 +103,7 @@ export default function RequestUpdate({ match, history, location }) {
         history.push("/entry_logs", { tab: 1 });
         setLoading(false)
       });
+
   }
 
   function handleEnrollUser() {
@@ -124,7 +128,9 @@ export default function RequestUpdate({ match, history, location }) {
       setModalAction('deny')
     }
     setModal(!isModalOpen)
+    !isModalOpen ? setIsClicked(!isClicked) : setIsClicked(isClicked)
   }
+
 
 
   return (
@@ -257,6 +263,12 @@ export default function RequestUpdate({ match, history, location }) {
             </TextField>
           </div>
 
+          <br />
+          {/* {Temproal component for temperature} */}
+          <CaptureTemp refId={match.params.id} refName={formData.name} />
+          
+          <br />
+          <br />
           {previousRoute === 'enroll' ?
 
             (
@@ -284,7 +296,9 @@ export default function RequestUpdate({ match, history, location }) {
             : !/logs|enroll/.test(previousRoute)
               ? (
                 <div className="row justify-content-center align-items-center">
+                
                   <div className="col">
+                    
                     <Button
                       variant="contained"
                       onClick={(event => handleModal(event, 'grant'))}
