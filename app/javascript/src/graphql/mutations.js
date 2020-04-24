@@ -393,7 +393,7 @@ export const TemperateRecord = gql`
 // Start shift
 // End shift
 export const StartShiftMutation = gql`
-  mutation($userId: ID!, $startDate: String) {
+  mutation($userId: ID!, $startDate: String!) {
     startShift(userId: $userId, startDate: $startDate){
       eventLog {
         data

@@ -5,16 +5,15 @@ module Mutations
     # Create timesheet record
     class StartShift < BaseMutation
       argument :user_id, ID, required: true
-      argument :start_date, String, required: false
-      argument :end_date, String, required: false
+      argument :start_date, String, required: true
 
       field :event_log, Types::EventLogType, null: true
 
-      def resolve(user_id:, start_date: nil)
+      def resolve(user_id:, start_date:)
         user = ::User.find(user_id)
         raise GraphQL::ExecutionError, 'User not found' unless user
 
-        event_log = log_user_shift(context[:current_user], user, start_date, end_date)
+        event_log = log_user_shift(context[:current_user], user, start_date)
 
         return { event_log: event_log } if event_log.save
 

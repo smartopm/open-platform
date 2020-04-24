@@ -10,7 +10,7 @@ RSpec.describe Mutations::Timesheet::TrackTime do
     # TODO: Add another user once implemented (a custodian)
     let(:query) do
       <<~GQL
-        mutation($userId: ID!, $startDate: String, $endDate: String) {
+        mutation($userId: ID!, $startDate: String) {
           StartShift(userId: $userId, startDate: $startDate){
             eventLog {
               data
