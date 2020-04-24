@@ -14,10 +14,12 @@ class Message < ApplicationRecord
       INNER JOIN ( SELECT user_id, max(messages.created_at) as max_date FROM messages
       INNER JOIN users ON users.id = messages.user_id INNER JOIN users senders_messages
       ON senders_messages.id = messages.sender_id
-      WHERE ((users.community_id=? AND senders_messages.community_id=?))
+      WHERE ((users.community_id=? AND senders_messages.community_id=?)
+      AND (users.name ILIKE ? OR users.phone_number ILIKE ?
+      OR users.name ILIKE ? OR users.phone_number ILIKE ? OR messages.message ILIKE ?))
       GROUP BY messages.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
-      ON messages.created_at = max_list.max_date
-      ORDER BY max_list.max_date DESC", com_id, com_id, limit, offset])
+      ON messages.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
+      Array.new(2, com_id) + Array.new(5, "%#{query}%") + [limit, offset])
   end
 
   def mark_as_read
