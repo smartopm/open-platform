@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
 import Nav from "../../components/Nav";
-import { TextField, MenuItem, Button} from "@material-ui/core";
+import { TextField, MenuItem, Button } from "@material-ui/core";
 
 import { EntryRequestQuery } from "../../graphql/queries.js";
 import {
@@ -263,7 +263,12 @@ export default function RequestUpdate({ match, history, location }) {
             </TextField>
           </div>
 
-
+          <br />
+          {/* {Temproal component for temperature} */}
+          <CaptureTemp refId={match.params.id} refName={formData.name} />
+          
+          <br />
+          <br />
           {previousRoute === 'enroll' ?
 
             (
@@ -291,7 +296,9 @@ export default function RequestUpdate({ match, history, location }) {
             : !/logs|enroll/.test(previousRoute)
               ? (
                 <div className="row justify-content-center align-items-center">
+                
                   <div className="col">
+                    
                     <Button
                       variant="contained"
                       onClick={(event => handleModal(event, 'grant'))}
@@ -324,11 +331,6 @@ export default function RequestUpdate({ match, history, location }) {
                 </div>
               ) : <span />}
         </form>
-
-        
-           <CaptureTemp refId={match.params.id} refName={formData.name}  />
-        
-        
       </div>
     </Fragment>
   );

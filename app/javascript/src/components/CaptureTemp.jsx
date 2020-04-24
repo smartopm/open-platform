@@ -25,7 +25,7 @@ export default function CaptureTemp({ refId, refName }) {
     }
         return (
 
-            <div className="row flex-row col-4 pl-10" style={{pointerEvents: disbaled}}>
+            <div className="row flex-row col-8 pl-10 " style={{pointerEvents: disbaled}}>
                 <TextField required label="°C" className="tempvalue" variant="outlined" value={tempValue}
                     size="small" style={{ width: 80, marginRight: 30 }} InputLabelProps={{
                         shrink: true,
@@ -33,8 +33,12 @@ export default function CaptureTemp({ refId, refName }) {
 
                 <Button className="button" variant="contained" color="inherit" onClick={handleClick} >log</Button>
 
-                {mutationLoading && <Loading />}
+                <div className="col-2 justify-content-center">
+                    
+                   
+                </div>
 
+                {mutationLoading && <Loading />}
 
                 <Snackbar className="snackBar" anchorOrigin={{
                     vertical: 'bottom',

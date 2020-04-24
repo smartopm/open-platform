@@ -87,7 +87,6 @@ export function Component({
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
-  const [recordTemp, setRecordTemp] = useState(false)
 
   const { handleSubmit, register } = useForm()
   const onSaveNote = ({ note }) => {
@@ -102,9 +101,7 @@ export function Component({
 
   const open = Boolean(anchorEl)
 
-  function takeTemp() {
-    setRecordTemp(!recordTemp)
-  }
+
   const handleChange = (_event, newValue) => {
     setValue(newValue)
   }
@@ -357,7 +354,7 @@ export function Component({
               />
             </div>
             <br />
-            <div className=" row d-flex justify-content-between">
+            <div className="container row d-flex justify-content-between">
               <span>Social: </span> <br />
               <CaptureTemp refId={data.user.id} refName={data.user.name} />
             </div>
