@@ -120,7 +120,7 @@ export default () => {
           >
             <Results {...{ data, loading }} />
           </div>
-          <Link to="/user/new">
+          <Link to="/new/user">
             <Fab
               color="primary"
               aria-label="add"

@@ -9,6 +9,7 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
 const initialValues = {
   name: '',
@@ -23,7 +24,7 @@ const initialValues = {
 
 export const FormContext = React.createContext({
   values: initialValues,
-  handleInputChange: () => { }
+  handleInputChange: () => {}
 })
 
 export default function FormContainer({ match, history }) {
@@ -65,7 +66,7 @@ export default function FormContainer({ match, history }) {
         setDenyModal(!isModalOpen)
       })
       .then(() => {
-        history.push('/user/pending')
+        history.push('/pending')
       })
   }
 
@@ -92,8 +93,13 @@ export default function FormContainer({ match, history }) {
       ...data,
       [name]: value
     })
-
   }
+
+  const authState = React.useContext(AuthStateContext)
+  if (authState.user.userType !== 'admin') {
+    history.push('/')
+  }
+
 
   // If we are in an edit flow and haven't loaded the data,
   // load the user data
@@ -126,7 +132,11 @@ export default function FormContainer({ match, history }) {
         status
       }}
     >
-      <Nav navName={title} menuButton="edit" backTo={`/user/${match.params.id}`} />
+      <Nav
+        navName={title}
+        menuButton="edit"
+        backTo={`/user/${match.params.id}`}
+      />
 
       <ModalDialog
         handleClose={handleModal}
@@ -137,9 +147,7 @@ export default function FormContainer({ match, history }) {
         name={data.name}
       />
       <br />
-      {
-        Boolean(msg.length) && <p className='text-danger text-center'>{msg}</p>
-      }
+      {Boolean(msg.length) && <p className="text-danger text-center">{msg}</p>}
       <UserForm />
     </FormContext.Provider>
   )

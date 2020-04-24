@@ -11,7 +11,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Redirect,
-  Route
+  Route,
+  useHistory 
 } from 'react-router-dom'
 import ApolloProvider from '../src/containers/Provider/ApolloProvider'
 import AuthStateProvider, {
@@ -60,6 +61,7 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
+import ReactGA from 'react-ga';
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -124,6 +126,8 @@ const Logout = () => {
   authState.setToken({ action: 'delete' })
   return <Redirect to="/login" />
 }
+//page tracking
+ReactGA.initialize('G-E4KP1B4LDQ');
 
 const Analytics = props => {
   const gtag = window.gtag
@@ -132,19 +136,42 @@ const Analytics = props => {
   })(window.location.host)
 
   const authState = useContext(AuthStateContext)
+  const history = useHistory()
 
   useEffect(() => {
     const user = authState.user
+    
     if (user) {
       if (liveAnalytics) {
         console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
         gtag('set', { user_id: user.id })
         gtag('set', 'user_properties', { Role: user.userType })
+        
+        ReactGA.event({
+          category:'LoggedInUserType',
+          action: user.userType,
+          eventLabel: user.id,
+          nonInteraction: true
+        })
       } else {
         console.log('GA DEVELOPMENT MODE: log user', user)
+       
       }
     }
-  }, [authState.user])
+    return history.listen((location) => {
+      if(location.pathname.includes('/id') ||location.pathname.includes('/user') ) {
+        let [,rootURL, , userPage] = location.pathname.split('/')
+    
+        let pageHit = `/${rootURL}/${userPage}`
+        ReactGA.pageview(pageHit)
+      } else {
+        console.log({ page: location.pathname })
+
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname)
+      }
+    });
+  }, [authState.user, history])
 
   return props.children
 }
@@ -157,7 +184,7 @@ const App = () => {
       }}
     >
       <ApolloProvider>
-        <Router>
+        <Router history={history}>
           <AuthStateProvider>
             <Analytics>
               {/* onboarding */}
@@ -219,15 +246,16 @@ const App = () => {
                       component={FeedbackSuccess}
                     />
 
-                    {/* {SMS page} */}
-                    {/* <Route path="/messages" component={Messages} /> */}
-
                     <Route path="/message/:id" component={UserMessages} />
 
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
                     <Route path="/news/:link" component={NewsContentPage} />
-
+                    
+                    <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
+                    <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
+                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                    
                     <AdminRoutes>
                       <Switch>
                         <Route path="/users" component={UsersList} />
@@ -235,31 +263,19 @@ const App = () => {
                         <Route path="/showroom_logs" component={ShowroomLogs} />
                         <Route path="/notes" component={AllNotes} />
                         <Route path="/feedbacks" component={FeedbackPage} />
+                        <Route path="/event_logs" component={EventLogs} />
+
+                        <Route path="/new/user" exact component={UserEdit} />
                         <Route
-                          path="/user/:id/edit"
-                          exact
-                          component={UserEdit}
-                        />
-                        <Route path="/user/new" exact component={UserEdit} />
-                        <Route
-                          path="/user/pending"
+                          path="/pending"
                           exact
                           component={PendingUsers}
                         />
-                        {/* The following routes should come after /user/* paths */}
-                        <Route
-                          path="/user/:id/logs"
-                          exact
-                          component={UserLogs}
-                        />
-                        <Route
-                          path="/user/:id/:tm?/:dg?"
-                          component={UserShow}
-                        />
-                        <Route path="/event_logs" component={EventLogs} />
+
                       </Switch>
                     </AdminRoutes>
 
+                    
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
