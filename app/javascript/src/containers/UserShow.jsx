@@ -18,7 +18,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import Tooltip from '@material-ui/core/Tooltip'
-
+import ReactGA from 'react-ga';
 import { UserQuery } from '../graphql/queries'
 import {
   AddActivityLog,
@@ -37,7 +37,13 @@ export default ({ history }) => {
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id }
   })
-
+  //GA-event Digital scanning
+  ReactGA.event({
+    category:'IDScanning',
+    action: 'DigitalScan',
+    eventLabel: tm+dg,
+    nonInteraction: true
+  });
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
       userId: id,
@@ -65,7 +71,6 @@ export default ({ history }) => {
     />
   )
 }
-
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
