@@ -7,7 +7,6 @@ RSpec.describe Mutations::Timesheet::StartShift do
     let!(:user) { create(:user_with_community) }
     let!(:custodian) { create(:store_custodian, community_id: user.community_id) }
 
-    # TODO: Add another user once implemented (a custodian)
     let(:query) do
       <<~GQL
         mutation($userId: ID!, $startDate: String!) {
@@ -37,7 +36,7 @@ RSpec.describe Mutations::Timesheet::StartShift do
       expect(result.dig('errors')).to be_nil
     end
 
-    it 'should not record temperature when not authorized' do
+    it 'should not start a shift when user is not custodian' do
       variables = {
         userId: user.id,
         startDate: '2020-04-21',
