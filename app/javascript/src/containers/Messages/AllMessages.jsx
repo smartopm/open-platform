@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import IconButton from '@material-ui/core/IconButton';
 import { MessagesQuery } from '../../graphql/queries'
-import Loading from '../../components/Loading'
+//import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import MessageList from '../../components/Messaging/MessageList'
 import Nav from '../../components/Nav'
@@ -28,12 +28,11 @@ export default function AllMessages() {
         [dbcSearchTerm]
       );
 
-    const {loading, error, data, refetch } = useQuery(MessagesQuery, { variables: {
+    const {error, data, refetch } = useQuery(MessagesQuery, { variables: {
         searchTerm,
         offset,
         limit
     }});
-    if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
 
     function handleNextPage() {
@@ -51,6 +50,7 @@ export default function AllMessages() {
     }
 
     function handleChange(event) {
+        setOffset(0)
         setSearchTermCurrent(event.target.value)
     }
 
