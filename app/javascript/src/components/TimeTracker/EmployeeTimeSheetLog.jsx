@@ -30,10 +30,10 @@ return (
           {
               shifts.map((shift, i) => (
                 <StyledTableRow key={i}>
-                    <StyledTableCell align="right">{getWeekDay(shift.start_date)}</StyledTableCell>
-                    <StyledTableCell align="right">{dateutil.dateToString(shift.start_date)}</StyledTableCell>
-                    <StyledTableCell align="right">{dateutil.dateTimeToString(shift.start_date)}</StyledTableCell>
-                    <StyledTableCell align="right">{shift.end_date && dateutil.dateTimeToString(shift.end_date)}</StyledTableCell>
+                    <StyledTableCell>{getWeekDay(shift.start_date)}</StyledTableCell>
+                    <StyledTableCell>{dateutil.dateToString(shift.start_date)}</StyledTableCell>
+                    <StyledTableCell>{dateutil.dateTimeToString(shift.start_date)}</StyledTableCell>
+                    <StyledTableCell>{shift.end_date && dateutil.dateTimeToString(shift.end_date)}</StyledTableCell>
                 </StyledTableRow>
               ))
           }
