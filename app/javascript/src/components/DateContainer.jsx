@@ -21,7 +21,7 @@ export default function DateContainer({ date }) {
 
   return (
     <span>
-      {isToday(new Date(date))
+      {isToday(new Date(zonedDate))
         ? `Today at ${dateTimeToString(new Date(date))}`
         : isYesterday(new Date(zonedDate))
         ? `Yesterday at ${dateTimeToString(new Date(date))}`

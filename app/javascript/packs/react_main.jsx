@@ -104,10 +104,10 @@ const LoggedInOnly = props => {
     />
   )
 }
-// TODO: @olivier: fix the user type here
+
 const AdminRoutes = props => {
   const authState = useContext(AuthStateContext)
-  if (authState.user.userType === 'admin' || authState.user.userType === 'custodian') {
+  if (authState.user.userType === 'admin') {
     return props.children
   }
   return (
