@@ -10,7 +10,7 @@ module Mutations
 
       field :event_log, Types::EventLogType, null: true
 
-      def resolve(user_id:, start_date: nil, end_date: nil)
+      def resolve(user_id:, start_date: nil)
         user = ::User.find(user_id)
         raise GraphQL::ExecutionError, 'User not found' unless user
 
@@ -21,7 +21,7 @@ module Mutations
         raise GraphQL::ExecutionError, event_log.errors.full_messages
       end
 
-      def log_user_shift(current_user, user, start_date, end_date)
+      def log_user_shift(current_user, user, start_date)
         EventLog.new(acting_user_id: current_user.id,
                      community_id: user.community_id, subject: 'user_shift',
                      ref_id: user.id,
@@ -29,7 +29,7 @@ module Mutations
                      data: {
                        ref_name: user.name,
                        type: user.user_type,
-                       shift: { start_date: start_date, end_date: end_date },
+                       shift: { start_date: start_date, end_date: nil },
                      })
       end
 

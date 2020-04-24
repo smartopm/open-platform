@@ -1,15 +1,10 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
-import { Table, TableBody, TableHead, TableRow } from '@material-ui/core'
 import { useParams } from 'react-router'
-import {
-  StyledTableCell,
-  StyledTableRow,
-  useStyles
-} from '../../containers/Users'
 import dateutil, { getWeekDay } from '../../utils/dateutil'
 import { AllEventLogsQuery } from '../../graphql/queries'
-import Loading from '../Loading'
+import { Spinner } from '../Loading'
+import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 
 export default function EmployeeTimeSheetLog() {
   const { id } = useParams()
@@ -22,26 +17,16 @@ export default function EmployeeTimeSheetLog() {
       offset: 0,
     }
   })
-  const classes = useStyles()
-
-  if (loading) return <Loading />
+  if (loading) return <Spinner />
   if (error) return <span>{error.message}</span>
 
   const shifts = data.result.map(res => res.data.shift)
-
-// day
+  const columns = ['Day', 'Date' , 'Start Time', 'Stop Time']
+  
 // Day, Date, Start Time, Stop Time, Total Hours in the day
-  return (
-    <Table stickyHeader className={classes.table} aria-label="timesheet table">
-      <TableHead>
-        <TableRow>
-          <StyledTableCell align="right">Day</StyledTableCell>
-          <StyledTableCell align="right">Date</StyledTableCell>
-          <StyledTableCell align="right">Start Time</StyledTableCell>
-          <StyledTableCell align="right">Stop Time</StyledTableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
+
+return (
+  <DataTable columns={columns}>
           {
               shifts.map((shift, i) => (
                 <StyledTableRow key={i}>
@@ -52,7 +37,6 @@ export default function EmployeeTimeSheetLog() {
                 </StyledTableRow>
               ))
           }
-      </TableBody>
-    </Table>
-  )
+  </DataTable>
+)
 }

@@ -58,9 +58,9 @@ export default function DataTable({ columns, children }) {
                 <Table className={classes.table, "tableClass"} >
                     <TableHead>
                         <TableRow>
-                            {columns.map((column) => (
-                                <StyledTableCell key={column.id}>
-                                    {column.label}
+                            {columns.map((column, index) => (
+                                <StyledTableCell key={`${index}-${column}`}>
+                                    {column}
                                 </StyledTableCell>
                                   
                             ))}

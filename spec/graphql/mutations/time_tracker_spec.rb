@@ -11,7 +11,7 @@ RSpec.describe Mutations::Timesheet::TrackTime do
     let(:query) do
       <<~GQL
         mutation($userId: ID!, $startDate: String, $endDate: String) {
-          trackTime(userId: $userId, startDate: $startDate, endDate: $endDate){
+          StartShift(userId: $userId, startDate: $startDate){
             eventLog {
               data
               refId
