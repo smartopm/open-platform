@@ -14,8 +14,10 @@
 
 **Describe how to test the PR: links, environment variables and other needs.**
 
-- [ ] Referred to tasks in Asana the PR solves.
+- [ ] Merge Request does not include breaking changes
+- [ ] I have tested and verified security guard's flow works fine
+- [ ] I have tested and verified event logs works fine
+- [ ] I have referred Asana tasks the PR solves.
 - [ ] Merge request does not contain merge conflicts
-- [ ] Linked the source and name of any newly added gem or node_module package
-- [ ] Added a description including the context and the chosen implementation strategy.
-- [ ] Explained code lines which the reviewer might not understand correctly:
+- [ ] I have linked the source and name of any newly added gem or node_module package
+
