@@ -60,7 +60,8 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
-import TimeSheetLog from '../src/components/TimeTracker/TimeSheetLog'
+import EmployeeTimeSheetLog from '../src/components/TimeTracker/EmployeeTimeSheetLog'
+import CustodianTimeSheetLog from '../src/components/TimeTracker/CustodianTimeSheetLog'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -229,6 +230,8 @@ const App = () => {
                     <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
                     <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
                     <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                    <Route path="/timesheet" exact component={CustodianTimeSheetLog} />
+                    <Route path="/timesheet/:id" exact component={EmployeeTimeSheetLog} />
                     
                     <AdminRoutes>
                       <Switch>
@@ -245,7 +248,6 @@ const App = () => {
                           exact
                           component={PendingUsers}
                         />
-                        <Route path="/timesheet" component={TimeSheetLog} />
 
                       </Switch>
                     </AdminRoutes>
