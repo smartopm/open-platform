@@ -9,6 +9,7 @@ import {
 } from '../../containers/Users'
 import dateutil, { getWeekDay } from '../../utils/dateutil'
 import { AllEventLogsQuery } from '../../graphql/queries'
+import Loading from '../Loading'
 
 export default function EmployeeTimeSheetLog() {
   const { id } = useParams()
@@ -23,12 +24,12 @@ export default function EmployeeTimeSheetLog() {
   })
   const classes = useStyles()
 
-  if (loading) return '<Loading />'
+  if (loading) return <Loading />
   if (error) return <span>{error.message}</span>
 
   const shifts = data.result.map(res => res.data.shift)
 
-//   day
+// day
 // Day, Date, Start Time, Stop Time, Total Hours in the day
   return (
     <Table stickyHeader className={classes.table} aria-label="timesheet table">
