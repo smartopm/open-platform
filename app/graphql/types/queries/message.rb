@@ -8,6 +8,7 @@ module Types::Queries::Message
     # Get messages
     field :messages, [Types::MessageType], null: true do
       description 'Get a list of messages'
+      argument :query, String, required: false
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
@@ -19,9 +20,9 @@ module Types::Queries::Message
     end
   end
 
-  def messages(offset: 0, limit: 100)
+  def messages(query: '', offset: 0, limit: 100)
     com_id = context[:current_user].community_id
-    iq = Message.users_newest_msgs(offset, limit, com_id)
+    iq = Message.users_newest_msgs(query, offset, limit, com_id)
     Message.joins(:user, :sender).eager_load(user: %i[notes avatar_attachment])
            .unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
   end
