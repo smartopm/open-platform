@@ -19,6 +19,7 @@ class User < ApplicationRecord
 
   has_many :notes, dependent: :destroy
   has_many :messages, dependent: :destroy
+  has_many :time_sheets, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
@@ -120,6 +121,16 @@ class User < ApplicationRecord
                       ref_id: target_user.id,
                       ref_type: 'User',
                       data: data)
+  end
+
+  def manage_shift(target_user_id, event_tag) 
+    user = find_a_user(target_user_id)
+    data = { ref_name: user.name, type: user.user_type,}
+    return unless user
+    event = generate_events(event_tag, user, data)
+    user.time_sheets.create(started_at: Time.current, shift_start_event_log: event)
+
+    # timesheet = user.time_sheets.where(ended_at: nil).order(created_at: :desc).limit(1)
   end
 
   def construct_message(vals)

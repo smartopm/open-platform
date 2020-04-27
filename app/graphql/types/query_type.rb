@@ -136,5 +136,14 @@ module Types
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
     end
+
+    field :timesheets, [TimeSheetType], null: true do
+      description 'Returns all timesheet submitted by the user'
+    end
+
+    def timesheets
+      TimeSheet.all
+    end
+
   end
 end
