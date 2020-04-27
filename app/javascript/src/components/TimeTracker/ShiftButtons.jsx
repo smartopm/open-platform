@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { ManageShiftMutation } from '../../graphql/mutations'
-import { userTimeSheet } from '../../graphql/queries'
+import { UserTimeSheetQuery } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
 
 // have mutations here for managing shifts
@@ -15,15 +15,15 @@ import  Typography from '@material-ui/core/Typography'
 // most importantly we need to find a way to get the last or current shift for this user
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
-  const { loading, data, error } = useQuery(userTimeSheet, {
+  const { loading, data, error } = useQuery(UserTimeSheetQuery, {
     variables: { userId }
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
 
   useEffect(() => {
-      if (!loading && data && data.userTimesheets.length) {
-        const {startedAt, endedAt} = data.userTimesheets[0]
+      if (!loading && data && data.userTimeSheetLogs.length) {
+        const {startedAt, endedAt} = data.userTimeSheetLogs[0]
           if (startedAt && endedAt === null) {
             console.log({startedAt, endedAt})
             setInProgress(true)

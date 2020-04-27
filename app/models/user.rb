@@ -134,9 +134,8 @@ class User < ApplicationRecord
       user.time_sheets.create(started_at: Time.current, shift_start_event_log: event)
     else
       timesheet = user.time_sheets.find_by(ended_at: nil)
-      # TODO: @olivier => get insights from Nicolas on how to best do this without skipping validations
-      # TODO: @olivier => Find a better way of throwing meaning errors rather than silencing them
-      return unless timesheet #
+      return unless timesheet
+
       timesheet.update(ended_at: Time.current, shift_end_event_log: event)
       timesheet
     end

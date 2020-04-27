@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TimeSheet model
 class TimeSheet < ApplicationRecord
   belongs_to :user
   belongs_to :shift_start_event_log, optional: true, class_name: 'EventLog'

@@ -10,4 +10,4 @@ module Types
     field :started_at, GraphQL::Types::ISO8601DateTime, null: true
     field :ended_at, GraphQL::Types::ISO8601DateTime, null: true
   end
-  end
+end
