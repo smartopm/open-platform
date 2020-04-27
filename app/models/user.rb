@@ -131,11 +131,12 @@ class User < ApplicationRecord
     event = generate_events(event_tag, user, data)
 
     if event_tag == 'shift_start'
-      user.time_sheets.create(started_at: Time.current, shift_start_event_log_id: event[:id])
+      user.time_sheets.create(started_at: Time.current, shift_start_event_log: event)
     else
-      timesheet = user.time_sheets.where(ended_at: nil).order(created_at: :desc).limit(1)
+      timesheet = user.time_sheets.find_by(ended_at: nil)
       # TODO: @olivier => get insights from Nicolas on how to best do this without skipping validations
-      timesheet.update_all(ended_at: Time.current, shift_end_event_log_id: event[:id])
+      return unless timesheet
+      timesheet.update(ended_at: Time.current, shift_end_event_log: event)
       timesheet
     end
   end

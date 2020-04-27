@@ -12,8 +12,8 @@ module Mutations
       def resolve(user_id:, event_tag:)
         time_sheet = context[:current_user].manage_shift(user_id, event_tag)
         return { time_sheet: time_sheet } if time_sheet.present?
-      rescue StandardError
-        raise GraphQL::ExecutionError, time_sheet.errors.full_messages
+      rescue StandardError => err
+        raise GraphQL::ExecutionError, err.full_message #time_sheet.errors.full_messages
       end
 
       def authorized?(_vals)

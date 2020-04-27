@@ -1,10 +1,10 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
-// import dateutil, { getWeekDay } from '../../utils/dateutil'
+import dateutil, { getWeekDay } from '../../utils/dateutil'
 import { userTimeSheet } from '../../graphql/queries'
 import { Spinner } from '../Loading'
-// import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
+import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 
 // TODO: @olivier => Fix the component with right data
 
@@ -18,24 +18,21 @@ export default function EmployeeTimeSheetLog() {
   if (loading) return <Spinner />
   if (error) return <span>{error.message}</span>
 
-  // const shifts = data.result.map(res => res.data.shift)
+  const shifts = data.userTimesheets
   const columns = ['Day', 'Date' , 'Start Time', 'Stop Time']
-  console.log(data)
-// Day, Date, Start Time, Stop Time, Total Hours in the day
 
-return <div />
-// return (
-//   <DataTable columns={columns}>
-//           {/* {
-//               shifts.map((shift, i) => (
-//                 <StyledTableRow key={i}>
-//                     <StyledTableCell>{getWeekDay(shift.start_date)}</StyledTableCell>
-//                     <StyledTableCell>{dateutil.dateToString(shift.start_date)}</StyledTableCell>
-//                     <StyledTableCell>{dateutil.dateTimeToString(shift.start_date)}</StyledTableCell>
-//                     <StyledTableCell>{shift.end_date && dateutil.dateTimeToString(shift.end_date)}</StyledTableCell>
-//                 </StyledTableRow>
-//               ))
-//           } */}
-//   </DataTable>
-// )
+  return (
+    <DataTable columns={columns}>
+            {
+                shifts.length && shifts.map(shift => (
+                  <StyledTableRow key={shift.id}>
+                      <StyledTableCell>{getWeekDay(shift.startedAt)}</StyledTableCell>
+                      <StyledTableCell>{dateutil.dateToString(shift.startedAt)}</StyledTableCell>
+                      <StyledTableCell>{dateutil.dateTimeToString(shift.startedAt)}</StyledTableCell>
+                      <StyledTableCell>{shift.endedAt ? dateutil.dateTimeToString(shift.endedAt) : 'In-Progress'}</StyledTableCell>
+                  </StyledTableRow>
+                ))
+            }
+    </DataTable>
+  )
 }
