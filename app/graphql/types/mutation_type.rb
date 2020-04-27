@@ -40,6 +40,5 @@ module Types
 
     # track time
     field :manage_shift, mutation: Mutations::Timesheet::ManageShift
-    field :end_shift, mutation: Mutations::Timesheet::EndShift
   end
 end
