@@ -219,8 +219,8 @@ export const UserMessageQuery = gql`
 `
 
 export const userTimeSheet = gql`
-  query userTimesheets($id: ID!){
-    userTimesheets(id: $id) {
+  query userTimeSheetLogs($userId: ID!){
+    userTimeSheetLogs(id: $userId) {
       startedAt
       endedAt
       id

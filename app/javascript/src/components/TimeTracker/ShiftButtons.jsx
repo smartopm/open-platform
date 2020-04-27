@@ -16,7 +16,7 @@ import  Typography from '@material-ui/core/Typography'
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
   const { loading, data, error } = useQuery(userTimeSheet, {
-    variables: { id: userId }
+    variables: { userId }
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)

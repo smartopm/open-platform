@@ -137,14 +137,5 @@ module Types
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
     end
-
-    field :user_timesheets, [TimeSheetType], null: true do
-      description 'Returns all timesheet for the user'
-      argument :id, ID, required: true
-    end
-
-    def user_timesheets(id:)
-      TimeSheet.where(user_id: id)
-    end
   end
 end
