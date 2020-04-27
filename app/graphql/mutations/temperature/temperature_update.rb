@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module Mutations
   module Temperature
     # Create an event for temperature record
@@ -11,28 +13,21 @@ module Mutations
       field :event_log, Types::EventLogType, null: true
 
       def resolve(temp:, ref_id:, ref_name:)
-        event_log = log_temperature(temp, ref_id, ref_name)
-        return { event_log: event_log } if event_log.save
-
-        raise GraphQL::ExecutionError, event_log.errors.full_messages
-      end
-
-      def log_temperature(temp, id, name)
-        ::EventLog.new(acting_user_id: context[:current_user].id,
-                       community_id: context[:current_user].community_id, subject: 'user_temp',
-                       ref_id: id,
-                       ref_type: 'User',
-                       data: {
-                         ref_name: name,
-                         note: temp,
-                         type: 'Temp', # we don't have specific user type here
-                       })
+        a_user = context[:current_user].find_a_user(ref_id)
+        data = { ref_name: ref_name, note: temp }
+        begin
+          event_log = a_user.generate_events('user_temp', a_user, data: data)
+          return { event_log: event_log } if event_log.present?
+        rescue ActiveRecord::RecordNotUnique
+          raise GraphQL::ExecutionError, event_log.errors.full_messages
+        end
       end
 
       # TODO: Better auth here
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        a_roles = Set['admin', 'security_guard']
+        c_user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless a_roles.include? c_user.user_type
 
         true
       end
