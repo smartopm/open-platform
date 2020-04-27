@@ -10,26 +10,17 @@ module Mutations
       field :event_log, Types::EventLogType, null: true
 
       def resolve(user_id:, start_date:)
-        user = ::User.find(user_id)
+        user = context[:current_user].find_a_user(user_id)
         raise GraphQL::ExecutionError, 'User not found' unless user
 
-        event_log = log_user_shift(context[:current_user], user, start_date)
-
-        return { event_log: event_log } if event_log.save
-
+        data = { ref_name: user.name, type: user.user_type, shift: { start_date: start_date } }
+        begin
+          event_log = context[:current_user].generate_events('user_shift', user, data)
+          return { event_log: event_log } if event_log.present?
+        rescue StandardError
+          raise GraphQL::ExecutionError, event_log.errors.full_messages
+        end
         raise GraphQL::ExecutionError, event_log.errors.full_messages
-      end
-
-      def log_user_shift(current_user, user, start_date)
-        EventLog.new(acting_user_id: current_user.id,
-                     community_id: user.community_id, subject: 'user_shift',
-                     ref_id: user.id,
-                     ref_type: 'User',
-                     data: {
-                       ref_name: user.name,
-                       type: user.user_type,
-                       shift: { start_date: start_date, end_date: nil },
-                     })
       end
 
       def authorized?(_vals)
