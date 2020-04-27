@@ -22,7 +22,16 @@ module Types::Queries::TimeSheet
   end
 
   def time_sheet_logs(offset: 0, limit: 100)
-    TimeSheet.all.limit(limit).offset(offset)
+    com_id = context[:current_user].community_id
+    query = ''
+    TimeSheet.find_by_sql(["SELECT time_sheets.* FROM time_sheets
+        INNER JOIN ( SELECT user_id, max(time_sheets.created_at) as max_date FROM time_sheets
+        INNER JOIN users ON users.id = time_sheets.user_id
+        WHERE (users.community_id=?)
+        AND (users.name ILIKE ? OR users.phone_number ILIKE ?)
+        GROUP BY time_sheets.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
+        ON time_sheets.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
+        Array.new(1, com_id) + Array.new(2, "%#{query}%") + [limit, offset])
   end
 
   def user_time_sheet_logs(user_id:, offset: 0, limit: 100)
