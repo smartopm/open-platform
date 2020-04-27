@@ -127,7 +127,7 @@ const Logout = () => {
   return <Redirect to="/login" />
 }
 //page tracking
-ReactGA.initialize('G-E4KP1B4LDQ');
+ReactGA.initialize('UA-150647211-2');
 
 const Analytics = props => {
   const gtag = window.gtag
@@ -146,7 +146,6 @@ const Analytics = props => {
         console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
         gtag('set', { user_id: user.id })
         gtag('set', 'user_properties', { Role: user.userType })
-        
         ReactGA.event({
           category:'LoggedInUserType',
           action: user.userType,
@@ -165,8 +164,6 @@ const Analytics = props => {
         let pageHit = `/${rootURL}/${userPage}`
         ReactGA.pageview(pageHit)
       } else {
-        console.log({ page: location.pathname })
-
         ReactGA.set({ page: location.pathname });
         ReactGA.pageview(location.pathname)
       }
