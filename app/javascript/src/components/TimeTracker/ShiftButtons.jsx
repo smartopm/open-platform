@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { ManageShiftMutation } from '../../graphql/mutations'
-import { AllEventLogsQuery } from '../../graphql/queries'
+import { userTimeSheet } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
 
 // have mutations here for managing shifts
@@ -15,25 +15,27 @@ import  Typography from '@material-ui/core/Typography'
 // most importantly we need to find a way to get the last or current shift for this user
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
-  const { loading, data, error } = useQuery(AllEventLogsQuery, {
-    variables: { refId: userId, subject: "user_shift", refType: null, limit: 1, offset: 0 }
+  const { loading, data, error } = useQuery(userTimeSheet, {
+    variables: { id: userId }
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
 
   useEffect(() => {
-      // if (!loading && data && data.result.length) {
-      //   const {start_date, end_date} = data.result[0].data.shift
-      //     if (start_date && end_date === null) {
-      //       console.log(end_date)
-      //       setInProgress(true)
-      //     }
-      //   return
-      // }
-  })
+      if (!loading && data && data.userTimesheets.length) {
+        const {startedAt, endedAt} = data.userTimesheets[0]
+          if (startedAt && endedAt === null) {
+            console.log({startedAt, endedAt})
+            setInProgress(true)
+            return
+          }
+          setInProgress(false)
+      }
+  }, [loading])
 
   function handleStartShift() {
     setInProgress(true)
+    setMessage("")
     manageShift({
       variables: {
         userId,
@@ -45,11 +47,11 @@ export default function ShiftButtons({ userId }) {
   }
 
   function handleEndShift() {
-    // const [ log ] = data.result
-    // if (!log) {
-    //   setMessage('You can\'t end shift that is not in progress')
-    //   return 
-    // }
+    if (!isInProgress) {
+      setMessage('You can\'t end shift that is not in progress')
+      return 
+    }
+    setMessage("")
     setInProgress(false)
     manageShift({
       variables: {

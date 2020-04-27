@@ -135,7 +135,8 @@ class User < ApplicationRecord
     else
       timesheet = user.time_sheets.find_by(ended_at: nil)
       # TODO: @olivier => get insights from Nicolas on how to best do this without skipping validations
-      return unless timesheet
+      # TODO: @olivier => Find a better way of throwing meaning errors rather than silencing them
+      return unless timesheet #
       timesheet.update(ended_at: Time.current, shift_end_event_log: event)
       timesheet
     end
