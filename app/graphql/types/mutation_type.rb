@@ -39,7 +39,7 @@ module Types
     field :temperature_update, mutation: Mutations::Temperature::TemperatureUpdate
 
     # track time
-    field :start_shift, mutation: Mutations::Timesheet::StartShift
+    field :manage_shift, mutation: Mutations::Timesheet::ManageShift
     field :end_shift, mutation: Mutations::Timesheet::EndShift
   end
 end

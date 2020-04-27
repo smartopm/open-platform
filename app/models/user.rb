@@ -128,9 +128,15 @@ class User < ApplicationRecord
     data = { ref_name: user.name, type: user.user_type,}
     return unless user
     event = generate_events(event_tag, user, data)
-    user.time_sheets.create(started_at: Time.current, shift_start_event_log: event)
 
-    # timesheet = user.time_sheets.where(ended_at: nil).order(created_at: :desc).limit(1)
+    if event_tag == 'shift_start'
+      user.time_sheets.create(started_at: Time.current, shift_start_event_log_id: event[:id])
+    else
+      timesheet = user.time_sheets.where(ended_at: nil).order(created_at: :desc).limit(1)
+      timesheet.update_all({:ended_at =>Time.current, :shift_end_event_log_id => event[:id]})  
+      timesheet
+    end
+
   end
 
   def construct_message(vals)

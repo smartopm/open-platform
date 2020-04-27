@@ -3,14 +3,15 @@
 module Mutations
   module Timesheet
     # Create timesheet record
-    class StartShift < BaseMutation
+    class ManageShift < BaseMutation
       argument :user_id, ID, required: true
+      argument :event_tag, String, required: true
 
       field :time_sheet, Types::TimeSheetType, null: true
 
-      def resolve(user_id:)
+      def resolve(user_id:, event_tag:)
         begin
-          time_sheet = context[:current_user].manage_shift(user_id, 'shift_start')
+          time_sheet = context[:current_user].manage_shift(user_id, event_tag)
           return { time_sheet: time_sheet } if time_sheet.present?
         rescue StandardError
           raise GraphQL::ExecutionError, time_sheet.errors.full_messages
