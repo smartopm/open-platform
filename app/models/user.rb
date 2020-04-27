@@ -123,20 +123,21 @@ class User < ApplicationRecord
                       data: data)
   end
 
-  def manage_shift(target_user_id, event_tag) 
+  def manage_shift(target_user_id, event_tag)
     user = find_a_user(target_user_id)
-    data = { ref_name: user.name, type: user.user_type,}
+    data = { ref_name: user.name, type: user.user_type }
     return unless user
+
     event = generate_events(event_tag, user, data)
 
     if event_tag == 'shift_start'
       user.time_sheets.create(started_at: Time.current, shift_start_event_log_id: event[:id])
     else
       timesheet = user.time_sheets.where(ended_at: nil).order(created_at: :desc).limit(1)
-      timesheet.update_all({:ended_at =>Time.current, :shift_end_event_log_id => event[:id]})  
+      # TODO: @olivier => get insights from Nicolas on how to best do this without skipping validations
+      timesheet.update_all(ended_at: Time.current, shift_end_event_log_id: event[:id])
       timesheet
     end
-
   end
 
   def construct_message(vals)

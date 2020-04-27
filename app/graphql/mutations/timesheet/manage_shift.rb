@@ -10,12 +10,10 @@ module Mutations
       field :time_sheet, Types::TimeSheetType, null: true
 
       def resolve(user_id:, event_tag:)
-        begin
-          time_sheet = context[:current_user].manage_shift(user_id, event_tag)
-          return { time_sheet: time_sheet } if time_sheet.present?
-        rescue StandardError
-          raise GraphQL::ExecutionError, time_sheet.errors.full_messages
-        end
+        time_sheet = context[:current_user].manage_shift(user_id, event_tag)
+        return { time_sheet: time_sheet } if time_sheet.present?
+      rescue StandardError
+        raise GraphQL::ExecutionError, time_sheet.errors.full_messages
       end
 
       def authorized?(_vals)
