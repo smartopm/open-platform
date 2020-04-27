@@ -217,3 +217,13 @@ export const UserMessageQuery = gql`
     }
   }
 `
+
+export const userTimeSheet = gql`
+  query userTimesheets($id: ID!){
+    userTimesheets(id: $id) {
+      startedAt
+      endedAt
+      id
+    }
+  }
+` 

@@ -137,13 +137,13 @@ module Types
               .limit(limit).offset(offset)
     end
 
-    field :timesheets, [TimeSheetType], null: true do
-      description 'Returns all timesheet submitted by the user'
+    field :user_timesheets, [TimeSheetType], null: true do
+      description 'Returns all timesheet for the user'
+      argument :id, ID, required: true
     end
 
-    def timesheets
-      TimeSheet.all
+    def user_timesheets(id)
+      TimeSheet.where(user_id: id)
     end
-
   end
 end

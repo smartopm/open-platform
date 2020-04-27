@@ -88,8 +88,12 @@ class EventLog < ApplicationRecord
     "Temperature for #{visitor_name} was recorded by #{acting_user_name}"
   end
 
-  def user_shift_to_sentence
-    "Shift for #{ref_user_name} was recorded by #{acting_user_name}"
+  def shift_start_to_sentence
+    "Shift for #{ref_user_name} was started by #{acting_user_name}"
+  end
+
+  def shift_end_to_sentence
+    "Shift for #{ref_user_name} was ended by #{acting_user_name}"
   end
 
   def user_enrolled_to_sentence
