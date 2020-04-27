@@ -108,19 +108,18 @@ class User < ApplicationRecord
     ATTACHMENTS.each_pair do |key, attr|
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
-    generate_events('user_enrolled', enrolled_user) if enrolled_user.save
+    data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
+    generate_events('user_enrolled', enrolled_user, data) if enrolled_user.save
     enrolled_user
   end
   # rubocop:enable Metrics/AbcSize
 
-  def generate_events(event_tag, target_user)
+  def generate_events(event_tag, target_user, data = {})
     ::EventLog.create(acting_user_id: id,
                       community_id: target_user.community_id, subject: event_tag,
                       ref_id: target_user.id,
                       ref_type: 'User',
-                      data: {
-                        ref_name: target_user.name, note: '', type: target_user.user_type
-                      })
+                      data: data)
   end
 
   def construct_message(vals)
@@ -128,6 +127,10 @@ class User < ApplicationRecord
     mess[:user_id] = vals[:user_id]
     mess.sender_id = self[:id]
     mess
+  end
+
+  def find_a_user(a_user_id)
+    User.find(a_user_id)
   end
 
   def id_card_token
