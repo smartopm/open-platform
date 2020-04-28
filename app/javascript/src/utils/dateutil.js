@@ -70,13 +70,22 @@ export function getWeekDay(date) {
   return weekdays[day];
 }
 
+export function differenceInHours(startDate, endDate) {
+  let lastDate = endDate || new Date()
+  let diff =(new Date(startDate).getTime() - new Date(lastDate).getTime()) / 1000;
+  diff /= (60 * 60);
+  return Math.abs(Math.round(diff));
+ }
+
 
 export default {
   fromISO8601,
   dateTimeToString,
   dateToString,
   isExpired,
-  formatDate
+  formatDate,
+  getWeekDay,
+  differenceInHours
 }
 
 // pad("00", "1") => "01"

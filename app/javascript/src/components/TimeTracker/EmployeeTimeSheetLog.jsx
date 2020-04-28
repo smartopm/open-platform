@@ -1,12 +1,10 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
-import dateutil, { getWeekDay } from '../../utils/dateutil'
+import dateutil from '../../utils/dateutil'
 import { UserTimeSheetQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
-
-// TODO: @olivier => Fix the component with right data
 
 export default function EmployeeTimeSheetLog() {
   const { id } = useParams()
@@ -19,20 +17,21 @@ export default function EmployeeTimeSheetLog() {
   if (error) return <span>{error.message}</span>
 
   const shifts = data.userTimeSheetLogs
-  const columns = ['Day', 'Date' , 'Start Time', 'Stop Time']
-
+  const columns = ['Day', 'Date' , 'Start Time', 'Stop Time', 'Total Hours']
   return (
     <DataTable columns={columns}>
             {
                 shifts.length && shifts.map(shift => (
                   <StyledTableRow key={shift.id}>
-                      <StyledTableCell>{getWeekDay(shift.startedAt)}</StyledTableCell>
+                      <StyledTableCell>{dateutil.getWeekDay(shift.startedAt)}</StyledTableCell>
                       <StyledTableCell>{dateutil.dateToString(shift.startedAt)}</StyledTableCell>
                       <StyledTableCell>{dateutil.dateTimeToString(shift.startedAt)}</StyledTableCell>
                       <StyledTableCell>{shift.endedAt ? dateutil.dateTimeToString(shift.endedAt) : 'In-Progress'}</StyledTableCell>
+                      <StyledTableCell>{dateutil.differenceInHours(shift.startedAt, shift.endedAt)}</StyledTableCell>
                   </StyledTableRow>
                 ))
             }
     </DataTable>
   )
 }
+
