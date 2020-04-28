@@ -5,6 +5,7 @@ import dateutil from '../../utils/dateutil'
 import { UserTimeSheetQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
+import { zonedDate } from '../DateContainer'
 
 export default function EmployeeTimeSheetLog() {
   const { id } = useParams()
@@ -23,15 +24,14 @@ export default function EmployeeTimeSheetLog() {
             {
                 shifts.length && shifts.map(shift => (
                   <StyledTableRow key={shift.id}>
-                      <StyledTableCell>{dateutil.getWeekDay(shift.startedAt)}</StyledTableCell>
-                      <StyledTableCell>{dateutil.dateToString(shift.startedAt)}</StyledTableCell>
-                      <StyledTableCell>{dateutil.dateTimeToString(shift.startedAt)}</StyledTableCell>
-                      <StyledTableCell>{shift.endedAt ? dateutil.dateTimeToString(shift.endedAt) : 'In-Progress'}</StyledTableCell>
-                      <StyledTableCell>{dateutil.differenceInHours(shift.startedAt, shift.endedAt)}</StyledTableCell>
+                      <StyledTableCell>{dateutil.getWeekDay(zonedDate(shift.startedAt))}</StyledTableCell>
+                      <StyledTableCell>{dateutil.dateToString(zonedDate(shift.startedAt))}</StyledTableCell>
+                      <StyledTableCell>{dateutil.dateTimeToString(zonedDate(shift.startedAt))}</StyledTableCell>
+                      <StyledTableCell>{shift.endedAt ? dateutil.dateTimeToString(zonedDate(shift.endedAt)) : 'In-Progress'}</StyledTableCell>
+                      <StyledTableCell>{shift.endedAt ? dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt)) : 'In-Progress'}</StyledTableCell>
                   </StyledTableRow>
                 ))
             }
     </DataTable>
   )
 }
-

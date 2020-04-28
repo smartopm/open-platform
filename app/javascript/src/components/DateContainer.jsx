@@ -7,25 +7,25 @@ import dateutil from '../utils/dateutil'
 
 const timeZone = 'Africa/Lusaka'
 
-const zonedDate = date => utcToZonedTime(date, timeZone)
+const zonedTimeDate = date => utcToZonedTime(date, timeZone)
 const timePattern = 'HH:mm'
 
 export const dateTimeToString = date =>
-  format(zonedDate(date), timePattern, {
+  format(zonedTimeDate(date), timePattern, {
     timeZone
   })
 
-export default function DateContainer({ date }) {
-  const utcDate = toDate(new Date(date), { timeZone: 'UTC' })
-  const zonedDate = utcToZonedTime(utcDate, timeZone)
+const utcDate = date => toDate(new Date(date), { timeZone: 'UTC' })
+export const zonedDate = date => utcToZonedTime(utcDate(date), timeZone)
 
+export default function DateContainer({ date }) {
   return (
     <span>
-      {isToday(new Date(zonedDate))
+      {isToday(new Date(zonedDate(date)))
         ? `Today at ${dateTimeToString(new Date(date))}`
         : isYesterday(new Date(zonedDate))
         ? `Yesterday at ${dateTimeToString(new Date(date))}`
-        : dateutil.dateToString(new Date(zonedDate))}
+        : dateutil.dateToString(new Date(zonedDate(date)))}
     </span>
   )
 }
