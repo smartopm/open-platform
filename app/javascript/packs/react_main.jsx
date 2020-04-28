@@ -165,8 +165,6 @@ const Analytics = props => {
         let pageHit = `/${rootURL}/${userPage}`
         ReactGA.pageview(pageHit)
       } else {
-        console.log({ page: location.pathname })
-
         ReactGA.set({ page: location.pathname });
         ReactGA.pageview(location.pathname)
       }
