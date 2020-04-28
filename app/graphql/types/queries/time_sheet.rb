@@ -27,10 +27,10 @@ module Types::Queries::TimeSheet
     TimeSheet.find_by_sql(["SELECT time_sheets.* FROM time_sheets
         INNER JOIN ( SELECT user_id, max(time_sheets.created_at) as max_date FROM time_sheets
         INNER JOIN users ON users.id = time_sheets.user_id
-        WHERE (users.community_id=?)
-        AND (users.name ILIKE ? OR users.phone_number ILIKE ?)
+        WHERE (users.community_id=?) AND (users.name ILIKE ? OR users.phone_number ILIKE ?)
         GROUP BY time_sheets.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
-        ON time_sheets.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
+        ON time_sheets.created_at = max_list.max_date AND time_sheets.user_id = max_list.user_id
+        ORDER BY time_sheets.created_at DESC"] +
         Array.new(1, com_id) + Array.new(2, "%#{query}%") + [limit, offset])
   end
 
