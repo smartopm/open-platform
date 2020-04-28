@@ -6,6 +6,7 @@ import { useMutation, useQuery } from 'react-apollo'
 import { StartShiftMutation, EndShiftMutation } from '../../graphql/mutations'
 import { AllEventLogsQuery } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
+import { Spinner } from '../Loading'
 
 // have mutations here for managing shifts
 // have queries that checks if a specific shift is in progress
@@ -62,7 +63,7 @@ export default function ShiftButtons({ userId }) {
       
     })
   }
-  if (loading) return '<Loading />'
+  if (loading) return <Spinner />
   if (error) return console.log(error.message)
 
 
@@ -74,14 +75,14 @@ export default function ShiftButtons({ userId }) {
       justify="space-around"
       alignItems="center"
     >
-      <Grid item xs>
+      <Grid item xs container justify="flex-end">
         <Button onClick={handleStartShift} className={css(styles.startBtn)} disabled={isInProgress}>
           {
            !isInProgress && 'Start Shift' || 'Shift In-Progress'
           }
         </Button>
       </Grid>
-      <Grid item xs>
+      <Grid item xs >
         <Button onClick={handleEndShift} className={css(styles.endBtn)}>
           End Shift
         </Button>
