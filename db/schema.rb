@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_100803) do
+ActiveRecord::Schema.define(version: 2020_04_27_090543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -131,6 +131,19 @@ ActiveRecord::Schema.define(version: 2020_04_14_100803) do
     t.string "source"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "time_sheets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "shift_start_event_log_id"
+    t.uuid "shift_end_event_log_id"
+    t.uuid "user_id"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shift_end_event_log_id"], name: "index_time_sheets_on_shift_end_event_log_id"
+    t.index ["shift_start_event_log_id"], name: "index_time_sheets_on_shift_start_event_log_id"
+    t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

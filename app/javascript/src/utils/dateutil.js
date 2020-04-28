@@ -61,14 +61,23 @@ export function isTimeValid(date) {
 }
 
 export function getWeekDay(date) {
-  let new_date
+  let new_date 
   if (!(date instanceof Date)) {
     new_date = new Date(date)
   }
-  var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-  let day = new_date.getDay();
+  new_date = date
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const day = new_date.getDay();
   return weekdays[day];
 }
+
+export function differenceInHours(startDate, endDate) {
+  // in case ended_at is null, initialize it.
+  const lastDate = endDate || new Date()
+  let diff = (new Date(startDate).getTime() - new Date(lastDate).getTime()) / 1000;
+  diff /= (60 * 60);
+  return Math.abs(Math.round(diff));
+ }
 
 
 export default {
@@ -76,7 +85,9 @@ export default {
   dateTimeToString,
   dateToString,
   isExpired,
-  formatDate
+  formatDate,
+  getWeekDay,
+  differenceInHours
 }
 
 // pad("00", "1") => "01"

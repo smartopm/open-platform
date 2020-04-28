@@ -297,7 +297,9 @@ export function Component({
           </div>
           {/*  */}
           <br/>
-              <ShiftButtons userId={userId} />
+              {
+                authState.user.userType === 'custodian' && <ShiftButtons userId={userId} />
+              }
         </div>
 
         <StyledTabs

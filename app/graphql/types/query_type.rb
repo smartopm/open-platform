@@ -7,6 +7,7 @@ module Types
     include Types::Queries::EntryRequest
     include Types::Queries::Message
     include Types::Queries::Showroom
+    include Types::Queries::TimeSheet
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 

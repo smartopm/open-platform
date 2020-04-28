@@ -217,3 +217,27 @@ export const UserMessageQuery = gql`
     }
   }
 `
+
+export const UserTimeSheetQuery = gql`
+  query userTimeSheetLogs($userId: ID!){
+    userTimeSheetLogs(userId: $userId) {
+      startedAt
+      endedAt
+      id
+    }
+  }
+` 
+
+export const TimeSheetLogsQuery = gql`
+  query {
+    timeSheetLogs {
+      endedAt
+      startedAt
+      id
+      user {
+        name
+      }
+      userId
+    }
+  }
+`

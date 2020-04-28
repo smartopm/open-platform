@@ -3,8 +3,8 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
-import { StartShiftMutation, EndShiftMutation } from '../../graphql/mutations'
-import { AllEventLogsQuery } from '../../graphql/queries'
+import { ManageShiftMutation } from '../../graphql/mutations'
+import { UserTimeSheetQuery } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
 import { Spinner } from '../Loading'
 
@@ -15,53 +15,54 @@ import { Spinner } from '../Loading'
 // we can disable the start shift for a day once started
 // most importantly we need to find a way to get the last or current shift for this user
 export default function ShiftButtons({ userId }) {
-  const [startShift] = useMutation(StartShiftMutation)
-  const [endShift] = useMutation(EndShiftMutation)
-  const { loading, data, error } = useQuery(AllEventLogsQuery, {
-    variables: { refId: userId, subject: "user_shift", refType: null, limit: 1, offset: 0 }
+  const [manageShift] = useMutation(ManageShiftMutation)
+  const { loading, data, error } = useQuery(UserTimeSheetQuery, {
+    variables: { userId }
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
 
   useEffect(() => {
-      if (!loading && data && data.result.length) {
-        const {start_date, end_date} = data.result[0].data.shift
-          if (start_date && end_date === null) {
-            console.log(end_date)
+      if (!loading && data && data.userTimeSheetLogs.length) {
+        const {startedAt, endedAt} = data.userTimeSheetLogs[0]
+          if (startedAt && endedAt === null) {
+            console.log({startedAt, endedAt})
             setInProgress(true)
+            return
           }
-        return
+          setInProgress(false)
       }
-  })
+  }, [loading])
 
   function handleStartShift() {
     setInProgress(true)
-    startShift({
+    setMessage("")
+    manageShift({
       variables: {
         userId,
-        startDate: new Date()
+        eventTag: 'shift_start'
       }
     }).then(data => {
       console.log(data)
-    })
+    }).catch(err => console.log(err.message))
   }
 
   function handleEndShift() {
-    const [ log ] = data.result
-    if (!log) {
+    if (!isInProgress) {
       setMessage('You can\'t end shift that is not in progress')
       return 
     }
+    setMessage("")
     setInProgress(false)
-    endShift({
+    manageShift({
       variables: {
-        logId: log.id,
-        endDate: new Date()
+        userId,
+        eventTag: 'shift_end'
       }
     }).then(data => {
       console.log(data)
       
-    })
+    }).catch(err => console.log(err.message))
   }
   if (loading) return <Spinner />
   if (error) return console.log(error.message)

@@ -1,29 +1,26 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
-import dateutil, { getWeekDay } from '../../utils/dateutil'
-import { AllEventLogsQuery } from '../../graphql/queries'
+import dateutil from '../../utils/dateutil'
+import { UserTimeSheetQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 import Typography from '@material-ui/core/Typography'
 import Nav from '../Nav'
+import { zonedDate } from '../DateContainer'
 
 export default function EmployeeTimeSheetLog() {
   const { id } = useParams()
-  const { loading, data, error } = useQuery(AllEventLogsQuery, {
+  const { loading, data, error } = useQuery(UserTimeSheetQuery, {
     variables: {
-      subject: 'user_shift',
-      refType: null,
-      refId: id,
-      limit: 10,
-      offset: 0,
+      userId: id,
     }
   })
   if (loading) return <Spinner />
   if (error) return <span>{error.message}</span>
 
-  const shifts = data.result.map(res => res.data.shift)
-  const columns = ['Day', 'Date', 'Start Time', 'Stop Time']
+  const shifts = data.userTimeSheetLogs
+  const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours']
 
   // Day, Date, Start Time, Stop Time, Total Hours in the day
 
@@ -51,16 +48,17 @@ export default function EmployeeTimeSheetLog() {
 
         </div>
         <DataTable columns={columns}>
-          {
-            shifts.map((shift, i) => (
-              <StyledTableRow key={i}>
-                <StyledTableCell>{getWeekDay(shift.start_date)}</StyledTableCell>
-                <StyledTableCell>{dateutil.dateToString(shift.start_date)}</StyledTableCell>
-                <StyledTableCell>{dateutil.dateTimeToString(shift.start_date)}</StyledTableCell>
-                <StyledTableCell>{shift.end_date && dateutil.dateTimeToString(shift.end_date)}</StyledTableCell>
-              </StyledTableRow>
-            ))
-          }
+        {
+                shifts.length && shifts.map(shift => (
+                  <StyledTableRow key={shift.id}>
+                      <StyledTableCell>{dateutil.getWeekDay(zonedDate(shift.startedAt))}</StyledTableCell>
+                      <StyledTableCell>{dateutil.dateToString(zonedDate(shift.startedAt))}</StyledTableCell>
+                      <StyledTableCell>{dateutil.dateTimeToString(zonedDate(shift.startedAt))}</StyledTableCell>
+                      <StyledTableCell>{shift.endedAt ? dateutil.dateTimeToString(zonedDate(shift.endedAt)) : 'In-Progress'}</StyledTableCell>
+                      <StyledTableCell>{shift.endedAt ? dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt)) : 'In-Progress'}</StyledTableCell>
+                  </StyledTableRow>
+                ))
+            }
         </DataTable>
 
       </div>
