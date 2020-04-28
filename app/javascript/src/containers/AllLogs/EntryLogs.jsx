@@ -130,6 +130,7 @@ export function IndexComponent({
             : 'Manual'
       const isDigital = source === 'Scan' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
+      const accessStatus = event.entryRequest.grantedState === 1 ? 'Granted Access':'Denied Access'
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
@@ -140,7 +141,10 @@ export function IndexComponent({
                 <span className={css(styles.logTitle)}>{visitorName}</span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
+                <span>
+                  <strong>{accessStatus}: </strong>
+                  </span>
+                  <span className={css(styles.subTitle)}>
                   {DateUtil.dateToString(new Date(event.createdAt))}
                 </span>
               </div>

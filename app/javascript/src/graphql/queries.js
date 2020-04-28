@@ -64,6 +64,7 @@ export const AllEventLogsQuery = gql`
       entryRequest {
         reason
         id
+        grantedState
       }
     }
   }
