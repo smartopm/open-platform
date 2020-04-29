@@ -225,6 +225,9 @@ export const UserTimeSheetQuery = gql`
       startedAt
       endedAt
       id
+      user {
+        name
+      }
     }
   }
 ` 

@@ -4,31 +4,33 @@ import { TimeSheetLogsQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import dateutil from '../../utils/dateutil'
 import { useHistory } from 'react-router'
-import { Typography } from '@material-ui/core'
-import Nav from '../Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { zonedDate } from '../DateContainer'
 
 export default function EmployeeTimeSheetLog() {
   const { loading, data, error } = useQuery(TimeSheetLogsQuery)
   const history = useHistory()
+
+  function routeToEmployee({userId, name}){
+    history.push({
+      pathname: `/timesheet/${userId}`,
+      state: {
+        name
+      }
+    })
+  }
   if (loading) return <Spinner />
   if (error) return <span>{error.message}</span>
 
-
   return (
-
     <div>
-      <Nav navName="Timesheet" menuButton="back" backTo="/" />
-
       <div className="container">
         <br />
-        
         <br />
         {
           data.timeSheetLogs.map(shift => (
             <React.Fragment key={shift.id} >
-              <div className="row justify-content-between" onClick={() => history.push(`/timesheet/${shift.userId}`)} >
+              <div className="row justify-content-between"  >
                 <div className="col-xs-8">
                   <strong >{shift.user.name}</strong>
                 </div>
@@ -43,7 +45,7 @@ export default function EmployeeTimeSheetLog() {
                 </div>
                 <div className="col-xs-4">
                   <span className={css(styles.subTitle)}>
-                    Numbers of shifts hours worked: {dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt || new Date())) }
+                    Numbers of shifts hours worked: {shift.endedAt ? dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt)) : 'In-Progress'}
                   </span>
                 </div>
               </div>
@@ -53,7 +55,7 @@ export default function EmployeeTimeSheetLog() {
                     cursor: 'pointer',
                     color: '#009688'
                   }}
-                  onClick={() => history.push(`/timesheet/${shift.userId}`)}
+                  onClick={() => routeToEmployee({userId: shift.userId, name: shift.user.name})}
                 >
                   More Details
                 </span>
