@@ -14,6 +14,7 @@ import {
   Route,
   useHistory 
 } from 'react-router-dom'
+import ReactGA from 'react-ga'
 import ApolloProvider from '../src/containers/Provider/ApolloProvider'
 import AuthStateProvider, {
   Context as AuthStateContext
@@ -61,8 +62,6 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
-import EmployeeTimeSheetLog from '../src/components/TimeTracker/EmployeeTimeSheetLog'
-import ReactGA from 'react-ga';
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 // Prevent Google Analytics reporting from staging and dev domains
@@ -207,7 +206,6 @@ const App = () => {
                     <Route path="/entry_logs" component={EntryLogs} />
 
                     <Route path="/user" exact component={UserEdit} />
-
                     <Route path="/map" component={Map} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
