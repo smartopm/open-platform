@@ -298,9 +298,9 @@ export function Component({
           {/*  <ShiftButtons userId={userId} /> */}
           <br />
           {authState.user.userType === 'custodian' &&
-            (['security_guard', 'contractor'].includes(data.user.userType) && (
+            ['security_guard', 'contractor'].includes(data.user.userType) && (
               <ShiftButtons userId={userId} />
-            ))}
+            )}
         </div>
 
         <StyledTabs
@@ -366,10 +366,12 @@ export function Component({
               />
             </div>
             <br />
-            <div className="container row d-flex justify-content-between">
-              <span>Social: </span> <br />
-              <CaptureTemp refId={data.user.id} refName={data.user.name} />
-            </div>
+            {authState.user.userType === 'security_guard' && (
+              <div className="container row d-flex justify-content-between">
+                <span>Social: </span> <br />
+                <CaptureTemp refId={data.user.id} refName={data.user.name} />
+              </div>
+            )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
