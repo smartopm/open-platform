@@ -9,6 +9,7 @@ import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import newUserIcon from '../../../../assets/images/new.svg'
 import gateIcon from '../../../../assets/images/bar.svg'
+import {userType} from '../../utils/constants'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import {
   StyledTabs,
@@ -130,12 +131,12 @@ export function IndexComponent({
             : 'Manual'
       const isDigital = source === 'Scan' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
-      
-      const accessStatus =  event.entryRequest && event.entryRequest.grantedState === 1 
-        ? 'Granted Access: ' 
-          : event.entryRequest && event.entryRequest.grantedState === 0 
-            ? 'Denied Access: ' 
-            : ''
+
+      const accessStatus = event.entryRequest && event.entryRequest.grantedState === 1
+        ? 'Granted Access: '
+        : event.entryRequest && event.entryRequest.grantedState === 0
+          ? 'Denied Access: '
+          : ''
 
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
@@ -149,8 +150,8 @@ export function IndexComponent({
               <div className="col-xs-4">
                 <span>
                   <strong>{accessStatus} </strong>
-                  </span>
-                  <span className={css(styles.subTitle)}>
+                </span>
+                <span className={css(styles.subTitle)}>
                   {DateUtil.dateToString(new Date(event.createdAt))}
                 </span>
               </div>
@@ -173,6 +174,10 @@ export function IndexComponent({
                 </span>
               </div>
               <div className="col-xs-4">
+
+                {/* Temperature status placeholder */}
+                <span className={css(styles.subTitle)}> {' '}</span>
+
                 <span className={css(styles.subTitle)}>
                   {source !== 'Scan' && authState.user.userType === 'admin' ? (
                     <Fragment>
@@ -232,7 +237,7 @@ export function IndexComponent({
           backgroundColor: '#25c0b0'
         }}
       >
-        <Nav menuButton="back" navName="Log Book" boxShadow={'none'}  backTo="/"/>
+        <Nav menuButton="back" navName="Log Book" boxShadow={'none'} backTo="/" />
       </div>
       <div className="container">
         <div className="form-group">
@@ -252,8 +257,8 @@ export function IndexComponent({
           aria-label="simple tabs example"
           centered
         >
-          <StyledTab icon={<img src={gateIcon} style={{height: 30, width: 30}}/>}  {...a11yProps(0)} />
-          <StyledTab icon={<img src={newUserIcon} style={{height: 30, width: 30}}/>} {...a11yProps(1)} />
+          <StyledTab icon={<img src={gateIcon} style={{ height: 30, width: 30 }} />}  {...a11yProps(0)} />
+          <StyledTab icon={<img src={newUserIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(1)} />
         </StyledTabs>
         <TabPanel value={tabValue} index={0}>
           <>{logs(filteredEvents)}</>
@@ -261,38 +266,38 @@ export function IndexComponent({
         <TabPanel value={tabValue} index={1}>
           {/*Todo: Handle the listing of enrolled users here*/}
 
-         {data.result.map(user => {
+          {data.result.map(user => {
 
-           return(
-             <Fragment key={user.id}>
-            <div className="container">
-              <div className="row justify-content-between">
-                <div className="col-xs-8">
-                  <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
+            return (
+              <Fragment key={user.id}>
+                <div className="container">
+                  <div className="row justify-content-between">
+                    <div className="col-xs-8">
+                      <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
+                    </div>
+                    <div className="col-xs-4">
+                      <span className={css(styles.subTitle)}>
+                        {DateUtil.dateToString(new Date(user.createdAt))}
+                      </span>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="row justify-content-between">
+                    <div className="col-xs-8">
+                      <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
+                    </div>
+                    <div className="col-xs-4">
+                      <span className={css(styles.subTitle)}>
+                        {DateUtil.dateTimeToString(new Date(user.createdAt))}
+                      </span>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="border-top my-3" />
                 </div>
-                <div className="col-xs-4">
-                  <span className={css(styles.subTitle)}>
-                    {DateUtil.dateToString(new Date(user.createdAt))}
-                  </span>
-                </div>
-              </div>
-              <br />
-              <div className="row justify-content-between">
-                <div className="col-xs-8">
-                  <span className={css(styles.subTitle)}>{user.data.type === 'prospective_client' ? 'Prospective Client' : user.data.type }</span>
-                </div>
-                <div className="col-xs-4">
-                  <span className={css(styles.subTitle)}>
-                    {DateUtil.dateTimeToString(new Date(user.createdAt))}
-                  </span>
-                </div>
-              </div>
-              <br />
-              <div className="border-top my-3" />
-            </div>
 
-            </Fragment>
-           )
+              </Fragment>
+            )
           })}
         </TabPanel>
       </div>
