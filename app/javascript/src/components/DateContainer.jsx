@@ -21,9 +21,9 @@ export const zonedDate = date => utcToZonedTime(utcDate(date), timeZone)
 export default function DateContainer({ date }) {
   return (
     <span>
-      {isToday(new Date(zonedDate(date)))
+      {isToday(new Date(date))
         ? `Today at ${dateTimeToString(new Date(date))}`
-        : isYesterday(new Date(zonedDate))
+        : isYesterday(new Date(date))
         ? `Yesterday at ${dateTimeToString(new Date(date))}`
         : dateutil.dateToString(new Date(zonedDate(date)))}
     </span>

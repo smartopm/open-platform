@@ -79,7 +79,6 @@ export function differenceInHours(startDate, endDate) {
   return Math.abs(Math.round(diff));
  }
 
-
 export default {
   fromISO8601,
   dateTimeToString,
