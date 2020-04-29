@@ -59,13 +59,14 @@ export default function ShiftButtons({ userId }) {
         userId,
         eventTag: 'shift_end'
       }
-    }).then(data => {
-      console.log(data)
-      
-    }).catch(err => console.log(err.message))
+    })
+      .then(data => {
+        console.log(data)
+      })
+      .catch(err => setMessage(err.message))
   }
   if (loading) return <Spinner />
-  if (error) return console.log(error.message)
+  if (error) return setMessage(error.message)
 
 
   return (
@@ -76,14 +77,14 @@ export default function ShiftButtons({ userId }) {
       justify="space-around"
       alignItems="center"
     >
-      <Grid item xs container justify="flex-end">
+      <Grid item xs={6} container justify="flex-end">
         <Button onClick={handleStartShift} className={css(styles.startBtn)} disabled={isInProgress}>
           {
            !isInProgress && 'Start Shift' || 'Shift In-Progress'
           }
         </Button>
       </Grid>
-      <Grid item xs >
+      <Grid item xs={6} >
         <Button onClick={handleEndShift} className={css(styles.endBtn)}>
           End Shift
         </Button>
