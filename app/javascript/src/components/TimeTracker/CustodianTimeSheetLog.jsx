@@ -40,10 +40,10 @@ export default function CustodianTimeSheetLog({ data }) {
                 <span className={css(styles.subTitle)}>
                   Numbers of shifts hours worked:{' '}
                   {shift.endedAt
-                    ? dateutil.differenceInHours(
+                    ? `${dateutil.differenceInHours(
                         zonedDate(shift.startedAt),
                         zonedDate(shift.endedAt)
-                      )
+                      )} hrs`
                     : 'In-Progress'}
                 </span>
               </div>

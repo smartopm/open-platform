@@ -20,15 +20,7 @@ export default function EmployeeTimeSheetLog({ data }) {
             <strong>Name: {state && state.name}</strong>
           </Typography>
         </div>
-        <div className="d-flex container justify-content-between pb-0">
-          <Typography variant="body2" key={1} style={{ marginLeft: 10 }}>
-            <strong>Total days worked this month:10 </strong>
-          </Typography>
-
-          <Typography variant="body2" key={2} style={{ marginRight: 10 }}>
-            <strong>Total hours worked this month:10 </strong>
-          </Typography>
-        </div>
+          {/* Removed total of hours and days till we have that. */}
         <DataTable columns={columns}>
           {Boolean(shifts.length) &&
             shifts.map(shift => (
