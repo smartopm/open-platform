@@ -159,7 +159,7 @@ export function Component({ authState }) {
                   </Fragment>
                 ) : null}
 
-              {['admin','contractor'].includes(
+              {['admin','custodian'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
 
