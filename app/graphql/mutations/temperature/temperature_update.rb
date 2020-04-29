@@ -18,8 +18,9 @@ module Mutations
         begin
           event_log = a_user.generate_events('user_temp', a_user, data)
           return { event_log: event_log } if event_log.present?
-        rescue ActiveRecord::RecordNotUnique
-          raise GraphQL::ExecutionError, event_log.errors.full_messages
+        rescue StandardError => e
+          Rails.logger.warn e.full_message
+          raise GraphQL::ExecutionError, "For some reason, I can't process your request"
         end
       end
 
