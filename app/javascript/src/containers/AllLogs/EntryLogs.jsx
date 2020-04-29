@@ -134,7 +134,7 @@ export function IndexComponent({
 
       const accessStatus = event.entryRequest && event.entryRequest.grantedState === 1
         ? 'Granted Access: '
-        : event.entryRequest && event.entryRequest.grantedState === 0
+        : event.entryRequest && event.entryRequest.grantedState === 2
           ? 'Denied Access: '
           : ''
 
@@ -148,7 +148,7 @@ export function IndexComponent({
                 <span className={css(styles.logTitle)}>{visitorName}</span>
               </div>
               <div className="col-xs-4">
-                <span>
+                <span className={css(styles.access)}>
                   <strong>{accessStatus} </strong>
                 </span>
                 <span className={css(styles.subTitle)}>
@@ -334,6 +334,12 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     color: '#818188',
+    fontSize: 14,
+    letterSpacing: 0.17,
+    fontWeight: 400
+  },
+  access: {
+    color: '#1f2026',
     fontSize: 14,
     letterSpacing: 0.17,
     fontWeight: 400
