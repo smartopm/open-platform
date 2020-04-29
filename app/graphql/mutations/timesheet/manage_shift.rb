@@ -12,8 +12,11 @@ module Mutations
       def resolve(user_id:, event_tag:)
         time_sheet = context[:current_user].manage_shift(user_id, event_tag)
         return { time_sheet: time_sheet } if time_sheet.present?
+      rescue ActiveRecord::RecordNotFound
+        raise GraphQL::ExecutionError, "Could not find User #{user_id}"
       rescue StandardError => e
-        raise GraphQL::ExecutionError, e.full_message # time_sheet.errors.full_messages
+        Rails.logger.warn e.full_message
+        raise GraphQL::ExecutionError, "For some reason, I can't process your request"
       end
 
       def authorized?(_vals)
