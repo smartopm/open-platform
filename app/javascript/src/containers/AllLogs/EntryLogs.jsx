@@ -25,7 +25,7 @@ export default ({ history, match }) => {
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50
 const allEventLogs = (history, match) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom']
+  const subjects = ['user_entry', 'visitor_entry', 'showroom','user_temp']
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
   const [searchTerm, setSearchTerm] = useState('')
@@ -120,7 +120,7 @@ export function IndexComponent({
     if (!eventLogs) {
       return 'No Entry logs yet'
     }
-
+    
     return eventLogs.map(event => {
       // Todo: To be followed up
       const source =
@@ -137,6 +137,7 @@ export function IndexComponent({
         : event.entryRequest && event.entryRequest.grantedState === 2
           ? 'Denied Access: '
           : ''
+
 
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
@@ -176,7 +177,7 @@ export function IndexComponent({
               <div className="col-xs-4">
 
                 {/* Temperature status placeholder */}
-                <span className={css(styles.subTitle)}> {' '}</span>
+                <span className={css(styles.subTitle)}> {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}</span>
 
                 <span className={css(styles.subTitle)}>
                   {source !== 'Scan' && authState.user.userType === 'admin' ? (
