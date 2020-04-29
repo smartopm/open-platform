@@ -16,7 +16,7 @@ module Mutations
         a_user = context[:current_user].find_a_user(ref_id)
         data = { ref_name: ref_name, note: temp }
         begin
-          event_log = a_user.generate_events('user_temp', a_user, data: data)
+          event_log = a_user.generate_events('user_temp', a_user, data)
           return { event_log: event_log } if event_log.present?
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, event_log.errors.full_messages
