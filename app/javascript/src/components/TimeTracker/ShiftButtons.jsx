@@ -7,6 +7,9 @@ import { ManageShiftMutation } from '../../graphql/mutations'
 import { UserTimeSheetQuery } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
 import { Spinner } from '../Loading'
+import { useWindowDimensions } from '../../utils/customHooks'
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
 
 // have mutations here for managing shifts
 // have queries that checks if a specific shift is in progress
@@ -21,6 +24,7 @@ export default function ShiftButtons({ userId }) {
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
+  const { width } = useWindowDimensions() // 767
 
   useEffect(() => {
       if (!loading && data && data.userTimeSheetLogs.length) {
@@ -42,9 +46,9 @@ export default function ShiftButtons({ userId }) {
         userId,
         eventTag: 'shift_start'
       }
-    }).then(data => {
-      console.log(data)
-    }).catch(err => console.log(err.message))
+    })
+      .then(data => data)
+      .catch(err => console.log(err.message))
   }
 
   function handleEndShift() {
@@ -60,9 +64,7 @@ export default function ShiftButtons({ userId }) {
         eventTag: 'shift_end'
       }
     })
-      .then(data => {
-        console.log(data)
-      })
+      .then(data => data)
       .catch(err => setMessage(err.message))
   }
   if (loading) return <Spinner />
@@ -80,13 +82,13 @@ export default function ShiftButtons({ userId }) {
       <Grid item xs={6} container justify="flex-end">
         <Button onClick={handleStartShift} className={css(styles.startBtn)} disabled={isInProgress}>
           {
-           !isInProgress && 'Start Shift' || 'Shift In-Progress'
+          width <= 767 ? <PlayArrowIcon />  : !isInProgress && 'Start Shift' || 'Shift In-Progress'
           }
         </Button>
       </Grid>
       <Grid item xs={6} >
         <Button onClick={handleEndShift} className={css(styles.endBtn)}>
-          End Shift
+          {width <= 767 ?  <StopIcon /> : 'End Shift'}
         </Button>
           {
             Boolean(message.length) && <Typography color={'secondary'}>{message}</Typography>
