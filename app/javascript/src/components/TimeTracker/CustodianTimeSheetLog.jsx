@@ -1,14 +1,10 @@
 import React from 'react'
-import { useQuery } from 'react-apollo'
-import { TimeSheetLogsQuery } from '../../graphql/queries'
-import { Spinner } from '../Loading'
 import dateutil from '../../utils/dateutil'
 import { useHistory } from 'react-router'
 import { StyleSheet, css } from 'aphrodite'
 import { zonedDate } from '../DateContainer'
 
-export default function EmployeeTimeSheetLog() {
-  const { loading, data, error } = useQuery(TimeSheetLogsQuery)
+export default function CustodianTimeSheetLog({ data }) {
   const history = useHistory()
 
   function routeToEmployee({userId, name}){
@@ -19,53 +15,58 @@ export default function EmployeeTimeSheetLog() {
       }
     })
   }
-  if (loading) return <Spinner />
-  if (error) return <span>{error.message}</span>
 
   return (
     <div>
       <div className="container">
         <br />
         <br />
-        {
-          data.timeSheetLogs.map(shift => (
-            <React.Fragment key={shift.id} >
-              <div className="row justify-content-between"  >
-                <div className="col-xs-8">
-                  <strong >{shift.user.name}</strong>
-                </div>
-                <div className="col-xs-4">
-                  <span className={css(styles.subTitle)}>
-                    Last shift worked: {dateutil.dateToString(zonedDate(shift.startedAt))}
-                  </span>
-                </div>
+        {data.timeSheetLogs.map(shift => (
+          <React.Fragment key={shift.id}>
+            <div className="row justify-content-between">
+              <div className="col-xs-8 nz_user">
+                <strong>{shift.user.name}</strong>
               </div>
-              <div className="row justify-content-between">
-                <div className="col-xs-8">
-                </div>
-                <div className="col-xs-4">
-                  <span className={css(styles.subTitle)}>
-                    Numbers of shifts hours worked: {shift.endedAt ? dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt)) : 'In-Progress'}
-                  </span>
-                </div>
-              </div>
-              <div className="d-flex flex-row-reverse">
-                <span
-                  style={{
-                    cursor: 'pointer',
-                    color: '#009688'
-                  }}
-                  onClick={() => routeToEmployee({userId: shift.userId, name: shift.user.name})}
-                >
-                  More Details
+              <div className="col-xs-4">
+                <span className={css(styles.subTitle)}>
+                  Last shift worked:{' '}
+                  {dateutil.dateToString(zonedDate(shift.startedAt))}
                 </span>
               </div>
-              <div className="border-top my-3" />
-            </React.Fragment>
-
-          ))
-        }
-
+            </div>
+            <div className="row justify-content-between">
+              <div className="col-xs-8"></div>
+              <div className="col-xs-4 nz_endshift">
+                <span className={css(styles.subTitle)}>
+                  Numbers of shifts hours worked:{' '}
+                  {shift.endedAt
+                    ? dateutil.differenceInHours(
+                        zonedDate(shift.startedAt),
+                        zonedDate(shift.endedAt)
+                      )
+                    : 'In-Progress'}
+                </span>
+              </div>
+            </div>
+            <div className="d-flex flex-row-reverse">
+              <span
+                style={{
+                  cursor: 'pointer',
+                  color: '#009688'
+                }}
+                onClick={() =>
+                  routeToEmployee({
+                    userId: shift.userId,
+                    name: shift.user.name
+                  })
+                }
+              >
+                More Details
+              </span>
+            </div>
+            <div className="border-top my-3" />
+          </React.Fragment>
+        ))}
       </div>
     </div>
   )
