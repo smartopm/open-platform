@@ -25,7 +25,7 @@ export default ({ history, match }) => {
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50
 const allEventLogs = (history, match) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom']
+  const subjects = ['user_entry', 'visitor_entry', 'showroom','user_temp']
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
   const [searchTerm, setSearchTerm] = useState('')
@@ -120,7 +120,7 @@ export function IndexComponent({
     if (!eventLogs) {
       return 'No Entry logs yet'
     }
-
+    
     return eventLogs.map(event => {
       // Todo: To be followed up
       const source =
@@ -138,6 +138,7 @@ export function IndexComponent({
           ? 'Denied Access: '
           : ''
 
+
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
@@ -148,8 +149,8 @@ export function IndexComponent({
                 <span className={css(styles.logTitle)}>{visitorName}</span>
               </div>
               <div className="col-xs-4">
-                <span>
-                  <strong>{accessStatus} </strong>
+                <span className={css(styles.logTitle)}>
+                  {accessStatus} 
                 </span>
                 <span className={css(styles.subTitle)}>
                   {DateUtil.dateToString(new Date(event.createdAt))}
@@ -176,7 +177,7 @@ export function IndexComponent({
               <div className="col-xs-4">
 
                 {/* Temperature status placeholder */}
-                <span className={css(styles.subTitle)}> {' '}</span>
+                <span className={css(styles.subTitle)}> {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}</span>
 
                 <span className={css(styles.subTitle)}>
                   {source !== 'Scan' && authState.user.userType === 'admin' ? (
