@@ -13,7 +13,8 @@ export const userType = {
   contractor: 'Contractor',
   prospective_client: 'Prospective Client',
   client: 'Client',
-  visitor: 'Visitor'
+  visitor: 'Visitor',
+  custodian: 'Store custodian'
 }
 
 export const userState = {
