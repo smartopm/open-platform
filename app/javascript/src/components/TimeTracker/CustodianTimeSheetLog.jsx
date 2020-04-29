@@ -6,6 +6,8 @@ import dateutil from '../../utils/dateutil'
 import { useHistory } from 'react-router'
 import { Typography } from '@material-ui/core'
 import Nav from '../Nav'
+import { StyleSheet, css } from 'aphrodite'
+import { zonedDate } from '../DateContainer'
 
 export default function EmployeeTimeSheetLog() {
   const { loading, data, error } = useQuery(TimeSheetLogsQuery)
@@ -20,28 +22,19 @@ export default function EmployeeTimeSheetLog() {
       <Nav navName="Timesheet" menuButton="back" backTo="/" />
 
       <div className="container">
-
-        <div className="form-group">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Filter Entries"
-          />
-        </div>
-
         <br />
+        
         <br />
-
         {
-          data.timeSheetLogs.map(event => (
-            <React.Fragment key={event.id} >
-              <div className="row justify-content-between" onClick={() => history.push(`/timesheet/${event.refId}`)} >
+          data.timeSheetLogs.map(shift => (
+            <React.Fragment key={shift.id} >
+              <div className="row justify-content-between" onClick={() => history.push(`/timesheet/${shift.userId}`)} >
                 <div className="col-xs-8">
-                  <span >event.data.ref_name</span>
+                  <strong >{shift.user.name}</strong>
                 </div>
                 <div className="col-xs-4">
-                  <span >
-                    <strong>Last shift worked: {dateutil.dateToString(new Date(event.data.shift.start_date))}</strong>
+                  <span className={css(styles.subTitle)}>
+                    Last shift worked: {dateutil.dateToString(zonedDate(shift.startedAt))}
                   </span>
                 </div>
               </div>
@@ -49,15 +42,22 @@ export default function EmployeeTimeSheetLog() {
                 <div className="col-xs-8">
                 </div>
                 <div className="col-xs-4">
-                  <span >
-                    <strong>Numbers of shifts hours worked: </strong>
+                  <span className={css(styles.subTitle)}>
+                    Numbers of shifts hours worked: {dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt || new Date())) }
                   </span>
                 </div>
               </div>
               <div className="d-flex flex-row-reverse">
-                <Typography variant="caption" color='textSecondary'>More Details</Typography>
+                <span
+                  style={{
+                    cursor: 'pointer',
+                    color: '#009688'
+                  }}
+                  onClick={() => history.push(`/timesheet/${shift.userId}`)}
+                >
+                  More Details
+                </span>
               </div>
-              <br />
               <div className="border-top my-3" />
             </React.Fragment>
 
@@ -68,3 +68,18 @@ export default function EmployeeTimeSheetLog() {
     </div>
   )
 }
+
+
+const styles = StyleSheet.create({
+  logTitle: {
+    color: '#1f2026',
+    fontSize: 16,
+    fontWeight: 700
+  },
+  subTitle: {
+    color: '#818188',
+    fontSize: 14,
+    letterSpacing: 0.17,
+    fontWeight: 400
+  }
+})

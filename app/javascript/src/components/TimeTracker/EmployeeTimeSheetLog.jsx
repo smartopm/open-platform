@@ -55,7 +55,7 @@ export default function EmployeeTimeSheetLog() {
                       <StyledTableCell>{dateutil.dateToString(zonedDate(shift.startedAt))}</StyledTableCell>
                       <StyledTableCell>{dateutil.dateTimeToString(zonedDate(shift.startedAt))}</StyledTableCell>
                       <StyledTableCell>{shift.endedAt ? dateutil.dateTimeToString(zonedDate(shift.endedAt)) : 'In-Progress'}</StyledTableCell>
-                      <StyledTableCell>{shift.endedAt ? dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt)) : 'In-Progress'}</StyledTableCell>
+                      <StyledTableCell>{ dateutil.differenceInHours(zonedDate(shift.startedAt), zonedDate(shift.endedAt || new Date()))}</StyledTableCell>
                   </StyledTableRow>
                 ))
             }
