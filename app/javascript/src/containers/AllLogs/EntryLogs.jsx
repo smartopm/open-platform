@@ -120,7 +120,7 @@ export function IndexComponent({
     if (!eventLogs) {
       return 'No Entry logs yet'
     }
-    
+      
     return eventLogs.map(event => {
       // Todo: To be followed up
       const source =
@@ -228,7 +228,7 @@ export function IndexComponent({
     data.result &&
     data.result.filter(log => {
       const visitorName =
-        log.data.ref_name || log.data.visitor_name || log.data.name
+        log.data.ref_name || log.data.visitor_name || log.data.name || ''
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase())
     })
   return (

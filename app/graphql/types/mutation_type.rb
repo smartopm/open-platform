@@ -37,5 +37,8 @@ module Types
 
     # temperature capture
     field :temperature_update, mutation: Mutations::Temperature::TemperatureUpdate
+
+    # track time
+    field :manage_shift, mutation: Mutations::Timesheet::ManageShift
   end
 end

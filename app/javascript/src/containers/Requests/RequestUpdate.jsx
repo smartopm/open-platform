@@ -12,10 +12,9 @@ import {
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
-import DateUtil from "../../utils/dateutil";
+import DateUtil, { isTimeValid, getWeekDay } from "../../utils/dateutil";
 import { ponisoNumber } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
-import { isWeekend, isSaturday } from 'date-fns'
 import CaptureTemp from "../../components/CaptureTemp";
 
 // TODO: Check the time of the day and day of the week.
@@ -336,19 +335,7 @@ export default function RequestUpdate({ match, history, location }) {
   );
 }
 
-// TODO: move these to date utils folder
-export function isTimeValid(date) {
-  const currentHour = date.getHours()
-  if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)
-  if (isSaturday(date)) return (currentHour > 8 && currentHour < 12)
-  return true
-}
 
-export function getWeekDay(date) {
-  var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-  let day = date.getDay();
-  return weekdays[day];
-}
 
 const styles = StyleSheet.create({
   logButton: {

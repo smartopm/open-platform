@@ -16,6 +16,12 @@ import NotesIcon from '@material-ui/icons/Notes'
 import FeedbackIcon from '@material-ui/icons/Feedback'
 import ForumIcon from '@material-ui/icons/Forum'
 import { Footer } from '../components/Footer.jsx'
+import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
+import { ponisoNumber } from '../utils/constants.js'
+import CallIcon from '@material-ui/icons/Call'
+
+
+
 export default function Home() {
   const authState = useContext(AuthStateContext)
 
@@ -49,7 +55,7 @@ export function Component({ authState }) {
   return (
     <div>
       <Nav>
-        {['security_guard', 'admin'].includes(
+        {['security_guard', 'admin', 'custodian'].includes(
           authState.user.userType.toLowerCase()
         ) && (
           <div className={css(styles.inputGroup)}>
@@ -74,7 +80,7 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {!['security_guard', 'resident'].includes(
+              {!['security_guard', 'resident', 'custodian'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
                 <div
@@ -93,6 +99,23 @@ export function Component({ authState }) {
                 </div>
               ) : null}
 
+              {Boolean(authState.user.userType === 'custodian') && (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to={`/scan`} className={`card-link`}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <img src={QRIcon} alt="support icon" />
+                      </h5>
+                      <p>{t('home.scan')}</p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+
               <div
                 className={`${css(
                   styles.cardSize
@@ -108,34 +131,45 @@ export function Component({ authState }) {
                 </Link>
               </div>
 
-              <div
-                className={`${css(
-                  styles.cardSize
-                )} card align-self-center text-center`}
-              >
-                <Link to={'/contact'} className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <HelpIcon className={css(styles.homeIconColor)} />
-                    </h5>
-                    <p>{'Contact'}</p>
-                  </div>
-                </Link>
-              </div>
-              <div
-                className={`${css(
-                  styles.cardSize
-                )} card align-self-center text-center`}
-              >
-                <Link to="/news" className={`card-link`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <img src={NewsIcon} className={css(styles.homeIconColor)} alt=""/>
-                    </h5>
-                    <p>News</p>
-                  </div>
-                </Link>
-              </div>
+              {/* Boolean(authState.user.userType !== 'custodian') */}
+              {Boolean(authState.user.userType !== 'custodian') && (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to={'/contact'} className={`card-link`}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <HelpIcon className={css(styles.homeIconColor)} />
+                      </h5>
+                      <p>{'Contact'}</p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+
+              {Boolean(authState.user.userType !== 'custodian') && (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to="/news" className={`card-link`}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <img
+                          src={NewsIcon}
+                          className={css(styles.homeIconColor)}
+                          alt=""
+                        />
+                      </h5>
+                      <p>News</p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+
               {['security_guard', 'admin'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
@@ -151,6 +185,30 @@ export function Component({ authState }) {
                           <LogIcon className={css(styles.homeIconColor)} />
                         </h5>
                         <p>{'Log Book'}</p>
+                      </div>
+                    </Link>
+                  </div>
+                </Fragment>
+              ) : null}
+
+              {['admin', 'custodian'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Fragment>
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={'/timesheet'} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <PlaylistAddCheckIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>Time Card</p>
                       </div>
                     </Link>
                   </div>
@@ -196,65 +254,89 @@ export function Component({ authState }) {
                   </div>
                 </Fragment>
               )}
-              <div
-                className={`${css(
-                  styles.cardSize
-                )} card align-self-center text-center`}
-              >
-                <Link
-                  to={
-                    authState.user.userType === 'admin'
-                      ? '/feedbacks'
-                      : '/feedback'
-                  }
-                  className={`card-link`}
-                >
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <FeedbackIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    </h5>
-                    <p>{'Feedback'}</p>
-                  </div>
-                </Link>
-              </div>
 
-              <div
-                className={`${css(
-                  styles.cardSize
-                )} card align-self-center text-center`}
-              >
-                <Link
-                  to={{
-                    pathname:
-                      authState.user.userType === 'admin'
-                        ? '/messages'
-                        : `/message/${authState.user.id}`,
-                    state: {
-                      clientName: authState.user.name,
-                      clientNumber: authState.user.phoneNumber,
-                      from: 'home'
-                    }
-                  }}
-                  className={`card-link`}
+              {Boolean(authState.user.userType !== 'custodian') && (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
                 >
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <ForumIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    </h5>
-                    <p>
-                      {authState.user.userType === 'admin'
-                        ? 'SMS'
-                        : 'My Messages'}
-                    </p>
-                  </div>
-                </Link>
-              </div>
+                  <Link
+                    to={
+                      authState.user.userType === 'admin'
+                        ? '/feedbacks'
+                        : '/feedback'
+                    }
+                    className={`card-link`}
+                  >
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <FeedbackIcon
+                          fontSize="large"
+                          className={css(styles.homeIconColor)}
+                        />
+                      </h5>
+                      <p>{'Feedback'}</p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+
+              {Boolean(authState.user.userType !== 'custodian') && (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link
+                    to={{
+                      pathname:
+                        authState.user.userType === 'admin'
+                          ? '/messages'
+                          : `/message/${authState.user.id}`,
+                      state: {
+                        clientName: authState.user.name,
+                        clientNumber: authState.user.phoneNumber,
+                        from: 'home'
+                      }
+                    }}
+                    className={`card-link`}
+                  >
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <ForumIcon
+                          fontSize="large"
+                          className={css(styles.homeIconColor)}
+                        />
+                      </h5>
+                      <p>
+                        {authState.user.userType === 'admin'
+                          ? 'SMS'
+                          : 'My Messages'}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+              {Boolean(authState.user.userType === 'custodian') && (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <a href={`tel:${ponisoNumber}`}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <CallIcon
+                          className={css(styles.homeIconColor)}
+                          fontSize="large"
+                        />
+                      </h5>
+                      Call Manager
+                    </div>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -14,6 +14,7 @@ import {
   Route,
   useHistory 
 } from 'react-router-dom'
+import ReactGA from 'react-ga'
 import ApolloProvider from '../src/containers/Provider/ApolloProvider'
 import AuthStateProvider, {
   Context as AuthStateContext
@@ -61,7 +62,8 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
 import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
-import ReactGA from 'react-ga';
+import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
+import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -204,7 +206,6 @@ const App = () => {
                     <Route path="/entry_logs" component={EntryLogs} />
 
                     <Route path="/user" exact component={UserEdit} />
-
                     <Route path="/map" component={Map} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
@@ -252,6 +253,8 @@ const App = () => {
                     <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
                     <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
                     <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                    <Route path="/timesheet" exact component={CustodianLogs} />
+                    <Route path="/timesheet/:id" exact component={EmployeeLogs} />
                     
                     <AdminRoutes>
                       <Switch>

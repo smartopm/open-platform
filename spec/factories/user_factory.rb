@@ -34,5 +34,9 @@ FactoryBot.define do
       request_status { 'pending' }
       community
     end
+    factory :store_custodian do
+      user_type { 'custodian' }
+      community
+    end
   end
 end
