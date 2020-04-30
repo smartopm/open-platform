@@ -36,7 +36,7 @@ export default function ShiftButtons({ userId }) {
           }
           setInProgress(false)
       }
-  }, [loading])
+  }, [loading, data])
 
   function handleStartShift() {
     setInProgress(true)
