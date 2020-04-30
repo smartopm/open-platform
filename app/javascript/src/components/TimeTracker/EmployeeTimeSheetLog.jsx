@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useLocation } from 'react-router'
 import dateutil from '../../utils/dateutil'
-
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 import Typography from '@material-ui/core/Typography'
 import { zonedDate } from '../DateContainer'
 
 export default function EmployeeTimeSheetLog({ data }) {
   const { state } = useLocation()
+  const authState = useContext(AuthStateContext)
 
   const shifts = data.userTimeSheetLogs
   const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours']
@@ -17,7 +18,7 @@ export default function EmployeeTimeSheetLog({ data }) {
       <div className="container">
         <div className="container " style={{ marginRight: 10 }}>
           <Typography variant="body1" style={{ marginLeft: 10 }}>
-            <strong>Name: {state && state.name}</strong>
+            <strong>Name: {state && state.name || authState.user.name }</strong>
           </Typography>
         </div>
           {/* Removed total of hours and days till we have that. */}
