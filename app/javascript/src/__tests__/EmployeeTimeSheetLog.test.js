@@ -1,8 +1,8 @@
 import React from 'react'
 import EmployeeLogs from '../components/TimeTracker/EmployeeTimeSheetLog'
 import { BrowserRouter } from 'react-router-dom/'
-import { act } from 'react-dom/test-utils'
-import { mount } from 'enzyme/'
+import { render,} from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
 
 describe('time sheet logs component', () => {
   const userData = {
@@ -11,24 +11,43 @@ describe('time sheet logs component', () => {
         createdAt: '2020-04-29T08:35:27Z',
         startedAt: '2020-04-29T08:35:27Z',
         userId: '999013ef',
-        id: "34r34543"
+        id: '34r34543',
+        endedAt: '2020-04-29T10:35:27Z',
+        user: {
+          name: "Joen"
+        }
       }
     ]
   }
-  let root
-  act(() => {
-    root = mount(
-      <BrowserRouter>
-        <EmployeeLogs data={userData} />
-      </BrowserRouter>
-    )
+
+  const userDataProgress = {
+    userTimeSheetLogs: [
+      {
+        createdAt: '2020-04-29T08:35:27Z',
+        startedAt: '2020-04-29T08:35:27Z',
+        userId: '999013ef',
+        id: '34r34543',
+        endedAt: null
+      }
+    ]
+  }
+
+  it('should render with given data', () => {
+  const { getByText } = render(
+    <BrowserRouter>
+      <EmployeeLogs data={userData} />
+    </BrowserRouter>
+  )
+    expect(getByText('2 hrs')).toBeInTheDocument()
+    expect(getByText('Wednesday')).toBeInTheDocument()   
   })
-  it('should render data with given props', () => {
-      expect(root.find('table')).toHaveLength(1)
-          const {
-            children: { props }
-          } = root.props()
-      expect(props.data.userTimeSheetLogs).toHaveLength(1)
-      expect(props.data.userTimeSheetLogs[0].userId).toBe('999013ef')
+
+  it('progress should be in the document', () => {
+      const { getByTestId } = render(
+        <BrowserRouter>
+          <EmployeeLogs data={userDataProgress} />
+        </BrowserRouter>
+      )
+     expect(getByTestId('prog')).toBeInTheDocument()  
   })
 })

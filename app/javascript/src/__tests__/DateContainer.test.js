@@ -1,19 +1,12 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import DateContainer from '../components/DateContainer'
+import DateContainer, { zonedDate } from '../components/DateContainer'
 import DateUtils from '../utils/dateutil'
-
-import { utcToZonedTime } from 'date-fns-tz'
-
-
-const timeZone = 'Africa/Lusaka'
-const zonedDate = date => utcToZonedTime(date, timeZone)
 
 describe('date container component', () => {
   it('renders a span element and has correct time', () => {
     // get today's date
     const date = new Date()
-    console.log(date)
     const time = DateUtils.dateTimeToString(date)
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
@@ -23,7 +16,6 @@ describe('date container component', () => {
     // get yesterday's date
     const date = new Date()
     const previousDate = date.setDate(date.getDate() - 1)
-    console.log(previousDate)
     const component = mount(<DateContainer date={previousDate} />)
     expect(component.find('span').text()).toContain('Yesterday')
   })
