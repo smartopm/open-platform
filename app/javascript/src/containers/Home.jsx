@@ -203,7 +203,7 @@ export function Component({ authState }) {
                     <Link to={'/timesheet'} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
-                          <PlaylistAddCheckIcon
+                          <LogIcon
                             fontSize="large"
                             className={css(styles.homeIconColor)}
                           />

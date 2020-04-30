@@ -213,6 +213,23 @@ export function HomeGuard({ translate }) {
                 </Link>
               </div>
               <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={`/timesheet/${authState.user.id}`} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <LogEntryIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>Time Card</p>
+                      </div>
+                    </Link>
+                  </div>
+              <div
                 className={`${css(
                   styles.cardSize
                 )} card align-self-center text-center`}
