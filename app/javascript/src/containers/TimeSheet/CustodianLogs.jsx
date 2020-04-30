@@ -1,13 +1,22 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { TimeSheetLogsQuery } from '../../graphql/queries'
 import { Spinner } from '../../components/Loading'
 import CustodianTimeSheetLogs from '../../components/TimeTracker/CustodianTimeSheetLog'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import { useHistory } from 'react-router/'
+
+
 
 export default function CustodianLogs() {
   const { loading, data, error } = useQuery(TimeSheetLogsQuery)
+  const authState = useContext(AuthStateContext)
+  const history = useHistory()
 
+  if (!['admin', 'custodian'].includes(authState.user.userType)) {
+    history.push('/')
+  }
   if (loading) return <Spinner />
   if (error) return <span>{error.message}</span>
 
