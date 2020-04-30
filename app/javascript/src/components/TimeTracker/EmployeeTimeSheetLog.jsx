@@ -4,6 +4,8 @@ import dateutil from '../../utils/dateutil'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 import Typography from '@material-ui/core/Typography'
 import { zonedDate } from '../DateContainer'
+import { PropTypes } from 'prop-types'
+
 
 export default function EmployeeTimeSheetLog({ data, name }) {
   const { state } = useLocation()
@@ -52,6 +54,10 @@ export default function EmployeeTimeSheetLog({ data, name }) {
       </div>
     </div>
   )
+}
 
 
+EmployeeTimeSheetLog.prototype = {
+  data: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired
 }

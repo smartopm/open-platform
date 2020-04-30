@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
+import { PropTypes } from 'prop-types'
 import { ManageShiftMutation } from '../../graphql/mutations'
 import { UserTimeSheetQuery } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
@@ -110,3 +111,8 @@ const styles = StyleSheet.create({
     width: '35%'
   }
 })
+
+
+ShiftButtons.prototype = {
+  userId: PropTypes.string.isRequired
+}
