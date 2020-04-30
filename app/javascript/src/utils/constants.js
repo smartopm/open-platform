@@ -14,7 +14,7 @@ export const userType = {
   prospective_client: 'Prospective Client',
   client: 'Client',
   visitor: 'Visitor',
-  custodian: 'Store custodian'
+  custodian: 'Store Custodian'
 }
 
 export const userState = {

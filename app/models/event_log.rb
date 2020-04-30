@@ -13,7 +13,8 @@ class EventLog < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
-                      user_active user_feedback showroom_entry user_update user_temp].freeze
+                      user_active user_feedback showroom_entry user_update user_temp
+                      shift_start shift_end].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -85,6 +86,14 @@ class EventLog < ApplicationRecord
 
   def user_temp_to_sentence
     "Temperature for #{visitor_name} was recorded by #{acting_user_name}"
+  end
+
+  def shift_start_to_sentence
+    "Shift for #{ref_user_name} was started by #{acting_user_name}"
+  end
+
+  def shift_end_to_sentence
+    "Shift for #{ref_user_name} was ended by #{acting_user_name}"
   end
 
   def user_enrolled_to_sentence

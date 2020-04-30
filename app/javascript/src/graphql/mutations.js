@@ -390,3 +390,14 @@ export const TemperateRecord = gql`
     }
   }
 `
+// Start shift
+// End shift
+export const ManageShiftMutation = gql`
+  mutation manageShift($userId: ID!, $eventTag: String!) {
+    manageShift(userId: $userId, eventTag: $eventTag){
+      timeSheet {
+        id
+      }
+    }
+  }
+`

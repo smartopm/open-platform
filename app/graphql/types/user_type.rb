@@ -28,6 +28,8 @@ module Types
     field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
     field :messages_count, Int, null: true
     field :messages, [Types::MessageType], null: true, visible: { roles: %i[admin], user: :id }
+    field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
+                                                                       user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?

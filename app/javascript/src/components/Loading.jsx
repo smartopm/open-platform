@@ -1,5 +1,7 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
+import { withStyles } from '@material-ui/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function Loading() {
   return (
@@ -12,6 +14,16 @@ export default function Loading() {
       </div>
     </div>
   )
+}
+
+const ColorCircularProgress = withStyles({
+  root: {
+    color: '#00695c',
+  },
+})(CircularProgress);
+
+export function Spinner(){
+  return <ColorCircularProgress size={30} thickness={5} />
 }
 
 const styles = StyleSheet.create({

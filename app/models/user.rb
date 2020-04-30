@@ -19,6 +19,7 @@ class User < ApplicationRecord
 
   has_many :notes, dependent: :destroy
   has_many :messages, dependent: :destroy
+  has_many :time_sheets, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
@@ -27,7 +28,7 @@ class User < ApplicationRecord
   has_paper_trail
 
   VALID_USER_TYPES = %w[security_guard admin resident contractor
-                        prospective_client client visitor].freeze
+                        prospective_client client visitor custodian].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
@@ -122,6 +123,26 @@ class User < ApplicationRecord
                       data: data)
   end
 
+  # rubocop:disable MethodLength
+  def manage_shift(target_user_id, event_tag)
+    user = find_a_user(target_user_id)
+    data = { ref_name: user.name, type: user.user_type }
+    return unless user
+
+    event = generate_events(event_tag, user, data)
+
+    if event_tag == 'shift_start'
+      user.time_sheets.create(started_at: Time.current, shift_start_event_log: event)
+    else
+      timesheet = user.time_sheets.find_by(ended_at: nil)
+      return unless timesheet
+
+      timesheet.update(ended_at: Time.current, shift_end_event_log: event)
+      timesheet
+    end
+  end
+  # rubocop:enable MethodLength
+
   def construct_message(vals)
     mess = messages.new(vals)
     mess[:user_id] = vals[:user_id]
@@ -140,6 +161,10 @@ class User < ApplicationRecord
 
   def admin?
     self[:user_type] == 'admin'
+  end
+
+  def custodian?
+    self[:user_type] == 'custodian'
   end
 
   def role_name

@@ -30,6 +30,7 @@ import {
 import { css, StyleSheet } from 'aphrodite'
 import ErrorPage from '../components/Error.jsx'
 import { ponisoNumber } from '../utils/constants.js'
+import ShiftButtons from '../components/TimeTracker/ShiftButtons'
 
 export default ({ history }) => {
   const { id, dg, tm } = useParams() // get timestamp and dg
@@ -151,8 +152,8 @@ export function Component({
                 {DateUtil.isExpired(data.user.expiresAt) ? (
                   <span className="text-danger">Already Expired</span>
                 ) : (
-                    DateUtil.formatDate(data.user.expiresAt)
-                  )}
+                  DateUtil.formatDate(data.user.expiresAt)
+                )}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
@@ -164,8 +165,8 @@ export function Component({
                   Expired
                 </p>
               ) : (
-                  <Status label={data.user.state} />
-                )}
+                <Status label={data.user.state} />
+              )}
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -189,13 +190,13 @@ export function Component({
                 }}
               >
                 {data.user.state === 'valid' &&
-                  authState.user.userType === 'security_guard' ? (
-                    <div>
-                      <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                        Log This Entry
+                authState.user.userType === 'security_guard' ? (
+                  <div>
+                    <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                      Log This Entry
                     </MenuItem>
-                    </div>
-                  ) : null}
+                  </div>
+                ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
                     <a
@@ -294,6 +295,12 @@ export function Component({
               </Menu>
             </div>
           </div>
+          {/*  <ShiftButtons userId={userId} /> */}
+          <br />
+          {authState.user.userType === 'custodian' &&
+            ['security_guard', 'contractor'].includes(data.user.userType) && (
+              <ShiftButtons userId={userId} />
+            )}
         </div>
 
         <StyledTabs
@@ -359,10 +366,12 @@ export function Component({
               />
             </div>
             <br />
-            <div className="container row d-flex justify-content-between">
-              <span>Social: </span> <br />
-              <CaptureTemp refId={data.user.id} refName={data.user.name} />
-            </div>
+            {authState.user.userType === 'security_guard' && (
+              <div className="container row d-flex justify-content-between">
+                <span>Social: </span> <br />
+                <CaptureTemp refId={data.user.id} refName={data.user.name} />
+              </div>
+            )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
@@ -415,15 +424,15 @@ export function Component({
                   ) : !note.flagged ? (
                     <span />
                   ) : (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() => handleOnComplete(note.id, note.completed)}
-                        >
-                          <Tooltip title="Mark this note complete">
-                            <CheckBoxOutlineBlankIcon />
-                          </Tooltip>
-                        </span>
-                      )}
+                    <span
+                      className={css(styles.actionIcon)}
+                      onClick={() => handleOnComplete(note.id, note.completed)}
+                    >
+                      <Tooltip title="Mark this note complete">
+                        <CheckBoxOutlineBlankIcon />
+                      </Tooltip>
+                    </span>
+                  )}
                   {!note.flagged && (
                     <span
                       className={css(styles.actionIcon)}
@@ -438,8 +447,8 @@ export function Component({
                 </Fragment>
               ))
             ) : (
-                  'No Notes Yet'
-                )}
+              'No Notes Yet'
+            )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>

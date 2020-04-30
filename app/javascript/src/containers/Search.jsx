@@ -103,7 +103,7 @@ export default function SearchContainer({ location }) {
   const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY)
   const authState = useContext(Context)
 
-  if (!['security_guard', 'admin'].includes(authState.user.userType.toLowerCase())) {
+  if (!['security_guard', 'admin', 'custodian'].includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
   }
   if (error) {
