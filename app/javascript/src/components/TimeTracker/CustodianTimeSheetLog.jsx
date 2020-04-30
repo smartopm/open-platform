@@ -41,8 +41,8 @@ export default function CustodianTimeSheetLog({ data }) {
                   Numbers of shifts hours worked:{' '}
                   {shift.endedAt
                     ? `${dateutil.differenceInHours(
-                        zonedDate(shift.startedAt),
-                        zonedDate(shift.endedAt)
+                        shift.startedAt,
+                        shift.endedAt
                       )} hrs`
                     : 'In-Progress'}
                 </span>

@@ -1,5 +1,6 @@
 import {dateTimeToString as newTime} from '../components/DateContainer'
 import { isWeekend, isSaturday } from 'date-fns'
+import { zonedDate } from '../components/DateContainer'
 
 // TODO: @olivier => write tests for these
 
@@ -52,7 +53,12 @@ function formatDate(datetime) {
   return 'Never'
 }
 
-
+/**
+ * 
+ * @param {Date} date 
+ * @description returns either true or false is the time is valid for Nkwashi entrace, this depends on which day of the week it is. 
+ * @returns {Boolean}
+ */
 export function isTimeValid(date) {
   const currentHour = date.getHours()
   if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)
@@ -60,6 +66,12 @@ export function isTimeValid(date) {
   return true
 }
 
+/**
+ * 
+ * @param {Date} date 
+ * @description returns the day in a week in word format based on a given day
+ * @returns {String} day in a week
+ */
 export function getWeekDay(date) {
   let new_date 
   if (!(date instanceof Date)) {
@@ -71,10 +83,19 @@ export function getWeekDay(date) {
   return weekdays[day];
 }
 
+
+/**
+ * 
+ * @param {Date} startDate 
+ * @param {Date} endDate 
+ * @description calculates difference between 2 dates, if hours less than 1 then it ruturns number of minutes
+ * @returns {String} hours || minutes
+ */
 export function differenceInHours(startDate, endDate) {
+  if (!startDate) return 
   // in case ended_at is null, initialize it.
   const lastDate = endDate || new Date()
-  const diff_seconds = (new Date(lastDate).getTime() - new Date(startDate).getTime()) / 1000;
+  const diff_seconds = (zonedDate(lastDate).getTime() - zonedDate(startDate).getTime()) / 1000;
   const diff_hours = diff_seconds / (60 * 60)
   const diff_minutes = diff_seconds / 60
   const hours = Math.abs(Math.round(diff_hours))

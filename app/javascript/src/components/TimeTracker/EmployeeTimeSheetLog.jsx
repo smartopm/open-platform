@@ -20,7 +20,7 @@ export default function EmployeeTimeSheetLog({ data }) {
             <strong>Name: {state && state.name}</strong>
           </Typography>
         </div>
-          {/* Removed total of hours and days till we have that. */}
+        {/* Removed total of hours and days till we have that. */}
         <DataTable columns={columns}>
           {Boolean(shifts.length) &&
             shifts.map(shift => (
@@ -39,7 +39,7 @@ export default function EmployeeTimeSheetLog({ data }) {
                     ? dateutil.dateTimeToString(zonedDate(shift.endedAt))
                     : 'In-Progress'}
                 </StyledTableCell>
-                <StyledTableCell>
+                <StyledTableCell data-testid="prog">
                   {shift.endedAt
                     ? dateutil.differenceInHours(
                         zonedDate(shift.startedAt),
