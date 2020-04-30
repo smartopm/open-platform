@@ -215,6 +215,28 @@ export function Component({ authState }) {
                 </Fragment>
               ) : null}
 
+              {authState.user.userType === 'contractor' && (
+                <Fragment>
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={`/timesheet/${authState.user.id}`} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <PlaylistAddCheckIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>Time Card</p>
+                      </div>
+                    </Link>
+                  </div>
+                </Fragment>
+              )}
+
               {authState.user.userType === 'admin' && (
                 <Fragment>
                   <div

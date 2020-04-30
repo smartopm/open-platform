@@ -1,12 +1,13 @@
 import React from 'react'
 import { useLocation } from 'react-router'
 import dateutil from '../../utils/dateutil'
-
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 import Typography from '@material-ui/core/Typography'
 import { zonedDate } from '../DateContainer'
+import { PropTypes } from 'prop-types'
 
-export default function EmployeeTimeSheetLog({ data }) {
+
+export default function EmployeeTimeSheetLog({ data, name }) {
   const { state } = useLocation()
 
   const shifts = data.userTimeSheetLogs
@@ -17,7 +18,7 @@ export default function EmployeeTimeSheetLog({ data }) {
       <div className="container">
         <div className="container " style={{ marginRight: 10 }}>
           <Typography variant="body1" style={{ marginLeft: 10 }}>
-            <strong>Name: {state && state.name}</strong>
+            <strong>Name: {state && state.name || name }</strong>
           </Typography>
         </div>
           {/* Removed total of hours and days till we have that. */}
@@ -53,6 +54,10 @@ export default function EmployeeTimeSheetLog({ data }) {
       </div>
     </div>
   )
+}
 
 
+EmployeeTimeSheetLog.prototype = {
+  data: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired
 }
