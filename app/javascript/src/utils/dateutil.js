@@ -74,9 +74,15 @@ export function getWeekDay(date) {
 export function differenceInHours(startDate, endDate) {
   // in case ended_at is null, initialize it.
   const lastDate = endDate || new Date()
-  let diff = (new Date(startDate).getTime() - new Date(lastDate).getTime()) / 1000;
-  diff /= (60 * 60);
-  return Math.abs(Math.round(diff));
+  const diff_seconds = (new Date(lastDate).getTime() - new Date(startDate).getTime()) / 1000;
+  const diff_hours = diff_seconds / (60 * 60)
+  const diff_minutes = diff_seconds / 60
+  const hours = Math.abs(Math.round(diff_hours))
+  const minutes = Math.abs(Math.round(diff_minutes))
+  if (hours >= 1) {
+    return `${hours} ${hours === 1 ? 'hr' : 'hrs'}`
+  }
+  return `${minutes} minutes`
  }
 
 export default {
