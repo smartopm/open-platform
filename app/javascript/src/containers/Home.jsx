@@ -20,6 +20,7 @@ import { Footer } from '../components/Footer.jsx'
 import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
+import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 
 
 
@@ -385,6 +386,7 @@ export function Component({ authState }) {
           </div>
         </div>
         <Footer position="5vh" />
+        <SocialMediaLinks />
       </div>
     </div>
   )
