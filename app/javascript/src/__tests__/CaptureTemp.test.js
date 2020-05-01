@@ -13,7 +13,7 @@ describe('temperature component', () => {
     const mock = [{
         request: {
             query: TemperateRecord,
-            variable: { refId: 1, temp: "36.5", refName: "Test Name" }
+            variable: { refId: 1, temp: "36.5", refName: "Test Name", refType: 'User' }
 
         },
         result: {
