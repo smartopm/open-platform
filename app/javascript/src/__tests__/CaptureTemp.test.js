@@ -50,14 +50,8 @@ describe('temperature component', () => {
             <MockedProvider mock={mock} addTypename={false}>
                 <CaptureTemp {...screenProps} />
             </MockedProvider>)
-
             await wrapper.find('button').simulate('click')
             expect(wrapper.find('tempvalue')).toMatchObject({})
             wrapper.update()
-    
-
     });
-
-
-
 });
