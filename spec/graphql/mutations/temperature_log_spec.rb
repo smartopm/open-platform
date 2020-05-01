@@ -71,8 +71,8 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
                                               }).as_json
 
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'refId')).to eql entry_request.id
-      expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'sentence')).to eql "Temperature
-                                        for #{variables[:refName]} was recorded by #{admin.name}"
+      # rubocop:disable LineLength
+      expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'sentence')).to eql "Temperature for #{variables[:refName]} was recorded by #{admin.name}"
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data', 'ref_name')).to eql 'oljm'
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data', 'note')).to eql '40'
       expect(result.dig('errors')).to be_nil
@@ -93,8 +93,8 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'refId')).to be_nil
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'sentence')).to be_nil
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to eql "For some reason,
-                                            I can't process your request"
+      expect(result.dig('errors', 0, 'message')).to eql "For some reason, I can't process your request"
+      # rubocop:enable LineLength
     end
   end
 end
