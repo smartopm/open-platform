@@ -33,13 +33,15 @@ describe('time sheet logs component', () => {
   }
 
   it('should render with given data', () => {
-  const { getByText } = render(
+  const { getByText, getByTestId } = render(
     <BrowserRouter>
-      <EmployeeLogs data={userData} />
+      <EmployeeLogs data={userData} name={'Joen'} />
     </BrowserRouter>
   )
     expect(getByText('2 hrs')).toBeInTheDocument()
     expect(getByText('Wednesday')).toBeInTheDocument()   
+    expect(getByTestId('emp_name')).toHaveTextContent('Joen')  
+    expect(getByTestId('prog')).toBeInTheDocument('2 hrs')  
   })
 
   it('progress should be in the document', () => {
@@ -49,5 +51,6 @@ describe('time sheet logs component', () => {
         </BrowserRouter>
       )
      expect(getByTestId('prog')).toBeInTheDocument()  
+     expect(getByTestId('prog')).toHaveTextContent('In-Progress')  
   })
 })

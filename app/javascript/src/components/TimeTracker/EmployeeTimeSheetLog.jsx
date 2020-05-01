@@ -18,7 +18,7 @@ export default function EmployeeTimeSheetLog({ data, name }) {
       <div className="container">
         <div className="container " style={{ marginRight: 10 }}>
           <Typography variant="body1" style={{ marginLeft: 10 }}>
-            <strong>Name: {state && state.name || name }</strong>
+            <strong data-testid="emp_name">Name: {state && state.name || name }</strong>
           </Typography>
         </div>
         {/* Removed total of hours and days till we have that. */}
