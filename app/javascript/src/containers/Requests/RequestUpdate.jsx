@@ -264,7 +264,7 @@ export default function RequestUpdate({ match, history, location }) {
 
           <br />
           {/* {Temproal component for temperature} */}
-          <CaptureTemp refId={match.params.id} refName={formData.name} />
+          <CaptureTemp refId={match.params.id} refName={formData.name} refType="EntryRequest" />
           
           <br />
           <br />

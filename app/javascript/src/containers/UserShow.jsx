@@ -369,7 +369,7 @@ export function Component({
             {authState.user.userType === 'security_guard' && (
               <div className="container row d-flex justify-content-between">
                 <span>Social: </span> <br />
-                <CaptureTemp refId={data.user.id} refName={data.user.name} />
+                <CaptureTemp refId={data.user.id} refName={data.user.name} refType="User" />
               </div>
             )}
           </div>
