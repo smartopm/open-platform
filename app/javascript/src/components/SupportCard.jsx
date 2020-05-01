@@ -117,7 +117,8 @@ export default function SupportCard({handleSendMessage}) {
                 </Grid>
 
                 <Grid container direction="row" className={classes.root}>
-                    <Button
+                    <Button 
+                    data-testid="crf"
                         variant="contained"
                         color="primary"
                         onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
