@@ -115,11 +115,11 @@ class User < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
-  def generate_events(event_tag, target_user, data = {})
+  def generate_events(event_tag, target_obj, data = {})
     ::EventLog.create(acting_user_id: id,
-                      community_id: target_user.community_id, subject: event_tag,
-                      ref_id: target_user.id,
-                      ref_type: 'User',
+                      community_id: community_id, subject: event_tag,
+                      ref_id: target_obj.id,
+                      ref_type: target_obj.class.to_s,
                       data: data)
   end
 
