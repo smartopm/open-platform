@@ -43,7 +43,7 @@ export default function CustodianTimeSheetLog({ data }) {
                     ? `${dateutil.differenceInHours(
                         shift.startedAt,
                         shift.endedAt
-                      )} hrs`
+                      )}`
                     : 'In-Progress'}
                 </span>
               </div>
