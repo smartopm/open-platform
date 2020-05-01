@@ -21,7 +21,8 @@ import StopIcon from '@material-ui/icons/Stop';
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
   const { loading, data, error } = useQuery(UserTimeSheetQuery, {
-    variables: { userId }
+    variables: { userId },
+    fetchPolicy: 'network-only'
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
