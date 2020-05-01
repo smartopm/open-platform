@@ -10,18 +10,18 @@ export default function SocialMediaLinks() {
 
     return (
         <Fragment>
-            <div className="row justify-content-center" >
+            <div id="div" className="row justify-content-center" >
 
-                <Typography className={css(styles.textLink)}>
+                <Typography id="connect" className={css(styles.textLink)}>
                     Connect with Nkwashi
                 </Typography>
-                <IconButton onClick={(()=> window.open('https://www.facebook.com/nkwashi.soar/','_blank'))}>
+                <IconButton id="facebook" onClick={()=> window.open('https://www.facebook.com/nkwashi.soar/','_blank')}>
                     <FacebookIcon className={css(styles.socialIcons)} />
                 </IconButton>
-                <IconButton onClick={(()=> window.open('https://twitter.com/Nkwashi_','_blank'))}>
+                <IconButton id="twitter" onClick={(()=> window.open('https://twitter.com/Nkwashi_','_blank'))}>
                     <TwitterIcon className={css(styles.socialIcons)} />
                 </IconButton>
-                <IconButton onClick={(()=> window.open('http://nkwashi.com/','_blank'))}>
+                <IconButton id="website" onClick={(()=> window.open('http://nkwashi.com/','_blank'))}>
                     <LanguageIcon className={css(styles.socialIcons)} />
                 </IconButton>
 
