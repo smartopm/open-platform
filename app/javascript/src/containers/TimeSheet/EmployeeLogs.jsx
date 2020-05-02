@@ -47,7 +47,7 @@ export default function EmployeeLogs() {
       <Grid container direction="row" justify="center" alignItems="center">
         <Paginate
           count={data.userTimeSheetLogs.length}
-          offset={offset}
+          offSet={offset}
           limit={limit}
           handlePageChange={paginate}
         />
