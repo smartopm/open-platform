@@ -3,9 +3,10 @@ import Nav from '../../components/Nav'
 import EmployeeTimeSheetLogs from '../../components/TimeTracker/EmployeeTimeSheetLog'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { UserTimeSheetQuery } from '../../graphql/queries'
-import { Spinner } from '../../components/Loading'
+import Spinner  from '../../components/Loading'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
+import ErrorPage from '../../components/Error'
 
 
 export default function EmployeeLogs() {
@@ -13,12 +14,13 @@ export default function EmployeeLogs() {
   const { loading, data, error } = useQuery(UserTimeSheetQuery, {
     variables: {
       userId: id
-    }
+    },
+    fetchPolicy: 'no-cache'
   })
   const authState = useContext(AuthStateContext)
 
   if (loading) return <Spinner />
-  if (error) return <span>{error.message}</span>
+  if (error) return <ErrorPage title={error.message} />
 
   return (
     <Fragment>
