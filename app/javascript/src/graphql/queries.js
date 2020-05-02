@@ -220,28 +220,28 @@ export const UserMessageQuery = gql`
 `
 
 export const UserTimeSheetQuery = gql`
-  query userTimeSheetLogs($userId: ID!){
-    userTimeSheetLogs(userId: $userId) {
-      startedAt
-      endedAt
-      id
-      user {
-        name
-      }
-    }
-  }
-` 
+         query userTimeSheetLogs($userId: ID!, $limit: Int, $offset: Int) {
+           userTimeSheetLogs(userId: $userId, limit: $limit, offset: $offset) {
+             startedAt
+             endedAt
+             id
+             user {
+               name
+             }
+           }
+         }
+       ` 
 
 export const TimeSheetLogsQuery = gql`
-  query {
-    timeSheetLogs {
-      endedAt
-      startedAt
-      id
-      user {
-        name
-      }
-      userId
-    }
-  }
-`
+         query timeSheetLogs($limit: Int, $offset: Int) {
+           timeSheetLogs(limit: $limit, offset: $offset) {
+             endedAt
+             startedAt
+             id
+             user {
+               name
+             }
+             userId
+           }
+         }
+       `
