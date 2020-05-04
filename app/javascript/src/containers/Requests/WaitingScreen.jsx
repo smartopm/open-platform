@@ -31,7 +31,7 @@ export default function HoldScreen({ match }) {
   return <WaitScreen />;
 }
 
-function WaitScreen() {
+export function WaitScreen() {
   const timeLeft = useTimer(180, 1000)
 
   return (
@@ -88,7 +88,7 @@ function formatTime(seconds) {
   return format(formattedSeconds, "mm:ss");
 }
 
-function GrantedScreen() {
+export function GrantedScreen() {
   return (
     <div
       className={`row justify-content-center align-items-center ${css(
@@ -109,7 +109,7 @@ function GrantedScreen() {
   );
 }
 
-function DeniedScreen() {
+export function DeniedScreen() {
   return (
     <div
       className={`row justify-content-center align-items-center ${css(
