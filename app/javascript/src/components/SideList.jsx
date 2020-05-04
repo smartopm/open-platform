@@ -28,7 +28,7 @@ export const SideList = ({ toggleDrawer, user }) => (
       <p>{user.phoneNumber}</p>
     </div>
     <Divider />
-    <List>
+    <List >
       <ListItem button>
         <ListItemIcon>
           <CropFreeIcon />
