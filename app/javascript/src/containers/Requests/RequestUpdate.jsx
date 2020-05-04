@@ -125,7 +125,6 @@ export default function RequestUpdate({ match, history, location }) {
       })
       .catch(err => {
         setLoading(false)
-        console.log(err.message)
         setMessage(err.message)
       })
   }

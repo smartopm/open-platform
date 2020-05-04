@@ -10,13 +10,17 @@ describe('paginate component', () => {
     limit: 10,
     handlePageChange: jest.mock('')
   }
-
-  const { getByTestId } = render(<Paginate {...props} />)
-
+ 
   it('should have correct buttons', () => {
+     const { getByTestId } = render(<Paginate {...props} />)
     expect(getByTestId('prev-btn')).toBeInTheDocument()
     expect(getByTestId('next-btn')).toBeInTheDocument()
-    expect(getByTestId('prev-btn').textContent).toContain('Previous')
-      expect(getByTestId('next-btn').textContent).toContain('Next')
   })
+
+  it('should have correct buttons names', () => {
+    const newProps = {}
+      const { getByTestId } = render(<Paginate {...newProps} />)
+      expect(getByTestId('prev-btn').textContent).toContain('Previous')
+      expect(getByTestId('next-btn').textContent).toContain('Next')
+    })
 })
