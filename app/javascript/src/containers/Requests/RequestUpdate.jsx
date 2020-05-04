@@ -113,12 +113,20 @@ export default function RequestUpdate({ match, history, location }) {
         state: 'pending',
         userType: 'client',
         reason: formData.reason,
+        phoneNumber: formData.phoneNumber,
         nrc: formData.nrc,
         vehicle: formData.vehiclePlate
       }
-    }).then(() => {
-      setMessage('User was successfully enrolled')
     })
+      .then(() => {
+        setLoading(false)
+        setMessage('User was successfully enrolled')
+      })
+      .catch(err => {
+        setLoading(false)
+        console.log(err.message)
+        setMessage(err.message)
+      })
   }
   function handleModal(_event, type) {
     if (type === 'grant') {
@@ -277,7 +285,7 @@ export default function RequestUpdate({ match, history, location }) {
                     variant="contained"
                     onClick={handleEnrollUser}
                     className={`btn ${css(styles.grantButton)}`}
-                    disabled={isLoading || Boolean(message.length)}
+                    disabled={isLoading}
                   >
                     {isLoading ? 'Enrolling ...' : ' Enroll User'}
                   </Button>
@@ -287,7 +295,7 @@ export default function RequestUpdate({ match, history, location }) {
                   <br />
                   <br />
                   {
-                    !isLoading && message.length ? <span>{message}</span> : <span />
+                    !isLoading && message.length ? <span >{message}</span> : <span />
                   }
                 </div>
               </Fragment>
