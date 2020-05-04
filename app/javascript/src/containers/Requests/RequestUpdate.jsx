@@ -118,9 +118,10 @@ export default function RequestUpdate({ match, history, location }) {
         vehicle: formData.vehiclePlate
       }
     })
-      .then(() => {
+      .then(({ data }) => {
         setLoading(false)
         setMessage('User was successfully enrolled')
+        history.push(`/user/${data.result.user.id}`)
       })
       .catch(err => {
         setLoading(false)
