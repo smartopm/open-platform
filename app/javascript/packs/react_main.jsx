@@ -65,6 +65,7 @@ import NewsContentPage from '../src/containers/NewsContentPage'
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
+import FBLogin from '../src/components/AuthScreens/FBLogin'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -196,6 +197,7 @@ const App = () => {
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={MainAuthCallback} />
                 <Route path="/facebook/:token" component={MainAuthCallback} />
+                <Route path="/fb_login" component={FBLogin} />
 
                 <LoggedInOnly>
                   <Switch>
