@@ -44,7 +44,7 @@ import RequestConfirm from '../src/containers/Requests/RequestConfirm'
 import WaitScreen from '../src/containers/Requests/WaitingScreen'
 import RequestApproval from '../src/containers/Requests/RequestApproval'
 import ErrorPage from '../src/components/Error'
-import GoogleAuthCallback from '../src/components/AuthScreens/GoogleAuthCallback'
+import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback'
 import ShowRoom from '../src/containers/showroom/Home'
 import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
 import ComingSoon from '../src/containers/showroom/ComingSoon'
@@ -194,7 +194,8 @@ const App = () => {
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
-                <Route path="/google/:token" component={GoogleAuthCallback} />
+                <Route path="/google/:token" component={MainAuthCallback} />
+                <Route path="/facebook/:token" component={MainAuthCallback} />
 
                 <LoggedInOnly>
                   <Switch>
@@ -205,15 +206,12 @@ const App = () => {
                     <Route path="/print/:id" component={IDPrint} />
                     <Route path="/entry_logs/:userId" component={EntryLogs} />
                     <Route path="/entry_logs" component={EntryLogs} />
-
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
-
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
-
                     {/* requests */}
                     <Route path="/entry_request" component={EntryRequest} />
                     <Route path="/request/:id" component={RequestUpdate} />
@@ -236,7 +234,6 @@ const App = () => {
                     <Route path="/sh_entry" component={VisitingClientForm} />
                     <Route path="/sh_complete" component={CheckInComplete} />
                     <Route path="/sh_soon" component={ComingSoon} />
-
                     {/* activity */}
                     <Route path="/todo" component={Todo} />
                     <Route path="/feedback" component={Feedback} />
@@ -244,22 +241,30 @@ const App = () => {
                       path="/feedback_success"
                       component={FeedbackSuccess}
                     />
-
                     <Route path="/message/:id" component={UserMessages} />
-
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
                     <Route path="/news/:link" component={NewsContentPage} />
-
                     {/*Nkwashi account management*/}
-                    <Route path="/account" component={NkwashiAccountManagement} />
-                    
-                    <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
-                    <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
+                    <Route
+                      path="/account"
+                      component={NkwashiAccountManagement}
+                    />
+                    <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
+                    {/* Still admin route */}
+                    <Route
+                      path="/user/:id/logs"
+                      exact
+                      component={UserLogs}
+                    />{' '}
+                    {/* Still admin route */}
                     <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
                     <Route path="/timesheet" exact component={CustodianLogs} />
-                    <Route path="/timesheet/:id" exact component={EmployeeLogs} />
-                    
+                    <Route
+                      path="/timesheet/:id"
+                      exact
+                      component={EmployeeLogs}
+                    />
                     <AdminRoutes>
                       <Switch>
                         <Route path="/users" component={UsersList} />
@@ -270,16 +275,9 @@ const App = () => {
                         <Route path="/event_logs" component={EventLogs} />
 
                         <Route path="/new/user" exact component={UserEdit} />
-                        <Route
-                          path="/pending"
-                          exact
-                          component={PendingUsers}
-                        />
-
+                        <Route path="/pending" exact component={PendingUsers} />
                       </Switch>
                     </AdminRoutes>
-
-                    
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}

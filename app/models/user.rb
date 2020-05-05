@@ -36,7 +36,7 @@ class User < ApplicationRecord
   validate :phone_number_valid?
   before_save :ensure_default_state
 
-  devise :omniauthable, omniauth_providers: [:google_oauth2]
+  devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
   PHONE_TOKEN_LEN = 6
   PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
@@ -208,13 +208,17 @@ class User < ApplicationRecord
   # TODO: Make this happen from the DB vs hardcoding
   def assign_default_community
     return if self[:community_id]
-    return unless self[:provider] == 'google_oauth2'
+    #  check for both providers
+    return unless %w[google_oauth2 facebook].include?(self[:provider])
 
     mapped_name = DOMAINS_COMMUNITY_MAP[domain.to_sym]
-    return unless mapped_name
+    # return unless mapped_name
 
-    community = Community.find_or_create_by(name: mapped_name)
-    update(community_id: community.id, user_type: 'admin')
+    # users coming from facebook won't have a community
+    # so if mapped_name is nil then we give them Nkwashi
+    # In the future this should be as dynamic as possible to allow multiple communities
+    community = Community.find_or_create_by(name: mapped_name || 'Nkwashi')
+    update(community_id: community.id, user_type: mapped_name.nil? ? 'prospective_client' : 'admin')
   end
 
   def send_phone_token

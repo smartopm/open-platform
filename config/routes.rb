@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
     get 'login_oauth', :to => 'users/omniauth_callbacks#passthru'
+    get 'fb_oauth', :to => 'users/omniauth_callbacks#fblogin'
   end
 
   get 'qr_code', to: 'home#qr_code'

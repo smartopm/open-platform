@@ -60,9 +60,9 @@ export function LoginScreen() {
 
 
   return (
-    <div style={{ height: "100vh" }} className="login-page">
+    <div style={{ height: '100vh' }} className="login-page">
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={"/welcome"}>
+        <Link to={'/welcome'}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -74,7 +74,9 @@ export function LoginScreen() {
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
           <Typography color="textSecondary" variant="body2">
-            The Nkwashi app, powered by DoubleGDP, provides clients and visitors with fast, easy, and secure access to the site through a digital ID / QR Code.
+            The Nkwashi app, powered by DoubleGDP, provides clients and visitors
+            with fast, easy, and secure access to the site through a digital ID
+            / QR Code.
           </Typography>
 
           <br />
@@ -95,7 +97,7 @@ export function LoginScreen() {
             maxLength={10}
             autoFocus
             style={{
-              width: "65%"
+              width: '65%'
             }}
             value={phoneNumber}
             onChange={e => setPhoneNumber(e.target.value)}
@@ -130,25 +132,31 @@ export function LoginScreen() {
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-            onClick={event => loginWithPhone(event, "btnClick")}
+            onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Next</span>
-              )}
+              <span>Next</span>
+            )}
           </Button>
         </div>
 
         <div className="row justify-content-center align-items-center">
-          <a className={css(styles.googleLink)} href={"/login_oauth"}>
+          <a className={css(styles.googleLink)} href={'/login_oauth'}>
             Or Login with Google instead
+          </a>
+        </div>
+
+        <div className="row justify-content-center align-items-center">
+          <a className={css(styles.googleLink)} href={'/fb_oauth'}>
+            Or Login with Facebook instead
           </a>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
