@@ -23,7 +23,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    log_decision('granted',event_id)
+    log_decision('granted', event_id)
   end
 
   def deny!(grantor, event_id)
@@ -32,7 +32,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    log_decision('denied',event_id)
+    log_decision('denied', event_id)
   end
 
   def granted?
@@ -85,8 +85,8 @@ class EntryRequest < ApplicationRecord
     SMS.send(number, "https://#{ENV['HOST']}/feedback")
   end
 
-  def get_last_event
-    EventLog.where("ref_id=? and ref_type=?",id,self.class).last
+  def last_event_log
+    EventLog.where('ref_id=? and ref_type=?', id, self.class).last
   end
 
   private
@@ -131,11 +131,11 @@ class EntryRequest < ApplicationRecord
 
   def log_decision(decision, event_id)
     event = EventLog.find(event_id)
-      return unless event
-      event.data['action'] = decision
-      event.save
+    return false if event.blank?
+
+    event.data['action'] = decision
+    event.save
   end
 end
-
 
 # rubocop:enable Metrics/ClassLength
