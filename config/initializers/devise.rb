@@ -275,10 +275,12 @@ Devise.setup do |config|
   # Add the credentials from your Google application to your credentials
   client_id = Rails.application.credentials[:google_oauth_client_id]
   client_secret = Rails.application.credentials[:google_oauth_secret]
+  fb_app_id = Rails.application.credentials[:facebook_app_id]
+  fb_app_secret = Rails.application.credentials[:facebook_app_secret]
+
   # Configure Google omniauth with proper scope
   config.omniauth :google_oauth2, client_id, client_secret, {
     scope: "userinfo.email,userinfo.profile"
   }
-  # here we could use Rails.application.credentials[:facebook_app_id], not yet sure how encryption is done
-  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], scope: 'public_profile,email'
+  config.omniauth :facebook, fb_app_id, fb_app_secret, scope: 'public_profile,email'
 end
