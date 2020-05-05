@@ -148,12 +148,6 @@ export function LoginScreen() {
             Or Login with Google instead
           </a>
         </div>
-
-        <div className="row justify-content-center align-items-center">
-          <a className={css(styles.googleLink)} href={'/fb_oauth'}>
-            Or Login with Facebook instead
-          </a>
-        </div>
       </div>
     </div>
   )
