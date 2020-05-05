@@ -40,9 +40,9 @@ export default ({ history }) => {
   })
   //GA-event Digital scanning
   ReactGA.event({
-    category:'IDScanning',
+    category: 'IDScanning',
     action: 'DigitalScan',
-    eventLabel: tm+dg,
+    eventLabel: tm + dg,
     nonInteraction: true
   });
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
@@ -152,8 +152,8 @@ export function Component({
                 {DateUtil.isExpired(data.user.expiresAt) ? (
                   <span className="text-danger">Already Expired</span>
                 ) : (
-                  DateUtil.formatDate(data.user.expiresAt)
-                )}
+                    DateUtil.formatDate(data.user.expiresAt)
+                  )}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
@@ -165,8 +165,8 @@ export function Component({
                   Expired
                 </p>
               ) : (
-                <Status label={data.user.state} />
-              )}
+                  <Status label={data.user.state} />
+                )}
             </div>
             <div className="col-2 ml-auto">
               <IconButton
@@ -190,13 +190,13 @@ export function Component({
                 }}
               >
                 {data.user.state === 'valid' &&
-                authState.user.userType === 'security_guard' ? (
-                  <div>
-                    <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                      Log This Entry
+                  authState.user.userType === 'security_guard' ? (
+                    <div>
+                      <MenuItem key={'log_entry'} onClick={onLogEntry}>
+                        Log This Entry
                     </MenuItem>
-                  </div>
-                ) : null}
+                    </div>
+                  ) : null}
                 {authState.user.userType === 'security_guard' ? (
                   <MenuItem key={'call_p'}>
                     <a
@@ -210,13 +210,11 @@ export function Component({
 
                 {authState.user.userType === 'admin' ? (
                   <div>
-                    <MenuItem key={'edit_user'}>
-                      <Link
-                        to={`/user/${data.user.id}/edit`}
-                        className={css(styles.linkItem)}
-                      >
-                        Edit
-                      </Link>
+                    <MenuItem
+                      key={'edit_user'}
+                      onClick={() => router.push(`/user/${data.user.id}/edit`)}
+                    >
+                      Edit
                     </MenuItem>
                     <MenuItem key={'send_sms'}>
                       <Link
@@ -424,15 +422,15 @@ export function Component({
                   ) : !note.flagged ? (
                     <span />
                   ) : (
-                    <span
-                      className={css(styles.actionIcon)}
-                      onClick={() => handleOnComplete(note.id, note.completed)}
-                    >
-                      <Tooltip title="Mark this note complete">
-                        <CheckBoxOutlineBlankIcon />
-                      </Tooltip>
-                    </span>
-                  )}
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() => handleOnComplete(note.id, note.completed)}
+                        >
+                          <Tooltip title="Mark this note complete">
+                            <CheckBoxOutlineBlankIcon />
+                          </Tooltip>
+                        </span>
+                      )}
                   {!note.flagged && (
                     <span
                       className={css(styles.actionIcon)}
@@ -447,8 +445,8 @@ export function Component({
                 </Fragment>
               ))
             ) : (
-              'No Notes Yet'
-            )}
+                  'No Notes Yet'
+                )}
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
