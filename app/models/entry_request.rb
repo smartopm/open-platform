@@ -17,22 +17,22 @@ class EntryRequest < ApplicationRecord
 
   GRANT_STATE = %w[Pending Granted Denied].freeze
 
-  def grant!(grantor)
+  def grant!(grantor, event_id)
     update(
       grantor_id: grantor.id,
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    log_decision('granted')
+    log_decision('granted',event_id)
   end
 
-  def deny!(grantor)
+  def deny!(grantor, event_id)
     update(
       grantor_id: grantor.id,
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    log_decision('denied')
+    log_decision('denied',event_id)
   end
 
   def granted?
@@ -85,6 +85,10 @@ class EntryRequest < ApplicationRecord
     SMS.send(number, "https://#{ENV['HOST']}/feedback")
   end
 
+  def get_last_event
+    EventLog.where("ref_id=? and ref_type=?",id,self.class).last
+  end
+
   private
 
   def attach_community
@@ -125,18 +129,13 @@ class EntryRequest < ApplicationRecord
     )
   end
 
-  def log_decision(decision)
-    EventLog.create(
-      acting_user: grantor, community: user.community,
-      subject: 'visitor_entry',
-      ref_id: self[:id], ref_type: 'EntryRequest',
-      data: {
-        action: decision,
-        ref_name: self[:name],
-        type: user.user_type,
-      }
-    )
+  def log_decision(decision, event_id)
+    event = EventLog.find(event_id)
+      return unless event
+      event.data['action'] = decision
+      event.save
   end
 end
+
 
 # rubocop:enable Metrics/ClassLength

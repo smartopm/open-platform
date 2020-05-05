@@ -10,9 +10,10 @@ module Mutations
 
       def resolve(vals)
         entry_request = ::EntryRequest.find(vals.delete(:id))
+        event_log = entry_request.get_last_event
         raise GraphQL::ExecutionError, 'NotFound' unless entry_request
 
-        if entry_request.deny!(context[:current_user])
+        if entry_request.deny!(context[:current_user],event_log.id)
           entry_request.notify_admin(false)
           return { entry_request: entry_request }
         end
