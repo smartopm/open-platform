@@ -278,7 +278,7 @@ class User < ApplicationRecord
   end
 
   def send_email_msg
-    EmailMsg.send_welcome_msg(self[:email], self[:name]) unless self[:email].nil?
+    EmailMsg.send_welcome_msg(self[:email], self[:name], community.name) unless self[:email].nil?
   end
 
   private
