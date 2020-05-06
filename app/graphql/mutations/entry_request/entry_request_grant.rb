@@ -9,11 +9,8 @@ module Mutations
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
-        entry_request = ::EntryRequest.find(vals.delete(:id))
-        event_log = entry_request.last_event_log
-        raise GraphQL::ExecutionError, 'NotFound' unless entry_request
-
-        if entry_request.grant!(context[:current_user], event_log.id)
+        entry_request = context[:current_user].grant!(vals.delete(:id))
+        if entry_request.present?
           send_notifications(entry_request)
           return { entry_request: entry_request }
         end

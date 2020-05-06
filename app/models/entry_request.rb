@@ -17,22 +17,22 @@ class EntryRequest < ApplicationRecord
 
   GRANT_STATE = %w[Pending Granted Denied].freeze
 
-  def grant!(grantor, event_id)
+  def grant!(grantor)
     update(
       grantor_id: grantor.id,
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    log_decision('granted', event_id)
+    log_decision('granted', last_event_log.id)
   end
 
-  def deny!(grantor, event_id)
+  def deny!(grantor)
     update(
       grantor_id: grantor.id,
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    log_decision('denied', event_id)
+    log_decision('denied', last_event_log.id)
   end
 
   def granted?
@@ -56,7 +56,7 @@ class EntryRequest < ApplicationRecord
       acknowledged: true,
       id: id,
     )
-    log_decision('acknowledged')
+    log_decision('acknowledged', last_event_log.id)
   end
 
   # TODO: Build this into a proper notification scheme
