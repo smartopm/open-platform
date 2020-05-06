@@ -98,7 +98,10 @@ RSpec.describe Mutations::EntryRequest do
                                               context: {
                                                 current_user: admin,
                                               }).as_json
-      expect(result.dig('data')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
+
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
       expect(result.dig('errors')).to be_nil
     end
 
