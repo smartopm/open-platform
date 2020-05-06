@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-# d-bec0f1bd39f240d98a146faa4d7c5235
-
 require 'sendgrid-ruby'
 require 'json'
 
+# class helper to help send emails to doublegdp users using sendgrid
 class EmailMsg
   include SendGrid
 
@@ -19,11 +18,9 @@ class EmailMsg
     mail.from = SendGrid::Email.new(email: 'olivier@doublegdp.com')
     personalization = Personalization.new
     personalization.add_to(SendGrid::Email.new(email: user_email))
-    personalization.add_dynamic_template_data(
-      "community": 'Nkwashi Community', "name": name
-    )
+    personalization.add_dynamic_template_data("community": 'Nkwashi Community', "name": name)
     mail.add_personalization(personalization)
-    mail.template_id = 'd-bec0f1bd39f240d98a146faa4d7c5235'
+    mail.template_id = Rails.application.credentials[:sendgrid_template_id]
     client.mail._('send').post(request_body: mail.to_json)
   end
 end
