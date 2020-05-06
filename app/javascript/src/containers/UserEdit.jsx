@@ -135,7 +135,7 @@ export default function FormContainer({ match, history }) {
       <Nav
         navName={title}
         menuButton="edit"
-        backTo={`/user/${match.params.id}`}
+        backTo={ match.params.id ? `/user/${match.params.id}` : '/'}
       />
 
       <ModalDialog

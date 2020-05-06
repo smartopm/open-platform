@@ -196,13 +196,11 @@ export function Component({
               >
                 {authState.user.userType === 'admin' ? (
                   <div>
-                    <MenuItem key={'edit_user'}>
-                      <Link
-                        to={`/user/${data.user.id}/edit`}
-                        className={css(styles.linkItem)}
-                      >
-                        Edit
-                      </Link>
+                    <MenuItem id='edit_button'
+                      key={'edit_user'}
+                      onClick={() => router.push(`/user/${data.user.id}/edit`)}
+                    >
+                      Edit
                     </MenuItem>
                     <MenuItem key={'send_sms'}>
                       <Link
