@@ -5,6 +5,7 @@ import { withStyles, Tab } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
+import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { a11yProps, StyledTabs, TabPanel } from '../components/Tabs'
@@ -19,6 +20,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import Tooltip from '@material-ui/core/Tooltip'
 import CaptureTemp from '../components/CaptureTemp'
+import PhoneIcon from '@material-ui/icons/Phone';
 import ReactGA from 'react-ga';
 import { UserQuery } from '../graphql/queries'
 import {
@@ -169,14 +171,17 @@ export function Component({
                 )}
             </div>
             <div className="col-2 ml-auto">
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleOpenMenu}
-              >
-                <MoreVertIcon />
-              </IconButton>
+
+              {Boolean(authState.user.userType !== 'security_guard') && (
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={handleOpenMenu}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              )}
               <Menu
                 id="long-menu"
                 anchorEl={anchorEl}
@@ -189,25 +194,6 @@ export function Component({
                   }
                 }}
               >
-                {data.user.state === 'valid' &&
-                  authState.user.userType === 'security_guard' ? (
-                    <div>
-                      <MenuItem key={'log_entry'} onClick={onLogEntry}>
-                        Log This Entry
-                    </MenuItem>
-                    </div>
-                  ) : null}
-                {authState.user.userType === 'security_guard' ? (
-                  <MenuItem key={'call_p'}>
-                    <a
-                      href={`tel:${ponisoNumber}`}
-                      className={` ${css(styles.callButton)}`}
-                    >
-                      Call Poniso
-                    </a>
-                  </MenuItem>
-                ) : null}
-
                 {authState.user.userType === 'admin' ? (
                   <div>
                     <MenuItem id='edit_button'
@@ -455,21 +441,28 @@ export function Component({
         <TabPanel value={tabValue} index={3}>
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
+
+        <div className="container d-flex justify-content-between">
+
+          {data.user.state === 'valid' &&
+            authState.user.userType === 'security_guard' ? (
+              <Button id="log-entry" className={`${css(styles.logButton)}`} onClick={onLogEntry}>
+                Log This Entry
+              </Button>) : null}
+
+          {authState.user.userType === 'security_guard' ? (
+            <Button id="call_poniso" startIcon={<PhoneIcon />} className={`${css(styles.callButton)}`} href={`tel:${ponisoNumber}`}>
+              Call Poniso
+            </Button>) : null}
+
+        </div>
       </Fragment>
     </div>
   )
 }
 
 const styles = StyleSheet.create({
-  logButton: {
-    backgroundColor: '#25c0b0',
-    textTransform: 'unset'
-  },
-  callButton: {
-    color: '#ed5757',
-    textTransform: 'unset',
-    textDecoration: 'none'
-  },
+
   linkItem: {
     color: '#000000',
     textDecoration: 'none'
@@ -478,6 +471,14 @@ const styles = StyleSheet.create({
     borderLeft: '2px solid #25c0b0',
     padding: '0.5%',
     color: 'gray'
+  },
+  logButton: {
+    backgroundColor: '#25c0b0',
+    color: '#FFF'
+  },
+  callButton: {
+    backgroundColor: '#FF6347',
+    color: '#FFF'
   },
   actionIcon: {
     float: 'right',
