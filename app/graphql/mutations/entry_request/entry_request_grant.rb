@@ -9,7 +9,7 @@ module Mutations
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
-        entry_request = context[:current_user].grant!(vals.delete(:id))
+        entry_request = context[:current_user].grant!(vals[:id])
         send_notifications(entry_request)
         return { entry_request: entry_request } if entry_request.present?
 
