@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'sendgrid-ruby'
-require 'json'
 
 # class helper to help send emails to doublegdp users using sendgrid
 class EmailMsg
@@ -10,6 +9,7 @@ class EmailMsg
   class UninitializedError < StandardError; end
   class EmailMsgError < StandardError; end
 
+  # disabling rubocop till I find a better to lighten this method
   # rubocop:disable Metrics/AbcSize
   def self.send_welcome_msg(user_email, name)
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
@@ -24,5 +24,5 @@ class EmailMsg
     mail.template_id = Rails.application.credentials[:sendgrid_template_id]
     client.mail._('send').post(request_body: mail.to_json)
   end
-   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/AbcSize
 end
