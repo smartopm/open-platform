@@ -210,7 +210,7 @@ export function Component({
 
                 {authState.user.userType === 'admin' ? (
                   <div>
-                    <MenuItem
+                    <MenuItem id='edit_button'
                       key={'edit_user'}
                       onClick={() => router.push(`/user/${data.user.id}/edit`)}
                     >
