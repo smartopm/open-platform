@@ -3,13 +3,7 @@ import { mount } from 'enzyme'
 import { MockedProvider } from '@apollo/react-testing'
 import { act } from 'react-dom/test-utils'
 import UserShow from '../containers/UserShow'
-import {
-    cleanup,
-    fireEvent,
-    render
-} from "@testing-library/react";
 import { MemoryRouter } from 'react-router-dom'
-
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Renders UserShow and edit button', () => {
