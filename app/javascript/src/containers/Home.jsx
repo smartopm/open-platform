@@ -187,7 +187,7 @@ export function Component({ authState }) {
                           alt=""
                         />
                       </h5>
-                      <p>Account Management</p>
+                      <p>My Thebe Portal</p>
                     </div>
                   </Link>
                 </div>
