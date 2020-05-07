@@ -10,7 +10,7 @@ import '@testing-library/jest-dom/extend-expect'
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Mounts page with no errors',()=>{
 
-    let wrapper
+    
     it('it should render',()=>{
 
         const {getByTestId} = render(
