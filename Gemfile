@@ -35,6 +35,7 @@ gem 'dotenv'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "nexmo", "~> 5.9"
+gem 'sendgrid-ruby'
 
 # For S3 file uploads in ActiveStorage
 gem "aws-sdk-s3", require: false

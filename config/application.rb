@@ -2,6 +2,7 @@ require_relative 'boot'
 
 require 'rails/all'
 
+
 ROOT_PATH ||= File.expand_path('../.', __dir__)
 
 # Load local .env files for development

@@ -3,6 +3,7 @@
 # TODO: @mdp break this class up
 # rubocop:disable ClassLength
 
+require 'email_msg'
 # User should encompass all users of the system
 # Citizens
 # City Administrators
@@ -23,6 +24,8 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
   has_one_attached :document
+
+  after_create :send_email_msg
 
   # Track changes to the User
   has_paper_trail
@@ -276,6 +279,10 @@ class User < ApplicationRecord
                                algorithm: 'HS256'
     payload = decoded_token[0]
     User.find(payload['user_id'])
+  end
+
+  def send_email_msg
+    EmailMsg.send_welcome_msg(self[:email], self[:name], community.name) unless self[:email].nil?
   end
 
   private
