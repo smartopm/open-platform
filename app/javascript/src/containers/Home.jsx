@@ -171,7 +171,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {Boolean(authState.user.userType !== 'custodian') && (
+              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
@@ -190,7 +190,7 @@ export function Component({ authState }) {
                     </div>
                   </Link>
                 </div>
-              )}
+              ) : null}
 
               {['security_guard', 'admin'].includes(
                 authState.user.userType.toLowerCase()
