@@ -115,18 +115,6 @@ export default function SupportCard({handleSendMessage}) {
                         Support Chat
                     </Button>
                 </Grid>
-
-                <Grid container direction="row" className={classes.root}>
-                    <Button 
-                    data-testid="crf"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
-                        className={`${css(styles.chatButton)}`}
-                    >
-                        Client Request Form
-                    </Button>
-                </Grid>
             </div>
         </Fragment>
     );
