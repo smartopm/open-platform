@@ -134,7 +134,7 @@ class User < ApplicationRecord
     entry
   end
 
-  def generate_events(event_tag, target_user, data = {})
+  def generate_events(event_tag, target_obj, data = {})
     ::EventLog.create(acting_user_id: id,
                       community_id: community_id, subject: event_tag,
                       ref_id: target_obj.id,
