@@ -64,6 +64,7 @@ import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
+import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -259,9 +260,12 @@ const App = () => {
                     <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
                     <Route path="/timesheet" exact component={CustodianLogs} />
                     <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+
+                    <Route path="/client_request_from" exact component={ClientRequestForm} />
                     
                     <AdminRoutes>
                       <Switch>
+                      <Route path="/client_request_from" exact component={ClientRequestForm} />
                         <Route path="/users" component={UsersList} />
                         <Route path="/messages" component={AllMessages} />
                         <Route path="/showroom_logs" component={ShowroomLogs} />
