@@ -21,8 +21,7 @@ import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
-
-
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -382,6 +381,30 @@ export function Component({ authState }) {
                   </a>
                 </div>
               )}
+
+              { ['admin', 'client', 'resident'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Fragment>
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={'/client_request_from'} className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <ListAltIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>Client Request Form</p>
+                      </div>
+                    </Link>
+                  </div>
+                </Fragment>
+              ): null}
             </div>
           </div>
         </div>
