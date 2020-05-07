@@ -12,16 +12,12 @@ import { useWindowDimensions } from '../../utils/customHooks'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 
-// have mutations here for managing shifts
-// have queries that checks if a specific shift is in progress
-// have a user_id
 
-// we can disable the start shift for a day once started
-// most importantly we need to find a way to get the last or current shift for this user
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
   const { loading, data, error } = useQuery(UserTimeSheetQuery, {
-    variables: { userId }
+    variables: { userId },
+    fetchPolicy: 'network-only'
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
@@ -31,7 +27,6 @@ export default function ShiftButtons({ userId }) {
       if (!loading && data && data.userTimeSheetLogs.length) {
         const {startedAt, endedAt} = data.userTimeSheetLogs[0]
           if (startedAt && endedAt === null) {
-            console.log({startedAt, endedAt})
             setInProgress(true)
             return
           }

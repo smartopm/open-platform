@@ -13,7 +13,7 @@ describe('temperature component', () => {
     const mock = [{
         request: {
             query: TemperateRecord,
-            variable: { refId: 1, temp: "36.5", refName: "Test Name" }
+            variable: { refId: 1, temp: "36.5", refName: "Test Name", refType: 'User' }
 
         },
         result: {
@@ -50,14 +50,8 @@ describe('temperature component', () => {
             <MockedProvider mock={mock} addTypename={false}>
                 <CaptureTemp {...screenProps} />
             </MockedProvider>)
-
             await wrapper.find('button').simulate('click')
             expect(wrapper.find('tempvalue')).toMatchObject({})
             wrapper.update()
-    
-
     });
-
-
-
 });

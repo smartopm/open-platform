@@ -1,16 +1,27 @@
 import React from 'react'
-import { shallow } from 'enzyme'
 import { SideList } from '../components/SideList'
+import { BrowserRouter } from 'react-router-dom/'
+import { render } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
 
 describe('Sidelist component', () => {
   const sideProps = {
     toggleDrawer: jest.fn(),
-    user: {}
+    user: {
+      name: 'Jetro'
+    }
   }
-  const sideListWrapper = shallow(<SideList {...sideProps} />)
+  const { getByText } = render(
+    <BrowserRouter>
+      <SideList {...sideProps} />
+    </BrowserRouter>
+  )
 
   it('should contain required list ', () => {
-    const { children } = sideListWrapper.props()
-    expect(children).toHaveLength(4)
+    expect(getByText('Scanner')).toBeInTheDocument()
+    expect(getByText('Search People')).toBeInTheDocument()
+    expect(getByText('Contact')).toBeInTheDocument()
+    expect(getByText('Logout')).toBeInTheDocument()
+    expect(getByText('Jetro')).toBeInTheDocument()
   })
 })

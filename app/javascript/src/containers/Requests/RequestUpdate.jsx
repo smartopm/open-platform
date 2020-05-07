@@ -113,12 +113,20 @@ export default function RequestUpdate({ match, history, location }) {
         state: 'pending',
         userType: 'client',
         reason: formData.reason,
+        phoneNumber: formData.phoneNumber,
         nrc: formData.nrc,
         vehicle: formData.vehiclePlate
       }
-    }).then(() => {
-      setMessage('User was successfully enrolled')
     })
+      .then(({ data }) => {
+        setLoading(false)
+        setMessage('User was successfully enrolled')
+        history.push(`/user/${data.result.user.id}`)
+      })
+      .catch(err => {
+        setLoading(false)
+        setMessage(err.message)
+      })
   }
   function handleModal(_event, type) {
     if (type === 'grant') {
@@ -136,7 +144,13 @@ export default function RequestUpdate({ match, history, location }) {
     <Fragment>
       <Nav
         // navname should be enroll user if coming from entry_logs
-        navName={previousRoute === "logs" ? "Request Access" : previousRoute === "enroll" ? "Enroll User" : "Approve Request"}
+        navName={
+          previousRoute === 'logs'
+            ? 'Request Access'
+            : previousRoute === 'enroll'
+            ? 'Enroll User'
+            : 'Approve Request'
+        }
         menuButton="cancel"
         backTo="/entry_request"
       />
@@ -148,16 +162,18 @@ export default function RequestUpdate({ match, history, location }) {
         action={modalAction}
         name={formData.name}
       >
-        {
-          (modalAction === 'grant' && !isTimeValid(date)) && (
-            <div>
-              <p>Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)}`} at <b> {DateUtil.dateTimeToString(date)} </b></p>
-              <p>
-                The current time is outside of normal visiting hours. Are you sure you wish proceed?
-              </p>
-            </div>
-          )
-        }
+        {modalAction === 'grant' && !isTimeValid(date) && (
+          <div>
+            <p>
+              Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)}`} at{' '}
+              <b> {DateUtil.dateTimeToString(date)} </b>
+            </p>
+            <p>
+              The current time is outside of normal visiting hours. Are you sure
+              you wish proceed?
+            </p>
+          </div>
+        )}
       </ModalDialog>
 
       <div className="container">
@@ -173,11 +189,11 @@ export default function RequestUpdate({ match, history, location }) {
                 value={
                   formData.guard
                     ? `${new Date(
-                      formData.createdAt
-                    ).toDateString()} at ${DateUtil.dateTimeToString(
-                      new Date(formData.createdAt)
-                    )}`
-                    : ""
+                        formData.createdAt
+                      ).toDateString()} at ${DateUtil.dateTimeToString(
+                        new Date(formData.createdAt)
+                      )}`
+                    : ''
                 }
                 disabled={true}
                 name="date"
@@ -192,7 +208,7 @@ export default function RequestUpdate({ match, history, location }) {
             <input
               className="form-control"
               type="text"
-              value={formData.guard ? formData.guard.name : ""}
+              value={formData.guard ? formData.guard.name : ''}
               disabled={true}
               name="name"
               required
@@ -218,7 +234,7 @@ export default function RequestUpdate({ match, history, location }) {
             <input
               className="form-control"
               type="text"
-              value={formData.nrc || ""}
+              value={formData.nrc || ''}
               onChange={handleInputChange}
               name="nrc"
               required
@@ -231,7 +247,7 @@ export default function RequestUpdate({ match, history, location }) {
             <input
               className="form-control"
               type="text"
-              value={formData.phoneNumber || ""}
+              value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
             />
@@ -244,7 +260,7 @@ export default function RequestUpdate({ match, history, location }) {
               className="form-control"
               type="text"
               onChange={handleInputChange}
-              value={formData.vehiclePlate || ""}
+              value={formData.vehiclePlate || ''}
               name="vehiclePlate"
             />
           </div>
@@ -254,7 +270,7 @@ export default function RequestUpdate({ match, history, location }) {
               select
               label="Reason for visit"
               name="reason"
-              value={formData.reason || ""}
+              value={formData.reason || ''}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
             >
@@ -264,75 +280,77 @@ export default function RequestUpdate({ match, history, location }) {
 
           <br />
           {/* {Temproal component for temperature} */}
-          <CaptureTemp refId={match.params.id} refName={formData.name} />
-          
+
+          {previousRoute !== 'enroll' && (
+            <CaptureTemp
+              refId={match.params.id}
+              refName={formData.name}
+              refType="EntryRequest"
+            />
+          )}
+
           <br />
           <br />
-          {previousRoute === 'enroll' ?
-
-            (
-              <Fragment>
-                <div className="row justify-content-center align-items-center">
-                  <Button
-                    variant="contained"
-                    onClick={handleEnrollUser}
-                    className={`btn ${css(styles.grantButton)}`}
-                    disabled={isLoading || Boolean(message.length)}
-                  >
-                    {isLoading ? 'Enrolling ...' : ' Enroll User'}
-                  </Button>
-
-                </div>
-                <div className='row justify-content-center align-items-center'>
-                  <br />
-                  <br />
-                  {
-                    !isLoading && message.length ? <span>{message}</span> : <span />
-                  }
-                </div>
-              </Fragment>
-            )
-            : !/logs|enroll/.test(previousRoute)
-              ? (
-                <div className="row justify-content-center align-items-center">
-                
-                  <div className="col">
-                    
-                    <Button
-                      variant="contained"
-                      onClick={(event => handleModal(event, 'grant'))}
-                      className={`btn ${css(styles.grantButton)}`}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Granting ...' : 'Grant'}
-                    </Button>
-                  </div>
-                  <div className="col">
-                    <Button
-                      variant="contained"
-                      onClick={handleDenyRequest}
-                      className={`btn  ${css(styles.denyButton)}`}
-                      disabled={isLoading}
-                    >
-                      Deny
-                    </Button>
-
-                  </div>
-                  <div className="col">
-                    <a
-                      href={`tel:${ponisoNumber}`}
-                      className={` ${css(styles.callButton)}`}
-                    >
-                      Call Poniso
-                    </a>
-
-                  </div>
-                </div>
-              ) : <span />}
+          {previousRoute === 'enroll' ? (
+            <Fragment>
+              <div className="row justify-content-center align-items-center">
+                <Button
+                  variant="contained"
+                  onClick={handleEnrollUser}
+                  className={`btn ${css(styles.grantButton)}`}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Enrolling ...' : ' Enroll User'}
+                </Button>
+              </div>
+              <div className="row justify-content-center align-items-center">
+                <br />
+                <br />
+                {!isLoading && message.length ? (
+                  <span>{message}</span>
+                ) : (
+                  <span />
+                )}
+              </div>
+            </Fragment>
+          ) : !/logs|enroll/.test(previousRoute) ? (
+            <div className="row justify-content-center align-items-center">
+              <div className="col">
+                <Button
+                  variant="contained"
+                  onClick={event => handleModal(event, 'grant')}
+                  className={`btn ${css(styles.grantButton)}`}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Granting ...' : 'Grant'}
+                </Button>
+              </div>
+              <div className="col">
+                <Button
+                  variant="contained"
+                  onClick={handleDenyRequest}
+                  className={`btn  ${css(styles.denyButton)}`}
+                  disabled={isLoading}
+                >
+                  Deny
+                </Button>
+              </div>
+              <div className="col">
+                <a
+                  href={`tel:${ponisoNumber}`}
+                  className={` ${css(styles.callButton)}`}
+                >
+                  Call Poniso
+                </a>
+              </div>
+            </div>
+          ) : (
+            <span />
+          )}
         </form>
       </div>
     </Fragment>
-  );
+  )
 }
 
 

@@ -382,14 +382,24 @@ export const MessageCreate = gql`
 `
 
 export const TemperateRecord = gql`
-  mutation temperatureUpdate($refId: ID!, $temp: String!, $refName: String!) {
-    temperatureUpdate(refId: $refId, temp: $temp, refName: $refName) {
-      eventLog {
-        sentence
-      }
-    }
-  }
-`
+         mutation temperatureUpdate(
+           $refId: ID!
+           $temp: String!
+           $refName: String!
+           $refType: String!
+         ) {
+           temperatureUpdate(
+             refId: $refId
+             temp: $temp
+             refName: $refName
+             refType: $refType
+           ) {
+             eventLog {
+               sentence
+             }
+           }
+         }
+       `
 // Start shift
 // End shift
 export const ManageShiftMutation = gql`

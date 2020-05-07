@@ -304,6 +304,7 @@ GEM
       rubocop (>= 0.72.0)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
+    ruby_http_client (3.5.0)
     rubyzip (1.2.3)
     rugged (0.28.3.1)
     sass (3.7.4)
@@ -323,6 +324,8 @@ GEM
     selenium-webdriver (3.142.3)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
+    sendgrid-ruby (6.2.0)
+      ruby_http_client (~> 3.4)
     sidekiq (6.0.3)
       connection_pool (>= 2.2.2)
       rack (>= 2.0.0)
@@ -413,6 +416,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.3)
   sass-rails (~> 5)
   selenium-webdriver
+  sendgrid-ruby
   sidekiq
   simplecov
   spring
