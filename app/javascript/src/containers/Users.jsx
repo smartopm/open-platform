@@ -28,7 +28,7 @@ export const useStyles = makeStyles(theme => ({
     table: {
         display: 'block',
         width: '100%',
-        overflowX: 'auto', 
+        overflowX: 'auto',
         height: 500
     },
     root: {
@@ -71,7 +71,7 @@ export const StyledTableRow = withStyles(theme => ({
     }
 }))(TableRow)
 
-   
+
 
 export default function UsersList() {
     const classes = useStyles()
@@ -87,12 +87,12 @@ export default function UsersList() {
     const [userName, setName] = useState('')
 
 
- function handleChangePage (){
+    function handleChangePage() {
         setOffSet(offset + limit);
 
     }
 
-    function handlePreviousPage  ()  {
+    function handlePreviousPage() {
         if (offset < limit) {
             return;
         }
@@ -111,7 +111,7 @@ export default function UsersList() {
 
     function handleModal(userId = '', username = '') {
         setId(userId)
-        setName(username)  
+        setName(username)
         setIsDialogOpen(!isDialogOpen)
     }
 
@@ -215,28 +215,6 @@ export default function UsersList() {
                         ))}
                     </TableBody>
                 </Table>
-
-                <div className="container row justify-content-center">
-                <nav aria-label="Page navigation" >
-                    <ul className="pagination  ">
-                        <li className={`page-item ${offset < limit && "disabled"}`}>
-                            <a className="page-link" onClick={handlePreviousPage} href="#">
-                                Previous
-                </a>
-                        </li>
-                        <li
-                            className={`page-item ${data.users.length < limit &&
-                                "disabled"}`}
-                        >
-                            <a className="page-link" onClick={handleChangePage} href="#">
-                                Next
-                </a>
-                        </li>
-                    </ul>
-                </nav>
-
-                </div>
-
             </div>
         </Fragment>
     )
