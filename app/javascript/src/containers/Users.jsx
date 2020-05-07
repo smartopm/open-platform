@@ -86,19 +86,6 @@ export default function UsersList() {
     const [userId, setId] = useState('')
     const [userName, setName] = useState('')
 
-
-    function handleChangePage() {
-        setOffSet(offset + limit);
-
-    }
-
-    function handlePreviousPage() {
-        if (offset < limit) {
-            return;
-        }
-        setOffSet(offset - limit);
-    }
-
     function handleClick() {
         noteCreate({
             variables: { userId, body: note, flagged: false }
