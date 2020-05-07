@@ -75,8 +75,6 @@ export const StyledTableRow = withStyles(theme => ({
 
 export default function UsersList() {
     const classes = useStyles()
-    const limit = 30
-    const [offset, setOffSet] = useState(0)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [redirect, setRedirect] = useState(false)
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
