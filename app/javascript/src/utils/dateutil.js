@@ -98,8 +98,8 @@ export function differenceInHours(startDate, endDate) {
   const diff_seconds = (zonedDate(lastDate).getTime() - zonedDate(startDate).getTime()) / 1000;
   const diff_hours = diff_seconds / (60 * 60)
   const diff_minutes = diff_seconds / 60
-  const hours = Math.abs(Math.round(diff_hours))
-  const minutes = Math.abs(Math.round(diff_minutes))
+  const hours = Math.abs(diff_hours.toFixed(2))
+  const minutes = Math.abs(diff_minutes.toFixed(2))
   if (hours >= 1) {
     return `${hours} ${hours === 1 ? 'hr' : 'hrs'}`
   }

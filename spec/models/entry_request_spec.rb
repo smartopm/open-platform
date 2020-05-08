@@ -35,7 +35,7 @@ RSpec.describe EntryRequest, type: :model do
       expect(@entry_request.denied?).to be false
       expect(@entry_request.granted?).to be true
       expect(@entry_request.grantor_id).to eql @admin.id
-      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 2
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
     it 'should handle a guard denying a request' do
@@ -46,7 +46,7 @@ RSpec.describe EntryRequest, type: :model do
       expect(@entry_request.denied?).to be true
       expect(@entry_request.granted?).to be false
       expect(@entry_request.grantor_id).to eql @guard.id
-      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 2
+      expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
     it 'should not throw error when guard grants entries' do

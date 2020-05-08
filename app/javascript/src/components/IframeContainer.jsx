@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 export default function IframeContainer({ link, height, width }) {
   return (
     <div>
-      <iframe src={link} height={height} width={width} />
+      <iframe  data-testid="iframe" src={link} height={height} width={width} />
     </div>
   )
 }

@@ -118,6 +118,22 @@ class User < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
+  def grant!(entry_request_id)
+    entry = entry_requests.find(entry_request_id)
+    return nil if entry.blank?
+
+    entry.grant!(self)
+    entry
+  end
+
+  def deny!(entry_request_id)
+    entry = entry_requests.find(entry_request_id)
+    return nil if entry.blank?
+
+    entry.deny!(self)
+    entry
+  end
+
   def generate_events(event_tag, target_obj, data = {})
     ::EventLog.create(acting_user_id: id,
                       community_id: community_id, subject: event_tag,

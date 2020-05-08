@@ -23,7 +23,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 1,
       granted_at: Time.zone.now,
     )
-    log_decision('granted')
+    log_decision('granted', last_event_log.id)
   end
 
   def deny!(grantor)
@@ -32,7 +32,7 @@ class EntryRequest < ApplicationRecord
       granted_state: 2,
       granted_at: Time.zone.now,
     )
-    log_decision('denied')
+    log_decision('denied', last_event_log.id)
   end
 
   def granted?
@@ -56,7 +56,7 @@ class EntryRequest < ApplicationRecord
       acknowledged: true,
       id: id,
     )
-    log_decision('acknowledged')
+    log_decision('acknowledged', last_event_log.id)
   end
 
   # TODO: Build this into a proper notification scheme
@@ -83,6 +83,10 @@ class EntryRequest < ApplicationRecord
 
   def notify_client(number)
     SMS.send(number, "https://#{ENV['HOST']}/feedback")
+  end
+
+  def last_event_log
+    EventLog.where('ref_id=? and ref_type=?', id, self.class).last
   end
 
   private
@@ -125,17 +129,12 @@ class EntryRequest < ApplicationRecord
     )
   end
 
-  def log_decision(decision)
-    EventLog.create(
-      acting_user: grantor, community: user.community,
-      subject: 'visitor_entry',
-      ref_id: self[:id], ref_type: 'EntryRequest',
-      data: {
-        action: decision,
-        ref_name: self[:name],
-        type: user.user_type,
-      }
-    )
+  def log_decision(decision, event_id)
+    event = EventLog.find(event_id)
+    return false if event.blank?
+
+    event.data['action'] = decision
+    event.save
   end
 end
 
