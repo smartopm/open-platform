@@ -35,13 +35,16 @@ module Types::Queries::TimeSheet
   end
 
   # The idea was to pass in nth month and query from there till today.
-  # If we can find a way of passing the date range here then we would only have data for just one month
+  # If we can find a way of passing the date range here then we would only have data
+  # for just one month
   # the date should come in UTC and be zoned from the F.E
   def user_time_sheet_logs(user_id:, offset: 0, limit: 100)
-    TimeSheet.where(user_id: user_id, created_at: 1.month.ago..Date.tomorrow).limit(limit).offset(offset)
+    TimeSheet.where(user_id: user_id, created_at: 1.month.ago..Date.tomorrow)
+             .limit(limit).offset(offset)
   end
 end
 
-# SELECT * from time_sheets where (From_date BETWEEN '2020-05-07'AND '2020-05-08') OR (To_date BETWEEN 
+# SELECT * from time_sheets where (From_date BETWEEN '2020-05-07'AND '2020-05-08')
+# OR (To_date BETWEEN
 # '2020-05-07' AND '2020-05-08') OR (From_date <= '2020-05-07' AND To_date >= '2020-05-08')
 # SELECT * FROM time_sheets WHERE created_at >= '2020-05-07' AND created_at <  '2020-05-08'
