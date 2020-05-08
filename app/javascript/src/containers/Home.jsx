@@ -391,7 +391,9 @@ export function Component({ authState }) {
                       styles.cardSize
                     )} card align-self-center text-center`}
                   >
-                    <Link to={'/client_request_from'} className={`card-link`}>
+                    <Link to={'/'} 
+                      onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                      className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
                           <ListAltIcon
