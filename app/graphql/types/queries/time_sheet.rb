@@ -18,6 +18,7 @@ module Types::Queries::TimeSheet
       argument :user_id, GraphQL::Types::ID, required: true
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :month, Integer, required: false
     end
   end
 
@@ -34,7 +35,12 @@ module Types::Queries::TimeSheet
         Array.new(1, com_id) + Array.new(2, "%#{query}%") + [limit, offset])
   end
 
-  def user_time_sheet_logs(user_id:, offset: 0, limit: 100)
-    TimeSheet.where(user_id: user_id).limit(limit).offset(offset)
+  def user_time_sheet_logs(user_id:, offset: 0, limit: 100, month: 1)
+    TimeSheet.where(user_id: user_id, created_at: month.month.ago..Date.tomorrow).limit(limit).offset(offset)
+    # TimeSheet.find_by_sql(["SELECT time_sheets.* FROM time_sheets WHERE time_sheets.user_id = #{user_id}"])
   end
 end
+
+# SELECT * from time_sheets where (From_date BETWEEN '2020-05-07'AND '2020-05-08') OR (To_date BETWEEN '2020-05-07' AND '2020-05-08') OR (From_date <= '2020-05-07' AND To_date >= '2020-05-08')
+# SELECT * FROM time_sheets WHERE '[2020-05-07, 2020-05-08]'::daterange @> created_at
+# SELECT * FROM time_sheets WHERE created_at >= '2020-05-07' AND created_at <  '2020-05-08'
