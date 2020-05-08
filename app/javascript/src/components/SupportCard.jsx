@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     }
 })
 
-export default function SupportCard({handleSendMessage}) {
+export default function SupportCard({ handleSendMessage }) {
     const classes = useStyles()
     // hard coding CSM number
     // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
@@ -100,7 +100,7 @@ export default function SupportCard({handleSendMessage}) {
                         <Typography className={classes.pos} color="textSecondary">
                             <a href={`https://api.whatsapp.com/send?phone=${CSMNumber}`}>
                                 {' '}
-                            +260 974 624243
+                                +260 974 624243
                             </a>
                         </Typography>
                     </Grid>
@@ -117,8 +117,8 @@ export default function SupportCard({handleSendMessage}) {
                 </Grid>
 
                 <Grid container direction="row" className={classes.root}>
-                    <Button 
-                    data-testid="crf"
+                    <Button
+                        data-testid="crf"
                         variant="contained"
                         color="primary"
                         onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
@@ -126,6 +126,18 @@ export default function SupportCard({handleSendMessage}) {
                     >
                         Client Request Form
                     </Button>
+                </Grid>
+
+                <Grid container direction="row" className={classes.root}>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => window.open("/contact/mobile_money", '_self')}
+                        className={`${css(styles.chatButton)}`}
+                    >
+                        Pay With Mobile Money
+                            </Button>
                 </Grid>
             </div>
         </Fragment>
