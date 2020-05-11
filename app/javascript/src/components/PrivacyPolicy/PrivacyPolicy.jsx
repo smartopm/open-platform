@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom'
 
 export default function PrivacyPolicy() {
 
@@ -7,9 +7,14 @@ export default function PrivacyPolicy() {
 
                 <div data-testid="div" className="row justify-content-center">
 
-                        <p style={{ fontSize: 14 }}><strong>Privacy and Terms of Service</strong></p>
+                        <Link to="/privacy_policy">
+                                <p style={{ fontSize: 14 }}><strong>Privacy and Terms of Service</strong></p>
+
+                        </Link>
 
                 </div>
+
+
 
         );
 
