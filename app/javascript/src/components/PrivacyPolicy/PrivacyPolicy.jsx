@@ -8,7 +8,7 @@ export default function PrivacyPolicy() {
                 <div data-testid="privacy_link" className="row justify-content-center">
 
                         <Link to="/privacy_policy">
-                                <p style={{ fontSize: 14 }}><strong>Privacy and Terms of Service</strong></p>
+                                <p data-testid="privacy_text" style={{ fontSize: 14 }}><strong>Privacy and Terms of Service</strong></p>
 
                         </Link>
 

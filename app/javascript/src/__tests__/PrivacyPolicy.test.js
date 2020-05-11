@@ -9,16 +9,29 @@ import PrivacyPolicy from '../components/PrivacyPolicy/PrivacyPolicy';
 
 describe('Mount privacy policy link', () => {
 
-    it('Mount Privacy component', () => {
+    const { getByTestId } = render(
 
+        <BrowserRouter>
+            <PrivacyPolicy />
+        </BrowserRouter>
+    )
+    it('Mount Privacy component', () => {
+        expect(getByTestId('privacy_link')).toBeTruthy()
+ 
+    });
+    it('Display privacy link text', () => {
         const { getByTestId } = render(
 
             <BrowserRouter>
                 <PrivacyPolicy />
             </BrowserRouter>
         )
-        expect(getByTestId('privacy_link')).toBeTruthy()
+        
+        expect(getByTestId('privacy_text').innerHTML).toBe('<strong>Privacy and Terms of Service</strong>')
+        
+        
     });
+    
 
     afterEach(cleanup)
 
