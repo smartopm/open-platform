@@ -38,9 +38,22 @@ module Types::Queries::TimeSheet
   # If we can find a way of passing the date range here then we would only have data
   # for just one month
   # the date should come in UTC and be zoned from the F.E
-  def user_time_sheet_logs(user_id:, offset: 0, limit: 100)
-    TimeSheet.where(user_id: user_id, created_at: 1.month.ago..Date.tomorrow)
-             .limit(limit).offset(offset)
+
+  # NICK:  Olivier, you need to pass the start date and end date from react in UTC.
+  # If none are passed then use the current month.
+  #  in this scenario you don t really need a user id.
+  # but i think you call this method from the custodian screen.
+  # this will need to get reworked a bit to make sure only custodian can retreive .
+  def user_time_sheet_logs(user_id:, offset: 0, limit: 100, date_from: nil)
+    date_from = Time.current.beginning_of_month if date_from.blank?
+    u = nil
+    if context[:current_user].id == user_id # means employee / can see own data.
+      u = context[:current_user]
+    elsif %w[admin custodian].include?(context[:current_user].user_type)
+      u = context[:current_user].find_a_user(user_id)
+    end
+    u.time_sheets.monthly_records(date_from, date_from + 1.month, limit, offset) if u.present?
+    []
   end
 end
 
