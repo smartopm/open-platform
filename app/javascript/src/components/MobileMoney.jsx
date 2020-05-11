@@ -48,15 +48,15 @@ export default function MobileMoney() {
                 </li>
 
                 <li>
-                    Enter Nkwashi&apos;s number &apos;0961722433&apos;
+                    Enter Nkwashi&apos;s number &apos;0961722433&apos; and send the money through MTN
                 </li>
 
                 <li>
-                    Include your full name and NRC number
+                    You and Nkwashi will receive a transaction message when the transaction is successfully completed
                 </li>
 
                 <li>
-                    You and Nkwashi will receive an SMS notification when the transaction is successfully completed
+                    Copy the transaction message and text it directly to Nkwashi (0961722433) with your full name and NRC number
                 </li>
             </ol>
 
