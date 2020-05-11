@@ -14,44 +14,6 @@ export default function EmployeeTimeSheetLog({ data, name }) {
   const shifts = data.userTimeSheetLogs
   const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours']
   // Day, Date, Start Time, Stop Time, Total Hours in the day
-
-  function calculateHoursAndDays(shifts) {
-    // in case user hasn't checked in, it means everything is at 0
-    if (!shifts.length) {
-      return {
-        days: 0,
-        hours: 0
-      }
-    }
-    // return hours || minutes diffs in shifts
-    const shiftArray = shifts.map(shift =>
-      dateutil.differenceInHours(
-        zonedDate(shift.startedAt),
-        zonedDate(shift.endedAt || new Date())
-      )
-    )
-    // separate shifts that are under one hour
-    const filteredMinuteShifts = shiftArray.filter(shift => shift.includes('minutes'))
-    const filteredHourShifts = shiftArray.filter(shift => shift.includes('hr'))
-    const shiftReducer = (a, b) => a + b
-    // remove the hours and make it a number to do calculations
-    const cleanHourShifts = filteredHourShifts.map(shift => {
-      const clean = shift.replace(/hr|hrs/gi, '')
-      return parseFloat(clean)
-    })
-    const cleanMinutesShifts = filteredMinuteShifts.map(shift => {
-      const clean = shift.replace(/minutes/gi, '')
-      return parseFloat(clean)
-    })
-    const totalMinutes = cleanMinutesShifts.reduce(shiftReducer, 0)
-    const totalHours = cleanHourShifts.reduce(shiftReducer, 0)
-    const totalHoursAndMinutes = (totalMinutes / 60) + totalHours
-
-    return {
-      hours: totalHoursAndMinutes.toFixed(2),
-      days: filteredHourShifts.length
-    }
-  }
   return (
     <div>
       <div className="container">
@@ -113,6 +75,46 @@ export default function EmployeeTimeSheetLog({ data, name }) {
   )
 }
 
+
+  export function calculateHoursAndDays(shifts) {
+    // in case user hasn't checked in, it means everything is at 0
+    if (!shifts.length) {
+      return {
+        days: 0,
+        hours: 0
+      }
+    }
+    // return hours || minutes diffs in shifts
+    const shiftArray = shifts.map(shift =>
+      dateutil.differenceInHours(
+        zonedDate(shift.startedAt),
+        zonedDate(shift.endedAt || new Date())
+      )
+    )
+    // separate shifts that are under one hour
+    const filteredMinuteShifts = shiftArray.filter(shift =>
+      shift.includes('minutes')
+    )
+    const filteredHourShifts = shiftArray.filter(shift => shift.includes('hr'))
+    const shiftReducer = (a, b) => a + b
+    // remove the hours and make it a number to do calculations
+    const cleanHourShifts = filteredHourShifts.map(shift => {
+      const clean = shift.replace(/hr|hrs/gi, '')
+      return parseFloat(clean)
+    })
+    const cleanMinutesShifts = filteredMinuteShifts.map(shift => {
+      const clean = shift.replace(/minutes/gi, '')
+      return parseFloat(clean)
+    })
+    const totalMinutes = cleanMinutesShifts.reduce(shiftReducer, 0)
+    const totalHours = cleanHourShifts.reduce(shiftReducer, 0)
+    const totalHoursAndMinutes = totalMinutes / 60 + totalHours
+
+    return {
+      hours: totalHoursAndMinutes.toFixed(2),
+      days: filteredHourShifts.length
+    }
+  }
 
 EmployeeTimeSheetLog.prototype = {
   data: PropTypes.object.isRequired,

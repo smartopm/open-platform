@@ -15,7 +15,7 @@ export const dateTimeToString = date =>
     timeZone
   })
 
-const utcDate = date => toDate(new Date(date), { timeZone: 'UTC' })
+export const utcDate = date => toDate(new Date(date), { timeZone: 'UTC' })
 export const zonedDate = date => utcToZonedTime(utcDate(date), timeZone)
 
 export default function DateContainer({ date }) {

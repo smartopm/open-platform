@@ -1,11 +1,12 @@
 import React from 'react'
 
-export default function Paginate({ offSet, count, limit, handlePageChange }) {
+export default function Paginate({ count, limit, handlePageChange }) {
 
   return (
     <nav aria-label="Page navigation">
       <ul className="pagination">
-        <li className={`page-item ${offSet < limit && 'disabled'}`}>
+        {/* ${count < limit && 'disabled'} */}
+        <li className={`page-item ${count < limit && 'disabled'}`}>
           <a
             className="page-link"
             data-testid="prev-btn"
@@ -15,6 +16,7 @@ export default function Paginate({ offSet, count, limit, handlePageChange }) {
             Previous
           </a>
         </li>
+        {/* ${count < limit && 'disabled'} */}
         <li className={`page-item ${count < limit && 'disabled'}`}>
           <button
             className="page-link"
