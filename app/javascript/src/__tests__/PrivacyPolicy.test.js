@@ -17,7 +17,7 @@ describe('Mount privacy policy link', () => {
                 <PrivacyPolicy />
             </BrowserRouter>
         )
-        expect(getByTestId('div')).toBeTruthy()
+        expect(getByTestId('privacy_link')).toBeTruthy()
     });
 
     afterEach(cleanup)
