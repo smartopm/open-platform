@@ -25,8 +25,6 @@ export default function EmployeeLogs() {
     fetchPolicy: 'no-cache'
   })
   const authState = useContext(AuthStateContext)
-  console.log({firstday: firstDay.toUTCString()})
-console.log({lastday: lastDay.toUTCString()})
 
   function paginate(action) {
     if (action === 'prev') {
