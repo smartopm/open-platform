@@ -14,6 +14,8 @@ export default function EmployeeTimeSheetLog({ data, name }) {
   const shifts = data.userTimeSheetLogs
   const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours']
   // Day, Date, Start Time, Stop Time, Total Hours in the day
+
+  const { days, hours } = calculateHoursAndDays(shifts)
   return (
     <div>
       <div className="container">
@@ -28,13 +30,13 @@ export default function EmployeeTimeSheetLog({ data, name }) {
             <Grid item xs={8}>
               <strong>
                 Total days worked this month:{' '}
-                {calculateHoursAndDays(shifts).days}
+                {days}
               </strong>
             </Grid>
             <Grid item xs={4}>
               <strong>
                 Total hours worked this month:{' '}
-                {calculateHoursAndDays(shifts).hours}
+                {hours}
               </strong>
             </Grid>
           </Grid>

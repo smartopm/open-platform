@@ -9,25 +9,24 @@ import { useParams } from 'react-router'
 import ErrorPage from '../../components/Error'
 import Paginate from '../../components/Paginate'
 import Grid from '@material-ui/core/Grid'
-import { utcDate } from '../../components/DateContainer'
 
 export default function EmployeeLogs() {
   const { id } = useParams()
   const [monthCount, setMonthCount] = useState(-1)
   const date = new Date()
-  const firstDay = new Date(date.getFullYear(), date.getMonth() + monthCount, 26)
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1 + monthCount, 25)
+  const firstDay = new Date(date.getFullYear(), date.getMonth() + monthCount, 27)
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1 + monthCount, 26)
   const { loading, data, error, refetch } = useQuery(UserTimeSheetQuery, {
     variables: {
       userId: id,
-      dateFrom: utcDate(firstDay),
-      dateTo: utcDate(lastDay)
+      dateFrom: firstDay.toUTCString(),
+      dateTo: lastDay.toUTCString()
     },
     fetchPolicy: 'no-cache'
   })
   const authState = useContext(AuthStateContext)
-  console.log(utcDate(firstDay))
-console.log(utcDate(lastDay))
+  console.log({firstday: firstDay.toUTCString()})
+console.log({lastday: lastDay.toUTCString()})
 
   function paginate(action) {
     if (action === 'prev') {
@@ -50,8 +49,7 @@ console.log(utcDate(lastDay))
       <Grid container direction="row" justify="center" alignItems="center">
         <Paginate
           count={data.userTimeSheetLogs.length}
-          // offSet={offset}
-          limit={30}
+          active={true}
           handlePageChange={paginate}
         />
       </Grid>
