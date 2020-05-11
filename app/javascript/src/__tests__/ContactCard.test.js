@@ -16,12 +16,22 @@ describe('Contact page', () => {
     it('clicks button and opens use window', () => {
 
         window.open = jest.fn();
-        const {getByTestId} = render(<SupportCard />)
+        const { getByTestId } = render(<SupportCard />)
         const button = getByTestId('crf');
         fireEvent.click(button)
-        expect(window.open).toBeCalledWith('https://forms.gle/Sdbj91Sia8EpDJiN6','_blank')
+        expect(window.open).toBeCalledWith('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')
     });
 
+    it('clicks pay with mobile money then opens use window', () => {
+
+        window.open = jest.fn();
+        const { getByTestId } = render(<SupportCard />)
+        const button = getByTestId('pwmm');
+        fireEvent.click(button)
+        expect(window.open).toBeCalledWith("/contact/mobile_money", '_self')
+    });
+
+
     afterEach(cleanup)
-    
+
 });

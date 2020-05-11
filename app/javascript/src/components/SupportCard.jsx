@@ -129,8 +129,8 @@ export default function SupportCard({ handleSendMessage }) {
                 </Grid>
 
                 <Grid container direction="row" className={classes.root}>
-
                     <Button
+                        data-testid="pwmm"
                         variant="contained"
                         color="primary"
                         onClick={() => window.open("/contact/mobile_money", '_self')}
