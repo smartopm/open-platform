@@ -61,7 +61,8 @@ RSpec.describe Types::Queries::TimeSheet do
 
     let(:single_user) do
       %(query {
-        userTimeSheetLogs(userId: "#{user1.id}", date_from: "#{date_from}", date_to: "#{time_plus_2days}") {
+        userTimeSheetLogs(userId: "#{user1.id}", date_from: "#{date_from}",
+          date_to: "#{time_plus_2days}") {
           startedAt
           endedAt
           id
