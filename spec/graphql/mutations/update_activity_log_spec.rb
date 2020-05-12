@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Mutations::ActivityLog::UpdateLog do
   describe 'update activity log' do
     let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin, community_id: user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:entry_request) { user.entry_requests.create(name: 'Benje', reason: 'Passing through') }
 
     let(:query) do
@@ -36,10 +36,10 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
     end
 
     it 'should not update event log when not authorized' do
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: user,
-                                              }).as_json
+      result = DoubleGdpSchema.execute(query,
+                                       context: {
+                                         current_user: user,
+                                       }).as_json
 
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
