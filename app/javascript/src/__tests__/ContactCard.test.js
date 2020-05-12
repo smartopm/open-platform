@@ -19,7 +19,7 @@ describe('Contact page', () => {
         const { getByTestId } = render(<SupportCard />)
         const button = getByTestId('crf');
         fireEvent.click(button)
-        expect(window.open).toBeCalledWith('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')
+        expect(window.open).toBeCalledWith('https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform', '_blank')
     });
 
     it('clicks pay with mobile money then opens use window', () => {
