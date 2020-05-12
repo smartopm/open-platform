@@ -138,7 +138,7 @@ export function IndexComponent({
           ? 'Denied Access: '
           : ''
 
-
+      const enrolled = event.data.enrolled || false
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
@@ -180,7 +180,7 @@ export function IndexComponent({
                 <span className={css(styles.subTitle)}> {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}</span>
 
                 <span className={css(styles.subTitle)}>
-                  {source !== 'Scan' && authState.user.userType === 'admin' ? (
+                  {source !== 'Scan' && authState.user.userType === 'admin' && !enrolled ? (
                     <Fragment>
                       <span
                         style={{

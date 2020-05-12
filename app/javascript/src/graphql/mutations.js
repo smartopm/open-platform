@@ -411,3 +411,13 @@ export const ManageShiftMutation = gql`
     }
   }
 `
+
+export const UpdateLogMutation = gql`
+         mutation activityLogUpdateLog($refId: ID!) {
+           activityLogUpdateLog(refId: $refId) {
+             eventLog {
+               data
+             }
+           }
+         }
+       `

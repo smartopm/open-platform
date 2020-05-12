@@ -8,7 +8,8 @@ import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
-  CreateUserMutation
+  CreateUserMutation,
+  UpdateLogMutation
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
@@ -17,7 +18,6 @@ import { ponisoNumber } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
 import CaptureTemp from "../../components/CaptureTemp";
 
-// TODO: Check the time of the day and day of the week.
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state && location.state.from
@@ -30,6 +30,7 @@ export default function RequestUpdate({ match, history, location }) {
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
+  const [updateLog] = useMutation(UpdateLogMutation)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
@@ -119,15 +120,22 @@ export default function RequestUpdate({ match, history, location }) {
       }
     })
       .then(({ data }) => {
-        setLoading(false)
-        setMessage('User was successfully enrolled')
-        history.push(`/user/${data.result.user.id}`)
+        updateLog({
+          variables: {
+            refId: match.params.id
+          }
+        }).then(() => {
+          setLoading(false)
+          setMessage('User was successfully enrolled')
+          history.push(`/user/${data.result.user.id}`)
+        })
       })
       .catch(err => {
         setLoading(false)
         setMessage(err.message)
       })
   }
+
   function handleModal(_event, type) {
     if (type === 'grant') {
       setModalAction('grant')
