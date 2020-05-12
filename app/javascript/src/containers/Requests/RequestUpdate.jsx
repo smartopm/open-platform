@@ -18,7 +18,6 @@ import { ponisoNumber } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
 import CaptureTemp from "../../components/CaptureTemp";
 
-// TODO: Check the time of the day and day of the week.
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state && location.state.from
@@ -136,7 +135,7 @@ export default function RequestUpdate({ match, history, location }) {
         setMessage(err.message)
       })
   }
-  
+
   function handleModal(_event, type) {
     if (type === 'grant') {
       setModalAction('grant')
