@@ -44,7 +44,7 @@ export default function DatePickerDialog({selectedDate, handleDateChange, label 
         <ThemeProvider theme={theme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
-                    data-testid='expiry-date'
+                    data-testid='date-picker'
                     style={{width: '100%'}}
                     margin="normal"
                     id="date-picker-dialog"
