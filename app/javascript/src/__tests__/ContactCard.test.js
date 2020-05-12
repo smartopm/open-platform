@@ -19,7 +19,7 @@ describe('Contact page', () => {
         const { getByTestId } = render(<SupportCard />)
         const button = getByTestId('crf');
         fireEvent.click(button)
-        expect(window.open).toBeCalledWith('https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform', '_blank')
+        expect(window.open).toBeCalledWith('https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=Kamran+Khan&entry.1055458143=7778889999', '_blank')
     });
 
     it('clicks pay with mobile money then opens use window', () => {

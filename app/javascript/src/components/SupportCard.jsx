@@ -27,7 +27,6 @@ export default function SupportCard({ handleSendMessage, userData }) {
     // hard coding CSM number
     // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
     const CSMNumber = '260974624243'
-    const userName = userData.name.replace(/\s+/g, '+')
 
     return (
         <Fragment>
@@ -122,7 +121,7 @@ export default function SupportCard({ handleSendMessage, userData }) {
                         data-testid="crf"
                         variant="contained"
                         color="primary"
-                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userName}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
                         className={`${css(styles.chatButton)}`}
                     >
                         Client Request Form
