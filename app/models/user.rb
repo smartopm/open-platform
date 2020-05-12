@@ -170,7 +170,7 @@ class User < ApplicationRecord
   end
 
   def find_a_user(a_user_id)
-    User.find(a_user_id)
+    community.users.find(a_user_id)
   end
 
   def id_card_token

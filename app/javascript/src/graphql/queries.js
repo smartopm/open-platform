@@ -222,8 +222,20 @@ export const UserMessageQuery = gql`
 `
 
 export const UserTimeSheetQuery = gql`
-         query userTimeSheetLogs($userId: ID!, $limit: Int, $offset: Int) {
-           userTimeSheetLogs(userId: $userId, limit: $limit, offset: $offset) {
+         query userTimeSheetLogs(
+           $userId: ID!
+           $limit: Int
+           $offset: Int
+           $dateFrom: String
+           $dateTo: String!
+         ) {
+           userTimeSheetLogs(
+             userId: $userId
+             limit: $limit
+             offset: $offset
+             dateFrom: $dateFrom
+             dateTo: $dateTo
+           ) {
              startedAt
              endedAt
              id

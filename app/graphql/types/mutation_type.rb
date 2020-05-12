@@ -4,6 +4,7 @@ module Types
   # MutationType
   class MutationType < Types::BaseObject
     field :activity_log_add, mutation: Mutations::ActivityLog::Add
+    field :activity_log_update_log, mutation: Mutations::ActivityLog::UpdateLog
     field :user_create, mutation: Mutations::User::Create
     field :user_update, mutation: Mutations::User::Update
     field :user_delete, mutation: Mutations::User::Delete
