@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext} from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
@@ -138,7 +138,7 @@ export default function UserForm() {
           </TextField>
         </div>
         <div >
-            <DatePickerDialog selectedDate={values.selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
+            <DatePickerDialog selectedDate={selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
         </div>
 
         <div className="form-group">

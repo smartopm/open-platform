@@ -1,9 +1,8 @@
 import React from 'react';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
+import {ThemeProvider } from '@material-ui/core/styles'
 import DateFnsUtils from '@date-io/date-fns'
 import { createMuiTheme } from '@material-ui/core'
 import {
-   
     KeyboardDatePicker,
     MuiPickersUtilsProvider
 } from '@material-ui/pickers'
@@ -39,7 +38,6 @@ const theme = createMuiTheme({
 });
 
 export default function DatePickerDialog({selectedDate, handleDateChange, label }) {
-    
     return (
         <ThemeProvider theme={theme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>

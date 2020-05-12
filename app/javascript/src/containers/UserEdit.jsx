@@ -78,10 +78,12 @@ export default function FormContainer({ match, history }) {
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate
     }
+    
 
     createOrUpdate(values)
       .then(({ data }) => {
-        // setSubmitting(false);
+  
+        setSubmitting(false);
         history.push(`/user/${data.result.user.id}`)
       })
       .catch(err => {
