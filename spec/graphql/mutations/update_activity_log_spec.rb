@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Mutations::ActivityLog::UpdateLog do
   describe 'update activity log' do
     let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:security_guard) { create(:security_guard, community_id: user.community_id) }
     let!(:entry_request) { user.entry_requests.create(name: 'Benje', reason: 'Passing through') }
 
     let(:query) do
@@ -24,7 +24,7 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
     it 'update the activity log' do
       result = DoubleGdpSchema.execute(query,
                                        context: {
-                                         current_user: admin,
+                                         current_user: security_guard,
                                        }).as_json
 
       expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'refId'))
