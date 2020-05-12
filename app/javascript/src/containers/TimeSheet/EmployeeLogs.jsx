@@ -16,7 +16,7 @@ export default function EmployeeLogs() {
   const date = new Date()
   const firstDay = new Date(date.getFullYear(), date.getMonth() + monthCount, 27)
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1 + monthCount, 27)
-  const { loading, data, error, refetch } = useQuery(UserTimeSheetQuery, {
+  const { loading, data, error } = useQuery(UserTimeSheetQuery, {
     variables: {
       userId: id,
       dateFrom: firstDay.toUTCString(),
@@ -32,7 +32,6 @@ export default function EmployeeLogs() {
     } else {
       setMonthCount(monthCount + 1)
     }
-    refetch()
   }
 
   if (loading) return <Spinner />
