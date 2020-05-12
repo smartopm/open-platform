@@ -20,7 +20,7 @@ export default function EmployeeLogs() {
     variables: {
       userId: id,
       dateFrom: firstDay.toUTCString(),
-      dateTo: lastDay.toUTCString()
+      dateTo: lastDay.toUTCString(),
     },
     fetchPolicy: 'no-cache'
   })

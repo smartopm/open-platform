@@ -42,7 +42,7 @@ module Types::Queries::TimeSheet
   # but i think you call this method from the custodian screen.
   # this will need to get reworked a bit to make sure only custodian can retreive .
 
-  def user_time_sheet_logs(user_id:, offset: 0, limit: 100, date_to:, date_from: nil)
+  def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to:, date_from: nil)
     date_from = date_from.blank? ? Time.current.beginning_of_month : DateTime.parse(date_from)
     u = get_allow_user(user_id)
     end_date = DateTime.parse(date_to)
