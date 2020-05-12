@@ -2,7 +2,7 @@
 
 module Mutations
   module ActivityLog
-    # Add an activity log for a user
+    # update an activity log for a user
     class UpdateLog < BaseMutation
       argument :ref_id, ID, required: true
 
@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(ref_id:)
         event_log = ::EventLog.find_by(ref_id: ref_id)
-        raise GraphQL::ExecutionError, 'Event Log not found' unless user
+        raise GraphQL::ExecutionError, 'Event Log not found' unless event_log
 
         event_log.data['enrolled'] = true
         event_log.save
