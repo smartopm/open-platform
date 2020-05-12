@@ -27,9 +27,11 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
                                          current_user: admin,
                                        }).as_json
 
-      expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'refId')).to eql entry_request.id
+      expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'refId'))
+        .to eql entry_request.id
       expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'data')).not_to be_nil
-      expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'data', 'enrolled')).not_to be_nil
+      expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'data', 'enrolled'))
+        .not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
   end
