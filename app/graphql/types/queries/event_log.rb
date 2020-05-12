@@ -12,6 +12,7 @@ module Types::Queries::EventLog
       argument :subject, [String, null: true], required: false
       argument :ref_id, GraphQL::Types::ID, required: false
       argument :ref_type, String, required: false
+      argument :name, String, required: false
     end
 
     field :all_event_logs_for_user, [Types::EventLogType], null: true do
@@ -22,15 +23,21 @@ module Types::Queries::EventLog
       argument :user_id, GraphQL::Types::ID, required: true
     end
   end
-
-  def all_event_logs(offset: 0, limit: 100, subject:, ref_id:, ref_type:)
+  # rubocop:disable Metrics/ParameterLists
+  def all_event_logs(offset: 0, limit: 100, subject:, ref_id:, ref_type:, name: nil)
     authorized = context[:current_user]&.role?(%i[security_guard admin custodian])
     raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
 
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
-    EventLog.where(query)
+    if name.nil?
+      EventLog.where(query)
             .limit(limit).offset(offset)
+    else
+      EventLog.where(query).where("data->>'ref_name' ILIKE ?", "%#{name}%")
+            .limit(limit).offset(offset)
+    end
   end
+  # rubocop:enable Metrics/ParameterLists
 
   def all_event_logs_for_user(offset: 0, limit: 100, subject:, user_id:)
     current_user = context[:current_user]
