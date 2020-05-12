@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useLazyQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import UserForm from '../components/UserForm.jsx'
@@ -43,6 +43,7 @@ export default function FormContainer({ match, history }) {
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
+  const [selectedDate, setSelectedDate] = useState(new Date()) 
 
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -75,7 +76,7 @@ export default function FormContainer({ match, history }) {
     const values = {
       ...data,
       avatarBlobId: signedBlobId,
-      expiresAt: data.expiresAt
+      expiresAt: selectedDate
     }
 
     createOrUpdate(values)
@@ -94,6 +95,10 @@ export default function FormContainer({ match, history }) {
       [name]: value
     })
   }
+
+  const handleDateChange = (date) => {
+    setSelectedDate(new Date(date).toISOString());
+  };
 
   const authState = React.useContext(AuthStateContext)
   if (authState.user.userType !== 'admin') {
@@ -128,6 +133,8 @@ export default function FormContainer({ match, history }) {
         imageUrl: url,
         handleInputChange,
         handleSubmit,
+        handleDateChange,
+        selectedDate,
         handleFileUpload: onChange,
         status
       }}

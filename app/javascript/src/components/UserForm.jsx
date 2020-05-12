@@ -1,16 +1,19 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import { reasons, userState, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
+import DatePickerDialog from './DatePickerDialog'
 
 export default function UserForm() {
   const {
     values,
     handleInputChange,
+    handleDateChange,
     handleFileUpload,
+    selectedDate,
     imageUrl,
     status
   } = useContext(FormContext)
@@ -134,20 +137,8 @@ export default function UserForm() {
             ))}
           </TextField>
         </div>
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="expiresAt">
-            Expiration Date
-          </label>
-          <input
-            className="form-control"
-            name="expiresAt"
-            type="text"
-            pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
-            placeholder='YYYYY-MM-DD'
-            defaultValue={values.expiresAt || 'YYYYY-MM-DD'}
-            onChange={handleInputChange}
-            title="Date must be of this format YYYY-MM-DD"
-          />
+        <div >
+            <DatePickerDialog selectedDate={values.selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
         </div>
 
         <div className="form-group">
