@@ -1,17 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 
 export default function PrivacyPolicy() {
 
         return (
 
-                <div data-testid="privacy_link" className="row justify-content-center">
-
-                        <Link to="/privacy_policy">
-                                <p data-testid="privacy_text" style={{ fontSize: 14 }}><strong>Privacy and Terms of Service</strong></p>
-
-                        </Link>
-
+                <div data-testid="privacy_link" className="row justify-content-center"  style={{cursor: 'pointer'}}>
+                        
+                        <p data-testid="privacy_text" 
+                         onClick={()=>window.open('https://docs.google.com/document/d/1d0zK4uKZESQNP4iqVDmXa3xBp5vcuR1KmbSzl-_kqPM/edit?usp=sharing','_blank')}style={{ fontSize: 14 }}>
+                                 <u><strong>Privacy and Terms of Service</strong></u>
+                        </p>
                 </div>
 
 
