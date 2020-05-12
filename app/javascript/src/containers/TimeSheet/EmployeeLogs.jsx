@@ -15,7 +15,7 @@ export default function EmployeeLogs() {
   const [monthCount, setMonthCount] = useState(-1)
   const date = new Date()
   const firstDay = new Date(date.getFullYear(), date.getMonth() + monthCount, 27)
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1 + monthCount, 26)
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1 + monthCount, 27)
   const { loading, data, error, refetch } = useQuery(UserTimeSheetQuery, {
     variables: {
       userId: id,
