@@ -4,6 +4,9 @@ import { zonedDate } from '../components/DateContainer'
 
 // TODO: @olivier => write tests for these
 
+const date = new Date()
+export const lastDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 26)
+
 function fromISO8601(isostr) {
   var parts = isostr.match(/\d+/g)
   return new Date(
