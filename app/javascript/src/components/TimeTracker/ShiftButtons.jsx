@@ -11,12 +11,16 @@ import { Spinner } from '../Loading'
 import { useWindowDimensions } from '../../utils/customHooks'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
+import { lastDayOfTheMonth } from '../../utils/dateutil'
 
 
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
   const { loading, data, error } = useQuery(UserTimeSheetQuery, {
-    variables: { userId },
+    variables: {
+      userId,
+      dateTo: lastDayOfTheMonth.toUTCString()
+    },
     fetchPolicy: 'network-only'
   })
   const [message, setMessage] = useState("")
