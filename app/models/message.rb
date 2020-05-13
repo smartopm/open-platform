@@ -28,7 +28,7 @@ class Message < ApplicationRecord
 
   def send_sms(add_prefix: true)
     return if receiver.nil?
-  
+
     new_message = ''
     text = 'Click this link to reply to this message in our app '
     link = "https://#{ENV['HOST']}/message/#{user_id}"
