@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import DateContainer, { zonedDate } from '../components/DateContainer'
-import DateUtils from '../utils/dateutil'
+import DateUtils, { lastDayOfTheMonth } from '../utils/dateutil'
 
 describe('date container component', () => {
   it('renders a span element and has correct time', () => {
@@ -28,5 +28,9 @@ describe('date container component', () => {
     expect(component.find('span').text()).toContain(
       DateUtils.dateToString(zonedDate(oldDate))
     )
+  })
+
+  it('should return the correct last day of the month', () => {
+    expect(lastDayOfTheMonth.toString()).toContain('26') // 26 as last day of the month
   })
 })
