@@ -21,8 +21,7 @@ import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
-
-
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -172,7 +171,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {Boolean(authState.user.userType !== 'custodian') && (
+              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
@@ -187,11 +186,11 @@ export function Component({ authState }) {
                           alt=""
                         />
                       </h5>
-                      <p>Account Management</p>
+                      <p>My Thebe Portal</p>
                     </div>
                   </Link>
                 </div>
-              )}
+              ) : null}
 
               {['security_guard', 'admin'].includes(
                 authState.user.userType.toLowerCase()
@@ -382,6 +381,32 @@ export function Component({ authState }) {
                   </a>
                 </div>
               )}
+
+              { ['admin', 'client', 'resident'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Fragment>
+                  <div
+                    className={`${css(
+                      styles.cardSize
+                    )} card align-self-center text-center`}
+                  >
+                    <Link to={'/'} 
+                      onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                      className={`card-link`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <ListAltIcon
+                            fontSize="large"
+                            className={css(styles.homeIconColor)}
+                          />
+                        </h5>
+                        <p>Client Request Form</p>
+                      </div>
+                    </Link>
+                  </div>
+                </Fragment>
+              ): null}
             </div>
           </div>
         </div>

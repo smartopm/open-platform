@@ -46,12 +46,19 @@ export default function QRScan() {
               })
               .catch(e => {
                 setError(JSON.stringify(e))
+                return
               })
+          } else {
+           setError(
+             isTorchOn && 'This browser does not support native flashlight'
+           )
+          return  
           }
         }
       })
       .catch(err => {
         setError(JSON.stringify(err))
+        return
       })
   }, [isTorchOn])
 

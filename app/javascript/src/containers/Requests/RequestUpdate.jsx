@@ -8,16 +8,16 @@ import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
-  CreateUserMutation
+  CreateUserMutation,
+  UpdateLogMutation
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
 import DateUtil, { isTimeValid, getWeekDay } from "../../utils/dateutil";
-import { ponisoNumber } from "../../utils/constants.js"
+import { ponisoNumber, userState, userType } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
 import CaptureTemp from "../../components/CaptureTemp";
 
-// TODO: Check the time of the day and day of the week.
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state && location.state.from
@@ -30,6 +30,7 @@ export default function RequestUpdate({ match, history, location }) {
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
+  const [updateLog] = useMutation(UpdateLogMutation)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
@@ -42,6 +43,10 @@ export default function RequestUpdate({ match, history, location }) {
     nrc: "",
     vehiclePlate: "",
     reason: "",
+    state: "",
+    userType: "",
+    expiresAt: "",
+    email: "",
     loaded: false
   });
 
@@ -110,8 +115,9 @@ export default function RequestUpdate({ match, history, location }) {
     createUser({
       variables: {
         name: formData.name,
-        state: 'pending',
-        userType: 'client',
+        state: formData.state,
+        userType: formData.userType,
+        email: formData.email,
         reason: formData.reason,
         phoneNumber: formData.phoneNumber,
         nrc: formData.nrc,
@@ -119,15 +125,22 @@ export default function RequestUpdate({ match, history, location }) {
       }
     })
       .then(({ data }) => {
-        setLoading(false)
-        setMessage('User was successfully enrolled')
-        history.push(`/user/${data.result.user.id}`)
+        updateLog({
+          variables: {
+            refId: match.params.id
+          }
+        }).then(() => {
+          setLoading(false)
+          setMessage('User was successfully enrolled')
+          history.push(`/user/${data.result.user.id}`)
+        })
       })
       .catch(err => {
         setLoading(false)
         setMessage(err.message)
       })
   }
+
   function handleModal(_event, type) {
     if (type === 'grant') {
       setModalAction('grant')
@@ -227,6 +240,7 @@ export default function RequestUpdate({ match, history, location }) {
               required
             />
           </div>
+
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
               NRC
@@ -250,8 +264,68 @@ export default function RequestUpdate({ match, history, location }) {
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
+              required={previousRoute === 'enroll'}
             />
           </div>
+          {previousRoute === 'enroll' && (
+            <>
+              <div className="form-group">
+                <TextField
+                  id="userType"
+                  select
+                  label="User Type"
+                  value={formData.userType || ''}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="userType"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {Object.entries(userType).map(([key, val]) => (
+                    <MenuItem key={key} value={key}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+              <div className="form-group">
+                <TextField
+                  id="state"
+                  select
+                  label="State"
+                  value={formData.state || ''}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="state"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {Object.entries(userState).map(([key, val]) => (
+                    <MenuItem key={key} value={key}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+
+              <div className="form-group">
+                <div className="form-group">
+                  <label className="bmd-label-static" htmlFor="expiresAt">
+                    Expiration Date
+                  </label>
+                  <input
+                    className="form-control"
+                    name="expiresAt"
+                    type="text"
+                    pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
+                    placeholder="YYYYY-MM-DD"
+                    defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
+                    onChange={handleInputChange}
+                    title="Date must be of this format YYYY-MM-DD"
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="vehicle">
               VEHICLE PLATE N&#176;
@@ -307,7 +381,7 @@ export default function RequestUpdate({ match, history, location }) {
                 <br />
                 <br />
                 {!isLoading && message.length ? (
-                  <span>{message}</span>
+                  <span className="text-danger">{message}</span>
                 ) : (
                   <span />
                 )}

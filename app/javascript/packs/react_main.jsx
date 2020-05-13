@@ -12,7 +12,7 @@ import {
   Switch,
   Redirect,
   Route,
-  useHistory 
+  useHistory
 } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import ApolloProvider from '../src/containers/Provider/ApolloProvider'
@@ -37,6 +37,7 @@ import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen'
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode'
 import Support from '../src/containers/Support'
+import MobileMoney from '../src/components/MobileMoney'
 import GuardHome from '../src/containers/GuardHome'
 import EntryRequest from '../src/containers/Requests/EntryRequest'
 import RequestUpdate from '../src/containers/Requests/RequestUpdate'
@@ -64,6 +65,7 @@ import UserMessages from '../src/containers/Messages/UserMessages'
 import NewsContentPage from '../src/containers/NewsContentPage'
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
+import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 import FBLogin from '../src/components/AuthScreens/FBLogin'
 // Prevent Google Analytics reporting from staging and dev domains
@@ -144,27 +146,27 @@ const Analytics = props => {
 
   useEffect(() => {
     const user = authState.user
-    
+
     if (user) {
       if (liveAnalytics) {
         console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
         gtag('set', { user_id: user.id })
         gtag('set', 'user_properties', { Role: user.userType })
         ReactGA.event({
-          category:'LoggedInUserType',
+          category: 'LoggedInUserType',
           action: user.userType,
           eventLabel: user.id,
           nonInteraction: true
         })
       } else {
         console.log('GA DEVELOPMENT MODE: log user', user)
-       
+
       }
     }
     return history.listen((location) => {
-      if(location.pathname.includes('/id') ||location.pathname.includes('/user') ) {
-        let [,rootURL, , userPage] = location.pathname.split('/')
-    
+      if (location.pathname.includes('/id') || location.pathname.includes('/user')) {
+        let [, rootURL, , userPage] = location.pathname.split('/')
+
         let pageHit = `/${rootURL}/${userPage}`
         ReactGA.pageview(pageHit)
       } else {
@@ -197,7 +199,7 @@ const App = () => {
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={MainAuthCallback} />
                 <Route path="/facebook/:token" component={MainAuthCallback} />
-                <Route path="/fb_login" component={FBLogin} />
+                <Route path="/reg_login_f" component={FBLogin} />
 
                 <LoggedInOnly>
                   <Switch>
@@ -210,6 +212,7 @@ const App = () => {
                     <Route path="/entry_logs" component={EntryLogs} />
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
+                    <Route path="/contact/mobile_money" component={MobileMoney} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
                     {/* new routes => guards */}
@@ -248,27 +251,19 @@ const App = () => {
                     <Route path="/news/" exact component={NewsContentPage} />
                     <Route path="/news/:link" component={NewsContentPage} />
                     {/*Nkwashi account management*/}
-                    <Route
-                      path="/account"
-                      component={NkwashiAccountManagement}
-                    />
-                    <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
-                    {/* Still admin route */}
-                    <Route
-                      path="/user/:id/logs"
-                      exact
-                      component={UserLogs}
-                    />{' '}
-                    {/* Still admin route */}
+                    <Route path="/account" component={NkwashiAccountManagement} />
+
+                    <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
+                    <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
                     <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
                     <Route path="/timesheet" exact component={CustodianLogs} />
-                    <Route
-                      path="/timesheet/:id"
-                      exact
-                      component={EmployeeLogs}
-                    />
+                    <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+
+                    <Route path="/client_request_from" exact component={ClientRequestForm} />
+                    
                     <AdminRoutes>
                       <Switch>
+                      <Route path="/client_request_from" exact component={ClientRequestForm} />
                         <Route path="/users" component={UsersList} />
                         <Route path="/messages" component={AllMessages} />
                         <Route path="/showroom_logs" component={ShowroomLogs} />
@@ -280,6 +275,8 @@ const App = () => {
                         <Route path="/pending" exact component={PendingUsers} />
                       </Switch>
                     </AdminRoutes>
+
+
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}
