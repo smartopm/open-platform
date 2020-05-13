@@ -42,6 +42,7 @@ export const AllEventLogsQuery = gql`
     $refType: String
     $offset: Int
     $limit: Int
+    $name: String
   ) {
     result: allEventLogs(
       subject: $subject
@@ -49,6 +50,7 @@ export const AllEventLogsQuery = gql`
       refType: $refType
       offset: $offset
       limit: $limit
+      name: $name
     ) {
       id
       createdAt

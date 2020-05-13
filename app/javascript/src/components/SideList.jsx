@@ -13,6 +13,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import Avatar from './Avatar.jsx'
 import { Footer } from './Footer.jsx'
+import PrivacyPolicy from '../components/PrivacyPolicy/PrivacyPolicy'
 
 export const SideList = ({ toggleDrawer, user }) => (
   <div
@@ -67,6 +68,7 @@ export const SideList = ({ toggleDrawer, user }) => (
       </ListItem>
     </List>
     <Footer position="36vh" />
+    <PrivacyPolicy />
   </div>
 )
 
