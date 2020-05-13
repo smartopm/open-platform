@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from 'react'
+import React, { useState, Fragment, useContext,useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
@@ -10,6 +10,7 @@ import { Footer } from '../../components/Footer'
 import newUserIcon from '../../../../assets/images/new.svg'
 import gateIcon from '../../../../assets/images/bar.svg'
 import {userType} from '../../utils/constants'
+import useDebounce  from '../../utils/useDebounce'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import {
   StyledTabs,
@@ -30,15 +31,25 @@ const allEventLogs = (history, match) => {
   const [limit, setLimit] = useState(initialLimit)
   const [searchTerm, setSearchTerm] = useState('')
   const [value, setvalue] = useState(0)
+  const dbcSearchTerm = useDebounce(searchTerm, 500);
 
   const refId = match.params.userId || null
+
+    useEffect(
+        () => {
+            setSearchTerm(dbcSearchTerm)
+        },
+        [dbcSearchTerm]
+      );
+
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
       subject: value === 0 ? subjects : 'user_enrolled',
       refId: refId,
       refType: null,
       offset,
-      limit: searchTerm.length < 4 ? 250 : initialLimit
+      limit,
+      name: dbcSearchTerm
     },
     fetchPolicy: 'cache-and-network'
   })
@@ -60,7 +71,6 @@ const allEventLogs = (history, match) => {
   }
   function handleSearch(event) {
     setSearchTerm(event.target.value)
-    handleLimit()
   }
 
   function handleChange(_event, newValue) {
@@ -138,7 +148,7 @@ export function IndexComponent({
           ? 'Denied Access: '
           : ''
 
-
+      const enrolled = event.data.enrolled || false
       const visitorName =
         event.data.ref_name || event.data.visitor_name || event.data.name
       return (
@@ -180,7 +190,7 @@ export function IndexComponent({
                 <span className={css(styles.subTitle)}> {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}</span>
 
                 <span className={css(styles.subTitle)}>
-                  {source !== 'Scan' && authState.user.userType === 'admin' ? (
+                  {source !== 'Scan' && authState.user.userType === 'admin' && !enrolled ? (
                     <Fragment>
                       <span
                         style={{

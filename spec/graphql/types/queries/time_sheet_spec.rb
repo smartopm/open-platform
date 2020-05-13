@@ -12,6 +12,7 @@ RSpec.describe Types::Queries::TimeSheet do
 
     let!(:time_minus_2days) { Time.current - 2.days }
     let!(:time_minus_1days) { Time.current - 1.day }
+    let!(:time_plus_5days) { Time.current + 5.days }
     let!(:time_now) { Time.current }
 
     let!(:time_log1_user1) do
@@ -59,7 +60,7 @@ RSpec.describe Types::Queries::TimeSheet do
 
     let(:single_user) do
       %(query {
-        userTimeSheetLogs(userId: "#{user1.id}") {
+        userTimeSheetLogs(userId: "#{user1.id}", dateTo: "#{time_plus_5days}") {
           startedAt
           endedAt
           id
