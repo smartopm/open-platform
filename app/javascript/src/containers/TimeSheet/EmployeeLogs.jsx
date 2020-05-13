@@ -1,7 +1,6 @@
-import React, { Fragment, useContext, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import Nav from '../../components/Nav'
 import EmployeeTimeSheetLogs from '../../components/TimeTracker/EmployeeTimeSheetLog'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { UserTimeSheetQuery } from '../../graphql/queries'
 import Spinner  from '../../components/Loading'
 import { useQuery } from 'react-apollo'
@@ -24,7 +23,6 @@ export default function EmployeeLogs() {
     },
     fetchPolicy: 'no-cache'
   })
-  const authState = useContext(AuthStateContext)
 
   function paginate(action) {
     if (action === 'prev') {
@@ -41,7 +39,13 @@ export default function EmployeeLogs() {
     <Fragment>
       <Nav navName="TimeSheet" menuButton="back" backTo={`/timesheet/`} />
       <br />
-      <EmployeeTimeSheetLogs data={data} name={authState.user.name} />
+      <EmployeeTimeSheetLogs
+        data={data}
+        name={
+          Boolean(data.userTimeSheetLogs.length) &&
+          data.userTimeSheetLogs[0].user.name
+        }
+      />
 
       <Grid container direction="row" justify="center" alignItems="center">
         <Paginate
