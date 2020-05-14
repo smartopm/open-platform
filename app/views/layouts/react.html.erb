@@ -15,6 +15,8 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#25c0b0"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
@@ -35,5 +37,15 @@
     </div>
     <%= javascript_pack_tag 'react_main' %>
 
+  <script>
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker
+        .register('/service-worker.js', { scope: './' })
+        .then(function(reg) {
+          console.log('[Companion]', 'Service worker registered!!!')
+          console.log(reg)
+        })
+    }
+  </script>
   </body>
 </html>
