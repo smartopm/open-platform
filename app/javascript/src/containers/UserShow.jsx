@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react'
+import { ClientPlotInfo } from '../components/ClientPlotInfo'
 import { Redirect, Link, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
@@ -436,7 +437,7 @@ export function Component({
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <h4 className="text-center">Coming soon</h4>
+          <ClientPlotInfo className="clientPlotInfoStyle" />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <h4 className="text-center">Coming soon</h4>
@@ -497,5 +498,8 @@ const styles = StyleSheet.create({
     border: '1px solid #ed5757',
     color: '#fff',
     backgroundColor: '#ed5757'
+  },
+  clientPlotInfoStyle: {
+    justifyContent: 'center'
   }
 })
