@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     }
 })
 
-export default function SupportCard({ handleSendMessage }) {
+export default function SupportCard({ handleSendMessage, userData }) {
     const classes = useStyles()
     // hard coding CSM number
     // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
@@ -121,7 +121,7 @@ export default function SupportCard({ handleSendMessage }) {
                         data-testid="crf"
                         variant="contained"
                         color="primary"
-                        onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
                         className={`${css(styles.chatButton)}`}
                     >
                         Client Request Form

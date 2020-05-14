@@ -22,12 +22,15 @@ export default function Support() {
       }
     })
   }
+
+  console.log("AuthState", authState)
+
   return (
     <Fragment>
       <Nav navName="Contact" menuButton="back" backTo="/" />
       <br />
 
-      <SupportCard handleSendMessage={handleSendMessage} />
+      <SupportCard handleSendMessage={handleSendMessage} userData={authState.user} />
     </Fragment>
   )
 }
