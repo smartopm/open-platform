@@ -113,3 +113,15 @@
 .index-cards .oi {
   color: #25c0b0;
 }
+
+#btn {
+  background-color: #25c0b0;
+  color: #fff;
+  
+}
+
+@media (display-mode: standalone) {
+  #btn {
+    display: none;
+  }
+}

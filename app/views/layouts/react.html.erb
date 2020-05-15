@@ -25,8 +25,8 @@
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 
     <!-- App Icon -->
-    <link href="/images/Nkwashi-180.png" rel="apple-touch-icon" sizes="180x180" />
-    <link href="/images/Nkwashi-192.png" rel="icon" sizes="192x192" />
+    <link href="/images/home_144.png" rel="apple-touch-icon" sizes="144x144" />
+    <link href="/images/home_192.png" rel="icon" sizes="192x192" />
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
@@ -36,85 +36,59 @@
     <div id="root">
     </div>
     <%= javascript_pack_tag 'react_main' %>
-
-    <button id="btn">Install</button>
+      <div class="alert text-center"id="btn" role="alert">
+        Click here to install this app on your homescreen
+      </div>
+    </div>
+  
+  <noscript>Javascript is not enabled</noscript>
 
   <script>
+
     if (navigator.serviceWorker) {
       navigator.serviceWorker
-        .register('/service-worker.js', { scope: './' })
-        .then(function(reg) {
-          console.log('[Companion]', 'Service worker registered!!!')
-          console.log(reg)
-        })
+        .register("/service-worker.js", { scope: "./" })
+        .then(function (_reg) {
+          console.log("[Companion]", "Service worker registered!!!");
+        });
     }
 
-    let deferredPrompt;
+    const btn = document.getElementById("btn");
 
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent the mini-infobar from appearing on mobile
-        e.preventDefault();
-        // Stash the event so it can be triggered later.
-        deferredPrompt = e;
-        // Update UI notify the user they can install the PWA
-        showInstallPromotion();
-        const buttonInstall = document.getElementById('btn')
+    window.onload = function() {
+      const isInstalled = window.localStorage.getItem('installed');
+      if (JSON.parse(isInstalled)) {
+         btn.style.display = 'none'
+         return
+      }
+      console.log('not installed')
+    };
 
-        buttonInstall.addEventListener('click', (e) => {
-            // Hide the app provided install promotion
-            hideMyInstallPromotion();
-            // Show the install prompt
-            deferredPrompt.prompt();
-            // Wait for the user to respond to the prompt
-            deferredPrompt.userChoice.then((choiceResult) => {
-              if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-              } else {
-                console.log('User dismissed the install prompt');
-              }
-            })
-          });
+    
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      window.promptEvent = event;
+    });
+    document.addEventListener("click", function (event) {
+      if (event.target.matches("#btn")) {
+        addToHomeScreen();
+      }
+    });
+
+    function addToHomeScreen() {
+      // show the install app prompt
+      window.promptEvent.prompt();
+      // handle the Decline/Accept choice of the user
+      window.promptEvent.userChoice.then(function (choiceResult) {
+        // hide the prompt banner here
+        if (choiceResult.outcome === "accepted") {
+          window.localStorage.setItem('installed', 'true');
+        } else {
+          console.info("mm User dismissed the A2HS prompt");
+        }
+        window.promptEvent = null;
       });
-
-      window.addEventListener('beforeinstallprompt', function(event) {
-            // not show the default browser install app prompt
-            event.preventDefault();
-
-            // add the banner here or make it visible
-            // …
-
-            // save the event to use it later
-            // (it has the important prompt method and userChoice property)
-            window.promptEvent = event;
-          });
-
-              document.addEventListener('click', function(event) {
-                if (event.target.matches('#btn')) {
-                  addToHomeScreen();
-                }
-              });
-
-
-      function addToHomeScreen() {
-            // show the install app prompt
-            window.promptEvent.prompt();
-
-            // handle the Decline/Accept choice of the user
-            window.promptEvent.userChoice.then(function(choiceResult) {
-              // hide the prompt banner here
-              // …
-
-              if (choiceResult.outcome === 'accepted') {
-                console.info('mm User accepted the A2HS prompt');
-              } else {
-                console.info('mm User dismissed the A2HS prompt');
-              }
-
-              window.promptEvent = null;
-            });
-          }
-
-
+    }
   </script>
   </body>
 </html>
