@@ -13,6 +13,7 @@ module Types
     field :postal_code, String, null: true
     field :state_province, String, null: true
     field :country, String, null: true
+    field :land_parcels, [Types::LandParcelType], null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end
