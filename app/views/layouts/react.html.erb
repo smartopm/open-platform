@@ -15,6 +15,8 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#25c0b0"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
@@ -23,8 +25,8 @@
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 
     <!-- App Icon -->
-    <link href="/images/Nkwashi-180.png" rel="apple-touch-icon" sizes="180x180" />
-    <link href="/images/Nkwashi-192.png" rel="icon" sizes="192x192" />
+    <link href="/images/home_144.png" rel="apple-touch-icon" sizes="144x144" />
+    <link href="/images/home_192.png" rel="icon" sizes="192x192" />
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
@@ -34,6 +36,59 @@
     <div id="root">
     </div>
     <%= javascript_pack_tag 'react_main' %>
+      <div class="alert text-center"id="btn" role="alert">
+        Click here to install this app on your homescreen
+      </div>
+    </div>
+  
+  <noscript>Javascript is not enabled</noscript>
 
+  <script>
+
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker
+        .register("/service-worker.js", { scope: "./" })
+        .then(function (_reg) {
+          console.log("[Companion]", "Service worker registered!!!");
+        });
+    }
+
+    const btn = document.getElementById("btn");
+
+    window.onload = function() {
+      const isInstalled = window.localStorage.getItem('installed');
+      if (JSON.parse(isInstalled)) {
+         btn.style.display = 'none'
+         return
+      }
+      console.log('not installed')
+    };
+
+    
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      window.promptEvent = event;
+    });
+    document.addEventListener("click", function (event) {
+      if (event.target.matches("#btn")) {
+        addToHomeScreen();
+      }
+    });
+
+    function addToHomeScreen() {
+      // show the install app prompt
+      window.promptEvent.prompt();
+      // handle the Decline/Accept choice of the user
+      window.promptEvent.userChoice.then(function (choiceResult) {
+        // hide the prompt banner here
+        if (choiceResult.outcome === "accepted") {
+          window.localStorage.setItem('installed', 'true');
+        } else {
+          console.info("mm User dismissed the A2HS prompt");
+        }
+        window.promptEvent = null;
+      });
+    }
+  </script>
   </body>
 </html>
