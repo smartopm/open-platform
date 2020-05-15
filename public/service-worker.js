@@ -9,7 +9,8 @@ function onInstall(event) {
         'index.html',
         './', // Alias for index.html
         '/packs/js/react_main-94d8a41668ff094039ab.js',
-        '/packs/media/images/nkwashi_white_logo_transparent-59ed31a3.png'
+        '/packs/media/images/nkwashi_white_logo_transparent-59ed31a3.png',
+        'offline.html'
       ])
     })
   );
