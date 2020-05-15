@@ -43,12 +43,13 @@ export default function FormContainer({ match, history }) {
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
-  const [selectedDate, setSelectedDate] = useState(new Date()) 
+  const [selectedDate, setSelectedDate] = useState(null) 
 
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
 
+  
   function handleModal(type) {
     if (type === 'grant') {
       setModalAction('grant')
@@ -99,7 +100,7 @@ export default function FormContainer({ match, history }) {
   }
 
   const handleDateChange = (date) => {
-    setSelectedDate(new Date(date).toISOString());
+    setSelectedDate(new Date(date));
   };
 
   const authState = React.useContext(AuthStateContext)
