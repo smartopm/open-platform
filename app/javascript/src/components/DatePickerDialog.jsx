@@ -37,6 +37,8 @@ const theme = createMuiTheme({
     }
 });
 
+
+
 export default function DatePickerDialog({ selectedDate, handleDateChange, label }) {
     return (
         <ThemeProvider theme={theme}>
@@ -51,8 +53,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
                     format="yyyy/MM/dd"
                     placeholder="YYYY-MM-DD"
                     value={selectedDate}
-                    minDate={new Date()}
-                    onChange={handleDateChange}
+                    onChange={date => handleDateChange(date)}
                     KeyboardButtonProps={{
                         'aria-label': 'change date',
                     }}
