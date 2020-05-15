@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_many :notes, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
+  has_many :accounts, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
