@@ -15,8 +15,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json"/>
     <meta name="theme-color" content="#25c0b0"/>
+    <meta name="description" content="Nkwashi app powered by DoubleGDP"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
@@ -44,7 +45,7 @@
   <noscript>Javascript is not enabled</noscript>
 
   <script>
-
+    // to bypass the webpacker not finding the service worker, had to install it here
     if (navigator.serviceWorker) {
       navigator.serviceWorker
         .register("/service-worker.js", { scope: "./" })
@@ -55,6 +56,8 @@
 
     const btn = document.getElementById("btn");
 
+    // hide the button if the user previously installed the pwa
+    // this is important because the prompt will only show once according to google 
     window.onload = function() {
       const isInstalled = window.localStorage.getItem('installed');
       if (JSON.parse(isInstalled)) {
@@ -82,8 +85,10 @@
       window.promptEvent.userChoice.then(function (choiceResult) {
         // hide the prompt banner here
         if (choiceResult.outcome === "accepted") {
-          window.localStorage.setItem('installed', 'true');
+          // Todo: @yoram ==> Add Google analytics here to track the app installs
+          window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
         } else {
+           // Todo: @yoram ==> Add Google analytics here to track the app install rejections
           console.info("mm User dismissed the A2HS prompt");
         }
         window.promptEvent = null;
