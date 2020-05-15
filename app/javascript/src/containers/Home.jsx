@@ -12,6 +12,7 @@ import ExploreIcon from '../../../assets/images/icon_map.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
 import FeedbackIcon from '@material-ui/icons/Feedback'
@@ -171,7 +172,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['admin', 'resident', 'client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
@@ -225,7 +226,7 @@ export function Component({ authState }) {
                       <Link to={'/timesheet'} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
-                            <LogIcon
+                            <HourglassEmptyIcon
                               fontSize="large"
                               className={css(styles.homeIconColor)}
                             />
@@ -382,31 +383,31 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              { ['admin', 'client', 'resident'].includes(
+              {['admin', 'client', 'resident'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                <Fragment>
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <Link to={'/'} 
-                      onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
-                      className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <ListAltIcon
-                            fontSize="large"
-                            className={css(styles.homeIconColor)}
-                          />
-                        </h5>
-                        <p>Client Request Form</p>
-                      </div>
-                    </Link>
-                  </div>
-                </Fragment>
-              ): null}
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/'}
+                        onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                        className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <ListAltIcon
+                              fontSize="large"
+                              className={css(styles.homeIconColor)}
+                            />
+                          </h5>
+                          <p>Client Request Form</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
             </div>
           </div>
         </div>
