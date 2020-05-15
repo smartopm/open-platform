@@ -162,7 +162,7 @@ export function Component({ authState }) {
                         <img
                           src={NewsIcon}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt=" news icons"
                         />
                       </h5>
                       <p>News</p>
@@ -183,7 +183,7 @@ export function Component({ authState }) {
                         <img
                           src={AccountManagement}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt="account management icon"
                         />
                       </h5>
                       <p>My Thebe Portal</p>
