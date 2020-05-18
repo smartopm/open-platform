@@ -23,8 +23,6 @@ export default function Support() {
     })
   }
 
-  console.log("AuthState", authState)
-
   return (
     <Fragment>
       <Nav navName="Contact" menuButton="back" backTo="/" />

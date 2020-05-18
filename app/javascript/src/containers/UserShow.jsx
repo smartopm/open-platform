@@ -137,7 +137,6 @@ export function Component({
       refetch()
     })
   }
-
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" backTo="/" />
@@ -437,7 +436,10 @@ export function Component({
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <ClientPlotInfo className="clientPlotInfoStyle" />
+          <ClientPlotInfo
+            className="clientPlotInfoStyle"
+            accounts={authState.user.accounts}
+          />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <h4 className="text-center">Coming soon</h4>
