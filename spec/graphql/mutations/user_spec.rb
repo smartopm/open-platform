@@ -91,14 +91,13 @@ RSpec.describe Mutations::User do
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
-                                                     context: {
-                                                       current_user: user,
-                                                     }).as_json
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
       expect(result.dig('errors')).to be_nil
       expect(result.dig('data', 'userCreate', 'user', 'requestReason')).to eql 'Resident'
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userCreate', 'user', 'name')).to eql 'Mark John'
-
     end
   end
 
