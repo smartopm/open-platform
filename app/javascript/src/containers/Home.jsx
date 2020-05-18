@@ -29,7 +29,6 @@ export default function Home() {
   if (!authState.loggedIn) return <Loading />
   return <Component authState={authState} />
 }
-
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false)
   const { t } = useTranslation()
@@ -52,6 +51,7 @@ export function Component({ authState }) {
       />
     )
   }
+  const userData = authState.user;
 
   return (
     <div>
@@ -171,7 +171,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['admin', 'resident', 'client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
@@ -382,31 +382,32 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              { ['admin', 'client', 'resident'].includes(
+              {['admin', 'client', 'resident'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                <Fragment>
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <Link to={'/'} 
-                      onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
-                      className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <ListAltIcon
-                            fontSize="large"
-                            className={css(styles.homeIconColor)}
-                          />
-                        </h5>
-                        <p>Client Request Form</p>
-                      </div>
-                    </Link>
-                  </div>
-                </Fragment>
-              ): null}
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/'}
+                        data-testid="crfl"
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
+                        className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <ListAltIcon
+                              fontSize="large"
+                              className={css(styles.homeIconColor)}
+                            />
+                          </h5>
+                          <p>Client Request Form</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
             </div>
           </div>
         </div>
