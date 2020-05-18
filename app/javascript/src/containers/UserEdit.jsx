@@ -169,7 +169,7 @@ export default function FormContainer({ match, history, location }) {
       <UserForm />
       { showResults ? 
           <div className='d-flex row justify-content-center'>
-          <p>Thank you for your referral. We will reach out to them soon</p>
+          <p>Thank you for your referral. We will reach out to them soon.</p>
         </div> 
         : null }
         
