@@ -392,7 +392,7 @@ export function Component({ authState }) {
                       )} card align-self-center text-center`}
                     >
                       <Link to={'/'}
-                        data-testid="crfl"
+                        id="crfl"
                         onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
                         className={`card-link`}>
                         <div className="card-body">
