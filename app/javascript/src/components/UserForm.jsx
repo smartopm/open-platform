@@ -138,7 +138,7 @@ export default function UserForm() {
           </TextField>
         </div>
         <div >
-            <DatePickerDialog selectedDate={selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
+            <DatePickerDialog selectedDate={selectedDate} label="Expiration Date" handleDateChange={handleDateChange}  />
         </div>
 
         <div className="form-group">
