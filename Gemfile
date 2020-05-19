@@ -51,6 +51,8 @@ gem 'rqrcode'
 # Sidekiq for jobs
 gem 'sidekiq'
 
+gem 'serviceworker-rails'
+
 # GraphQL
 gem 'graphql', '~> 1.9'
 gem 'graphiql-rails', group: :development
