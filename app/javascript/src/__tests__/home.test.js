@@ -36,4 +36,5 @@ describe('home component', () => {
   it('renders a search input', () => {
     expect(wrapper.find('input')).toBeTruthy()
   })
+
 })

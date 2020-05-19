@@ -30,7 +30,6 @@ export default function Home() {
   if (!authState.loggedIn) return <Loading />
   return <Component authState={authState} />
 }
-
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false)
   const { t } = useTranslation()
@@ -53,6 +52,7 @@ export function Component({ authState }) {
       />
     )
   }
+  const userData = authState.user;
 
   return (
     <div>
@@ -163,7 +163,7 @@ export function Component({ authState }) {
                         <img
                           src={NewsIcon}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt=" news icons"
                         />
                       </h5>
                       <p>News</p>
@@ -184,7 +184,7 @@ export function Component({ authState }) {
                         <img
                           src={AccountManagement}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt="account management icon"
                         />
                       </h5>
                       <p>My Thebe Portal</p>
@@ -393,7 +393,8 @@ export function Component({ authState }) {
                       )} card align-self-center text-center`}
                     >
                       <Link to={'/'}
-                        onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                        id="crfl"
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
                         className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">

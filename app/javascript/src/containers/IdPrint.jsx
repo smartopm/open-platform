@@ -95,7 +95,7 @@ export function Component({ data }) {
             className="d-flex justify-content-center"
             style={{ marginTop: '1.75em' }}
           >
-            <img src={Logo} style={{ width: '200px' }} onLoad={downloadBtn} />
+            <img src={Logo} style={{ width: '200px' }} onLoad={downloadBtn} alt="printed QR code" />
           </div>
           <div
             className="d-flex justify-content-center"
