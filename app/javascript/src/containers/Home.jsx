@@ -23,6 +23,7 @@ import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -171,6 +172,28 @@ export function Component({ authState }) {
                   </Link>
                 </div>
               )}
+
+              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to={{
+                      pathname: '/myaccount',
+                      state: {
+                        from: 'acc'
+                      }
+                    }}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                      <AccountCircleIcon fontSize="large" className={css(styles.homeIconColor)} />
+                      </h5>
+                      <p>My Account</p>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
 
               {['admin', 'resident', 'client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
