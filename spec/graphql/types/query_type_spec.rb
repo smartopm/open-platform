@@ -199,26 +199,5 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'usersFeedback')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
-
-    describe 'users' do
-      before :each do
-        @query =
-          %(query {
-                    users {
-                      name
-                      userType
-                    }
-              })
-      end
-
-      it 'returns list of users' do
-        result = DoubleGdpSchema.execute(@query, context: {
-                                           current_user: @current_user,
-                                         }).as_json
-
-        expect(result.dig('data', 'users')).not_to be_nil
-        expect(result.dig('errors')).to be_nil
-      end
-    end
   end
 end

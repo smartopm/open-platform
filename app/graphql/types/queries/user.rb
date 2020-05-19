@@ -83,5 +83,5 @@ module Types::Queries::User
       community_id: context[:current_user].community_id,
       user_type: 'security_guard',
     ).order(name: :asc)
-    end
+  end
 end
