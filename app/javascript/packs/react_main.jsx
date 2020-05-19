@@ -214,7 +214,7 @@ const App = () => {
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
-                    <Route path="/myaccount" component={UserShow} />
+                    <Route path="/myaccount/:id" component={UserShow} />
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
 
