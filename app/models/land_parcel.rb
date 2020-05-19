@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
+# Land Parcel, describe the land partitions.
 class LandParcel < ApplicationRecord
   belongs_to :community
-  has_and_belongs_to_many :accounts, join_table: :land_parcel_accounts
+  has_many :land_parcel_accounts, dependent: :destroy
+  has_many :accounts, through: :land_parcel_accounts
 end
