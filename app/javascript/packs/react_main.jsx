@@ -5,7 +5,7 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-import React, { useContext, useEffect, Component, Suspense } from 'react'
+import React, { useContext, useEffect, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
