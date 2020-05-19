@@ -5,5 +5,6 @@
 class Account < ApplicationRecord
   belongs_to :community
   belongs_to :user
+  has_many :land_parcel_accounts, dependent: :destroy
   has_many :land_parcels, through: :land_parcel_accounts
 end
