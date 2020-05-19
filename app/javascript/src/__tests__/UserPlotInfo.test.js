@@ -1,13 +1,13 @@
 import React from 'react';
-import { ClientPlotInfo } from '../components/ClientPlotInfo';
+import { UserPlotInfo } from '../components/UserPlotInfo';
+import { BrowserRouter } from 'react-router-dom';
 import {
     cleanup,
-    fireEvent,
     render
 } from '@testing-library/react'
 
 
-describe('Client Plot Info Page', () => {
+describe('User Plot Info Page', () => {
 
     const accounts = [{
         id: "2dc81-48ab-9afc",
@@ -27,15 +27,9 @@ describe('Client Plot Info Page', () => {
         }]
     }]
 
+    it('Component should display all parcel numbers', () => {
 
-    it('render without error', () => {
-        render(<ClientPlotInfo />)
-    });
-
-
-    it('clicks button and opens use window', () => {
-
-        const { getByTestId } = render(<ClientPlotInfo accounts={accounts} />)
+        const { getByTestId } = render(<BrowserRouter><UserPlotInfo accounts={accounts} /></BrowserRouter>)
         const ol = getByTestId('pn');
         expect(ol.children.length).toBe(3)
     });

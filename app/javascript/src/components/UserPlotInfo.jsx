@@ -2,10 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 
-export function ClientPlotInfo(props) {
+export function UserPlotInfo(props) {
     let { accounts } = props;
     let land_parcels = [];
-
     accounts.forEach((account) => {
         land_parcels = [...land_parcels, ...account.landParcels]
     });

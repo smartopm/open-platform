@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react'
-import { ClientPlotInfo } from '../components/ClientPlotInfo'
+import { UserPlotInfo } from '../components/UserPlotInfo'
 import { Redirect, Link, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
@@ -436,8 +436,7 @@ export function Component({
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <ClientPlotInfo
-            className="clientPlotInfoStyle"
+          <UserPlotInfo
             accounts={authState.user.accounts}
           />
         </TabPanel>
@@ -500,8 +499,5 @@ const styles = StyleSheet.create({
     border: '1px solid #ed5757',
     color: '#fff',
     backgroundColor: '#ed5757'
-  },
-  clientPlotInfoStyle: {
-    justifyContent: 'center'
   }
 })
