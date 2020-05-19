@@ -20,12 +20,14 @@ import {
     TextField,
     MenuItem,
     InputAdornment,
-    Select
+    Select,
+    Grid
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog } from '../components/Dialog'
 import { StyledTableRow, StyledTableCell } from '../components/TimeTracker/DataTable'
 import { userType } from '../utils/constants'
+import Paginate from '../components/Paginate'
 
 
 export const useStyles = makeStyles(theme => ({
@@ -93,6 +95,7 @@ export default function UsersList() {
     function handleInputChange(event) {
         setType(event.target.value)
     }
+    function paginate() {}
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
@@ -237,6 +240,13 @@ export default function UsersList() {
               ))}
             </TableBody>
           </Table>
+          <Grid container direction="row" justify="center" alignItems="center">
+            <Paginate
+              count={data.users.length}
+              active={true}
+              handlePageChange={paginate}
+            />
+          </Grid>
         </div>
       </Fragment>
     )
