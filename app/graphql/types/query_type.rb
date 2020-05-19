@@ -21,20 +21,6 @@ module Types
       Community.find(id) if context[:current_user]
     end
 
-    # Get a list of guards
-    field :security_guards, [UserType], null: true do
-      description 'Get a list of security guards for a community'
-    end
-
-    def security_guards
-      return unless context[:current_user]
-
-      User.where(
-        community_id: context[:current_user].community_id,
-        user_type: 'security_guard',
-      ).order(name: :asc)
-    end
-
     field :all_notes, [NoteType], null: false do
       description 'Returns a list of all the notes'
       argument :offset, Integer, required: false

@@ -34,6 +34,11 @@ module Types::Queries::User
     field :current_user, Types::UserType, null: true do
       description 'Get the current logged in user'
     end
+
+    # Get a list of guards
+    field :security_guards, [Types::UserType], null: true do
+      description 'Get a list of security guards for a community'
+    end
   end
 
   def user(id:)
@@ -70,4 +75,13 @@ module Types::Queries::User
     User.where(state: 'pending',
                community_id: context[:current_user].community_id)
   end
+
+  def security_guards
+    return unless context[:current_user]
+
+    User.where(
+      community_id: context[:current_user].community_id,
+      user_type: 'security_guard',
+    ).order(name: :asc)
+    end
 end
