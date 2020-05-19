@@ -326,8 +326,13 @@ GEM
       rubyzip (~> 1.2, >= 1.2.2)
     sendgrid-ruby (6.2.0)
       ruby_http_client (~> 3.4)
+<<<<<<< HEAD
     serviceworker-rails (0.6.0)
       railties (>= 3.1)
+=======
+    shoulda-matchers (4.3.0)
+      activesupport (>= 4.2.0)
+>>>>>>> b703099f55c9da037acf3b261ab2fc864f994304
     sidekiq (6.0.3)
       connection_pool (>= 2.2.2)
       rack (>= 2.0.0)
@@ -420,6 +425,7 @@ DEPENDENCIES
   selenium-webdriver
   sendgrid-ruby
   serviceworker-rails
+  shoulda-matchers
   sidekiq
   simplecov
   spring

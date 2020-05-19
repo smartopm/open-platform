@@ -99,6 +99,7 @@ group :test do
   gem 'webdrivers'
   gem 'factory_bot'
   gem 'simplecov'
+  gem 'shoulda-matchers'
 end
 
 
