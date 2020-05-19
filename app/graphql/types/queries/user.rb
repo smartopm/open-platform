@@ -46,7 +46,7 @@ module Types::Queries::User
   end
 
   def users(offset: 0, limit: 100, user_type: nil)
-    return unless context[:current_user]
+    return unless context[:current_user].admin?
 
     community_id = context[:current_user].community_id
     if user_type.present?
