@@ -19,7 +19,8 @@ import {
     InputBase,
     TextField,
     MenuItem,
-    InputAdornment
+    InputAdornment,
+    Select
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog } from '../components/Dialog'
@@ -57,7 +58,7 @@ export default function UsersList() {
     const classes = useStyles()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [redirect, setRedirect] = useState(false)
-    const [type, setType] = useState('None')
+    const [type, setType] = useState('')
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
     const { loading, error, data, refetch } = useQuery(UsersQuery, {
       variables: {
@@ -134,31 +135,6 @@ export default function UsersList() {
             </div>
           </ModalDialog>
 
-          <TextField
-            id="userType"
-            select
-            value={type}
-            fullWidth
-            onChange={handleInputChange}
-            name="userType"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <p>Filter By Role: </p>
-                </InputAdornment>
-              )
-            }}
-          >
-            <MenuItem key={'dwer2333e23'}  value={'None'}>
-              None
-            </MenuItem>
-            {Object.entries(userType).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
-            ))}
-          </TextField>
-
           <div className={classes.root}>
             <Fragment>
               <InputBase
@@ -179,6 +155,35 @@ export default function UsersList() {
               </IconButton>
             </Fragment>
           </div>
+
+          <TextField
+            id="userType"
+            disabled
+            label="Filter by Role:"
+            name="userType"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">
+                  <Select value={type} onChange={handleInputChange}>
+                    <MenuItem disabled key={'dwer2333e23'} value={'Role'}>
+                      Role
+                    </MenuItem>
+                    {Object.entries(userType).map(([key, val]) => (
+                      <MenuItem key={key} value={key}>
+                        {val}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {Boolean(type.length) && (
+                    <Button onClick={() => setType('')}>Clear Filter</Button>
+                  )}
+                </InputAdornment>
+              )
+            }}
+          />
+          <br />
+          <br />
+
           <Table
             stickyHeader
             className={classes.table}
