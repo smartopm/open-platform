@@ -75,10 +75,10 @@
       event.preventDefault();
       window.promptEvent = event;
     });
-    document.addEventListener("click", function (event) {
-      if (event.target.matches("#btn")) {
+
+    // added the event to just the button instead
+    btn.addEventListener("click", function (event) {
         addToHomeScreen();
-      }
     });
 
     function addToHomeScreen() {
