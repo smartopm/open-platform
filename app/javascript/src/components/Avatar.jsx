@@ -21,6 +21,7 @@ export default function Avatar({ imageUrl, user, style = 'small' }) {
         <img
           src={avatarUrl({ imageUrl, user })}
           className={css(styles.avatarBig)}
+          alt="avatar for the user"
         />
       </div>
     )
@@ -30,15 +31,17 @@ export default function Avatar({ imageUrl, user, style = 'small' }) {
         <img
           src={avatarUrl({ imageUrl, user })}
           className={css(styles.avatarSmall)}
+          alt="avatar for the user"
         />
       </div>
     )
   }else if(style==='medium'){
     return (
-      <div style={{width: 80}}>
+      <div style={{ width: 80 }}>
         <img
           src={avatarUrl({ imageUrl, user })}
           className={css(styles.avatarMedium)}
+          alt="avatar for the user"
         />
       </div>
     )

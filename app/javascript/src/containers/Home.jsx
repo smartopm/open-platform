@@ -12,6 +12,7 @@ import ExploreIcon from '../../../assets/images/icon_map.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
 import FeedbackIcon from '@material-ui/icons/Feedback'
@@ -30,7 +31,6 @@ export default function Home() {
   if (!authState.loggedIn) return <Loading />
   return <Component authState={authState} />
 }
-
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false)
   const { t } = useTranslation()
@@ -53,6 +53,7 @@ export function Component({ authState }) {
       />
     )
   }
+  const userData = authState.user;
 
   return (
     <div>
@@ -163,7 +164,7 @@ export function Component({ authState }) {
                         <img
                           src={NewsIcon}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt=" news icons"
                         />
                       </h5>
                       <p>News</p>
@@ -172,7 +173,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['admin', 'resident', 'client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
@@ -184,7 +185,7 @@ export function Component({ authState }) {
                         <img
                           src={AccountManagement}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt="account management icon"
                         />
                       </h5>
                       <p>My Thebe Portal</p>
@@ -226,7 +227,7 @@ export function Component({ authState }) {
                       <Link to={'/timesheet'} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
-                            <LogIcon
+                            <HourglassEmptyIcon
                               fontSize="large"
                               className={css(styles.homeIconColor)}
                             />
@@ -400,31 +401,32 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              { ['admin', 'client', 'resident'].includes(
+              {['admin', 'client', 'resident'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                <Fragment>
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <Link to={'/'} 
-                      onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
-                      className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <ListAltIcon
-                            fontSize="large"
-                            className={css(styles.homeIconColor)}
-                          />
-                        </h5>
-                        <p>Client Request Form</p>
-                      </div>
-                    </Link>
-                  </div>
-                </Fragment>
-              ): null}
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/'}
+                        id="crfl"
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
+                        className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <ListAltIcon
+                              fontSize="large"
+                              className={css(styles.homeIconColor)}
+                            />
+                          </h5>
+                          <p>Client Request Form</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
             </div>
           </div>
         </div>

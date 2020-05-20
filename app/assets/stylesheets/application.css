@@ -113,3 +113,17 @@
 .index-cards .oi {
   color: #25c0b0;
 }
+
+#btn {
+  background-color: #25c0b0;
+  color: #fff;
+  cursor: pointer;
+
+}
+
+/* This will hide the install button when the user is viewing the app in a pwa */
+@media (display-mode: standalone) {
+  #btn {
+    display: none;
+  }
+}

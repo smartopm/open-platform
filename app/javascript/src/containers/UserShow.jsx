@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react'
+import { UserPlotInfo } from '../components/UserPlotInfo'
 import { Redirect, Link, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
@@ -136,7 +137,6 @@ export function Component({
       refetch()
     })
   }
-
   return (
     <div>
       <Nav navName="Identification" menuButton="cancel" backTo="/" />
@@ -436,7 +436,9 @@ export function Component({
           </div>
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <h4 className="text-center">Coming soon</h4>
+          <UserPlotInfo
+            accounts={authState.user.accounts}
+          />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <h4 className="text-center">Coming soon</h4>

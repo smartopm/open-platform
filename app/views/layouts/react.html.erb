@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics - app.doublegdp.com stream -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150647211-2"></script>
@@ -15,6 +15,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="manifest" href="/manifest.json"/>
+    <meta name="theme-color" content="#25c0b0"/>
+    <meta name="description" content="Nkwashi app powered by DoubleGDP"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
@@ -23,8 +26,8 @@
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 
     <!-- App Icon -->
-    <link href="/images/Nkwashi-180.png" rel="apple-touch-icon" sizes="180x180" />
-    <link href="/images/Nkwashi-192.png" rel="icon" sizes="192x192" />
+    <link href="/images/home_144.png" rel="apple-touch-icon" sizes="144x144" />
+    <link href="/images/home_192.png" rel="icon" sizes="192x192" />
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
@@ -34,6 +37,71 @@
     <div id="root">
     </div>
     <%= javascript_pack_tag 'react_main' %>
+      <div class="alert text-center"id="btn" role="alert">
+        Click here to install this app on your homescreen
+      </div>
+    </div>
+  
+  <noscript>Javascript is not enabled</noscript>
 
+  <script>
+    // to bypass the webpacker not finding the service worker, had to install it here
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker
+        .register("/service-worker.js", { scope: "./" })
+        .then(function (_reg) {
+          console.log("[Companion]", "Service worker registered!!!");
+        })
+        .catch(function(err) {
+          console.log(err)
+        })
+    }
+
+    const installButton = document.getElementById("btn");
+
+    // hide the button if the user previously installed the pwa
+    // this is important because the prompt will only show once according to google 
+    window.onload = function() {
+      const isInstalled = window.localStorage.getItem('installed');
+      if (JSON.parse(isInstalled)) {
+         installButton.style.display = 'none'
+         return
+      }
+      console.log('not installed')
+    };
+
+    
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      window.promptEvent = event;
+    });
+
+    // added the event to just the button instead
+    installButton.addEventListener("click", function (event) {
+        addToHomeScreen();
+    });
+
+    function addToHomeScreen() {
+      // show the install app prompt
+      if (window.promptEvent) {
+        // window.promptEvent.prompt();
+      window.promptEvent.prompt();
+        // handle the Decline/Accept choice of the user
+        window.promptEvent.userChoice.then(function (choiceResult) {
+          // hide the prompt banner here
+          if (choiceResult.outcome === "accepted") {
+            // Todo: @yoram ==> Add Google analytics here to track the app installs
+            window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
+          } else {
+            // Todo: @yoram ==> Add Google analytics here to track the app install rejections
+            console.info("mm User dismissed the A2HS prompt");
+          }
+          window.promptEvent = null;
+        });
+
+      }
+ 
+    }
+  </script>
   </body>
 </html>
