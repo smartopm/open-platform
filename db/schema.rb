@@ -10,11 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_090543) do
+ActiveRecord::Schema.define(version: 2020_05_19_223525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.string "full_name"
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "postal_code"
+    t.string "state_province"
+    t.string "country"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_accounts_on_community_id"
+    t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
@@ -44,6 +60,19 @@ ActiveRecord::Schema.define(version: 2020_04_27_090543) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "reporting_user_id"
+  end
+
+  create_table "campaigns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.string "name"
+    t.string "message"
+    t.text "user_id_list"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "batch_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
   create_table "communities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -97,6 +126,31 @@ ActiveRecord::Schema.define(version: 2020_04_27_090543) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "land_parcel_accounts", id: false, force: :cascade do |t|
+    t.uuid "land_parcel_id", null: false
+    t.uuid "account_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_land_parcel_accounts_on_account_id"
+    t.index ["land_parcel_id", "account_id"], name: "index_land_parcel_accounts_on_land_parcel_id_and_account_id", unique: true
+    t.index ["land_parcel_id"], name: "index_land_parcel_accounts_on_land_parcel_id"
+  end
+
+  create_table "land_parcels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.string "parcel_number"
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "postal_code"
+    t.string "state_province"
+    t.string "country"
+    t.string "parcel_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_land_parcels_on_community_id"
+  end
+
   create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "receiver"
     t.text "message"
@@ -107,6 +161,8 @@ ActiveRecord::Schema.define(version: 2020_04_27_090543) do
     t.uuid "sender_id"
     t.boolean "is_read"
     t.datetime "read_at"
+    t.uuid "campaign_id"
+    t.index ["campaign_id"], name: "index_messages_on_campaign_id"
   end
 
   create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -189,4 +245,10 @@ ActiveRecord::Schema.define(version: 2020_04_27_090543) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "accounts", "communities"
+  add_foreign_key "accounts", "users"
+  add_foreign_key "campaigns", "communities"
+  add_foreign_key "land_parcel_accounts", "accounts"
+  add_foreign_key "land_parcel_accounts", "land_parcels"
+  add_foreign_key "land_parcels", "communities"
 end
