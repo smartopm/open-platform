@@ -51,7 +51,10 @@
         .register("/service-worker.js", { scope: "./" })
         .then(function (_reg) {
           console.log("[Companion]", "Service worker registered!!!");
-        });
+        })
+        .catch(function(err) {
+          console.log(err)
+        })
     }
 
     const btn = document.getElementById("btn");
@@ -80,19 +83,24 @@
 
     function addToHomeScreen() {
       // show the install app prompt
+      if (window.promptEvent) {
+        // window.promptEvent.prompt();
       window.promptEvent.prompt();
-      // handle the Decline/Accept choice of the user
-      window.promptEvent.userChoice.then(function (choiceResult) {
-        // hide the prompt banner here
-        if (choiceResult.outcome === "accepted") {
-          // Todo: @yoram ==> Add Google analytics here to track the app installs
-          window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
-        } else {
-           // Todo: @yoram ==> Add Google analytics here to track the app install rejections
-          console.info("mm User dismissed the A2HS prompt");
-        }
-        window.promptEvent = null;
-      });
+        // handle the Decline/Accept choice of the user
+        window.promptEvent.userChoice.then(function (choiceResult) {
+          // hide the prompt banner here
+          if (choiceResult.outcome === "accepted") {
+            // Todo: @yoram ==> Add Google analytics here to track the app installs
+            window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
+          } else {
+            // Todo: @yoram ==> Add Google analytics here to track the app install rejections
+            console.info("mm User dismissed the A2HS prompt");
+          }
+          window.promptEvent = null;
+        });
+
+      }
+ 
     }
   </script>
   </body>
