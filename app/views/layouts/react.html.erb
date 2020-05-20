@@ -57,14 +57,14 @@
         })
     }
 
-    const btn = document.getElementById("btn");
+    const installButton = document.getElementById("btn");
 
     // hide the button if the user previously installed the pwa
     // this is important because the prompt will only show once according to google 
     window.onload = function() {
       const isInstalled = window.localStorage.getItem('installed');
       if (JSON.parse(isInstalled)) {
-         btn.style.display = 'none'
+         installButton.style.display = 'none'
          return
       }
       console.log('not installed')
@@ -77,7 +77,7 @@
     });
 
     // added the event to just the button instead
-    btn.addEventListener("click", function (event) {
+    installButton.addEventListener("click", function (event) {
         addToHomeScreen();
     });
 
