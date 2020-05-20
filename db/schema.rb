@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_15_043156) do
+ActiveRecord::Schema.define(version: 2020_05_19_223525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -60,6 +60,19 @@ ActiveRecord::Schema.define(version: 2020_05_15_043156) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "reporting_user_id"
+  end
+
+  create_table "campaigns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.string "name"
+    t.string "message"
+    t.text "user_id_list"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "batch_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
   create_table "communities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -148,6 +161,8 @@ ActiveRecord::Schema.define(version: 2020_05_15_043156) do
     t.uuid "sender_id"
     t.boolean "is_read"
     t.datetime "read_at"
+    t.uuid "campaign_id"
+    t.index ["campaign_id"], name: "index_messages_on_campaign_id"
   end
 
   create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -232,6 +247,7 @@ ActiveRecord::Schema.define(version: 2020_05_15_043156) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "campaigns", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
