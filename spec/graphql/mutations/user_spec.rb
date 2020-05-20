@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Mutations::User do
   describe 'create pending member' do
     let!(:current_user) { create(:user_with_community, user_type: 'security_guard') }
+    let!(:user) { create(:user_with_community, user_type: 'client') }
 
     let(:query) do
       <<~GQL
@@ -26,6 +27,8 @@ RSpec.describe Mutations::User do
               id
               email
               phoneNumber
+              requestReason
+              name
             }
           }
         }
@@ -78,6 +81,23 @@ RSpec.describe Mutations::User do
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user')).to be_nil
       expect(result.dig('errors')).not_to be_empty
+    end
+
+    it 'should allow clients to create other clients' do
+      variables = {
+        name: 'Mark John',
+        reason: 'Resident',
+        phoneNumber: '26923422232',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
+      expect(result.dig('errors')).to be_nil
+      expect(result.dig('data', 'userCreate', 'user', 'requestReason')).to eql 'Resident'
+      expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
+      expect(result.dig('data', 'userCreate', 'user', 'name')).to eql 'Mark John'
     end
   end
 
