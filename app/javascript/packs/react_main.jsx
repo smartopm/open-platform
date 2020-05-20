@@ -67,6 +67,7 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
+import Referrals from '../src/containers/Referrals'
 import Scan from '../src/containers/Scan.jsx'
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -190,6 +191,8 @@ const App = () => {
                     <Route path="/contact/mobile_money" component={MobileMoney} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
+
+                    <Route path="/referrals" component={Referrals} />
 
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
