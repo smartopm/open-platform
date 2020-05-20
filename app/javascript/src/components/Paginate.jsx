@@ -6,15 +6,20 @@ export default function Paginate({
   limit,
   handlePageChange,
   active,
+  offset
 }) {
   return (
     <>
-      <Button data-testid="prev-btn" onClick={() => handlePageChange('prev')}>
+      <Button
+        data-testid="prev-btn"
+        onClick={() => handlePageChange('prev')}
+        disabled={!active && offset < 1}
+      >
         Previous
       </Button>
 
       <Button
-        data-testid="prev-btn"
+        data-testid="next-btn"
         onClick={() => handlePageChange('next')}
         disabled={!active && count < limit}
       >

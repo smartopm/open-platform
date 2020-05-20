@@ -31,12 +31,6 @@ import Paginate from '../components/Paginate'
 
 
 export const useStyles = makeStyles(theme => ({
-    table: {
-        display: 'block',
-        width: '100%',
-        overflowX: 'auto',
-        height: 500
-    },
     root: {
         padding: '2px 4px',
         display: 'flex',
@@ -56,15 +50,21 @@ export const useStyles = makeStyles(theme => ({
     }
 }))
 
+
+const limit = 50
 export default function UsersList() {
     const classes = useStyles()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [redirect, setRedirect] = useState(false)
     const [type, setType] = useState('')
+    const [offset, setOffset] = useState(0)
+
     const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
     const { loading, error, data, refetch } = useQuery(UsersQuery, {
       variables: {
-        userType: type
+            userType: type,
+            limit,
+            offset,
         },
         fetchPolicy: "cache-and-network"
     })
@@ -95,7 +95,16 @@ export default function UsersList() {
     function handleInputChange(event) {
         setType(event.target.value)
     }
-    function paginate() {}
+    function paginate(action) {
+      if (action === 'prev') {
+        if (offset < limit) {
+          return
+        }
+        setOffset(offset - limit)
+      } else {
+        setOffset(offset + limit)
+      }
+    }
 
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
@@ -190,7 +199,7 @@ export default function UsersList() {
           <Table
             stickyHeader
             className={classes.table}
-            aria-label="customized table"
+            aria-label="user table"
           >
             <TableHead>
               <TableRow>
@@ -242,9 +251,11 @@ export default function UsersList() {
           </Table>
           <Grid container direction="row" justify="center" alignItems="center">
             <Paginate
-              count={data.users.length}
-              active={true}
-              handlePageChange={paginate}
+                count={data.users.length}
+                active={false}
+                offset={offset}
+                handlePageChange={paginate}
+                limit={limit}
             />
           </Grid>
         </div>
