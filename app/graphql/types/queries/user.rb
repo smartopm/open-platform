@@ -23,6 +23,8 @@ module Types::Queries::User
     field :user_search, [Types::UserType], null: true do
       description 'Find a user by name, phone number or user type'
       argument :query, String, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
     # Get a entry logs for a user
@@ -62,10 +64,11 @@ module Types::Queries::User
         .limit(limit).offset(offset)
   end
 
-  def user_search(query:)
-    User.where('name ILIKE :query OR phone_number ILIKE :query OR user_type ILIKE :query',
-               query: "%#{query}%")
-        .where(community_id: context[:current_user].community_id).limit(20)
+  def user_search(query: nil, offset: 0, limit: 50)
+    User.where(community_id: context[:current_user].community_id)
+        .search(query)
+        .limit(limit)
+        .offset(offset)
   end
 
   def current_user
