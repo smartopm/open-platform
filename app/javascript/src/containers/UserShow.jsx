@@ -426,4 +426,61 @@ export function Component({
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
 
+ <div className="container d-flex justify-content-between">
+
+          {data.user.state === 'valid' &&
+            authState.user.userType === 'security_guard' ? (
+              <Button id="log-entry" className={`${css(styles.logButton)}`} onClick={onLogEntry}>
+                Log This Entry
+              </Button>) : null}
+
+          {authState.user.userType === 'security_guard' ? (
+            <Button id="call_poniso" startIcon={<PhoneIcon />} className={`${css(styles.callButton)}`} href={`tel:${ponisoNumber}`}>
+              Call Poniso
+            </Button>) : null}
+
+        </div>
+      </Fragment>
+    </div>
+  )
+}
+
+const styles = StyleSheet.create({
+
+  linkItem: {
+    color: '#000000',
+    textDecoration: 'none'
+  },
+  commentBox: {
+    borderLeft: '2px solid #25c0b0',
+    padding: '0.5%',
+    color: 'gray'
+  },
+  logButton: {
+    backgroundColor: '#25c0b0',
+    color: '#FFF'
+  },
+  callButton: {
+    backgroundColor: '#FF6347',
+    color: '#FFF'
+  },
+  actionIcon: {
+    float: 'right',
+    cursor: 'pointer',
+    ':hover': {
+      color: '#25c0b0'
+    },
+    marginRight: 12
+  },
+  badge: {
+    margin: '0',
+    padding: '0 0.7em',
+    borderRadius: '14px'
+  },
+  statusBadgeBanned: {
+    border: '1px solid #ed5757',
+    color: '#fff',
+    backgroundColor: '#ed5757'
+  }
+})
 
