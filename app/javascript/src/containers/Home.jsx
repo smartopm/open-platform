@@ -24,7 +24,8 @@ import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PeopleIcon from '@material-ui/icons/People';
+import PeopleIcon from '@material-ui/icons/People'
+
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -174,7 +175,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['resident','client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize

@@ -23,6 +23,8 @@ module Types::Queries::User
     field :user_search, [Types::UserType], null: true do
       description 'Find a user by name, phone number or user type'
       argument :query, String, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
     # Get a entry logs for a user
@@ -48,24 +50,19 @@ module Types::Queries::User
   def users(offset: 0, limit: 100, user_type: nil)
     return unless context[:current_user].admin?
 
-    community_id = context[:current_user].community_id
-    return get_usertype(user_type, community_id, limit, offset) if user_type.present?
-
-    User.where(community_id: community_id)
-        .order(created_at: :desc)
-        .limit(limit).offset(offset)
+    User.where(community_id: context[:current_user].community_id)
+        .search(user_type)
+        .limit(limit)
+        .offset(offset)
   end
 
-  def get_usertype(user_type, community_id, limit, offset)
-    User.where(user_type: user_type, community_id: community_id)
-        .order(created_at: :desc)
-        .limit(limit).offset(offset)
-  end
+  def user_search(query: nil, offset: 0, limit: 50)
+    return unless context[:current_user]
 
-  def user_search(query:)
-    User.where('name ILIKE :query OR phone_number ILIKE :query OR user_type ILIKE :query',
-               query: "%#{query}%")
-        .where(community_id: context[:current_user].community_id).limit(20)
+    User.where(community_id: context[:current_user].community_id)
+        .search(query)
+        .limit(limit)
+        .offset(offset)
   end
 
   def current_user
