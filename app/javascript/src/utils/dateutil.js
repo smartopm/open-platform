@@ -1,4 +1,4 @@
-import {dateTimeToString as newTime} from '../components/DateContainer'
+import { dateTimeToString as newTime, newCatDate } from '../components/DateContainer'
 import { isWeekend, isSaturday } from 'date-fns'
 import { zonedDate } from '../components/DateContainer'
 
@@ -41,7 +41,9 @@ function dateToString(date) {
 function dateTimeToString(date) {
   return newTime(date)
 }
-
+function dateTimeToCatString(date) {
+  return newCatDate(date)
+}
 function formatDate(datetime) {
   if (datetime) {
     const date = fromISO8601(datetime)
@@ -76,7 +78,7 @@ export function isTimeValid(date) {
  * @returns {String} day in a week
  */
 export function getWeekDay(date) {
-  let new_date 
+  let new_date
   if (!(date instanceof Date)) {
     new_date = new Date(date)
   }
@@ -95,7 +97,7 @@ export function getWeekDay(date) {
  * @returns {String} hours || minutes
  */
 export function differenceInHours(startDate, endDate) {
-  if (!startDate) return 
+  if (!startDate) return
   // in case ended_at is null, initialize it.
   const lastDate = endDate || new Date()
   const diff_seconds = (zonedDate(lastDate).getTime() - zonedDate(startDate).getTime()) / 1000;
@@ -107,7 +109,7 @@ export function differenceInHours(startDate, endDate) {
     return `${hours} ${hours === 1 ? 'hr' : 'hrs'}`
   }
   return `${minutes} minutes`
- }
+}
 
 export default {
   fromISO8601,
@@ -116,7 +118,8 @@ export default {
   isExpired,
   formatDate,
   getWeekDay,
-  differenceInHours
+  differenceInHours,
+  dateTimeToCatString
 }
 
 // pad("00", "1") => "01"
