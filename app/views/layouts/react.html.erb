@@ -67,11 +67,10 @@
     // this is important because the prompt will only show once according to google 
     window.onload = function() {
       const isInstalled = window.localStorage.getItem('installed');
-      if (JSON.parse(isInstalled)) {
+      if (JSON.parse(isInstalled) || isSafari()) {
          installButton.style.display = 'none'
          return
       }
-      console.log('not installed')
     };
 
     
@@ -102,10 +101,13 @@
           }
           window.promptEvent = null;
         });
-
       }
- 
     }
+
+    function isSafari(){
+      return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    }
+
   </script>
   </body>
 </html>
