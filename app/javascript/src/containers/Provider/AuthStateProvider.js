@@ -28,7 +28,15 @@ const QUERY = gql`
       expiresAt
       imageUrl
       avatarUrl
+     accounts{
+       id
+       landParcels{
+         id
+         parcelNumber
+       }
+     }
       community {
+        id
         name
         logoUrl
         timezone

@@ -38,8 +38,8 @@ module Mutations
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
 
-      def authorized?(vals)
-        check_params(ALLOWED_PARAMS_FOR_ROLES, vals)
+      def authorized?(_vals)
+        # allowing all users to create clients
         current_user = context[:current_user]
         raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
 

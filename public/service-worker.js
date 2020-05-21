@@ -8,7 +8,7 @@ function onInstall(event) {
       return cache.addAll([
         'index.html',
         './', // Alias for index.html
-        '/packs/js/react_main-94d8a41668ff094039ab.js',
+        // '/packs/js/react_main-10bebb47b7c928ae9047.js',
         '/packs/media/images/nkwashi_white_logo_transparent-59ed31a3.png',
         'offline.html'
       ])

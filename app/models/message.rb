@@ -4,6 +4,7 @@
 class Message < ApplicationRecord
   belongs_to :user
   belongs_to :sender, class_name: 'User'
+  has_one :campaign, dependent: :restrict_with_exception
 
   default_scope { order(created_at: :asc) }
 
