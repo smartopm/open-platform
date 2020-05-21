@@ -27,24 +27,28 @@ export const FormContext = React.createContext({
   handleInputChange: () => {}
 })
 
-export default function FormContainer({ match, history }) {
+export default function FormContainer({ match, history, location }) {
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: 'user',
     readLazyQuery: useLazyQuery(UserQuery),
     updateMutation: useMutation(UpdateUserMutation),
     createMutation: useMutation(CreateUserMutation)
   })
-
+  const previousRoute = location.state && location.state.from
+  const isFromRef = previousRoute === "ref" || false;
   let title = 'New User'
   if (result && result.id) {
     title = 'Editing User'
+  }else if (isFromRef){
+    title = 'Referrals'
   }
+
   const [data, setData] = React.useState(initialValues)
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
-  const [selectedDate, handleDateChange] = React.useState(null)
-
+  const [selectedDate] = React.useState(new Date()) 
+  const [showResults, setShowResults] = React.useState(false)
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
@@ -80,11 +84,19 @@ export default function FormContainer({ match, history }) {
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
+    if(isFromRef){
+      setShowResults(true)
+      window.location.reload(false)
+    }
 
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
+        if(isFromRef){
+          return
+        }else{
         history.push(`/user/${data.result.user.id}`)
+        }
       })
       .catch(err => {
         setMsg(err.message)
@@ -133,7 +145,6 @@ export default function FormContainer({ match, history }) {
         imageUrl: url,
         handleInputChange,
         handleSubmit,
-        handleDateChange,
         selectedDate,
         handleFileUpload: onChange,
         status
@@ -156,6 +167,12 @@ export default function FormContainer({ match, history }) {
       <br />
       {Boolean(msg.length) && <p className="text-danger text-center">{msg}</p>}
       <UserForm />
+      { showResults ? 
+          <div className='d-flex row justify-content-center'>
+          <p>Thank you for your referral. We will reach out to them soon.</p>
+        </div> 
+        : null }
+        
     </FormContext.Provider>
   )
 }

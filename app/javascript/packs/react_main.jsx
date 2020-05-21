@@ -5,7 +5,7 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-import React, { useContext, useEffect, Component, Suspense } from 'react'
+import React, { useContext, useEffect, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
@@ -67,33 +67,11 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
+
+import Scan from '../src/containers/Scan.jsx'
+
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
-
-class DynamicImport extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      component: null
-    }
-  }
-  componentDidMount() {
-    this.props.load().then(component => {
-      this.setState(() => ({
-        component: component.default ? component.default : component
-      }))
-    })
-  }
-  render() {
-    return this.props.children(this.state.component)
-  }
-}
-
-const Scan = props => (
-  <DynamicImport load={() => import('../src/containers/Scan.jsx')}>
-    {Component => (Component === null ? <Loading /> : <Component {...props} />)}
-  </DynamicImport>
-)
 
 const LoggedInOnly = props => {
   const authState = useContext(AuthStateContext)
@@ -215,6 +193,8 @@ const App = () => {
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     <Route path="/myaccount/:id" component={UserShow} />
+                    <Route path="/referral" component={UserEdit} />
+
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
 
@@ -265,10 +245,10 @@ const App = () => {
                     <Route path="/timesheet/:id" exact component={EmployeeLogs} />
 
                     <Route path="/client_request_from" exact component={ClientRequestForm} />
-                    
+
                     <AdminRoutes>
                       <Switch>
-                      <Route path="/client_request_from" exact component={ClientRequestForm} />
+                        <Route path="/client_request_from" exact component={ClientRequestForm} />
                         <Route path="/users" component={UsersList} />
                         <Route path="/messages" component={AllMessages} />
                         <Route path="/showroom_logs" component={ShowroomLogs} />
