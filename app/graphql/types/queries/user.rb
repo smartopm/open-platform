@@ -50,18 +50,10 @@ module Types::Queries::User
   def users(offset: 0, limit: 100, user_type: nil)
     return unless context[:current_user].admin?
 
-    community_id = context[:current_user].community_id
-    return get_usertype(user_type, community_id, limit, offset) if user_type.present?
-
-    User.where(community_id: community_id)
-        .order(created_at: :desc)
-        .limit(limit).offset(offset)
-  end
-
-  def get_usertype(user_type, community_id, limit, offset)
-    User.where(user_type: user_type, community_id: community_id)
-        .order(created_at: :desc)
-        .limit(limit).offset(offset)
+    User.where(community_id: context[:current_user].community_id)
+        .search(user_type)
+        .limit(limit)
+        .offset(offset)
   end
 
   def user_search(query: nil, offset: 0, limit: 50)

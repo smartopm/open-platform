@@ -13,9 +13,9 @@ class User < ApplicationRecord
   # General user error to return on actions that are not possible
   class UserError < StandardError; end
   include SearchCop
-  
+
   search_scope :search do
-    attributes :name, :phone_number, :user_type, :email
+    attributes :name, :phone_number, :user_type
   end
 
   belongs_to :community, optional: true
