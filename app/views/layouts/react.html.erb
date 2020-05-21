@@ -16,9 +16,13 @@
     <%= csp_meta_tag %>
 
     <link rel="manifest" href="/manifest.json"/>
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="theme-color" content="#25c0b0"/>
     <meta name="description" content="Nkwashi app powered by DoubleGDP"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="application-name" content="DoubleGDP">
+    <meta name="msapplication-TileColor" content="#25c0b0">
+    <meta name="apple-mobile-web-app-title" content="DoubleGDP">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -26,8 +30,8 @@
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 
     <!-- App Icon -->
-    <link href="/images/home_144.png" rel="apple-touch-icon" sizes="144x144" />
-    <link href="/images/home_192.png" rel="icon" sizes="192x192" />
+    <link href="/images/home_192.png" rel="apple-touch-icon" sizes="192x192" />
+    <link href="/images/home_72.png" type="image/png" rel="icon" sizes="72x72" />
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
