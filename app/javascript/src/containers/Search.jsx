@@ -142,13 +142,15 @@ export default function SearchContainer({ location }) {
         {name.length > 0 && (
           <>
             <Results {...{ data, loading, called }} />
-            <Button
-              data-testid="prev-btn"
-              onClick={loadMoreResults}
-              disabled={false}
-            >
-              Load more
-            </Button>
+            {Boolean(called && data && data.userSearch.length) && (
+              <Button
+                data-testid="prev-btn"
+                onClick={loadMoreResults}
+                disabled={false}
+              >
+                Load more
+              </Button>
+            )}
           </>
         )}
       </div>
