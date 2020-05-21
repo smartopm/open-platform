@@ -1,6 +1,7 @@
 import React, { Fragment , useState } from 'react'
 import { Link, useLocation} from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import {UserPlotInfo} from './UserPlotInfo'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import Button from '@material-ui/core/Button'
@@ -86,7 +87,7 @@ export default function UserInformation({
         refetch()
       })
     }
-  
+    
     return (
       <div>
         <Fragment>
@@ -396,7 +397,7 @@ export default function UserInformation({
         </TabPanel>
           )}
           <TabPanel value={tabValue} index={2}>
-            <h4 className="text-center">Coming soon</h4>
+            <UserPlotInfo accounts={data.user.accounts}/>
           </TabPanel>
           <TabPanel value={tabValue} index={3}>
             <h4 className="text-center">Coming soon</h4>
