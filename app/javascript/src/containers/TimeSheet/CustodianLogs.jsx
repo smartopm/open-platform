@@ -8,7 +8,7 @@ import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import { useHistory } from 'react-router/'
 import ErrorPage from '../../components/Error'
 import Paginate from '../../components/Paginate'
-import Grid from '@material-ui/core/Grid'
+import CenteredContent from '../../components/CenteredContent'
 
 const limit = 20
 export default function CustodianLogs() {
@@ -41,14 +41,14 @@ export default function CustodianLogs() {
       <Nav navName="Time Cards" menuButton="back" backTo="/" />
       <br />
       <CustodianTimeSheetLogs data={data} />
-      <Grid container direction="row" justify="center" alignItems="center">
+      <CenteredContent>
         <Paginate
           count={data.timeSheetLogs.length}
           offSet={offset}
           limit={limit}
           handlePageChange={paginate}
         />
-      </Grid>
+      </CenteredContent>
     </Fragment>
   )
 }
