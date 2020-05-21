@@ -12,8 +12,8 @@ import ErrorPage from '../components/Error.jsx'
 import { Context } from './Provider/AuthStateProvider.js'
 
 const QUERY = gql`
-  query UserSearch($query: String!) {
-    userSearch(query: $query) {
+  query UserSearch($query: String!, $limit: Int, $offset: Int) {
+    userSearch(query: $query, limit: $limit, offset: $offset) {
       id
       userType
       name
@@ -42,6 +42,7 @@ function NewRequestButton() {
 
 function Results({ data, loading, called }) {
   const authState = useContext(Context)
+
   function memberList(users) {
     return (
       <Fragment>
@@ -77,10 +78,13 @@ function Results({ data, loading, called }) {
         {data.userSearch.length > 0 ? (
           memberList(data.userSearch)
         ) : (
-            <div className={`${css(styles.noResults)}`}>
-              <h4>No results found!</h4>
-            </div>
-          )}
+          <div className={`${css(styles.noResults)}`}>
+            <h4>No results found!</h4>
+          </div>
+        )}
+
+
+
         {/* only show this when the user is admin */}
         {authState.user.userType === 'admin' && <NewRequestButton />}
       </div>
@@ -90,18 +94,35 @@ function Results({ data, loading, called }) {
 }
 
 export default function SearchContainer({ location }) {
+  const [offset, setOffset] = useState(0)
+  const limit = 50
 
   function updateSearch(e) {
     const { value } = e.target
     setName(value || '')
     if (value && value.length > 0) {
-      loadGQL({ variables: { query: value } })
+      loadGQL({ variables: { query: value, limit, offset } })
     }
   }
 
   const [name, setName] = useState('')
-  const [loadGQL, { called, loading, error, data }] = useLazyQuery(QUERY)
+  const [loadGQL, { called, loading, error, data, fetchMore }] = useLazyQuery(
+    QUERY
+  )
   const authState = useContext(Context)
+
+  function loadMoreResults() {
+    fetchMore({
+      variables: { query: name, offset: data.userSearch.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+        return Object.assign({}, prev, {
+          userSearch: [...prev.userSearch, ...fetchMoreResult.userSearch]
+        })
+      }
+    })
+    setOffset(0)
+  }
 
   if (!['security_guard', 'admin', 'custodian'].includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
@@ -132,7 +153,18 @@ export default function SearchContainer({ location }) {
           />
         </Link>
 
-        {name.length > 0 && <Results {...{ data, loading, called }} />}
+        {name.length > 0 && (
+          <>
+            <Results {...{ data, loading, called }} />
+            <Button
+              data-testid="prev-btn"
+              onClick={loadMoreResults}
+              disabled={false}
+            >
+              Load more
+            </Button>
+          </>
+        )}
       </div>
     </div>
   )
