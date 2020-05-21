@@ -173,6 +173,22 @@ export const UsersQuery = gql`
   ${UserFragment.publicFields}
 `
 
+export const UserSearchQuery = gql`
+  query UserSearch($query: String!, $limit: Int, $offset: Int) {
+    userSearch(query: $query, limit: $limit, offset: $offset) {
+      id
+      userType
+      name
+      state
+      roleName
+      imageUrl
+      avatarUrl
+    }
+  }
+`
+
+
+
 export const ShowroomEntriesQuery = gql`
   {
     showroomEntries {
