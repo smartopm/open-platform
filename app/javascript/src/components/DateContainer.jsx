@@ -15,6 +15,11 @@ export const dateTimeToString = date =>
     timeZone
   })
 
+export const newCatDate = date =>
+  format(zonedTimeDate(date), "yyyy-MM-dd", {
+    timeZone
+  })
+
 const utcDate = date => toDate(new Date(date), { timeZone: 'UTC' })
 export const zonedDate = date => utcToZonedTime(utcDate(date), timeZone)
 
