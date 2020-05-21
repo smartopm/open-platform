@@ -65,6 +65,8 @@ module Types::Queries::User
   end
 
   def user_search(query: nil, offset: 0, limit: 50)
+    return unless context[:current_user]
+
     User.where(community_id: context[:current_user].community_id)
         .search(query)
         .limit(limit)
