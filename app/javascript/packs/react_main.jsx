@@ -192,7 +192,6 @@ const App = () => {
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
-                    <Route path="/myaccount/:id" component={UserShow} />
                     <Route path="/referral" component={UserEdit} />
 
                     {/* new routes => guards */}
@@ -245,10 +244,10 @@ const App = () => {
                     <Route path="/timesheet/:id" exact component={EmployeeLogs} />
 
                     <Route path="/client_request_from" exact component={ClientRequestForm} />
-                    
+
                     <AdminRoutes>
                       <Switch>
-                      <Route path="/client_request_from" exact component={ClientRequestForm} />
+                        <Route path="/client_request_from" exact component={ClientRequestForm} />
                         <Route path="/users" component={UsersList} />
                         <Route path="/messages" component={AllMessages} />
                         <Route path="/showroom_logs" component={ShowroomLogs} />
