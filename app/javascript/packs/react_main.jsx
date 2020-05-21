@@ -193,8 +193,7 @@ const App = () => {
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     <Route path="/myaccount/:id" component={UserShow} />
-                    <Route path="/referrals" component={Referrals} />
-
+                    
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
 
