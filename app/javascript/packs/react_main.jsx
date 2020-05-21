@@ -67,7 +67,7 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
-import Referrals from '../src/containers/Referrals'
+
 import Scan from '../src/containers/Scan.jsx'
 
 // Prevent Google Analytics reporting from staging and dev domains
