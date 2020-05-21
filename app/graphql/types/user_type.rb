@@ -27,6 +27,7 @@ module Types
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
     field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
     field :messages_count, Int, null: true
+    field :accounts, [Types::AccountType], null: true, visible: { roles: %i[admin], user: :id }
     field :messages, [Types::MessageType], null: true, visible: { roles: %i[admin], user: :id }
     field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
                                                                        user: :id }

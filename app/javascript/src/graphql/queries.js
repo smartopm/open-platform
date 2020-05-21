@@ -164,14 +164,30 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int) {
-    users(limit: $limit, offset: $offset) {
+  query users($limit: Int, $offset: Int, $userType: String) {
+    users(limit: $limit, offset: $offset, userType: $userType) {
       ...UserFields
     }
   }
 
   ${UserFragment.publicFields}
 `
+
+export const UserSearchQuery = gql`
+  query UserSearch($query: String!, $limit: Int, $offset: Int) {
+    userSearch(query: $query, limit: $limit, offset: $offset) {
+      id
+      userType
+      name
+      state
+      roleName
+      imageUrl
+      avatarUrl
+    }
+  }
+`
+
+
 
 export const ShowroomEntriesQuery = gql`
   {

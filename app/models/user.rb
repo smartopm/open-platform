@@ -12,6 +12,11 @@ require 'email_msg'
 class User < ApplicationRecord
   # General user error to return on actions that are not possible
   class UserError < StandardError; end
+  include SearchCop
+
+  search_scope :search do
+    attributes :name, :phone_number, :user_type
+  end
 
   belongs_to :community, optional: true
   has_many :entry_requests, dependent: :destroy
@@ -21,6 +26,7 @@ class User < ApplicationRecord
   has_many :notes, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
+  has_many :accounts, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
