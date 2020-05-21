@@ -291,7 +291,12 @@ export function Component({ authState }) {
                     styles.cardSize
                   )} card align-self-center text-center`}
                 >
-                  <Link to="/referrals" className={`card-link`}>
+                  <Link to={{
+                      pathname: '/referral',
+                      state: {
+                        from: 'ref'
+                      }
+                    }}>
                     <div className="card-body">
                       <h5 className="card-title">
                       <PeopleIcon fontSize="large" className={css(styles.homeIconColor)} />
