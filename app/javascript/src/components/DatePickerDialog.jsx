@@ -26,14 +26,6 @@ const theme = createMuiTheme({
                 color: '#25c0b0',
             },
         },
-        MuiPickersModal: {
-            dialogAction: {
-                color: '#25c0b0'
-            },
-            current: {
-                color: '#25c0b0',
-            },
-        },
     }
 });
 
@@ -67,3 +59,4 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
 }
 
 
+  

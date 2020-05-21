@@ -47,7 +47,7 @@ export default function FormContainer({ match, history, location }) {
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
-  const [selectedDate] = React.useState(new Date()) 
+  const [selectedDate, handleDateChange] = React.useState(null) 
   const [showResults, setShowResults] = React.useState(false)
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -135,6 +135,8 @@ export default function FormContainer({ match, history, location }) {
         ...result,
         dataLoaded: true
       })
+
+      handleDateChange(result.expiresAt)
     }
   }
 
@@ -146,6 +148,7 @@ export default function FormContainer({ match, history, location }) {
         handleInputChange,
         handleSubmit,
         selectedDate,
+        handleDateChange,
         handleFileUpload: onChange,
         status
       }}
