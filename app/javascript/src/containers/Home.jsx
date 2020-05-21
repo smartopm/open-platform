@@ -175,7 +175,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['resident','client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
