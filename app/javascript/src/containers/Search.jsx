@@ -13,7 +13,7 @@ import CenteredContent from '../components/CenteredContent.jsx'
 import { UserSearchQuery } from '../graphql/queries.js'
 
 
-function NewRequestButton() {
+export function NewRequestButton() {
   return (
     <CenteredContent>
       <Link className={css(styles.requestLink)} to="/new/user">
@@ -28,9 +28,7 @@ function NewRequestButton() {
   )
 }
 
-function Results({ data, loading, called }) {
-  const authState = useContext(Context)
-
+export function Results({ data, loading, called, authState }) {
   function memberList(users) {
     return (
       <Fragment>
@@ -38,6 +36,7 @@ function Results({ data, loading, called }) {
           <Link
             to={`/user/${user.id}`}
             key={user.id}
+            data-testid="link_search_user"
             className={css(styles.link)}
           >
             <div className="d-flex flex-row align-items-center py-2">
@@ -107,6 +106,7 @@ export default function SearchContainer({ location }) {
         })
       }
     })
+    // Allow next search to go through all records 
     setOffset(0)
   }
 
@@ -141,7 +141,7 @@ export default function SearchContainer({ location }) {
 
         {name.length > 0 && (
           <>
-            <Results {...{ data, loading, called }} />
+            <Results {...{ data, loading, called, authState }} />
             {Boolean(called && data && data.userSearch.length) && (
               <Button
                 data-testid="prev-btn"
