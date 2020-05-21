@@ -164,8 +164,8 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int) {
-    users(limit: $limit, offset: $offset) {
+  query users($limit: Int, $offset: Int, $userType: String) {
+    users(limit: $limit, offset: $offset, userType: $userType) {
       ...UserFields
     }
   }
