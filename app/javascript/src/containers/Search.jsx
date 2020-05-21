@@ -1,7 +1,6 @@
 import React, { useState, Fragment, useContext } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo'
-import gql from 'graphql-tag'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../components/Loading.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
@@ -10,24 +9,13 @@ import ScanIcon from '../../../assets/images/shape.svg'
 import { Button } from '@material-ui/core'
 import ErrorPage from '../components/Error.jsx'
 import { Context } from './Provider/AuthStateProvider.js'
+import CenteredContent from '../components/CenteredContent.jsx'
+import { UserSearchQuery } from '../graphql/queries.js'
 
-const QUERY = gql`
-  query UserSearch($query: String!, $limit: Int, $offset: Int) {
-    userSearch(query: $query, limit: $limit, offset: $offset) {
-      id
-      userType
-      name
-      state
-      roleName
-      imageUrl
-      avatarUrl
-    }
-  }
-`
 
 function NewRequestButton() {
   return (
-    <div className="d-flex justify-content-center">
+    <CenteredContent>
       <Link className={css(styles.requestLink)} to="/new/user">
         <Button
           variant="contained"
@@ -36,7 +24,7 @@ function NewRequestButton() {
           Create a new request
         </Button>
       </Link>
-    </div>
+    </CenteredContent>
   )
 }
 
@@ -83,8 +71,6 @@ function Results({ data, loading, called }) {
           </div>
         )}
 
-
-
         {/* only show this when the user is admin */}
         {authState.user.userType === 'admin' && <NewRequestButton />}
       </div>
@@ -107,7 +93,7 @@ export default function SearchContainer({ location }) {
 
   const [name, setName] = useState('')
   const [loadGQL, { called, loading, error, data, fetchMore }] = useLazyQuery(
-    QUERY
+    UserSearchQuery
   )
   const authState = useContext(Context)
 
