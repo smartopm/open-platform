@@ -105,7 +105,6 @@ class User < ApplicationRecord
     find_by(id: token)
   end
 
-  # rubocop:disable Metrics/AbcSize
   def enroll_user(vals)
     enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
     enrolled_user.community_id = community_id
@@ -114,10 +113,30 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-    generate_events('user_enrolled', enrolled_user, data) if enrolled_user.save
+    if enrolled_user.save
+      generate_events('user_enrolled', enrolled_user, data)
+      process_referral(enrolled_user,data)
+    end
     enrolled_user
   end
   # rubocop:enable Metrics/AbcSize
+
+  def process_referral(enrolled_user,data)
+    if user_type !='admin'
+      generate_events('user_referred', enrolled_user, data)
+      referral_todo(enrolled_user)
+    end
+  end
+
+  def referral_todo(vals)
+    ::Note.create( 
+      user_id: self[:id],
+      body: "Contact #{vals[:name]}: Prospective client referred by #{self[:name]}. Please reach out to the set up a call or visit.", 
+      flagged: true,
+      author_id: vals[:id],
+      completed: false
+    ) 
+  end
 
   def grant!(entry_request_id)
     entry = entry_requests.find(entry_request_id)
