@@ -56,5 +56,8 @@ export default ({ history }) => {
     </>
   )
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> c486ec64ae22819cfba3a0782cbe49dbef61af72

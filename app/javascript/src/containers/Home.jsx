@@ -24,6 +24,8 @@ import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import PeopleIcon from '@material-ui/icons/People'
+
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -173,7 +175,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['resident','client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
@@ -282,6 +284,28 @@ export function Component({ authState }) {
                   </div>
                 </Fragment>
               )}
+
+              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to={{
+                      pathname: '/referral',
+                      state: {
+                        from: 'ref'
+                      }
+                    }}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                      <PeopleIcon fontSize="large" className={css(styles.homeIconColor)} />
+                      </h5>
+                      <p>Referrals</p>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
 
               {authState.user.userType === 'admin' && (
                 <Fragment>
