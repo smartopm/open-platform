@@ -84,7 +84,6 @@ export default function FormContainer({ match, history, location }) {
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
-    const form = document.getElementById('user_form')
 
     if(isFromRef){
       setShowResults(true)
@@ -113,10 +112,6 @@ export default function FormContainer({ match, history, location }) {
       [name]: value
     })
   }
-
-
-
-  const authState = React.useContext(AuthStateContext)
 
 
   // If we are in an edit flow and haven't loaded the data,
