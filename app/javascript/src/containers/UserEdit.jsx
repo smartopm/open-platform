@@ -9,7 +9,6 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
 const initialValues = {
   name: '',
