@@ -9,7 +9,7 @@ export function UserPlotInfo(props) {
     accounts && accounts.forEach((account) => {
         land_parcels = [...land_parcels, ...account.landParcels]
     });
-    let plotInformation = <p>No Plots associated with this account!</p>
+    let plotInformation = <div className="container"><p>No plots information available.</p></div>
     if (accounts && accounts.length > 0 && land_parcels.length > 0) {
         let latestUpdated = new Date(accounts[0].updatedAt);
         accounts.forEach(account => {
