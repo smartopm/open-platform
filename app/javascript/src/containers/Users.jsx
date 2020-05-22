@@ -207,7 +207,7 @@ export default function UsersList() {
             ))}
           </Select>
           {Boolean(type.length) && (
-            <Button onClick={() => setType('')}>Clear Filter</Button>
+            <Button onClick={() => setType([])}>Clear Filter</Button>
           )}
         </FormControl>
 
