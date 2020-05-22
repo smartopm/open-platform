@@ -125,7 +125,7 @@ class User < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
   def process_referral(enrolled_user, data)
-    return unless user_type == 'admin'
+    return unless user_type != 'admin'
 
     generate_events('user_referred', enrolled_user, data)
     referral_todo(enrolled_user)
