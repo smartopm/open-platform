@@ -30,6 +30,7 @@ const QUERY = gql`
       avatarUrl
      accounts{
        id
+       updatedAt
        landParcels{
          id
          parcelNumber

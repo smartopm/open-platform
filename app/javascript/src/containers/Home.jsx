@@ -24,7 +24,7 @@ import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PeopleIcon from '@material-ui/icons/People'
+// import PeopleIcon from '@material-ui/icons/People'
 
 
 export default function Home() {
@@ -182,7 +182,7 @@ export function Component({ authState }) {
                   )} card align-self-center text-center`}
                 >
                   <Link to={{
-                      pathname: `/myaccount/${authState.user.id}`,
+                      pathname: `/user/${authState.user.id}`,
                       state: {
                         from: 'acc'
                       }
@@ -284,28 +284,6 @@ export function Component({ authState }) {
                   </div>
                 </Fragment>
               )}
-
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
-                <div
-                  className={`${css(
-                    styles.cardSize
-                  )} card align-self-center text-center`}
-                >
-                  <Link to={{
-                      pathname: '/referral',
-                      state: {
-                        from: 'ref'
-                      }
-                    }}>
-                    <div className="card-body">
-                      <h5 className="card-title">
-                      <PeopleIcon fontSize="large" className={css(styles.homeIconColor)} />
-                      </h5>
-                      <p>Referrals</p>
-                    </div>
-                  </Link>
-                </div>
-              ) : null}
 
               {authState.user.userType === 'admin' && (
                 <Fragment>
@@ -441,7 +419,7 @@ export function Component({ authState }) {
                     >
                       <Link to={'/'}
                         id="crfl"
-                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&entry.1055458143=${userData.phoneNumber ? userData.phoneNumber : ""}`, '_blank')}
                         className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">

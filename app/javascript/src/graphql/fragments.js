@@ -14,6 +14,14 @@ export const UserFragment = {
       state
       expiresAt
       email
+      accounts{
+        id
+        updatedAt
+        landParcels{
+          id
+          parcelNumber
+        }
+      }
       avatarUrl
       imageUrl
       notes {
