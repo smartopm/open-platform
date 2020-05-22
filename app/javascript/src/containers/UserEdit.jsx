@@ -84,11 +84,14 @@ export default function FormContainer({ match, history, location }) {
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
+    const form = document.getElementById('user_form')
+
     if(isFromRef){
       setShowResults(true)
-      window.location.reload(false)
+      setTimeout(() => {
+        window.location.reload(false)
+      }, 2000);
     }
-
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
@@ -101,6 +104,7 @@ export default function FormContainer({ match, history, location }) {
       .catch(err => {
         setMsg(err.message)
       })
+
   }
   function handleInputChange(event) {
     const { name, value } = event.target
@@ -113,9 +117,6 @@ export default function FormContainer({ match, history, location }) {
 
 
   const authState = React.useContext(AuthStateContext)
-  if (authState.user.userType !== 'admin') {
-    history.push('/')
-  }
 
 
   // If we are in an edit flow and haven't loaded the data,
