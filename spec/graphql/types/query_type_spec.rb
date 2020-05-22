@@ -179,6 +179,9 @@ RSpec.describe Types::QueryType do
 
   describe 'feedback' do
     before :each do
+      @user = create(:security_guard)
+      @current_user = create(:user, community: @user.community)
+
       @query =
         %(query {
                 usersFeedback {
@@ -195,9 +198,15 @@ RSpec.describe Types::QueryType do
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
                                        }).as_json
-
       expect(result.dig('data', 'usersFeedback')).not_to be_nil
       expect(result.dig('errors')).to be_nil
+    end
+
+    it 'should fails if not logged in' do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: nil,
+                                       }).as_json
+      expect(result.dig('data', 'usersFeedback')).to be_nil
     end
   end
 end

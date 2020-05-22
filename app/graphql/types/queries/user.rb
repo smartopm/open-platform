@@ -44,11 +44,14 @@ module Types::Queries::User
   end
 
   def user(id:)
-    User.find(id) if context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    User.find(id)
   end
 
   def users(offset: 0, limit: 100, user_type: nil)
-    return unless context[:current_user].admin?
+    adm = context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
     User.eager_load(:notes, :accounts)
         .where(community_id: context[:current_user].community_id)
@@ -58,7 +61,7 @@ module Types::Queries::User
   end
 
   def user_search(query: nil, offset: 0, limit: 50)
-    return unless context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
     User.eager_load(:notes, :accounts)
         .where(community_id: context[:current_user].community_id)
@@ -74,13 +77,15 @@ module Types::Queries::User
   end
 
   def pending_users
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
     User.eager_load(:notes, :accounts)
         .where(state: 'pending',
                community_id: context[:current_user].community_id).with_attached_avatar
   end
 
   def security_guards
-    return unless context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
     User.eager_load(:notes, :accounts).where(
       community_id: context[:current_user].community_id,

@@ -14,6 +14,8 @@ module Types::Queries::Showroom
   end
 
   def showroom_entries(offset: 0, limit: 100)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     Showroom.all.limit(limit).offset(offset)
   end
 end
