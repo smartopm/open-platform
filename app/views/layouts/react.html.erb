@@ -90,10 +90,10 @@
         window.promptEvent.userChoice.then(function (choiceResult) {
           // hide the prompt banner here
           if (choiceResult.outcome === "accepted") {
-            // Todo: @yoram ==> Add Google analytics here to track the app installs
+             ga('send', 'event', 'PWA-installed', 'Accepted',);
             window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
           } else {
-            // Todo: @yoram ==> Add Google analytics here to track the app install rejections
+            ga('send', 'event', 'PWA-rejected', 'mm User dismissed the A2HS prompt',);
             console.info("mm User dismissed the A2HS prompt");
           }
           window.promptEvent = null;
