@@ -18,10 +18,14 @@ module Types::Queries::EntryRequest
   end
 
   def entry_request(id:)
-    EntryRequest.find(id) if context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    EntryRequest.find(id)
   end
 
   def entry_requests
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     EntryRequest.where(community_id: context[:current_user].community_id)
   end
 end

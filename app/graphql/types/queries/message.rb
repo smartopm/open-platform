@@ -21,13 +21,18 @@ module Types::Queries::Message
   end
 
   def messages(query: '', offset: 0, limit: 100)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     com_id = context[:current_user].community_id
     iq = Message.users_newest_msgs(query, offset, limit, com_id)
     Message.joins(:user, :sender).eager_load(user: %i[notes avatar_attachment])
            .unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
   end
 
+  # rubocop:disable Metrics/AbcSize
   def user_messages(id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     com_id = context[:current_user].community_id
     messages =
       Message.joins(:user, :sender).includes(:user, :sender)
@@ -38,4 +43,5 @@ module Types::Queries::Message
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
   end
+  # rubocop:enable Metrics/AbcSize
 end
