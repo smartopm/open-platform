@@ -50,19 +50,21 @@ module Types::Queries::User
   def users(offset: 0, limit: 100, user_type: nil)
     return unless context[:current_user].admin?
 
-    User.where(community_id: context[:current_user].community_id)
+    User.eager_load(:notes, :accounts)
+        .where(community_id: context[:current_user].community_id)
         .search(user_type)
         .limit(limit)
-        .offset(offset)
+        .offset(offset).with_attached_avatar
   end
 
   def user_search(query: nil, offset: 0, limit: 50)
     return unless context[:current_user]
 
-    User.where(community_id: context[:current_user].community_id)
+    User.eager_load(:notes, :accounts)
+        .where(community_id: context[:current_user].community_id)
         .search(query)
         .limit(limit)
-        .offset(offset)
+        .offset(offset).with_attached_avatar
   end
 
   def current_user
@@ -72,16 +74,17 @@ module Types::Queries::User
   end
 
   def pending_users
-    User.where(state: 'pending',
-               community_id: context[:current_user].community_id)
+    User.eager_load(:notes, :accounts)
+        .where(state: 'pending',
+               community_id: context[:current_user].community_id).with_attached_avatar
   end
 
   def security_guards
     return unless context[:current_user]
 
-    User.where(
+    User.eager_load(:notes, :accounts).where(
       community_id: context[:current_user].community_id,
       user_type: 'security_guard',
-    ).order(name: :asc)
+    ).order(name: :asc).with_attached_avatar
   end
 end
