@@ -192,7 +192,7 @@ export default function UserInformation({
                         </MenuItem>
                       </>
                     )}
-                    {['client', 'resident'].includes(userType) && (
+                    {['admin', 'client', 'resident'].includes(userType) && (
                       <>
                         <MenuItem key={'message_support'}>
                           <Link
