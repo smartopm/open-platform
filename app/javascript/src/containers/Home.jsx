@@ -182,7 +182,7 @@ export function Component({ authState }) {
                   )} card align-self-center text-center`}
                 >
                   <Link to={{
-                      pathname: `/user/${authState.user.id}`,
+                      pathname: `/myaccount/${authState.user.id}`,
                       state: {
                         from: 'acc'
                       }
