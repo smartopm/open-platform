@@ -5,6 +5,8 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { StyleSheet, css } from 'aphrodite'
+import {useHistory} from 'react-router-dom'
+
 
 const useStyles = makeStyles({
     root: {
@@ -27,7 +29,7 @@ export default function SupportCard({ handleSendMessage, userData }) {
     // hard coding CSM number
     // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
     const CSMNumber = '260974624243'
-
+    let history = useHistory()
     return (
         <Fragment>
             <div className="justify-content-center align-items-center container">
@@ -129,18 +131,23 @@ export default function SupportCard({ handleSendMessage, userData }) {
                 </Grid>
 
                 <Grid container direction="row" className={classes.root}>
-                    <Button
-                        data-testid="pwmm"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => window.open("/contact/mobile_money", '_self')}
-                        className={`${css(styles.chatButton)}`}
-                    >
-                        Pay With Mobile Money
-                            </Button>
+
+                    
+                        <Button
+                            data-testid="pwmm"
+                            variant="contained"
+                            color="primary"
+                            onClick={()=> history.push("/mobile_money")}
+                            className={`${css(styles.chatButton)}`}
+                        >
+                            Pay With Mobile Money
+                           
+                    </Button>
+
+                    
                 </Grid>
             </div>
-        </Fragment>
+        </Fragment >
     );
 
 }

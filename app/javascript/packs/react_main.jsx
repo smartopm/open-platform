@@ -188,7 +188,7 @@ const App = () => {
 
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
-                    <Route path="/contact/mobile_money" component={MobileMoney} />
+                    <Route path="/mobile_money" component={MobileMoney} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
