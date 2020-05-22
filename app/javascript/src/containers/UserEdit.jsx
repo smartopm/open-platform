@@ -9,7 +9,6 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
 const initialValues = {
   name: '',
@@ -84,11 +83,13 @@ export default function FormContainer({ match, history, location }) {
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
+
     if(isFromRef){
       setShowResults(true)
-      window.location.reload(false)
+      setTimeout(() => {
+        window.location.reload(false)
+      }, 2000);
     }
-
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
@@ -101,6 +102,7 @@ export default function FormContainer({ match, history, location }) {
       .catch(err => {
         setMsg(err.message)
       })
+
   }
   function handleInputChange(event) {
     const { name, value } = event.target
@@ -108,13 +110,6 @@ export default function FormContainer({ match, history, location }) {
       ...data,
       [name]: value
     })
-  }
-
-
-
-  const authState = React.useContext(AuthStateContext)
-  if (authState.user.userType !== 'admin') {
-    history.push('/')
   }
 
 
