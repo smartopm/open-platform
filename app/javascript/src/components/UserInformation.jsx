@@ -102,8 +102,8 @@ export default function UserInformation({
                 {DateUtil.isExpired(data.user.expiresAt) ? (
                   <span className="text-danger">Already Expired</span>
                 ) : (
-                    DateUtil.formatDate(data.user.expiresAt)
-                  )}
+                  DateUtil.formatDate(data.user.expiresAt)
+                )}
               </div>
               <div className="expires">
                 Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
@@ -115,15 +115,14 @@ export default function UserInformation({
               {DateUtil.isExpired(data.user.expiresAt) ? (
                 <p className={css(styles.badge, styles.statusBadgeBanned)}>
                   Expired
-                  </p>
+                </p>
               ) : (
-                  ['admin'].includes(userType) && (
-                    <Status label={data.user.state} />
-                  )
-                )}
+                ['admin'].includes(userType) && (
+                  <Status label={data.user.state} />
+                )
+              )}
             </div>
             <div className="col-2 ml-auto">
-
               {Boolean(authState.user.userType !== 'security_guard') && (
                 <IconButton
                   aria-label="more"
@@ -150,12 +149,15 @@ export default function UserInformation({
                   <div>
                     {['admin'].includes(userType) && (
                       <>
-                        <MenuItem id='edit_button'
+                        <MenuItem
+                          id="edit_button"
                           key={'edit_user'}
-                          onClick={() => router.push(`/user/${data.user.id}/edit`)}
+                          onClick={() =>
+                            router.push(`/user/${data.user.id}/edit`)
+                          }
                         >
                           Edit
-                          </MenuItem>
+                        </MenuItem>
                         <MenuItem key={'send_sms'}>
                           <Link
                             to={{
@@ -188,25 +190,6 @@ export default function UserInformation({
                             className={css(styles.linkItem)}
                           >
                             User Logs
-                            </Link>
-                        </MenuItem>
-                      </>
-                    )}
-                    {['client', 'resident'].includes(userType) && (
-                      <>
-                        <MenuItem key={'message_support'}>
-                          <Link
-                            to={{
-                              pathname: `/message/${data.user.id}`,
-                              state: {
-                                clientName: 'Contact Support',
-                                clientNumber: CSMNumber,
-                                from: 'user_profile'
-                              }
-                            }}
-                            className={css(styles.linkItem)}
-                          >
-                            Message Support
                           </Link>
                         </MenuItem>
                         <MenuItem key={'print'}>
@@ -215,7 +198,7 @@ export default function UserInformation({
                             className={css(styles.linkItem)}
                           >
                             Print
-                        </Link>
+                          </Link>
                         </MenuItem>
                         <MenuItem key={'send_code'}>
                           <a
@@ -244,10 +227,29 @@ export default function UserInformation({
                             className={css(styles.linkItem)}
                           >
                             Send One Time Passcode
-                        </a>
+                          </a>
                         </MenuItem>
-                      </>)}
-
+                      </>
+                    )}
+                    {['client', 'resident'].includes(userType) && (
+                      <>
+                        <MenuItem key={'message_support'}>
+                          <Link
+                            to={{
+                              pathname: `/message/${data.user.id}`,
+                              state: {
+                                clientName: 'Contact Support',
+                                clientNumber: CSMNumber,
+                                from: 'user_profile'
+                              }
+                            }}
+                            className={css(styles.linkItem)}
+                          >
+                            Message Support
+                          </Link>
+                        </MenuItem>
+                      </>
+                    )}
                   </div>
                 ) : null}
               </Menu>
@@ -280,7 +282,7 @@ export default function UserInformation({
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="name">
                 Name
-                </label>
+              </label>
               <input
                 className="form-control"
                 type="text"
@@ -292,7 +294,7 @@ export default function UserInformation({
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="Accounts">
                 Accounts
-                </label>
+              </label>
               <input
                 className="form-control"
                 type="text"
@@ -304,7 +306,7 @@ export default function UserInformation({
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="phoneNumber">
                 Phone Number
-                </label>
+              </label>
               <input
                 className="form-control"
                 type="text"
@@ -316,7 +318,7 @@ export default function UserInformation({
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="email">
                 Email
-                </label>
+              </label>
               <input
                 className="form-control"
                 type="email"
@@ -329,7 +331,11 @@ export default function UserInformation({
             {authState.user.userType === 'security_guard' && (
               <div className="container row d-flex justify-content-between">
                 <span>Social: </span> <br />
-                <CaptureTemp refId={data.user.id} refName={data.user.name} refType="User" />
+                <CaptureTemp
+                  refId={data.user.id}
+                  refName={data.user.name}
+                  refType="User"
+                />
               </div>
             )}
           </div>
@@ -376,7 +382,9 @@ export default function UserInformation({
                     {note.completed ? (
                       <span
                         className={css(styles.actionIcon)}
-                        onClick={() => handleOnComplete(note.id, note.completed)}
+                        onClick={() =>
+                          handleOnComplete(note.id, note.completed)
+                        }
                       >
                         <Tooltip title="Mark this note as incomplete">
                           <CheckBoxIcon />
@@ -385,15 +393,17 @@ export default function UserInformation({
                     ) : !note.flagged ? (
                       <span />
                     ) : (
-                          <span
-                            className={css(styles.actionIcon)}
-                            onClick={() => handleOnComplete(note.id, note.completed)}
-                          >
-                            <Tooltip title="Mark this note complete">
-                              <CheckBoxOutlineBlankIcon />
-                            </Tooltip>
-                          </span>
-                        )}
+                      <span
+                        className={css(styles.actionIcon)}
+                        onClick={() =>
+                          handleOnComplete(note.id, note.completed)
+                        }
+                      >
+                        <Tooltip title="Mark this note complete">
+                          <CheckBoxOutlineBlankIcon />
+                        </Tooltip>
+                      </span>
+                    )}
                     {!note.flagged && (
                       <span
                         className={css(styles.actionIcon)}
@@ -408,8 +418,8 @@ export default function UserInformation({
                   </Fragment>
                 ))
               ) : (
-                    'No Notes Yet'
-                  )}
+                'No Notes Yet'
+              )}
             </div>
           </TabPanel>
         )}
@@ -421,18 +431,27 @@ export default function UserInformation({
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
-
           {data.user.state === 'valid' &&
-            authState.user.userType === 'security_guard' ? (
-              <Button id="log-entry" className={`${css(styles.logButton)}`} onClick={onLogEntry}>
-                Log This Entry
-                </Button>) : null}
+          authState.user.userType === 'security_guard' ? (
+            <Button
+              id="log-entry"
+              className={`${css(styles.logButton)}`}
+              onClick={onLogEntry}
+            >
+              Log This Entry
+            </Button>
+          ) : null}
 
           {authState.user.userType === 'security_guard' ? (
-            <Button id="call_poniso" startIcon={<PhoneIcon />} className={`${css(styles.callButton)}`} href={`tel:${ponisoNumber}`}>
+            <Button
+              id="call_poniso"
+              startIcon={<PhoneIcon />}
+              className={`${css(styles.callButton)}`}
+              href={`tel:${ponisoNumber}`}
+            >
               Call Poniso
-              </Button>) : null}
-
+            </Button>
+          ) : null}
         </div>
       </Fragment>
     </div>
