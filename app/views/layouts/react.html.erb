@@ -41,8 +41,8 @@
     <div id="root">
     </div>
     <%= javascript_pack_tag 'react_main' %>
-      <div class="alert text-center"id="btn" role="alert">
-        Click here to install this app on your homescreen
+      <div class="alert text-center"id="btnSection" role="alert">
+        <span id="btn">Click here to add this application to your home screen </span> <span id="closeBtn">close</span>
       </div>
     </div>
   
@@ -62,13 +62,15 @@
     }
 
     const installButton = document.getElementById("btn");
+    const closeButton = document.getElementById('closeBtn')
+    const btSection = document.getElementById("btnSection")
 
     // hide the button if the user previously installed the pwa
     // this is important because the prompt will only show once according to google 
     window.onload = function() {
       const isInstalled = window.localStorage.getItem('installed');
       if (JSON.parse(isInstalled) || isSafari()) {
-         installButton.style.display = 'none'
+         btSection.style.display = 'none'
          return
       }
     };
@@ -83,6 +85,10 @@
     installButton.addEventListener("click", function (event) {
         addToHomeScreen();
     });
+    closeButton.addEventListener("click", function (_event) {
+      btSection.style.display = 'none'
+    })
+
 
     function addToHomeScreen() {
       // show the install app prompt
@@ -104,6 +110,7 @@
       }
     }
 
+    // check if browser is safari 
     function isSafari(){
       return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     }
