@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import DateUtil from '../utils/dateutil'
@@ -121,6 +121,11 @@ export default function UsersList() {
       setOffset(offset + limit)
     }
   }
+
+  // reset pagination when the filter changes
+  useEffect(() => {
+    setOffset(0)
+  }, [type])
 
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
