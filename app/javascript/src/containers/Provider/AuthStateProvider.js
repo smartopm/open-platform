@@ -113,7 +113,7 @@ export function AuthStateProvider({ children, token, setToken }) {
       setState({ ...state, user: null, loaded: true, loggedIn: false })
     }
     // Get query if token changes
-  }, [token])
+  }, [client, state, token])
 
   if (state.error && token) {
     // There's an error with the token, delete it

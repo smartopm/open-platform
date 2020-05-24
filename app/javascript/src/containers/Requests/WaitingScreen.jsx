@@ -16,7 +16,7 @@ export default function HoldScreen({ match }) {
     return function cleanup() {
       stopPolling();
     };
-  }, []);
+  }, [stopPolling]);
   if (loading) {
     return <WaitScreen />;
   }

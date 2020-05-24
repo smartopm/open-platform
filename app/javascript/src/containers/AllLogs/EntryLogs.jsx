@@ -20,12 +20,12 @@ import {
 } from '../../components/Tabs'
 
 export default ({ history, match }) => {
-  return allEventLogs(history, match)
+  return AllEventLogs(history, match)
 }
 
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50
-const allEventLogs = (history, match) => {
+const AllEventLogs = (history, match) => {
   const subjects = ['user_entry', 'visitor_entry', 'showroom','user_temp']
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)

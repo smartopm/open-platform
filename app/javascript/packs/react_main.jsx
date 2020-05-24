@@ -151,7 +151,7 @@ const Analytics = props => {
         ReactGA.pageview(location.pathname)
       }
     });
-  }, [authState.user, history])
+  }, [authState.user, gtag, history, liveAnalytics])
 
   return props.children
 }
