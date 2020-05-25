@@ -25,7 +25,7 @@ import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PeopleIcon from '@material-ui/icons/People'
-
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -174,6 +174,27 @@ export function Component({ authState }) {
                   </Link>
                 </div>
               )}
+
+              {[ 'admin'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/users'} className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <RecentActorsIcon fontSize="large" className={css(styles.homeIconColor)} />
+                          </h5>
+                          <p>{'Users'}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
 
               {['resident','client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
