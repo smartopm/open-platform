@@ -1,4 +1,4 @@
-import React, {useContext } from 'react'
+import React, { useContext } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import UserInformation from '../components/UserInformation'
@@ -43,16 +43,16 @@ export default ({ history }) => {
   }
   return (
     <>
-    <Nav navName="Identification" menuButton="cancel" backTo="/" />
-    <UserInformation
-      data={data}
-      authState={authState}
-      onLogEntry={addLogEntry}
-      sendOneTimePasscode={sendOneTimePasscode}
-      refetch={refetch}
-      userId={id}
-      router={history}
-    />
+      <Nav navName="Identification" menuButton="cancel" backTo="/" />
+      <UserInformation
+        data={data}
+        authState={authState}
+        onLogEntry={addLogEntry}
+        sendOneTimePasscode={sendOneTimePasscode}
+        refetch={refetch}
+        userId={id}
+        router={history}
+      />
     </>
   )
 }

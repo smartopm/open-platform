@@ -18,7 +18,9 @@ module Types
     end
 
     def community(id:)
-      Community.find(id) if context[:current_user]
+      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
+      Community.find(id)
     end
 
     field :all_notes, [NoteType], null: false do
@@ -28,6 +30,8 @@ module Types
     end
 
     def all_notes(offset: 0, limit: 50)
+      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
       Note.all.order(created_at: :desc)
           .limit(limit).offset(offset)
     end
@@ -38,6 +42,8 @@ module Types
     end
 
     def user_notes(id:)
+      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
       Note.where(user_id: id).order(created_at: :desc)
     end
 
@@ -46,6 +52,8 @@ module Types
     end
 
     def flagged_notes
+      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
       Note.where(flagged: true).order(completed: :desc, created_at: :desc)
     end
 
@@ -55,6 +63,8 @@ module Types
     end
 
     def entry_search(name:)
+      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
       EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
     end
 
@@ -66,6 +76,8 @@ module Types
     end
 
     def users_feedback(offset: 0, limit: 50)
+      raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
     end

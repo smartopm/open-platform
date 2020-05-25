@@ -187,5 +187,19 @@ RSpec.describe User, type: :model do
       expect(@nuser.id).to eq @el.ref_id
       expect(@admin.id).to eq @el.acting_user_id
     end
+
+    it 'it should create a todo after a referral client has been created' do
+      user = FactoryBot.create(:user_with_community, phone_number: '34566784567')
+      other_user = FactoryBot.create(:user_with_community, phone_number: '34566784567')
+      user_ref = {
+        id: user.id,
+        name: 'Test name',
+      }
+      todo = other_user.referral_todo(user_ref)
+      notes = Note.where(author_id: user.id)
+      expect(Note.all.count).to eql 1
+      expect(notes.length).to eql 1
+      expect(todo).to_not be_nil
+    end
   end
 end

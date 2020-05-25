@@ -128,7 +128,10 @@ export default function SearchContainer({ location }) {
           value={name}
           autoFocus
         />
-        <Link to={location.state.from} className={css(styles.cancelBtn)}>
+        <Link
+          to={location.state && location.state.from || '/'}
+          className={css(styles.cancelBtn)}
+        >
           <i className="material-icons">arrow_back</i>
         </Link>
         <Link to="/scan">

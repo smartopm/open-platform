@@ -111,6 +111,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
   def enroll_user(vals)
     enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
     enrolled_user.community_id = community_id
@@ -119,10 +120,32 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-    generate_events('user_enrolled', enrolled_user, data) if enrolled_user.save
+    return unless enrolled_user.save
+
+    generate_events('user_enrolled', enrolled_user, data)
+    process_referral(enrolled_user, data)
     enrolled_user
   end
+
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
+  def process_referral(enrolled_user, data)
+    return unless user_type != 'admin'
+
+    generate_events('user_referred', enrolled_user, data)
+    referral_todo(enrolled_user)
+  end
+
+  def referral_todo(vals)
+    ::Note.create(
+      user_id: self[:id],
+      body: "Contact #{vals[:name]}: Prospective client referred by #{self[:name]}.
+      Please reach out to the set up a call or visit.",
+      flagged: true,
+      author_id: vals[:id],
+      completed: false,
+    )
+  end
 
   def grant!(entry_request_id)
     entry = entry_requests.find(entry_request_id)
@@ -149,6 +172,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable MethodLength
+
   def manage_shift(target_user_id, event_tag)
     user = find_a_user(target_user_id)
     data = { ref_name: user.name, type: user.user_type }
