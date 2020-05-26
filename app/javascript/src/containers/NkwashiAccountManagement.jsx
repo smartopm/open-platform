@@ -29,7 +29,7 @@ export default function NkwashiAccountManagement() {
                 <Nav navName="Thebe Portal" menuButton="back" backTo="/">
 
                     <div className="d-flex mb-0 justify-content-center">
-                        <p onClick={openDialog} style={{ color: '#FFF', marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
+                        <p data-testid="reset_password" onClick={openDialog} style={{ color: '#FFF', marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
                     </div>
                 </Nav>
 
@@ -37,11 +37,12 @@ export default function NkwashiAccountManagement() {
                     handleClose={openDialog}
                     handleConfirm={handleClick}
                     action='Send Email'
-                    open={isOpen}>
+                    open={isOpen}
+                   >
 
                     <h6>
-                        To request your login information or to reset your username and password?
-                    Email: <a>arrears.nkwashi@thebe-im.com</a>
+                        To request your login information or to reset your username and password,
+                    email: <a>arrears.nkwashi@thebe-im.com</a>
                     </h6>
 
                     <br />
