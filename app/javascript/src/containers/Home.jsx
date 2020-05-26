@@ -171,13 +171,19 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+              {['admin', 'resident', 'client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
                   className={`${css(
                     styles.cardSize
                   )} card align-self-center text-center`}
                 >
-                  <Link to="/account" className={`card-link`}>
+                  <Link to={{
+                    pathname: '/account',
+                    state: {
+                      clientName: authState.user.name,
+                      from: 'home'
+                    }
+                  }} className={`card-link`}>
                     <div className="card-body">
                       <h5 className="card-title">
                         <img
@@ -382,31 +388,31 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              { ['admin', 'client', 'resident'].includes(
+              {['admin', 'client', 'resident'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
-                <Fragment>
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <Link to={'/'} 
-                      onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
-                      className={`card-link`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <ListAltIcon
-                            fontSize="large"
-                            className={css(styles.homeIconColor)}
-                          />
-                        </h5>
-                        <p>Client Request Form</p>
-                      </div>
-                    </Link>
-                  </div>
-                </Fragment>
-              ): null}
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/'}
+                        onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                        className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <ListAltIcon
+                              fontSize="large"
+                              className={css(styles.homeIconColor)}
+                            />
+                          </h5>
+                          <p>Client Request Form</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
             </div>
           </div>
         </div>
