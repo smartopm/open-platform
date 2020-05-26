@@ -21,6 +21,11 @@ module Types::Queries::TimeSheet
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    field :user_last_shift, Types::TimeSheetType, null: true do
+      description 'Get user\'s last timesheet logs'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -55,6 +60,11 @@ module Types::Queries::TimeSheet
     return u.time_sheets.monthly_records(date_from - 1, end_date, limit, offset) if u.present?
 
     []
+  end
+
+  def user_last_shift(user_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    context[:current_user].find_a_user(user_id).time_sheets.first
   end
 
   def get_allow_user(user_id)

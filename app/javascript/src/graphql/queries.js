@@ -275,3 +275,12 @@ export const TimeSheetLogsQuery = gql`
            }
          }
        `
+
+export const lastUserTimeSheet = gql`
+      query userLastShift($userId: ID!){
+        userLastShift(userId: $userId){
+          endedAt
+          startedAt
+        }
+}
+`
