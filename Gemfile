@@ -51,6 +51,8 @@ gem 'rqrcode'
 # Sidekiq for jobs
 gem 'sidekiq'
 
+gem 'serviceworker-rails'
+
 # GraphQL
 gem 'graphql', '~> 1.9'
 gem 'graphiql-rails', group: :development
@@ -61,6 +63,9 @@ gem 'paper_trail'
 
 # Rollbar for error logging
 gem 'rollbar'
+
+# full text searching on models
+gem 'search_cop'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -97,6 +102,7 @@ group :test do
   gem 'webdrivers'
   gem 'factory_bot'
   gem 'simplecov'
+  gem 'shoulda-matchers'
 end
 
 

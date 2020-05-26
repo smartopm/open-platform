@@ -5,14 +5,14 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-import React, { useContext, useEffect, Component, Suspense } from 'react'
+import React, { useContext, useEffect, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
   Switch,
   Redirect,
   Route,
-  useHistory 
+  useHistory
 } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import ApolloProvider from '../src/containers/Provider/ApolloProvider'
@@ -37,6 +37,7 @@ import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen'
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode'
 import Support from '../src/containers/Support'
+import MobileMoney from '../src/components/MobileMoney'
 import GuardHome from '../src/containers/GuardHome'
 import EntryRequest from '../src/containers/Requests/EntryRequest'
 import RequestUpdate from '../src/containers/Requests/RequestUpdate'
@@ -66,33 +67,11 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
+
+import Scan from '../src/containers/Scan.jsx'
+
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
-
-class DynamicImport extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      component: null
-    }
-  }
-  componentDidMount() {
-    this.props.load().then(component => {
-      this.setState(() => ({
-        component: component.default ? component.default : component
-      }))
-    })
-  }
-  render() {
-    return this.props.children(this.state.component)
-  }
-}
-
-const Scan = props => (
-  <DynamicImport load={() => import('../src/containers/Scan.jsx')}>
-    {Component => (Component === null ? <Loading /> : <Component {...props} />)}
-  </DynamicImport>
-)
 
 const LoggedInOnly = props => {
   const authState = useContext(AuthStateContext)
@@ -144,27 +123,27 @@ const Analytics = props => {
 
   useEffect(() => {
     const user = authState.user
-    
+
     if (user) {
       if (liveAnalytics) {
         console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
         gtag('set', { user_id: user.id })
         gtag('set', 'user_properties', { Role: user.userType })
         ReactGA.event({
-          category:'LoggedInUserType',
+          category: 'LoggedInUserType',
           action: user.userType,
           eventLabel: user.id,
           nonInteraction: true
         })
       } else {
         console.log('GA DEVELOPMENT MODE: log user', user)
-       
+
       }
     }
     return history.listen((location) => {
-      if(location.pathname.includes('/id') ||location.pathname.includes('/user') ) {
-        let [,rootURL, , userPage] = location.pathname.split('/')
-    
+      if (location.pathname.includes('/id') || location.pathname.includes('/user')) {
+        let [, rootURL, , userPage] = location.pathname.split('/')
+
         let pageHit = `/${rootURL}/${userPage}`
         ReactGA.pageview(pageHit)
       } else {
@@ -209,8 +188,12 @@ const App = () => {
 
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
+                    <Route path="/mobile_money" component={MobileMoney} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
+
+                    <Route path="/referral" component={UserEdit} />
+                    <Route path="/myaccount/:id" component={UserShow} />
 
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
@@ -254,7 +237,7 @@ const App = () => {
 
                     {/*Nkwashi account management*/}
                     <Route path="/account" component={NkwashiAccountManagement} />
-                    
+
                     <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
                     <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
                     <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
@@ -262,10 +245,10 @@ const App = () => {
                     <Route path="/timesheet/:id" exact component={EmployeeLogs} />
 
                     <Route path="/client_request_from" exact component={ClientRequestForm} />
-                    
+
                     <AdminRoutes>
                       <Switch>
-                      <Route path="/client_request_from" exact component={ClientRequestForm} />
+                        <Route path="/client_request_from" exact component={ClientRequestForm} />
                         <Route path="/users" component={UsersList} />
                         <Route path="/messages" component={AllMessages} />
                         <Route path="/showroom_logs" component={ShowroomLogs} />
@@ -283,7 +266,7 @@ const App = () => {
                       </Switch>
                     </AdminRoutes>
 
-                    
+
                     <Route
                       path="*"
                       render={() => <ErrorPage title="Sorry Page not Found" />}

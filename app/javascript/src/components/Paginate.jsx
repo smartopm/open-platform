@@ -1,31 +1,36 @@
 import React from 'react'
+import { Button } from '@material-ui/core'
 
-export default function Paginate({ offSet, count, limit, handlePageChange }) {
-
+export default function Paginate({
+  count,
+  limit,
+  handlePageChange,
+  active,
+  offset
+}) {
   return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination">
-        <li className={`page-item ${offSet < limit && 'disabled'}`}>
-          <a
-            className="page-link"
-            data-testid="prev-btn"
-            onClick={() => handlePageChange('prev')}
-            href="#"
-          >
-            Previous
-          </a>
-        </li>
-        <li className={`page-item ${count < limit && 'disabled'}`}>
-          <button
-            className="page-link"
-            data-testid="next-btn"
-            onClick={() => handlePageChange('next')}
-            href="#"
-          >
-            Next
-          </button>
-        </li>
-      </ul>
-    </nav>
+    <>
+      <Button
+        data-testid="prev-btn"
+        onClick={() => handlePageChange('prev')}
+        disabled={!active && offset < 1}
+      >
+        Previous
+      </Button>
+
+      <Button
+        data-testid="next-btn"
+        onClick={() => handlePageChange('next')}
+        disabled={!active && count < limit}
+      >
+        Next
+      </Button>
+    </>
   )
+}
+
+Paginate.defaultProps = {
+  active: false,
+  offset: 0,
+  limit: 50
 }

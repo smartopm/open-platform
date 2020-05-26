@@ -128,6 +128,7 @@ export function Component({
             <img
               src={authState.community.logoUrl}
               className={css(styles.logo)}
+              alt="community logo"
             />
           </Link>
         )
@@ -140,7 +141,7 @@ export function Component({
     }
     return (
       <Link to="/">
-        <img src={logoUrl} className={css(styles.logo)} />
+        <img src={logoUrl} className={css(styles.logo)} alt="community logo" />
       </Link>
     )
   }

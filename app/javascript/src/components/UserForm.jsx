@@ -1,24 +1,37 @@
-import React, { useContext } from 'react'
+import React, { useContext} from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import { reasons, userState, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
-
+import DatePickerDialog from './DatePickerDialog'
+import {useLocation} from "react-router-dom"
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
+import {Button} from "@material-ui/core";
+import { Typography } from '@material-ui/core'
 export default function UserForm() {
+  let location = useLocation();
+  const authState = React.useContext(AuthStateContext)
+  const previousRoute = location.state && location.state.from
+  const isFromRef = previousRoute === "ref" || false;
   const {
     values,
     handleInputChange,
+    handleDateChange,
     handleFileUpload,
+    selectedDate,
     imageUrl,
-    status
+    status, handleSubmit 
   } = useContext(FormContext)
-
+  if(isFromRef){
+    values.userType = 'prospective_client'
+  }
   return (
     <div className="container">
       <form>
-        <div className="form-group">
+        {!isFromRef&&(
+          <div className="form-group">
           {status === 'DONE' ? (
             <img
               src={imageUrl}
@@ -40,6 +53,23 @@ export default function UserForm() {
               </div>
             )}
         </div>
+        )}
+        {isFromRef&&(
+          <div className="form-group">
+          <label className="bmd-label-static" htmlFor="firstName">
+           Client Name
+          </label>
+          <input
+            className="form-control"
+            type="text"
+            onChange={handleInputChange}
+            value={authState.user.name || ''}
+            disabled={true}
+            name="name"
+            required
+          />
+        </div>
+        )}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
             Name
@@ -79,78 +109,68 @@ export default function UserForm() {
             required
           />
         </div>
-        <div className="form-group">
-          <TextField
-            id="reason"
-            select
-            label="Reason"
-            name="requestReason"
-            value={values.requestReason || ''}
-            onChange={handleInputChange}
-            margin="normal"
-            className={`${css(styles.selectInput)}`}
-          >
-            {reasons.map(reason => (
-              <MenuItem key={reason} value={reason}>
-                {reason}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className="form-group">
-          <TextField
-            id="userType"
-            select
-            label="User Type"
-            value={values.userType || ''}
-            onChange={handleInputChange}
-            margin="normal"
-            name="userType"
-            className={`${css(styles.selectInput)}`}
-          >
-            {Object.entries(userType).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-
-        <div className="form-group">
-          <TextField
-            id="state"
-            select
-            label="State"
-            value={values.state || ''}
-            onChange={handleInputChange}
-            margin="normal"
-            name="state"
-            className={`${css(styles.selectInput)}`}
-          >
-            {Object.entries(userState).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="expiresAt">
-            Expiration Date
-          </label>
-          <input
-            className="form-control"
-            name="expiresAt"
-            type="text"
-            pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
-            placeholder='YYYYY-MM-DD'
-            defaultValue={values.expiresAt || 'YYYYY-MM-DD'}
-            onChange={handleInputChange}
-            title="Date must be of this format YYYY-MM-DD"
-          />
-        </div>
-
-        <div className="form-group">
+      {!isFromRef&&(
+               <>
+                   <div className="form-group">
+                <TextField
+                  id="reason"
+                  select
+                  label="Reason"
+                  name="requestReason"
+                  value={values.requestReason || ''}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {reasons.map(reason => (
+                    <MenuItem key={reason} value={reason}>
+                      {reason}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+              <div className="form-group">
+                <TextField
+                  id="userType"
+                  select
+                  label="User Type"
+                  value={values.userType || ''}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="userType"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {Object.entries(userType).map(([key, val]) => (
+                    <MenuItem key={key} value={key}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+      
+              <div className="form-group">
+                <TextField
+                  id="state"
+                  select
+                  label="State"
+                  value={values.state || ''}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="state"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {Object.entries(userState).map(([key, val]) => (
+                    <MenuItem key={key} value={key}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+              <div >
+                  <DatePickerDialog selectedDate={selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
+              </div>
+              
+          <div className="form-group">
           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
             <input
               type="file"
@@ -164,12 +184,41 @@ export default function UserForm() {
             <label htmlFor="file">Take a photo of your ID</label>
           </div>
         </div>
+               </>
+      )}
+      {isFromRef&&(
+        
+        <div className='d-flex row justify-content-center' > 
+       <div className="col-8 p-0 justify-content-center" style={{ width: 256, marginRight: "10%" }}>
+       <Typography color="textSecondary" variant="body2" style={{ fontSize: 13 }}>
+         Nkwashi values its community and believes our community starts with you! Referring your friends and family members
+           to Nkwashi gives you a chance to pick your future neighbors, so start referring today.
+        </Typography>
+      </div>
+        <Button
+        variant="contained"
+        className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+        onClick = {e=> handleSubmit(e, values)}
+      >
+        <span>Refer</span>
+      </Button>
+        </div>
+      )}
       </form>
     </div>
   )
 }
 
 const styles = StyleSheet.create({
+  getStartedButton: {
+    backgroundColor: "#25c0b0",
+    color: "#FFF",
+    width: "30%",
+    height: 51,
+    boxShadow: "none",
+    marginTop: 50,
+    alignItems: 'center',
+  },
   selectInput: {
     width: '100%'
   },

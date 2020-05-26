@@ -12,6 +12,7 @@ import ExploreIcon from '../../../assets/images/icon_map.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
 import FeedbackIcon from '@material-ui/icons/Feedback'
@@ -22,6 +23,9 @@ import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import PeopleIcon from '@material-ui/icons/People'
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -29,7 +33,6 @@ export default function Home() {
   if (!authState.loggedIn) return <Loading />
   return <Component authState={authState} />
 }
-
 export function Component({ authState }) {
   const [redirect, setRedirect] = useState(false)
   const { t } = useTranslation()
@@ -52,6 +55,7 @@ export function Component({ authState }) {
       />
     )
   }
+  const userData = authState.user;
 
   return (
     <div>
@@ -94,7 +98,7 @@ export function Component({ authState }) {
                         <h5 className="card-title">
                           <img src={ExploreIcon} alt="map icon" />
                         </h5>
-                        <p>{t('home.explore')}</p>
+                        <p className={css(styles.CardtextImg)}>{t('home.explore')}</p>
                       </div>
                     </Link>
                   </div>
@@ -111,7 +115,7 @@ export function Component({ authState }) {
                       <h5 className="card-title">
                         <img src={QRIcon} alt="support icon" />
                       </h5>
-                      <p>{t('home.scan')}</p>
+                      <p className={css(styles.CardtextImg)}>{t('home.scan')}</p>
                     </div>
                   </Link>
                 </div>
@@ -125,9 +129,9 @@ export function Component({ authState }) {
                 <Link to={`/id/${authState.user.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
-                      <PersonIcon className={css(styles.homeIconColor)} />
+                      <PersonIcon fontSize='large' className={css(styles.homeIconColor)} />
                     </h5>
-                    <p>{t('home.identity')}</p>
+                    <p className={css(styles.CardtextIcon)}>{t('home.identity')}</p>
                   </div>
                 </Link>
               </div>
@@ -142,9 +146,9 @@ export function Component({ authState }) {
                   <Link to={'/contact'} className={`card-link`}>
                     <div className="card-body">
                       <h5 className="card-title">
-                        <HelpIcon className={css(styles.homeIconColor)} />
+                        <HelpIcon fontSize='large' className={css(styles.homeIconColor)} />
                       </h5>
-                      <p>{'Contact'}</p>
+                      <p className={css(styles.CardtextIcon)}>{'Contact'}</p>
                     </div>
                   </Link>
                 </div>
@@ -162,14 +166,57 @@ export function Component({ authState }) {
                         <img
                           src={NewsIcon}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt=" news icons"
                         />
                       </h5>
-                      <p>News</p>
+                      <p className={css(styles.CardtextImg)}>News</p>
                     </div>
                   </Link>
                 </div>
               )}
+
+              {[ 'admin'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                  <Fragment>
+                    <div
+                      className={`${css(
+                        styles.cardSize
+                      )} card align-self-center text-center`}
+                    >
+                      <Link to={'/users'} className={`card-link`}>
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <RecentActorsIcon fontSize="large" className={css(styles.homeIconColor)} />
+                          </h5>
+                          <p className={css(styles.CardtextIcon)}>{'Users'}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </Fragment>
+                ) : null}
+
+              {['resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to={{
+                      pathname: `/myaccount/${authState.user.id}`,
+                      state: {
+                        from: 'acc'
+                      }
+                    }}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                      <AccountCircleIcon fontSize="large" className={css(styles.homeIconColor)} />
+                      </h5>
+                      <p className={css(styles.CardtextIcon)}>My Account</p>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
 
               {['admin', 'resident', 'client'].includes(authState.user.userType.toLowerCase()) ? (
                 <div
@@ -189,10 +236,11 @@ export function Component({ authState }) {
                         <img
                           src={AccountManagement}
                           className={css(styles.homeIconColor)}
-                          alt=""
+                          alt="account management icon"
                         />
                       </h5>
-                      <p>My Thebe Portal</p>
+
+                      <p className={css(styles.CardtextImg)}>My Thebe Portal</p>
                     </div>
                   </Link>
                 </div>
@@ -210,9 +258,9 @@ export function Component({ authState }) {
                       <Link to={'/entry_logs'} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
-                            <LogIcon className={css(styles.homeIconColor)} />
+                            <LogIcon fontSize="large" className={css(styles.homeIconColor)} />
                           </h5>
-                          <p>{'Log Book'}</p>
+                          <p className={css(styles.CardtextIcon)}>{'Log Book'}</p>
                         </div>
                       </Link>
                     </div>
@@ -231,12 +279,12 @@ export function Component({ authState }) {
                       <Link to={'/timesheet'} className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
-                            <LogIcon
+                            <HourglassEmptyIcon
                               fontSize="large"
                               className={css(styles.homeIconColor)}
                             />
                           </h5>
-                          <p>Time Card</p>
+                          <p className={css(styles.CardtextIcon)}>Time Card</p>
                         </div>
                       </Link>
                     </div>
@@ -258,12 +306,34 @@ export function Component({ authState }) {
                             className={css(styles.homeIconColor)}
                           />
                         </h5>
-                        <p>Time Card</p>
+                        <p className={css(styles.CardtextIcon)}>Time Card</p>
                       </div>
                     </Link>
                   </div>
                 </Fragment>
               )}
+
+              {['admin','resident','client'].includes(authState.user.userType.toLowerCase()) ? (
+                <div
+                  className={`${css(
+                    styles.cardSize
+                  )} card align-self-center text-center`}
+                >
+                  <Link to={{
+                      pathname: '/referral',
+                      state: {
+                        from: 'ref'
+                      }
+                    }}>
+                    <div className="card-body">
+                      <h5 className="card-title">
+                      <PeopleIcon fontSize="large" className={css(styles.homeIconColor)} />
+                      </h5>
+                      <p className={css(styles.CardtextIcon)}>Referrals</p>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
 
               {authState.user.userType === 'admin' && (
                 <Fragment>
@@ -280,7 +350,7 @@ export function Component({ authState }) {
                             className={css(styles.homeIconColor)}
                           />
                         </h5>
-                        <p>{'Todo'}</p>
+                        <p className={css(styles.CardtextIcon)}>{'Todo'}</p>
                       </div>
                     </Link>
                   </div>
@@ -298,7 +368,7 @@ export function Component({ authState }) {
                             className={css(styles.homeIconColor)}
                           />
                         </h5>
-                        <p>{'Notes'}</p>
+                        <p className={css(styles.CardtextIcon)}>{'Notes'}</p>
                       </div>
                     </Link>
                   </div>
@@ -326,7 +396,7 @@ export function Component({ authState }) {
                           className={css(styles.homeIconColor)}
                         />
                       </h5>
-                      <p>{'Feedback'}</p>
+                      <p className={css(styles.CardtextIcon)}>{'Feedback'}</p>
                     </div>
                   </Link>
                 </div>
@@ -359,7 +429,7 @@ export function Component({ authState }) {
                           className={css(styles.homeIconColor)}
                         />
                       </h5>
-                      <p>
+                      <p className={css(styles.CardtextIcon)}>
                         {authState.user.userType === 'admin'
                           ? 'SMS'
                           : 'My Messages'}
@@ -382,7 +452,7 @@ export function Component({ authState }) {
                           fontSize="large"
                         />
                       </h5>
-                      Call Manager
+                      <p className={css(styles.CardtextIcon)}>Call Manager</p>
                     </div>
                   </a>
                 </div>
@@ -398,7 +468,8 @@ export function Component({ authState }) {
                       )} card align-self-center text-center`}
                     >
                       <Link to={'/'}
-                        onClick={() => window.open('https://forms.gle/Sdbj91Sia8EpDJiN6', '_blank')}
+                        id="crfl"
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&entry.1055458143=${userData.phoneNumber ? userData.phoneNumber : ""}`, '_blank')}
                         className={`card-link`}>
                         <div className="card-body">
                           <h5 className="card-title">
@@ -407,7 +478,7 @@ export function Component({ authState }) {
                               className={css(styles.homeIconColor)}
                             />
                           </h5>
-                          <p>Client Request Form</p>
+                          <p className={css(styles.CardtextIcon)}>Client Request Form</p>
                         </div>
                       </Link>
                     </div>
@@ -459,7 +530,13 @@ const styles = StyleSheet.create({
     width: 20
   },
   homeIconColor: {
-    color: '#25c0b0'
+    color: '#25c0b0',
+  },
+  CardtextIcon: {
+    marginTop: '15.5%'
+  },
+  CardtextImg: {
+    marginTop: '21%'
   },
   cardSize: {
     width: 200,

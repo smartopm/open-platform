@@ -4,6 +4,7 @@
 class Message < ApplicationRecord
   belongs_to :user
   belongs_to :sender, class_name: 'User'
+  has_one :campaign, dependent: :restrict_with_exception
 
   default_scope { order(created_at: :asc) }
 
@@ -26,12 +27,14 @@ class Message < ApplicationRecord
     update(is_read: true, read_at: DateTime.now) unless is_read
   end
 
-  def send_sms
+  def send_sms(add_prefix: true)
     return if receiver.nil?
 
+    new_message = ''
     text = 'Click this link to reply to this message in our app '
     link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{sender[:name]} from Nkwashi said: \n#{message} \n\n#{text} \n#{link}"
+    new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
+    new_message += "#{message} \n\n#{text} \n#{link}"
     Sms.send(receiver, new_message)
   end
 end

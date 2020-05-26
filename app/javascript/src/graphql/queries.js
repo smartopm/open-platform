@@ -42,6 +42,7 @@ export const AllEventLogsQuery = gql`
     $refType: String
     $offset: Int
     $limit: Int
+    $name: String
   ) {
     result: allEventLogs(
       subject: $subject
@@ -49,6 +50,7 @@ export const AllEventLogsQuery = gql`
       refType: $refType
       offset: $offset
       limit: $limit
+      name: $name
     ) {
       id
       createdAt
@@ -162,14 +164,30 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int) {
-    users(limit: $limit, offset: $offset) {
+  query users($limit: Int, $offset: Int, $userType: String) {
+    users(limit: $limit, offset: $offset, userType: $userType) {
       ...UserFields
     }
   }
 
   ${UserFragment.publicFields}
 `
+
+export const UserSearchQuery = gql`
+  query UserSearch($query: String!, $limit: Int, $offset: Int) {
+    userSearch(query: $query, limit: $limit, offset: $offset) {
+      id
+      userType
+      name
+      state
+      roleName
+      imageUrl
+      avatarUrl
+    }
+  }
+`
+
+
 
 export const ShowroomEntriesQuery = gql`
   {
@@ -220,8 +238,20 @@ export const UserMessageQuery = gql`
 `
 
 export const UserTimeSheetQuery = gql`
-         query userTimeSheetLogs($userId: ID!, $limit: Int, $offset: Int) {
-           userTimeSheetLogs(userId: $userId, limit: $limit, offset: $offset) {
+         query userTimeSheetLogs(
+           $userId: ID!
+           $limit: Int
+           $offset: Int
+           $dateFrom: String
+           $dateTo: String!
+         ) {
+           userTimeSheetLogs(
+             userId: $userId
+             limit: $limit
+             offset: $offset
+             dateFrom: $dateFrom
+             dateTo: $dateTo
+           ) {
              startedAt
              endedAt
              id
@@ -245,3 +275,12 @@ export const TimeSheetLogsQuery = gql`
            }
          }
        `
+
+export const lastUserTimeSheet = gql`
+      query userLastShift($userId: ID!){
+        userLastShift(userId: $userId){
+          endedAt
+          startedAt
+        }
+}
+`

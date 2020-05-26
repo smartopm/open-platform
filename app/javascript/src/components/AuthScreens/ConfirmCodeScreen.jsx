@@ -42,7 +42,7 @@ export default function ConfirmCodeScreen({ match }) {
   function resendCode() {
     setIsLoading(true);
     resendCodeToPhone({
-      variables: { phoneNumber: state.phoneNumber }
+      variables: { phoneNumber: state && state.phoneNumber || '' }
     }).then(() => {
       setIsLoading(false);
       setMsg(`We have resent the code to +${state.phoneNumber}`)
@@ -84,7 +84,7 @@ export default function ConfirmCodeScreen({ match }) {
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    return <Redirect to={state.from} />;
+    return <Redirect to={state ? state.from : '/'} /> //state.from
   }
 
   return (

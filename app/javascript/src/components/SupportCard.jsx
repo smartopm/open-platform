@@ -5,6 +5,8 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { StyleSheet, css } from 'aphrodite'
+import {useHistory} from 'react-router-dom'
+
 
 const useStyles = makeStyles({
     root: {
@@ -22,12 +24,12 @@ const useStyles = makeStyles({
     }
 })
 
-export default function SupportCard({handleSendMessage}) {
+export default function SupportCard({ handleSendMessage, userData }) {
     const classes = useStyles()
     // hard coding CSM number
     // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
     const CSMNumber = '260974624243'
-
+    let history = useHistory()
     return (
         <Fragment>
             <div className="justify-content-center align-items-center container">
@@ -100,7 +102,7 @@ export default function SupportCard({handleSendMessage}) {
                         <Typography className={classes.pos} color="textSecondary">
                             <a href={`https://api.whatsapp.com/send?phone=${CSMNumber}`}>
                                 {' '}
-                            +260 974 624243
+                                +260 974 624243
                             </a>
                         </Typography>
                     </Grid>
@@ -115,8 +117,37 @@ export default function SupportCard({handleSendMessage}) {
                         Support Chat
                     </Button>
                 </Grid>
+
+                <Grid container direction="row" className={classes.root}>
+                    <Button
+                        data-testid="crf"
+                        variant="contained"
+                        color="primary"
+                        onClick={() => window.open(`https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(/\s+/g, '+')}&${userData.phoneNumber}?entry.1055458143=${userData.phoneNumber}:entry.1055458143=""`, '_blank')}
+                        className={`${css(styles.chatButton)}`}
+                    >
+                        Client Request Form
+                    </Button>
+                </Grid>
+
+                <Grid container direction="row" className={classes.root}>
+
+                    
+                        <Button
+                            data-testid="pwmm"
+                            variant="contained"
+                            color="primary"
+                            onClick={()=> history.push("/mobile_money")}
+                            className={`${css(styles.chatButton)}`}
+                        >
+                            Pay With Mobile Money
+                           
+                    </Button>
+
+                    
+                </Grid>
             </div>
-        </Fragment>
+        </Fragment >
     );
 
 }
