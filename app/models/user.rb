@@ -125,7 +125,7 @@ class User < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
   def process_referral(enrolled_user, data)
-    return unless user_type != 'admin'
+    return unless user_type == 'admin'
 
     generate_events('user_referred', enrolled_user, data)
     referral_todo(enrolled_user)
@@ -133,11 +133,11 @@ class User < ApplicationRecord
 
   def referral_todo(vals)
     ::Note.create(
-      user_id: self[:id],
+      user_id: vals[:id],
       body: "Contact #{vals[:name]}: Prospective client referred by #{self[:name]}.
       Please reach out to the set up a call or visit.",
       flagged: true,
-      author_id: vals[:id],
+      author_id: self[:id],
       completed: false,
     )
   end
