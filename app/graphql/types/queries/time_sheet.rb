@@ -64,6 +64,7 @@ module Types::Queries::TimeSheet
 
   def user_last_shift(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     context[:current_user].find_a_user(user_id).time_sheets.first
   end
 
