@@ -30,7 +30,7 @@ module Mutations
         user = nil
         begin
           user = context[:current_user].enroll_user(vals)
-          return { user: user } if user.present?
+          return { user: user } if user.present? && user.errors.blank?
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, 'Duplicate email'
         end
