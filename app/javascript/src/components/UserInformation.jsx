@@ -24,6 +24,7 @@ import { CreateNote, UpdateNote } from '../graphql/mutations'
 import { withStyles, Tab } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import Loading from './Loading.jsx'
+import ReactGA from 'react-ga';
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
@@ -61,6 +62,31 @@ export default function UserInformation({
 
   const handleChange = (_event, newValue) => {
     setValue(newValue)
+    var page; 
+    switch (newValue) {
+      case 0:
+         page = "Contacts/"
+        break;
+      case 1:
+        page = "Notes/"
+        break;
+      case 2:
+        page = "Plots/"
+        break;
+      case 3:
+        page ="payments/"
+        break;
+      default:
+        page = "0"
+        break;
+    }
+      ReactGA.event({
+      category: 'My_Account',
+      action: page,
+      eventLabel: `Tab number${newValue}`,
+      nonInteraction: true
+    })
+    
   }
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
