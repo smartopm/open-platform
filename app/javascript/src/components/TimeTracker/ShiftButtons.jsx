@@ -82,7 +82,9 @@ export default function ShiftButtons({ userId }) {
       <Grid item xs={6} container justify="flex-end">
         <Button onClick={handleStartShift} className={css(styles.startBtn)} disabled={isInProgress}>
           {
-          width <= 767 ? <PlayArrowIcon />  : !isInProgress && 'Start Shift' || 'Shift In-Progress'
+            (width <= 767 && !isInProgress)
+              ? <PlayArrowIcon /> : (width <= 767 && isInProgress)
+                ? <Spinner/> : !isInProgress && 'Start Shift' || 'Shift In-Progress'
           }
         </Button>
       </Grid>
