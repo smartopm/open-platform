@@ -44,7 +44,8 @@ export default function LogEntry({ history }) {
     if (business.value === "Other") {
       setModal(!isModalOpen);
     }
-  }, [business.value, isModalOpen]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [business.value]);
 
   // Disable this temporarily until it's setup on the server
   function clearSignature() {
