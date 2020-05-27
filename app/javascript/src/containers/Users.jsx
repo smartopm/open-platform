@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import DateUtil from '../utils/dateutil'
@@ -78,7 +78,7 @@ export default function UsersList() {
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
-      userType: type.join(' OR '),
+      userType: joinWords(type),
       limit,
       offset
     },
@@ -88,6 +88,10 @@ export default function UsersList() {
   const [note, setNote] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
+
+  function joinWords(types) {
+    return types.map(type => `user_type = ${type}`).join(' OR ')
+  }
 
   function handleClick() {
     noteCreate({
@@ -121,6 +125,11 @@ export default function UsersList() {
       setOffset(offset + limit)
     }
   }
+
+  // reset pagination when the filter changes
+  useEffect(() => {
+    setOffset(0)
+  }, [type])
 
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />

@@ -5,7 +5,8 @@ import UserMessageItem from '../components/Messaging/UserMessageItem'
 
 describe('user message item component', () => {
   const message =
-    'Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/'
+    `Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/ 
+    and your email test@testdotcom.com`
   const data = {
     id: 1,
     name: 'joen',
@@ -42,7 +43,12 @@ describe('user message item component', () => {
   it('message should display in full when isTruncate is false', () => {
     expect(messageItem.find('.nz_msg').text()).toBe(message)
   })
-
+  it('message should include a linked url address', () => {
+    expect(messageItem.find('.nz_msg').html().toString()).toContain('<a href="https://app.doublegdp.com/news/posts/survey/">https://app.doublegdp.com/news/posts/survey/</a>')
+  })
+  it('message should include a linked url address', () => {
+    expect(messageItem.find('.nz_msg').html().toString()).toContain('<a href="mailto:test@testdotcom.com">test@testdotcom.com</a>')
+  })
   it('displayes not seen if message not seen yet by the user', () => {
     expect(messageItem.find('.nz_read').text()).toBe('Not Read')
   })
