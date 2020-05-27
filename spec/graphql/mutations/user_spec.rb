@@ -51,6 +51,20 @@ RSpec.describe Mutations::User do
       expect(result.dig('errors')).to be_nil
     end
 
+    it 'returns  duplicate number' do
+      variables = {
+        name: 'Mark Percival',
+        reason: 'Resident',
+        vehicle: nil,
+        phoneNumber: '26923422232',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                              }).as_json
+      expect(result.dig('errors')).not_to be_nil
+    end
+
     it 'returns should not create an invalid pending user' do
       variables = {
         name: '',
@@ -73,7 +87,7 @@ RSpec.describe Mutations::User do
         email: dup_email,
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '26923422232',
+        phoneNumber: '26924422232',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -87,7 +101,7 @@ RSpec.describe Mutations::User do
       variables = {
         name: 'Mark John',
         reason: 'Resident',
-        phoneNumber: '26923422232',
+        phoneNumber: '26913422232',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,

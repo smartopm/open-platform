@@ -42,6 +42,7 @@ class User < ApplicationRecord
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
+  validates :phone_number, uniqueness: true
   validate :phone_number_valid?
   before_save :ensure_default_state
 
@@ -113,6 +114,7 @@ class User < ApplicationRecord
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def enroll_user(vals)
+    # check_number_exsists(vals[:phone_number])
     enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
     enrolled_user.community_id = community_id
     enrolled_user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
@@ -120,7 +122,7 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-    return unless enrolled_user.save
+    return enrolled_user unless enrolled_user.save
 
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)
@@ -134,6 +136,11 @@ class User < ApplicationRecord
 
     generate_events('user_referred', enrolled_user, data)
     referral_todo(enrolled_user)
+  end
+
+  def check_number_exsists(_phone)
+    number_exists = ::User.where(User.arel_table[:phone_number].eq(phone_number))
+    return raise GraphQL::ExecutionError, 'Duplicate Number' if number_exists
   end
 
   def referral_todo(vals)
