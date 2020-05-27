@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
