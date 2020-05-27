@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
@@ -15,62 +15,71 @@ import Avatar from './Avatar.jsx'
 import { Footer } from './Footer.jsx'
 import PrivacyPolicy from '../components/PrivacyPolicy/PrivacyPolicy'
 
-export const SideList = ({ toggleDrawer, user }) => (
-  <div
-    role="drawer navigation"
-    onClick={toggleDrawer}
-    className={`${css(styles.sidenav)}`}
-    onKeyDown={toggleDrawer}
-  >
-    <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
-      <Avatar user={user} />
+export const SideList = ({ toggleDrawer, user, authState }) => {
+  return (
+    <div
+      role="drawer navigation"
+      onClick={toggleDrawer}
+      className={`${css(styles.sidenav)}`}
+      onKeyDown={toggleDrawer}
+    >
+      <div className={`align-self-center text-center ${css(styles.userInfo)} `}>
+        <Avatar user={user} />
 
-      <h5>{user.name}</h5>
-      <p>{user.phoneNumber}</p>
+        <h5>{user.name}</h5>
+        <p>{user.phoneNumber}</p>
+      </div>
+      <Divider />
+      <List >
+        {
+          ['admin', 'custodian'].includes(authState.user.userType) && (
+            <>
+              <ListItem button>
+                <ListItemIcon>
+                  <CropFreeIcon />
+                </ListItemIcon>
+                <Link to="/scan" className={`${css(styles.link)}`}>
+                  <ListItemText primary="Scanner" />
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <Link
+                  to={{
+                    pathname: 'search',
+                    state: { from: '/' }
+                  }} className={`${css(styles.link)}`}>
+                  <ListItemText primary="Search People" />
+                </Link>
+              </ListItem>  
+            </>
+         )
+        }
+
+        <ListItem button>
+          <ListItemIcon>
+            <HelpIcon />
+          </ListItemIcon>
+          <Link to="/contact" className={`${css(styles.link)}`}>
+            <ListItemText primary="Contact" />
+          </Link>
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <MeetingRoomIcon />
+          </ListItemIcon>
+          <a href="/logout" className={`${css(styles.link)}`}>
+            <ListItemText primary="Logout" />
+          </a>
+        </ListItem>
+      </List>
+      <Footer position="36vh" />
+      <PrivacyPolicy />
     </div>
-    <Divider />
-    <List >
-      <ListItem button>
-        <ListItemIcon>
-          <CropFreeIcon />
-        </ListItemIcon>
-        <Link to="/scan" className={`${css(styles.link)}`}>
-          <ListItemText primary="Scanner" />
-        </Link>
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <Link
-          to={{
-            pathname: 'search',
-            state: { from: '/' }
-          }} className={`${css(styles.link)}`}>
-          <ListItemText primary="Search People" />
-        </Link>
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <HelpIcon />
-        </ListItemIcon>
-        <Link to="/contact" className={`${css(styles.link)}`}>
-          <ListItemText primary="Contact" />
-        </Link>
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <MeetingRoomIcon />
-        </ListItemIcon>
-        <a href="/logout" className={`${css(styles.link)}`}>
-          <ListItemText primary="Logout" />
-        </a>
-      </ListItem>
-    </List>
-    <Footer position="36vh" />
-    <PrivacyPolicy />
-  </div>
-)
+  )
+}
 
 SideList.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
