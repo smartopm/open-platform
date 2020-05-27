@@ -18,7 +18,7 @@ describe("User infromation component loads",()=>{
             userType : "admin"
         }
     }
-    it('should render user name',()=>{
+    it('should render user name on contacts tab',()=>{
         const {getByText} = render(
             <MockedProvider mock={[]} >
               <BrowserRouter>
@@ -46,6 +46,34 @@ describe("User infromation component loads",()=>{
         expect(getByText('Plots')).toBeInTheDocument()
         expect(getByText('Payments')).toBeInTheDocument() 
         expect(getByText('Contact')).toBeInTheDocument() 
+    })
+    it('should render Comming soon',()=>{
+        const {getByText} = render(
+            <MockedProvider mock={[]} >
+              <BrowserRouter>
+                <UserInformation
+                data ={data}
+                authState ={authstate}
+                />
+            </BrowserRouter>
+            </MockedProvider>
+        )
+        expect(getByText('Coming soon')).toBeInTheDocument()
+    })
+    it('should render Menue',()=>{
+        const {getByText} = render(
+            <MockedProvider mock={[]} >
+              <BrowserRouter>
+                <UserInformation
+                data ={data}
+                authState ={authstate}
+                />
+            </BrowserRouter>
+            </MockedProvider>
+        )
+        expect(getByText('Print')).toBeInTheDocument()
+        expect(getByText('Send One Time Passcode')).toBeInTheDocument()
+        expect(getByText('Message Support')).toBeInTheDocument()
     })
 
 })
