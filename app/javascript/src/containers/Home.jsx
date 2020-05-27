@@ -224,7 +224,13 @@ export function Component({ authState }) {
                     styles.cardSize
                   )} card align-self-center text-center`}
                 >
-                  <Link to="/account" className={`card-link`}>
+                  <Link to={{
+                    pathname: '/account',
+                    state: {
+                      clientName: authState.user.name,
+                      from: 'home'
+                    }
+                  }} className={`card-link`}>
                     <div className="card-body">
                       <h5 className="card-title">
                         <img
