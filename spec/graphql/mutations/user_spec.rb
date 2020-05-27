@@ -62,7 +62,7 @@ RSpec.describe Mutations::User do
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
     end
 
     it 'returns should not create an invalid pending user' do
