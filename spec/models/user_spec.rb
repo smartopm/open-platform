@@ -196,7 +196,7 @@ RSpec.describe User, type: :model do
         name: 'Test name',
       }
       todo = other_user.referral_todo(user_ref)
-      notes = Note.where(author_id: user.id)
+      notes = Note.where(author_id: other_user.id)
       expect(Note.all.count).to eql 1
       expect(notes.length).to eql 1
       expect(todo).to_not be_nil
