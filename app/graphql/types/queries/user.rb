@@ -66,6 +66,7 @@ module Types::Queries::User
     User.eager_load(:notes, :accounts)
         .where(community_id: context[:current_user].community_id)
         .search(query)
+        .order(name: :asc)
         .limit(limit)
         .offset(offset).with_attached_avatar
   end
