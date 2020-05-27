@@ -5,7 +5,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { PropTypes } from 'prop-types'
 import { ManageShiftMutation } from '../../graphql/mutations'
-import { UserTimeSheetQuery } from '../../graphql/queries'
+import { lastUserTimeSheet } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
 import { Spinner } from '../Loading'
 import { useWindowDimensions } from '../../utils/customHooks'
@@ -16,7 +16,7 @@ import { lastDayOfTheMonth } from '../../utils/dateutil'
 
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
-  const { loading, data, error } = useQuery(UserTimeSheetQuery, {
+  const { loading, data, error } = useQuery(lastUserTimeSheet, {
     variables: {
       userId,
       dateTo: lastDayOfTheMonth.toUTCString()
@@ -28,8 +28,8 @@ export default function ShiftButtons({ userId }) {
   const { width } = useWindowDimensions() // 767
 
   useEffect(() => {
-      if (!loading && data && data.userTimeSheetLogs.length) {
-        const {startedAt, endedAt} = data.userTimeSheetLogs[0]
+      if (!loading && data && data.userLastShift) {
+        const {startedAt, endedAt} = data.userLastShift
           if (startedAt && endedAt === null) {
             setInProgress(true)
             return
@@ -69,7 +69,6 @@ export default function ShiftButtons({ userId }) {
   }
   if (loading) return <Spinner />
   if (error) return setMessage(error.message)
-
 
   return (
     <Grid

@@ -78,7 +78,7 @@ export default function UsersList() {
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
-      userType: type.join(' OR '),
+      userType: joinWords(type),
       limit,
       offset
     },
@@ -88,6 +88,10 @@ export default function UsersList() {
   const [note, setNote] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
+
+  function joinWords(types) {
+    return types.map(type => `user_type = ${type}`).join(' OR ')
+  }
 
   function handleClick() {
     noteCreate({
