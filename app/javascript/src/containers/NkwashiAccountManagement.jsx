@@ -9,7 +9,7 @@ export default function NkwashiAccountManagement() {
     const { width, height } = useWindowDimensions()
     const url = "https://mythebe.thebe-im.com/index.php/site/login"
     const [isOpen, setIsOpen] = React.useState(false);
-    const [loginId, setLoginId] = React.useState('')
+    const [loginId, setLoginId] = React.useState(null)
     const { state } = useLocation()
 
 
@@ -19,7 +19,9 @@ export default function NkwashiAccountManagement() {
     }
 
     function handleClick() {
-        window.open("mailto:arrears.nkwashi@thebe-im.com?subject=Thebe Portal Password Rest for " + state.clientName + '&body=Hi, my name is ' + state.clientName + '. Please rest my password for my login id: ' + loginId, 'emailWindow')
+        console.log(loginId);
+        window.open(`mailto:arrears.nkwashi@thebe-im.com?subject=Thebe Portal Password Rest for ${state.clientName} &body=Hi, my name is ${state.clientName}. Please reset my password for my login id:  ${loginId || ' Not Available'}`, 'emailWindow')
+    
     }
 
     return (
@@ -51,7 +53,7 @@ export default function NkwashiAccountManagement() {
                         type="text"
                         onChange={event => setLoginId(event.target.value)}
                         name="loginId"
-                        placeholder="Enter Login Id here"
+                        placeholder="Enter username (if available) here"
                     />
 
                 </ModalDialog>
