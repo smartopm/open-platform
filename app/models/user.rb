@@ -114,7 +114,6 @@ class User < ApplicationRecord
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def enroll_user(vals)
-    # check_number_exsists(vals[:phone_number])
     enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
     enrolled_user.community_id = community_id
     enrolled_user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
@@ -132,15 +131,10 @@ class User < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
   def process_referral(enrolled_user, data)
-    return unless user_type == 'admin'
+    return unless user_type != 'admin'
 
     generate_events('user_referred', enrolled_user, data)
     referral_todo(enrolled_user)
-  end
-
-  def check_number_exsists(_phone)
-    number_exists = ::User.where(User.arel_table[:phone_number].eq(phone_number))
-    return raise GraphQL::ExecutionError, 'Duplicate Number' if number_exists
   end
 
   def referral_todo(vals)
