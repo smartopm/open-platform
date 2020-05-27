@@ -157,7 +157,7 @@ export function Component({
   return (
     <>
       <Drawer open={state} onClose={toggleDrawer}>
-        <SideList toggleDrawer={toggleDrawer} user={authState.user} />
+        <SideList toggleDrawer={toggleDrawer} user={authState.user} authState={authState} />
       </Drawer>
       <nav
         className={`navbar navbar-dark ${css(styles.navBar)}`}
