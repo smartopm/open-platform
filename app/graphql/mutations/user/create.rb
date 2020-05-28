@@ -28,8 +28,10 @@ module Mutations
 
       def resolve(vals)
         user = nil
+        raise GraphQL::ExecutionError, 'Duplicate phone' if number_exists?(vals[:phone_number])
+
         begin
-          user = context[:current_user].enroll_user(vals) unless number_exists?(vals[:phone_number])
+          user = context[:current_user].enroll_user(vals)
           return { user: user } if user.present? && user.errors.blank?
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, 'Duplicate email'
@@ -40,7 +42,7 @@ module Mutations
 
       def number_exists?(phone_number)
         user = context[:current_user].find_via_phone_number(phone_number)
-        raise GraphQL::ExecutionError, 'Duplicate phone' if user
+        return false if user.nil?
 
         true
       end

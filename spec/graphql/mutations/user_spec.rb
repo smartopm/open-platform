@@ -40,14 +40,14 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '26923422232',
+        phoneNumber: '2609234222321',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
-      expect(result.dig('data', 'userCreate', 'user', 'phoneNumber')).to eql '26923422232'
+      expect(result.dig('data', 'userCreate', 'user', 'phoneNumber')).to eql '2609234222321'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '26923422232',
+        phoneNumber: '269234222321',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -87,7 +87,7 @@ RSpec.describe Mutations::User do
         email: dup_email,
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '26924422232',
+        phoneNumber: '269244222322',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -101,7 +101,7 @@ RSpec.describe Mutations::User do
       variables = {
         name: 'Mark John',
         reason: 'Resident',
-        phoneNumber: '26913422232',
+        phoneNumber: '269134322232',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -349,7 +349,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
-        phoneNumber: '26923422232',
+        phoneNumber: '261923422232',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
