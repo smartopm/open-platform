@@ -29,13 +29,20 @@ module Mutations
       def resolve(vals)
         user = nil
         begin
-          user = context[:current_user].enroll_user(vals)
+          user = context[:current_user].enroll_user(vals) unless number_exists?(vals[:phone_number])
           return { user: user } if user.present? && user.errors.blank?
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, 'Duplicate email'
         end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
+      end
+
+      def number_exists?(phone_number)
+        user = context[:current_user].find_via_phone_number(phone_number)
+        raise GraphQL::ExecutionError, 'Duplicate phone' if user
+
+        true
       end
 
       def authorized?(_vals)

@@ -42,7 +42,6 @@ class User < ApplicationRecord
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
-  validates :phone_number, uniqueness: true
   validate :phone_number_valid?
   before_save :ensure_default_state
 
@@ -103,8 +102,8 @@ class User < ApplicationRecord
   end
 
   # We may want to do a bit more work here massaing the number entered
-  def self.find_via_phone_number(phone_number)
-    find_by(phone_number: phone_number)
+  def find_via_phone_number(phone_number)
+    User.find_by(phone_number: phone_number)
   end
 
   def self.lookup_by_id_card_token(token)
