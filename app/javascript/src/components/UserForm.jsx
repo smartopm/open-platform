@@ -10,6 +10,7 @@ import {useLocation} from "react-router-dom"
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import {Button} from "@material-ui/core";
 import { Typography } from '@material-ui/core'
+
 export default function UserForm() {
   let location = useLocation();
   const authState = React.useContext(AuthStateContext)
@@ -138,6 +139,7 @@ export default function UserForm() {
                   onChange={handleInputChange}
                   margin="normal"
                   name="userType"
+                  required
                   className={`${css(styles.selectInput)}`}
                 >
                   {Object.entries(userType).map(([key, val]) => (
