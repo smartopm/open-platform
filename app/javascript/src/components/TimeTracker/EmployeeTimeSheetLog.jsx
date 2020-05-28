@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router'
-import dateutil, { getMonthName } from '../../utils/dateutil'
+import dateutil from '../../utils/dateutil'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 import Typography from '@material-ui/core/Typography'
 import { zonedTimeDate } from '../DateContainer'
