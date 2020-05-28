@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useWindowDimensions } from '../utils/customHooks'
 import IframeContainer from '../components/IframeContainer'
 import Nav from '../components/Nav';
@@ -14,16 +14,13 @@ export default function NkwashiAccountManagement() {
 
     function openDialog() {
         setIsOpen(!isOpen);
-        console.log(loginId);
-        
-    }
 
+    }
     function handleClick() {
         window.open(`mailto:arrears.nkwashi@thebe-im.com?subject=Thebe Portal Password Rest for ${state.clientName} &body=Hi, my name is ${state.clientName}. Please reset my password for my login id:  ${loginId}`, 'emailWindow')
         setIsOpen(!isOpen);
-        
-    }
 
+    }
     return (
 
         <React.Fragment>
@@ -34,19 +31,16 @@ export default function NkwashiAccountManagement() {
                         <p data-testid="reset_password" onClick={openDialog} style={{ color: '#FFF', marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
                     </div>
                 </Nav>
-
                 <ModalDialog
                     handleClose={openDialog}
                     handleConfirm={handleClick}
                     action='Send Email'
                     open={isOpen}
-                   >
-
+                >
                     <h6>
                         To request your login information or to reset your username and password,
                     email: <a>arrears.nkwashi@thebe-im.com</a>
                     </h6>
-
                     <br />
                     <input
                         className="form-control"
@@ -55,7 +49,6 @@ export default function NkwashiAccountManagement() {
                         name="loginId"
                         placeholder="Enter username (if available) here"
                     />
-
                 </ModalDialog>
                 <IframeContainer
                     link={url}
