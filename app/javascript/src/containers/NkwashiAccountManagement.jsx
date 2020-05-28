@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useWindowDimensions } from '../utils/customHooks'
 import IframeContainer from '../components/IframeContainer'
 import Nav from '../components/Nav';
@@ -9,19 +9,19 @@ export default function NkwashiAccountManagement() {
     const { width, height } = useWindowDimensions()
     const url = "https://mythebe.thebe-im.com/index.php/site/login"
     const [isOpen, setIsOpen] = React.useState(false);
-    const [loginId, setLoginId] = React.useState(null)
+    const [loginId, setLoginId] = useState('Not Available')
     const { state } = useLocation()
 
-
-    function openDialog(loginId) {
-        setLoginId(loginId)
+    function openDialog() {
         setIsOpen(!isOpen);
+        console.log(loginId);
+        
     }
 
     function handleClick() {
-        console.log(loginId);
-        window.open(`mailto:arrears.nkwashi@thebe-im.com?subject=Thebe Portal Password Rest for ${state.clientName} &body=Hi, my name is ${state.clientName}. Please reset my password for my login id:  ${loginId || ' Not Available'}`, 'emailWindow')
-    
+        window.open(`mailto:arrears.nkwashi@thebe-im.com?subject=Thebe Portal Password Rest for ${state.clientName} &body=Hi, my name is ${state.clientName}. Please reset my password for my login id:  ${loginId}`, 'emailWindow')
+        setIsOpen(!isOpen);
+        
     }
 
     return (
