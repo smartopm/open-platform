@@ -44,7 +44,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         phoneNumber: '26923422232',
-        userType: 'client'
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -62,7 +62,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         phoneNumber: '26923422232',
-        userType: 'client'
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -76,7 +76,7 @@ RSpec.describe Mutations::User do
         name: '',
         reason: 'Resident',
         vehicle: nil,
-        userType: 'client'
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -92,7 +92,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         phoneNumber: '26923422232',
-        userType: nil
+        userType: nil,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -111,7 +111,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         phoneNumber: '26924422232',
-        userType: 'client'
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -126,7 +126,7 @@ RSpec.describe Mutations::User do
         name: 'Mark John',
         reason: 'Resident',
         phoneNumber: '26913422232',
-        userType: 'client'
+        userType: 'client',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -379,7 +379,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
         phoneNumber: '26923422232',
-        userType: 'resident'
+        userType: 'resident',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
