@@ -8,6 +8,7 @@ import { useParams } from 'react-router'
 import ErrorPage from '../../components/Error'
 import Paginate from '../../components/Paginate'
 import Grid from '@material-ui/core/Grid'
+import { getMonthName } from '../../utils/dateutil'
 
 export default function EmployeeLogs() {
   const { id } = useParams()
@@ -23,7 +24,6 @@ export default function EmployeeLogs() {
     },
     fetchPolicy: 'no-cache'
   })
-
   function paginate(action) {
     if (action === 'prev') {
       setMonthCount(monthCount - 1)
@@ -45,6 +45,7 @@ export default function EmployeeLogs() {
           Boolean(data.userTimeSheetLogs.length) &&
           data.userTimeSheetLogs[0].user.name
         }
+        month={Boolean(data.userTimeSheetLogs.length) && getMonthName(lastDay)}
       />
 
       <Grid container direction="row" justify="center" alignItems="center">

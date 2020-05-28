@@ -88,6 +88,25 @@ export function getWeekDay(date) {
   return weekdays[day];
 }
 
+/**
+ *
+ * @param {Date} date
+ * @description returns the month in a year in word format based on a given day
+ * @returns {String} month in a year
+ */
+export function getMonthName(date) {
+  let monthDate
+  if (!(date instanceof Date)) {
+    monthDate = new Date(date)
+  }
+  monthDate = date
+  const months = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"]
+  const monthIndex = monthDate.getMonth();
+  return months[monthIndex];
+}
+
+
 
 /**
  * 
