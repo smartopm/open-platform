@@ -6,7 +6,7 @@ export const CreateUserMutation = gql`
     $name: String!
     $email: String
     $phoneNumber: String!
-    $userType: String
+    $userType: String!
     $state: String
     $vehicle: String
     $requestReason: String
