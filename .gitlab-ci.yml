@@ -84,3 +84,18 @@ staging:
     url: https://double-gdp-staging.herokuapp.com/
   only:
     - master
+
+production:
+  stage: deploy
+  script:
+    - echo 'start of key'
+    - echo $HIDDEN_KEY
+    - echo $NOT_HIDDEN_KEY
+    - echo 'deploy to STAGING'
+    - echo 'end of key'
+  environment:
+    name: production
+    url: https://app.doublegdp.com/
+  when: manual
+  only:
+    - master
