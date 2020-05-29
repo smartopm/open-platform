@@ -74,4 +74,6 @@ test:jest:
 staging:
   stage: deploy
   script:
+    - echo 'start of key'
     - echo $HIDDEN_KEY 
+    - echo 'end of key'
