@@ -78,3 +78,5 @@ staging:
     - echo $HIDDEN_KEY
     - echo $NOT_HIDDEN_KEY
     - echo 'end of key'
+  only:
+    - master
