@@ -79,7 +79,7 @@ export default function UserMessages() {
               <span>
                 {state && state.from === 'contact'
                   ? 'Send Message to Support, You should receive an answer soon'
-                  : `There are no messages yet for ${state.clientName}`}
+                    : `There are no messages yet for ${state && state.clientName ? state.clientName : 'this user  '}`}
               </span>
             </p>
           )}

@@ -3,7 +3,7 @@ import { UserPlotInfo } from '../components/UserPlotInfo';
 import { BrowserRouter } from 'react-router-dom';
 import {
     cleanup,
-    render
+    render,
 } from '@testing-library/react'
 
 
@@ -34,9 +34,33 @@ describe('User Plot Info Page', () => {
             return account.landParcels.length + sum
         }, 0);
         const { getByTestId } = render(<BrowserRouter><UserPlotInfo accounts={accounts} /></BrowserRouter>)
-        const ol = getByTestId('pn');
+        const ol = getByTestId('parcel_list');
         expect(ol.children.length).toBe(numberOfPlots);
     });
+
+    it('should include this type of a plot', () => {
+        const { getByTestId} = render(
+            <BrowserRouter>
+                <UserPlotInfo accounts={accounts} />
+            </BrowserRouter>)
+        expect(getByTestId('parcel_list').textContent).toContain('Standard456')
+    });
+
+    it('should show no plot when plots are empty', () => {
+        const { getByTestId,  } = render(
+            <BrowserRouter>
+                <UserPlotInfo accounts={[]} />
+            </BrowserRouter>)
+        expect(getByTestId('no_plot').textContent).toContain('No plots information available')
+    }); 
+
+    it('should include support team link', () => {
+        const { getByTestId, } = render(
+            <BrowserRouter>
+                <UserPlotInfo accounts={accounts} />
+            </BrowserRouter>)
+        expect(getByTestId('support_link').textContent).toContain('Support Team')
+    }); 
 
     afterEach(cleanup)
 });
