@@ -30,7 +30,7 @@ export default function UserForm() {
   }
   return (
     <div className="container">
-      <form>
+      <form onSubmit={e=> handleSubmit(e, values)}>
         {!isFromRef&&(
           <div className="form-group">
           {status === 'DONE' ? (
@@ -199,8 +199,8 @@ export default function UserForm() {
       </div>
         <Button
         variant="contained"
+        type = "submit"
         className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-        onClick = {e=> handleSubmit(e, values)}
       >
         <span>Refer</span>
       </Button>
