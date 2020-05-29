@@ -97,5 +97,7 @@ production:
     name: production
     url: https://app.doublegdp.com/
   when: manual
+  dependencies:
+    - staging
   only:
     - master
