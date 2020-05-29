@@ -75,5 +75,6 @@ staging:
   stage: deploy
   script:
     - echo 'start of key'
-    - echo $HIDDEN_KEY 
+    - echo $HIDDEN_KEY
+    - echo $NOT_HIDDEN_KEY
     - echo 'end of key'
