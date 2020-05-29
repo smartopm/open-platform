@@ -9,12 +9,13 @@ import DatePickerDialog from './DatePickerDialog'
 import {useLocation} from "react-router-dom"
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import {Button} from "@material-ui/core";
+import { Typography } from '@material-ui/core'
+
 export default function UserForm() {
   let location = useLocation();
   const authState = React.useContext(AuthStateContext)
   const previousRoute = location.state && location.state.from
   const isFromRef = previousRoute === "ref" || false;
-
   const {
     values,
     handleInputChange,
@@ -31,28 +32,28 @@ export default function UserForm() {
     <div className="container">
       <form>
         {!isFromRef&&(
-                  <div className="form-group">
-                  {status === 'DONE' ? (
-                    <img
-                      src={imageUrl}
-                      alt="uploaded picture"
-                      className={`${css(styles.uploadedImage)}`}
-                    />
-                  ) : (
-                      <div className={`${css(styles.photoUpload)}`}>
-                        <input
-                          type="file"
-                          accepts="image/*"
-                          capture
-                          id="file"
-                          onChange={handleFileUpload}
-                          className={`${css(styles.fileInput)}`}
-                        />
-                        <PhotoCameraIcon />
-                        <label htmlFor="file">Take a photo</label>
-                      </div>
-                    )}
-                </div>
+          <div className="form-group">
+          {status === 'DONE' ? (
+            <img
+              src={imageUrl}
+              alt="uploaded picture"
+              className={`${css(styles.uploadedImage)}`}
+            />
+          ) : (
+              <div className={`${css(styles.photoUpload)}`}>
+                <input
+                  type="file"
+                  accepts="image/*"
+                  capture
+                  id="file"
+                  onChange={handleFileUpload}
+                  className={`${css(styles.fileInput)}`}
+                />
+                <PhotoCameraIcon />
+                <label htmlFor="file">Take a photo</label>
+              </div>
+            )}
+        </div>
         )}
         {isFromRef&&(
           <div className="form-group">
@@ -138,6 +139,7 @@ export default function UserForm() {
                   onChange={handleInputChange}
                   margin="normal"
                   name="userType"
+                  required
                   className={`${css(styles.selectInput)}`}
                 >
                   {Object.entries(userType).map(([key, val]) => (
@@ -189,6 +191,12 @@ export default function UserForm() {
       {isFromRef&&(
         
         <div className='d-flex row justify-content-center' > 
+       <div className="col-8 p-0 justify-content-center" style={{ width: 256, marginRight: "10%" }}>
+       <Typography color="textSecondary" variant="body2" style={{ fontSize: 13 }}>
+         Nkwashi values its community and believes our community starts with you! Referring your friends and family members
+           to Nkwashi gives you a chance to pick your future neighbors, so start referring today.
+        </Typography>
+      </div>
         <Button
         variant="contained"
         className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}

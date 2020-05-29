@@ -188,11 +188,12 @@ const App = () => {
 
                     <Route path="/user" exact component={UserEdit} />
                     <Route path="/map" component={Map} />
-                    <Route path="/contact/mobile_money" component={MobileMoney} />
+                    <Route path="/mobile_money" component={MobileMoney} />
                     <Route path="/contact" component={Support} />
                     <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
                     <Route path="/referral" component={UserEdit} />
+                    <Route path="/myaccount/:id" component={UserShow} />
 
                     {/* new routes => guards */}
                     <Route path="/guard_home" component={GuardHome} />
@@ -244,10 +245,10 @@ const App = () => {
                     <Route path="/timesheet/:id" exact component={EmployeeLogs} />
 
                     <Route path="/client_request_from" exact component={ClientRequestForm} />
-                    
+
                     <AdminRoutes>
                       <Switch>
-                      <Route path="/client_request_from" exact component={ClientRequestForm} />
+                        <Route path="/client_request_from" exact component={ClientRequestForm} />
                         <Route path="/users" component={UsersList} />
                         <Route path="/messages" component={AllMessages} />
                         <Route path="/showroom_logs" component={ShowroomLogs} />

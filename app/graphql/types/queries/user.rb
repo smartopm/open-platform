@@ -23,6 +23,8 @@ module Types::Queries::User
     field :user_search, [Types::UserType], null: true do
       description 'Find a user by name, phone number or user type'
       argument :query, String, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
     # Get a entry logs for a user
@@ -42,30 +44,31 @@ module Types::Queries::User
   end
 
   def user(id:)
-    User.find(id) if context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    User.find(id)
   end
 
   def users(offset: 0, limit: 100, user_type: nil)
-    return unless context[:current_user].admin?
+    adm = context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
-    community_id = context[:current_user].community_id
-    return get_usertype(user_type, community_id, limit, offset) if user_type.present?
-
-    User.where(community_id: community_id)
-        .order(created_at: :desc)
-        .limit(limit).offset(offset)
+    User.eager_load(:notes, :accounts)
+        .where(community_id: context[:current_user].community_id)
+        .search(user_type)
+        .limit(limit)
+        .offset(offset).with_attached_avatar
   end
 
-  def get_usertype(user_type, community_id, limit, offset)
-    User.where(user_type: user_type, community_id: community_id)
-        .order(created_at: :desc)
-        .limit(limit).offset(offset)
-  end
+  def user_search(query: nil, offset: 0, limit: 50)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-  def user_search(query:)
-    User.where('name ILIKE :query OR phone_number ILIKE :query OR user_type ILIKE :query',
-               query: "%#{query}%")
-        .where(community_id: context[:current_user].community_id).limit(20)
+    User.eager_load(:notes, :accounts)
+        .where(community_id: context[:current_user].community_id)
+        .search(query)
+        .order(name: :asc)
+        .limit(limit)
+        .offset(offset).with_attached_avatar
   end
 
   def current_user
@@ -75,16 +78,19 @@ module Types::Queries::User
   end
 
   def pending_users
-    User.where(state: 'pending',
-               community_id: context[:current_user].community_id)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
+    User.eager_load(:notes, :accounts)
+        .where(state: 'pending',
+               community_id: context[:current_user].community_id).with_attached_avatar
   end
 
   def security_guards
-    return unless context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.where(
+    User.eager_load(:notes, :accounts).where(
       community_id: context[:current_user].community_id,
       user_type: 'security_guard',
-    ).order(name: :asc)
+    ).order(name: :asc).with_attached_avatar
   end
 end
