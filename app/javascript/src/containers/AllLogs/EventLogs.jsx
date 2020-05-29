@@ -9,12 +9,12 @@ import Events from "../../components/Events"
 
 export default ({ history }) => {
   const authState = useContext(AuthStateContext);
-  return allEventLogs(history, authState);
+  return AllEventLogs(history, authState);
 };
 
 // Todo: Find the total number of allEventLogs
 const limit = 30;
-const allEventLogs = (history, authState) => {
+const AllEventLogs = (history, authState) => {
   const [offset, setOffset] = useState(0);
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: { subject: null, refId: null, refType: null, offset, limit },

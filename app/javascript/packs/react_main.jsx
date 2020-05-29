@@ -151,6 +151,7 @@ const Analytics = props => {
         ReactGA.pageview(location.pathname)
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState.user, history])
 
   return props.children

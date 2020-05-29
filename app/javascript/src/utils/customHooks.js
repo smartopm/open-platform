@@ -15,7 +15,7 @@ export default function useTimer(initialTime, delay) {
       setTime(time - 1)
     }, delay)
     return () => clearInterval(intervalId)
-  }, [time])
+  }, [delay, time])
 
   return time
 }
