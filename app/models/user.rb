@@ -103,7 +103,7 @@ class User < ApplicationRecord
 
   # We may want to do a bit more work here massaing the number entered
   def find_via_phone_number(phone_number)
-    User.find_by(phone_number: phone_number)
+    community.users.find_by(phone_number: phone_number)
   end
 
   def self.lookup_by_id_card_token(token)
