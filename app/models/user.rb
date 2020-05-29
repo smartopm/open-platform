@@ -12,6 +12,11 @@ require 'email_msg'
 class User < ApplicationRecord
   # General user error to return on actions that are not possible
   class UserError < StandardError; end
+  include SearchCop
+
+  search_scope :search do
+    attributes :name, :phone_number, :user_type
+  end
 
   belongs_to :community, optional: true
   has_many :entry_requests, dependent: :destroy
@@ -37,6 +42,7 @@ class User < ApplicationRecord
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
+  validates :phone_number, uniqueness: true
   validate :phone_number_valid?
   before_save :ensure_default_state
 
@@ -115,7 +121,7 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-    return unless enrolled_user.save
+    return enrolled_user unless enrolled_user.save
 
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)

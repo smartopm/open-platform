@@ -3,7 +3,7 @@ import { UserPlotInfo } from '../components/UserPlotInfo';
 import { BrowserRouter } from 'react-router-dom';
 import {
     cleanup,
-    render
+    render,
 } from '@testing-library/react'
 
 
@@ -11,6 +11,7 @@ describe('User Plot Info Page', () => {
 
     const accounts = [{
         id: "2dc81-48ab-9afc",
+        updatedAt: "2020-05-15T17:09:37Z",
         landParcels: [{
             id: "6f1f-4200-8cqa",
             parcelNumber: "Standard434"
@@ -21,6 +22,7 @@ describe('User Plot Info Page', () => {
         }]
     }, {
         id: "2d81-48ab-9p8c",
+        updatedAt: "2020-05-20T17:09:37Z",
         landParcels: [{
             id: "6f1f-4200-8jfa",
             parcelNumber: "Standard456"
@@ -28,11 +30,37 @@ describe('User Plot Info Page', () => {
     }]
 
     it('Component should display all parcel numbers', () => {
-
+        let numberOfPlots = accounts.reduce((sum, account) => {
+            return account.landParcels.length + sum
+        }, 0);
         const { getByTestId } = render(<BrowserRouter><UserPlotInfo accounts={accounts} /></BrowserRouter>)
-        const ol = getByTestId('pn');
-        expect(ol.children.length).toBe(3)
+        const ol = getByTestId('parcel_list');
+        expect(ol.children.length).toBe(numberOfPlots);
     });
+
+    it('should include this type of a plot', () => {
+        const { getByTestId} = render(
+            <BrowserRouter>
+                <UserPlotInfo accounts={accounts} />
+            </BrowserRouter>)
+        expect(getByTestId('parcel_list').textContent).toContain('Standard456')
+    });
+
+    it('should show no plot when plots are empty', () => {
+        const { getByTestId,  } = render(
+            <BrowserRouter>
+                <UserPlotInfo accounts={[]} />
+            </BrowserRouter>)
+        expect(getByTestId('no_plot').textContent).toContain('No plots information available')
+    }); 
+
+    it('should include support team link', () => {
+        const { getByTestId, } = render(
+            <BrowserRouter>
+                <UserPlotInfo accounts={accounts} />
+            </BrowserRouter>)
+        expect(getByTestId('support_link').textContent).toContain('Support Team')
+    }); 
 
     afterEach(cleanup)
 });

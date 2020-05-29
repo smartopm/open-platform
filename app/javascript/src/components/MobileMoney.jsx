@@ -17,7 +17,7 @@ const useStyles = makeStyles({
         marginTop: '10px',
     },
     text3: {
-        width: '35%',
+        width: '45%',
         margin: 'auto',
         textAlign: 'left',
         marginTop: '10px',
@@ -48,15 +48,11 @@ export default function MobileMoney() {
                 </li>
 
                 <li>
-                    Enter Nkwashi&apos;s number &apos;0961722433&apos; and send the money through MTN
+                    Enter Nkwashi&apos;s number &apos;0961722433&apos; and send the money through MTN with your full name and NRC number
                 </li>
 
                 <li>
                     You and Nkwashi will receive a transaction message when the transaction is successfully completed
-                </li>
-
-                <li>
-                    Copy the transaction message and text it directly to Nkwashi (0961722433) with your full name and NRC number
                 </li>
             </ol>
 

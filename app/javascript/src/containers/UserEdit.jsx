@@ -9,7 +9,6 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 
 const initialValues = {
   name: '',
@@ -47,7 +46,7 @@ export default function FormContainer({ match, history, location }) {
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
-  const [selectedDate] = React.useState(new Date()) 
+  const [selectedDate, handleDateChange] = React.useState(null) 
   const [showResults, setShowResults] = React.useState(false)
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -84,15 +83,17 @@ export default function FormContainer({ match, history, location }) {
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
-    if(isFromRef){
-      setShowResults(true)
-      window.location.reload(false)
-    }
 
+    if(isFromRef){
+      setTimeout(() => {
+        window.location.reload(false)
+      }, 3000);
+    }
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
         if(isFromRef){
+          setShowResults(true)
           return
         }else{
         history.push(`/user/${data.result.user.id}`)
@@ -101,6 +102,7 @@ export default function FormContainer({ match, history, location }) {
       .catch(err => {
         setMsg(err.message)
       })
+
   }
   function handleInputChange(event) {
     const { name, value } = event.target
@@ -108,13 +110,6 @@ export default function FormContainer({ match, history, location }) {
       ...data,
       [name]: value
     })
-  }
-
-
-
-  const authState = React.useContext(AuthStateContext)
-  if (authState.user.userType !== 'admin') {
-    history.push('/')
   }
 
 
@@ -135,6 +130,8 @@ export default function FormContainer({ match, history, location }) {
         ...result,
         dataLoaded: true
       })
+
+      handleDateChange(result.expiresAt)
     }
   }
 
@@ -146,6 +143,7 @@ export default function FormContainer({ match, history, location }) {
         handleInputChange,
         handleSubmit,
         selectedDate,
+        handleDateChange,
         handleFileUpload: onChange,
         status
       }}
@@ -165,13 +163,13 @@ export default function FormContainer({ match, history, location }) {
         name={data.name}
       />
       <br />
-      {Boolean(msg.length) && <p className="text-danger text-center">{msg}</p>}
+      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">This user already exists in the system.</p>}
       <UserForm />
       { showResults ? 
           <div className='d-flex row justify-content-center'>
           <p>Thank you for your referral. We will reach out to them soon.</p>
         </div> 
-        : null }
+        : Boolean(msg.length) && <p className="text-danger text-center">This user already exists in the system.</p>  }
         
     </FormContext.Provider>
   )

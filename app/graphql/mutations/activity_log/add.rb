@@ -41,6 +41,14 @@ module Mutations
         Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
         # rubocop:enable LineLength
       end
+
+      # TODO: Better auth here
+      def authorized?(_vals)
+        current_user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+
+        true
+      end
     end
   end
 end

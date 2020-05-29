@@ -21,9 +21,17 @@ module Types::Queries::TimeSheet
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    field :user_last_shift, Types::TimeSheetType, null: true do
+      description 'Get user\'s last timesheet logs'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def time_sheet_logs(offset: 0, limit: 100)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     com_id = context[:current_user].community_id
     query = ''
     TimeSheet.find_by_sql(["SELECT time_sheets.* FROM time_sheets
@@ -35,6 +43,7 @@ module Types::Queries::TimeSheet
         ORDER BY time_sheets.created_at DESC"] +
         Array.new(1, com_id) + Array.new(2, "%#{query}%") + [limit, offset])
   end
+  # rubocop:enable Metrics/MethodLength
 
   # NICK:  Olivier, you need to pass the start date and end date from react in UTC.
   # If none are passed then use the current month.
@@ -43,12 +52,20 @@ module Types::Queries::TimeSheet
   # this will need to get reworked a bit to make sure only custodian can retreive .
 
   def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to:, date_from: nil)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     date_from = date_from.blank? ? Time.current.beginning_of_month : DateTime.parse(date_from)
     u = get_allow_user(user_id)
     end_date = DateTime.parse(date_to)
     return u.time_sheets.monthly_records(date_from - 1, end_date, limit, offset) if u.present?
 
     []
+  end
+
+  def user_last_shift(user_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    context[:current_user].find_a_user(user_id).time_sheets.first
   end
 
   def get_allow_user(user_id)
