@@ -7,7 +7,7 @@ import { zonedTimeDate } from '../DateContainer'
 import { PropTypes } from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 
-export default function EmployeeTimeSheetLog({ data, name, month }) {
+export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) {
   const { state } = useLocation()
 
   const shifts = data.userTimeSheetLogs
@@ -28,7 +28,7 @@ export default function EmployeeTimeSheetLog({ data, name, month }) {
 
           <Grid container justify="flex-start">
             <Grid item xs={10}>
-              <strong>Worked {days} days for a total of {hours} hrs in {month}
+              <strong data-testid='summary'>Worked {days} days for a total of {hours} hrs between {firstDay} - {lastDay}
               </strong>
             </Grid>
           </Grid>

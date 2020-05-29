@@ -8,7 +8,8 @@ import { useParams } from 'react-router'
 import ErrorPage from '../../components/Error'
 import Paginate from '../../components/Paginate'
 import Grid from '@material-ui/core/Grid'
-import { getMonthName } from '../../utils/dateutil'
+import dateutil, { lastDayOfTheMonth } from '../../utils/dateutil'
+import { newCatDate, zonedDate } from '../../components/DateContainer'
 
 export default function EmployeeLogs() {
   const { id } = useParams()
@@ -45,7 +46,8 @@ export default function EmployeeLogs() {
           Boolean(data.userTimeSheetLogs.length) &&
           data.userTimeSheetLogs[0].user.name
         }
-        month={Boolean(data.userTimeSheetLogs.length) && getMonthName(lastDay)}
+        lastDay={dateutil.dateToString(zonedDate(new Date()))}
+        firstDay={dateutil.dateToString(zonedDate(lastDayOfTheMonth))}
       />
 
       <Grid container direction="row" justify="center" alignItems="center">
