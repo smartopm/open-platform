@@ -14,6 +14,7 @@ RSpec.describe Mutations::User do
             $reason: String!,
             $vehicle: String,
             $phoneNumber: String!
+            $userType: String!
             $email: String
           ) {
           userCreate(
@@ -21,6 +22,7 @@ RSpec.describe Mutations::User do
               requestReason: $reason,
               vehicle: $vehicle,
               phoneNumber: $phoneNumber
+              userType: $userType
               email: $email
             ) {
             user {
@@ -29,6 +31,7 @@ RSpec.describe Mutations::User do
               phoneNumber
               requestReason
               name
+              userType
             }
           }
         }
@@ -40,14 +43,16 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '2609234222321',
+        phoneNumber: '26923422232',
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
-      expect(result.dig('data', 'userCreate', 'user', 'phoneNumber')).to eql '2609234222321'
+      expect(result.dig('data', 'userCreate', 'user', 'phoneNumber')).to eql '26923422232'
+      expect(result.dig('data', 'userCreate', 'user', 'userType')).to eql 'client'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -56,7 +61,8 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '269234222321',
+        phoneNumber: '26923422232',
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -70,6 +76,23 @@ RSpec.describe Mutations::User do
         name: '',
         reason: 'Resident',
         vehicle: nil,
+        userType: 'client',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                              }).as_json
+      expect(result.dig('data', 'userCreate', 'user')).to be_nil
+      expect(result.dig('errors')).not_to be_empty
+    end
+
+    it 'should not create a user when user_type is not valid' do
+      variables = {
+        name: 'Jels B',
+        reason: 'Resident',
+        vehicle: nil,
+        phoneNumber: '26923422232',
+        userType: nil,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -87,7 +110,8 @@ RSpec.describe Mutations::User do
         email: dup_email,
         reason: 'Resident',
         vehicle: nil,
-        phoneNumber: '269244222322',
+        phoneNumber: '26924422232',
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -101,7 +125,8 @@ RSpec.describe Mutations::User do
       variables = {
         name: 'Mark John',
         reason: 'Resident',
-        phoneNumber: '269134322232',
+        phoneNumber: '26913422232',
+        userType: 'client',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -112,6 +137,7 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userCreate', 'user', 'requestReason')).to eql 'Resident'
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userCreate', 'user', 'name')).to eql 'Mark John'
+      expect(result.dig('data', 'userCreate', 'user', 'userType')).to eql 'client'
     end
   end
 
@@ -125,6 +151,7 @@ RSpec.describe Mutations::User do
             $id: ID!,
             $name: String!,
             $reason: String!,
+            $userType: String!,
             $vehicle: String
           ) {
           userUpdate(
@@ -132,10 +159,12 @@ RSpec.describe Mutations::User do
               name: $name,
               requestReason: $reason,
               vehicle: $vehicle,
+              userType: $userType
             ) {
             user {
               id
               requestReason
+              userType
             }
           }
         }
@@ -148,6 +177,7 @@ RSpec.describe Mutations::User do
         name: 'Mark Percival',
         reason: 'Rspec',
         vehicle: nil,
+        userType: 'client',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -155,6 +185,7 @@ RSpec.describe Mutations::User do
                                               }).as_json
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'requestReason')).to eql 'Rspec'
+      expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql 'client'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -164,6 +195,22 @@ RSpec.describe Mutations::User do
         lastName: 'Percival',
         reason: 'Rspec',
         vehicle: nil,
+        userType: 'resident',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user')).to be_nil
+      expect(result.dig('errors')).not_to be_empty
+    end
+    it 'returns should not update without a user type' do
+      variables = {
+        firstName: nil,
+        lastName: 'Perc',
+        reason: 'Hs',
+        vehicle: nil,
+        userType: nil,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -183,7 +230,7 @@ RSpec.describe Mutations::User do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
-            $userType: String
+            $userType: String!
             $vehicle: String
           ) {
           userUpdate(
@@ -300,6 +347,7 @@ RSpec.describe Mutations::User do
             $vehicle: String
             $avatarBlobId: String
             $phoneNumber: String!
+            $userType: String!
           ) {
           userCreate(
               name: $name,
@@ -307,10 +355,12 @@ RSpec.describe Mutations::User do
               vehicle: $vehicle,
               avatarBlobId: $avatarBlobId,
               phoneNumber: $phoneNumber
+              userType: $userType
             ) {
             user {
               id
               avatarUrl
+              userType
             }
           }
         }
@@ -321,11 +371,15 @@ RSpec.describe Mutations::User do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
-            $avatarBlobId: String
+            $avatarBlobId: String,
+            $phoneNumber: String!
+            $userType: String!
           ) {
           userUpdate(
               id: $id,
               avatarBlobId: $avatarBlobId,
+              phoneNumber: $phoneNumber
+              userType: $userType
             ) {
             user {
               id
@@ -349,7 +403,8 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
-        phoneNumber: '261923422232',
+        phoneNumber: '26923422232',
+        userType: 'resident',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
@@ -370,6 +425,8 @@ RSpec.describe Mutations::User do
       variables = {
         id: pending_user.id,
         avatarBlobId: avatar_blob.signed_id,
+        phoneNumber: '26923422232',
+        userType: 'resident',
       }
       result = DoubleGdpSchema.execute(update_query, variables: variables,
                                                      context: {

@@ -6,7 +6,7 @@ export const CreateUserMutation = gql`
     $name: String!
     $email: String
     $phoneNumber: String!
-    $userType: String
+    $userType: String!
     $state: String
     $vehicle: String
     $requestReason: String
@@ -38,7 +38,7 @@ export const UpdateUserMutation = gql`
     $name: String
     $email: String
     $phoneNumber: String
-    $userType: String
+    $userType: String!
     $requestReason: String
     $vehicle: String
     $state: String
@@ -71,12 +71,14 @@ export const CreatePendingUserMutation = gql`
   mutation CreatePendingUserMutation(
     $name: String!
     $requestReason: String!
+    $userType: String!
     $vehicle: String
   ) {
     result: userCreate(
       name: $name
       requestReason: $requestReason
       vehicle: $vehicle
+      userType: $userType
     ) {
       user {
         ...UserFields
@@ -92,12 +94,14 @@ export const UpdatePendingUserMutation = gql`
     $name: String!
     $requestReason: String!
     $vehicle: String
+     $userType: String!
   ) {
     result: userUpdate(
       id: $id
       name: $name
       requestReason: $requestReason
       vehicle: $vehicle
+      userType: $userType
     ) {
       user {
         ...UserFields
