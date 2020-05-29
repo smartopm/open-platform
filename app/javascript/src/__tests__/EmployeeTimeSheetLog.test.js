@@ -53,4 +53,20 @@ describe('time sheet logs component', () => {
      expect(getByTestId('prog')).toBeInTheDocument()  
      expect(getByTestId('prog')).toHaveTextContent('In-Progress')  
   })
+  it('should have summary in the document', () => {
+    const container = render(
+      <BrowserRouter>
+        <EmployeeLogs data={userData} />
+      </BrowserRouter>
+    )
+    expect(container.queryByTestId('summary').textContent).toContain('Worked 1 days')
+  })
+  it('should have summary in the document when there is shift in progress', () => {
+    const container = render(
+      <BrowserRouter>
+        <EmployeeLogs data={userDataProgress} />
+      </BrowserRouter>
+    )
+    expect(container.queryByTestId('summary').textContent).toContain('Worked ')
+  })
 })
