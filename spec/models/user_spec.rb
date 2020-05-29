@@ -190,7 +190,7 @@ RSpec.describe User, type: :model do
 
     it 'it should create a todo after a referral client has been created' do
       user = FactoryBot.create(:user_with_community, phone_number: '34566784567')
-      other_user = FactoryBot.create(:user_with_community, phone_number: '34566784567',
+      other_user = FactoryBot.create(:user_with_community, phone_number: '34566784561',
                                                            user_type: 'client')
       user_ref = {
         id: user.id,
