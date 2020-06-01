@@ -85,15 +85,6 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {!['security_guard', 'resident', 'custodian'].includes(
-                authState.user.userType.toLowerCase()
-              ) ? (
-                <Card
-                  path={`/map`}
-                  title={t('home.explore')}
-                  icon={<img src={ExploreIcon} alt="map icon" />}
-                />
-              ) : null}
 
               {Boolean(authState.user.userType === 'custodian') && (
                 <Card
@@ -273,23 +264,6 @@ export function Component({ authState }) {
                 <Card
                   path={
                     authState.user.userType === 'admin'
-                      ? '/feedbacks'
-                      : '/feedback'
-                  }
-                  title={'Feedback'}
-                  icon={
-                    <FeedbackIcon
-                      fontSize="large"
-                      className={css(styles.homeIconColor)}
-                    />
-                  }
-                />
-              )}
-
-              {Boolean(authState.user.userType !== 'custodian') && (
-                <Card
-                  path={
-                    authState.user.userType === 'admin'
                       ? '/messages'
                       : `/message/${authState.user.id}`
                   }
@@ -326,33 +300,6 @@ export function Component({ authState }) {
                   </a>
                 </div>
               )}
-
-              {['admin', 'client', 'resident'].includes(
-                authState.user.userType.toLowerCase()
-              ) ? (
-                <Card
-                  path={`/`}
-                  title={'Client Request Form'}
-                  id="crfl"
-                  handleClick={() =>
-                    window.open(
-                      `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(
-                        /\s+/g,
-                        '+'
-                      )}&entry.1055458143=${
-                        userData.phoneNumber ? userData.phoneNumber : ''
-                      }`,
-                      '_blank'
-                    )
-                  }
-                  icon={
-                    <ListAltIcon
-                      fontSize="large"
-                      className={css(styles.homeIconColor)}
-                    />
-                  }
-                />
-              ) : null}
             </div>
           </div>
         </div>
