@@ -12,7 +12,8 @@ export default function Card({
   clientNumber,
   children,
   handleClick,
-  id
+  id,
+  titleStyle
 }) {
   return (
     <Fragment>
@@ -36,7 +37,7 @@ export default function Card({
               <span>{icon}</span>
               <span>{children}</span>
             </h5>
-            <p>{title}</p>
+            <p className={titleStyle} >{title}</p>
           </div>
         </Link>
       </div>
