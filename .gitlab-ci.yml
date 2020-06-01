@@ -74,6 +74,8 @@ test:jest:
 
 staging:
   stage: staging
+  allow_failure: false
+  when: on_success
   script:
     - echo 'start of key'
     - echo $HIDDEN_KEY
@@ -88,6 +90,7 @@ staging:
 
 production:
   stage: deploy
+  allow_failure: false
   script:
     - echo 'start of key'
     - echo $HIDDEN_KEY
