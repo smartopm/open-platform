@@ -101,4 +101,4 @@ production:
     url: https://app.doublegdp.com/
   when: manual
   only:
-    - master
+    - tags
