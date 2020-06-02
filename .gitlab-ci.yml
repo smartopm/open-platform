@@ -99,6 +99,5 @@ production:
   environment:
     name: production
     url: https://app.doublegdp.com/
-  when: manual
   only:
     - tags
