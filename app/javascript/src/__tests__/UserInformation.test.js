@@ -44,6 +44,7 @@ describe("User infromation component loads",()=>{
             </MockedProvider>
         )
         expect(getByText('Plots')).toBeInTheDocument()
+        expect(getByText('Communication')).toBeInTheDocument()
         expect(getByText('Payments')).toBeInTheDocument() 
         expect(getByText('Contact')).toBeInTheDocument() 
     })
