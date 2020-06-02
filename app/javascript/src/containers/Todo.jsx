@@ -13,6 +13,8 @@ import { ModalDialog } from '../components/Dialog'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import { createMuiTheme } from '@material-ui/core'
 import DateUtil from '../utils/dateutil'
+import Paginate from '../components/Paginate'
+import CenteredContent from '../components/CenteredContent'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -59,20 +61,40 @@ const theme = createMuiTheme({
 
 export default function Todo({ history }) {
   const classes = useStyles()
+  const [offset, setOffset] = useState(0)
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
-  const { loading, error, data, refetch } = useQuery(flaggedNotes)
+
   const [noteUpdate] = useMutation(UpdateNote)
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [userId, setUserId] = React.useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
+  const limit = 5
   function todoAction(id, isCompleted) {
     setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
+    noteUpdate({ variables: { id, completed: !isCompleted, } }).then(() => {
       setLoading(false)
       refetch()
     })
+  }
+
+  
+  
+  const { loading, error, data, refetch } = useQuery(flaggedNotes, {
+    variables: {
+      offset, limit
+    }
+  })
+  console.log(data);
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) {
+        return
+      }
+      setOffset(offset - limit)
+    } else if (action === 'next'){
+      setOffset(offset + limit)
+    }
   }
 
   function handleModal(Uid) {
@@ -85,9 +107,7 @@ export default function Todo({ history }) {
     noteUpdate({ variables: { id, dueDate: selectedDate } }).then(() => {
       refetch()
       setIsDialogOpen(!isDialogOpen)
-
     })
-
   }
 
   const handleDateChange = (date) => {
@@ -211,6 +231,15 @@ export default function Todo({ history }) {
                 )}
           </ul>
         </div>
+
+        <CenteredContent>
+          <Paginate
+            offSet={offset}
+            limit={limit}
+            active={true}
+            handlePageChange={paginate}
+          />
+        </CenteredContent>
       </div>
     </Fragment>
   );

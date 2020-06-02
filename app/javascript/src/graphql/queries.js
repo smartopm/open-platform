@@ -130,8 +130,8 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  {
-    flaggedNotes {
+  query GetTodos($offset: Int, $limit: Int){ 
+    flaggedNotes(offset: $offset, limit: $limit) {
       body
       createdAt
       id
