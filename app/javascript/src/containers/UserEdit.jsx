@@ -163,10 +163,10 @@ export default function FormContainer({ match, history, location }) {
         name={data.name}
       />
       <br />
-      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">This user already exists in the system.</p>}
+      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">{msg}</p>}
       <UserForm />
       { showResults ? 
-          <div className='d-flex row justify-content-center'>
+        <div className='d-flex row justify-content-center'>
           <p>Thank you for your referral. We will reach out to them soon.</p>
         </div> 
         : Boolean(msg.length) && <p className="text-danger text-center">This user already exists in the system.</p>  }

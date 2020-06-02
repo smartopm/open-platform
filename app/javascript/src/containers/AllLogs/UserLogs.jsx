@@ -9,12 +9,12 @@ import ErrorPage from "../../components/Error";
 
 export default ({ history, match }) => {
   const subjects = null;
-  return allEventLogs(history, match, subjects);
+  return AllEventLogs(history, match, subjects);
 };
 
-// Todo: Find the total number of allEventLogs
+// Todo: Find the total number of AllEventLogs
 const limit = 50;
-const allEventLogs = (history, match, subjects) => {
+const AllEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0);
   const userId = match.params.id || null;
   const { loading, error, data } = useQuery(AllEventLogsForUserQuery, {
