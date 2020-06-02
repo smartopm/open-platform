@@ -31,6 +31,7 @@ export default function Card({
           }}
           onClick={handleClick}
           id={id}
+          className={`card-link`}
         >
           <div className="card-body">
             <h5 className="card-title">
