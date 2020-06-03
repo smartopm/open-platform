@@ -66,10 +66,11 @@ class EmailMsg
         message = Message.new(
           is_read: message['opens_count'] > 0 ? true : false,
           sender_id: sender.id,
+          user_id: user.nil? ? SecureRandom.uuid : user.id,
           message: "#{message['subject']}",
-          # type: 'email',
+          type: 'email',
           status: message['status'],
-          user_id: user.nil? ? SecureRandom.uuid : user.id
+          source_system_id: message['msg_id']
         )
         message.save
         puts message['to_email']
