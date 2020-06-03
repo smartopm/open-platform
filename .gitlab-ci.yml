@@ -93,7 +93,7 @@ production:
   script:
     - echo 'deploying to PRODUCTION'
     - gem install dpl
-    - dpl --provider=heroku --app=my-app-production --api-key=$HEROKU_PRODUCTION_API_KEY
+    - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
     - echo 'deployed to PRODUCTION'
   environment:
     name: production
