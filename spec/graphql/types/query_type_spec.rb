@@ -209,4 +209,36 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'usersFeedback')).to be_nil
     end
   end
+
+  describe 'To-dos' do
+    before :each do
+      @admin = create(:admin_user)
+      @current_user = create(:user, community: @admin.community)
+      @query =
+        %(query GetTodos($offset: Int, $limit: Int){
+            flaggedNotes(offset: $offset, limit: $limit) {
+              body
+              createdAt
+              id
+              completed
+              dueDate
+              user {
+                id
+                name
+              }
+              author {
+                id
+                name
+              }
+            }
+          })
+    end
+    it 'should query all to-dos' do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @admin,
+                                       }).as_json
+
+      expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+    end
+  end
 end
