@@ -22,6 +22,8 @@ module DoubleGDP
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+    config.eager_load_paths += ["#{Rails.root}/lib"]
+
 
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
