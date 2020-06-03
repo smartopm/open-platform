@@ -28,7 +28,7 @@ export default function Support() {
       <Nav navName="Contact" menuButton="back" backTo="/" />
       <br />
 
-      <SupportCard handleSendMessage={handleSendMessage} userData={authState.user} />
+      <SupportCard handleSendMessage={handleSendMessage} user={authState.user} />
     </Fragment>
   )
 }

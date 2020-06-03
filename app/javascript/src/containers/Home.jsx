@@ -22,6 +22,7 @@ import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import PeopleIcon from '@material-ui/icons/People'
+import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 export default function Home() {
@@ -81,19 +82,6 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-<<<<<<< HEAD
-=======
-              {!['security_guard', 'resident', 'custodian'].includes(
-                authState.user.userType.toLowerCase()
-              ) ? (
-                <Card
-                  path={`/map`}
-                  title={t('home.explore')}
-                  titleStyle ={css(styles.CardtextImg)}
-                  icon={<img src={ExploreIcon} alt="map icon" />}
-                />
-              ) : null}
->>>>>>> 2d69b78c788925783c4eb5cfb7f353f069d13a6f
 
               {Boolean(authState.user.userType === 'custodian') && (
                 <Card
@@ -286,27 +274,6 @@ export function Component({ authState }) {
                 <Card
                   path={
                     authState.user.userType === 'admin'
-<<<<<<< HEAD
-=======
-                      ? '/feedbacks'
-                      : '/feedback'
-                  }
-                  title={'Feedback'}
-                  titleStyle ={css(styles.CardtextIcon)}
-                  icon={
-                    <FeedbackIcon
-                      fontSize="large"
-                      className={css(styles.homeIconColor)}
-                    />
-                  }
-                />
-              )}
-
-              {Boolean(authState.user.userType !== 'custodian') && (
-                <Card
-                  path={
-                    authState.user.userType === 'admin'
->>>>>>> 2d69b78c788925783c4eb5cfb7f353f069d13a6f
                       ? '/messages'
                       : `/message/${authState.user.id}`
                   }
@@ -353,11 +320,11 @@ export function Component({ authState }) {
                   titleStyle ={css(styles.CardtextIcon)}
                   handleClick={() =>
                     window.open(
-                      `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(
+                      `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${ authState.user.name.replace(
                         /\s+/g,
                         '+'
                       )}&entry.1055458143=${
-                        userData.phoneNumber ? userData.phoneNumber : ''
+                        authState.user.phoneNumber ? authState.user.phoneNumber : ''
                       }`,
                       '_blank'
                     )

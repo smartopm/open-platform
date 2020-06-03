@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, Button, Grid } from '@material-ui/core'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
@@ -6,7 +6,9 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
-import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
+import PropTypes from 'prop-types'
+
+
 
 const useStyles = makeStyles({
   root: {
@@ -24,7 +26,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function SupportCard({ handleSendMessage, userData, authState }) {
+export default function SupportCard({ handleSendMessage, user }) {
   const classes = useStyles()
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
@@ -125,11 +127,11 @@ export default function SupportCard({ handleSendMessage, userData, authState }) 
             color="primary"
             onClick={() =>
               window.open(
-                `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(
+                `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${user.name.replace(
                   /\s+/g,
                   '+'
-                )}&${userData.phoneNumber}?entry.1055458143=${
-                  userData.phoneNumber
+                )}&${user.phoneNumber}?entry.1055458143=${
+                  user.phoneNumber
                 }:entry.1055458143=""`,
                 '_blank'
               )
@@ -151,10 +153,10 @@ export default function SupportCard({ handleSendMessage, userData, authState }) 
             Pay With Mobile Money
           </Button>
         </Grid>
-        {Boolean(authState.user.userType !== 'custodian') && (
+        {Boolean(user.userType !== 'custodian') && (
           <Grid container direction="row" className={classes.root}>
             <Button
-              data-testid="pwmm"
+              data-testid="feed"
               variant="contained"
               color="primary"
               onClick={() => history.push('/feedback')}
@@ -165,7 +167,7 @@ export default function SupportCard({ handleSendMessage, userData, authState }) 
           </Grid>
         )}
         {!['security_guard', 'resident', 'custodian'].includes(
-          authState.user.userType.toLowerCase()
+          user.userType.toLowerCase()
         ) ? (
           <Grid container direction="row" className={classes.root}>
             <Button
@@ -182,6 +184,16 @@ export default function SupportCard({ handleSendMessage, userData, authState }) 
       </div>
     </Fragment>
   )
+}
+
+SupportCard.defaultProps = {
+  user: {
+    userType: "admin"
+  }
+}
+
+SupportCard.propTypes = {
+  user: PropTypes.object.isRequired
 }
 
 const styles = StyleSheet.create({
