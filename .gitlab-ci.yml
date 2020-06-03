@@ -91,14 +91,12 @@ production:
   stage: deploy
   allow_failure: false
   script:
-    - echo 'start of key'
-    - echo $HIDDEN_KEY
-    - echo $NOT_HIDDEN_KEY
-    - echo 'deploy to PRODUCTION'
-    - echo 'end of key'
+    - echo 'deploying to PRODUCTION'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
+    - echo 'deployed to PRODUCTION'
   environment:
     name: production
     url: https://app.doublegdp.com/
-  when: manual
   only:
-    - master
+    - tags

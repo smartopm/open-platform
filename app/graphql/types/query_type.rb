@@ -32,7 +32,7 @@ module Types
     def all_notes(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      Note.all.order(created_at: :desc)
+      Note.all.includes(:user).order(created_at: :desc)
           .limit(limit).offset(offset)
     end
 
