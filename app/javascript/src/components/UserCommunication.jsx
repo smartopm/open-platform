@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import List from '@material-ui/core/List'
 import UserMessageItem from '../components/Messaging/UserMessageItem'
 import { useParams } from 'react-router-dom'
@@ -21,18 +21,18 @@ export default function UserCommunication(user, state) {
         variables: { id }
     })
 
-    function sendMessage(){
+    function sendMessage() {
         setLoading(true)
-    const receiver = (user && user.user.name) || ''
-    if (!message.length) {
-      setError('The message must contain some text')
-      return
-    }
-    messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
-      setMessage('')
-      refetch()
-      setLoading(false)
-    })
+        const receiver = (user && user.user.name) || ''
+        if (!message.length) {
+            setError('The message must contain some text')
+            return
+        }
+        messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
+            setMessage('')
+            refetch()
+            setLoading(false)
+        })
     }
     console.log(data)
     return (
@@ -87,11 +87,12 @@ export default function UserCommunication(user, state) {
             <Button
                 color="primary"
                 onClick={sendMessage}
-                disabled={loading}
+                disabled={isMsgLoading}
                 style={{ marginTop: -37, marginRight: 34, float: 'right' }}
             >
                 Send
-      </Button>
+            </Button>
+            {errmsg && <p className="text-center text-danger">{errmsg}</p>}
 
         </div>
     )
