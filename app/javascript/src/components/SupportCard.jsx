@@ -24,9 +24,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function SupportCard({ handleSendMessage, userData }) {
-  const authState = useContext(AuthStateContext)
-
+export default function SupportCard({ handleSendMessage, userData, authState }) {
   const classes = useStyles()
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically

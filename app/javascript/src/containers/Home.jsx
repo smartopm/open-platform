@@ -8,21 +8,18 @@ import Loading from '../components/Loading.jsx'
 import ScanIcon from '../../../assets/images/shape.svg'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
-import ExploreIcon from '../../../assets/images/icon_map.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
-import FeedbackIcon from '@material-ui/icons/Feedback'
 import ForumIcon from '@material-ui/icons/Forum'
 import { Footer } from '../components/Footer.jsx'
 import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
-import ListAltIcon from '@material-ui/icons/ListAlt'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import PeopleIcon from '@material-ui/icons/People'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
@@ -55,7 +52,6 @@ export function Component({ authState }) {
       />
     )
   }
-  const userData = authState.user
 
   return (
     <div>
@@ -300,6 +296,33 @@ export function Component({ authState }) {
                   </a>
                 </div>
               )}
+
+            {['admin', 'client', 'resident'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Card
+                  path={`/`}
+                  title={'Client Request Form'}
+                  id="crfl"
+                  handleClick={() =>
+                    window.open(
+                      `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(
+                        /\s+/g,
+                        '+'
+                      )}&entry.1055458143=${
+                        userData.phoneNumber ? userData.phoneNumber : ''
+                      }`,
+                      '_blank'
+                    )
+                  }
+                  icon={
+                    <ListAltIcon
+                      fontSize="large"
+                      className={css(styles.homeIconColor)}
+                    />
+                  }
+                />
+              ) : null}
             </div>
           </div>
         </div>
