@@ -81,17 +81,32 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+<<<<<<< HEAD
+=======
+              {!['security_guard', 'resident', 'custodian'].includes(
+                authState.user.userType.toLowerCase()
+              ) ? (
+                <Card
+                  path={`/map`}
+                  title={t('home.explore')}
+                  titleStyle ={css(styles.CardtextImg)}
+                  icon={<img src={ExploreIcon} alt="map icon" />}
+                />
+              ) : null}
+>>>>>>> 2d69b78c788925783c4eb5cfb7f353f069d13a6f
 
               {Boolean(authState.user.userType === 'custodian') && (
                 <Card
                   path={`/scan`}
                   title={t('home.scan')}
+                  titleStyle ={css(styles.CardtextImg)}
                   icon={<img src={QRIcon} alt="support icon" />}
                 />
               )}
               <Card
                 path={`/id/${authState.user.id}`}
-                title={t('home.identity')}
+                title={t('My ID Card')}
+                titleStyle ={css(styles.CardtextIcon)}
                 icon={
                   <PersonIcon
                     fontSize="large"
@@ -103,7 +118,8 @@ export function Component({ authState }) {
               {Boolean(authState.user.userType !== 'custodian') && (
                 <Card
                   path={'/contact'}
-                  title={'Contact'}
+                  title={`${authState.user.community.name} Support`}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <HelpIcon
                       fontSize="large"
@@ -115,7 +131,8 @@ export function Component({ authState }) {
               {Boolean(authState.user.userType !== 'custodian') && (
                 <Card
                   path={`/news`}
-                  title={'News'}
+                  title={`${authState.user.community.name} News`}
+                  titleStyle ={css(styles.CardtextImg)}
                   icon={
                     <img
                       src={NewsIcon}
@@ -130,6 +147,7 @@ export function Component({ authState }) {
                 <Card
                   path={'/users'}
                   title={'Users'}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <RecentActorsIcon
                       fontSize="large"
@@ -145,6 +163,7 @@ export function Component({ authState }) {
                 <Card
                   path={`/myaccount/${authState.user.id}`}
                   title={'My Account'}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <AccountCircleIcon
                       fontSize="large"
@@ -161,6 +180,7 @@ export function Component({ authState }) {
                   path={`/account'`}
                   title={'My Thebe Portal'}
                   clientName={authState.user.name}
+                  titleStyle ={css(styles.CardtextImg)}
                   from={'home'}
                   icon={
                     <img
@@ -178,6 +198,7 @@ export function Component({ authState }) {
                 <Card
                   path={'/entry_logs'}
                   title={'Log Book'}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <LogIcon
                       fontSize="large"
@@ -193,6 +214,7 @@ export function Component({ authState }) {
                 <Card
                   path={'/timesheet'}
                   title={'Time Card'}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <HourglassEmptyIcon
                       fontSize="large"
@@ -206,6 +228,7 @@ export function Component({ authState }) {
                 <Card
                   path={`/timesheet/${authState.user.id}`}
                   title={'Time Card'}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <PlaylistAddCheckIcon
                       fontSize="large"
@@ -221,6 +244,7 @@ export function Component({ authState }) {
                 <Card
                   path={`/referral`}
                   title={'Referrals'}
+                  titleStyle ={css(styles.CardtextIcon)}
                   icon={
                     <PeopleIcon
                       fontSize="large"
@@ -236,6 +260,7 @@ export function Component({ authState }) {
                   <Card
                     path={`/todo`}
                     title={'Todo'}
+                    titleStyle ={css(styles.CardtextIcon)}
                     icon={
                       <PlaylistAddCheckIcon
                         fontSize="large"
@@ -246,6 +271,7 @@ export function Component({ authState }) {
                   <Card
                     path={`/notes`}
                     title={'Notes'}
+                    titleStyle ={css(styles.CardtextIcon)}
                     icon={
                       <NotesIcon
                         fontSize="large"
@@ -260,12 +286,32 @@ export function Component({ authState }) {
                 <Card
                   path={
                     authState.user.userType === 'admin'
+<<<<<<< HEAD
+=======
+                      ? '/feedbacks'
+                      : '/feedback'
+                  }
+                  title={'Feedback'}
+                  titleStyle ={css(styles.CardtextIcon)}
+                  icon={
+                    <FeedbackIcon
+                      fontSize="large"
+                      className={css(styles.homeIconColor)}
+                    />
+                  }
+                />
+              )}
+
+              {Boolean(authState.user.userType !== 'custodian') && (
+                <Card
+                  path={
+                    authState.user.userType === 'admin'
+>>>>>>> 2d69b78c788925783c4eb5cfb7f353f069d13a6f
                       ? '/messages'
                       : `/message/${authState.user.id}`
                   }
-                  title={
-                    authState.user.userType === 'admin' ? 'SMS' : 'My Messages'
-                  }
+                  title={ 'My Messages' }
+                  titleStyle ={css(styles.CardtextIcon)}
                   clientName={authState.user.name}
                   clientNumber={authState.user.phoneNumber}
                   from={'home'}
@@ -304,6 +350,7 @@ export function Component({ authState }) {
                   path={`/`}
                   title={'Client Request Form'}
                   id="crfl"
+                  titleStyle ={css(styles.CardtextIcon)}
                   handleClick={() =>
                     window.open(
                       `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(
