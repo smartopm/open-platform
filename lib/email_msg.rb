@@ -54,11 +54,12 @@ class EmailMsg
    end
 
    def self.save_sendgrid_messages
-     emails  = messages_from_sendgrid()
+     emails  = messages_from_sendgrid
      # puts messages.to_hash
      mess = JSON.parse(emails)
      messages = mess['messages']
      # replace this with Mutale's email
+     # add more validation to make sure users exist before saving that user.
      sender = User.find_by_email('olivier@doublegdp.com')
      puts "============================"
      messages.each do |message|
@@ -66,9 +67,9 @@ class EmailMsg
         message = Message.new(
           is_read: message['opens_count'] > 0 ? true : false,
           sender_id: sender.id,
-          user_id: user.nil? ? SecureRandom.uuid : user.id,
-          message: "#{message['subject']}",
-          type: 'email',
+          user_id: user.nil? ? SecureRandom.uuid : user.id, # temporarily save this if they don't exist
+          message: message['subject'],
+          category: 'email',
           status: message['status'],
           source_system_id: message['msg_id']
         )
