@@ -65,7 +65,7 @@ gem 'paper_trail'
 gem 'rollbar'
 
 # full text searching on models
-gem 'search_cop'
+gem 'search_cop', git: 'https://github.com/OlivierJM/search_cop'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

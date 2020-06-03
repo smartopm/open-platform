@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'sendgrid-ruby'
+require 'uri'
+require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
 class EmailMsg

@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/OlivierJM/search_cop
+  revision: 953f858852d0dd0b2bb243478bf125a132098861
+  specs:
+    search_cop (1.1.0)
+      treetop
+
+GIT
   remote: https://github.com/rspec/rspec-core
   revision: 77dbc84657c5dc45e07a7fe0f5b02b4caeb6c9ad
   specs:
@@ -322,8 +329,6 @@ GEM
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
-    search_cop (1.1.0)
-      treetop
     selenium-webdriver (3.142.3)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
@@ -424,7 +429,7 @@ DEPENDENCIES
   rubocop (~> 0.74.0)
   rubocop-rails (~> 2.3)
   sass-rails (~> 5)
-  search_cop
+  search_cop!
   selenium-webdriver
   sendgrid-ruby
   serviceworker-rails
