@@ -41,7 +41,6 @@ describe('Mounts the UserCommunications component and loads the data', () => {
                 </MockedProvider>
             </BrowserRouter>
         )
-
         expect(container.queryByText('Send')).toBeTruthy()
     })
 })
