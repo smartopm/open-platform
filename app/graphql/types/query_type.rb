@@ -56,7 +56,7 @@ module Types
     def flagged_notes(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      Note.where(flagged: true).order(completed: :desc, created_at: :desc)
+      Note.includes(:user).where(flagged: true).order(completed: :desc, created_at: :desc)
           .limit(limit).offset(offset)
     end
 
