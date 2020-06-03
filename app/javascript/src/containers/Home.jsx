@@ -8,23 +8,21 @@ import Loading from '../components/Loading.jsx'
 import ScanIcon from '../../../assets/images/shape.svg'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
-import ExploreIcon from '../../../assets/images/icon_map.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import NotesIcon from '@material-ui/icons/Notes'
-import FeedbackIcon from '@material-ui/icons/Feedback'
 import ForumIcon from '@material-ui/icons/Forum'
 import { Footer } from '../components/Footer.jsx'
 import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
-import ListAltIcon from '@material-ui/icons/ListAlt'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import PeopleIcon from '@material-ui/icons/People'
+import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 export default function Home() {
@@ -55,7 +53,6 @@ export function Component({ authState }) {
       />
     )
   }
-  const userData = authState.user
 
   return (
     <div>
@@ -85,16 +82,6 @@ export function Component({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {!['security_guard', 'resident', 'custodian'].includes(
-                authState.user.userType.toLowerCase()
-              ) ? (
-                <Card
-                  path={`/map`}
-                  title={t('home.explore')}
-                  titleStyle ={css(styles.CardtextImg)}
-                  icon={<img src={ExploreIcon} alt="map icon" />}
-                />
-              ) : null}
 
               {Boolean(authState.user.userType === 'custodian') && (
                 <Card
@@ -287,24 +274,6 @@ export function Component({ authState }) {
                 <Card
                   path={
                     authState.user.userType === 'admin'
-                      ? '/feedbacks'
-                      : '/feedback'
-                  }
-                  title={'Feedback'}
-                  titleStyle ={css(styles.CardtextIcon)}
-                  icon={
-                    <FeedbackIcon
-                      fontSize="large"
-                      className={css(styles.homeIconColor)}
-                    />
-                  }
-                />
-              )}
-
-              {Boolean(authState.user.userType !== 'custodian') && (
-                <Card
-                  path={
-                    authState.user.userType === 'admin'
                       ? '/messages'
                       : `/message/${authState.user.id}`
                   }
@@ -341,7 +310,7 @@ export function Component({ authState }) {
                 </div>
               )}
 
-              {['admin', 'client', 'resident'].includes(
+            {['admin', 'client', 'resident'].includes(
                 authState.user.userType.toLowerCase()
               ) ? (
                 <Card
@@ -351,11 +320,11 @@ export function Component({ authState }) {
                   titleStyle ={css(styles.CardtextIcon)}
                   handleClick={() =>
                     window.open(
-                      `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${userData.name.replace(
+                      `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${ authState.user.name.replace(
                         /\s+/g,
                         '+'
                       )}&entry.1055458143=${
-                        userData.phoneNumber ? userData.phoneNumber : ''
+                        authState.user.phoneNumber ? authState.user.phoneNumber : ''
                       }`,
                       '_blank'
                     )
