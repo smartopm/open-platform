@@ -47,6 +47,8 @@ class EmailMsg
     user
   end
 
+  # call this method from message model with the community_id
+  # We can also add this to the scheduler as well if we have community_id
   # rubocop:disable Metrics/MethodLength
   def self.save_sendgrid_messages(community_id)
     emails = messages_from_sendgrid
