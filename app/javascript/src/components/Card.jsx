@@ -16,7 +16,6 @@ export default function Card({
   access,
   authState
 }) {
-  // const authState = useContext(AuthStateContext)
   if (!access.includes(authState.user.userType.toLowerCase())) {
     return null
   }

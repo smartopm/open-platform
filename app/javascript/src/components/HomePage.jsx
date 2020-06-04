@@ -23,8 +23,6 @@ import Card from '../components/Card'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
-
-  // TODO: Make this just a conditional part of Home
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />
   }
