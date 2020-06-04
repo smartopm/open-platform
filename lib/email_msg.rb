@@ -27,18 +27,13 @@ class EmailMsg
   end
   # rubocop:enable Metrics/AbcSize
 
-  def self.messages_from_sendgrid
-    url = URI("https://api.sendgrid.com/v3/messages?limit=10")
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    request = Net::HTTP::Get.new(url)
-    request["authorization"] = "Bearer #{Rails.application.credentials[:sendgrid_api_key]}"
-    request.body = "{}"
-
-    response = http.request(request)
-    response.read_body
+  def self.get_messages_from_sendgrid
+    sg_client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
+    # Find a way to make limit and offset dynamic
+    params = JSON.parse('{"limit": 100, }')
+    response = sg_client.messages.get(query_params: params)
+    puts "==============using the library=============="
+    response.body
   end
 
   # other stuff ==> message body
@@ -54,14 +49,14 @@ class EmailMsg
    end
 
    def self.save_sendgrid_messages
-     emails  = messages_from_sendgrid
+     emails  = get_messages_from_sendgrid
      # puts messages.to_hash
      mess = JSON.parse(emails)
      messages = mess['messages']
      # replace this with Mutale's email
      # add more validation to make sure users exist before saving that user.
      sender = User.find_by_email('olivier@doublegdp.com')
-     puts "============================"
+
      messages.each do |message|
         user = find_by_email(message['to_email'])
         message = Message.new(
