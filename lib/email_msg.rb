@@ -47,6 +47,7 @@ class EmailMsg
     user
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.save_sendgrid_messages(community_id)
     emails = messages_from_sendgrid
     # replace this with Mutale's email
@@ -56,7 +57,7 @@ class EmailMsg
       user = find_user(email['to_email'], community_id)
       message = Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
-        read_at: email['last_event_time']
+        read_at: email['last_event_time'],
         # temporarily save this if they don't exist
         user_id: user.nil? ? SecureRandom.uuid : user.id,
         message: email['subject'], category: 'email', status: email['status'],
@@ -65,5 +66,6 @@ class EmailMsg
       message.save # add ! later to validate user existance before saving the message
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Metrics/AbcSize
