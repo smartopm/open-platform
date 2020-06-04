@@ -34,7 +34,9 @@ export default function UserCommunication(user, state) {
             setLoading(false)
         })
     }
-    console.log(data)
+    if (error){
+        return <span >{error.message} </span>
+      }
     return (
         <div>
             <List>
