@@ -44,8 +44,8 @@ describe("User infromation component loads",()=>{
             </MockedProvider>
         )
         expect(getByText('Plots')).toBeInTheDocument()
-        expect(getByText('Payments')).toBeInTheDocument()
-        expect(getByText('Send SMS to Yoram')).toBeInTheDocument()
+        expect(getByText('Communication')).toBeInTheDocument()
+        expect(getByText('Payments')).toBeInTheDocument() 
         expect(getByText('Contact')).toBeInTheDocument() 
     })
     it('should render Comming soon',()=>{
