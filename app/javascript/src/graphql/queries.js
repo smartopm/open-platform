@@ -29,6 +29,7 @@ export const AllEntryRequestsQuery = gql`
       ...EntryRequestFields
       guard: user {
         name
+        id
       }
     }
   }
@@ -129,8 +130,8 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  {
-    flaggedNotes {
+  query GetTodos($offset: Int, $limit: Int){ 
+    flaggedNotes(offset: $offset, limit: $limit) {
       body
       createdAt
       id
@@ -257,6 +258,7 @@ export const UserTimeSheetQuery = gql`
              id
              user {
                name
+               id
              }
            }
          }
@@ -270,6 +272,7 @@ export const TimeSheetLogsQuery = gql`
              id
              user {
                name
+               id
              }
              userId
            }
@@ -281,6 +284,7 @@ export const lastUserTimeSheet = gql`
         userLastShift(userId: $userId){
           endedAt
           startedAt
+          id
         }
 }
 `

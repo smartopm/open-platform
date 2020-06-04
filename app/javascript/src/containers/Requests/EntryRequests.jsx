@@ -8,10 +8,10 @@ import { AllEntryRequestsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
 
 export default () => {
-  return allEntryRequests();
+  return AllEntryRequests();
 };
 
-const allEntryRequests = () => {
+const AllEntryRequests = () => {
   const { loading, error, data } = useQuery(AllEntryRequestsQuery, {
     fetchPolicy: "no-cache"
   });

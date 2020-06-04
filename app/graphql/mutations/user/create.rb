@@ -12,7 +12,7 @@ module Mutations
       argument :name, String, required: true
       argument :email, String, required: false
       argument :phone_number, String, required: true
-      argument :user_type, String, required: false
+      argument :user_type, String, required: true
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
@@ -28,6 +28,8 @@ module Mutations
 
       def resolve(vals)
         user = nil
+        raise GraphQL::ExecutionError, 'Duplicate phone' if number_exists?(vals[:phone_number])
+
         begin
           user = context[:current_user].enroll_user(vals)
           return { user: user } if user.present? && user.errors.blank?
@@ -36,6 +38,13 @@ module Mutations
         end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
+      end
+
+      def number_exists?(phone_number)
+        user = context[:current_user].find_via_phone_number(phone_number)
+        return false if user.nil?
+
+        true
       end
 
       def authorized?(_vals)

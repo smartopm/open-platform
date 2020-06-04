@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { UserPlotInfo } from './UserPlotInfo'
 import IconButton from '@material-ui/core/IconButton'
@@ -49,6 +49,7 @@ export default function UserInformation({
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
   const { handleSubmit, register } = useForm()
+  let location = useLocation();
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
     noteCreate({
@@ -70,13 +71,11 @@ export default function UserInformation({
       Plots: 'Plots',
       Payments: 'Payments'
     }
-      ReactGA.event({
-      category: 'My_Account',
-      action: pages[newValue],
-      eventLabel: `Tab ${newValue}`,
-      nonInteraction: true
-    })
-    
+    if ( location.pathname.includes('/user')) {
+      let [, rootURL, , userPage] = location.pathname.split('/')
+      let pageHit = `/${rootURL}/${userPage}/${pages[newValue]}`
+      ReactGA.pageview(pageHit)
+    }
   }
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)

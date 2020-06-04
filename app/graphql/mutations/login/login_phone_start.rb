@@ -9,7 +9,7 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
-        user = ::User.find_via_phone_number(vals[:phone_number])
+        user = ::User.find_any_via_phone_number(vals[:phone_number])
         raise ActiveRecord::RecordNotFound.new('User not found', ::User) unless user
 
         user&.send_phone_token
