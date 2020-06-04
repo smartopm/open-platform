@@ -149,7 +149,7 @@ class User < ApplicationRecord
 
   def grant!(entry_request_id)
     puts "===============Grant============="
-    EmailMsg.save_sendgrid_messages
+    EmailMsg.save_sendgrid_messages(community_id)
     entry = entry_requests.find(entry_request_id)
     return nil if entry.blank?
 
