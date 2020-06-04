@@ -88,7 +88,7 @@ RSpec.describe Types::Queries::User do
                                                       current_user: admin,
                                                     }).as_json
       expect(result.dig('errors')).to be_nil
-      expect(result.dig('data', 'users').length).to eql 1
+      expect(result.dig('data', 'users').length).to eql 3
     end
 
     it 'should return all users when no user type is specified' do
