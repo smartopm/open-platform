@@ -1,8 +1,7 @@
-import React, { useContext, useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import React from 'react'
+import { Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import ScanIcon from '../../../assets/images/shape.svg'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
@@ -18,315 +17,294 @@ import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import PeopleIcon from '@material-ui/icons/People'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
-export function Component({ authState }) {
 
-    const { t } = useTranslation()
+export default function Homepage({ authState }) {
+  const { t } = useTranslation()
 
-    // TODO: Make this just a conditional part of Home
-    if (authState.user.userType === 'security_guard') {
-      return <Redirect push to="/guard_home" />
+  // TODO: Make this just a conditional part of Home
+  if (authState.user.userType === 'security_guard') {
+    return <Redirect push to="/guard_home" />
+  }
+  const cards = [
+    {
+      card_id: 1,
+      title: t('home.scan'),
+      path: `/scan`,
+      titleStyle: css(styles.CardtextImg),
+      icon: <img src={QRIcon} alt="support icon" />,
+      access: ['custodian']
+    },
+    {
+      card_id: 2,
+      title: t('My ID Card'),
+      path: `/id/${authState.user.id}`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <PersonIcon fontSize="large" className={css(styles.homeIconColor)} />
+      ),
+      access: [
+        'admin',
+        'client',
+        'security_guard',
+        'custodian',
+        'prospective_client',
+        'contractor',
+        'resident',
+        'visitor'
+      ]
+    },
+    {
+      card_id: 3,
+      title: 'My Account',
+      path: `/myaccount/${authState.user.id}`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <AccountCircleIcon
+          fontSize="large"
+          className={css(styles.homeIconColor)}
+        />
+      ),
+      access: ['resident', 'client']
+    },
+    {
+      card_id: 4,
+      title: 'Users',
+      path: `/users`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <RecentActorsIcon
+          fontSize="large"
+          className={css(styles.homeIconColor)}
+        />
+      ),
+      access: ['admin']
+    },
+    {
+      card_id: 5,
+      title: `${authState.user.community.name} News`,
+      path: `/news`,
+      titleStyle: css(styles.CardtextImg),
+      icon: (
+        <img
+          src={NewsIcon}
+          className={css(styles.homeIconColor)}
+          alt=" news icons"
+        />
+      ),
+      access: [
+        'admin',
+        'client',
+        'security_guard',
+        'prospective_client',
+        'contractor',
+        'resident',
+        'visitor'
+      ]
+    },
+    {
+      card_id: 6,
+      title: 'My Messages',
+      path:
+        authState.user.userType === 'admin'
+          ? '/messages'
+          : `/message/${authState.user.id}`,
+      titleStyle: css(styles.CardtextIcon),
+      clientName: authState.user.name,
+      clientNumber: authState.user.phoneNumber,
+      from: 'home',
+      icon: (
+        <ForumIcon fontSize="large" className={css(styles.homeIconColor)} />
+      ),
+      access: [
+        'admin',
+        'client',
+        'security_guard',
+        'prospective_client',
+        'contractor',
+        'resident',
+        'visitor'
+      ]
+    },
+    {
+      card_id: 7,
+      title: 'Tasks',
+      path: `/todo`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <PlaylistAddCheckIcon
+          fontSize="large"
+          className={css(styles.homeIconColor)}
+        />
+      ),
+      access: ['admin']
+    },
+    {
+      card_id: 8,
+      title: 'Notes',
+      path: `/notes`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <NotesIcon fontSize="large" className={css(styles.homeIconColor)} />
+      ),
+      access: ['admin']
+    },
+    {
+      card_id: 9,
+      title: 'My Thebe Portal',
+      path: `/account`,
+      titleStyle: css(styles.CardtextImg),
+      clientName: authState.user.name,
+      from: 'home',
+      icon: (
+        <img
+          src={AccountManagement}
+          className={css(styles.homeIconColor)}
+          alt="account management icon"
+        />
+      ),
+      access: ['admin', 'resident', 'client']
+    },
+    {
+      card_id: 10,
+      title: 'Client Request Form',
+      path: `/`,
+      id: 'crfl',
+      titleStyle: css(styles.CardtextIcon),
+      handleClick: () =>
+        window.open(
+          `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
+            /\s+/g,
+            '+'
+          )}&entry.1055458143=${
+            authState.user.phoneNumber ? authState.user.phoneNumber : ''
+          }`,
+          '_blank'
+        ),
+      icon: (
+        <ListAltIcon fontSize="large" className={css(styles.homeIconColor)} />
+      ),
+      access: ['admin', 'resident', 'client']
+    },
+    {
+      card_id: 11,
+      title: 'Time Card',
+      path: `/timesheet`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <HourglassEmptyIcon
+          fontSize="large"
+          className={css(styles.homeIconColor)}
+        />
+      ),
+      access: ['admin', 'custodian']
+    },
+    {
+      card_id: 12,
+      title: 'Log Book',
+      path: `/entry_logs`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: <LogIcon fontSize="large" className={css(styles.homeIconColor)} />,
+      access: ['security_guard', 'admin']
+    },
+    {
+      card_id: 13,
+      title: 'Referrals',
+      path: `/referral`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: <LogIcon fontSize="large" className={css(styles.homeIconColor)} />,
+      access: ['admin', 'resident', 'client']
+    },
+    {
+      card_id: 14,
+      title: `${authState.user.community.name} Support`,
+      path: `/contact`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: <HelpIcon fontSize="large" className={css(styles.homeIconColor)} />,
+      access: [
+        'admin',
+        'client',
+        'security_guard',
+        'prospective_client',
+        'contractor',
+        'resident',
+        'visitor'
+      ]
+    },
+    {
+      card_id: 15,
+      title: `Time Card`,
+      path: `/timesheet/${authState.user.id}`,
+      titleStyle: css(styles.CardtextIcon),
+      icon: (
+        <PlaylistAddCheckIcon
+          fontSize="large"
+          className={css(styles.homeIconColor)}
+        />
+      ),
+      access: ['contractor']
+    },
+    {
+      card_id: 16,
+      children: (
+        <a href={`tel:${ponisoNumber}`}>
+          <div className="card-body">
+            <h5 className="card-title">
+              <CallIcon
+                className={css(styles.homeIconColor)}
+                fontSize="large"
+              />
+            </h5>
+            <p className={css(styles.CardtextIcon)}>Call Manager</p>
+          </div>
+        </a>
+      ),
+      access: ['contractor']
     }
-  
+  ]
 
-  
-    return (
-      <div>
-
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-4-lg col-12-sm index-cards">
-              <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-                {Boolean(authState.user.userType === 'custodian') && (
-                  <Card
-                    path={`/scan`}
-                    title={t('home.scan')}
-                    titleStyle={css(styles.CardtextImg)}
-                    icon={<img src={QRIcon} alt="support icon" />}
-                  />
-                )}
+  return (
+    <div>
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-4-lg col-12-sm index-cards">
+            <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+              {cards.map(card => (
                 <Card
-                  path={`/id/${authState.user.id}`}
-                  title={t('My ID Card')}
-                  titleStyle={css(styles.CardtextIcon)}
-                  icon={
-                    <PersonIcon
-                      fontSize="large"
-                      className={css(styles.homeIconColor)}
-                    />
-                  }
-                />
-                {['resident', 'client'].includes(
-                  authState.user.userType.toLowerCase()
-                ) ? (
-                  <Card
-                    path={`/myaccount/${authState.user.id}`}
-                    title={'My Account'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <AccountCircleIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                ) : null}
-  
-                {['admin'].includes(authState.user.userType.toLowerCase()) ? (
-                  <Card
-                    path={'/users'}
-                    title={'Users'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <RecentActorsIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                ) : null}
-                {Boolean(authState.user.userType !== 'custodian') && (
-                  <Card
-                    path={`/news`}
-                    title={`${authState.user.community.name} News`}
-                    titleStyle={css(styles.CardtextImg)}
-                    icon={
-                      <img
-                        src={NewsIcon}
-                        className={css(styles.homeIconColor)}
-                        alt=" news icons"
-                      />
-                    }
-                  />
-                )}
-  
-                {Boolean(authState.user.userType !== 'custodian') && (
-                  <Card
-                    path={
-                      authState.user.userType === 'admin'
-                        ? '/messages'
-                        : `/message/${authState.user.id}`
-                    }
-                    title={'My Messages'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    clientName={authState.user.name}
-                    clientNumber={authState.user.phoneNumber}
-                    from={'home'}
-                    icon={
-                      <ForumIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                )}
-  
-                {authState.user.userType === 'admin' && (
-                  <>
-                    <Card
-                      path={`/todo`}
-                      title={'Tasks'}
-                      titleStyle={css(styles.CardtextIcon)}
-                      icon={
-                        <PlaylistAddCheckIcon
-                          fontSize="large"
-                          className={css(styles.homeIconColor)}
-                        />
-                      }
-                    />
-                    <Card
-                      path={`/notes`}
-                      title={'Notes'}
-                      titleStyle={css(styles.CardtextIcon)}
-                      icon={
-                        <NotesIcon
-                          fontSize="large"
-                          className={css(styles.homeIconColor)}
-                        />
-                      }
-                    />
-                  </>
-                )}
-  
-                {['admin', 'resident', 'client'].includes(
-                  authState.user.userType.toLowerCase()
-                ) ? (
-                  <Card
-                    path={`/account'`}
-                    title={'My Thebe Portal'}
-                    clientName={authState.user.name}
-                    titleStyle={css(styles.CardtextImg)}
-                    from={'home'}
-                    icon={
-                      <img
-                        src={AccountManagement}
-                        className={css(styles.homeIconColor)}
-                        alt="account management icon"
-                      />
-                    }
-                  />
-                ) : null}
-  
-                {['admin', 'client', 'resident'].includes(
-                  authState.user.userType.toLowerCase()
-                ) ? (
-                  <Card
-                    path={`/`}
-                    title={'Client Request Form'}
-                    id="crfl"
-                    titleStyle={css(styles.CardtextIcon)}
-                    handleClick={() =>
-                      window.open(
-                        `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
-                          /\s+/g,
-                          '+'
-                        )}&entry.1055458143=${
-                          authState.user.phoneNumber
-                            ? authState.user.phoneNumber
-                            : ''
-                        }`,
-                        '_blank'
-                      )
-                    }
-                    icon={
-                      <ListAltIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                ) : null}
-                {['admin', 'custodian'].includes(
-                  authState.user.userType.toLowerCase()
-                ) ? (
-                  <Card
-                    path={'/timesheet'}
-                    title={'Time Card'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <HourglassEmptyIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                ) : null}
-  
-                {['security_guard', 'admin'].includes(
-                  authState.user.userType.toLowerCase()
-                ) ? (
-                  <Card
-                    path={'/entry_logs'}
-                    title={'Log Book'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <LogIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                ) : null}
-                {['admin', 'resident', 'client'].includes(
-                  authState.user.userType.toLowerCase()
-                ) ? (
-                  <Card
-                    path={`/referral`}
-                    title={'Referrals'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <PeopleIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                    from="ref"
-                  />
-                ) : null}
-                {Boolean(authState.user.userType !== 'custodian') && (
-                  <Card
-                    path={'/contact'}
-                    title={`${authState.user.community.name} Support`}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <HelpIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                )}
-  
-                {authState.user.userType === 'contractor' && (
-                  <Card
-                    path={`/timesheet/${authState.user.id}`}
-                    title={'Time Card'}
-                    titleStyle={css(styles.CardtextIcon)}
-                    icon={
-                      <PlaylistAddCheckIcon
-                        fontSize="large"
-                        className={css(styles.homeIconColor)}
-                      />
-                    }
-                  />
-                )}
-  
-                {Boolean(authState.user.userType === 'custodian') && (
-                  <div
-                    className={`${css(
-                      styles.cardSize
-                    )} card align-self-center text-center`}
-                  >
-                    <a href={`tel:${ponisoNumber}`}>
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          <CallIcon
-                            className={css(styles.homeIconColor)}
-                            fontSize="large"
-                          />
-                        </h5>
-                        <p className={css(styles.CardtextIcon)}>Call Manager</p>
-                      </div>
-                    </a>
-                  </div>
-                )}
-              </div>
+                  key={card.card_id}
+                  path={card.path}
+                  title={card.title}
+                  titleStyle={css(styles.CardtextImg)}
+                  icon={card.icon}
+                  access={card.access}
+                  authState={authState} >
+                {card.children}
+                </Card>
+              ))}
             </div>
           </div>
-          <Footer position="5vh" />
-          <SocialMediaLinks />
         </div>
+        <Footer position="5vh" />
+        <SocialMediaLinks />
       </div>
-    )
+    </div>
+  )
+}
+
+const styles = StyleSheet.create({
+  homeIconColor: {
+    color: '#25c0b0'
+  },
+  CardtextIcon: {
+    marginTop: '15.5%'
+  },
+  CardtextImg: {
+    marginTop: '21%'
+  },
+  cardSize: {
+    width: 200,
+    height: 154
   }
-  
-  const styles = StyleSheet.create({
-    bellIcon: {
-      color: '#25c0b0'
-    },
-    scanIcon: {
-      position: 'absolute',
-      top: 26,
-      bottom: 4,
-      right: 5,
-      width: 20
-    },
-    homeIconColor: {
-      color: '#25c0b0'
-    },
-    CardtextIcon: {
-      marginTop: '15.5%'
-    },
-    CardtextImg: {
-      marginTop: '21%'
-    },
-    cardSize: {
-      width: 200,
-      height: 154
-    }
-  })
-  
-  
+})

@@ -2,7 +2,6 @@ import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
-
 export default function Card({
   title,
   path,
@@ -13,13 +12,20 @@ export default function Card({
   children,
   handleClick,
   id,
-  titleStyle
+  titleStyle,
+  access,
+  authState
 }) {
+  // const authState = useContext(AuthStateContext)
+  if (!access.includes(authState.user.userType.toLowerCase())) {
+    return null
+  }
   return (
     <Fragment>
       <div
         className={`${css(styles.cardSize)} card align-self-center text-center`}
       >
+        <span>{children}</span>
         <Link
           to={{
             pathname: path,
@@ -36,9 +42,8 @@ export default function Card({
           <div className="card-body">
             <h5 className="card-title">
               <span>{icon}</span>
-              <span>{children}</span>
             </h5>
-            <p className={titleStyle} >{title}</p>
+            <p className={titleStyle}>{title}</p>
           </div>
         </Link>
       </div>
@@ -49,7 +54,7 @@ export default function Card({
 Card.propTypes = {
   icon: PropTypes.node,
   children: PropTypes.node,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   path: PropTypes.string,
   from: PropTypes.string,
   handleClick: PropTypes.func,
