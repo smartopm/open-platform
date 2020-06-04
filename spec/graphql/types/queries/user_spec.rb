@@ -29,8 +29,8 @@ RSpec.describe Types::Queries::User do
     end
 
     let(:users_query) do
-      %(query users($userType: String) {
-        users(userType: $userType) {
+      %(query users($query: String) {
+        users(query: $query) {
             name
             id
             userType
@@ -69,7 +69,19 @@ RSpec.describe Types::Queries::User do
 
     it 'should return users with provided usertype' do
       variables = {
-        userType: 'admin',
+        query: 'admin',
+      }
+      result = DoubleGdpSchema.execute(users_query, variables: variables,
+                                                    context: {
+                                                      current_user: admin,
+                                                    }).as_json
+      expect(result.dig('errors')).to be_nil
+      expect(result.dig('data', 'users').length).to eql 1
+    end
+
+    it 'should find users by phoneNumber when passed to the query' do
+      variables = {
+        query: '1404555121',
       }
       result = DoubleGdpSchema.execute(users_query, variables: variables,
                                                     context: {
@@ -81,7 +93,7 @@ RSpec.describe Types::Queries::User do
 
     it 'should return all users when no user type is specified' do
       variables = {
-        userType: '',
+        query: '',
       }
       result = DoubleGdpSchema.execute(users_query, variables: variables,
                                                     context: {

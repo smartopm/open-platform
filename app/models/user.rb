@@ -15,8 +15,7 @@ class User < ApplicationRecord
   include SearchCop
 
   search_scope :search do
-    attributes :id, :name, :phone_number, :user_type
-    # options :id, :type => :fulltext
+    attributes :name, :phone_number, :user_type
   end
 
   belongs_to :community, optional: true
