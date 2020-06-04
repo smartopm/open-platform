@@ -102,6 +102,11 @@ class User < ApplicationRecord
   end
 
   # We may want to do a bit more work here massaing the number entered
+  def self.find_any_via_phone_number(phone_number)
+    find_by(phone_number: phone_number)
+  end
+
+  # We may want to do a bit more work here massaing the number entered
   def find_via_phone_number(phone_number)
     community.users.find_by(phone_number: phone_number)
   end

@@ -32,7 +32,7 @@ module Types
     def all_notes(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      Note.all.order(created_at: :desc)
+      Note.all.includes(:user).order(created_at: :desc)
           .limit(limit).offset(offset)
     end
 
@@ -49,12 +49,15 @@ module Types
 
     field :flagged_notes, [NoteType], null: false do
       description 'Returns a list of all the flagged notes, basically todos'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
-    def flagged_notes
+    def flagged_notes(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      Note.where(flagged: true).order(completed: :desc, created_at: :desc)
+      Note.includes(:user).where(flagged: true).order(completed: :desc, created_at: :desc)
+          .limit(limit).offset(offset)
     end
 
     field :entry_search, [EntryRequestType], null: true do
