@@ -3,7 +3,6 @@ import { render} from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import UserCommunication from '../components/UserCommunication'
-import { UserMessageQuery } from '../graphql/queries'
 
 describe('Mounts the UserCommunications component and loads the data', () => {
 
