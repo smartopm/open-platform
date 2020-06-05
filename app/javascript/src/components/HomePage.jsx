@@ -20,6 +20,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
+import { SVGIcon } from '../components/Card'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -32,17 +33,15 @@ export default function Homepage({ authState }) {
       title: t('home.scan'),
       path: `/scan`,
       titleStyle: css(styles.CardtextImg),
-      icon: <img src={QRIcon} alt="support icon" />,
+      icon: <SVGIcon image={QRIcon} alt={'support icon'} />,
       access: ['custodian']
     },
     {
       card_id: 2,
       title: t('My ID Card'),
       path: `/id/${authState.user.id}`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <PersonIcon fontSize="large" className={css(styles.homeIconColor)} />
-      ),
+
+      icon: <PersonIcon />,
       access: [
         'admin',
         'client',
@@ -58,26 +57,16 @@ export default function Homepage({ authState }) {
       card_id: 3,
       title: 'My Account',
       path: `/myaccount/${authState.user.id}`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <AccountCircleIcon
-          fontSize="large"
-          className={css(styles.homeIconColor)}
-        />
-      ),
+
+      icon: <AccountCircleIcon />,
       access: ['resident', 'client']
     },
     {
       card_id: 4,
       title: 'Users',
       path: `/users`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <RecentActorsIcon
-          fontSize="large"
-          className={css(styles.homeIconColor)}
-        />
-      ),
+
+      icon: <RecentActorsIcon />,
       access: ['admin']
     },
     {
@@ -85,13 +74,7 @@ export default function Homepage({ authState }) {
       title: `${authState.user.community.name} News`,
       path: `/news`,
       titleStyle: css(styles.CardtextImg),
-      icon: (
-        <img
-          src={NewsIcon}
-          className={css(styles.homeIconColor)}
-          alt=" news icons"
-        />
-      ),
+      icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
       access: [
         'admin',
         'client',
@@ -109,13 +92,11 @@ export default function Homepage({ authState }) {
         authState.user.userType === 'admin'
           ? '/messages'
           : `/message/${authState.user.id}`,
-      titleStyle: css(styles.CardtextIcon),
+
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
-      icon: (
-        <ForumIcon fontSize="large" className={css(styles.homeIconColor)} />
-      ),
+      icon: <ForumIcon />,
       access: [
         'admin',
         'client',
@@ -130,23 +111,16 @@ export default function Homepage({ authState }) {
       card_id: 7,
       title: 'Tasks',
       path: `/todo`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <PlaylistAddCheckIcon
-          fontSize="large"
-          className={css(styles.homeIconColor)}
-        />
-      ),
+
+      icon: <PlaylistAddCheckIcon />,
       access: ['admin']
     },
     {
       card_id: 8,
       title: 'Notes',
       path: `/notes`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <NotesIcon fontSize="large" className={css(styles.homeIconColor)} />
-      ),
+
+      icon: <NotesIcon />,
       access: ['admin']
     },
     {
@@ -157,11 +131,7 @@ export default function Homepage({ authState }) {
       clientName: authState.user.name,
       from: 'home',
       icon: (
-        <img
-          src={AccountManagement}
-          className={css(styles.homeIconColor)}
-          alt="account management icon"
-        />
+        <SVGIcon image={AccountManagement} alt={'account management icon'} />
       ),
       access: ['admin', 'resident', 'client']
     },
@@ -170,7 +140,7 @@ export default function Homepage({ authState }) {
       title: 'Client Request Form',
       path: `/`,
       id: 'crfl',
-      titleStyle: css(styles.CardtextIcon),
+
       handleClick: () =>
         window.open(
           `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
@@ -181,46 +151,39 @@ export default function Homepage({ authState }) {
           }`,
           '_blank'
         ),
-      icon: (
-        <ListAltIcon fontSize="large" className={css(styles.homeIconColor)} />
-      ),
+      icon: <ListAltIcon />,
       access: ['admin', 'resident', 'client']
     },
     {
       card_id: 11,
       title: 'Time Card',
       path: `/timesheet`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <HourglassEmptyIcon
-          fontSize="large"
-          className={css(styles.homeIconColor)}
-        />
-      ),
+
+      icon: <HourglassEmptyIcon />,
       access: ['admin', 'custodian']
     },
     {
       card_id: 12,
       title: 'Log Book',
       path: `/entry_logs`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: <LogIcon fontSize="large" className={css(styles.homeIconColor)} />,
+
+      icon: <LogIcon />,
       access: ['security_guard', 'admin']
     },
     {
       card_id: 13,
       title: 'Referrals',
       path: `/referral`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: <LogIcon fontSize="large" className={css(styles.homeIconColor)} />,
+
+      icon: <LogIcon />,
       access: ['admin', 'resident', 'client']
     },
     {
       card_id: 14,
       title: `${authState.user.community.name} Support`,
       path: `/contact`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: <HelpIcon fontSize="large" className={css(styles.homeIconColor)} />,
+
+      icon: <HelpIcon />,
       access: [
         'admin',
         'client',
@@ -235,13 +198,8 @@ export default function Homepage({ authState }) {
       card_id: 15,
       title: `Time Card`,
       path: `/timesheet/${authState.user.id}`,
-      titleStyle: css(styles.CardtextIcon),
-      icon: (
-        <PlaylistAddCheckIcon
-          fontSize="large"
-          className={css(styles.homeIconColor)}
-        />
-      ),
+
+      icon: <PlaylistAddCheckIcon />,
       access: ['contractor']
     },
     {
@@ -250,10 +208,7 @@ export default function Homepage({ authState }) {
         <a href={`tel:${ponisoNumber}`}>
           <div className="card-body">
             <h5 className="card-title">
-              <CallIcon
-                className={css(styles.homeIconColor)}
-                fontSize="large"
-              />
+              <CallIcon />
             </h5>
             <p className={css(styles.CardtextIcon)}>Call Manager</p>
           </div>
@@ -277,8 +232,9 @@ export default function Homepage({ authState }) {
                   titleStyle={css(styles.CardtextImg)}
                   icon={card.icon}
                   access={card.access}
-                  authState={authState} >
-                {card.children}
+                  authState={authState}
+                >
+                  {card.children}
                 </Card>
               ))}
             </div>

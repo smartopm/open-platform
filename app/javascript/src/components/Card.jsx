@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
+
 export default function Card({
   title,
   path,
@@ -12,7 +13,6 @@ export default function Card({
   children,
   handleClick,
   id,
-  titleStyle,
   access,
   authState
 }) {
@@ -40,14 +40,20 @@ export default function Card({
         >
           <div className="card-body">
             <h5 className="card-title">
-              <span>{icon}</span>
+              <span className={css(styles.homeIconColor)} fontSize="large">
+                {icon}
+              </span>
             </h5>
-            <p className={titleStyle}>{title}</p>
+            <p className={css(styles.CardtextIcon)}>{title}</p>
           </div>
         </Link>
       </div>
     </Fragment>
   )
+}
+
+export function SVGIcon({ image, alt }) {
+  return <img src={image} alt={alt} />
 }
 
 Card.propTypes = {
@@ -63,6 +69,15 @@ Card.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  homeIconColor: {
+    color: '#25c0b0'
+  },
+  CardtextIcon: {
+    marginTop: '15.5%'
+  },
+  CardtextImg: {
+    marginTop: '21%'
+  },
   cardSize: {
     width: 200,
     height: 154
