@@ -176,6 +176,18 @@ class User < ApplicationRecord
                       data: data)
   end
 
+  def generate_note(vals)
+    ::Note.create(
+      user_id: vals[:user_id],
+      body: vals[:body],
+      category: vals[:category],
+      flagged: false,
+      author_id: self[:id],
+      completed: false,
+    )
+  end
+
+
   # rubocop:disable MethodLength
 
   def manage_shift(target_user_id, event_tag)
