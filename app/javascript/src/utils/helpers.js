@@ -41,7 +41,7 @@ export function truncateString(message, count) {
 export function saniteError(requiredFields, errorMessage) {
   if (!errorMessage.length) return;
   const errArr = errorMessage.split(" ");
-  const foundFields = requiredFields.filter(field => errArr.includes(field));
+  const foundFields = Object.keys(requiredFields).filter(field => errArr.includes(field));
   // duplicate errors are already sanitized, we just need to remove the GraphQL
   if (errArr.includes("Duplicate")) {
     return `${errorMessage.replace(/GraphQL error:/, "")}`;
@@ -50,5 +50,5 @@ export function saniteError(requiredFields, errorMessage) {
   if (!foundFields.length) {
     return "Unexpected error happened, Please try again";
   }
-  return `${foundFields.join(" or ")}'s value is blank`;
+  return `${foundFields.join(" or ")} value is blank`;
 }

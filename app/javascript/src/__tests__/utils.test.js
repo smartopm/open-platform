@@ -15,7 +15,13 @@ const allFieldsError = `GraphQL error: name of type String! was provided invalid
 const duplicateError = "GraphQL error: Duplicate Email"
 
 const fieldError = "GraphQL error: userType of type String! was provided invalid value"
-const requiredKeys = ["userType", "phoneNumber", "name", "email"];
+const requiredKeys = {
+  userType: "User Type",
+  phoneNumber: "Phone Number",
+  name: "name",
+  email: "email"
+};
+
 
 
 
@@ -63,14 +69,14 @@ describe('sanitize GraphQL errors', () => {
   // check for one field missing
   it('should return cleaned error when one field is missing', () => {
     expect(saniteError(requiredKeys, fieldError)).toBe(
-      "userType's value is blank"
+      "userType value is blank"
     )
   })
 
   // check for multiple fields missing
   it('should return cleaned error when multiple fields are missing', () => {
     expect(saniteError(requiredKeys, allFieldsError)).toBe(
-      "userType or phoneNumber or name's value is blank"
+      "userType or phoneNumber or name value is blank"
     )
   })
 })
