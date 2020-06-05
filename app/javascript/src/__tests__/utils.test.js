@@ -15,13 +15,7 @@ const allFieldsError = `GraphQL error: name of type String! was provided invalid
 const duplicateError = "GraphQL error: Duplicate Email"
 
 const fieldError = "GraphQL error: userType of type String! was provided invalid value"
-const requiredKeys = {
-  userType: "User Type",
-  phoneNumber: "Phone Number",
-  name: "name",
-  email: "email"
-};
-
+const requiredKeys = ["userType", "phoneNumber", "name", "email"];
 
 
 
