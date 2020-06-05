@@ -6,6 +6,12 @@ export const reasons = [
   'Passing through',
   'Other'
 ]
+
+export const requiredFields = [
+  "userType", "phoneNumber", "name", "email"
+]
+
+
 export const userType = {
   admin: 'Admin',
   security_guard: 'Security Guard',
