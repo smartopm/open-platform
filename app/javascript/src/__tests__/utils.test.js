@@ -18,7 +18,6 @@ const fieldError = "GraphQL error: userType of type String! was provided invalid
 const requiredKeys = ["userType", "phoneNumber", "name", "email"];
 
 
-
 describe('find links and replace with anchor tag', () => {
   // find link in a text and replace
 
@@ -63,14 +62,14 @@ describe('sanitize GraphQL errors', () => {
   // check for one field missing
   it('should return cleaned error when one field is missing', () => {
     expect(saniteError(requiredKeys, fieldError)).toBe(
-      "userType value is blank"
+      "User Type value is blank"
     )
   })
 
   // check for multiple fields missing
   it('should return cleaned error when multiple fields are missing', () => {
     expect(saniteError(requiredKeys, allFieldsError)).toBe(
-      "userType or phoneNumber or name value is blank"
+      "User Type or Phone Number or name value is blank"
     )
   })
 })
