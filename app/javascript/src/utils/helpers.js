@@ -20,7 +20,7 @@ export function findLinkAndReplace(msg) {
 
 /**
  * 
- * @param {Strin} message 
+ * @param {String} message 
  * @param {Number} count
  * @description returns a substring of the given message after the character count passed to the function
  */
@@ -28,4 +28,27 @@ export function truncateString(message, count) {
   if (!message) return
   if (message.length <= count) return message
   return `${message.substring(0, count)}...`
+}
+
+/**
+ *
+ * @param {String} requiredFields
+ * @param {String} errorMessage
+ * @returns a more readable error
+ * @description Gets GraphQL errors and return a minimal human readable error
+ *
+ */
+export function saniteError(requiredFields, errorMessage) {
+  if (!errorMessage.length) return;
+  const errArr = errorMessage.split(" ");
+  const foundFields = requiredFields.filter(field => errArr.includes(field));
+  // duplicate errors are already sanitized, we just need to remove the GraphQL
+  if (errArr.includes("Duplicate")) {
+    return `${errorMessage.replace(/GraphQL error:/, "")}`;
+  }
+  // if we don't know the error
+  if (!foundFields.length) {
+    return "Unexpected error happened, Please try again";
+  }
+  return `${foundFields.join(" or ")}'s value is blank`;
 }
