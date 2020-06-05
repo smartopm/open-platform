@@ -6,6 +6,7 @@ module Mutations
     class NoteCreate < BaseMutation
       argument :user_id, ID, required: true
       argument :body, String, required: true
+      argument :category, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
 

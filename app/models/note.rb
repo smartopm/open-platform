@@ -8,5 +8,4 @@ class Note < ApplicationRecord
   default_scope { order(created_at: :desc) }
   VALID_CATEGORY = %w[call email text message to_do other].freeze
   validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
-
 end

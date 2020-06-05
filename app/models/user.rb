@@ -187,7 +187,6 @@ class User < ApplicationRecord
     )
   end
 
-
   # rubocop:disable MethodLength
 
   def manage_shift(target_user_id, event_tag)
