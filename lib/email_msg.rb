@@ -54,7 +54,7 @@ class EmailMsg
     emails = messages_from_sendgrid
     # replace this with Mutale's email
     # add more validation to make sure users exist before saving that user.
-    sender = find_user('mutale@doublegdp.com', community_id) # Admin's email, static for now
+    sender = find_user('olivier@doublegdp.com', community_id) # Admin's email, static for now
     emails.each do |email|
       user = find_user(email['to_email'], community_id)
       message = Message.new(
@@ -65,6 +65,7 @@ class EmailMsg
         message: email['subject'], category: 'email', status: email['status'],
         source_system_id: email['msg_id']
       )
+      puts email['subject']
       message.save # add ! later to validate user existance before saving the message
     end
   end
