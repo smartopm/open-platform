@@ -13,13 +13,18 @@ export default function Card({
   children,
   handleClick,
   id,
-  titleStyle
+  access,
+  authState
 }) {
+  if (!access.includes(authState.user.userType.toLowerCase())) {
+    return null
+  }
   return (
     <Fragment>
       <div
         className={`${css(styles.cardSize)} card align-self-center text-center`}
       >
+        <span>{children}</span>
         <Link
           to={{
             pathname: path,
@@ -35,10 +40,11 @@ export default function Card({
         >
           <div className="card-body">
             <h5 className="card-title">
-              <span>{icon}</span>
-              <span>{children}</span>
+              <span className={css(styles.homeIconColor)} fontSize="large">
+                {icon}
+              </span>
             </h5>
-            <p className={titleStyle} >{title}</p>
+            <p className={css(styles.CardtextIcon)}>{title}</p>
           </div>
         </Link>
       </div>
@@ -46,10 +52,14 @@ export default function Card({
   )
 }
 
+export function SVGIcon({ image, alt }) {
+  return <img src={image} alt={alt} />
+}
+
 Card.propTypes = {
   icon: PropTypes.node,
   children: PropTypes.node,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   path: PropTypes.string,
   from: PropTypes.string,
   handleClick: PropTypes.func,
@@ -59,6 +69,15 @@ Card.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  homeIconColor: {
+    color: '#25c0b0'
+  },
+  CardtextIcon: {
+    marginTop: '15.5%'
+  },
+  CardtextImg: {
+    marginTop: '21%'
+  },
   cardSize: {
     width: 200,
     height: 154

@@ -24,6 +24,7 @@ import { CreateNote, UpdateNote } from '../graphql/mutations'
 import { withStyles, Tab } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import Loading from './Loading.jsx'
+import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
 export const StyledTab = withStyles({
   root: {
@@ -66,6 +67,7 @@ export default function UserInformation({
     const pages = {
       Contacts: 'Contacts',
       Notes: 'Notes',
+      Communication: 'Communication',
       Plots: 'Plots',
       Payments: 'Payments'
     }
@@ -284,6 +286,9 @@ export default function UserInformation({
           {['admin'].includes(userType) && (
             <StyledTab label="Notes" value={'Notes'} />
           )}
+             {['admin'].includes(userType) && (
+            <StyledTab label="Communication" value={'Communication'} />
+          )}
           <StyledTab label="Plots" value={'Plots'} />
           <StyledTab label="Payments" value={'Payments'} />
         </StyledTabs>
@@ -348,6 +353,7 @@ export default function UserInformation({
           </div>
         </TabPanel>
         {['admin'].includes(userType) && (
+          <>
           <TabPanel value={tabValue}  index={'Notes'}>
             <div className="container">
               <form id="note-form">
@@ -380,6 +386,7 @@ export default function UserInformation({
                 <Loading />
               ) : data.user.notes ? (
                 data.user.notes.map(note => (
+                  
                   <Fragment key={note.id}>
                     <div className={css(styles.commentBox)}>
                       <p className="comment">{note.body}</p>
@@ -425,6 +432,14 @@ export default function UserInformation({
                   )}
             </div>
           </TabPanel>
+
+          <TabPanel value={tabValue}  index={'Communication'}>
+
+            <UserCommunication user={authState.user}/>
+
+          </TabPanel>
+
+          </>
         )}
         <TabPanel value={tabValue}  index={'Plots'}>
           <UserPlotInfo accounts={data.user.accounts}  />
