@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'email_msg'
-
 # Messages being sent out
 class Message < ApplicationRecord
   belongs_to :user
@@ -38,10 +36,5 @@ class Message < ApplicationRecord
     new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
     new_message += "#{message} \n\n#{text} \n#{link}"
     Sms.send(receiver, new_message)
-  end
-
-  def merge_sendgrid_emails
-    # handle any exceptions that might happen here
-    EmailMsg.save_sendgrid_messages(sender[:community_id])
   end
 end
