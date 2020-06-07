@@ -162,8 +162,6 @@ ActiveRecord::Schema.define(version: 2020_06_05_101502) do
     t.boolean "is_read"
     t.datetime "read_at"
     t.uuid "campaign_id"
-    t.string "category"
-    t.string "source_system_id"
     t.index ["campaign_id"], name: "index_messages_on_campaign_id"
   end
 
