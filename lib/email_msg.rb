@@ -57,7 +57,7 @@ class EmailMsg
     community
   end
 
-  # msg_id here === source_system_id 
+  # msg_id here === source_system_id
   def self.message_exists?(msg_id, id)
     message = Message.find_by(source_system_id: msg_id, user_id: id)
     return true unless message.nil?
@@ -70,18 +70,14 @@ class EmailMsg
   # rubocop:disable Metrics/MethodLength
   def self.save_sendgrid_messages(community_name)
     comm = find_community(community_name)
-    puts comm.id
     emails = messages_from_sendgrid
     # replace this with Mutale's email
     # add more validation to make sure users exist before saving that user.
-    sender = find_user('olivier@doublegdp.coma', comm.id) # Admin's email, static for now
-    # puts sender.to_json
+    sender = find_user('mutale@doublegdp.com', comm.id) # Admin's email, static for now
     emails.each do |email|
       user = find_user(email['to_email'], comm.id)
       next if user.nil?
       next if message_exists?(email['msg_id'], user.id)
-
-      puts user.name
 
       message = Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
@@ -90,7 +86,7 @@ class EmailMsg
         message: email['subject'], category: 'email', status: email['status'],
         source_system_id: email['msg_id']
       )
-      message.save! # add ! later to validate user existance before saving the message
+      message.save!
     end
   end
   # rubocop:enable Metrics/MethodLength
