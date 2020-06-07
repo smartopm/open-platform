@@ -45,16 +45,24 @@ class EmailMsg
 
   def self.find_user(email, community_id)
     user = User.find_by(email: email, community_id: community_id)
-    return unless user
+    return if user.nil?
 
     user
   end
 
   def self.find_community(name)
     community = Community.find_by(name: name)
-    return unless community
+    return if community.nil?
 
     community
+  end
+
+  # msg_id here === source_system_id 
+  def self.message_exists?(msg_id, id)
+    message = Message.find_by(source_system_id: msg_id, user_id: id)
+    return true unless message.nil?
+
+    false
   end
 
   # call this method from message model with the community_id
@@ -62,22 +70,27 @@ class EmailMsg
   # rubocop:disable Metrics/MethodLength
   def self.save_sendgrid_messages(community_name)
     comm = find_community(community_name)
+    puts comm.id
     emails = messages_from_sendgrid
     # replace this with Mutale's email
     # add more validation to make sure users exist before saving that user.
-    sender = find_user('olivier@doublegdp.com', comm) # Admin's email, static for now
+    sender = find_user('olivier@doublegdp.coma', comm.id) # Admin's email, static for now
+    # puts sender.to_json
     emails.each do |email|
-      user = find_user(email['to_email'], comm)
+      user = find_user(email['to_email'], comm.id)
+      next if user.nil?
+      next if message_exists?(email['msg_id'], user.id)
+
+      puts user.name
+
       message = Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
         read_at: email['last_event_time'],
-        # temporarily save this if they don't exist
-        user_id: user.nil? ? SecureRandom.uuid : user.id,
+        user_id: user.id,
         message: email['subject'], category: 'email', status: email['status'],
         source_system_id: email['msg_id']
       )
-
-      message.save # add ! later to validate user existance before saving the message
+      message.save! # add ! later to validate user existance before saving the message
     end
   end
   # rubocop:enable Metrics/MethodLength
