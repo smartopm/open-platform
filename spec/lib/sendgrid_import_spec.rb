@@ -26,19 +26,19 @@ RSpec.describe User, type: :model do
   end
 
   let!(:non_users_emails) do
-  [
-    { 'from_email' => 'support@doublegdp.com',
-      'msg_id' => msg_id,
-      'subject' => 'Nkwashi discount promotion on outstanding balance!',
-      'to_email' => "m@gmail.com",
-      'status' => 'delivered', 'opens_count' => 3, 'clicks_count' => 0,
-      'last_event_time' => '2020-06-08T05:29:03Z' },
-    { 'from_email' => 'support@doublegdp.com',
-      'msg_id' => '4IyHlSLiTy2yglIEzlmdIg.filterdrecv-p3las1-74f77df65c-gtbxz-19-5EDE4049-4.0',
-      'subject' => 'Welcome to Nkwashi', 'to_email' => "mg@doublegdp.io", 'status' => 'delivered',
-      'opens_count' => 2, 'clicks_count' => 0, 'last_event_time' => '2020-06-08T13:43:49Z' },
-  ]
-end
+    [
+      { 'from_email' => 'support@doublegdp.com',
+        'msg_id' => msg_id,
+        'subject' => 'Nkwashi discount promotion on outstanding balance!',
+        'to_email' => 'm@gmail.com',
+        'status' => 'delivered', 'opens_count' => 3, 'clicks_count' => 0,
+        'last_event_time' => '2020-06-08T05:29:03Z' },
+      { 'from_email' => 'support@doublegdp.com',
+        'msg_id' => '4IyHlSLiTy2yglIEzlmdIg.filterdrecv-p3las1-74f77df65c-gtbxz-19-5EDE4049-4.0',
+        'subject' => 'Welcome to Nkwashi', 'to_email' => 'mg@doublegdp.io', 'status' => 'delivered',
+        'opens_count' => 2, 'clicks_count' => 0, 'last_event_time' => '2020-06-08T13:43:49Z' },
+    ]
+  end
 
   # Test if find user based on a community found by name
   # test if the message exist
