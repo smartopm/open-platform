@@ -41,7 +41,7 @@ export default function Homepage({ authState }) {
       title: t('My ID Card'),
       path: `/id/${authState.user.id}`,
 
-      icon: <PersonIcon />,
+      icon: <PersonIcon fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -58,7 +58,7 @@ export default function Homepage({ authState }) {
       title: 'My Account',
       path: `/myaccount/${authState.user.id}`,
 
-      icon: <AccountCircleIcon />,
+      icon: <AccountCircleIcon fontSize="large"/>,
       access: ['resident', 'client']
     },
     {
@@ -66,7 +66,7 @@ export default function Homepage({ authState }) {
       title: 'Users',
       path: `/users`,
 
-      icon: <RecentActorsIcon />,
+      icon: <RecentActorsIcon fontSize="large"/>,
       access: ['admin']
     },
     {
@@ -96,7 +96,7 @@ export default function Homepage({ authState }) {
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
-      icon: <ForumIcon />,
+      icon: <ForumIcon fontSize="large"/>,
       access: [
         'admin',
         'client',
@@ -112,7 +112,7 @@ export default function Homepage({ authState }) {
       title: 'Tasks',
       path: `/todo`,
 
-      icon: <PlaylistAddCheckIcon />,
+      icon: <PlaylistAddCheckIcon fontSize="large"/>,
       access: ['admin']
     },
     {
@@ -120,7 +120,7 @@ export default function Homepage({ authState }) {
       title: 'Notes',
       path: `/notes`,
 
-      icon: <NotesIcon />,
+      icon: <NotesIcon fontSize="large"/>,
       access: ['admin']
     },
     {
@@ -151,7 +151,7 @@ export default function Homepage({ authState }) {
           }`,
           '_blank'
         ),
-      icon: <ListAltIcon />,
+      icon: <ListAltIcon fontSize="large"/>,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -159,7 +159,7 @@ export default function Homepage({ authState }) {
       title: 'Time Card',
       path: `/timesheet`,
 
-      icon: <HourglassEmptyIcon />,
+      icon: <HourglassEmptyIcon fontSize="large"/>,
       access: ['admin', 'custodian']
     },
     {
@@ -167,7 +167,7 @@ export default function Homepage({ authState }) {
       title: 'Log Book',
       path: `/entry_logs`,
 
-      icon: <LogIcon />,
+      icon: <LogIcon fontSize="large"/>,
       access: ['security_guard', 'admin']
     },
     {
@@ -175,7 +175,7 @@ export default function Homepage({ authState }) {
       title: 'Referrals',
       path: `/referral`,
 
-      icon: <LogIcon />,
+      icon: <LogIcon fontSize="large"/>,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -183,7 +183,7 @@ export default function Homepage({ authState }) {
       title: `${authState.user.community.name} Support`,
       path: `/contact`,
 
-      icon: <HelpIcon />,
+      icon: <HelpIcon fontSize="large"/>,
       access: [
         'admin',
         'client',
@@ -199,7 +199,7 @@ export default function Homepage({ authState }) {
       title: `Time Card`,
       path: `/timesheet/${authState.user.id}`,
 
-      icon: <PlaylistAddCheckIcon />,
+      icon: <PlaylistAddCheckIcon fontSize="large"/>,
       access: ['contractor']
     },
     {
@@ -208,7 +208,7 @@ export default function Homepage({ authState }) {
         <a href={`tel:${ponisoNumber}`}>
           <div className="card-body">
             <h5 className="card-title">
-              <CallIcon />
+              <CallIcon fontSize="large"/>
             </h5>
             <p className={css(styles.CardtextIcon)}>Call Manager</p>
           </div>
@@ -231,8 +231,13 @@ export default function Homepage({ authState }) {
                   title={card.title}
                   titleStyle={css(styles.CardtextImg)}
                   icon={card.icon}
+                  from={card.from}
                   access={card.access}
                   authState={authState}
+                  clientName={card.clientName}
+                  clientNumber={card.clientNumber}
+                  id={card.id}
+                  handleClick={card.handleClick}
                 >
                   {card.children}
                 </Card>
