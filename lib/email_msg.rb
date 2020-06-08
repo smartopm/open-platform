@@ -27,6 +27,8 @@ class EmailMsg
   end
 
   def self.messages_from_sendgrid
+    return if Rails.env.test?
+
     sg_client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
     # Find a way to make limit and offset dynamic
     params = JSON.parse('{"limit": 100 }')
@@ -59,14 +61,19 @@ class EmailMsg
     false
   end
 
+  # passing the email here to allow testing with generated emails
+  def self.fetch_emails(name)
+    emails = messages_from_sendgrid
+    save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
+  end
+
   # call this method from message model with the community_id
   # We can also add this to the scheduler as well if we have community_id
   # rubocop:disable Metrics/MethodLength
-  def self.save_sendgrid_messages(community_name)
-    emails = messages_from_sendgrid
+  def self.save_sendgrid_messages(community_name, emails, sender_email)
     # replace this with Mutale's email
     # add more validation to make sure users exist before saving that user.
-    sender = find_user('nicolas@doublegdp.com', community_name) # Admin's email, static for now
+    sender = find_user(sender_email, community_name) # Admin's email, static for now
     emails.each do |email|
       user = find_user(email['to_email'], community_name)
       next if user.nil?
