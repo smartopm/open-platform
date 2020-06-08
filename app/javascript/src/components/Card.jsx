@@ -40,7 +40,7 @@ export default function Card({
         >
           <div className="card-body">
             <h5 className="card-title">
-              <span className={css(styles.homeIconColor)} fontSize="large">
+              <span className={css(styles.homeIconColor)} >
                 {icon}
               </span>
             </h5>
