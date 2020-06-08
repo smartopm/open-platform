@@ -6,19 +6,14 @@ module Mutations
     class NoteCreate < BaseMutation
       argument :user_id, ID, required: true
       argument :body, String, required: true
+      argument :category, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
 
       field :note, Types::NoteType, null: true
 
       def resolve(vals)
-        note = context[:current_user].notes.new(vals)
-        note.author_id = context[:current_user].id
-        note.created_at = DateTime.now
-        note.completed = false
-        note.user_id = vals[:user_id]
-        note.save
-
+        note = context[:current_user].generate_note(vals)
         return { note: note } if note.persisted?
 
         raise GraphQL::ExecutionError, note.errors.full_messages

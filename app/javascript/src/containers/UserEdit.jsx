@@ -9,6 +9,8 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
+import { saniteError } from '../utils/helpers'
+import { requiredFields } from '../utils/constants'
 
 const initialValues = {
   name: '',
@@ -163,7 +165,7 @@ export default function FormContainer({ match, history, location }) {
         name={data.name}
       />
       <br />
-      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">{msg}</p>}
+      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>}
       <UserForm />
       { showResults ? 
         <div className='d-flex row justify-content-center'>
