@@ -10,4 +10,8 @@ RSpec.describe Note, type: :model do
     current_user.notes.create(author_id: admin.id, body: 'Test Note')
     expect(current_user.notes.length).to eql 1
   end
+  it 'should create a note for a user with accepted categories' do
+    current_user.notes.create(author_id: admin.id, body: 'Test Note', category: 'email')
+    expect(current_user.notes.length).to eql 1
+  end
 end
