@@ -10,7 +10,7 @@ RSpec.describe User, type: :model do
   let!(:admin) { create(:admin_user, community_id: community.id) }
   let!(:msg_id) { 'gzJ5spFzQFGzvp_8h_inlQ.filterdrecv-p3mdw1' }
 
-  let!(:emails) do
+  let!(:users_emails) do
     [
       { 'from_email' => 'support@doublegdp.com',
         'msg_id' => msg_id,
@@ -24,6 +24,21 @@ RSpec.describe User, type: :model do
         'opens_count' => 2, 'clicks_count' => 0, 'last_event_time' => '2020-06-08T13:43:49Z' },
     ]
   end
+
+  let!(:non_users_emails) do
+  [
+    { 'from_email' => 'support@doublegdp.com',
+      'msg_id' => msg_id,
+      'subject' => 'Nkwashi discount promotion on outstanding balance!',
+      'to_email' => "m@gmail.com",
+      'status' => 'delivered', 'opens_count' => 3, 'clicks_count' => 0,
+      'last_event_time' => '2020-06-08T05:29:03Z' },
+    { 'from_email' => 'support@doublegdp.com',
+      'msg_id' => '4IyHlSLiTy2yglIEzlmdIg.filterdrecv-p3las1-74f77df65c-gtbxz-19-5EDE4049-4.0',
+      'subject' => 'Welcome to Nkwashi', 'to_email' => "mg@doublegdp.io", 'status' => 'delivered',
+      'opens_count' => 2, 'clicks_count' => 0, 'last_event_time' => '2020-06-08T13:43:49Z' },
+  ]
+end
 
   # Test if find user based on a community found by name
   # test if the message exist
@@ -66,10 +81,18 @@ RSpec.describe User, type: :model do
   end
 
   it 'should save emails as messages for users' do
-    EmailMsg.save_sendgrid_messages(community.name, emails, admin.email)
+    EmailMsg.save_sendgrid_messages(community.name, users_emails, admin.email)
     messages = Message.all.count
     expect(messages).to eql 2
     expect(current_user.messages.count).to eql 1
     expect(another.messages.count).to eql 1
+  end
+
+  it 'shouldn\'n save emails as messages for non users' do
+    EmailMsg.save_sendgrid_messages(community.name, non_users_emails, admin.email)
+    messages = Message.all.count
+    expect(messages).to eql 0
+    expect(current_user.messages.count).to eql 0
+    expect(another.messages.count).to eql 0
   end
 end
