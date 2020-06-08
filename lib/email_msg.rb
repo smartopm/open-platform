@@ -43,18 +43,12 @@ class EmailMsg
   # pass community name and find id based on that.
   # loop through all messages coming from the API and find respective users based on their emails
 
-  def self.find_user(email, community_id)
-    user = User.find_by(email: email, community_id: community_id)
-    return if user.nil?
-
-    user
-  end
-
-  def self.find_community(name)
+  def self.find_user(email, name)
     community = Community.find_by(name: name)
     return if community.nil?
 
-    community
+    user = community.users.find_by(email: email)
+    user
   end
 
   # msg_id here === source_system_id
@@ -69,13 +63,12 @@ class EmailMsg
   # We can also add this to the scheduler as well if we have community_id
   # rubocop:disable Metrics/MethodLength
   def self.save_sendgrid_messages(community_name)
-    comm = find_community(community_name)
     emails = messages_from_sendgrid
     # replace this with Mutale's email
     # add more validation to make sure users exist before saving that user.
-    sender = find_user('mutale@doublegdp.com', comm.id) # Admin's email, static for now
+    sender = find_user('nicolas@doublegdp.com', community_name) # Admin's email, static for now
     emails.each do |email|
-      user = find_user(email['to_email'], comm.id)
+      user = find_user(email['to_email'], community_name)
       next if user.nil?
       next if message_exists?(email['msg_id'], user.id)
 
