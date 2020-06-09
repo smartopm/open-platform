@@ -82,6 +82,7 @@ export default function FormContainer({ match, history, location }) {
     event.preventDefault()
     const values = {
       ...data,
+      name: data.name.trim(),
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
