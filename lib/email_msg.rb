@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sendgrid-ruby'
+require 'json'
 
 # class helper to help send emails to doublegdp users using sendgrid
 class EmailMsg
@@ -24,5 +25,70 @@ class EmailMsg
     mail.template_id = 'd-bec0f1bd39f240d98a146faa4d7c5235'
     client.mail._('send').post(request_body: mail.to_json)
   end
-  # rubocop:enable Metrics/AbcSize
+
+  def self.messages_from_sendgrid
+    return if Rails.env.test?
+
+    sg_client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
+    # Find a way to make limit and offset dynamic
+    params = JSON.parse('{"limit": 100 }')
+    response = sg_client.messages.get(query_params: params)
+    emails = JSON.parse(response.body)
+    emails['messages']
+  end
+
+  # other stuff ==> message body
+  # is_open ==> is_read
+  # msg_id ==> source_system_id
+  # type ==> email || sms
+  # sender_id ==> findByEmail from Mutale.
+  # pass community name and find id based on that.
+  # loop through all messages coming from the API and find respective users based on their emails
+
+  def self.find_user(email, name)
+    community = Community.find_by(name: name)
+    return if community.nil?
+
+    user = community.users.find_by(email: email)
+    user
+  end
+
+  # msg_id here === source_system_id
+  def self.message_exists?(msg_id, id)
+    message = Message.find_by(source_system_id: msg_id, user_id: id)
+    return true unless message.nil?
+
+    false
+  end
+
+  # passing the email here to allow testing with generated emails
+  def self.fetch_emails(name)
+    emails = messages_from_sendgrid
+    save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
+  end
+
+  # call this method from message model with the community_id
+  # We can also add this to the scheduler as well if we have community_id
+  # rubocop:disable Metrics/MethodLength
+  def self.save_sendgrid_messages(community_name, emails, sender_email)
+    # replace this with Mutale's email
+    # add more validation to make sure users exist before saving that user.
+    sender = find_user(sender_email, community_name) # Admin's email, static for now
+    emails.each do |email|
+      user = find_user(email['to_email'], community_name)
+      next if user.nil?
+      next if message_exists?(email['msg_id'], user.id)
+
+      message = Message.new(
+        is_read: (email['opens_count']).positive?, sender_id: sender.id,
+        read_at: email['last_event_time'],
+        user_id: user.id,
+        message: email['subject'], category: 'email', status: email['status'],
+        source_system_id: email['msg_id']
+      )
+      message.save!
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
 end
+# rubocop:enable Metrics/AbcSize

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_05_101502) do
+ActiveRecord::Schema.define(version: 2020_06_07_102652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -162,6 +162,8 @@ ActiveRecord::Schema.define(version: 2020_06_05_101502) do
     t.boolean "is_read"
     t.datetime "read_at"
     t.uuid "campaign_id"
+    t.string "source_system_id"
+    t.string "category"
     t.index ["campaign_id"], name: "index_messages_on_campaign_id"
   end
 
