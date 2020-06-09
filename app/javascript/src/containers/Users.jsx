@@ -8,6 +8,8 @@ import ErrorPage from '../components/Error'
 import { UsersQuery } from '../graphql/queries'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
+import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk'
+import PhoneMissedIcon from '@material-ui/icons/PhoneMissed'
 import {
   Table,
   TableBody,
@@ -84,6 +86,7 @@ export default function UsersList() {
   const [searchType, setSearchType] = useState('type')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
+  const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
@@ -115,10 +118,16 @@ export default function UsersList() {
       setNote('')
     })
   }
-  function handleNoteModal(userId = '', username = '') {
+  function handleNoteModal(userId = '', username = '', type = '') {
     setId(userId)
     setName(username)
     setIsDialogOpen(!isDialogOpen)
+    const NoteTypes = {
+      Note: 'Note',
+      Answered: 'Answered',
+      Missed: 'Missed'
+    }
+    setModalAction(NoteTypes[type])
   }
   function inputToSearch() {
     setRedirect('/search')
@@ -177,6 +186,7 @@ export default function UsersList() {
           handleConfirm={handleSaveNote}
           open={isDialogOpen}
         >
+          {modalAction === 'Note'&&(
           <div className="form-group">
             <h6>
               Add note for <strong>{userName}</strong>{' '}
@@ -191,6 +201,41 @@ export default function UsersList() {
             />
             {mutationLoading && <p className="text-center">Saving note ...</p>}
           </div>
+          )}
+          {modalAction === 'Answered'&&(
+
+          <div className="form-group">
+            <h6>
+              Add Outgoing call answered for <strong>{userName}</strong>{' '}
+            </h6>
+            <input
+              className="form-control"
+              type="call"
+              value={note}
+              onChange={event => setNote(event.target.value)}
+              name="note"
+              placeholder="Type action note here"
+            />
+            {mutationLoading && <p className="text-center">Saving note ...</p>}
+          </div>
+          )}
+          {modalAction === 'Missed'&&(
+
+          <div className="form-group">
+            <h6>
+              Add Outgoing call not answered for <strong>{userName}</strong>{' '}
+            </h6>
+            <input
+              className="form-control"
+              type="call"
+              value={note}
+              onChange={event => setNote(event.target.value)}
+              name="note"
+              placeholder="Type action note here"
+            />
+            {mutationLoading && <p className="text-center">Saving note ...</p>}
+          </div>
+          )}
         </ModalDialog>
         <div className={classes.root}>
           <Fragment>
@@ -256,6 +301,7 @@ export default function UsersList() {
               <StyledTableCell align="right">Email</StyledTableCell>
               <StyledTableCell align="right">Date</StyledTableCell>
               <StyledTableCell align="right">Note</StyledTableCell>
+              <StyledTableCell align="right">Quick Note</StyledTableCell>
               <StyledTableCell align="right">Add Note</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -284,7 +330,21 @@ export default function UsersList() {
                 <StyledTableCell align="right">
                   <Button
                     color="secondary"
-                    onClick={() => handleNoteModal(user.id, user.name)}
+                    onClick={() => handleNoteModal(user.id, user.name,'Answered')}
+                  >
+                    <PhoneInTalkIcon />
+                  </Button>
+                  <Button
+                    color="secondary"
+                    onClick={() => handleNoteModal(user.id, user.name,'Missed')}
+                  >
+                   <PhoneMissedIcon />
+                  </Button>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Button
+                    color="secondary"
+                    onClick={() => handleNoteModal(user.id, user.name,'Note')}
                   >
                     +
                   </Button>
