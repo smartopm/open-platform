@@ -16,8 +16,10 @@ import {
   TableHead,
   TableRow,
   Button,
+  TextField,
   Divider,
   IconButton,
+  Icon,
   InputBase,
   MenuItem,
   Select,
@@ -70,6 +72,12 @@ export const useStyles = makeStyles(theme => ({
   },
   chip: {
     margin: 2
+  },
+  filterButton : {
+    backgroundColor: '#25c0b0','&:hover': {
+      backgroundColor: '#25c0b0',
+    },
+    textTransform: 'none'
   }
 }))
 const limit = 50
@@ -103,10 +111,9 @@ export default function UsersList() {
   function handleFilterModal() {
     setOpen(!open)
     setSearchType('phone')
-    setType([])
   }
   function handleBatchFilter() {
-    setPhoneNumbers(searchValue.split('\n'))
+    setPhoneNumbers(searchValue.split('\n').join(',').split(','))
     setOpen(!open)
   }
   function handleSaveNote() {
@@ -150,7 +157,7 @@ export default function UsersList() {
   // reset pagination when the filter changes
   useEffect(() => {
     setOffset(0)
-  }, [type, phoneNumbers])
+  }, [type])
 
 
   if (loading) return <Loading />
@@ -174,12 +181,11 @@ export default function UsersList() {
         <CustomizedDialogs
           open={open}
           saveAction="Save"
-          value={phoneNumbers}
-          dialogHeader="Filter by Phone number"
+          dialogHeader="Filter by User Phone # (provide a comma delimited list)"
           handleBatchFilter={handleBatchFilter}
           handleModal={handleFilterModal}>
-          {/* This here is justifiable as MUI textarea doesn't properly adjust  */}
-          <textarea cols={100} className="form-control" onChange={event => setSearchValue(event.target.value)}  />
+          <TextField rows={5}
+          multiline className="form-control" onChange={event => setSearchValue(event.target.value)} />
         </CustomizedDialogs>
         <ModalDialog
           handleClose={handleNoteModal}
@@ -286,8 +292,14 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <Button onClick={handleFilterModal}>Filter by Phone number</Button>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end'}}>
+            <Button variant="contained"
+              color="primary"
+              className={classes.filterButton}
+               endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
+               {Boolean(phoneNumbers.length) && (
+                <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
+              )}
           </Grid>
         </Grid>
         <br />
@@ -306,7 +318,7 @@ export default function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            { data.users.length && data.users.length > 0 ? (data.users.map(user => (
+            {data.users.map(user => (
               <StyledTableRow key={user.id}>
                 <StyledTableCell component="th" scope="row">
                   <Link to={`/user/${user.id}`} key={user.id}>
@@ -350,7 +362,7 @@ export default function UsersList() {
                   </Button>
                 </StyledTableCell>
               </StyledTableRow>
-            ))) : <span>No results found :(</span> }
+            ))}
           </TableBody>
         </Table>
         <Grid container direction="row" justify="center" alignItems="center">
