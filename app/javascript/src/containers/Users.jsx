@@ -26,7 +26,7 @@ import {
   Chip
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
-import { ModalDialog } from '../components/Dialog'
+import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import {
   StyledTableRow,
   StyledTableCell
@@ -44,6 +44,11 @@ export const useStyles = makeStyles(theme => ({
   input: {
     marginLeft: theme.spacing(1),
     flex: 1
+  },
+  table: {
+    display: 'block',
+    width: '100%',
+    overflowX: 'auto'
   },
   iconButton: {
     padding: 10
@@ -65,35 +70,43 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   }
 }))
-
 const limit = 50
-
 export default function UsersList() {
   const classes = useStyles()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
   const [type, setType] = useState([])
+  const [phoneNumbers, setPhoneNumbers] = useState([])
+  const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
-
+  const [note, setNote] = useState('')
+  const [searchType, setSearchType] = useState('type')
+  const [userId, setId] = useState('')
+  const [userName, setName] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
-      userType: joinWords(type),
+      query: joinSearchQuery(searchType === 'type' ? type : searchType === 'phone' ? phoneNumbers : type, searchType),
       limit,
       offset
     },
     fetchPolicy: 'cache-and-network'
   })
-
-  const [note, setNote] = useState('')
-  const [userId, setId] = useState('')
-  const [userName, setName] = useState('')
-
-  function joinWords(types) {
-    return types.map(type => `user_type = ${type}`).join(' OR ')
+  function joinSearchQuery(query, type) {
+    const filterType = type === 'phone' ? 'phone_number' : 'user_type'
+    return query.map(query => `${filterType} = ${query}`).join(' OR ')
   }
-
-  function handleClick() {
+  function handleFilterModal() {
+    setOpen(!open)
+    setSearchType('phone')
+    setType([])
+  }
+  function handleBatchFilter() {
+    setPhoneNumbers(searchValue.split('\n'))
+    setOpen(!open)
+  }
+  function handleSaveNote() {
     noteCreate({
       variables: { userId, body: note, flagged: false }
     }).then(() => {
@@ -102,18 +115,17 @@ export default function UsersList() {
       setNote('')
     })
   }
-
-  function handleModal(userId = '', username = '') {
+  function handleNoteModal(userId = '', username = '') {
     setId(userId)
     setName(username)
     setIsDialogOpen(!isDialogOpen)
   }
-
   function inputToSearch() {
     setRedirect('/search')
   }
   function handleInputChange(event) {
     setType(event.target.value)
+    setSearchType('type')
   }
   function paginate(action) {
     if (action === 'prev') {
@@ -129,7 +141,8 @@ export default function UsersList() {
   // reset pagination when the filter changes
   useEffect(() => {
     setOffset(0)
-  }, [type])
+  }, [type, phoneNumbers])
+
 
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
@@ -145,14 +158,23 @@ export default function UsersList() {
       />
     )
   }
-
   return (
     <Fragment>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
+        <CustomizedDialogs
+          open={open}
+          saveAction="Save"
+          value={phoneNumbers}
+          dialogHeader="Filter by Phone number"
+          handleBatchFilter={handleBatchFilter}
+          handleModal={handleFilterModal}>
+          {/* This here is justifiable as MUI textarea doesn't properly adjust  */}
+          <textarea cols={100} className="form-control" onChange={event => setSearchValue(event.target.value)}  />
+        </CustomizedDialogs>
         <ModalDialog
-          handleClose={handleModal}
-          handleConfirm={handleClick}
+          handleClose={handleNoteModal}
+          handleConfirm={handleSaveNote}
           open={isDialogOpen}
         >
           <div className="form-group">
@@ -170,7 +192,6 @@ export default function UsersList() {
             {mutationLoading && <p className="text-center">Saving note ...</p>}
           </div>
         </ModalDialog>
-
         <div className={classes.root}>
           <Fragment>
             <InputBase
@@ -181,7 +202,6 @@ export default function UsersList() {
               inputProps={{ 'aria-label': 'search User' }}
             />
             <Divider className={classes.divider} orientation="vertical" />
-
             <IconButton
               type="submit"
               className={classes.iconButton}
@@ -191,38 +211,42 @@ export default function UsersList() {
             </IconButton>
           </Fragment>
         </div>
-
-        <FormControl className={classes.formControl}>
-          <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
-          <Select
-            labelId="select-by-role"
-            id="role-chip"
-            multiple
-            value={type}
-            onChange={handleInputChange}
-            input={<Input id="select-by-role" />}
-            renderValue={selected => (
-              <div>
-                {selected.map(value => (
-                  <Chip key={value} label={value} />
+        <Grid container>
+          <Grid item xs={'auto'}>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
+              <Select
+                labelId="select-by-role"
+                id="role-chip"
+                multiple
+                value={type}
+                onChange={handleInputChange}
+                input={<Input id="select-by-role" />}
+                renderValue={selected => (
+                  <div>
+                    {selected.map(value => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </div>
+                )}
+              >
+                {Object.entries(userType).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
                 ))}
-              </div>
-            )}
-          >
-            {Object.entries(userType).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-          {Boolean(type.length) && (
-            <Button onClick={() => setType([])}>Clear Filter</Button>
-          )}
-        </FormControl>
-
+              </Select>
+              {Boolean(type.length) && (
+                <Button onClick={() => setType([])}>Clear Filter</Button>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <Button onClick={handleFilterModal}>Filter by Phone number</Button>
+          </Grid>
+        </Grid>
         <br />
         <br />
-
         <Table stickyHeader className={classes.table} aria-label="user table">
           <TableHead>
             <TableRow>
@@ -236,7 +260,7 @@ export default function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.users.map(user => (
+            { data.users.length && data.users.length > 0 ? (data.users.map(user => (
               <StyledTableRow key={user.id}>
                 <StyledTableCell component="th" scope="row">
                   <Link to={`/user/${user.id}`} key={user.id}>
@@ -244,7 +268,6 @@ export default function UsersList() {
                     {user.name}{' '}
                   </Link>
                 </StyledTableCell>
-
                 <StyledTableCell align="right">{user.roleName}</StyledTableCell>
                 <StyledTableCell align="right">
                   {user.phoneNumber || 'None'}
@@ -261,13 +284,13 @@ export default function UsersList() {
                 <StyledTableCell align="right">
                   <Button
                     color="secondary"
-                    onClick={() => handleModal(user.id, user.name)}
+                    onClick={() => handleNoteModal(user.id, user.name)}
                   >
                     +
                   </Button>
                 </StyledTableCell>
               </StyledTableRow>
-            ))}
+            ))) : <span>No results found :(</span> }
           </TableBody>
         </Table>
         <Grid container direction="row" justify="center" alignItems="center">
@@ -283,3 +306,5 @@ export default function UsersList() {
     </Fragment>
   )
 }
+
+
