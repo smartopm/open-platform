@@ -82,18 +82,18 @@ export function CustomizedDialogs({
   saveAction
 }) {
   return (
-    <Dialog
+    <Dialog 
       onClose={handleModal}
       aria-labelledby="simple-dialog-title"
       open={open}
     >
       <DialogTitle>
         <div className="d-flex justify-content-between">
-          <h6>{dialogHeader}</h6>
+          <h6 data-testid ='customDialog'>{dialogHeader}</h6>
           <CloseIcon onClick={handleModal} />
         </div>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent data-testid= 'customDialogcontent'>
         {subHeader ? <DialogContentText>
           {subHeader}
         </DialogContentText>
@@ -101,7 +101,7 @@ export function CustomizedDialogs({
         {children}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleBatchFilter} color={'primary'}>
+        <Button data-testid="custom-dialog-button" onClick={handleBatchFilter} color={'primary'}>
           {saveAction}
         </Button>
       </DialogActions>

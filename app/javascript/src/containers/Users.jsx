@@ -34,7 +34,6 @@ import {
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 
-
 export const useStyles = makeStyles(theme => ({
   root: {
     padding: '2px 4px',
@@ -71,8 +70,6 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   }
 }))
-
-
 const limit = 50
 export default function UsersList() {
   const classes = useStyles()
@@ -81,6 +78,7 @@ export default function UsersList() {
   const [redirect, setRedirect] = useState(false)
   const [type, setType] = useState([])
   const [phoneNumbers, setPhoneNumbers] = useState([])
+  const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
   const [searchType, setSearchType] = useState('type')
@@ -89,7 +87,7 @@ export default function UsersList() {
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
-      userType: joinSearchQuery(type || phoneNumbers , searchType),
+      query: joinSearchQuery(searchType === 'type' ? type : searchType === 'phone' ? phoneNumbers : type, searchType),
       limit,
       offset
     },
@@ -102,10 +100,11 @@ export default function UsersList() {
   function handleFilterModal() {
     setOpen(!open)
     setSearchType('phone')
+    setType([])
   }
   function handleBatchFilter() {
-    // handle batch searching here
-    joinSearchQuery(phoneNumbers, searchType)
+    setPhoneNumbers(searchValue.split('\n'))
+    setOpen(!open)
   }
   function handleSaveNote() {
     noteCreate({
@@ -138,10 +137,11 @@ export default function UsersList() {
       setOffset(offset + limit)
     }
   }
+
   // reset pagination when the filter changes
   useEffect(() => {
     setOffset(0)
-  }, [type])
+  }, [type, phoneNumbers])
 
 
   if (loading) return <Loading />
@@ -158,7 +158,6 @@ export default function UsersList() {
       />
     )
   }
-
   return (
     <Fragment>
       <Nav navName="Users" menuButton="back" backTo="/" />
@@ -166,11 +165,12 @@ export default function UsersList() {
         <CustomizedDialogs
           open={open}
           saveAction="Save"
-          dialogHeader="Filter"
+          value={phoneNumbers}
+          dialogHeader="Filter by Phone number"
           handleBatchFilter={handleBatchFilter}
           handleModal={handleFilterModal}>
           {/* This here is justifiable as MUI textarea doesn't properly adjust  */}
-          <textarea cols={100} className="form-control" onChange={event => setPhoneNumbers(event.target.value.split(' '))} />
+          <textarea cols={100} className="form-control" onChange={event => setSearchValue(event.target.value)}  />
         </CustomizedDialogs>
         <ModalDialog
           handleClose={handleNoteModal}
@@ -212,7 +212,7 @@ export default function UsersList() {
           </Fragment>
         </div>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={'auto'}>
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
               <Select
@@ -241,8 +241,8 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={6} style={{display: 'flex', alignItems: 'flex-end'}}>
-            <Button onClick={handleFilterModal}>Filter by Name</Button>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <Button onClick={handleFilterModal}>Filter by Phone number</Button>
           </Grid>
         </Grid>
         <br />
@@ -260,7 +260,7 @@ export default function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.users.map(user => (
+            { data.users.length && data.users.length > 0 ? (data.users.map(user => (
               <StyledTableRow key={user.id}>
                 <StyledTableCell component="th" scope="row">
                   <Link to={`/user/${user.id}`} key={user.id}>
@@ -290,7 +290,7 @@ export default function UsersList() {
                   </Button>
                 </StyledTableCell>
               </StyledTableRow>
-            ))}
+            ))) : <span>No results found :(</span> }
           </TableBody>
         </Table>
         <Grid container direction="row" justify="center" alignItems="center">
@@ -306,3 +306,5 @@ export default function UsersList() {
     </Fragment>
   )
 }
+
+
