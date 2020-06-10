@@ -166,7 +166,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             </Button>
           </Grid>
         )}
-        {!['security_guard', 'resident', 'custodian'].includes(
+        {!['security_guard', 'custodian'].includes(
           user.userType.toLowerCase()
         ) ? (
           <Grid container direction="row" className={classes.root}>
