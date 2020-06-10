@@ -34,7 +34,7 @@ describe('user message item component', () => {
     expect(messageItem.find('img')).toBeTruthy()
   })
   it('message owner should contain children of spans', () => {
-    expect(messageItem.find('.nz_msg_owner').children()).toHaveLength(2)
+    expect(messageItem.find('.nz_msg_owner').children()).toHaveLength(3)
   })
   it('message element should only contain one child element', () => {
     expect(messageItem.find('.nz_msg').children()).toHaveLength(1)
