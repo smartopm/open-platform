@@ -78,7 +78,7 @@ class EmailMsg
   # passing the email here to allow testing with generated emails
   def self.fetch_emails(name, date_from)
     emails = messages_from_sendgrid(date_from)
-    save_sendgrid_messages(name, emails, 'oliver@doublegdp.com')
+    save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
   end
 
   # attempt to synchronize
