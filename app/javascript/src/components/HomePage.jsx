@@ -58,7 +58,7 @@ export default function Homepage({ authState }) {
       card_id: 3,
       title: 'My Account',
       path: `/myaccount/${authState.user.id}`,
-
+      from: 'acc',
       icon: <AccountCircleIcon fontSize="large"/>,
       access: ['resident', 'client']
     },
@@ -93,7 +93,6 @@ export default function Homepage({ authState }) {
         authState.user.userType === 'admin'
           ? '/messages'
           : `/message/${authState.user.id}`,
-
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
@@ -175,7 +174,7 @@ export default function Homepage({ authState }) {
       card_id: 13,
       title: 'Referrals',
       path: `/referral`,
-
+      from: 'ref',
       icon: <PeopleIcon fontSize="large"/>,
       access: ['admin', 'resident', 'client']
     },
