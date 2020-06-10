@@ -21,6 +21,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
+import PeopleIcon from '@material-ui/icons/People'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
