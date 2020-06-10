@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'sendgrid-ruby'
-require 'uri'
-require 'json'
 require 'erb'
 
 # class helper to help send emails to doublegdp users using sendgrid
