@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'sendgrid-ruby'
-require 'json'
+require 'erb'
 
 # class helper to help send emails to doublegdp users using sendgrid
 class EmailMsg
@@ -26,16 +26,30 @@ class EmailMsg
     client.mail._('send').post(request_body: mail.to_json)
   end
 
-  def self.messages_from_sendgrid
+  # rubocop:disable Metrics/MethodLength
+  def self.messages_from_sendgrid(date_from)
     return if Rails.env.test?
 
-    sg_client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
-    # Find a way to make limit and offset dynamic
-    params = JSON.parse('{"limit": 100 }')
-    response = sg_client.messages.get(query_params: params)
-    emails = JSON.parse(response.body)
+    past_date = DateTime.now - 3.days
+    end_date = ERB::Util.url_encode(past_date.to_s)
+    date_from_e = date_from.blank? ? end_date : ERB::Util.url_encode(date_from)
+    start_date = ERB::Util.url_encode(DateTime.now.to_s)
+
+    # rubocop:disable Metrics/LineLength
+    url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
+    # rubocop:enable Metrics/LineLength
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(url)
+    request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_api_key]}"
+    request.body = '{}'
+    response = http.request(request)
+    response.read_body
+    emails = JSON.parse(response.read_body)
     emails['messages']
   end
+  # rubocop:enable Metrics/MethodLength
 
   # other stuff ==> message body
   # is_open ==> is_read
@@ -62,8 +76,8 @@ class EmailMsg
   end
 
   # passing the email here to allow testing with generated emails
-  def self.fetch_emails(name)
-    emails = messages_from_sendgrid
+  def self.fetch_emails(name, date_from)
+    emails = messages_from_sendgrid(date_from)
     save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
   end
 
@@ -83,6 +97,7 @@ class EmailMsg
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
         read_at: email['last_event_time'],
         user_id: user.id,
+        created_at: email['last_event_time'],
         message: email['subject'], category: 'email', status: email['status'],
         source_system_id: email['msg_id']
       )
