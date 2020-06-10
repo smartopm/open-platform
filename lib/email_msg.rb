@@ -78,7 +78,18 @@ class EmailMsg
   # passing the email here to allow testing with generated emails
   def self.fetch_emails(name, date_from)
     emails = messages_from_sendgrid(date_from)
-    save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
+    save_sendgrid_messages(name, emails, 'oliver@doublegdp.com')
+  end
+
+  # attempt to synchronize
+  def self.message_update(email)
+    message = Message.find_by(source_system_id: email['source_system_id'])
+    return if message.nil?
+
+    message.update(
+      is_read: (email['opens_count']).positive?,
+      read_at: email['last_event_time'],
+    )
   end
 
   # call this method from message model with the community_id
@@ -90,8 +101,14 @@ class EmailMsg
     sender = find_user(sender_email, community_name) # Admin's email, static for now
     emails.each do |email|
       user = find_user(email['to_email'], community_name)
+
       next if user.nil?
-      next if message_exists?(email['msg_id'], user.id)
+
+      if message_exists?(email['msg_id'], user.id)
+        message_update(email)
+        next
+      end
+      # next if message_exists?(email['msg_id'], user.id)
 
       message = Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
