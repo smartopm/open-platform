@@ -34,7 +34,6 @@ class EmailMsg
     end_date = ERB::Util.url_encode(past_date.to_s)
     date_from_e = date_from.blank? ? end_date : ERB::Util.url_encode(date_from)
     start_date = ERB::Util.url_encode(DateTime.now.to_s)
-    
 
     # rubocop:disable Metrics/LineLength
     url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
