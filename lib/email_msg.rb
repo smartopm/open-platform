@@ -27,15 +27,17 @@ class EmailMsg
   end
 
   # rubocop:disable Metrics/MethodLength
-  def self.messages_from_sendgrid
+  def self.messages_from_sendgrid(date_from)
     return if Rails.env.test?
 
-    start_date = ERB::Util.url_encode(DateTime.now.to_s)
     past_date = DateTime.now - 3.days
     end_date = ERB::Util.url_encode(past_date.to_s)
+    date_from_e = date_from.blank? ? end_date : ERB::Util.url_encode(date_from)
+    start_date = ERB::Util.url_encode(DateTime.now.to_s)
+    
 
     # rubocop:disable Metrics/LineLength
-    url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{end_date}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
+    url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
     # rubocop:enable Metrics/LineLength
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -75,9 +77,9 @@ class EmailMsg
   end
 
   # passing the email here to allow testing with generated emails
-  def self.fetch_emails(name)
-    emails = messages_from_sendgrid
-    save_sendgrid_messages(name, emails, 'oliver@doublegdp.com')
+  def self.fetch_emails(name, date_from)
+    emails = messages_from_sendgrid(date_from)
+    save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
   end
 
   # call this method from message model with the community_id
