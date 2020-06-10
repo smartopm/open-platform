@@ -175,7 +175,7 @@ export default function Homepage({ authState }) {
       title: 'Referrals',
       path: `/referral`,
       from: 'ref',
-      icon: <LogIcon fontSize="large"/>,
+      icon: <PeopleIcon fontSize="large"/>,
       access: ['admin', 'resident', 'client']
     },
     {
