@@ -39,7 +39,7 @@ describe('time sheet logs component', () => {
     </BrowserRouter>
   )
     expect(getByText('2 hrs')).toBeInTheDocument()
-    // expect(getByText('Wednesday')).toBeInTheDocument()  // removed this, not doing w 
+    expect(getByText('Wednesday')).toBeInTheDocument() 
     expect(getByTestId('emp_name')).toHaveTextContent('Joen')  
     expect(getByTestId('prog')).toBeInTheDocument('2 hrs')  
   })
