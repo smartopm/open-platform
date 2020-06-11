@@ -211,6 +211,7 @@ export const MessagesQuery = gql`
     messages(query: $searchTerm, limit: $limit, offset: $offset) {
       id
       message
+      category
       createdAt
       user {
         ...UserFields
@@ -227,6 +228,7 @@ export const UserMessageQuery = gql`
       message
       createdAt
       readAt
+      category
       isRead
       sender {
         name

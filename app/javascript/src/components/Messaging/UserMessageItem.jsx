@@ -49,7 +49,7 @@ export default function UserMessageItem({
           <React.Fragment>
             <span className="nz_msg_owner">
               {name}
-              <Badge className="nz_msg_tag" color={category === 'email' ? 'secondary' : 'error'} badgeContent={category && category === 'email' ? <span>Email</span> : <span>SMS</span> } style={{marginLeft: 20}} />
+              <Badge className="nz_msg_tag" color={category === 'email' ? 'secondary' : 'error'} badgeContent={category && category === 'email' ? <span>Email</span> : <span>SMS</span> } style={{marginLeft: 25}} />
               {isTruncate && (
                 <span className={css(styles.ownerType)}>
                   {userType[user.userType] || ''}
