@@ -2,7 +2,7 @@ import React from 'react'
 import dateutil from '../../utils/dateutil'
 import { useHistory } from 'react-router'
 import { StyleSheet, css } from 'aphrodite'
-import { zonedDate } from '../DateContainer'
+import { dateToString } from '../DateContainer'
 
 export default function CustodianTimeSheetLog({ data }) {
   const history = useHistory()
@@ -30,7 +30,7 @@ export default function CustodianTimeSheetLog({ data }) {
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
                   Last shift worked:{' '}
-                  {dateutil.dateToString(zonedDate(shift.startedAt))}
+                  {dateToString(shift.startedAt)}
                 </span>
               </div>
             </div>

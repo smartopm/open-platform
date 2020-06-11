@@ -1,13 +1,13 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import DateContainer from '../components/DateContainer'
-import DateUtils, { lastDayOfTheMonth } from '../utils/dateutil'
+import DateContainer, { dateTimeToString, dateToString } from '../components/DateContainer'
+import DateUtils, { lastDayOfTheMonth, getMonthName, isTimeValid } from '../utils/dateutil'
 
 describe('date container component', () => {
   it('renders a span element and has correct time', () => {
     // get today's date
     const date = new Date()
-    const time = DateUtils.dateTimeToString(date)
+    const time = dateTimeToString(date)
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
     expect(component.find('span').text()).toContain(`Today at ${time}`)
@@ -20,17 +20,46 @@ describe('date container component', () => {
     expect(component.find('span').text()).toContain('Yesterday')
   })
 
-//  it('renders date for older dates', () => {
-//    // get old date
-//    const date = new Date()
-//    const oldDate = date.setDate(date.getDate() - 2)
-//    const component = mount(<DateContainer date={oldDate} />)
-//    expect(component.find('span').text()).toContain(
-//      DateUtils.dateToString(zonedDate(oldDate))
-//    )
-//  })
+ it('renders date for older dates', () => {
+   // get old date
+   const date = new Date()
+   const oldDate = date.setDate(date.getDate() - 2)
+   const component = mount(<DateContainer date={oldDate} />)
+   expect(component.find('span').text()).toContain(
+     dateToString(oldDate)
+   )
+ })
 
   it('should return the correct last day of the month', () => {
     expect(lastDayOfTheMonth.toString()).toContain('26') // 26 as last day of the month
+  })
+
+  // test more date utils
+  // getweekday
+  // timedifference
+  // getMonthName
+  // dateToString
+
+  it('should return the correct week day', () => {
+      const date = "2020-06-11T15:26:05.596Z"
+      expect(DateUtils.getWeekDay(new Date(date))).toContain('Thursday') // 26 as last day of the month
+  })
+
+  it('should return the correct time difference', () => {
+    const date = new Date()
+    const date2 = new Date().setDate(new Date().getDate() - 2)
+    expect(DateUtils.differenceInHours(new Date(date2), date)).toContain('48 hrs')
+  })
+  it('should return the correct month name', () => {
+    const date = "2020-06-11T15:26:05.596Z"
+    expect(getMonthName(new Date(date))).toContain('June')
+  })
+  it('should return the correctly formatted date', () => {
+    const date = "2020-06-11T15:26:05.596Z"
+    expect(DateUtils.dateToString(date)).toContain('2020-06-11')
+  })
+  it('should return the correct month name', () => {
+    const date = "2020-06-11T15:26:05.596Z"
+    expect(isTimeValid(new Date(date))).toBe(false)
   })
 })
