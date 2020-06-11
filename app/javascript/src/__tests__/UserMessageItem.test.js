@@ -11,6 +11,7 @@ describe('user message item component', () => {
     id: 1,
     name: 'joen',
     user: {},
+    category: 'SMS',
     message,
     clientNumber: '2603434343',
     dateMessageCreated: new Date(),
@@ -52,8 +53,9 @@ describe('user message item component', () => {
   it('displayes not seen if message not seen yet by the user', () => {
     expect(messageItem.find('.nz_read').text()).toBe('Not Read')
   })
-
-
+  it('It should display SMS tag ', () => {
+    expect(messageItem.find('.nz_msg_tag').first().text()).toBe('SMS')  
+  })
   // new data
 
   const new_data = {
