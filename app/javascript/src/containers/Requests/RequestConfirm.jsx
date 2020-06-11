@@ -6,7 +6,6 @@ import Nav from '../../components/Nav'
 import { EntryRequestQuery } from '../../graphql/queries.js'
 import { AcknowledgeRequest, CreateNote } from '../../graphql/mutations.js'
 import Loading from '../../components/Loading'
-import DateUtil from '../../utils/dateutil'
 import { ModalDialog } from '../../components/Dialog'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
 
