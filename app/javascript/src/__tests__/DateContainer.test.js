@@ -34,12 +34,6 @@ describe('date container component', () => {
     expect(lastDayOfTheMonth.toString()).toContain('26') // 26 as last day of the month
   })
 
-  // test more date utils
-  // getweekday
-  // timedifference
-  // getMonthName
-  // dateToString
-
   it('should return the correct week day', () => {
       const date = "2020-06-11T15:26:05.596Z"
       expect(DateUtils.getWeekDay(new Date(date))).toContain('Thursday') // 26 as last day of the month
@@ -56,10 +50,13 @@ describe('date container component', () => {
   })
   it('should return the correctly formatted date', () => {
     const date = "2020-06-11T15:26:05.596Z"
-    expect(DateUtils.dateToString(date)).toContain('2020-06-11')
+    expect(dateToString(date)).toContain('2020-06-11')
   })
-  it('should return the correct month name', () => {
+  it('should return formatted date', () => {
     const date = "2020-06-11T15:26:05.596Z"
-    expect(isTimeValid(new Date(date))).toBe(false)
+    expect(DateUtils.formatDate(date)).toContain('2020-06-11')
+  })
+  it('should return never when date is null', () => {
+    expect(DateUtils.formatDate()).toContain('Never')
   })
 })

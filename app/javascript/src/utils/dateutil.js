@@ -96,8 +96,6 @@ export function getMonthName(date) {
   return months[monthIndex];
 }
 
-
-
 /**
  * 
  * @param {Date} startDate 
