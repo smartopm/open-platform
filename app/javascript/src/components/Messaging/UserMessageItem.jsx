@@ -100,6 +100,7 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
+  category: PropTypes.string,
   readAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   isTruncate: PropTypes.bool.isRequired,
   isRead: PropTypes.bool,
