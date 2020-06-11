@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import DateContainer, { dateTimeToString, dateToString } from '../components/DateContainer'
-import DateUtils, { lastDayOfTheMonth, getMonthName, isTimeValid } from '../utils/dateutil'
+import DateUtils, { lastDayOfTheMonth, getMonthName } from '../utils/dateutil'
 
 describe('date container component', () => {
   it('renders a span element and has correct time', () => {
