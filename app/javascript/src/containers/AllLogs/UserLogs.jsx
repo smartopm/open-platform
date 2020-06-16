@@ -3,9 +3,9 @@ import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
 
 import Loading from "../../components/Loading.jsx";
-import DateUtil from "../../utils/dateutil.js";
 import { AllEventLogsForUserQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
+import { dateToString, dateTimeToString } from "../../components/DateContainer";
 
 export default ({ history, match }) => {
   const subjects = null;
@@ -73,8 +73,8 @@ export function IndexComponent({
             cursor: "pointer"
           }}
         >
-          <td>{DateUtil.dateToString(new Date(event.createdAt))}</td>
-          <td>{DateUtil.dateTimeToString(new Date(event.createdAt))}</td>
+          <td>{dateToString(event.createdAt)}</td>
+          <td>{dateTimeToString(new Date(event.createdAt))}</td>
           <td>{event.sentence}</td>
         </tr>
       );

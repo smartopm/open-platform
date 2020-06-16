@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
-import dateutil from '../utils/dateutil';
+import {dateToString} from '../components/DateContainer';
 
 // Todo: Refactor this to use best practices of React
 
@@ -20,7 +20,7 @@ export function UserPlotInfo(props) {
                 latestUpdated = updated;
             }
         });
-        const convertedDateTime = dateutil.dateTimeToCatString(latestUpdated);
+        const convertedDateTime = dateToString(latestUpdated);
         plotInformation = (<div className="container">
             <p>Plots associated with this account:</p>
             <ol data-testid="parcel_list">
