@@ -8,7 +8,8 @@ import Avatar from '../components/Avatar'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserMessageQuery } from '../graphql/queries'
 import { MessageCreate } from '../graphql/mutations'
-import Loading from '../components/Loading'
+import {Spinner} from '../components/Loading'
+import CenteredContent from '../components/CenteredContent'
 import { Button, TextField } from '@material-ui/core'
 
 export default function UserCommunication(user, state) {
@@ -40,7 +41,7 @@ export default function UserCommunication(user, state) {
     return (
         <div>
             <List>
-                {loading ? <Loading /> : (data.userMessages.length ? (
+                {loading ? <CenteredContent > <Spinner /> </CenteredContent> : (data.userMessages.length ? (
                     data.userMessages.map(message => (
                         <UserMessageItem
                             key={message.id}
@@ -50,6 +51,7 @@ export default function UserCommunication(user, state) {
                             message={message.message}
                             clientNumber={message.sender.phoneNumber}
                             dateMessageCreated={message.createdAt}
+                            category={message.category}
                             readAt={message.readAt}
                             isTruncate={false}
                             isRead={message.isRead}
