@@ -9,7 +9,7 @@ import ErrorPage from '../../components/Error'
 import Paginate from '../../components/Paginate'
 import Grid from '@material-ui/core/Grid'
 import dateutil from '../../utils/dateutil'
-import { zonedDate } from '../../components/DateContainer'
+
 
 export default function EmployeeLogs() {
   const { id } = useParams()
@@ -48,8 +48,8 @@ export default function EmployeeLogs() {
           Boolean(data.userTimeSheetLogs.length) &&
           data.userTimeSheetLogs[0].user.name
         }
-        lastDay={dateutil.dateToString(zonedDate(lastDay))}
-        firstDay={dateutil.dateToString(zonedDate(firstDay))}
+        lastDay={dateutil.dateToString(lastDay)}
+        firstDay={dateutil.dateToString(firstDay)}
       />
 
       <Grid container direction="row" justify="center" alignItems="center">

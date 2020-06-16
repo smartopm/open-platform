@@ -21,6 +21,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
+import PeopleIcon from '@material-ui/icons/People'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -57,7 +58,7 @@ export default function Homepage({ authState }) {
       card_id: 3,
       title: 'My Account',
       path: `/myaccount/${authState.user.id}`,
-
+      from: 'acc',
       icon: <AccountCircleIcon fontSize="large"/>,
       access: ['resident', 'client']
     },
@@ -92,7 +93,6 @@ export default function Homepage({ authState }) {
         authState.user.userType === 'admin'
           ? '/messages'
           : `/message/${authState.user.id}`,
-
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
@@ -174,8 +174,8 @@ export default function Homepage({ authState }) {
       card_id: 13,
       title: 'Referrals',
       path: `/referral`,
-
-      icon: <LogIcon fontSize="large"/>,
+      from: 'ref',
+      icon: <PeopleIcon fontSize="large"/>,
       access: ['admin', 'resident', 'client']
     },
     {

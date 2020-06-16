@@ -25,8 +25,9 @@ module Types::Queries::Message
 
     com_id = context[:current_user].community_id
     iq = Message.users_newest_msgs(query, offset, limit, com_id)
-    Message.joins(:user, :sender).eager_load(user: %i[notes avatar_attachment])
-           .unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
+    Message.joins(:user, :sender).eager_load(
+      user: { notes: {}, avatar_attachment: {}, accounts: { land_parcel_accounts: :land_parcel } },
+    ).unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
   end
 
   # rubocop:disable Metrics/AbcSize

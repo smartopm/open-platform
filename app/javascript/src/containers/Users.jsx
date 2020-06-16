@@ -117,8 +117,14 @@ export default function UsersList() {
     setOpen(!open)
   }
   function handleSaveNote() {
+    let noteType = ''
+    if (modalAction === 'Answered'){
+      noteType = "Outgoing Call Answered: "
+    }else if(modalAction === 'Missed'){
+      noteType = "Outgoing not Call Answered: "
+    }
     noteCreate({
-      variables: { userId, body: note, flagged: false }
+      variables: { userId, body: noteType+note, flagged: false }
     }).then(() => {
       refetch()
       setIsDialogOpen(!isDialogOpen)

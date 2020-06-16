@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem'
+import Badge from "@material-ui/core/Badge";
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../Avatar'
@@ -19,6 +20,7 @@ export default function UserMessageItem({
   dateMessageCreated,
   isTruncate,
   isRead,
+  category,
   readAt,
   isAdmin,
   count
@@ -47,13 +49,15 @@ export default function UserMessageItem({
           <React.Fragment>
             <span className="nz_msg_owner">
               {name}
+              <Badge className="nz_msg_tag" color={category === 'email' ? 'secondary' : 'error'} badgeContent={category && category === 'email' ? <span>Email</span> : <span>SMS</span> } style={{marginLeft: 25}} />
               {isTruncate && (
                 <span className={css(styles.ownerType)}>
                   {userType[user.userType] || ''}
                 </span>
               )}
+
               <span className={css(styles.timeStamp)}>
-               Sent: <DateContainer date={dateMessageCreated} />
+                Sent: <DateContainer date={dateMessageCreated} />
               </span>
             </span>
           </React.Fragment>
@@ -64,23 +68,23 @@ export default function UserMessageItem({
               {isTruncate ? (
                 truncateString(message, count)
               ) : (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: findLinkAndReplace(message)
-                  }}
-                />
-              )}
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: findLinkAndReplace(message)
+                    }}
+                  />
+                )}
             </span>
 
             {isAdmin && (
               <span className={`nz_read ${css(styles.timeStamp)}`}>
-                { isRead && readAt ? (
+                {isRead && readAt ? (
                   <React.Fragment>
                     Read: <DateContainer date={readAt} />
                   </React.Fragment>
                 ) : (
-                  'Not Read'
-                )}
+                    'Not Read'
+                  )}
               </span>
             )}
           </React.Fragment>
@@ -96,6 +100,7 @@ UserMessageItem.propTypes = {
   imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
+  category: PropTypes.string,
   readAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   isTruncate: PropTypes.bool.isRequired,
   isRead: PropTypes.bool,
@@ -120,5 +125,13 @@ const styles = StyleSheet.create({
   ownerType: {
     marginLeft: 20,
     color: '#737380'
+  },
+  smsBadge: {
+    backgroundColor: '#98fffc'
+  },
+  emailBadge: {
+    backgroundColor: '#1a8683',
+    color: 'white',
+    marginLeft: 5
   }
 })
