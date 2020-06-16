@@ -29,6 +29,7 @@ export const AllEntryRequestsQuery = gql`
       ...EntryRequestFields
       guard: user {
         name
+        id
       }
     }
   }
@@ -129,8 +130,8 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  {
-    flaggedNotes {
+  query GetTodos($offset: Int, $limit: Int){ 
+    flaggedNotes(offset: $offset, limit: $limit) {
       body
       createdAt
       id
@@ -164,8 +165,8 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int, $userType: String) {
-    users(limit: $limit, offset: $offset, userType: $userType) {
+  query users($limit: Int, $offset: Int, $query: String) {
+    users(limit: $limit, offset: $offset, query: $query) {
       ...UserFields
     }
   }
@@ -210,6 +211,7 @@ export const MessagesQuery = gql`
     messages(query: $searchTerm, limit: $limit, offset: $offset) {
       id
       message
+      category
       createdAt
       user {
         ...UserFields
@@ -226,6 +228,7 @@ export const UserMessageQuery = gql`
       message
       createdAt
       readAt
+      category
       isRead
       sender {
         name
@@ -257,6 +260,7 @@ export const UserTimeSheetQuery = gql`
              id
              user {
                name
+               id
              }
            }
          }
@@ -270,6 +274,7 @@ export const TimeSheetLogsQuery = gql`
              id
              user {
                name
+               id
              }
              userId
            }
@@ -281,6 +286,7 @@ export const lastUserTimeSheet = gql`
         userLastShift(userId: $userId){
           endedAt
           startedAt
+          id
         }
 }
 `

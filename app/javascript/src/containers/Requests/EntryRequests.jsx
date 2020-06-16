@@ -1,17 +1,16 @@
 import React from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
-
 import Loading from "../../components/Loading.jsx";
-import DateUtil from "../../utils/dateutil.js";
 import { AllEntryRequestsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
+import { dateToString, dateTimeToString } from "../../components/DateContainer";
 
 export default () => {
-  return allEntryRequests();
+  return AllEntryRequests();
 };
 
-const allEntryRequests = () => {
+const AllEntryRequests = () => {
   const { loading, error, data } = useQuery(AllEntryRequestsQuery, {
     fetchPolicy: "no-cache"
   });
@@ -27,8 +26,8 @@ export function IndexComponent({ data }) {
       <tr key={entry.id}>
         <td>{entry.name}</td>
         <td>{entry.guard.name}</td>
-        <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
-        <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
+        <td>{dateToString(entry.createdAt)}</td>
+        <td>{dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.phoneNumber}</td>
         <td>{entry.nrc}</td>
         <td>{entry.vehiclePlate}</td>
@@ -69,8 +68,8 @@ export function UserComponent({ data }) {
   function logs(entries) {
     return entries.map(entry => (
       <tr key={entry.id}>
-        <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
-        <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
+        <td>{dateToString(entry.createdAt)}</td>
+        <td>{dateTimeToString(new Date(entry.createdAt))}</td>
         <td>{entry.reportingUser.name}</td>
       </tr>
     ));

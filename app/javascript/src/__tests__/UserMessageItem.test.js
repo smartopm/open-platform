@@ -11,6 +11,7 @@ describe('user message item component', () => {
     id: 1,
     name: 'joen',
     user: {},
+    category: 'SMS',
     message,
     clientNumber: '2603434343',
     dateMessageCreated: new Date(),
@@ -34,7 +35,7 @@ describe('user message item component', () => {
     expect(messageItem.find('img')).toBeTruthy()
   })
   it('message owner should contain children of spans', () => {
-    expect(messageItem.find('.nz_msg_owner').children()).toHaveLength(2)
+    expect(messageItem.find('.nz_msg_owner').children()).toHaveLength(3)
   })
   it('message element should only contain one child element', () => {
     expect(messageItem.find('.nz_msg').children()).toHaveLength(1)
@@ -52,8 +53,9 @@ describe('user message item component', () => {
   it('displayes not seen if message not seen yet by the user', () => {
     expect(messageItem.find('.nz_read').text()).toBe('Not Read')
   })
-
-
+  it('It should display SMS tag ', () => {
+    expect(messageItem.find('.nz_msg_tag').first().text()).toBe('SMS')  
+  })
   // new data
 
   const new_data = {

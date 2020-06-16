@@ -2,6 +2,8 @@ stages:
   - build
   - test
   - report
+  - staging
+  - deploy
 
 image: "ruby:2.6"
 
@@ -69,3 +71,32 @@ test:jest:
       - "coverage/"
     name: "Jest $CI_PIPELINE_ID Coverage Report"
     expire_in: 24 hours
+
+staging:
+  stage: staging
+  allow_failure: false
+  when: on_success
+  script:
+    - echo 'deploying to STAGING'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-staging --api-key=$HEROKU_STAGING_API_KEY
+    - echo 'deployed to STAGING'
+  environment:
+    name: staging
+    url: https://double-gdp-staging.herokuapp.com/
+  only:
+    - master
+
+production:
+  stage: deploy
+  allow_failure: false
+  script:
+    - echo 'deploying to PRODUCTION'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
+    - echo 'deployed to PRODUCTION'
+  environment:
+    name: production
+    url: https://app.doublegdp.com/
+  only:
+    - tags

@@ -9,6 +9,8 @@ import { useApolloClient } from 'react-apollo'
 import { UserQuery } from '../graphql/queries'
 import { UpdateUserMutation, CreateUserMutation } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
+import { saniteError } from '../utils/helpers'
+import { requiredFields } from '../utils/constants'
 
 const initialValues = {
   name: '',
@@ -80,20 +82,21 @@ export default function FormContainer({ match, history, location }) {
     event.preventDefault()
     const values = {
       ...data,
+      name: data.name.trim(),
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
 
     if(isFromRef){
-      setShowResults(true)
       setTimeout(() => {
         window.location.reload(false)
-      }, 2000);
+      }, 3000);
     }
     createOrUpdate(values)
       .then(({ data }) => {
         // setSubmitting(false);
         if(isFromRef){
+          setShowResults(true)
           return
         }else{
         history.push(`/user/${data.result.user.id}`)
@@ -163,13 +166,13 @@ export default function FormContainer({ match, history, location }) {
         name={data.name}
       />
       <br />
-      {Boolean(msg.length) && <p className="text-danger text-center">{msg}</p>}
+      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>}
       <UserForm />
       { showResults ? 
-          <div className='d-flex row justify-content-center'>
+        <div className='d-flex row justify-content-center'>
           <p>Thank you for your referral. We will reach out to them soon.</p>
         </div> 
-        : null }
+        : Boolean(msg.length) && <p className="text-danger text-center">This user already exists in the system.</p>  }
         
     </FormContext.Provider>
   )

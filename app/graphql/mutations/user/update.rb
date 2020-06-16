@@ -8,7 +8,7 @@ module Mutations
       argument :name, String, required: false
       argument :email, String, required: false
       argument :phone_number, String, required: false
-      argument :user_type, String, required: false
+      argument :user_type, String, required: true
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false

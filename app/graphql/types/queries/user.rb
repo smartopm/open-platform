@@ -16,7 +16,7 @@ module Types::Queries::User
       description 'Get a list of all the users'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-      argument :user_type, String, required: false
+      argument :query, String, required: false
     end
 
     # Get a member's information
@@ -49,13 +49,13 @@ module Types::Queries::User
     User.find(id)
   end
 
-  def users(offset: 0, limit: 100, user_type: nil)
+  def users(offset: 0, limit: 100, query: nil)
     adm = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
     User.eager_load(:notes, :accounts)
         .where(community_id: context[:current_user].community_id)
-        .search(user_type)
+        .search(query)
         .limit(limit)
         .offset(offset).with_attached_avatar
   end
@@ -66,6 +66,7 @@ module Types::Queries::User
     User.eager_load(:notes, :accounts)
         .where(community_id: context[:current_user].community_id)
         .search(query)
+        .order(name: :asc)
         .limit(limit)
         .offset(offset).with_attached_avatar
   end

@@ -113,6 +113,7 @@ export function AuthStateProvider({ children, token, setToken }) {
       setState({ ...state, user: null, loaded: true, loggedIn: false })
     }
     // Get query if token changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   if (state.error && token) {

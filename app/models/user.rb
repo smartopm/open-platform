@@ -102,8 +102,13 @@ class User < ApplicationRecord
   end
 
   # We may want to do a bit more work here massaing the number entered
-  def self.find_via_phone_number(phone_number)
+  def self.find_any_via_phone_number(phone_number)
     find_by(phone_number: phone_number)
+  end
+
+  # We may want to do a bit more work here massaing the number entered
+  def find_via_phone_number(phone_number)
+    community.users.find_by(phone_number: phone_number)
   end
 
   def self.lookup_by_id_card_token(token)
@@ -120,7 +125,7 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-    return unless enrolled_user.save
+    return enrolled_user unless enrolled_user.save
 
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)
@@ -130,7 +135,7 @@ class User < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
   def process_referral(enrolled_user, data)
-    return unless user_type == 'admin'
+    return unless user_type != 'admin'
 
     generate_events('user_referred', enrolled_user, data)
     referral_todo(enrolled_user)
@@ -169,6 +174,17 @@ class User < ApplicationRecord
                       ref_id: target_obj.id,
                       ref_type: target_obj.class.to_s,
                       data: data)
+  end
+
+  def generate_note(vals)
+    ::Note.create(
+      user_id: vals[:user_id],
+      body: vals[:body],
+      category: vals[:category],
+      flagged: false,
+      author_id: self[:id],
+      completed: false,
+    )
   end
 
   # rubocop:disable MethodLength

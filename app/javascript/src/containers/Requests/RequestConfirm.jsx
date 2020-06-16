@@ -6,8 +6,8 @@ import Nav from '../../components/Nav'
 import { EntryRequestQuery } from '../../graphql/queries.js'
 import { AcknowledgeRequest, CreateNote } from '../../graphql/mutations.js'
 import Loading from '../../components/Loading'
-import DateUtil from '../../utils/dateutil'
 import { ModalDialog } from '../../components/Dialog'
+import { dateTimeToString, dateToString } from '../../components/DateContainer'
 
 
 export default function RequestConfirm({ match, history }) {
@@ -124,9 +124,7 @@ export default function RequestConfirm({ match, history }) {
                             type='text'
                             value={
                                 formData.guard
-                                    ? `${new Date(
-                                        formData.createdAt
-                                    ).toDateString()} at ${DateUtil.dateTimeToString(
+                                    ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
                                         new Date(formData.createdAt)
                                     )}`
                                     : ''
