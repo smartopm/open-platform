@@ -1,6 +1,6 @@
 import React from 'react'
 import FacebookIcon from '@material-ui/icons/Facebook'
-import Button from '@material-ui/core/Button';
+import Fab from "@material-ui/core/Fab";
 
 export function ShareButton({ url }) {
     function shareFacebook() {
@@ -8,14 +8,18 @@ export function ShareButton({ url }) {
             'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
     }
     return (
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<FacebookIcon />}
-                onClick={shareFacebook}
-            >
-                Share Facebook
-            </Button>
+        <Fab variant="extended"
+            style={{
+                position: 'fixed',
+                bottom: 24,
+                right: 57,
+            }}
+            color="primary"
+            onClick={shareFacebook}
+        >
+            <FacebookIcon />
+            {"  "} Share on Facebook
+        </Fab>
     )
 }
 
