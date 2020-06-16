@@ -60,3 +60,7 @@ export function saniteError(requiredFields, errorMessage) {
   }
   return `${cleanFields.join(" or ")} value is blank`;
 }
+
+function phoneNumber(params) {
+  return params.split('\n').join(',').split(',')
+}
