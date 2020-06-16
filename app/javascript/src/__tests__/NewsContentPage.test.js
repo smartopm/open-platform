@@ -9,7 +9,7 @@ describe('news content page', () => {
   })
   it('should include dom elements when rendered', () => {
     expect(page.find('iframe')).toHaveLength(1)
-    expect(page.find('div')).toHaveLength(1)
+    expect(page.find('div')).toHaveLength(2)
   })
 })
 
