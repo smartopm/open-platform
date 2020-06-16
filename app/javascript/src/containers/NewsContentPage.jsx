@@ -1,18 +1,22 @@
 import React from 'react'
 import IframeContainer from '../components/IframeContainer'
 import { useWindowDimensions } from '../utils/customHooks'
+import { ShareButton } from '../components/CustomButtons'
 
 export default function NewsContentPage() {
   const { width, height } = useWindowDimensions()
   const currentUrl = window.location.href
   const url = `https://doublegdp.gitlab.io/nkwashi-content/${formatUrl(currentUrl, 'news') || ''}`
-
+    // 
   return (
-    <IframeContainer
-      link={url}
-      height={height}
-      width={width}
-    />
+    <div>
+      <IframeContainer
+        link={url}
+        height={height}
+        width={width}
+      />
+      <ShareButton url={url} />
+    </div>
   )
 }
 
