@@ -69,6 +69,7 @@ import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 
 import Scan from '../src/containers/Scan.jsx'
+import WelcomePage from '../src/containers/WelcomePage'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -176,6 +177,7 @@ const App = () => {
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={GoogleAuthCallback} />
+                <Route path="/welcome_page" component={WelcomePage} />
 
                 <LoggedInOnly>
                   <Switch>
