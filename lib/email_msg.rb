@@ -82,7 +82,7 @@ class EmailMsg
   end
 
   # attempt to synchronize
-  def self.message_update(email)
+  def self.message_update?(email)
     message = Message.find_by(source_system_id: email['msg_id'])
     return if message.nil?
 
@@ -105,7 +105,7 @@ class EmailMsg
       next if user.nil?
 
       if message_exists?(email['msg_id'], user.id)
-        message_update(email)
+        message_update?(email)
         next
       end
 
