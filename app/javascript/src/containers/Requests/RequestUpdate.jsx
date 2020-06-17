@@ -13,10 +13,11 @@ import {
 } from "../../graphql/mutations.js";
 import Loading from "../../components/Loading";
 import { StyleSheet, css } from "aphrodite";
-import DateUtil, { isTimeValid, getWeekDay } from "../../utils/dateutil";
+import { isTimeValid, getWeekDay } from "../../utils/dateutil";
 import { ponisoNumber, userState, userType } from "../../utils/constants.js"
 import { ModalDialog } from '../../components/Dialog'
 import CaptureTemp from "../../components/CaptureTemp";
+import { dateToString, dateTimeToString } from "../../components/DateContainer";
 
 
 export default function RequestUpdate({ match, history, location }) {
@@ -178,8 +179,8 @@ export default function RequestUpdate({ match, history, location }) {
         {modalAction === 'grant' && !isTimeValid(date) && (
           <div>
             <p>
-              Today is {`${getWeekDay(date)} ${DateUtil.dateToString(date)}`} at{' '}
-              <b> {DateUtil.dateTimeToString(date)} </b>
+              Today is {`${getWeekDay(date)} ${dateToString(date)}`} at{' '}
+              <b> {dateTimeToString(new Date(date))} </b>
             </p>
             <p>
               The current time is outside of normal visiting hours. Are you sure
@@ -201,9 +202,7 @@ export default function RequestUpdate({ match, history, location }) {
                 type="text"
                 value={
                   formData.guard
-                    ? `${new Date(
-                        formData.createdAt
-                      ).toDateString()} at ${DateUtil.dateTimeToString(
+                    ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
                         new Date(formData.createdAt)
                       )}`
                     : ''

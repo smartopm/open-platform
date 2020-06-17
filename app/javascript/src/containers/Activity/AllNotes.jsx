@@ -4,7 +4,7 @@ import { useQuery } from 'react-apollo'
 import { allNotes } from '../../graphql/queries'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
-import { formatISO9075 } from 'date-fns'
+import DateContainer from '../../components/DateContainer'
 
 const limit = 20
 export default function Notes() {
@@ -45,7 +45,7 @@ export default function Notes() {
                 </b>{' '}
                 on{' '}
                 <i style={{ color: 'grey' }}>
-                  {formatISO9075(new Date(note.createdAt))}
+                <DateContainer date={note.createdAt} />
                 </i>
                 <br />
                 {note.body}

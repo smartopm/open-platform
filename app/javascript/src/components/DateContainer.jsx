@@ -1,27 +1,18 @@
 import React from 'react'
 import { isYesterday, isToday } from 'date-fns'
 import { PropTypes } from 'prop-types'
-
-import { utcToZonedTime, format, toDate } from 'date-fns-tz'
 import dateutil from '../utils/dateutil'
 
 const timeZone = 'Africa/Lusaka'
 
-export const zonedTimeDate = date => utcToZonedTime(date, timeZone)
-const timePattern = 'HH:mm'
-
-export const dateTimeToString = date =>
-  format(zonedTimeDate(date), timePattern, {
-    timeZone
-  })
-
-export const newCatDate = date =>
-  format(zonedTimeDate(date), "yyyy-MM-dd", {
-    timeZone
-  })
-
-const utcDate = date => toDate(new Date(date), { timeZone: 'UTC' })
-export const zonedDate = date => utcToZonedTime(utcDate(date), timeZone)
+// returns a stringified date
+export function dateTimeToString(date) {
+  return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', timeZone })
+}
+export function dateToString(date) {
+  const lDate = date.toLocaleString("en-GB", { timeZone })
+  return dateutil.dateToString(new Date(lDate))
+}
 
 export default function DateContainer({ date }) {
   return (
@@ -30,7 +21,7 @@ export default function DateContainer({ date }) {
         ? `Today at ${dateTimeToString(new Date(date))}`
         : isYesterday(new Date(date))
           ? `Yesterday at ${dateTimeToString(new Date(date))}`
-          : dateutil.dateToString(new Date(date))}
+          : dateToString(date)}
     </span>
   )
 }
