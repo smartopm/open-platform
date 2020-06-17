@@ -83,9 +83,9 @@ class EmailMsg
 
   # attempt to synchronize
   def self.message_update(email)
-    message = Message.find_by(source_system_id: email['source_system_id'])
+    message = Message.find_by(source_system_id: email['msg_id'])
     return if message.nil?
-
+    # we could override the activerecord timestamp by setting updated_at to last_event_time
     message.update(
       is_read: (email['opens_count']).positive?,
       read_at: email['last_event_time'],
@@ -101,18 +101,16 @@ class EmailMsg
     sender = find_user(sender_email, community_name) # Admin's email, static for now
     emails.each do |email|
       user = find_user(email['to_email'], community_name)
-
       next if user.nil?
 
       if message_exists?(email['msg_id'], user.id)
         message_update(email)
         next
       end
-      # next if message_exists?(email['msg_id'], user.id)
 
       message = Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
-        read_at: email['last_event_time'],
+        read_at: (email['opens_count']).positive? ? email['last_event_time'] : nil,
         user_id: user.id,
         created_at: email['last_event_time'],
         message: email['subject'], category: 'email', status: email['status'],
