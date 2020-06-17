@@ -6,31 +6,42 @@ import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
 import { CampaignCreate } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
+import { saniteError } from '../utils/helpers'
 
 export default function CampaignForm({ authState }) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [userIdList, setUserIdList] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
   const [batchTime, setBatchTime] = useState('')
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
   const [campaign] = useMutation(CampaignCreate)
 
   function handleSubmit(e) {
     e.preventDefault()
-    const campaingData={
+    const campaingData = {
       name: name,
       message: message,
       batchTime: batchTime,
       userIdList: userIdList
     }
-    campaign({ variables:campaingData }).then(e => {
-      console.log(e)
-    })
+    setTimeout(() => {
+      window.location.reload(false)
+    }, 3000)
+
+    campaign({ variables: campaingData })
+      .then(e => {
+        console.log(e)
+        setIsSubmitted(true)
+      })
+      .catch(err => {
+        setErrorMsg(err.message)
+      })
   }
 
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)
-
-    console.log(userIds.toString())
     setUserIdList(userIds.toString())
   }
   if (authState.user.userType !== 'admin') {
@@ -74,6 +85,7 @@ export default function CampaignForm({ authState }) {
             label="User ID List"
             rows={5}
             multiline
+            required
             className="form-control"
             value={userIdList}
             onChange={e => handleUserIDList(e, e.target.value)}
@@ -83,6 +95,7 @@ export default function CampaignForm({ authState }) {
         <div>
           <DateAndTimePickers
             label="Start Time"
+            required
             selectedDateTime={batchTime}
             handleDateChange={e => setBatchTime(e.target.value)}
           />
@@ -95,6 +108,13 @@ export default function CampaignForm({ authState }) {
           >
             <span>Submit</span>
           </Button>
+        </div>
+        <br />
+        <div className="d-flex row justify-content-center">
+          {Boolean(errorMsg.length) && (
+            <p className="text-danger text-center">{saniteError(errorMsg)}</p>
+          )}
+          {isSubmitted && <p>Campaign has been submitted</p>}
         </div>
       </form>
     </div>
