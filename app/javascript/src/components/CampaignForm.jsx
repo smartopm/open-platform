@@ -94,7 +94,7 @@ export default function CampaignForm({ authState }) {
         <br />
         <div>
           <DateAndTimePickers
-            label="Start Time"
+            label="Batch Time"
             required
             selectedDateTime={batchTime}
             handleDateChange={e => setBatchTime(e.target.value)}

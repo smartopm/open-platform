@@ -32,4 +32,17 @@ describe('Campaign page', () => {
     )
     expect(getByText('Message')).toBeInTheDocument()
   })
+  it('should render input elements', () => {
+    const { getByText } = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <Campaign authState={authState} />
+        </BrowserRouter>
+      </MockedProvider>
+    )
+    expect(getByText('Message')).toBeInTheDocument()
+    expect(getByText('Campaign Name')).toBeInTheDocument()
+    expect(getByText('User ID List')).toBeInTheDocument()
+    expect(getByText('Batch Time')).toBeInTheDocument()
+  })
 })
