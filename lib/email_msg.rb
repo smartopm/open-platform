@@ -85,6 +85,7 @@ class EmailMsg
   def self.message_update(email)
     message = Message.find_by(source_system_id: email['msg_id'])
     return if message.nil?
+
     # we could override the activerecord timestamp by setting updated_at to last_event_time
     message.update(
       is_read: (email['opens_count']).positive?,
