@@ -41,5 +41,8 @@ module Types
 
     # track time
     field :manage_shift, mutation: Mutations::Timesheet::ManageShift
+
+    # campaigns
+    field :campaign_create, mutation: Mutations::Campaign::CampaignCreate
   end
 end
