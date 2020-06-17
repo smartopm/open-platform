@@ -426,21 +426,22 @@ export const UpdateLogMutation = gql`
   }
 `
 
-// export const CampaignCreate = gql`
-//   mutation campaignCreate(
-//     $name: String!
-//     $message: String!
-//     $start_time: String!
-//     $user_id_list: Array!
-//     $end_time: String!
-//   ) {
-//     CampaignCreate(
-//       name: $name
-//       message: $message
-//       start_time: $start_time
-//       user_id_list: $user_id_list
-//       end_time: $end_time
-//       ) 
-//     }
-//   }
-// `
+export const CampaignCreate = gql`
+  mutation campaignCreate(
+    $name: String!
+    $message: String!
+    $batchTime: String!
+    $userIdList: String!
+  ) {
+    campaignCreate(
+      name: $name
+      message: $message
+      batchTime: $batchTime
+      userIdList: $userIdList
+      ){
+        campaign{
+          name
+        }
+      } 
+    }
+`

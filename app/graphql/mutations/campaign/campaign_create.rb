@@ -4,9 +4,8 @@ module Mutations
         class CampaignCreate < BaseMutation
             argument :name, String, required:true
             argument :message,String, required:true
-            argument :start_time,String, required:true
             argument :batch_time,String, required:true
-            argument :user_id_list, String, required:false
+            argument :user_id_list, String, required:true
 
             field  :campaign, Types::CampaignType, null: true
 
@@ -17,8 +16,7 @@ module Mutations
                 campaign.message = vals[:message]
                 campaign.user_id_list = vals[:user_id_list]
                 campaign.batch_time = vals[:batch_time]
-                campaign.start_time = vals[:start_time]
-                campaign.save
+                campaign.save!
                 return {campaign: campaign} if campaign.persisted?
 
                 raise GraphQL::ExecutionError, campaign.errors.full_message
