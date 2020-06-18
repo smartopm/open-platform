@@ -84,5 +84,17 @@ module Types
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
     end
+
+    field :campaigns, [Types::CampaignType], null: true do
+      description 'Get a list of all Campaigns'
+  end
+  
+  def campaigns()
+      raise GraphQL::ExecutionError,'Unauthorized' if context[:current_user].blank?
+
+      com_id = context[:current_user].community_id
+      campaign = Campaign.where(community_id: com_id).offset(0).limit(100)
+      campaign
+  end
   end
 end

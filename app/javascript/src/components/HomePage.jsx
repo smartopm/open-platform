@@ -22,6 +22,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
 import PeopleIcon from '@material-ui/icons/People'
+import TelegramIcon from '@material-ui/icons/Telegram';
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -215,7 +216,17 @@ export default function Homepage({ authState }) {
         </a>
       ),
       access: ['contractor']
-    }
+    },
+    {
+      card_id: 17,
+      title: `Campaigns`,
+      path: `/campaign`,
+
+      icon: <TelegramIcon fontSize="large"/>,
+      access: [
+        'admin'
+      ]
+    },
   ]
 
   return (

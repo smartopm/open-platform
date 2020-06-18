@@ -68,6 +68,7 @@ import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 import Campaign from '../src/containers/Campaign'
+import Campaigns from "../src/containers/Campaigns";
 import Scan from '../src/containers/Scan.jsx'
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -232,6 +233,7 @@ const App = () => {
 
                     <Route path="/message/:id" component={UserMessages} />
                     <Route path="/campaign" component={Campaign} />
+                    <Route path="/campaigns" component={Campaigns} />
 
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
