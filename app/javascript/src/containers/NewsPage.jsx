@@ -12,7 +12,7 @@ import Nav from '../components/Nav'
 
 export default function NewsPage() {
     const {slug} = useParams()
-    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug}`)
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     if (error) {
         return error
     }
@@ -29,7 +29,7 @@ export default function NewsPage() {
                 <br />
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant='h3' color='textSecondary'>
-                        {titleCase(slug)}
+                        {titleCase(slug || 'Posts')}
                     </Typography>
                 </Box>
                 <Divider light variant="middle" />
