@@ -21,7 +21,7 @@ export default function Categories() {
                     {response.categories.map(category => (
                         <Button key={category.ID}>
                             <Link stytle={{textDecoration: 'none'}} to={`/spike_news/${category.slug}`}>
-                            {category.name}
+                                {category.name}
                             </Link>
                         </Button>
                     ))}
