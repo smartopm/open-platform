@@ -72,7 +72,6 @@ export function useFetch(url, options={}){
       }
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]); // react recommends adding deps here but it was over fetching
+  },[url, options]);
   return { response, error };
 };
