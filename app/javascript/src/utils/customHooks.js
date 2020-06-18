@@ -57,7 +57,7 @@ export function useWindowDimensions() {
  * @returns {object} response and error
  * 
  */
-export function useFetch(url, options){
+export function useFetch(url, options={}){
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   // we might not need the options anymore since we don't need auth for GET(which is the default)
@@ -73,6 +73,6 @@ export function useFetch(url, options){
     };
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[]); // react recommends adding deps here but it was over fetching
   return { response, error };
 };

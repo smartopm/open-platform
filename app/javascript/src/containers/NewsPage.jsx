@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { useFetch } from '../utils/customHooks'
 
 export default function NewsPage() {
-    const {response, error} = useFetch('https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts', {})
+    const {response, error} = useFetch('https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts')
     
     if (error) {
         return error
@@ -15,7 +15,6 @@ export default function NewsPage() {
     if (!response) {
         return 'loading'
     }
-    console.log(response)
     return (
         <React.Fragment>
             <div style={{ flex: 1, height: '100vh', width: '100%', overflowX: 'auto' }} >
