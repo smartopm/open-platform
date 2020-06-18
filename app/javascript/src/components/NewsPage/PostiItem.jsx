@@ -12,34 +12,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Box from "@material-ui/core/Box";
 import {truncateString} from '../../utils/helpers'
 
-const useStyles = makeStyles(() => ({
-    root: {
-        maxWidth: 400,
-        cursor: 'pointer',
-        margin: 10,
-        shadowColor: "#CCE5F3",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 6,
-        height: 500
-
-    },
-    media: {
-        height: 0,
-        width: 400,
-        paddingTop: "56.25%", // 16:9,
-
-
-    },
-    avatar: {
-        backgroundColor: red[500]
-    }
-}));
-
 export default function PostiItem({ title, imageUrl, datePosted, subTitle }) {
     const classes = useStyles();
     return (
@@ -83,3 +55,28 @@ export default function PostiItem({ title, imageUrl, datePosted, subTitle }) {
 
     )
 }
+
+// Moved this at the bottom
+const useStyles = makeStyles(() => ({
+    root: {
+        maxWidth: 400,
+        cursor: 'pointer',
+        margin: 10,
+        shadowColor: "#CCE5F3",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 6
+    },
+    media: {
+        height: 0,
+        width: 400,
+        paddingTop: "56.25%", // 16:9,
+    },
+    avatar: {
+        backgroundColor: red[500]
+    }
+}));

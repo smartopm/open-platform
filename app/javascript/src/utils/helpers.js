@@ -30,6 +30,14 @@ export function truncateString(message, count) {
   return `${message.substring(0, count)}...`
 }
 
+/**
+ * 
+ * @param {string} word string to be uppercased
+ * @description makes the first letter of a string to uppercase
+ */
+export function titleCase(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
 const cleanedFields = {
   userType: 'User Type',
   phoneNumber: 'Phone Number',
@@ -59,4 +67,8 @@ export function saniteError(requiredFields, errorMessage) {
     return "Unexpected error happened, Please try again";
   }
   return `${cleanFields.join(" or ")} value is blank`;
+}
+
+export function DelimitorFormator(params) {
+  return params.split('\n').join(',').split(',')
 }

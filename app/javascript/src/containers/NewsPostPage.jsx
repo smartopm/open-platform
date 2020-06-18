@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Card, CardMedia, CardContent, Typography, Divider, Box, Container } from '@material-ui/core'
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { wordpressEndpoint } from '../utils/constants'
+import { useFetch } from '../utils/customHooks'
+import Categories from '../components/NewsPage/Categories'
 
 export default function NewsPostPage() {
-    let { state } = useLocation()
-    console.log(state)
+    const { id } = useParams()
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/${id}`)
+    // TODO: @olivier ==> add better error page and loading component here
+    if (error) {
+        return error
+    }
+    if (!response) {
+        return 'loading'
+    }
     return (
-
-        <div style={{ height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1 }}>
+        <Fragment>
+            <Categories />
+       
+        <div style={{height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1}}>
             <Container>
                 <Box >
                     <Card style={{ marginTop: 100 }}>
@@ -15,20 +27,23 @@ export default function NewsPostPage() {
                             height: 0,
                             width: "100%",
                             paddingTop: "50%",
-                        }} image={state.imageUrl} />
-                        <CardContent>
+                        }}
+                        image={response.post_thumbnail?.URL} />
+                        <CardContent >
                             <Typography variant='h3' color='textSecondary'>
-                                <strong>{state.title}</strong>
+                                <strong>{response.title}</strong>
                             </Typography>
 
                             <Divider light variant='middle' />
+
+                            <div  dangerouslySetInnerHTML={{ __html: response.content }} />
+
                         </CardContent>
                         
                     </Card>
-                </Box>
-                <div dangerouslySetInnerHTML={{ __html: state.content }} />
+                </Box> 
             </Container>
         </div>
-
+    </Fragment>
     )
 }

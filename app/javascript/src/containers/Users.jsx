@@ -121,7 +121,7 @@ export default function UsersList() {
     if (modalAction === 'Answered'){
       noteType = "Outgoing Call Answered: "
     }else if(modalAction === 'Missed'){
-      noteType = "Outgoing not Call Answered: "
+      noteType = "Outgoing Call not Answered: "
     }
     noteCreate({
       variables: { userId, body: noteType+note, flagged: false }

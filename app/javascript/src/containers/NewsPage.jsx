@@ -2,77 +2,56 @@ import React from 'react'
 import { Typography, Box, Divider, Grid, Button } from '@material-ui/core'
 import backgroundImage from '../../../assets/images/news_background.jpg'
 import PostiItem from '../components/NewsPage/PostiItem'
-import { newCatDate } from '../components/DateContainer'
-import { Link } from 'react-router-dom'
+import { dateToString } from '../components/DateContainer'
+import { Link, useParams } from 'react-router-dom'
+import { useFetch } from '../utils/customHooks'
+import Categories from '../components/NewsPage/Categories'
+import { wordpressEndpoint } from '../utils/constants'
+import { titleCase } from '../utils/helpers'
 import Nav from '../components/Nav'
 
 export default function NewsPage() {
-    const [data, setData] = React.useState([])
-    const [categorys, setCategory] = React.useState([])
-    React.useEffect(() => {
-        getPosts()
-        getCategory()
-    }, [])
-    const getPosts = async () => {
-        const res = await fetch('https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts')
-        const da = await res.json()
-        setData(da.posts)
+    const {slug} = useParams()
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug}`)
+    if (error) {
+        return error
     }
-    const getCategory = async () => {
-
-        const res = await fetch('https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/categories')
-        const da = await res.json()
-        setCategory(da.categories)
+    if (!response) {
+        return 'loading'
     }
-
+    console.log(response)
     return (
         <React.Fragment>
             <div style={{ flex: 1, height: '100vh', width: '100%', overflowX: 'auto' }} >
                 <Nav />
-
                 <Box style={{ height: '50%', width: '100%', backgroundImage: `url(${backgroundImage})` }} />
-                <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
-                    <Grid direction="row" justify="flex-end">
-                        <Grid item xs >
-                            {categorys.map(category => (
-                                <Button>
-                                    {category.name}
-                                </Button>
-                            ))}
-                        </Grid>
-                    </Grid>
-                </Box>
+                <Categories />
                 <br />
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant='h3' color='textSecondary'>
-                        Posts
+                        {titleCase(slug)}
                     </Typography>
                 </Box>
                 <Divider light variant="middle" />
                 <br />
                 <Grid container direction="row" justify="center">
-                    {data.map(post => (
+                    {response.found ? response.posts.map(post => (
                         <Grid item xs key={post.ID}>
-                            <Box style={{ display: 'flex', justifyContent: 'flex-start', marginLeft: 50 }}>
-                                <Link key={post.ID} style={{ textDecoration: 'none' }} to={{
-                                    pathname: "/spike_news/post",
-                                    state: {
-                                        title: post.title,
-                                        imageUrl: post.featured_image,
-                                        content: post.excerpt
-                                    }
-                                }} >
+                            <Box style={{display: 'flex', justifyContent: 'center'}}>
+                                <Link key={post.ID} style={{ textDecoration: 'none' }}
+                                    to={`/spike_news/post/${post.ID}`}
+                                >
                                     <PostiItem
                                         key={post.ID}
                                         title={post.title}
                                         imageUrl={post.featured_image}
-                                        datePosted={newCatDate(post.modified)}
+                                        datePosted={dateToString(post.modified)}
                                         subTitle={post.excerpt}
                                     />
                                 </Link>
                             </Box>
                         </Grid>
-                    ))
+                    )) : <p>No Post Found in this category</p>
                     }
                 </Grid>
             </div>

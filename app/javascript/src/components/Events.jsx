@@ -1,7 +1,7 @@
 import React from "react";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Fab from "@material-ui/core/Fab";
-import DateUtil from "../utils/dateutil.js";
+import { dateToString, dateTimeToString } from "./DateContainer.jsx";
 
 
 export default function Events({
@@ -24,12 +24,12 @@ export default function Events({
               entry.subject === 'user_feedback' ? `${entry.sentence} ${entry.data.note}` : entry.sentence
             }
           </td>
-          <td>{DateUtil.dateToString(new Date(entry.createdAt))}</td>
-          <td>{DateUtil.dateTimeToString(new Date(entry.createdAt))}</td>
+          <td>{dateToString(entry.createdAt)}</td>
+          <td>{dateTimeToString(new Date(entry.createdAt))}</td>
           <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? 'Digital' : 'Print'} Scan` : 'N/A'}</td>
           <td>{entry.subject === 'user_entry' && entry.data.timestamp
-            ? `${entry.data.timestamp && `${DateUtil.dateToString(new Date(Number(entry.data.timestamp)))} 
-              ${DateUtil.dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}</td>
+            ? `${entry.data.timestamp && `${dateToString(new Date(Number(entry.data.timestamp)))} 
+              ${dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}</td>
           <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
         </tr>
       ));
