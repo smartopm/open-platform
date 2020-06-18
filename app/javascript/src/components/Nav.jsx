@@ -185,8 +185,10 @@ export function Component({
 
 export function NewsNav({ children }) {
   return (
-    <AppBar>
-      <Toolbar style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: '#25c0b0' }}>
+    <AppBar style={{
+      display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', background: 'transparent', boxShadow: 'none'
+    }}>
+      <Toolbar >
         {children}
       </Toolbar>
     </AppBar>

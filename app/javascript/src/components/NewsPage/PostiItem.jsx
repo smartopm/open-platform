@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Box from "@material-ui/core/Box";
+import {truncateString} from '../../utils/helpers'
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -23,7 +24,8 @@ const useStyles = makeStyles(() => ({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 6
+        elevation: 6,
+        height: 500
 
     },
     media: {
@@ -58,10 +60,10 @@ export default function PostiItem({ title, imageUrl, datePosted, subTitle }) {
             />
             <CardContent>
                 <Typography variant="body2" color="textPrimary" component="h2">
-                    <div dangerouslySetInnerHTML={{ __html: subTitle }} />
+                    <div dangerouslySetInnerHTML={{ __html: truncateString(subTitle, 100) }} />
                 </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions >
                 <Box
                     style={{
                         display: "flex",
@@ -73,7 +75,7 @@ export default function PostiItem({ title, imageUrl, datePosted, subTitle }) {
                 >
                     <Typography color="textSecondary" component="p">
                         Read More
-          </Typography>
+                    </Typography>
                     <ChevronRightIcon />
                 </Box>
             </CardActions>

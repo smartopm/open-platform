@@ -7,10 +7,10 @@ export default function NewsPostPage() {
     console.log(state)
     return (
 
-        <div style={{height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1}}>
+        <div style={{ height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1 }}>
             <Container>
                 <Box >
-                    <Card style={{marginTop: 100}}>
+                    <Card style={{ marginTop: 100 }}>
                         <CardMedia style={{
                             height: 0,
                             width: "100%",
@@ -22,12 +22,11 @@ export default function NewsPostPage() {
                             </Typography>
 
                             <Divider light variant='middle' />
-
-                            <div dangerouslySetInnerHTML={{ __html: state.content }} />
-
                         </CardContent>
+                        
                     </Card>
                 </Box>
+                <div dangerouslySetInnerHTML={{ __html: state.content }} />
             </Container>
         </div>
 
