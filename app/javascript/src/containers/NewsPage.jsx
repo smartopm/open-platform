@@ -11,7 +11,7 @@ import { titleCase } from '../utils/helpers'
 
 export default function NewsPage() {
     const {slug} = useParams()
-    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug}`)
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     // TODO: @olivier ==> add better error page and loading component here
     if (error) {
         return error
@@ -19,7 +19,6 @@ export default function NewsPage() {
     if (!response) {
         return 'loading'
     }
-    console.log(response)
     return (
         <React.Fragment>
             <Categories />
@@ -28,7 +27,7 @@ export default function NewsPage() {
                 <br />
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant='h3' color='textSecondary'>
-                        {titleCase(slug)}
+                        {titleCase(slug || 'Posts')}
                     </Typography>
                 </Box>
                 <Divider light variant="middle" />
