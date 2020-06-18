@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardMedia, CardContent, Typography, Divider, Box, Container } from '@material-ui/core'
-
+import PropTypes from 'prop-types'
 export default function PostContent({response}) {
     return (
         <div style={{ height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1 }}>
@@ -28,4 +28,12 @@ export default function PostContent({response}) {
             </Container>
         </div>
     )
+}
+
+PostContent.propType = {
+    response: PropTypes.shape({
+        post_thumbnail: PropTypes.object,
+        title: PropTypes.string,
+        content: PropTypes.string,
+    }),
 }
