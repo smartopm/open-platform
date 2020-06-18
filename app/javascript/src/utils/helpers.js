@@ -30,6 +30,14 @@ export function truncateString(message, count) {
   return `${message.substring(0, count)}...`
 }
 
+/**
+ * 
+ * @param {string} word string to be uppercased
+ * @description makes the first letter of a string to uppercase
+ */
+export function titleCase(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
 const cleanedFields = {
   userType: 'User Type',
   phoneNumber: 'Phone Number',

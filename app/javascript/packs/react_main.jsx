@@ -69,6 +69,10 @@ import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 import Campaign from '../src/containers/Campaign'
 import Scan from '../src/containers/Scan.jsx'
+import Posts from '../src/containers/Posts/Posts'
+import NewsPage from '../src/containers/Posts/NewsPage'
+import PostPage from '../src/containers/Posts/PostPage'
+
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -247,6 +251,11 @@ const App = () => {
                     <Route path="/timesheet/:id" exact component={EmployeeLogs} />
 
                     <Route path="/client_request_from" exact component={ClientRequestForm} />
+
+                    {/* Spike page */}
+                    <Route path="/spike_news" exact component={NewsPage} />
+                    <Route path="/spike_news/:slug" exact component={Posts} />
+                    <Route path="/spike_news/post/:id" exact component={PostPage} />
 
                     <AdminRoutes>
                       <Switch>
