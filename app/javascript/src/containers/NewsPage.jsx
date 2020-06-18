@@ -2,20 +2,20 @@ import React from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import backgroundImage from '../../../assets/images/news_background.jpg'
 import PostiItem from '../components/NewsPage/PostiItem'
-import { newCatDate } from '../components/DateContainer'
+import { dateToString } from '../components/DateContainer'
 import { Link } from 'react-router-dom'
+import { useFetch } from '../utils/customHooks'
 
 export default function NewsPage() {
-    const [data, setData] = React.useState([])
-    React.useEffect(() => {
-        getPosts()
-    }, [])
-    const getPosts = async () => {
-        const res = await fetch('https://public-api.wordpress.com/rest/v1.1/sites/realatorblog.wordpress.com/posts')
-        const da = await res.json()
-        setData(da.posts)
+    const {response, error} = useFetch('https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts', {})
+    
+    if (error) {
+        return error
     }
-
+    if (!response) {
+        return 'loading'
+    }
+    console.log(response)
     return (
         <React.Fragment>
             <div style={{ flex: 1, height: '100vh', width: '100%', overflowX: 'auto' }} >
@@ -29,7 +29,7 @@ export default function NewsPage() {
                 <Divider light variant="middle" />
                 <br />
                 <Grid container direction="row" justify="center">
-                    {data.map(post => (
+                    {response.posts.map(post => (
                         <Grid item xs key={post.ID}>
                             <Box style={{display: 'flex', justifyContent: 'center'}}>
                                 <Link key={post.ID} style={{ textDecoration: 'none' }} to={{
@@ -44,7 +44,7 @@ export default function NewsPage() {
                                         key={post.ID}
                                         title={post.title}
                                         imageUrl={post.featured_image}
-                                        datePosted={newCatDate(post.modified)}
+                                        datePosted={dateToString(post.modified)}
                                         subTitle={post.excerpt}
                                     />
                                 </Link>

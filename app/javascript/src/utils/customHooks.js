@@ -48,3 +48,31 @@ export function useWindowDimensions() {
 
   return windowDimensions
 }
+
+
+/**
+ * 
+ * @param {string} url API endpoint to fetch from
+ * @param {object} options include headers and http method here [GET, POST, ...]
+ * @returns {object} response and error
+ * 
+ */
+export function useFetch(url, options){
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null);
+  // we might not need the options anymore since we don't need auth for GET(which is the default)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(url, options);
+        const json = await res.json();
+        setResponse(json);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+  return { response, error };
+};
