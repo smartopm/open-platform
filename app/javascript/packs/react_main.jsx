@@ -252,7 +252,9 @@ const App = () => {
 
                     {/* Spike page */}
                     <Route path="/spike_news" exact component={NewsPage} />
+                    <Route path="/spike_news/:id" exact component={NewsPage} />
                     <Route path="/spike_news/post" exact component={NewsPostPage} />
+
                     <AdminRoutes>
                       <Switch>
                         <Route path="/client_request_from" exact component={ClientRequestForm} />
