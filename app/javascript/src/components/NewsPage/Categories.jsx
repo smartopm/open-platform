@@ -10,10 +10,9 @@ export default function Categories() {
     if (error) {
         return error
     }
-    if (!response) {
+    if (!response || !response.found) {
         return 'loading'
     }
-
     return (
         <Grid container spacing={3}>
             {

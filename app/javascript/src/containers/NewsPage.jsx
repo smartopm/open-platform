@@ -7,15 +7,16 @@ import { Link, useParams } from 'react-router-dom'
 import { useFetch } from '../utils/customHooks'
 import Categories from '../components/NewsPage/Categories'
 import { wordpressEndpoint } from '../utils/constants'
+import { titleCase } from '../utils/helpers'
 
 export default function NewsPage() {
-    const {id} = useParams()
-    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${id}`)
+    const {slug} = useParams()
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug}`)
     // TODO: @olivier ==> add better error page and loading component here
     if (error) {
         return error
     }
-    if (!response) {
+    if (!response || !response.found) {
         return 'loading'
     }
     console.log(response)
@@ -27,7 +28,7 @@ export default function NewsPage() {
                 <br />
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant='h3' color='textSecondary'>
-                        Posts
+                        {titleCase(slug)}
                     </Typography>
                 </Box>
                 <Divider light variant="middle" />
@@ -36,14 +37,9 @@ export default function NewsPage() {
                     {response.posts.map(post => (
                         <Grid item xs key={post.ID}>
                             <Box style={{display: 'flex', justifyContent: 'center'}}>
-                                <Link key={post.ID} style={{ textDecoration: 'none' }} to={{
-                                    pathname: "/spike_news/post",
-                                    state: {
-                                        title: post.title,
-                                        imageUrl: post.featured_image,
-                                        content: post.excerpt
-                                    }
-                                }} >
+                                <Link key={post.ID} style={{ textDecoration: 'none' }}
+                                    to={`/spike_news/post/${post.ID}`}
+                                >
                                     <PostiItem
                                         key={post.ID}
                                         title={post.title}
@@ -56,8 +52,6 @@ export default function NewsPage() {
                         </Grid>
                     ))
                     }
-                    {/* <Box style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }} >
-                    </Box> */}
                 </Grid>
             </div>
         </React.Fragment >

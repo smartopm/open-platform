@@ -57,21 +57,23 @@ export function useWindowDimensions() {
  * @returns {object} response and error
  * 
  */
-export function useFetch(url, options={}){
-  const [response, setResponse] = useState(null);
+export function useFetch(url) {
+  const [response, setData] = useState({});
   const [error, setError] = useState(null);
-  // we might not need the options anymore since we don't need auth for GET(which is the default)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(url, options);
-        const json = await res.json();
-        setResponse(json);
+        const result = await fetch(url);
+        const json = await result.json();
+        setData(json);
       } catch (error) {
         setError(error);
       }
     };
     fetchData();
-  },[url, options]);
+  }, [url]);
   return { response, error };
-};
+}
+
+
