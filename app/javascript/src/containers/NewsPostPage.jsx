@@ -24,7 +24,7 @@ export default function NewsPostPage() {
                             width: "100%",
                             paddingTop: "50%",
                         }} image={response.post_thumbnail?.URL} />
-                        <CardContent>
+                        <CardContent >
                             <Typography variant='h3' color='textSecondary'>
                                 <strong>{response.title}</strong>
                             </Typography>
