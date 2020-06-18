@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react'
 import { useParams } from 'react-router-dom'
-import { wordpressEndpoint } from '../utils/constants'
-import { useFetch } from '../utils/customHooks'
-import Categories from '../components/NewsPage/Categories'
-import PostContent from '../components/NewsPage/PostContent'
+import { wordpressEndpoint } from '../../utils/constants'
+import { useFetch } from '../../utils/customHooks'
+import Categories from '../../components/NewsPage/Categories'
+import PostContent from '../../components/NewsPage/PostContent'
 
-export default function NewsPostPage() {
+export default function PostPage() {
     const { id } = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/${id}`)
     // TODO: @olivier ==> add better error page and loading component here

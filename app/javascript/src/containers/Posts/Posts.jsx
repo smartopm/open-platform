@@ -1,15 +1,15 @@
 import React from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
-import backgroundImage from '../../../assets/images/news_background.jpg'
-import PostiItem from '../components/NewsPage/PostiItem'
-import { dateToString } from '../components/DateContainer'
+import backgroundImage from '../../../../assets/images/news_background.jpg'
+import PostiItem from '../../components/NewsPage/PostiItem'
+import { dateToString } from '../../components/DateContainer'
 import { Link, useParams } from 'react-router-dom'
-import { useFetch } from '../utils/customHooks'
-import Categories from '../components/NewsPage/Categories'
-import { wordpressEndpoint } from '../utils/constants'
-import { titleCase } from '../utils/helpers'
+import { useFetch } from '../../utils/customHooks'
+import Categories from '../../components/NewsPage/Categories'
+import { wordpressEndpoint } from '../../utils/constants'
+import { titleCase } from '../../utils/helpers'
 
-export default function NewsPage() {
+export default function Posts() {
     const {slug} = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     // TODO: @olivier ==> add better error page and loading component here

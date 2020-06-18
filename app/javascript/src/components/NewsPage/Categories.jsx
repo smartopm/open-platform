@@ -13,10 +13,13 @@ export default function Categories() {
     if (!response || !response.found) {
         return 'loading'
     }
+    // filter out news categories
+    const categories = response.categories.filter(cat => cat.slug !== 'news')
+
     return (
         <Grid container spacing={3}>
             {
-                response.categories.map(cat => (
+                categories.map(cat => (
                     <Grid key={cat.ID} item xs={6} sm={3}>
                         <Link to={`/spike_news/${cat.slug}`}>{cat.name}</Link>
                     </Grid>
