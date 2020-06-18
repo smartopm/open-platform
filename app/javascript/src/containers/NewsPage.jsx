@@ -16,7 +16,7 @@ export default function NewsPage() {
     if (error) {
         return error
     }
-    if (!response || !response.found) {
+    if (!response) {
         return 'loading'
     }
     console.log(response)
@@ -34,7 +34,7 @@ export default function NewsPage() {
                 <Divider light variant="middle" />
                 <br />
                 <Grid container direction="row" justify="center">
-                    {response.posts.map(post => (
+                    {response.found ? response.posts.map(post => (
                         <Grid item xs key={post.ID}>
                             <Box style={{display: 'flex', justifyContent: 'center'}}>
                                 <Link key={post.ID} style={{ textDecoration: 'none' }}
@@ -50,7 +50,7 @@ export default function NewsPage() {
                                 </Link>
                             </Box>
                         </Grid>
-                    ))
+                    )) : <p>No Post Found in this category</p>
                     }
                 </Grid>
             </div>

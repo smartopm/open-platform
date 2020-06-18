@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Card, CardMedia, CardContent, Typography, Divider, Box, Container } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { wordpressEndpoint } from '../utils/constants'
 import { useFetch } from '../utils/customHooks'
+import Categories from '../components/NewsPage/Categories'
 
 export default function NewsPostPage() {
     const { id } = useParams()
@@ -15,6 +16,9 @@ export default function NewsPostPage() {
         return 'loading'
     }
     return (
+        <Fragment>
+            <Categories />
+       
         <div style={{height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1}}>
             <Container>
                 <Box >
@@ -23,7 +27,8 @@ export default function NewsPostPage() {
                             height: 0,
                             width: "100%",
                             paddingTop: "50%",
-                        }} image={response.post_thumbnail?.URL} />
+                        }}
+                        image={response.post_thumbnail?.URL} />
                         <CardContent >
                             <Typography variant='h3' color='textSecondary'>
                                 <strong>{response.title}</strong>
@@ -38,6 +43,6 @@ export default function NewsPostPage() {
                 </Box> 
             </Container>
         </div>
-
+    </Fragment>
     )
 }
