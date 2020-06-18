@@ -7,108 +7,11 @@ import { Campaigns } from "../graphql/queries";
 export default function CampaignList() {
     
     const {data, error, loading} = useQuery(Campaigns)
-
     if (loading) return <p>loading</p>
-    console.log(data)
+    
+    console.log(data.campaigns.map(c => c.name))
 
-    return(
-        <div>
-              {data.result.map(campaign =>{
-        
-           
-        
- <Fragment 
-            // key={event.id}
-            >
-            <div className="container">
-              <div className="row justify-content-between">
-                <div className="col-xs-8">
-                  {/* <span className={css(styles.logTitle)}>{visitorName}</span> */}
-                <p>one</p>
-                </div>
-                <div className="col-xs-4">
-                  <span className={css(styles.access)}>
-                    {/* <strong>{accessStatus} </strong> */}
-                    access
-                  </span>
-                  <span className={css(styles.subTitle)}>
-                    {/* {dateToString(event.createdAt)} */}
-                    the date 
-    
-                  </span>
-                </div>
-              </div>
-              <div className="row justify-content-between">
-                <div className="col-xs-8">
-                  <span className={css(styles.subTitle)}>
-                      reason
-                      </span>
-                </div>
-                <div className="col-xs-4">
-                  <span className={css(styles.subTitle)}>
-                    {/* {dateTimeToString(new Date(event.createdAt))} */}
-                    the other date
-                  </span>
-                </div>
-              </div>
-              <br />
-              <div className="row justify-content-between">
-                <div className="col-xs-8">
-                  <span className={css(styles.subTitle)}>
-                    {/* {event.actingUser && event.actingUser.name} */}
-                    The title
-                  </span>
-                </div>
-                <div className="col-xs-4">
-    
-                  {/* Temperature status placeholder */}
-                  {/* <span className={css(styles.subTitle)}> {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}</span>
-    
-                  <span className={css(styles.subTitle)}>
-                    {source !== 'Scan' && authState.user.userType === 'admin' && !enrolled ? (
-                      <Fragment>
-                        <span
-                          style={{
-                            cursor: 'pointer',
-                            color: '#009688'
-                          }}
-                          onClick={() => enrollUser(event.refId)}
-                        >
-                          Enroll user{' '}
-                        </span>
-                        | {source}
-                      </Fragment>
-                    ) : source === 'Scan' && isDigital !== null ? (
-                      `${isDigital ? 'Digital' : 'Print'} Scan`
-                    ) : (
-                          source
-                        )}{' '}
-                    |{' '}*/}
-                    <span
-                      style={{
-                        cursor: 'pointer',
-                        color: '#009688'
-                      }}
-                      onClick={() => {
-                        routeToAction(event)
-                      }}
-                    > 
-                      More Details
-                    </span>
-                  {/* </span> */}
-                </div>
-              </div>
-              <br />
-            </div>
-    
-            <div className="border-top my-3" />
-          </Fragment>
-    })}
-        </div>
-    )
-  
-
-    
+    return <div>{data.campaigns.map(c => c.name)}</div>
 }
 
 const styles = StyleSheet.create({
