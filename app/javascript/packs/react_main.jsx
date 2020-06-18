@@ -67,7 +67,7 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
-
+import Campaign from '../src/containers/Campaign'
 import Scan from '../src/containers/Scan.jsx'
 import NewsPage from '../src/containers/NewsPage'
 import NewsPostPage from '../src/containers/NewsPostPage'
@@ -233,6 +233,7 @@ const App = () => {
                     />
 
                     <Route path="/message/:id" component={UserMessages} />
+                    <Route path="/campaign" component={Campaign} />
 
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
