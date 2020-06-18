@@ -7,23 +7,23 @@ RSpec.describe Mutations::Campaign do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
     let(:query) do
       <<~GQL
-      mutation campaignCreate(
-        $name: String!
-        $message: String!
-        $batchTime: String!
-        $userIdList: String!
-      ) {
-        campaignCreate(
-          name: $name
-          message: $message
-          batchTime: $batchTime
-          userIdList: $userIdList
-          ){
-            campaign{
-              name
+        mutation campaignCreate(
+          $name: String!
+          $message: String!
+          $batchTime: String!
+          $userIdList: String!
+        ) {
+          campaignCreate(
+            name: $name
+            message: $message
+            batchTime: $batchTime
+            userIdList: $userIdList
+            ){
+              campaign{
+                name
+              }
             }
-          } 
-        }
+          }
       GQL
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Mutations::Campaign do
         name: 'This is a Campaign',
         message: 'Visiting',
         batchTime: '17/06/2020 03:49',
-        userIdList: '23fsafsafa1147,asdfasdfsefsdfsfa,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7'
+        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -43,5 +43,4 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('errors')).to be_nil
     end
   end
-  
 end
