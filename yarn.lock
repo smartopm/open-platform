@@ -2221,6 +2221,7 @@ babel-preset-jest@^24.9.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
@@ -2236,6 +2237,8 @@ bail@^1.0.0:
 
 =======
 >>>>>>> 0420225258348908b30edf6980e051f2c57a466b
+=======
+>>>>>>> c22cf3e95a55a5973b8ced887152e00d8df18079
 =======
 >>>>>>> c22cf3e95a55a5973b8ced887152e00d8df18079
 balanced-match@^1.0.0:

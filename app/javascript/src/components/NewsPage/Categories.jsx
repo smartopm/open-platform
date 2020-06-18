@@ -13,6 +13,7 @@ export default function Categories() {
     if (!response || !response.found) {
         return 'loading'
     }
+<<<<<<< HEAD
     return (
 
         <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
@@ -29,5 +30,20 @@ export default function Categories() {
             </Grid>
         </Box>
 
+=======
+    // filter out news categories
+    const categories = response.categories.filter(cat => cat.slug !== 'news')
+
+    return (
+        <Grid container spacing={3}>
+            {
+                categories.map(cat => (
+                    <Grid key={cat.ID} item xs={6} sm={3}>
+                        <Link to={`/spike_news/${cat.slug}`}>{cat.name}</Link>
+                    </Grid>
+                ))
+            }
+        </Grid>
+>>>>>>> c22cf3e95a55a5973b8ced887152e00d8df18079
     )
 }

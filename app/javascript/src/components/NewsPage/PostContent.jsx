@@ -3,13 +3,13 @@ import { Card, CardMedia, CardContent, Typography, Divider, Box, Container } fro
 import PropTypes from 'prop-types'
 export default function PostContent({response}) {
     return (
-        <div style={{ minHeight: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1 }}>
+        <div style={{ height: '100vh', width: '100%', backgroundColor: '#F1F1F1', flex: 1 }}>
             <Container>
                 <Box >
                     <Card style={{ marginTop: 100 }}>
                         <CardMedia style={{
                             height: 0,
-                            width: "100%",  
+                            width: "100%",
                             paddingTop: "50%",
                         }}
                             image={response.post_thumbnail?.URL} />
@@ -23,9 +23,8 @@ export default function PostContent({response}) {
                             <div dangerouslySetInnerHTML={{ __html: response.content }} />
 
                         </CardContent>
-                        
                     </Card>
-                </Box> 
+                </Box>
             </Container>
         </div>
     )
