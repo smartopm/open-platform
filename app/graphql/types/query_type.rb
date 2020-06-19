@@ -89,11 +89,23 @@ module Types
       description 'Get a list of all Campaigns'
   end
   
-  def campaigns()
-      raise GraphQL::ExecutionError,'Unauthorized' if context[:current_user].blank?
+  def campaigns
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
       com_id = context[:current_user].community_id
       campaign = Campaign.where(community_id: com_id).offset(0).limit(100)
+      campaign
+  end
+
+    field :campaign, Types::CampaignType, null: true do
+      description 'Find Campaign by Id'
+      argument :id, ID, required: true
+  end
+  
+  def campaign(id:)
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+      campaign = context[:current_user].community.campaigns.find_by(id: id)
       campaign
   end
   end

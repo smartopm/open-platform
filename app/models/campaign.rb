@@ -4,6 +4,7 @@
 class Campaign < ApplicationRecord
   belongs_to :community
   has_many :messages, dependent: :restrict_with_exception
+  default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids
     messages.collect(&:user_id)
@@ -24,6 +25,20 @@ class Campaign < ApplicationRecord
     return User.where(state: 'valid').where(id: l) if l.present?
 
     []
+  end
+
+  def update_campaign(**vals)
+    campaign = Campaign.find(vals[:id])
+    return if campaign.nil?
+    
+    campaign.update!(vals)
+      # campaign.name = vals[:name]
+      # campaign.message = vals[:message]
+      # campaign.user_id_list = vals[:user_id_list]
+      # campaign.batch_time = vals[:batch_time]
+      # campaign.save!
+    # end
+    campaign
   end
 
   def send_messages(campaign_user, acc)

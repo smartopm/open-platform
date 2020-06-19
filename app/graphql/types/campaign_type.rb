@@ -3,6 +3,7 @@
 module Types
     # CampaignType
     class CampaignType < Types::BaseObject
+      field :id, ID, null: false
       field :community_id, ID, null: false
       field :name, String, null: false
       field :message, String, null: false

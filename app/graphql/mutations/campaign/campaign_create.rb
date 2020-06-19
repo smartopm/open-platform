@@ -24,8 +24,6 @@ module Mutations
       end
 
       def authorized?(_vals)
-        # allowing all users to create clients
-        # TODO: only admins
         current_user = context[:current_user]
         raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 

@@ -44,5 +44,6 @@ module Types
 
     # campaigns
     field :campaign_create, mutation: Mutations::Campaign::CampaignCreate
+    field :campaign_update, mutation: Mutations::Campaign::CampaignUpdate
   end
 end

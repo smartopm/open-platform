@@ -438,10 +438,40 @@ export const CampaignCreate = gql`
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
-      ){
-        campaign{
-          name
-        }
-      } 
+    ) {
+      campaign {
+        name
+      }
     }
+  }
+`
+export const CampaignUpdate = gql`
+  mutation campaignCreate(
+    $id: ID!
+    $name: String!
+    $message: String!
+    $batchTime: String!
+    $userIdList: String!
+  ) {
+    campaignCreate(
+      id: $id
+      name: $name
+      message: $message
+      batchTime: $batchTime
+      userIdList: $userIdList
+    ) {
+      campaign {
+        batchTime
+        communityId
+        createdAt
+        endTime
+        id
+        message
+        name
+        startTime
+        updatedAt
+        userIdList
+      }
+    }
+  }
 `
