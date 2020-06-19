@@ -12,8 +12,7 @@ export function ShareButton({ url }) {
             style={{
                 position: 'fixed',
                 bottom: 24,
-                right: 57,
-                backgroundColor: '#25c0b0'
+                right: 57
             }}
             color="primary"
             onClick={shareFacebook}
