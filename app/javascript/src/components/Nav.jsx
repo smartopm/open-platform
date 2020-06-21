@@ -1,5 +1,7 @@
 import React, { useContext, Fragment } from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import { StyleSheet, css } from 'aphrodite'
 import Avatar from '@material-ui/core/Avatar'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -102,13 +104,13 @@ export function Component({
             className={`${css(styles.userAvatar)}`}
           />
         ) : (
-          <Avatar
-            alt="Default Avatar"
-            onClick={toggleDrawer}
-            className={`${css(styles.userAvatar)}`}
-            src={avatarUrl({ user: authState.user })}
-          />
-        )}
+            <Avatar
+              alt="Default Avatar"
+              onClick={toggleDrawer}
+              className={`${css(styles.userAvatar)}`}
+              src={avatarUrl({ user: authState.user })}
+            />
+          )}
         <NotificationsNoneOutlinedIcon
           className={`${css(
             authState.user.userType === 'security_guard'
@@ -179,6 +181,19 @@ export function Component({
       </nav>
     </>
   )
+}
+
+export function NewsNav({ children }) {
+  return (
+    <AppBar style={{
+      display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', background: 'transparent', boxShadow: 'none'
+    }}>
+      <Toolbar >
+        {children}
+      </Toolbar>
+    </AppBar>
+  )
+
 }
 
 Component.defaultProps = {

@@ -94,7 +94,7 @@ export const UpdatePendingUserMutation = gql`
     $name: String!
     $requestReason: String!
     $vehicle: String
-     $userType: String!
+    $userType: String!
   ) {
     result: userUpdate(
       id: $id
@@ -386,29 +386,29 @@ export const MessageCreate = gql`
 `
 
 export const TemperateRecord = gql`
-         mutation temperatureUpdate(
-           $refId: ID!
-           $temp: String!
-           $refName: String!
-           $refType: String!
-         ) {
-           temperatureUpdate(
-             refId: $refId
-             temp: $temp
-             refName: $refName
-             refType: $refType
-           ) {
-             eventLog {
-               sentence
-             }
-           }
-         }
-       `
+  mutation temperatureUpdate(
+    $refId: ID!
+    $temp: String!
+    $refName: String!
+    $refType: String!
+  ) {
+    temperatureUpdate(
+      refId: $refId
+      temp: $temp
+      refName: $refName
+      refType: $refType
+    ) {
+      eventLog {
+        sentence
+      }
+    }
+  }
+`
 // Start shift
 // End shift
 export const ManageShiftMutation = gql`
   mutation manageShift($userId: ID!, $eventTag: String!) {
-    manageShift(userId: $userId, eventTag: $eventTag){
+    manageShift(userId: $userId, eventTag: $eventTag) {
       timeSheet {
         id
       }
@@ -417,11 +417,31 @@ export const ManageShiftMutation = gql`
 `
 
 export const UpdateLogMutation = gql`
-         mutation activityLogUpdateLog($refId: ID!) {
-           activityLogUpdateLog(refId: $refId) {
-             eventLog {
-               data
-             }
-           }
-         }
-       `
+  mutation activityLogUpdateLog($refId: ID!) {
+    activityLogUpdateLog(refId: $refId) {
+      eventLog {
+        data
+      }
+    }
+  }
+`
+
+export const CampaignCreate = gql`
+  mutation campaignCreate(
+    $name: String!
+    $message: String!
+    $batchTime: String!
+    $userIdList: String!
+  ) {
+    campaignCreate(
+      name: $name
+      message: $message
+      batchTime: $batchTime
+      userIdList: $userIdList
+      ){
+        campaign{
+          name
+        }
+      } 
+    }
+`
