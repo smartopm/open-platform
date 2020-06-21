@@ -63,6 +63,18 @@ RSpec.describe User, type: :model do
     expect(mess).to eql true
   end
 
+  it 'should update the message when it exists ' do
+    message = admin.construct_message(
+      receiver: '260971500748723',
+      message: 'Admin testing out message',
+      user_id: current_user.id,
+      source_system_id: msg_id,
+    )
+    message.save!
+    mess = EmailMsg.message_update?(users_emails[0])
+    expect(mess).to eql true
+  end
+
   it 'should check for message existence false when not exist' do
     message = admin.construct_message(
       receiver: '2609715007490',

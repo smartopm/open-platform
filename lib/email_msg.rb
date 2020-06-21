@@ -81,6 +81,18 @@ class EmailMsg
     save_sendgrid_messages(name, emails, 'mutale@doublegdp.com')
   end
 
+  # attempt to synchronize
+  def self.message_update?(email)
+    message = Message.find_by(source_system_id: email['msg_id'])
+    return if message.nil?
+
+    # we could override the activerecord timestamp by setting updated_at to last_event_time
+    message.update(
+      is_read: (email['opens_count']).positive?,
+      read_at: email['last_event_time'],
+    )
+  end
+
   # call this method from message model with the community_id
   # We can also add this to the scheduler as well if we have community_id
   # rubocop:disable Metrics/MethodLength
@@ -91,11 +103,15 @@ class EmailMsg
     emails.each do |email|
       user = find_user(email['to_email'], community_name)
       next if user.nil?
-      next if message_exists?(email['msg_id'], user.id)
+
+      if message_exists?(email['msg_id'], user.id)
+        message_update?(email)
+        next
+      end
 
       message = Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
-        read_at: email['last_event_time'],
+        read_at: (email['opens_count']).positive? ? email['last_event_time'] : nil,
         user_id: user.id,
         created_at: email['last_event_time'],
         message: email['subject'], category: 'email', status: email['status'],
