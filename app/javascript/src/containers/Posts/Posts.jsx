@@ -1,6 +1,6 @@
 import React from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
-import PostiItem from '../../components/NewsPage/PostiItem'
+import PostItem from '../../components/NewsPage/PostItem'
 import { dateToString } from '../../components/DateContainer'
 import { Link, useParams } from 'react-router-dom'
 import { useFetch } from '../../utils/customHooks'
@@ -41,7 +41,7 @@ export default function Posts() {
                                 <Link key={post.ID} style={{ textDecoration: 'none' }}
                                     to={`/spike_news/post/${post.ID}`}
                                 >
-                                    <PostiItem
+                                    <PostItem
                                         key={post.ID}
                                         title={post.title}
                                         imageUrl={post.featured_image}
