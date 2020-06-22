@@ -223,13 +223,7 @@ export default function Homepage({ authState }) {
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
       access: [
-        'admin',
-        'client',
-        'security_guard',
-        'prospective_client',
-        'contractor',
-        'resident',
-        'visitor'
+        'admin'
       ]
     }
   ]
