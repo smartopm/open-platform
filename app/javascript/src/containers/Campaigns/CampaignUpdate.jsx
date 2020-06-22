@@ -10,6 +10,8 @@ import { DelimitorFormator } from '../../utils/helpers'
 import { saniteError } from '../../utils/helpers'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
+import { dateTimeToString, dateToString } from '../../components/DateContainer'
+import Nav from '../../components/Nav'
 
 export default function UpdateCampaign({ match }) {
   const authState = useContext(AuthStateContext)
@@ -17,15 +19,16 @@ export default function UpdateCampaign({ match }) {
     variables: { id: match.params.id }
   })
   const [campaign] = useMutation(CampaignUpdate)
-  
-  const [formData, setFormData] =useState({
-    id: "",
-    name:"",
-    message:"",
-    batchTime :"",
-    userIdList:"",
+
+  const [formData, setFormData] = useState({
+    id: '',
+    name: '',
+    message: '',
+    batchTime: '',
+    userIdList: '',
     loaded: false
   })
+  const [batchTime, setBatchTime] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -34,16 +37,18 @@ export default function UpdateCampaign({ match }) {
   }
   if (loading) return <Loading />
 
-  if(!formData.loaded && data){
-    setFormData({ ...data.campaign, loaded: true})
+  if (!formData.loaded && data) {
+    setFormData({ ...data.campaign, loaded: true })
   }
 
   function handleInputChange(e) {
-    const { name, value } = e.target;
+    console.log(formData.message)
+
+    const { name, value } = e.target
     setFormData({
-        ...formData,
-        [name]: value
-      });
+      ...formData,
+      [name]: value
+    })
   }
 
   function handleSubmit(e) {
@@ -52,8 +57,14 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
-
-    campaign({ variables: formData })
+    const campaingData = {
+      id: formData.id,
+      name: formData.name,
+      message: formData.message,
+      batchTime: batchTime,
+      userIdList: formData.userIdList
+    }
+    campaign({ variables: campaingData })
       .then(e => {
         setIsSubmitted(true)
       })
@@ -67,83 +78,91 @@ export default function UpdateCampaign({ match }) {
     setFormData({
       ...formData,
       userIdList: userIds.toString()
-    });
+    })
   }
 
-
   return (
-    <div className="container">
-      <form
-        onSubmit={e => {
-          handleSubmit(e)
-        }}
-      >
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">
-            Campaign Name
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            onChange={handleInputChange}
-            value={formData.name}
-            name="name"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <TextField
-            label="Message"
-            rows={5}
-            multiline
-            required
-            className="form-control"
-            value={formData.message }
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <TextField
-            label="User ID List"
-            rows={5}
-            multiline
-            required
-            className="form-control"
-            value={formData.userIdList }
-            onChange={e => handleUserIDList(e, e.target.value)}
-          />
-        </div>
-        <br />
-        <div>
-          <label className="bmd-label-static" htmlFor="firstName">
-            {data.campaign.batchTime}
-          </label>
+    <>
+      <Nav navName="Campaign Udate" menuButton="back" backTo="/campaigns" />
+      <div className="container">
+        <form
+          onSubmit={e => {
+            handleSubmit(e)
+          }}
+        >
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="firstName">
+              Campaign Name
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              onChange={handleInputChange}
+              value={formData.name}
+              name="name"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <TextField
+              label="Message"
+              name="message"
+              rows={5}
+              multiline
+              required
+              className="form-control"
+              value={formData.message}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div>
+            <TextField
+              label="User ID List"
+              rows={5}
+              multiline
+              required
+              className="form-control"
+              value={formData.userIdList}
+              onChange={e => handleUserIDList(e, e.target.value)}
+            />
+          </div>
           <br />
-          <DateAndTimePickers
-            label="Start Time"
-            required
-            selectedDateTime={formData.batchTime}
-            handleDateChange={handleInputChange}
-          />
-        </div>
-        <div className="d-flex row justify-content-center">
-          <Button
-            variant="contained"
-            type="submit"
-            className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-          >
-            <span>Submit</span>
-          </Button>
-        </div>
-        <br />
-        <div className="d-flex row justify-content-center">
-          {Boolean(errorMsg.length) && (
-            <p className="text-danger text-center">{saniteError(errorMsg)}</p>
-          )}
-          {isSubmitted && <p>Campaign has been submitted</p>}
-        </div>
-      </form>
-    </div>
+          <div>
+            <label className={css(styles.access)} htmlFor="batchTime">
+              <strong>
+                Batch Time: {dateTimeToString(new Date(formData.batchTime))}
+              </strong>
+              <br />
+              <strong>Batch Date: {dateToString(formData.batchTime)}</strong>
+            </label>
+            <br />
+            <br />
+            <DateAndTimePickers
+              label="Start Time"
+              required
+              selectedDateTime={batchTime}
+              handleDateChange={e => setBatchTime(e.target.value)}
+            />
+          </div>
+          <div className="d-flex row justify-content-center">
+            <Button
+              variant="contained"
+              type="submit"
+              className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+            >
+              <span>Update</span>
+            </Button>
+          </div>
+          <br />
+          <div className="d-flex row justify-content-center">
+            {Boolean(errorMsg.length) && (
+              <p className="text-danger text-center">{saniteError(errorMsg)}</p>
+            )}
+            {isSubmitted && <p>Campaign has been submitted</p>}
+          </div>
+        </form>
+      </div>
+    </>
   )
 }
 const styles = StyleSheet.create({
@@ -155,5 +174,11 @@ const styles = StyleSheet.create({
     boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center'
+  },
+  access: {
+    color: '#1f2026',
+    fontSize: 14,
+    letterSpacing: 0.17,
+    fontWeight: 400
   }
 })

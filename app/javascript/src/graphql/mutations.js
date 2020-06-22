@@ -446,14 +446,14 @@ export const CampaignCreate = gql`
   }
 `
 export const CampaignUpdate = gql`
-  mutation campaignCreate(
+  mutation campaignUpdate(
     $id: ID!
     $name: String!
     $message: String!
     $batchTime: String!
     $userIdList: String!
   ) {
-    campaignCreate(
+    campaignUpdate(
       id: $id
       name: $name
       message: $message
