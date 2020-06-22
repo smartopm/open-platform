@@ -2,8 +2,10 @@ import React from 'react'
 import { Button } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
+import { useHistory } from 'react-router';
 
 export default function WelcomePage() {
+    const history = useHistory()
     return (
         <>
             
@@ -15,11 +17,19 @@ export default function WelcomePage() {
                 <CustomButton title="Book a tour" />
                 <CustomButton title="Become a client" />
                 <br />
-                <br/>
+                <br />
+                <Button
+                    variant="contained"
+                    className={`btn ${css(styles.getStartedButton)}`}
+                    onClick={() => history.push("/login")}
+                >
+                    Get Started
+                 </Button>
                 <p className={css(styles.mainText)} data-testid="maintext">
                     Our house plans are designed by among the best architectural firms on the African 
                     continent and will be made available to plot owners.
                 </p>
+ 
                 <div className="centered" data-testid="maintext-centered">
                     <h2 >Its not just a house, its a way of life</h2>
                 </div>
@@ -65,5 +75,12 @@ const styles = StyleSheet.create({
     mainText: {
         color: '#343a40',
         margin: 30
-    }
+    },
+    getStartedButton: {
+        backgroundColor: "#25c0b0",
+        color: "#FFF",
+        width: "35%",
+        height: 51,
+        boxShadow: "none"
+    },
 })
