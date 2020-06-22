@@ -12,11 +12,15 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhone } from "../../graphql/mutations";
 import { getAuthToken } from "../../utils/apollo";
+import { ModalDialog } from "../Dialog";
 
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loginPhoneStart] = useMutation(loginPhone);
+  const [open, setOpen] = useState(false)
+  const [username, setUsername] = useState('')
+  const [value, setValue] = useState('')
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState(260);
@@ -57,6 +61,15 @@ export function LoginScreen() {
       history.push(`${!state ? '/' : state.from.pathname}`)
     }
   })
+
+  function handleModal() {
+    setOpen(!open)
+  }
+  function handleClick() {
+    console.log(username + value)
+    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please  provide me with my login credentials. \n Full Name: ${username} \n Phone Nnumber or Email: ${value} (Please include)`, 'emailWindow')
+    setOpen(!open);
+  }
 
 
   return (
@@ -147,6 +160,38 @@ export function LoginScreen() {
           </a>
         </div>
       </div>
+
+      <div data-testid="trouble-logging-div" className="row justify-content-center align-items-center">
+        <p onClick={handleModal} style={{ marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
+      </div>
+
+      <ModalDialog
+        open={open}
+        handleClose={handleModal}
+        handleConfirm={handleClick}
+        action='Send Email'
+      >
+        <h6>
+          To request your login information, email: <a>support@doublegdp.com</a>
+        </h6>
+        <br />
+        <input
+          className="form-control"
+          type="text"
+          onChange={event => setUsername(event.target.value)}
+          name="name"
+          placeholder="Enter Full name here"
+        />
+        <input
+          className="form-control"
+          type="text"
+          onChange={event => setValue(event.target.value)}
+          name="email-number"
+          placeholder="Enter Email/Phonenumber"
+        />
+
+      </ModalDialog>
+
     </div>
   );
 }
