@@ -23,7 +23,6 @@ export default function WelcomePage() {
                     <h2 >Its not just a house, its a way of life</h2>
                 </div>
                 <p className={css(styles.mainText)}>We are located in Woodlands, 11 Nalikwanda Road, Lusaka, Zambia</p>
-                
             </div>
         </>
     )
@@ -31,21 +30,18 @@ export default function WelcomePage() {
 
 export function CustomButton({ title }) {
     return (
-        <Button className={css(styles.customButton)}>
+        <Button variant="outlined" className={css(styles.customButton)}>
             {title}
         </Button>
     )
 }
 
 const styles = StyleSheet.create({
-    fullHeightSection: {
-        height: '100vh',
-        color: '#FFFFFF'
-    },
     customButton: {
         fontSize: 13,
         marginLeft: 10,
         marginRight: 10,
+        marginTop: 10
     },
     mainText: {
         color: '#343a40',
