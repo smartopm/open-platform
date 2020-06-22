@@ -220,7 +220,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 17,
       title: `Campaigns`,
-      path: `/campaign`,
+      path: `/campaign-create`,
 
       icon: <TelegramIcon fontSize="large"/>,
       access: [

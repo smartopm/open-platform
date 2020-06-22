@@ -288,7 +288,7 @@ export const lastUserTimeSheet = gql`
     }
   }
 `
-export const Campaigns = gql`
+export const allCampaigns = gql`
   {
     campaigns {
       id
@@ -304,9 +304,9 @@ export const Campaigns = gql`
     }
   }
 `
-export const Campaigns = gql`
-query{
-  campaign($id: ID!){
+export const Campaign = gql`
+query campaign($id: ID!){
+
     campaign(id: $id){
     batchTime
     communityId
@@ -319,6 +319,5 @@ query{
     updatedAt
     userIdList
     }
-  }
 }
 `

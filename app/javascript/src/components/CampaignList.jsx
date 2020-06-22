@@ -2,20 +2,19 @@ import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
-import { Campaigns } from '../graphql/queries'
+import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
 
 export default function CampaignList() {
-    const history = useHistory()
-  const { data, error, loading } = useQuery(Campaigns)
-  function routeToAction() {
-      return history.push(`/campaign`)
- 
+  const history = useHistory()
+  const { data, error, loading } = useQuery(allCampaigns,{fetchPolicy: "cache-and-network"})
+  function routeToAction(_event, id) {
+    return history.push(`/campaign/${id}`)
   }
-  if(loading) return <Loading/>
-  if (error) return <ErrorPage/>
+  if (loading) return <Loading />
+  if (error) return <ErrorPage />
 
   return (
     <div>
@@ -54,7 +53,7 @@ export default function CampaignList() {
                     color: '#009688'
                   }}
                   onClick={() => {
-                    routeToAction(event)
+                    routeToAction(event,c.id)
                   }}
                 >
                   More Details

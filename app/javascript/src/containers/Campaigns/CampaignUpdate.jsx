@@ -1,36 +1,59 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'
 import { Button, TextField } from '@material-ui/core'
-import { DateAndTimePickers } from './DatePickerDialog'
-import { useMutation,useQuery } from 'react-apollo'
-import { CampaignCreate } from '../graphql/mutations'
-import { DelimitorFormator } from '../utils/helpers'
-import { saniteError } from '../utils/helpers'
+import { DateAndTimePickers } from '../../components/DatePickerDialog'
+import { useMutation, useQuery } from 'react-apollo'
+import { CampaignUpdate } from '../../graphql/mutations'
+import { Campaign } from '../../graphql/queries'
+import { DelimitorFormator } from '../../utils/helpers'
+import { saniteError } from '../../utils/helpers'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import Loading from '../../components/Loading'
 
-export default function CampaignForm({authState }) {
-  const [name, setName] = useState('')
-  const [message, setMessage] = useState('')
-  const [userIdList, setUserIdList] = useState('')
+export default function UpdateCampaign({ match }) {
+  const authState = useContext(AuthStateContext)
+  const { data, error, loading } = useQuery(Campaign, {
+    variables: { id: match.params.id }
+  })
+  const [campaign] = useMutation(CampaignUpdate)
+  
+  const [formData, setFormData] =useState({
+    id: "",
+    name:"",
+    message:"",
+    batchTime :"",
+    userIdList:"",
+    loaded: false
+  })
   const [errorMsg, setErrorMsg] = useState('')
-  const [batchTime, setBatchTime] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const [campaign] = useMutation(CampaignCreate)
+  if (authState.user.userType !== 'admin') {
+    return <Redirect push to="/" />
+  }
+  if (loading) return <Loading />
+
+  if(!formData.loaded && data){
+    setFormData({ ...data.campaign, loaded: true})
+  }
+
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    setFormData({
+        ...formData,
+        [name]: value
+      });
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
-    const campaingData = {
-      name,
-      message,
-      batchTime,
-      userIdList
-    }
+
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
 
-    campaign({ variables: campaingData })
+    campaign({ variables: formData })
       .then(e => {
         setIsSubmitted(true)
       })
@@ -41,12 +64,13 @@ export default function CampaignForm({authState }) {
 
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)
-    setUserIdList(userIds.toString())
+    setFormData({
+      ...formData,
+      userIdList: userIds.toString()
+    });
   }
-  if (authState.user.userType !== 'admin') {
-    return <Redirect push to="/" />
-  }
-  
+
+
   return (
     <div className="container">
       <form
@@ -61,23 +85,21 @@ export default function CampaignForm({authState }) {
           <input
             className="form-control"
             type="text"
-            onChange={e => setName(e.target.value)}
-            value={name}
+            onChange={handleInputChange}
+            value={formData.name}
             name="name"
             required
           />
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">
-            Message
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            onChange={e => setMessage(e.target.value)}
-            value={message}
-            name="name"
+          <TextField
+            label="Message"
+            rows={5}
+            multiline
             required
+            className="form-control"
+            value={formData.message }
+            onChange={handleInputChange}
           />
         </div>
         <div>
@@ -87,17 +109,21 @@ export default function CampaignForm({authState }) {
             multiline
             required
             className="form-control"
-            value={userIdList}
+            value={formData.userIdList }
             onChange={e => handleUserIDList(e, e.target.value)}
           />
         </div>
         <br />
         <div>
+          <label className="bmd-label-static" htmlFor="firstName">
+            {data.campaign.batchTime}
+          </label>
+          <br />
           <DateAndTimePickers
             label="Start Time"
             required
-            selectedDateTime={batchTime}
-            handleDateChange={e => setBatchTime(e.target.value)}
+            selectedDateTime={formData.batchTime}
+            handleDateChange={handleInputChange}
           />
         </div>
         <div className="d-flex row justify-content-center">

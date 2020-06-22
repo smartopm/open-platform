@@ -67,9 +67,10 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
-import CampaignCreate from '../src/containers/CampaignCreate'
-import Campaigns from "../src/containers/Campaigns";
+import CampaignCreate from '../src/containers/Campaigns/CampaignCreate'
+import Campaigns from "../src/containers/Campaigns/Campaigns";
 import Scan from '../src/containers/Scan.jsx'
+import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -232,8 +233,9 @@ const App = () => {
                     />
 
                     <Route path="/message/:id" component={UserMessages} />
-                    <Route path="/campaign-create" component={Campaign} />
+                    <Route path="/campaign-create" component={CampaignCreate} />
                     <Route path="/campaigns" component={Campaigns} />
+                    <Route path="/campaign/:id" component={CampaignUpdate} />
 
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
