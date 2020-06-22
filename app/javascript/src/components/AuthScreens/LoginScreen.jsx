@@ -13,6 +13,7 @@ import { useMutation } from "react-apollo";
 import { loginPhone } from "../../graphql/mutations";
 import { getAuthToken } from "../../utils/apollo";
 import { ModalDialog } from "../Dialog";
+import { areaCode } from '../../utils/constants'
 
 
 export function LoginScreen() {
@@ -124,8 +125,9 @@ export function LoginScreen() {
                     }}
                     onChange={e => setCountryCode(e.target.value)}
                   >
-                    <option value={260}>🇿🇲 +260</option>
-                    <option value={1}>🇺🇸 +1</option>
+                    {Object.entries(areaCode).map(([key, val]) => (
+                      <option key={key} value={key}>{val}</option>
+                    ))}
                   </Select>
                 </InputAdornment>
               )
