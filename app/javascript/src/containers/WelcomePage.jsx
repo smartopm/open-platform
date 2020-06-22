@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
+import ReactGA from 'react-ga';
 
 export default function WelcomePage() {
-   
     return (
         <>
             
@@ -39,6 +39,12 @@ export function CustomButton({ title }) {
         return name.split(' ')[2]
     }
     function handleClicks() {
+        ReactGA.event({
+            category: title,
+            action: `${title} clicked`,
+            eventLabel: 'Open page Interaction',
+            nonInteraction: true
+        });
         // history.push(route[getName(title)])
         return route[getName(title)]
     }
