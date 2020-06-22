@@ -54,7 +54,7 @@ describe('Login screen', () => {
   })
   it('should have a select element ', () => {
     expect(loginWrapper.find('select')).toHaveLength(1)
-    expect(loginWrapper.find('select').children()).toHaveLength(2)
+    expect(loginWrapper.find('select').children()).toHaveLength(4)
     expect(
       loginWrapper
         .find('select')

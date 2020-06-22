@@ -130,7 +130,7 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  query GetTodos($offset: Int, $limit: Int){ 
+  query GetTodos($offset: Int, $limit: Int) {
     flaggedNotes(offset: $offset, limit: $limit) {
       body
       createdAt
@@ -188,8 +188,6 @@ export const UserSearchQuery = gql`
   }
 `
 
-
-
 export const ShowroomEntriesQuery = gql`
   {
     showroomEntries {
@@ -241,52 +239,85 @@ export const UserMessageQuery = gql`
 `
 
 export const UserTimeSheetQuery = gql`
-         query userTimeSheetLogs(
-           $userId: ID!
-           $limit: Int
-           $offset: Int
-           $dateFrom: String
-           $dateTo: String!
-         ) {
-           userTimeSheetLogs(
-             userId: $userId
-             limit: $limit
-             offset: $offset
-             dateFrom: $dateFrom
-             dateTo: $dateTo
-           ) {
-             startedAt
-             endedAt
-             id
-             user {
-               name
-               id
-             }
-           }
-         }
-       ` 
+  query userTimeSheetLogs(
+    $userId: ID!
+    $limit: Int
+    $offset: Int
+    $dateFrom: String
+    $dateTo: String!
+  ) {
+    userTimeSheetLogs(
+      userId: $userId
+      limit: $limit
+      offset: $offset
+      dateFrom: $dateFrom
+      dateTo: $dateTo
+    ) {
+      startedAt
+      endedAt
+      id
+      user {
+        name
+        id
+      }
+    }
+  }
+`
 
 export const TimeSheetLogsQuery = gql`
-         query timeSheetLogs($limit: Int, $offset: Int) {
-           timeSheetLogs(limit: $limit, offset: $offset) {
-             endedAt
-             startedAt
-             id
-             user {
-               name
-               id
-             }
-             userId
-           }
-         }
-       `
+  query timeSheetLogs($limit: Int, $offset: Int) {
+    timeSheetLogs(limit: $limit, offset: $offset) {
+      endedAt
+      startedAt
+      id
+      user {
+        name
+        id
+      }
+      userId
+    }
+  }
+`
 
 export const lastUserTimeSheet = gql`
-      query userLastShift($userId: ID!){
-        userLastShift(userId: $userId){
-          endedAt
-          startedAt
-          id
-        }
+  query userLastShift($userId: ID!) {
+    userLastShift(userId: $userId) {
+      endedAt
+      startedAt
+      id
+    }
+  }
+`
+export const allCampaigns = gql`
+  {
+    campaigns {
+      id
+      batchTime
+      communityId
+      createdAt
+      endTime
+      message
+      name
+      startTime
+      updatedAt
+      userIdList
+    }
+  }
+`
+export const Campaign = gql`
+query campaign($id: ID!){
+
+    campaign(id: $id){
+    batchTime
+    communityId
+    createdAt
+    endTime
+    id
+    message
+    name
+    startTime
+    updatedAt
+    userIdList
+    }
 }
 `

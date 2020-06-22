@@ -8,7 +8,6 @@ export default function WelcomePage() {
     const history = useHistory()
     return (
         <>
-            
             <div className="container_img">
                 <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Nkwashi landing page image"/>
                 <br />
