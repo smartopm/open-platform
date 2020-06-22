@@ -8,7 +8,7 @@ import { CampaignCreate } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
 
-export default function CampaignForm({ authState }) {
+export default function CampaignForm({authState }) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [userIdList, setUserIdList] = useState('')
@@ -21,20 +21,19 @@ export default function CampaignForm({ authState }) {
   function handleSubmit(e) {
     e.preventDefault()
     const campaingData = {
-      name: name,
-      message: message,
-      batchTime: batchTime,
-      userIdList: userIdList
+      name,
+      message,
+      batchTime,
+      userIdList
     }
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
 
     campaign({ variables: campaingData })
-      .then(e => {
-        console.log(e)
+      .then(()=> 
         setIsSubmitted(true)
-      })
+      )
       .catch(err => {
         setErrorMsg(err.message)
       })
@@ -47,6 +46,7 @@ export default function CampaignForm({ authState }) {
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
   }
+  
   return (
     <div className="container">
       <form

@@ -48,4 +48,11 @@ export const infoSource = [
   'Other'
 ]
 
+export const areaCode = {
+  260: '🇿🇲 +260',
+  1: '🇺🇸 +1',
+  27: '🇿🇦 +27',
+  44: '🇬🇧 +44'
+}
+
 export const ponisoNumber = '+260976064298'
