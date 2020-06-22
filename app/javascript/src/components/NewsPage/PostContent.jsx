@@ -17,11 +17,8 @@ export default function PostContent({response}) {
                             <Typography variant='h3' color='textSecondary'>
                                 <strong>{response.title}</strong>
                             </Typography>
-
                             <Divider light variant='middle' />
-
                             <div dangerouslySetInnerHTML={{ __html: response.content }} />
-
                         </CardContent>
                     </Card>
                 </Box>
