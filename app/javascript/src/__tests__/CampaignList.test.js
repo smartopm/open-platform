@@ -8,7 +8,7 @@ import { MockedProvider } from '@apollo/react-testing'
 describe('Campaign List page', () => {
 
   it('should render without error', () => {
-    const { getByText } = render(
+     render(
       <MockedProvider>
         <BrowserRouter>
           <Campaign />
