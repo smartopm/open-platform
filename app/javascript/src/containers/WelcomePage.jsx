@@ -3,6 +3,7 @@ import { Button } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 
 export default function WelcomePage() {
+   
     return (
         <>
             
@@ -29,8 +30,20 @@ export default function WelcomePage() {
 }
 
 export function CustomButton({ title }) {
+    const route = {
+        call: '/call',
+        tour: '/tour',
+        client: '/client'
+    }
+    function getName(name) {
+        return name.split(' ')[2]
+    }
+    function handleClicks() {
+        // history.push(route[getName(title)])
+        return route[getName(title)]
+    }
     return (
-        <Button variant="outlined" className={css(styles.customButton)}>
+        <Button variant="outlined" onClick={() => handleClicks(title)} className={css(styles.customButton)}>
             {title}
         </Button>
     )
