@@ -2,8 +2,9 @@
 
 module Mutations
   module Campaign
-    # CampaignCreate
-    class CampaignCreate < BaseMutation
+    # CampaignUpdate
+    class CampaignUpdate < BaseMutation
+      argument :id, ID, required: true
       argument :name, String, required: true
       argument :message, String, required: true
       argument :batch_time, String, required: true
@@ -11,13 +12,12 @@ module Mutations
 
       field :campaign, Types::CampaignType, null: true
 
-      def resolve(vals)
-        campaign = context[:current_user].community.campaigns.new
-        campaign.name = vals[:name]
-        campaign.message = vals[:message]
-        campaign.user_id_list = vals[:user_id_list]
-        campaign.batch_time = vals[:batch_time]
-        campaign.save!
+      def resolve(id:, **vals)
+        campaign = ::Campaign.find(id)
+        return if campaign.nil?
+
+        campaign.update!(vals)
+
         return { campaign: campaign } if campaign.persisted?
 
         raise GraphQL::ExecutionError, campaign.errors.full_message
