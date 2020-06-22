@@ -30,13 +30,13 @@ class Campaign < ApplicationRecord
   def update_campaign(**vals)
     campaign = Campaign.find(vals[:id])
     return if campaign.nil?
-    
+
     campaign.update!(vals)
-      # campaign.name = vals[:name]
-      # campaign.message = vals[:message]
-      # campaign.user_id_list = vals[:user_id_list]
-      # campaign.batch_time = vals[:batch_time]
-      # campaign.save!
+    # campaign.name = vals[:name]
+    # campaign.message = vals[:message]
+    # campaign.user_id_list = vals[:user_id_list]
+    # campaign.batch_time = vals[:batch_time]
+    # campaign.save!
     # end
     campaign
   end

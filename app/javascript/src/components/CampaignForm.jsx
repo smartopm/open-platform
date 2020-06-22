@@ -31,9 +31,9 @@ export default function CampaignForm({authState }) {
     }, 3000)
 
     campaign({ variables: campaingData })
-      .then(e => {
+      .then(()=> 
         setIsSubmitted(true)
-      })
+      )
       .catch(err => {
         setErrorMsg(err.message)
       })

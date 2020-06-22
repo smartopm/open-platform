@@ -12,6 +12,7 @@ import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
 import Nav from '../../components/Nav'
+import ErrorPage from '../../components/Error'
 
 export default function UpdateCampaign({ match }) {
   const authState = useContext(AuthStateContext)
@@ -36,6 +37,7 @@ export default function UpdateCampaign({ match }) {
     return <Redirect push to="/" />
   }
   if (loading) return <Loading />
+  if (error) return <ErrorPage />
 
   if (!formData.loaded && data) {
     setFormData({ ...data.campaign, loaded: true })
@@ -65,9 +67,7 @@ export default function UpdateCampaign({ match }) {
       userIdList: formData.userIdList
     }
     campaign({ variables: campaingData })
-      .then(e => {
-        setIsSubmitted(true)
-      })
+      .then(() => setIsSubmitted(true))
       .catch(err => {
         setErrorMsg(err.message)
       })

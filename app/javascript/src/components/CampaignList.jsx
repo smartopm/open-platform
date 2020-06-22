@@ -17,7 +17,7 @@ export default function CampaignList() {
   if (error) return <ErrorPage />
 
   return (
-    <div>
+    <div className="container">
       {data.campaigns.map(c => (
         <Fragment key={c.id}>
           <div className="container">
