@@ -30,7 +30,6 @@ import Search from '../src/containers/Search'
 import UserEdit from '../src/containers/UserEdit'
 import PendingUsers from '../src/containers/PendingUsers'
 import Loading from '../src/components/Loading.jsx'
-import { WelcomeScreen } from '../src/components/AuthScreens/WelcomeScreen'
 import '../src/i18n'
 import Map from '../src/containers/Map'
 import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
@@ -69,7 +68,7 @@ import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 import Campaign from '../src/containers/Campaign'
 import Scan from '../src/containers/Scan.jsx'
-import WelcomePage from '../src/containers/WelcomePage'
+import WelcomePage from '../src/components/AuthScreens/WelcomePage'
 import Posts from '../src/containers/Posts/Posts'
 import NewsPage from '../src/containers/Posts/NewsPage'
 import PostPage from '../src/containers/Posts/PostPage'
@@ -175,13 +174,13 @@ const App = () => {
             <Analytics>
               {/* onboarding */}
               <Switch>
-                <Route path="/welcome" component={WelcomeScreen} />
+                <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={GoogleAuthCallback} />
-                <Route path="/welcome_page" component={WelcomePage} />
+                {/* <Route path="/welcome_page" component={WelcomePage} /> */}
 
                 <LoggedInOnly>
                   <Switch>
