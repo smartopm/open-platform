@@ -1,11 +1,19 @@
 import React from 'react'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import Fab from "@material-ui/core/Fab";
+import ReactGA from 'react-ga'
 
 export function ShareButton({ url }) {
     function shareFacebook() {
+        ReactGA.event({
+        category: 'ShareToFB',
+        action: 'NewPageShare',
+        eventLabel: "Facebook Share",
+        nonInteraction: true
+        });
         return window.open('https://www.facebook.com/sharer/sharer.php?u=' + escape(url) + '&t=' + document.title, '',
             'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
     }
     return (
         <Fab variant="extended"
@@ -18,7 +26,7 @@ export function ShareButton({ url }) {
             onClick={shareFacebook}
         >
             <FacebookIcon />
-            {"  "} Share on Facebook
+            {"  "} Share
         </Fab>
     )
 }
