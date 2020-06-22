@@ -14,6 +14,7 @@ import { loginPhone } from "../../graphql/mutations";
 import { getAuthToken } from "../../utils/apollo";
 import { ModalDialog } from "../Dialog";
 import { areaCode } from '../../utils/constants'
+import ReactGA from 'react-ga'
 
 
 export function LoginScreen() {
@@ -67,9 +68,16 @@ export function LoginScreen() {
     setOpen(!open)
   }
   function handleClick() {
-    console.log(username + value)
     window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please  provide me with my login credentials. \n Full Name: ${username} \n Phone Nnumber or Email: ${value} (Please include)`, 'emailWindow')
     setOpen(!open);
+
+    //Google Analytics tracking 
+    ReactGA.event({
+      category: 'LoginPage',
+      action: 'TroubleLogging',
+      eventLabel: "Trouble Logging on Login Page",
+      nonInteraction: true
+    });
   }
 
 
