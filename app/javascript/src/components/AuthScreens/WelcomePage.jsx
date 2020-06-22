@@ -8,7 +8,7 @@ export default function WelcomePage() {
         <>
             
             <div className="container_img">
-                <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Snow"/>
+                <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Nkwashi landing page image"/>
                 <br />
                 <br/>
                 <CustomButton title="Schedule a call" />
@@ -16,14 +16,14 @@ export default function WelcomePage() {
                 <CustomButton title="Become a client" />
                 <br />
                 <br/>
-                <p className={css(styles.mainText)}>
+                <p className={css(styles.mainText)} data-testid="maintext">
                     Our house plans are designed by among the best architectural firms on the African 
                     continent and will be made available to plot owners.
                 </p>
-                <div className="centered">
+                <div className="centered" data-testid="maintext-centered">
                     <h2 >Its not just a house, its a way of life</h2>
                 </div>
-                <p className={css(styles.mainText)}>We are located in Woodlands, 11 Nalikwanda Road, Lusaka, Zambia</p>
+                <p className={css(styles.mainText)} data-testid="locationtext" >We are located in Woodlands, 11 Nalikwanda Road, Lusaka, Zambia</p>
             </div>
         </>
     )

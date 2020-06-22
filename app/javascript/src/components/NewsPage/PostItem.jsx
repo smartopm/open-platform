@@ -10,9 +10,11 @@ import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Box from "@material-ui/core/Box";
-import {truncateString} from '../../utils/helpers'
+import { truncateString } from '../../utils/helpers'
+import PropTypes from 'prop-types'
 
-export default function PostiItem({ title, imageUrl, datePosted, subTitle }) {
+
+export default function PostItem({ title, imageUrl, datePosted, subTitle }) {
     const classes = useStyles();
     return (
         <Card className={classes.root}>
@@ -55,6 +57,14 @@ export default function PostiItem({ title, imageUrl, datePosted, subTitle }) {
 
     )
 }
+
+PostItem.propType = {
+    title: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
+    datePosted: PropTypes.string,
+    subTitle: PropTypes.string,
+}
+
 
 // Moved this at the bottom
 const useStyles = makeStyles(() => ({

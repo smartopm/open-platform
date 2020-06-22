@@ -1,0 +1,39 @@
+import React from 'react'
+import WelcomePage from '../components/AuthScreens/WelcomePage'
+import { render } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+
+describe('component that centers divs', () => {
+    it('should include proper text', () => {
+        const container = render(<WelcomePage />)
+        expect(container.queryByText('Here i am')).toBeNull()
+        expect(container.queryByText('Here i am')).not.toBeInTheDocument()
+    })
+    it('should have action button texts', () => {
+        const container = render(<WelcomePage />)
+        expect(container.queryByText('Schedule a call')).toBeInTheDocument()
+        expect(container.queryByText('Book a tour')).toBeInTheDocument()
+        expect(container.queryByText('Become a client')).toBeInTheDocument()
+    })
+    
+    it('should have main centered text', () => {
+        const container = render(<WelcomePage />)
+        expect(container.queryByTestId('maintext-centered').textContent).toContain('Its not just a house')
+    })
+    it('should have location text', () => {
+        const container = render(<WelcomePage />)
+        expect(container.queryByTestId('locationtext').textContent).toContain('11 Nalikwanda Road')
+    })
+    it('should have main text', () => {
+        const container = render(<WelcomePage />)
+        expect(container.queryByTestId('maintext').textContent).toContain('among the best architectural firms on the African')
+    })
+    it('should have 3 main buttons', () => {
+        const container = render(<WelcomePage />)
+        expect(container.container.getElementsByTagName('button')).toHaveLength(3)
+    })
+    it('should have an image with a proper url', () => {
+        const container = render(<WelcomePage />)
+        expect(container.container.getElementsByTagName('img')[0]).toHaveAttribute('src', 'https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg')
+    })
+})
