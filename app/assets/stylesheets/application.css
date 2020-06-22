@@ -155,3 +155,35 @@
     display: none;
   }
 }
+.wp_content h3 {
+  font-weight: 500;
+  margin: 30px -2px 14px -24px;
+}
+
+.wp_content ol > li {
+  font-size: 22px;
+}
+.wp_content ul > li {
+  font-size: 22px;
+}
+.wp_content p {
+  font-size: 22px;
+}
+@media only screen and (max-width: 600px) {
+    .wp_content ol > li {
+      font-size: 19px;
+    }
+    .wp_content ul > li {
+      font-size: 19px;
+    }
+    .wp_content p {
+      font-size: 19px;
+    }
+    .wp-block-gallery ul {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 25px;
+      grid-row-gap: 25px;
+      width:100%;
+    }
+}

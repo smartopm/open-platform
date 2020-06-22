@@ -1,33 +1,17 @@
 import React from 'react'
-import { Card, CardMedia, CardContent, Typography, Divider, Box, Container } from '@material-ui/core'
+import { Typography, Container } from '@material-ui/core'
 import PropTypes from 'prop-types'
 export default function PostContent({ response }) {
     return (
-        <div style={{ height: '100vh', width: '100%', flex: 1 }}>
-            <Container>
-                <Box >
-                    <Card style={{ marginTop: 30 }}>
-                        <CardMedia style={{
-                            height: 0,
-                            width: "100%",
-                            paddingTop: "50%",
-                        }}
-                            image={response.post_thumbnail?.URL} />
-                        <CardContent >
-                            <Box style={{ marginLeft: 50, marginRight: 50 }}>
-                                <Typography variant='h3' color='textSecondary'>
-                                    <strong>{response.title}</strong>
-                                </Typography>
-                            </Box>
-                            <Divider light variant='middle' />
-                            <Box style={{ margin: 50 }}>
-                                <div dangerouslySetInnerHTML={{ __html: response.content }} />
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Box>
+        <Container>
+            <br/>
+            <Typography align="center" variant='h3' color='textSecondary'>
+                    <strong>{response.title}</strong>
+            </Typography>
+            <br/>
+                <img className="img-fluid" src={response.post_thumbnail?.URL} alt="" />
+                <div className="wp_content container" dangerouslySetInnerHTML={{ __html: response.content }} />
             </Container>
-        </div>
     )
 }
 
