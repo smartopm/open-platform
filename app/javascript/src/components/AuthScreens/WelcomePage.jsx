@@ -41,22 +41,21 @@ export default function WelcomePage() {
 
 export function CustomButton({ title }) {
     const route = {
-        call: '/call',
-        tour: '/tour',
-        client: '/client'
+        call: 'https://forms.gle/4t553oiff7XTFYnW9',
+        tour: 'https://forms.gle/9N79ZwKXTPxcrAta9',
+        client: 'https://forms.gle/rtSH9oou9usUfJQ98'
     }
     function getName(name) {
         return name.split(' ')[2]
     }
     function handleClicks() {
         ReactGA.event({
-            category: title,
-            action: `${title} clicked`,
+            category: 'OpenPage',
+            action: title,
             eventLabel: 'Open page Interaction',
             nonInteraction: true
         });
-        // history.push(route[getName(title)])
-        return route[getName(title)]
+        return window.open(route[getName(title)], '_blank')
     }
     return (
         <Button variant="outlined" onClick={() => handleClicks(title)} className={css(styles.customButton)}>
