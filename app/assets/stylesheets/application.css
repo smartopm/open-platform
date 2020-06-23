@@ -160,7 +160,7 @@
   text-align: center;
   color: white;
 }
-.container_img img {
+.container_img .home_hero {
   width: 100%;
 }
 
@@ -177,7 +177,7 @@
 
 .centered {
   position: absolute;
-  top: 20%;
+  top: 14%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -192,7 +192,7 @@
     font-weight: 500;
   }
  .centered {
-    top: 19%;
+    top: 10%;
     position: absolute;
 
   }

@@ -20,7 +20,7 @@ export default function Categories() {
                 <Grid item xs >
                     {response.categories.map(category => (
                         <Button key={category.ID}>
-                            <Link stytle={{textDecoration: 'none'}} to={`/spike_news/${category.slug}`}>
+                            <Link stytle={{textDecoration: 'none'}} to={`/nkwashi_news/${category.slug}`}>
                                 {category.name}
                             </Link>
                         </Button>
