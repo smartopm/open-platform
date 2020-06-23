@@ -74,6 +74,7 @@ import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate'
 import Posts from '../src/containers/Posts/Posts'
 import NewsPage from '../src/containers/Posts/NewsPage'
 import PostPage from '../src/containers/Posts/PostPage'
+import ThemeProvider from '../Themes/Nkwashi/ThemeProvider'
 
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -157,7 +158,7 @@ const Analytics = props => {
         ReactGA.pageview(location.pathname)
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState.user, history])
 
   return props.children
@@ -173,124 +174,126 @@ const App = () => {
       <ApolloProvider>
         <Router history={history}>
           <AuthStateProvider>
-            <Analytics>
-              {/* onboarding */}
-              <Switch>
-                <Route path="/welcome" component={WelcomePage} />
-                <Route path="/login" component={LoginScreen} />
-                <Route path="/code/:id" component={ConfirmCodeScreen} />
-                <Route path="/l/:id/:code" component={OneTimeLoginCode} />
-                <Route path="/logout" component={Logout} />
-                <Route path="/google/:token" component={GoogleAuthCallback} />
-                {/* <Route path="/welcome_page" component={WelcomePage} /> */}
+            <ThemeProvider>
+              <Analytics>
+                {/* onboarding */}
+                <Switch>
+                  <Route path="/welcome" component={WelcomePage} />
+                  <Route path="/login" component={LoginScreen} />
+                  <Route path="/code/:id" component={ConfirmCodeScreen} />
+                  <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+                  <Route path="/logout" component={Logout} />
+                  <Route path="/google/:token" component={GoogleAuthCallback} />
+                  {/* <Route path="/welcome_page" component={WelcomePage} /> */}
 
-                <LoggedInOnly>
-                  <Switch>
-                    <Route path="/" exact component={Home} />
-                    <Route path="/scan" component={Scan} />
-                    <Route path="/search" component={Search} />
-                    <Route path="/id/:id" component={IDCard} />
-                    <Route path="/print/:id" component={IDPrint} />
-                    <Route path="/entry_logs/:userId" component={EntryLogs} />
-                    <Route path="/entry_logs" component={EntryLogs} />
+                  <LoggedInOnly>
+                    <Switch>
+                      <Route path="/" exact component={Home} />
+                      <Route path="/scan" component={Scan} />
+                      <Route path="/search" component={Search} />
+                      <Route path="/id/:id" component={IDCard} />
+                      <Route path="/print/:id" component={IDPrint} />
+                      <Route path="/entry_logs/:userId" component={EntryLogs} />
+                      <Route path="/entry_logs" component={EntryLogs} />
 
-                    <Route path="/user" exact component={UserEdit} />
-                    <Route path="/map" component={Map} />
-                    <Route path="/mobile_money" component={MobileMoney} />
-                    <Route path="/contact" component={Support} />
-                    <Route path="/otp_sent" component={OTPFeedbackScreen} />
+                      <Route path="/user" exact component={UserEdit} />
+                      <Route path="/map" component={Map} />
+                      <Route path="/mobile_money" component={MobileMoney} />
+                      <Route path="/contact" component={Support} />
+                      <Route path="/otp_sent" component={OTPFeedbackScreen} />
 
-                    <Route path="/referral" component={UserEdit} />
-                    <Route path="/myaccount/:id" component={UserShow} />
+                      <Route path="/referral" component={UserEdit} />
+                      <Route path="/myaccount/:id" component={UserShow} />
 
-                    {/* new routes => guards */}
-                    <Route path="/guard_home" component={GuardHome} />
+                      {/* new routes => guards */}
+                      <Route path="/guard_home" component={GuardHome} />
 
-                    {/* requests */}
-                    <Route path="/entry_request" component={EntryRequest} />
-                    <Route path="/request/:id" component={RequestUpdate} />
-                    <Route
-                      path="/request_hos/:id/"
-                      component={RequestConfirm}
-                    />
-                    <Route path="/request_wait/:id" component={WaitScreen} />
-                    <Route
-                      path="/request_status/:id/edit"
-                      component={RequestApproval}
-                    />
-                    <Route
-                      path="/request_status/:id"
-                      component={RequestApproval}
-                    />
-                    {/* Showroom kiosk routes */}
-                    <Route path="/showroom_kiosk" component={ShowRoom} />
-                    <Route path="/sh_reason" component={VisitingReasonScreen} />
-                    <Route path="/sh_entry" component={VisitingClientForm} />
-                    <Route path="/sh_complete" component={CheckInComplete} />
-                    <Route path="/sh_soon" component={ComingSoon} />
+                      {/* requests */}
+                      <Route path="/entry_request" component={EntryRequest} />
+                      <Route path="/request/:id" component={RequestUpdate} />
+                      <Route
+                        path="/request_hos/:id/"
+                        component={RequestConfirm}
+                      />
+                      <Route path="/request_wait/:id" component={WaitScreen} />
+                      <Route
+                        path="/request_status/:id/edit"
+                        component={RequestApproval}
+                      />
+                      <Route
+                        path="/request_status/:id"
+                        component={RequestApproval}
+                      />
+                      {/* Showroom kiosk routes */}
+                      <Route path="/showroom_kiosk" component={ShowRoom} />
+                      <Route path="/sh_reason" component={VisitingReasonScreen} />
+                      <Route path="/sh_entry" component={VisitingClientForm} />
+                      <Route path="/sh_complete" component={CheckInComplete} />
+                      <Route path="/sh_soon" component={ComingSoon} />
 
-                    {/* activity */}
-                    <Route path="/todo" component={Todo} />
-                    <Route path="/feedback" component={Feedback} />
-                    <Route
-                      path="/feedback_success"
-                      component={FeedbackSuccess}
-                    />
+                      {/* activity */}
+                      <Route path="/todo" component={Todo} />
+                      <Route path="/feedback" component={Feedback} />
+                      <Route
+                        path="/feedback_success"
+                        component={FeedbackSuccess}
+                      />
 
-                    <Route path="/message/:id" component={UserMessages} />
-                    <Route path="/campaign-create" component={CampaignCreate} />
-                    <Route path="/campaigns" component={Campaigns} />
-                    <Route path="/campaign/:id" component={CampaignUpdate} />
+                      <Route path="/message/:id" component={UserMessages} />
+                      <Route path="/campaign-create" component={CampaignCreate} />
+                      <Route path="/campaigns" component={Campaigns} />
+                      <Route path="/campaign/:id" component={CampaignUpdate} />
 
-                    {/* users */}
-                    <Route path="/news/" exact component={NewsContentPage} />
-                    <Route path="/news/:link" component={NewsContentPage} />
+                      {/* users */}
+                      <Route path="/news/" exact component={NewsContentPage} />
+                      <Route path="/news/:link" component={NewsContentPage} />
 
-                    {/*Nkwashi account management*/}
-                    <Route path="/account" component={NkwashiAccountManagement} />
+                      {/*Nkwashi account management*/}
+                      <Route path="/account" component={NkwashiAccountManagement} />
 
-                    <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
-                    <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
-                    <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
-                    <Route path="/timesheet" exact component={CustodianLogs} />
-                    <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+                      <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
+                      <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
+                      <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                      <Route path="/timesheet" exact component={CustodianLogs} />
+                      <Route path="/timesheet/:id" exact component={EmployeeLogs} />
 
-                    <Route path="/client_request_from" exact component={ClientRequestForm} />
+                      <Route path="/client_request_from" exact component={ClientRequestForm} />
 
-                    {/* Spike page */}
-                    <Route path="/spike_news" exact component={NewsPage} />
-                    <Route path="/spike_news/:slug" exact component={Posts} />
-                    <Route path="/spike_news/post/:id" exact component={PostPage} />
+                      {/* Spike page */}
+                      <Route path="/spike_news" exact component={NewsPage} />
+                      <Route path="/spike_news/:slug" exact component={Posts} />
+                      <Route path="/spike_news/post/:id" exact component={PostPage} />
 
-                    <AdminRoutes>
-                      <Switch>
-                        <Route path="/client_request_from" exact component={ClientRequestForm} />
-                        <Route path="/users" component={UsersList} />
-                        <Route path="/messages" component={AllMessages} />
-                        <Route path="/showroom_logs" component={ShowroomLogs} />
-                        <Route path="/notes" component={AllNotes} />
-                        <Route path="/feedbacks" component={FeedbackPage} />
-                        <Route path="/event_logs" component={EventLogs} />
+                      <AdminRoutes>
+                        <Switch>
+                          <Route path="/client_request_from" exact component={ClientRequestForm} />
+                          <Route path="/users" component={UsersList} />
+                          <Route path="/messages" component={AllMessages} />
+                          <Route path="/showroom_logs" component={ShowroomLogs} />
+                          <Route path="/notes" component={AllNotes} />
+                          <Route path="/feedbacks" component={FeedbackPage} />
+                          <Route path="/event_logs" component={EventLogs} />
 
-                        <Route path="/new/user" exact component={UserEdit} />
-                        <Route
-                          path="/pending"
-                          exact
-                          component={PendingUsers}
-                        />
+                          <Route path="/new/user" exact component={UserEdit} />
+                          <Route
+                            path="/pending"
+                            exact
+                            component={PendingUsers}
+                          />
 
-                      </Switch>
-                    </AdminRoutes>
+                        </Switch>
+                      </AdminRoutes>
 
 
-                    <Route
-                      path="*"
-                      render={() => <ErrorPage title="Sorry Page not Found" />}
-                    />
-                  </Switch>
-                </LoggedInOnly>
-              </Switch>
-            </Analytics>
+                      <Route
+                        path="*"
+                        render={() => <ErrorPage title="Sorry Page not Found" />}
+                      />
+                    </Switch>
+                  </LoggedInOnly>
+                </Switch>
+              </Analytics>
+            </ThemeProvider>
           </AuthStateProvider>
         </Router>
       </ApolloProvider>
