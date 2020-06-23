@@ -29,7 +29,7 @@ describe('component that centers divs', () => {
     })
     it('should have main text', () => {
         const container = render(<Welcome />)
-        expect(container.queryByTestId('maintext').textContent).toContain('among the best architectural firms on the African')
+        expect(container.queryByTestId('maintext').textContent).toContain('Nkwashi is a new town that is being developed 36 kilometres east of the City of Lusaka')
     })
     it('should have 3 main buttons', () => {
         const container = render(<Welcome />)
