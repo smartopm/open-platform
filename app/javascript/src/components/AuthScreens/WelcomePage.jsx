@@ -4,6 +4,7 @@ import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
 import logo from '../../../../assets/images/logo.png'
+import nkwashiLogoUrl from '../../../../assets/images/logo-footer.png'
 
 export default function WelcomePage() {
     const history = useHistory()
@@ -42,6 +43,9 @@ export default function WelcomePage() {
                 >
                     Login
                  </Button>
+                <br />
+                <br />
+                <img src={nkwashiLogoUrl} alt="community logo" />
                 <p className={css(styles.mainText)} data-testid="maintext">
                     Our house plans are designed by among the best architectural firms on the African 
                     continent and will be made available to plot owners.

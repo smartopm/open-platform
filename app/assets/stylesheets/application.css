@@ -160,7 +160,7 @@
   text-align: center;
   color: white;
 }
-.container_img img {
+.container_img .home_hero {
   width: 100%;
 }
 
