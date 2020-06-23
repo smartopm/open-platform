@@ -5,6 +5,9 @@ import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
 import logo from '../../../../assets/images/logo.png'
 import nkwashiLogoUrl from '../../../../assets/images/logo-footer.png'
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import CallIcon from '@material-ui/icons/Call';
+import MailIcon from '@material-ui/icons/Mail';
 
 export default function WelcomePage() {
     const history = useHistory()
@@ -52,17 +55,19 @@ export default function WelcomePage() {
                 </p>
 
                 <Grid container spacing={3}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} sm={4}>
+                        <LocationOnIcon  className={css(styles.icon)} />
                         <p className={css(styles.mainText)} data-testid="locationtext" >11 Nalikwanda Road, Lusaka, Zambia</p>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} sm={4}>
+                        <CallIcon  className={css(styles.icon)} />
                         <p className={css(styles.mainText)}>
-                        +260-211-268-915 , + 260-972-577-234, <br />
+                        +260-211-268-915 , + 260-972-577-234 <br />
                         + 260-961-105-655, + 260-954-809-717
                         </p>
-                        
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} sm={4}>
+                        <MailIcon  className={css(styles.icon)} />
                         <p className={css(styles.mainText)}>
                             hello@thebe-im.com
                         </p>
@@ -108,7 +113,8 @@ const styles = StyleSheet.create({
     },
     mainText: {
         color: '#343a40',
-        margin: 30
+        margin: 30,
+        marginTop: 10
     },
     getStartedButton: {
         backgroundColor: "#25c0b0",
@@ -117,4 +123,7 @@ const styles = StyleSheet.create({
         height: 51,
         boxShadow: "none"
     },
+    icon: {
+        color: '#25c0b0'
+    }
 })
