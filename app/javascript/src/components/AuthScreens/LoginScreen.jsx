@@ -68,16 +68,17 @@ export function LoginScreen() {
     setOpen(!open)
   }
   function handleClick() {
+       //Google Analytics tracking 
+       ReactGA.event({
+        category: 'LoginPage',
+        action: 'TroubleLogging',
+        eventLabel: "Trouble Logging on Login Page",
+        nonInteraction: true
+      });
     window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`, 'emailWindow')
     setOpen(!open);
 
-    //Google Analytics tracking 
-    ReactGA.event({
-      category: 'LoginPage',
-      action: 'TroubleLogging',
-      eventLabel: "Trouble Logging on Login Page",
-      nonInteraction: true
-    });
+ 
   }
 
 
