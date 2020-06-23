@@ -19,7 +19,7 @@ export default function PostPage() {
     }
     return (
         <Fragment>
-            <Nav navName="News" menuButton="back" backTo="/spike_news/posts" />
+            <Nav navName="News" menuButton="back" backTo="/nkwashi_news/posts" />
             <PostContent response={response} />
             <ShareButton url={currentUrl} />
         </Fragment>
