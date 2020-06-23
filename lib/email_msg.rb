@@ -12,7 +12,9 @@ class EmailMsg
 
   # disabling rubocop till I find a better to lighten this method
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def self.send_welcome_msg(user_email, name, community)
+    return if Rails.env.test?
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
 
     client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
@@ -26,7 +28,6 @@ class EmailMsg
     client.mail._('send').post(request_body: mail.to_json)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def self.messages_from_sendgrid(date_from)
     return if Rails.env.test?
 
