@@ -18,13 +18,12 @@ export default function WelcomePage() {
         <>
             <AppBar position="static" style={{ backgroundColor: '#FFFFFF' }} >
                 <Toolbar>
-                    <div className="align-items-center d-flex justify-content-center">
-                        <img src={logo}
-                            style={{
-                                width: 110,
-                                height: 40
-                            }} />
-                    </div>
+                    <img src={logo}
+                        style={{
+                            width: 110,
+                            height: 40
+                        }}
+                        />
                     <Typography variant="h6">
                         News
                     </Typography>
