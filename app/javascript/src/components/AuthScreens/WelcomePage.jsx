@@ -24,7 +24,7 @@ export default function WelcomePage() {
                             height: 40
                         }}
                         alt="Nkwashi logo with title"
-                        />
+                    />
                     <Typography variant="h6">
                         News
                     </Typography>
@@ -42,6 +42,16 @@ export default function WelcomePage() {
                 <CustomButton title="Become a client" />
                 <br />
                 <br />
+                <p className={css(styles.mainText)} data-testid="maintext">
+                    Nkwashi is a new town that is being developed 36 kilometres east of the City of Lusaka.
+                    It is situated along Leopards Hill Road, approximately a 20 minute drive from Cross roads Shopping Mall and
+                    about a half hour drive from the Lusaka CBD. Nkwashi will include more than 9460 residential plots,
+                    as well as hundreds of acres of green areas and parks, 9 schools including an International School
+                    and an American University with a Teaching Hospital.
+                </p>
+                <p className={css(styles.mainText)}>
+                    Already an Nkwashi client? Start your Nkwashi experience today.
+                </p>
                 <Button
                     variant="contained"
                     className={`btn ${css(styles.getStartedButton)}`}
@@ -49,16 +59,13 @@ export default function WelcomePage() {
                 >
                     Login
                  </Button>
+
                 <br />
                 <br />
                 <img src={nkwashiLogoUrl} alt="community logo" data-testid="nkwashi_logo" />
-                <br />
-                <br />
-                <p className={css(styles.mainText)} data-testid="maintext">
-                    Our house plans are designed by among the best architectural firms on the African
-                    continent and will be made available to plot owners.
-                </p>
 
+                <br />
+                <br />
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={4} sm={6}>
                         <LocationOnIcon className={css(styles.icon)} />
@@ -79,7 +86,7 @@ export default function WelcomePage() {
                     </Grid>
                 </Grid>
                 <Divider variant="middle" style={{ color: '#767676' }} />
-                <br/>
+                <br />
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={4} sm={4}>
                         <img src={thebeLogoUrl} alt="thebe logo" data-testid="thebe_logo" />
