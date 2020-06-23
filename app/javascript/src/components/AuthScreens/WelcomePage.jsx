@@ -1,15 +1,33 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, AppBar, Toolbar, Typography } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
+import logo from '../../../../assets/images/logo.png'
 
 export default function WelcomePage() {
     const history = useHistory()
     return (
         <>
+            <AppBar position="static" style={{ backgroundColor: '#FFFFFF' }} >
+                <Toolbar>
+                    <div className="align-items-center d-flex justify-content-center">
+                        <img src={logo}
+                            style={{
+                                width: 110,
+                                height: 40
+                            }} />
+                    </div>
+                    <Typography variant="h6">
+                        News
+                    </Typography>
+                </Toolbar>
+            </AppBar>
             <div className="container_img">
                 <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Nkwashi landing page image"/>
+                <div className="centered" data-testid="maintext-centered">
+                    <h2 >Its not just a house, its a way of life</h2>
+                </div>
                 <br />
                 <br/>
                 <CustomButton title="Schedule a call" />
@@ -22,16 +40,13 @@ export default function WelcomePage() {
                     className={`btn ${css(styles.getStartedButton)}`}
                     onClick={() => history.push("/login")}
                 >
-                    Get Started
+                    Login
                  </Button>
                 <p className={css(styles.mainText)} data-testid="maintext">
                     Our house plans are designed by among the best architectural firms on the African 
                     continent and will be made available to plot owners.
                 </p>
- 
-                <div className="centered" data-testid="maintext-centered">
-                    <h2 >Its not just a house, its a way of life</h2>
-                </div>
+
                 <p className={css(styles.mainText)} data-testid="locationtext" >We are located in Woodlands, 11 Nalikwanda Road, Lusaka, Zambia</p>
             </div>
         </>
