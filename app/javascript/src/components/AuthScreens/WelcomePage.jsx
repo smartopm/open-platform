@@ -16,7 +16,7 @@ export default function WelcomePage() {
     const history = useHistory()
     return (
         <>
-            <AppBar position="static" style={{ backgroundColor: '#FFFFFF' }} >
+            <AppBar position="static" style={{ backgroundColor: '#FFFFFF', boxShadow: 'none' }} >
                 <Toolbar>
                     <img src={logo}
                         style={{
