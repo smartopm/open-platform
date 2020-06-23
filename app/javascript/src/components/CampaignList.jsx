@@ -15,7 +15,7 @@ export default function CampaignList() {
   function routeToAction(_event, id) {
     return history.push(`/campaign/${id}`)
   }
-  function routeToCreateCampaign(_event){
+  function routeToCreateCampaign(){
     return history.push('/campaign-create')
   }
   if (loading) return <Loading />
@@ -77,7 +77,7 @@ export default function CampaignList() {
                 right: 57,
                 color: '#009688'
             }}
-            onClick={()=> {routeToCreateCampaign(event)}}
+            onClick={()=> {routeToCreateCampaign()}}
             color="inherit"
             >
         <AddIcon />
