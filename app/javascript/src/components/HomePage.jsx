@@ -226,9 +226,9 @@ export default function Homepage({ authState }) {
       access: ['contractor']
     },
     {
-      card_id: 17,
+      card_id: 18,
       title: `${authState.user.community.name} News 2.0`,
-      path: `/spike_news`,
+      path: `/nkwashi_news`,
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
       access: [

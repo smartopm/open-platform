@@ -1,39 +1,120 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, AppBar, Toolbar, Typography, Grid, Divider } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
+import logo from '../../../../assets/images/logo.png'
+import nkwashiLogoUrl from '../../../../assets/images/logo-footer.png'
+import thebeLogoUrl from '../../../../assets/images/thebe-logo.png'
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import CallIcon from '@material-ui/icons/Call';
+import MailIcon from '@material-ui/icons/Mail';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
 export default function WelcomePage() {
     const history = useHistory()
     return (
         <>
-            
+            <AppBar position="static" style={{ backgroundColor: '#FFFFFF', boxShadow: 'none' }} >
+                <Toolbar>
+                    <img src={logo}
+                        style={{
+                            width: 110,
+                            height: 40
+                        }}
+                        alt="Nkwashi logo with title"
+                    />
+                    <Typography variant="h6">
+                        News
+                    </Typography>
+                </Toolbar>
+            </AppBar>
             <div className="container_img">
-                <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Nkwashi landing page image"/>
+                <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Nkwashi landing page image" />
+                <div className="centered" data-testid="maintext-centered">
+                    <h2 >Its not just a house, its a way of life</h2>
+                </div>
                 <br />
-                <br/>
+                <br />
                 <CustomButton title="Schedule a call" />
                 <CustomButton title="Book a tour" />
                 <CustomButton title="Become a client" />
                 <br />
                 <br />
+                <p className={css(styles.mainText)} data-testid="maintext">
+                    Nkwashi is a new town that is being developed 36 kilometres east of the City of Lusaka.
+                    It is situated along Leopards Hill Road, approximately a 20 minute drive from Cross roads Shopping Mall and
+                    about a half hour drive from the Lusaka CBD. Nkwashi will include more than 9460 residential plots,
+                    as well as hundreds of acres of green areas and parks, 9 schools including an International School
+                    and an American University with a Teaching Hospital.
+                </p>
+                <p className={css(styles.mainText)}>
+                    Already an Nkwashi client? Start your Nkwashi experience today.
+                </p>
                 <Button
                     variant="contained"
                     className={`btn ${css(styles.getStartedButton)}`}
                     onClick={() => history.push("/login")}
                 >
-                    Get Started
+                    Login
                  </Button>
-                <p className={css(styles.mainText)} data-testid="maintext">
-                    Our house plans are designed by among the best architectural firms on the African 
-                    continent and will be made available to plot owners.
-                </p>
- 
-                <div className="centered" data-testid="maintext-centered">
-                    <h2 >Its not just a house, its a way of life</h2>
-                </div>
-                <p className={css(styles.mainText)} data-testid="locationtext" >We are located in Woodlands, 11 Nalikwanda Road, Lusaka, Zambia</p>
+
+                <br />
+                <br />
+                <img src={nkwashiLogoUrl} alt="community logo" data-testid="nkwashi_logo" />
+
+                <br />
+                <br />
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={4} sm={6}>
+                        <LocationOnIcon className={css(styles.icon)} />
+                        <p className={css(styles.mainText)} data-testid="locationtext" >11 Nalikwanda Road, Lusaka, Zambia</p>
+                    </Grid>
+                    <Grid item xs={12} md={4} sm={6}>
+                        <CallIcon className={css(styles.icon)} />
+                        <p className={css(styles.mainText)}>
+                            +260-211-268-915 , + 260-972-577-234 <br />
+                        + 260-961-105-655, + 260-954-809-717
+                        </p>
+                    </Grid>
+                    <Grid item xs={12} md={4} sm={12}>
+                        <MailIcon className={css(styles.icon)} />
+                        <p className={css(styles.mainText)}>
+                            hello@thebe-im.com
+                        </p>
+                    </Grid>
+                </Grid>
+                <Divider variant="middle" style={{ color: '#767676' }} />
+                <br />
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={4} sm={4}>
+                        <img src={thebeLogoUrl} alt="thebe logo" data-testid="thebe_logo" />
+                    </Grid>
+                    <Grid item xs={12} md={4} sm={4}>
+                        <p className={css(styles.footerText)} data-testid="copyright_text">
+                            ©2017. Thebe Investment Management Limited. All Rights Reserved
+                        </p>
+                    </Grid>
+                    <Grid item xs={12} md={4} sm={4}>
+                        <Button
+                            startIcon={<FacebookIcon />}
+                            className={css(styles.iconButton)}
+                        >
+                            <a className={css(styles.socialLinks)} data-testid="fb_like" href="https://www.facebook.com/nkwashi.soar/" target='_blank' rel="noopener noreferrer">
+                                Like
+                            </a>
+                        </Button>
+                        <Button
+                            startIcon={<LinkedInIcon />}
+                            className={css(styles.iconButton)}
+                        >
+                            <a className={css(styles.socialLinks)} data-testid="ld_follow" href="https://www.linkedin.com/company/10478892" target='_blank' rel="noopener noreferrer">
+                                Follow us
+                            </a>
+                        </Button>
+                    </Grid>
+                </Grid>
             </div>
         </>
     )
@@ -72,8 +153,9 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     mainText: {
-        color: '#343a40',
-        margin: 30
+        color: '#767676',
+        margin: 30,
+        marginTop: 10
     },
     getStartedButton: {
         backgroundColor: "#25c0b0",
@@ -82,4 +164,19 @@ const styles = StyleSheet.create({
         height: 51,
         boxShadow: "none"
     },
+    icon: {
+        color: '#25c0b0'
+    },
+    footerText: {
+        color: '#767676',
+        marginTop: 10
+    },
+    iconButton: {
+        textTransform: 'none',
+    },
+    socialLinks: {
+        textDecoration: 'none',
+        color: '#767676',
+        marginLeft: -7
+    }
 })
