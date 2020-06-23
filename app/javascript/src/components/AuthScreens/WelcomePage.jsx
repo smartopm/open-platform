@@ -23,6 +23,7 @@ export default function WelcomePage() {
                             width: 110,
                             height: 40
                         }}
+                        alt="Nkwashi logo with title"
                         />
                     <Typography variant="h6">
                         News
@@ -50,7 +51,7 @@ export default function WelcomePage() {
                  </Button>
                 <br />
                 <br />
-                <img src={nkwashiLogoUrl} alt="community logo" />
+                <img src={nkwashiLogoUrl} alt="community logo" data-testid="nkwashi_logo" />
                 <br />
                 <br />
                 <p className={css(styles.mainText)} data-testid="maintext">
@@ -80,10 +81,10 @@ export default function WelcomePage() {
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={4} sm={4}>
-                        <img src={thebeLogoUrl} alt="thebe logo" />
+                        <img src={thebeLogoUrl} alt="thebe logo" data-testid="thebe_logo" />
                     </Grid>
                     <Grid item xs={12} md={4} sm={4}>
-                        <p className={css(styles.footerText)}>
+                        <p className={css(styles.footerText)} data-testid="copyright_text">
                             ©2017. Thebe Investment Management Limited. All Rights Reserved
                         </p>
                     </Grid>
@@ -92,7 +93,7 @@ export default function WelcomePage() {
                             startIcon={<FacebookIcon />}
                             className={css(styles.iconButton)}
                         >
-                            <a className={css(styles.socialLinks)} href="https://www.facebook.com/nkwashi.soar/" target='_blank' rel="noopener noreferrer">
+                            <a className={css(styles.socialLinks)} data-testid="fb_like" href="https://www.facebook.com/nkwashi.soar/" target='_blank' rel="noopener noreferrer">
                                 Like
                             </a>
                         </Button>
@@ -100,7 +101,7 @@ export default function WelcomePage() {
                             startIcon={<LinkedInIcon />}
                             className={css(styles.iconButton)}
                         >
-                            <a className={css(styles.socialLinks)} href="https://www.linkedin.com/company/10478892" target='_blank' rel="noopener noreferrer">
+                            <a className={css(styles.socialLinks)} data-testid="ld_follow" href="https://www.linkedin.com/company/10478892" target='_blank' rel="noopener noreferrer">
                                 Follow us
                             </a>
                         </Button>
