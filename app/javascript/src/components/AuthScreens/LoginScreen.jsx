@@ -68,16 +68,17 @@ export function LoginScreen() {
     setOpen(!open)
   }
   function handleClick() {
-    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please  provide me with my login credentials. \n Full Name: ${username} \n Phone Nnumber or Email: ${value} (Please include)`, 'emailWindow')
+       //Google Analytics tracking 
+       ReactGA.event({
+        category: 'LoginPage',
+        action: 'TroubleLogging',
+        eventLabel: "Trouble Logging on Login Page",
+        nonInteraction: true
+      });
+    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`, 'emailWindow')
     setOpen(!open);
 
-    //Google Analytics tracking 
-    ReactGA.event({
-      category: 'LoginPage',
-      action: 'TroubleLogging',
-      eventLabel: "Trouble Logging on Login Page",
-      nonInteraction: true
-    });
+ 
   }
 
 
@@ -96,12 +97,12 @@ export function LoginScreen() {
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
           <Typography color="textSecondary" variant="body2">
-            The Nkwashi app, powered by DoubleGDP, provides clients and visitors with fast, easy, and secure access to the site through a digital ID / QR Code.
+            Hello! This is your all inclusive stop for Nkwashi news, payments, client requests, gate access, and support.
           </Typography>
 
           <br />
           <br />
-          <Typography color="textSecondary" variant="body1">
+          <Typography color="textSecondary" variant="body2">
             Please log in with your phone number here:
           </Typography>
         </div>
@@ -197,7 +198,7 @@ export function LoginScreen() {
           type="text"
           onChange={event => setValue(event.target.value)}
           name="email-number"
-          placeholder="Enter Email/Phonenumber"
+          placeholder="Enter Email/Phone number"
         />
 
       </ModalDialog>
