@@ -59,15 +59,22 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
+    if(batchTime === ''){
+      setBatchTime(formData.batchTime)
+      console.log(formData.batchTime)
+    }
     const campaingData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      batchTime: batchTime,
+      batchTime: formData.batchTime,
       userIdList: formData.userIdList
     }
+    console.log(campaingData)
     campaign({ variables: campaingData })
-      .then(() => setIsSubmitted(true))
+      .then( () => {
+        setIsSubmitted(true)
+      })
       .catch(err => {
         setErrorMsg(err.message)
       })
