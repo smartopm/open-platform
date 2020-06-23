@@ -18,6 +18,18 @@ class User < ApplicationRecord
     attributes :name, :phone_number, :user_type
   end
 
+  scope :allowed_users, lambda { |current_user|
+    policy = UserPolicy.new(current_user, nil)
+    allowed_user_types = policy.roles_user_can_see
+    relat = where(community_id: current_user.community_id)
+    return relat if allowed_user_types == '*'
+    if policy.role_can_see_self?
+      return relat.where(user_type: allowed_user_types).or(relat.where(id: current_user.id))
+    end
+
+    return relat.where(user_type: allowed_user_types)
+  }
+
   belongs_to :community, optional: true
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
