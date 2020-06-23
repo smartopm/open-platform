@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, AppBar, Toolbar, Typography, Grid } from '@material-ui/core'
+import { Button, AppBar, Toolbar, Typography, Grid, Divider } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
@@ -77,8 +77,9 @@ export default function WelcomePage() {
                             hello@thebe-im.com
                         </p>
                     </Grid>
-                    <hr />
                 </Grid>
+                <Divider variant="middle" style={{ color: '#767676' }} />
+                <br/>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={4} sm={4}>
                         <img src={thebeLogoUrl} alt="thebe logo" data-testid="thebe_logo" />
