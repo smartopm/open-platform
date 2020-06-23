@@ -22,6 +22,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
 import PeopleIcon from '@material-ui/icons/People'
+import TelegramIcon from '@material-ui/icons/Telegram'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -59,7 +60,7 @@ export default function Homepage({ authState }) {
       title: 'My Account',
       path: `/myaccount/${authState.user.id}`,
       from: 'acc',
-      icon: <AccountCircleIcon fontSize="large"/>,
+      icon: <AccountCircleIcon fontSize="large" />,
       access: ['resident', 'client']
     },
     {
@@ -67,7 +68,7 @@ export default function Homepage({ authState }) {
       title: 'Users',
       path: `/users`,
 
-      icon: <RecentActorsIcon fontSize="large"/>,
+      icon: <RecentActorsIcon fontSize="large" />,
       access: ['admin']
     },
     {
@@ -96,7 +97,7 @@ export default function Homepage({ authState }) {
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
-      icon: <ForumIcon fontSize="large"/>,
+      icon: <ForumIcon fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -109,22 +110,30 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 7,
-      title: 'Tasks',
-      path: `/todo`,
+      title: `Campaigns`,
+      path: `/campaign-create`,
 
-      icon: <PlaylistAddCheckIcon fontSize="large"/>,
+      icon: <TelegramIcon fontSize="large" />,
       access: ['admin']
     },
     {
       card_id: 8,
-      title: 'Notes',
-      path: `/notes`,
+      title: 'Tasks',
+      path: `/todo`,
 
-      icon: <NotesIcon fontSize="large"/>,
+      icon: <PlaylistAddCheckIcon fontSize="large" />,
       access: ['admin']
     },
     {
       card_id: 9,
+      title: 'Notes',
+      path: `/notes`,
+
+      icon: <NotesIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      card_id: 10,
       title: 'My Thebe Portal',
       path: `/account`,
       titleStyle: css(styles.CardtextImg),
@@ -136,7 +145,7 @@ export default function Homepage({ authState }) {
       access: ['admin', 'resident', 'client']
     },
     {
-      card_id: 10,
+      card_id: 11,
       title: 'Client Request Form',
       path: `/`,
       id: 'crfl',
@@ -151,39 +160,39 @@ export default function Homepage({ authState }) {
           }`,
           '_blank'
         ),
-      icon: <ListAltIcon fontSize="large"/>,
+      icon: <ListAltIcon fontSize="large" />,
       access: ['admin', 'resident', 'client']
-    },
-    {
-      card_id: 11,
-      title: 'Time Card',
-      path: `/timesheet`,
-
-      icon: <HourglassEmptyIcon fontSize="large"/>,
-      access: ['admin', 'custodian']
     },
     {
       card_id: 12,
-      title: 'Log Book',
-      path: `/entry_logs`,
+      title: 'Time Card',
+      path: `/timesheet`,
 
-      icon: <LogIcon fontSize="large"/>,
-      access: ['security_guard', 'admin']
+      icon: <HourglassEmptyIcon fontSize="large" />,
+      access: ['admin', 'custodian']
     },
     {
       card_id: 13,
-      title: 'Referrals',
-      path: `/referral`,
-      from: 'ref',
-      icon: <PeopleIcon fontSize="large"/>,
-      access: ['admin', 'resident', 'client']
+      title: 'Log Book',
+      path: `/entry_logs`,
+
+      icon: <LogIcon fontSize="large" />,
+      access: ['security_guard', 'admin']
     },
     {
       card_id: 14,
+      title: 'Referrals',
+      path: `/referral`,
+      from: 'ref',
+      icon: <PeopleIcon fontSize="large" />,
+      access: ['admin', 'resident', 'client']
+    },
+    {
+      card_id: 15,
       title: `${authState.user.community.name} Support`,
       path: `/contact`,
 
-      icon: <HelpIcon fontSize="large"/>,
+      icon: <HelpIcon fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -195,20 +204,20 @@ export default function Homepage({ authState }) {
       ]
     },
     {
-      card_id: 15,
+      card_id: 16,
       title: `Time Card`,
       path: `/timesheet/${authState.user.id}`,
 
-      icon: <PlaylistAddCheckIcon fontSize="large"/>,
+      icon: <PlaylistAddCheckIcon fontSize="large" />,
       access: ['contractor']
     },
     {
-      card_id: 16,
+      card_id: 17,
       children: (
         <a href={`tel:${ponisoNumber}`}>
           <div className="card-body">
             <h5 className="card-title">
-              <CallIcon fontSize="large"/>
+              <CallIcon fontSize="large" />
             </h5>
             <p className={css(styles.CardtextIcon)}>Call Manager</p>
           </div>
@@ -217,19 +226,13 @@ export default function Homepage({ authState }) {
       access: ['contractor']
     },
     {
-      card_id: 17,
+      card_id: 18,
       title: `${authState.user.community.name} News 2.0`,
-      path: `/spike_news`,
+      path: `/nkwashi_news`,
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
       access: [
-        'admin',
-        'client',
-        'security_guard',
-        'prospective_client',
-        'contractor',
-        'resident',
-        'visitor'
+        'admin'
       ]
     }
   ]

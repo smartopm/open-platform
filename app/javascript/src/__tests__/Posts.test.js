@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from '@testing-library/react'
-import PostiItem from '../components/NewsPage/PostiItem';
+import PostItem from '../components/NewsPage/PostItem';
 
 describe('Testing the posts Card', () => {
 
@@ -13,7 +13,7 @@ describe('Testing the posts Card', () => {
 
     it('it should always render', ()=>{
 
-        const container = render( <PostiItem {...data} />)
+        const container = render( <PostItem {...data} />)
         expect(container.queryByText('Test title')).toBeTruthy()
         expect(container.queryByText('Test content for the Nkwashi news')).toBeTruthy()
 

@@ -12,11 +12,17 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { useMutation } from "react-apollo";
 import { loginPhone } from "../../graphql/mutations";
 import { getAuthToken } from "../../utils/apollo";
+import { ModalDialog } from "../Dialog";
+import { areaCode } from '../../utils/constants'
+import ReactGA from 'react-ga'
 
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loginPhoneStart] = useMutation(loginPhone);
+  const [open, setOpen] = useState(false)
+  const [username, setUsername] = useState('')
+  const [value, setValue] = useState('')
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState(260);
@@ -58,6 +64,23 @@ export function LoginScreen() {
     }
   })
 
+  function handleModal() {
+    setOpen(!open)
+  }
+  function handleClick() {
+       //Google Analytics tracking 
+       ReactGA.event({
+        category: 'LoginPage',
+        action: 'TroubleLogging',
+        eventLabel: "Trouble Logging on Login Page",
+        nonInteraction: true
+      });
+    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`, 'emailWindow')
+    setOpen(!open);
+
+ 
+  }
+
 
   return (
     <div style={{ height: "100vh" }} className="login-page">
@@ -74,12 +97,12 @@ export function LoginScreen() {
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
           <Typography color="textSecondary" variant="body2">
-            The Nkwashi app, powered by DoubleGDP, provides clients and visitors with fast, easy, and secure access to the site through a digital ID / QR Code.
+            Hello! This is your all inclusive stop for Nkwashi news, payments, client requests, gate access, and support.
           </Typography>
 
           <br />
           <br />
-          <Typography color="textSecondary" variant="body1">
+          <Typography color="textSecondary" variant="body2">
             Please log in with your phone number here:
           </Typography>
         </div>
@@ -111,8 +134,9 @@ export function LoginScreen() {
                     }}
                     onChange={e => setCountryCode(e.target.value)}
                   >
-                    <option value={260}>🇿🇲 +260</option>
-                    <option value={1}>🇺🇸 +1</option>
+                    {Object.entries(areaCode).map(([key, val]) => (
+                      <option key={key} value={key}>{val}</option>
+                    ))}
                   </Select>
                 </InputAdornment>
               )
@@ -147,6 +171,38 @@ export function LoginScreen() {
           </a>
         </div>
       </div>
+
+      <div data-testid="trouble-logging-div" className="row justify-content-center align-items-center">
+        <p onClick={handleModal} style={{ marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
+      </div>
+
+      <ModalDialog
+        open={open}
+        handleClose={handleModal}
+        handleConfirm={handleClick}
+        action='Send Email'
+      >
+        <h6>
+          To request your login information, email: <a>support@doublegdp.com</a>
+        </h6>
+        <br />
+        <input
+          className="form-control"
+          type="text"
+          onChange={event => setUsername(event.target.value)}
+          name="name"
+          placeholder="Enter Full name here"
+        />
+        <input
+          className="form-control"
+          type="text"
+          onChange={event => setValue(event.target.value)}
+          name="email-number"
+          placeholder="Enter Email/Phone number"
+        />
+
+      </ModalDialog>
+
     </div>
   );
 }

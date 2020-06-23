@@ -30,7 +30,6 @@ import Search from '../src/containers/Search'
 import UserEdit from '../src/containers/UserEdit'
 import PendingUsers from '../src/containers/PendingUsers'
 import Loading from '../src/components/Loading.jsx'
-import { WelcomeScreen } from '../src/components/AuthScreens/WelcomeScreen'
 import '../src/i18n'
 import Map from '../src/containers/Map'
 import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
@@ -67,8 +66,11 @@ import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
-import Campaign from '../src/containers/Campaign'
+import CampaignCreate from '../src/containers/Campaigns/CampaignCreate'
+import Campaigns from "../src/containers/Campaigns/Campaigns";
 import Scan from '../src/containers/Scan.jsx'
+import WelcomePage from '../src/components/AuthScreens/WelcomePage'
+import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate'
 import Posts from '../src/containers/Posts/Posts'
 import NewsPage from '../src/containers/Posts/NewsPage'
 import PostPage from '../src/containers/Posts/PostPage'
@@ -174,12 +176,13 @@ const App = () => {
             <Analytics>
               {/* onboarding */}
               <Switch>
-                <Route path="/welcome" component={WelcomeScreen} />
+                <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={GoogleAuthCallback} />
+                {/* <Route path="/welcome_page" component={WelcomePage} /> */}
 
                 <LoggedInOnly>
                   <Switch>
@@ -235,7 +238,9 @@ const App = () => {
                     />
 
                     <Route path="/message/:id" component={UserMessages} />
-                    <Route path="/campaign" component={Campaign} />
+                    <Route path="/campaign-create" component={CampaignCreate} />
+                    <Route path="/campaigns" component={Campaigns} />
+                    <Route path="/campaign/:id" component={CampaignUpdate} />
 
                     {/* users */}
                     <Route path="/news/" exact component={NewsContentPage} />
@@ -253,9 +258,9 @@ const App = () => {
                     <Route path="/client_request_from" exact component={ClientRequestForm} />
 
                     {/* Spike page */}
-                    <Route path="/spike_news" exact component={NewsPage} />
-                    <Route path="/spike_news/:slug" exact component={Posts} />
-                    <Route path="/spike_news/post/:id" exact component={PostPage} />
+                    <Route path="/nkwashi_news" exact component={NewsPage} />
+                    <Route path="/nkwashi_news/:slug" exact component={Posts} />
+                    <Route path="/nkwashi_news/post/:id" exact component={PostPage} />
 
                     <AdminRoutes>
                       <Switch>
