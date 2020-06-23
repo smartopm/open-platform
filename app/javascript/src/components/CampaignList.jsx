@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import { useHistory } from 'react-router-dom'
 import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
@@ -12,6 +14,9 @@ export default function CampaignList() {
   const { data, error, loading } = useQuery(allCampaigns,{fetchPolicy: "cache-and-network"})
   function routeToAction(_event, id) {
     return history.push(`/campaign/${id}`)
+  }
+  function routeToCreateCampaign(_event){
+    return history.push('/campaign-create')
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage />
@@ -62,10 +67,22 @@ export default function CampaignList() {
             </div>
             <br />
           </div>
-
           <div className="border-top my-3" />
         </Fragment>
       ))}
+            <Fab variant="extended"
+            style={{
+                position: 'fixed',
+                bottom: 24,
+                right: 57,
+                color: '#009688'
+            }}
+            onClick={()=> {routeToCreateCampaign(event)}}
+            color="inherit"
+            >
+        <AddIcon />
+       {" "} Create 
+      </Fab>
     </div>
   )
 }

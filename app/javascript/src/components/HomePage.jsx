@@ -111,7 +111,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 7,
       title: `Campaigns`,
-      path: `/campaign-create`,
+      path: `/campaigns`,
 
       icon: <TelegramIcon fontSize="large" />,
       access: ['admin']
