@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, AppBar, Toolbar, Typography } from '@material-ui/core'
+import { Button, AppBar, Toolbar, Typography, Grid } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
@@ -51,7 +51,24 @@ export default function WelcomePage() {
                     continent and will be made available to plot owners.
                 </p>
 
-                <p className={css(styles.mainText)} data-testid="locationtext" >We are located in Woodlands, 11 Nalikwanda Road, Lusaka, Zambia</p>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={4}>
+                        <p className={css(styles.mainText)} data-testid="locationtext" >11 Nalikwanda Road, Lusaka, Zambia</p>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <p className={css(styles.mainText)}>
+                        +260-211-268-915 , + 260-972-577-234, <br />
+                        + 260-961-105-655, + 260-954-809-717
+                        </p>
+                        
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <p className={css(styles.mainText)}>
+                            hello@thebe-im.com
+                        </p>
+                    </Grid>
+                </Grid>
+
             </div>
         </>
     )
