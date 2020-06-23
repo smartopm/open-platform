@@ -68,7 +68,7 @@ export function LoginScreen() {
     setOpen(!open)
   }
   function handleClick() {
-    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please  provide me with my login credentials. \n Full Name: ${username} \n Phone Nnumber or Email: ${value} (Please include)`, 'emailWindow')
+    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`, 'emailWindow')
     setOpen(!open);
 
     //Google Analytics tracking 
