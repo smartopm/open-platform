@@ -3,7 +3,6 @@
 # Queries module for breaking out queries
 module Types::Queries::User
   extend ActiveSupport::Concern
-
   included do
     # Get a member's information
     field :user, Types::UserType, null: true do
@@ -46,15 +45,14 @@ module Types::Queries::User
   def user(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    User.find(id)
+    User.allowed_users(context[:current_user]).find(id)
   end
 
   def users(offset: 0, limit: 100, query: nil)
     adm = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
-    User.eager_load(:notes, :accounts)
-        .where(community_id: context[:current_user].community_id)
+    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)
         .search(query)
         .limit(limit)
         .offset(offset).with_attached_avatar
@@ -63,8 +61,7 @@ module Types::Queries::User
   def user_search(query: nil, offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.eager_load(:notes, :accounts)
-        .where(community_id: context[:current_user].community_id)
+    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)
         .search(query)
         .order(name: :asc)
         .limit(limit)
@@ -80,7 +77,7 @@ module Types::Queries::User
   def pending_users
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.eager_load(:notes, :accounts)
+    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)
         .where(state: 'pending',
                community_id: context[:current_user].community_id).with_attached_avatar
   end
@@ -88,7 +85,7 @@ module Types::Queries::User
   def security_guards
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.eager_load(:notes, :accounts).where(
+    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts).where(
       community_id: context[:current_user].community_id,
       user_type: 'security_guard',
     ).order(name: :asc).with_attached_avatar

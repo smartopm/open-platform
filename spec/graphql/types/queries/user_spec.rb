@@ -4,8 +4,12 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::User do
   describe 'user' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community, community_id: current_user.community_id) }
+    let!(:current_user) { create(:user_with_community, user_type: 'client') }
+    let!(:another_user) do
+      create(:user_with_community,
+             user_type: 'client',
+             community_id: current_user.community_id)
+    end
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
 
     let(:query) do
