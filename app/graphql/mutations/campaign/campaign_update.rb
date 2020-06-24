@@ -5,10 +5,10 @@ module Mutations
     # CampaignUpdate
     class CampaignUpdate < BaseMutation
       argument :id, ID, required: true
-      argument :name, String, required: true
-      argument :message, String, required: true
-      argument :batch_time, String, required: true
-      argument :user_id_list, String, required: true
+      argument :name, String, required: false
+      argument :message, String, required: false
+      argument :batch_time, String, required: false
+      argument :user_id_list, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 

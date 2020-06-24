@@ -448,10 +448,10 @@ export const CampaignCreate = gql`
 export const CampaignUpdate = gql`
   mutation campaignUpdate(
     $id: ID!
-    $name: String!
-    $message: String!
-    $batchTime: String!
-    $userIdList: String!
+    $name: String
+    $message: String
+    $batchTime: String
+    $userIdList: String
   ) {
     campaignUpdate(
       id: $id
