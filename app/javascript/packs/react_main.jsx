@@ -260,9 +260,9 @@ const App = () => {
                       <Route path="/client_request_from" exact component={ClientRequestForm} />
 
                       {/* Spike page */}
-                      <Route path="/spike_news" exact component={NewsPage} />
-                      <Route path="/spike_news/:slug" exact component={Posts} />
-                      <Route path="/spike_news/post/:id" exact component={PostPage} />
+                      <Route path="/nkwashi_news" exact component={NewsPage} />
+                      <Route path="/nkwashi_news/:slug" exact component={Posts} />
+                      <Route path="/nkwashi_news/post/:id" exact component={PostPage} />
 
                       <AdminRoutes>
                         <Switch>
