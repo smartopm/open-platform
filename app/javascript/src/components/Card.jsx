@@ -20,9 +20,9 @@ export default function Card({
     return null
   }
   return (
-    <Fragment>
       <div
-        className={`${css(styles.cardSize)} card align-self-center text-center`}
+      className={`${css(styles.cardSize)} card align-self-center text-center`}
+      onClick={handleClick}
       >
         <span>{children}</span>
         <Link
@@ -34,7 +34,7 @@ export default function Card({
               from: from
             }
           }}
-          onClick={handleClick}
+          
           id={id}
           className={`card-link`}
         >
@@ -48,7 +48,6 @@ export default function Card({
           </div>
         </Link>
       </div>
-    </Fragment>
   )
 }
 
