@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'

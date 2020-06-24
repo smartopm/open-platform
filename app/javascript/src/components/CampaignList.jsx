@@ -6,7 +6,6 @@ import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
-import { Button } from '@material-ui/core'
 
 export default function CampaignList() {
   const history = useHistory()
@@ -16,7 +15,7 @@ export default function CampaignList() {
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage />
-console.log(data)
+  
   return (
     <div className="container">
       { data.campaigns.map(c => (
@@ -48,7 +47,7 @@ console.log(data)
             <br />
             <div className="row justify-content-between">
               <div className="col-xs-4">
-                <Button
+                <span
                   style={{
                     cursor: 'pointer',
                     color: '#009688'
@@ -57,7 +56,7 @@ console.log(data)
                   onClick={(event) => routeToAction(event, c.id)}
                 >
                   More Details
-                </Button>
+                </span>
               </div>
             </div>
             <br />
