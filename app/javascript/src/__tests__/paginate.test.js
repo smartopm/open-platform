@@ -45,4 +45,16 @@ describe('paginate component', () => {
       const btn = getByTestId('next-btn')
       expect(btn).toBeDisabled()
     })
+  
+  it('next button should be not disabled when count is more than limit', () => {
+      const prevProps = {
+        offSet: 0,
+        count: 15,
+        limit: 10,
+        handlePageChange: jest.fn()
+      }
+      const { getByTestId } = render(<Paginate {...prevProps} />)
+      const btn = getByTestId('next-btn')
+      expect(btn).not.toBeDisabled()
+    })
 })
