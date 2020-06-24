@@ -6,6 +6,7 @@ import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
+import { Button } from '@material-ui/core'
 
 export default function CampaignList() {
   const history = useHistory()
@@ -15,15 +16,15 @@ export default function CampaignList() {
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage />
-
+console.log(data)
   return (
     <div className="container">
-      {data.campaigns.map(c => (
+      { data.campaigns.map(c => (
         <Fragment key={c.id}>
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.logTitle)}>{c.name}</span>
+                <span className={css(styles.logTitle)} data-testid="c_name" >{c.name}</span>
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.access)}>
@@ -41,23 +42,22 @@ export default function CampaignList() {
                 </span>
               </div>
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>{c.message}</span>
+                <span className={css(styles.subTitle)} data-testid="c_message" >{c.message}</span>
               </div>
             </div>
             <br />
             <div className="row justify-content-between">
               <div className="col-xs-4">
-                <span
+                <Button
                   style={{
                     cursor: 'pointer',
                     color: '#009688'
                   }}
-                  onClick={() => {
-                    routeToAction(event,c.id)
-                  }}
+                  data-testid="more_details_btn"
+                  onClick={(event) => routeToAction(event, c.id)}
                 >
                   More Details
-                </span>
+                </Button>
               </div>
             </div>
             <br />

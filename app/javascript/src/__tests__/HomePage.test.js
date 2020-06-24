@@ -2,7 +2,7 @@ import React from 'react'
 import Homepage from '../components/HomePage'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { BrowserRouter, Redirect } from 'react-router-dom/'
+import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 
 describe("HomePage component ",() => {

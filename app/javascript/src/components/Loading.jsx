@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function Loading() {
   return (
-    <div className={css(styles.todoSection)}>
+    <div className={css(styles.todoSection)} data-testid="loader">
       <div className="d-flex w-100 justify-content-center align-self-center">
         <div className="lds-ripple">
           <div></div>
