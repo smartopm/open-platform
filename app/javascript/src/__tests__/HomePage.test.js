@@ -174,7 +174,7 @@ describe("HomePage component ",() => {
     expect(window.open).toBeCalled()
   });
 
-  it('should open the new when clicked on the client request form', () => {
+  it('should not contain any non security_guard cards', () => {
     const prospectAuthState = {
       loaded: true,
       loggedIn: true,

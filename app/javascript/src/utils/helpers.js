@@ -54,6 +54,7 @@ const cleanedFields = {
  *
  */
 export function saniteError(requiredFields, errorMessage) {
+  
   if (!errorMessage.length) return;
   const errArr = errorMessage.split(" ");
   const foundFields = requiredFields.filter(field => errArr.includes(field));

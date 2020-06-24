@@ -53,6 +53,7 @@ export default function CampaignForm({authState }) {
         onSubmit={e => {
           handleSubmit(e)
         }}
+        aria-label="campaign-form"
       >
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -64,6 +65,7 @@ export default function CampaignForm({authState }) {
             onChange={e => setName(e.target.value)}
             value={name}
             name="name"
+            aria-label="campaign_name"
             required
           />
         </div>
@@ -77,6 +79,7 @@ export default function CampaignForm({authState }) {
             onChange={e => setMessage(e.target.value)}
             value={message}
             name="name"
+            aria-label="campaign_message"
             required
           />
         </div>
@@ -88,6 +91,8 @@ export default function CampaignForm({authState }) {
             required
             className="form-control"
             value={userIdList}
+            aria-label="campaign_ids"
+            inputProps={{ "data-testid": "campaign_ids" }}
             onChange={e => handleUserIDList(e, e.target.value)}
           />
         </div>
@@ -104,6 +109,7 @@ export default function CampaignForm({authState }) {
           <Button
             variant="contained"
             type="submit"
+            aria-label="campaign_submit"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
           >
             <span>Submit</span>
