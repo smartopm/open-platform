@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import PostItem from '../../components/NewsPage/PostItem'
 import { dateToString } from '../../components/DateContainer'
@@ -9,18 +9,18 @@ import { wordpressEndpoint } from '../../utils/constants'
 import { titleCase } from '../../utils/helpers'
 import Nav from '../../components/Nav'
 import { ShareButton } from '../../components/ShareButton'
+import { Spinner } from '../../components/Loading'
 
 export default function Posts() {
     const {slug} = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     const currentUrl = window.location.href
 
-    // TODO: @olivier ==> add better error page and loading component here
     if (error) {
-        return error
+        return error.message
     }
     if (!response) {
-        return 'loading'
+        return <Spinner />
     }
     return (
         <React.Fragment>

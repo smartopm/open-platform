@@ -9,7 +9,7 @@ export default function Categories() {
     const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
     // TODO: @olivier ==> add better error page and loading component here
     if (error) {
-        return error
+        return error.message
     }
     if (!response || !response.found) {
         return <Spinner />
