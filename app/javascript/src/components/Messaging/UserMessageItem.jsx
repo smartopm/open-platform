@@ -70,7 +70,7 @@ export default function UserMessageItem({
                 check_route() !== 'is_post' && (
                   <Badge className="nz_msg_tag"
                     color={category === 'email' ? 'secondary' : 'error'}
-                    badgeContent={category && category === 'email' ? <span>{' '} Email</span> : <span>SMS</span>}
+                    badgeContent={category && category === 'email' ? <span>{' '} Email</span> : <span>{' '}SMS</span>}
                     style={{ marginLeft: 25 }}
                   />
                 )
