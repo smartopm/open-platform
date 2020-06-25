@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_07_102652) do
+ActiveRecord::Schema.define(version: 2020_06_25_104005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -75,6 +75,15 @@ ActiveRecord::Schema.define(version: 2020_06_07_102652) do
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.uuid "post_id"
+    t.uuid "community_id"
+    t.uuid "user_id"
+    t.text "comment"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "communities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "google_domain"
@@ -84,16 +93,6 @@ ActiveRecord::Schema.define(version: 2020_06_07_102652) do
     t.string "logo_url"
     t.string "slack_webhook_url"
     t.string "timezone"
-    t.index ["slug"], name: "index_communities_on_slug", unique: true
-  end
-
-  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "user_id",null: false
-    t.string "post_id",null: false
-    t.string "community_id",null: false
-    t.text "comment"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
