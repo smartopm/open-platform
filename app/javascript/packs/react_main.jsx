@@ -187,11 +187,9 @@ const App = () => {
                   {/* <Route path="/welcome_page" component={WelcomePage} /> */}
 
                   {/* Spike page */}
-                  <Route path="/nkwashi_news" exact component={NewsPage} />
-                  <Route path="/nkwashi_news/:slug" exact component={Posts} />
                   <Route path="/nkwashi_news/post/:id" exact component={PostPage} />
 
-                  
+
                   <LoggedInOnly>
                     <Switch>
                       <Route path="/" exact component={Home} />
@@ -265,6 +263,8 @@ const App = () => {
 
                       <Route path="/client_request_from" exact component={ClientRequestForm} />
 
+                      <Route path="/nkwashi_news" exact component={NewsPage} />
+                      <Route path="/nkwashi_news/:slug" exact component={Posts} />
 
 
                       <AdminRoutes>
