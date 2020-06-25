@@ -87,6 +87,16 @@ ActiveRecord::Schema.define(version: 2020_06_07_102652) do
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
+  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "user_id",null: false
+    t.string "post_id",null: false
+    t.string "community_id",null: false
+    t.text "comment"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_communities_on_slug", unique: true
+  end
+
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.uuid "community_id"

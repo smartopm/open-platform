@@ -45,5 +45,8 @@ module Types
     # campaigns
     field :campaign_create, mutation: Mutations::Campaign::CampaignCreate
     field :campaign_update, mutation: Mutations::Campaign::CampaignUpdate
+
+    # comments
+    field :comment_create, mutation: Mutations::Comments::CommentCreate
   end
 end
