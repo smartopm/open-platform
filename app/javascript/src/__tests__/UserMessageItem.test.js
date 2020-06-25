@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { BrowserRouter } from 'react-router-dom'
-import UserMessageItem from '../components/Messaging/UserMessageItem'
+import UserMessageItem, { check_route } from '../components/Messaging/UserMessageItem'
 
 describe('user message item component', () => {
   const message =
@@ -54,7 +54,7 @@ describe('user message item component', () => {
     expect(messageItem.find('.nz_read').text()).toBe('Not Read')
   })
   it('It should display SMS tag ', () => {
-    expect(messageItem.find('.nz_msg_tag').first().text()).toBe('SMS')  
+    expect(messageItem.find('.nz_msg_tag').first().text()).toBe(' SMS')  
   })
   // new data
 
@@ -93,4 +93,25 @@ describe('user message item component', () => {
   it('shows admin the user type of the message owner', () => {
     expect(truncateMessageItem.find('.nz_msg_owner').text()).toContain('Client')
   })
+
 })
+
+describe('check route', () => {
+  const location1 = '/message/348534'
+  const location4 = '/messages'
+  const location2 = '/user/348534'
+  const location3 = '/nkwashi_news/348534'
+  
+  it('should know when it is being used on messages', () => {
+    expect(check_route(location1)).toBe('is_message')
+  });
+  it('should know when it is being used on user profile', () => {
+    expect(check_route(location2)).toBe('is_profile')
+  });
+  it('should know when it is being used on nkwashi news posts', () => {
+    expect(check_route(location3)).toBe('is_post')
+  });
+  it('should know when it is being used on nkwashi news posts', () => {
+    expect(check_route(location4)).toBe('is_message')
+  });
+});
