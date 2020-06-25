@@ -1,19 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import PostItem from '../../components/NewsPage/PostItem'
 import { dateToString } from '../../components/DateContainer'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, Redirect } from 'react-router-dom'
 import { useFetch } from '../../utils/customHooks'
 import Categories from '../../components/NewsPage/Categories'
 import { wordpressEndpoint } from '../../utils/constants'
 import { titleCase } from '../../utils/helpers'
 import Nav from '../../components/Nav'
-import {ShareButton} from '../../components/ShareButton'
+import { ShareButton } from '../../components/ShareButton'
+import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
 export default function Posts() {
     const {slug} = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     const currentUrl = window.location.href
+    const authState = useContext(AuthStateContext);
+
+    if (!authState.loggedIn) {
+        return <Redirect to="/welcome" />
+    }
     // TODO: @olivier ==> add better error page and loading component here
     if (error) {
         return error

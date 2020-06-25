@@ -18,6 +18,8 @@ export default function NewsPage() {
     if (!response || !response.found) {
         return <CenteredContent> <Loading /> </CenteredContent> 
     }
+
+    console.log(response)
     return (
         <Fragment style={{ minHeight: '100vh', width: '100%', flex: 1 }}>
             <Nav navName="News" menuButton="back" backTo="/" />

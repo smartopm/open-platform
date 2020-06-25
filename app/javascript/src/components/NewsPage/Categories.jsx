@@ -13,12 +13,14 @@ export default function Categories() {
     if (!response || !response.found) {
         return 'loading'
     }
+    const cats = response.categories.filter(cat => cat.slug !== 'private')
+
     return (
 
         <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
             <Grid >
                 <Grid item xs >
-                    {response.categories.map(category => (
+                    {cats.map(category => (
                         <Button key={category.ID}>
                             <Link stytle={{textDecoration: 'none'}} to={`/nkwashi_news/${category.slug}`}>
                                 {category.name}
