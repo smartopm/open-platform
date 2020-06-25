@@ -9,14 +9,20 @@ class ApplicationPolicy
     @user = user
     @record = record
     @role_list = {
-      'admin' => { 'ability_list' => ['*@*'] },
+      'admin' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
       'prospective_client' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
-      'client' => { 'ability_list' => ['*@*'] },
-      'custodian' => { 'ability_list' => ['*@*'] },
-      'security_guard' => { 'ability_list' => ['*@*'] },
-      'contractor' => { 'ability_list' => ['*@*'] },
-      'resident' => { 'ability_list' => ['*@*'] },
-      'visitor' => { 'ability_list' => ['*@*'] },
+      'client' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
+      'custodian' => {
+        'ability_list' => ['admin@can_see?', 'contractor@can_see?', 'security_guard@can_see?'],
+        'can_see_self' => true,
+      },
+      'security_guard' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
+      'contractor' => {
+        'ability_list' => ['admin@can_see?', 'custodian@can_see?'],
+        'can_see_self' => true,
+      },
+      'resident' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
+      'visitor' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
     }
   end
   # rubocop:enable Metrics/MethodLength
