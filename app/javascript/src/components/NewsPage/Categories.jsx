@@ -3,6 +3,7 @@ import { Grid, Box, Button } from '@material-ui/core'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
 import { Link } from 'react-router-dom'
+import { Spinner } from '../Loading'
 
 export default function Categories() {
     const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
@@ -11,12 +12,11 @@ export default function Categories() {
         return error
     }
     if (!response || !response.found) {
-        return 'loading'
+        return <Spinner />
     }
     const cats = response.categories.filter(cat => cat.slug !== 'private')
 
     return (
-
         <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
             <Grid >
                 <Grid item xs >

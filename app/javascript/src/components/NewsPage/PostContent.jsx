@@ -4,14 +4,14 @@ import PropTypes from 'prop-types'
 export default function PostContent({ response }) {
     return (
         <Container>
-            <br/>
+            <br />
             <Typography align="center" variant='h3' color='textSecondary'>
-                    <strong>{response.title}</strong>
+                <strong>{response.title}</strong>
             </Typography>
-            <br/>
-                <img className="img-fluid" src={response.post_thumbnail?.URL} alt="" />
-                <div className="wp_content container" dangerouslySetInnerHTML={{ __html: response.content }} />
-            </Container>
+            <br />
+            <img className="img-fluid" src={response.post_thumbnail?.URL} alt="" />
+            <div className="wp_content container" dangerouslySetInnerHTML={{ __html: response.content }} />
+        </Container>
     )
 }
 
