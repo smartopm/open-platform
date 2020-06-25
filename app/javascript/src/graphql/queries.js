@@ -212,11 +212,14 @@ export const MessagesQuery = gql`
       category
       createdAt
       user {
-        ...UserFields
+        name
+        id
+        phoneNumber
+        avatarUrl
+        imageUrl
       }
     }
   }
-  ${UserFragment.publicFields}
 `
 
 export const UserMessageQuery = gql`
