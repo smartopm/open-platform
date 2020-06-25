@@ -158,9 +158,13 @@ export function Component({
   }
   return (
     <>
-      <Drawer open={state} onClose={toggleDrawer}>
-        <SideList toggleDrawer={toggleDrawer} user={authState.user} authState={authState} />
-      </Drawer>
+      {
+        authState.loggedIn && (
+          <Drawer open={state} onClose={toggleDrawer}>
+            <SideList toggleDrawer={toggleDrawer} user={authState.user} authState={authState} />
+          </Drawer>
+        )
+      }
       <nav
         className={`navbar navbar-dark ${css(styles.navBar)}`}
         style={{ boxShadow }}
