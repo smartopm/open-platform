@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Types
   class BusinessType < Types::BaseObject
-     field :id, ID, null: false
+    field :id, ID, null: false
     field :name, String, null: false
     field :verified, Boolean, null: true
     field :home_url, String, null: true
