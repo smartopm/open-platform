@@ -209,36 +209,70 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'usersFeedback')).to be_nil
     end
   end
+  # TODO: add more tests cases
 
-  describe 'To-dos' do
-    before :each do
-      @admin = create(:admin_user)
-      @current_user = create(:user, community: @admin.community)
-      @query =
-        %(query GetTodos($offset: Int, $limit: Int){
-            flaggedNotes(offset: $offset, limit: $limit) {
+  describe 'To-dos and notes in general' do
+    let!(:admin) { create(:user_with_community, user_type: 'admin') }
+    let!(:current_user) { create(:user_with_community) }
+    let!(:notes) do
+      admin.notes.create(
+        body: 'This is a note',
+        user_id: current_user.id,
+        flagged: true,
+      )
+    end
+
+    let(:flagged_query) do
+      %(query {
+            flaggedNotes {
               body
               createdAt
               id
-              completed
-              dueDate
-              user {
-                id
-                name
-              }
-              author {
-                id
-                name
-              }
             }
-          })
+        })
     end
+    let(:notes_query) do
+      %(query {
+            allNotes {
+              body
+              createdAt
+              id
+            }
+        })
+    end
+
+    let(:user_notes_query) do
+      %(query {
+            userNotes(id: "#{admin.id}") {
+              body
+              createdAt
+              id
+            }
+        })
+    end
+
     it 'should query all to-dos' do
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @admin,
+      result = DoubleGdpSchema.execute(flagged_query, context: {
+                                         current_user: admin,
                                        }).as_json
 
       expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+    end
+
+    it 'should query all to-dos' do
+      result = DoubleGdpSchema.execute(notes_query, context: {
+                                         current_user: admin,
+                                       }).as_json
+
+      expect(result.dig('data', 'allNotes')).not_to be_nil
+    end
+
+    it 'should query all to-dos' do
+      result = DoubleGdpSchema.execute(user_notes_query, context: {
+                                         current_user: admin,
+                                       }).as_json
+
+      expect(result.dig('data', 'userNotes')).not_to be_nil
     end
   end
 end
