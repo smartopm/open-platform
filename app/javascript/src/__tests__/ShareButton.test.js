@@ -18,6 +18,5 @@ describe('share button', () => {
         const container = render(<ShareButton {...props} />)
         const button = container.queryByText('Share')
         expect(button).toBeTruthy()
-         
     })
 })
