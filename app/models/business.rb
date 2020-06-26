@@ -5,4 +5,6 @@ class Business < ApplicationRecord
   belongs_to :community
   belongs_to :user
 
+  validates :name, presence: true
+  validates :community_id, presence: true
 end
