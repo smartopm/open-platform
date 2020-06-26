@@ -7,8 +7,8 @@ FactoryBot.define do
 
   factory :campaign do
     name { generate(:campaign_name) }
-    message { "Testing campaigns" }
-    batch_time { Time.now }
+    message { 'Visiting' }
+    batch_time { Time.zone.now }
     user_id_list { '23fsafsafa1147,2609adf61sfsdfs871fd147' }
   end
 end

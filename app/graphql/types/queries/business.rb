@@ -15,10 +15,11 @@ module Types::Queries::Business
 
   def businesses(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     # Find out if we can use User.allowed...
-    Business.where(community_id: context[:current_user].community_id)       
-        .order(name: :asc)
-        .limit(limit)
-        .offset(offset)
+    Business.where(community_id: context[:current_user].community_id)
+            .order(name: :asc)
+            .limit(limit)
+            .offset(offset)
   end
 end

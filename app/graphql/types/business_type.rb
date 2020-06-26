@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Types
+  # business type
   class BusinessType < Types::BaseObject
     field :id, ID, null: false
     field :user_id, ID, null: false

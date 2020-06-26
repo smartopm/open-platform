@@ -33,7 +33,6 @@ module Types
                                                                        user: :id }
     field :businesses, [Types::BusinessType], null: true, visible: { roles: %i[admin], user: :id }
 
-
     def avatar_url
       return nil unless object.avatar.attached?
 
