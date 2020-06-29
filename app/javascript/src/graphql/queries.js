@@ -324,3 +324,14 @@ query campaign($id: ID!){
     }
 }
 `
+export const BusinessesQuery = gql`
+  {
+  businesses {
+    category
+   	createdAt
+    homeUrl
+    name
+    userId
+  }
+}
+`
