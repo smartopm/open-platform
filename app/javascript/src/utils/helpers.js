@@ -80,7 +80,5 @@ export function DelimitorFormator(params) {
 * @returns copied text in the clipboard
 */
 export function copyText(text) {
-    if (text) {
-      navigator.clipboard.writeText(text)
-      }
+    if (text) return navigator.clipboard.writeText(text)
   }

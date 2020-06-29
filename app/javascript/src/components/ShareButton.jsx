@@ -6,6 +6,8 @@ import Popper from '@material-ui/core/Popper'
 import ShareIcon from '@material-ui/icons/Share';
 import ReactGA from 'react-ga'
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
+import {Snackbar, SnackbarContent } from '@material-ui/core'
+import CheckCircleIconBase from "@material-ui/icons/CheckCircle";
 import {copyText} from '../utils/helpers'
 import {
     FacebookShareButton,
@@ -23,6 +25,7 @@ import {
 export function ShareButton({ url }) {
     const [openPopper, setOpenPopper] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
+    const [open, setOpen] = useState(false)
 
 
     function onShareClick(linkType) {
@@ -36,6 +39,9 @@ export function ShareButton({ url }) {
     function handleClick(event) {
         setOpenPopper(!openPopper)
         setAnchorEl(anchorEl ? null : event.currentTarget);
+    }
+    function handleCopy(url){
+        if(copyText(url)) setOpen(!open)
     }
 
     return (
@@ -58,13 +64,13 @@ export function ShareButton({ url }) {
                     <WhatsappShareButton url={url} title={document.title} onClick={()=>onShareClick('whatsApp')}>
                         <WhatsappIcon size={50} round />
                     </WhatsappShareButton>
-                    <EmailShareButton url={url} onClick={()=>onShareClick('email')}>
+                    <EmailShareButton url={url} subject={document.title} body={"Hi, vist Nkwashi's news page"}>
                         <EmailIcon size={50} round />
                     </EmailShareButton>
                     <FacebookShareButton url={url} title={document.title} onClick={()=>onShareClick('facebook')}>
                         <FacebookIcon size={50} round />
                     </FacebookShareButton>
-                    <Fab size="medium" onClick={()=>copyText(url)}>
+                    <Fab size="medium" onClick={()=>handleCopy(url)}>
                     <FileCopyOutlinedIcon />
                     </Fab>
                 </Box>
@@ -82,6 +88,20 @@ export function ShareButton({ url }) {
                 <ShareIcon />
                 {"  "} Share
         </Fab>
+        <div className="row container flex-row">
+        <Snackbar className="snackBar" anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }} open={open} autoHideDuration={3000} onClose={()=> setOpen(!open)}>
+                    <SnackbarContent style={{
+                        backgroundColor: '#25c0b0',
+                    }}
+
+                        message={<div className="row d-flex m-20"> <CheckCircleIconBase /> <span className="justify-content-center" id="client-snackbar">Copied to Clipboard!</span> </div>}
+                    />
+                    </Snackbar>
+
+        </div>
         </>
     )
 }
