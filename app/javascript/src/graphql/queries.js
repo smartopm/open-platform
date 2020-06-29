@@ -324,6 +324,7 @@ query campaign($id: ID!){
     }
 }
 `
+// reduce the query to only get what's needed
 export const BusinessesQuery = gql`
   {
   businesses {
@@ -332,6 +333,9 @@ export const BusinessesQuery = gql`
     homeUrl
     name
     userId
+    id
+    description
+    verified
   }
 }
 `
