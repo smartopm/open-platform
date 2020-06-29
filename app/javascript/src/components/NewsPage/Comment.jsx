@@ -7,21 +7,76 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
-import { useMutation } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
+import { CommentsQuery } from '../../graphql/queries'
+import Loading from '../Loading'
+import ErrorPage from '../Error'
 
 export default function Comments() {
+    const init = {
+        message: '',
+        error: '',
+        isLoading: false
+    }
     const authState = useContext(Context)
+    const { id } = useParams()
+    const { loading, error, data, refetch } = useQuery(CommentsQuery, {
+        variables: { postId: id }
+    })
+
+    const [_data, setData] = useState(init)
+    const [createComment] = useMutation(CommentMutation)
+
+    function handleCommentChange() {
+        setData({ ..._data, message: event.target.value })
+    }
+
+    function sendComment() {
+        setData({ ..._data, isLoading: true })
+        if (!_data.message.length) {
+            setData({ ..._data, error: 'The message must contain some text' })
+            return
+        }
+        createComment({
+            variables: {
+                userId: authState.user.id,
+                comment: _data.message,
+                postId: id
+            }
+        })
+        .then(() => {
+            setData({ ..._data, isLoading: false, message: '' })
+            refetch()
+        })
+            .catch(err => setData({ ..._data, error: err.message }))
+
+    }
+
+    if (loading) return <Loading />
+    if (error) return <ErrorPage title={error.message} />
     return (
         <List>
-            <CommentBox authState={authState} />
-            {/* <CommentSection user={} createdAt={} comment={} /> */}
+            <CommentBox
+                authState={authState}
+                data={_data}
+                handleCommentChange={handleCommentChange}
+                sendComment={sendComment} />
+            {
+                data.comments.map(comment => (
+                    <CommentSection
+                        key={comment.id}
+                        user={comment.user}
+                        createdAt={comment.createdAt}
+                        comment={comment.comment} />
+                ))
+            }
         </List>
     )
 }
 
 
-export  function CommentSection({ user, createdAt, comment }) {
+export function CommentSection({ user, createdAt, comment }) {
     return (
         <ListItem alignItems="flex-start" >
             <ListItemAvatar style={{ marginRight: 8 }}>
@@ -50,29 +105,8 @@ export  function CommentSection({ user, createdAt, comment }) {
     )
 }
 
-export function CommentBox({ authState }) {
-    const init = {
-        message: '',
-        error: '',
-        isLoading: false
-    }
-    const [data, setData] = useState(init)
-    const { id } = useParams()
-    const [createComment] = useMutation(CommentMutation)
+export function CommentBox({ authState, sendComment, data, handleCommentChange }) {
 
-    function sendMessage() {
-        setData({ ...data, isLoading: true })
-        if (!data.message.length) {
-            setData({ ...data, error: 'The message must contain some text' })
-            return
-        }
-        createComment({ variables: { userId: authState.user.id, comment: data.message, postId: id } })
-            .then(() => {
-                setData({ ...data, isLoading: false, message: '' })
-            })
-            .catch(err => console.log(err.message))
-        
-    }
     return (
         <>
             <ListItem alignItems="flex-start">
@@ -84,7 +118,7 @@ export function CommentBox({ authState }) {
                     style={{ width: '95vw', margin: 26, marginTop: 7 }}
                     placeholder="Type message here"
                     value={data.message}
-                    onChange={event => setData({ ...data, message: event.target.value })}
+                    onChange={handleCommentChange}
                     helperText={`Character count: ${data.message.length}`}
                     multiline
                     rows={3}
@@ -97,7 +131,7 @@ export function CommentBox({ authState }) {
             </ListItem>
             <Button
                 color="primary"
-                onClick={sendMessage}
+                onClick={sendComment}
                 disabled={data.isLoading}
                 style={{ marginTop: -37, marginRight: 34, float: 'right' }}
             >

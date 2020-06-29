@@ -321,3 +321,16 @@ query campaign($id: ID!){
     }
 }
 `
+
+export const CommentsQuery = gql`
+    query comments($postId: ID!) {
+      comments(postId: $postId) {
+        comment
+        createdAt
+        id
+        user {
+          name
+        }
+      }
+    }
+`
