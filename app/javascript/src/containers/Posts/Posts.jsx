@@ -45,7 +45,7 @@ export default function Posts() {
                                     <PostItem
                                         key={post.ID}
                                         title={post.title}
-                                        imageUrl={post.featured_image}
+                                        imageUrl={post?.featured_image}
                                         datePosted={dateToString(post.modified)}
                                         subTitle={post.excerpt}
                                     />

@@ -23,7 +23,6 @@ export default function PostPage() {
     if (response.categories?.Private && !authState.loggedIn) {
         return <Redirect to="/welcome" />
     }
-    console.log(response)
     return (
         <Fragment>
             <Nav menuButton="back" backTo={authState.loggedIn ? '/nkwashi_news/posts' : '/welcome'} />
