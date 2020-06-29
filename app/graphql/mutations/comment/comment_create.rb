@@ -8,7 +8,7 @@ module Mutations
         argument :post_id, ID, required: true
         argument :comment, String, required: true
   
-        field :note, Types::CommentType, null: true
+        field :comment, Types::CommentType, null: true
   
         def resolve(vals)
           comment = context[:current_user].community.comments.new

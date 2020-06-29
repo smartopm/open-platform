@@ -475,3 +475,13 @@ export const CampaignUpdate = gql`
     }
   }
 `
+
+export const CommentMutation = gql`
+  mutation commentCreate($userId: ID!, $postId: ID!, $comment: String!){
+  commentCreate(userId: $userId, postId: $postId, comment: $comment){
+    comment {
+      comment
+    }
+  }
+}
+`
