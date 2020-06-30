@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_26_112048) do
+ActiveRecord::Schema.define(version: 2020_06_30_101726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -66,11 +66,15 @@ ActiveRecord::Schema.define(version: 2020_06_26_112048) do
     t.uuid "community_id", null: false
     t.uuid "user_id", null: false
     t.string "name"
-    t.boolean "verified"
+    t.string "status"
     t.string "home_url"
     t.string "category"
     t.text "description"
     t.string "image_url"
+    t.string "email"
+    t.string "phone_number"
+    t.string "address"
+    t.string "operation_hours"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_businesses_on_community_id"
