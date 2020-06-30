@@ -11,7 +11,6 @@ export default function Businesses() {
     const { loading, error, data } = useQuery(BusinessesQuery)
 
     if (loading) return <Loading />
-    console.log(data)
     return (
         <div>
             <Fragment>
