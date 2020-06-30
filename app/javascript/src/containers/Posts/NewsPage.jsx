@@ -19,7 +19,7 @@ export default function NewsPage() {
         return <CenteredContent> <Loading /> </CenteredContent> 
     }
     return (
-        <Fragment style={{ minHeight: '100vh', width: '100%', flex: 1 }}>
+        <Fragment >
             <Nav navName="News" menuButton="back" backTo="/" />
             <Categories />
             <PostContent response={response.posts[0]} />

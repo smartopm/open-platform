@@ -51,7 +51,7 @@ export default function Comments() {
             .catch(err => setData({ ..._data, error: err.message }))
 
     }
-
+    if (!id) return <span /> // don't show comments on pages that dont have known posts like /nkwashi_news
     if (loading) return <Loading />
     if (error) return <ErrorPage title={error.message} />
     return (
