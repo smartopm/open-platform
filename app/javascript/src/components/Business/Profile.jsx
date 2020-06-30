@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Avatar from '../Avatar'
-import { Typography, withStyles, Tab, Paper } from '@material-ui/core'
+import { Typography, withStyles, Tab } from '@material-ui/core'
 import { StyledTabs, TabPanel } from '../../components/Tabs'
 
 
@@ -19,7 +19,7 @@ export default function Profile() {
     return (
         <div className="container">
 
-            <Paper>
+            
                 <div className="row d-flex justify-content-between">
                     <div className="col-4">
                         <Avatar />
@@ -34,10 +34,10 @@ export default function Profile() {
                         <Typography>Hello</Typography>
                     </div>
                 </div>
-            </Paper>
+           
 
             <div>
-                <Paper square>
+                
                     <StyledTabs
                         value={tabValue}
                         onChange={handleChange}
@@ -56,7 +56,7 @@ export default function Profile() {
                     <TabPanel value={tabValue} index={'Contact'}>
 
                     </TabPanel>
-                </Paper>
+             
 
             </div>
 

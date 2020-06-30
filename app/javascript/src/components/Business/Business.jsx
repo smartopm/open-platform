@@ -7,7 +7,7 @@ export default function Business({ businessData }) {
         <div className="container">
             <List>
                 {
-                    <Link to={`business/:id`}>
+                    <Link to="/business/:id">
                         <ListItem>
                             <ListItemAvatar>
                                 <Avatar>
