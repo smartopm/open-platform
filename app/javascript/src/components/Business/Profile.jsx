@@ -59,8 +59,9 @@ export default function Profile() {
                             <TextField
                                 id="standard-full-width"
                                 disabled
+                                label="Company Name"
                                 style={{ margin: 8 }}
-                                placeholder="Company name"
+                                placeholder="Company Name"
                                 fullWidth
                                 margin="normal"
                             />
@@ -71,6 +72,7 @@ export default function Profile() {
                                 placeholder="Phone Number"
                                 fullWidth
                                 margin="normal"
+                                label="Phone Number"
                             />
                             <TextField
                                 id="standard-full-width"
@@ -79,6 +81,7 @@ export default function Profile() {
                                 placeholder="Email Address"
                                 fullWidth
                                 margin="normal"
+                                label="Email Address"
                             />
                             <TextField
                                 id="standard-full-width"
@@ -87,6 +90,8 @@ export default function Profile() {
                                 placeholder="Address"
                                 fullWidth
                                 margin="normal"
+                                label="Address"
+                                
                             />
                             <TextField
                                 id="standard-full-width"
@@ -94,6 +99,7 @@ export default function Profile() {
                                 style={{ margin: 8 }}
                                 placeholder="Operating Hours"
                                 fullWidth
+                                label="Operating Hours"
                                 margin="normal"
                             />
                         </form>

@@ -9,12 +9,12 @@ import {BusinessesQuery} from '../../graphql/queries'
 
 export default function Businesses() {
     const { loading, error, data } = useQuery(BusinessesQuery)
-
+    console.log(data)
     if (loading) return <Loading />
     return (
         <div>
             <Fragment>
-                <Nav navName="Business" menuButton="back" backTo="/" />
+                <Nav navName="Business Directory" menuButton="back" backTo="/" />
                 <Business businessData={data} />
             </Fragment>
         </div>
