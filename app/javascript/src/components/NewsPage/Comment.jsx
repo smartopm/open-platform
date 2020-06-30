@@ -41,7 +41,7 @@ export default function Comments() {
         createComment({
             variables: {
                 userId: authState.user.id,
-                comment: _data.message,
+                content: _data.message,
                 postId: id
             }
         })
@@ -68,7 +68,7 @@ export default function Comments() {
                         key={comment.id}
                         user={comment.user}
                         createdAt={comment.createdAt}
-                        comment={comment.comment} />
+                        comment={comment.content} />
                 ))
             }
         </List>

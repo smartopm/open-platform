@@ -323,9 +323,9 @@ query campaign($id: ID!){
 `
 
 export const CommentsQuery = gql`
-    query comments($postId: ID!) {
+    query comments($postId: String!) {
       comments(postId: $postId) {
-        comment
+        content
         createdAt
         id
         user {

@@ -8,7 +8,7 @@ module Types::Queries::Comment
     # Get comments
     field :comments, [Types::CommentType], null: true do
       description 'Get all comment entries per post'
-      argument :post_id, GraphQL::Types::ID, required: true
+      argument :post_id, String, required: true
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
