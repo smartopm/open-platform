@@ -25,9 +25,11 @@ export default function PostPage() {
     }
     return (
         <Fragment>
-            <Nav menuButton="back" backTo={authState.loggedIn ? '/nkwashi_news/posts' : '/welcome'} />
-            <IframeContainer link={response?.URL || ""} width={width} height={height} />
-            <ShareButton url={currentUrl} />
+            <Nav menuButton="back" backTo={authState.loggedIn ? '/nkwashi_news' : '/welcome'} />
+            <div className="post_page">
+                <IframeContainer link={response?.URL || ""} width={width} height={height} />
+                <ShareButton url={currentUrl} />
+            </div>
         </Fragment>
     )
 }
