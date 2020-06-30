@@ -7,15 +7,17 @@ export default function Business({ businessData }) {
         <div className="container">
             <List>
                 {
-                 <ListItem>
-                     <ListItemAvatar>
-                         <Avatar>
-                             B
-                         </Avatar>
-                     </ListItemAvatar>
-                     <ListItemText primary="Test Test" />
-                     <Divider variant="middle" />
-                 </ListItem>
+                    <Link to={`business/:id`}>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    B
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Test Test" />
+                            <Divider variant="middle" />
+                        </ListItem>
+                    </Link>
                 }
             </List>
 
