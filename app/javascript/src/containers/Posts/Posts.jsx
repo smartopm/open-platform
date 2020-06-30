@@ -26,7 +26,7 @@ export default function Posts() {
         <React.Fragment>
             <Nav  navName="News" menuButton="back" backTo="/nkwashi_news" />
             <Categories />
-            <div style={{ flex: 1, height: '100vh', width: '100%', overflowX: 'auto' }} >
+            <div>
                 <br />
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant='h3' color='textSecondary'>
