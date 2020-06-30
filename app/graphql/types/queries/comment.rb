@@ -18,7 +18,7 @@ module Types::Queries::Comment
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     # Find out if we can use User.allowed...
-    Comment.where(community_id: context[:current_user].community_id, post_id: post_id)
+    Comment.where(post_id: post_id)
             .limit(limit)
             .offset(offset)
   end

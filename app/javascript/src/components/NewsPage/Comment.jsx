@@ -40,7 +40,6 @@ export default function Comments() {
         }
         createComment({
             variables: {
-                userId: authState.user.id,
                 content: _data.message,
                 postId: id
             }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_112707) do
+ActiveRecord::Schema.define(version: 2020_06_30_113540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -93,6 +93,16 @@ ActiveRecord::Schema.define(version: 2020_06_30_112707) do
     t.string "slack_webhook_url"
     t.string "timezone"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
+  end
+
+  create_table "discussions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.text "description"
+    t.string "title"
+    t.string "post_id"
+    t.index ["community_id"], name: "index_discussions_on_community_id"
+    t.index ["user_id"], name: "index_discussions_on_user_id"
   end
 
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -259,6 +269,8 @@ ActiveRecord::Schema.define(version: 2020_06_30_112707) do
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "discussions", "communities"
+  add_foreign_key "discussions", "users"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"

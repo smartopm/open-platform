@@ -477,8 +477,8 @@ export const CampaignUpdate = gql`
 `
 
 export const CommentMutation = gql`
-  mutation commentCreate($userId: ID!, $postId: ID!, $content: String!){
-  commentCreate(userId: $userId, postId: $postId, content: $content){
+  mutation commentCreate($postId: String!, $content: String!){
+  commentCreate(postId: $postId, content: $content){
     comment {
       content
     }

@@ -4,17 +4,15 @@ module Mutations
     module Comment
       # Create a new Comment
       class CommentCreate < BaseMutation
-        argument :user_id, ID, required: true
-        argument :post_id, ID, required: true
-        argument :comment, String, required: true
+        argument :post_id, String, required: true
+        argument :content, String, required: true
   
         field :comment, Types::CommentType, null: true
   
         def resolve(vals)
-          comment = context[:current_user].community.comments.new
+          comment = context[:current_user].comments.new
           comment.post_id = vals[:post_id]
-          comment.user_id = vals[:user_id]
-          comment.comment = vals[:comment]
+          comment.content = vals[:content]
           comment.save!
 
           return { comment: comment } if comment.persisted?
