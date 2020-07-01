@@ -22,7 +22,7 @@ export default function PostPage() {
         variables: { postId: id}
     })
 
-    function createDiscussion(e, ...d) {
+    function createDiscussion(e, d) {
         console.log(e, d)
     }
     if (error) {
