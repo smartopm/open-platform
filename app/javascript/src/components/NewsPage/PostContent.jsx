@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography, Container } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import Comments from './Comment'
+import Comments from '../Discussion/Comment'
 export default function PostContent({ response }) {
   return (
     <Container>
