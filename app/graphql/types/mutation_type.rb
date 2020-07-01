@@ -48,5 +48,8 @@ module Types
 
     # comments
     field :comment_create, mutation: Mutations::Comment::CommentCreate
+
+    # discussions
+    field :discussion_create, mutation: Mutations::Discussion::DiscussionCreate
   end
 end
