@@ -5,7 +5,7 @@ import Badge from "@material-ui/core/Badge";
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '../Avatar'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
 import { truncateString, findLinkAndReplace } from '../../utils/helpers'
@@ -26,6 +26,9 @@ export default function UserMessageItem({
   count
 }) {
   let history = useHistory()
+  const location = useLocation()
+
+
 
   function handleReadMessages() {
     if (!isTruncate) return // we will be on user messages page
@@ -48,11 +51,21 @@ export default function UserMessageItem({
         primary={
           <React.Fragment>
             <span className="nz_msg_owner">
+
               {name}
-              <Badge className="nz_msg_tag" color={category === 'email' ? 'secondary' : 'error'} badgeContent={category && category === 'email' ? <span>Email</span> : <span>SMS</span> } style={{marginLeft: 25}} />
+              {
+                check_route(location.pathname) !== 'is_post' && (
+                  <Badge className="nz_msg_tag"
+                    color={category === 'email' ? 'secondary' : 'error'}
+                    badgeContent={category && category === 'email' ? <span>{' '} Email</span> : <span>{' '}SMS</span>}
+                    style={{ marginLeft: 25 }}
+                  />
+                )
+              }
+              
               {isTruncate && (
                 <span className={css(styles.ownerType)}>
-                  {userType[user.userType] || ''}
+                  {`  ${userType[user.userType] || ''}`}
                 </span>
               )}
 
@@ -76,7 +89,7 @@ export default function UserMessageItem({
                 )}
             </span>
 
-            {isAdmin && (
+            {isAdmin && check_route(location.pathname) !== 'is_post' && (
               <span className={`nz_read ${css(styles.timeStamp)}`}>
                 {isRead && readAt ? (
                   <React.Fragment>
@@ -92,6 +105,22 @@ export default function UserMessageItem({
       />
     </ListItem>
   )
+}
+
+// identify between posts, messages and user profile
+// /nkwashi_news ==> posts
+// /user/blahblah ==> user profile
+// /messages ==> messages
+// /message/blah
+export function check_route(location) {
+  const routes = {
+    nkwashi_news: 'is_post',
+    user: 'is_profile',
+    message: 'is_message',
+    messages: 'is_message'
+  }
+  if(!location.length) return 
+  return routes[location.split('/')[1]]
 }
 
 UserMessageItem.propTypes = {

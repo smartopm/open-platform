@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from '@material-ui/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CenteredContent from './CenteredContent';
 
 export default function Loading() {
   return (
@@ -23,7 +24,11 @@ const ColorCircularProgress = withStyles({
 })(CircularProgress);
 
 export function Spinner(){
-  return <ColorCircularProgress size={30} thickness={5} />
+  return (
+    <CenteredContent>
+      <ColorCircularProgress size={30} thickness={5} />
+    </CenteredContent>
+  )
 }
 
 const styles = StyleSheet.create({

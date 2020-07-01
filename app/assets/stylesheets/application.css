@@ -236,3 +236,10 @@
   }
 }
 /* Open Page Styles */
+
+.site-footer {
+  display: none;
+}
+.post_page {
+  overflow-y: hidden;
+}

@@ -1,3 +1,4 @@
+
 // keep string methods [helpers]
 
 /**
@@ -73,3 +74,11 @@ export function saniteError(requiredFields, errorMessage) {
 export function DelimitorFormator(params) {
   return params.split('\n').join(',').split(',')
 }
+
+/**
+* @param {String} text
+* @returns copied text in the clipboard
+*/
+export function copyText(text) {
+    if (text) return navigator.clipboard.writeText(text)
+  }

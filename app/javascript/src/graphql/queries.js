@@ -212,11 +212,14 @@ export const MessagesQuery = gql`
       category
       createdAt
       user {
-        ...UserFields
+        name
+        id
+        phoneNumber
+        avatarUrl
+        imageUrl
       }
     }
   }
-  ${UserFragment.publicFields}
 `
 
 export const UserMessageQuery = gql`
@@ -331,6 +334,26 @@ export const CommentsQuery = gql`
         user {
           name
         }
+      }
+    }
+`
+
+export const DiscussionQuery = gql`
+    query discussionPost($postId: String!) {
+      discussionPost(postId: $postId) {
+        title
+        id
+      }
+    }
+`
+
+export const DiscussionsQuery = gql`
+    {
+      discussions{
+        title
+        description
+        createdAt
+        id
       }
     }
 `

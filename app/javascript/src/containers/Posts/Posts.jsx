@@ -8,24 +8,25 @@ import Categories from '../../components/NewsPage/Categories'
 import { wordpressEndpoint } from '../../utils/constants'
 import { titleCase } from '../../utils/helpers'
 import Nav from '../../components/Nav'
-import {ShareButton} from '../../components/ShareButton'
+import { ShareButton } from '../../components/ShareButton'
+import { Spinner } from '../../components/Loading'
 
 export default function Posts() {
     const {slug} = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     const currentUrl = window.location.href
-    // TODO: @olivier ==> add better error page and loading component here
+
     if (error) {
-        return error
+        return error.message
     }
     if (!response) {
-        return 'loading'
+        return <Spinner />
     }
     return (
         <React.Fragment>
             <Nav  navName="News" menuButton="back" backTo="/nkwashi_news" />
             <Categories />
-            <div style={{ flex: 1, height: '100vh', width: '100%', overflowX: 'auto' }} >
+            <div>
                 <br />
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant='h3' color='textSecondary'>
@@ -44,7 +45,7 @@ export default function Posts() {
                                     <PostItem
                                         key={post.ID}
                                         title={post.title}
-                                        imageUrl={post.featured_image}
+                                        imageUrl={post?.featured_image}
                                         datePosted={dateToString(post.modified)}
                                         subTitle={post.excerpt}
                                     />
