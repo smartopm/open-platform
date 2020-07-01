@@ -12,6 +12,7 @@ module Mutations
 
       def resolve(vals)
         discussion = context[:current_user].community.discussions.new
+        discussion.user_id = context[:current_user].id
         discussion.post_id = vals[:post_id]
         discussion.title = vals[:title]
         discussion.description = vals[:description]
