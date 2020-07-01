@@ -19,7 +19,7 @@ export default function PostPage() {
     const {width, height} = useWindowDimensions()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/${id}`)
     const { data, loading } = useQuery(DiscussionQuery, {
-        variables: id
+        variables: { postId: id}
     })
 
     function createDiscussion(e, ...d) {
