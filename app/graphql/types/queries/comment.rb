@@ -12,6 +12,13 @@ module Types::Queries::Comment
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    # Get comments
+    field :discussions, [Types::DiscussionType], null: true do
+      description 'Get all discussion'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
   end
 
   def comments(offset: 0, limit: 100, post_id:)
@@ -21,5 +28,14 @@ module Types::Queries::Comment
     return [] if discs.nil?
 
     discs.comments.limit(limit).offset(offset)
+  end
+
+  def discussions
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    discussions = Discussion.where(community_id: context[:current_user].community_id)
+    return [] if discussions.nil?
+
+    discussions
   end
 end

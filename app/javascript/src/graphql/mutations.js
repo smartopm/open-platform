@@ -485,3 +485,17 @@ export const CommentMutation = gql`
   }
 }
 `
+
+export const DiscussionMutation = gql`
+    mutation discussionCreate(
+      $postId: String!
+      $title: String!
+      $description: String
+    ) {
+      discussionCreate(postId: $postId, title: $title, description: $description) {
+        discussion {
+          id
+        }
+      }
+    }
+`
