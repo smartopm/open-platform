@@ -16,9 +16,10 @@ module Types::Queries::Comment
 
   def comments(offset: 0, limit: 100, post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
     discs = Discussion.find_by(community_id: context[:current_user].community_id, post_id: post_id)
     return [] if discs.nil?
-    
+
     discs.comments.limit(limit).offset(offset)
   end
 end
