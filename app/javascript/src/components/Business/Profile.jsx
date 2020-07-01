@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react'
-import {Link} from 'react-router-dom'
-import { Typography, withStyles, Tab, Button, Box, Avatar } from '@material-ui/core'
+import { Link } from 'react-router-dom'
+import { Typography, withStyles, Tab, Button, Box, Avatar, ListItem, List } from '@material-ui/core'
 import { StyledTabs, TabPanel } from '../../components/Tabs'
 import Status from '../../components/StatusBadge'
-import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
+import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider.js'
 import { useHistory } from 'react-router-dom'
+
 
 export const StyledTab = withStyles({
     root: {
@@ -40,7 +41,7 @@ export default function Profile({ profileData }) {
         <div className="container">
             <div className="row d-flex justify-content-between">
                 <div className="col-4 d-flex justify-content-end align-items-center">
-                    <Avatar style={{ height: 80, width: 80, fontSize: 20}}>
+                    <Avatar style={{ height: 80, width: 80, fontSize: 20 }}>
                         {profileData.name.charAt(0)}
                     </Avatar>
                 </div>
@@ -59,7 +60,7 @@ export default function Profile({ profileData }) {
                     </Typography >
                     <Typography variant="subtitle2">
 
-                        {profileData.homeUrl ? <Link to={profileData.homeUrl}>{profileData.homeUrl}</Link> : 'No Link'}
+                        {profileData.homeUrl ? <Link to={profileData.homeUrl}>{profileData.homeUrl}</Link> : null}
                     </Typography >
                     <Box style={{ width: '50%', marginTop: 5 }}><Status label={'notVerified'} /></Box>
                 </div>
@@ -75,7 +76,7 @@ export default function Profile({ profileData }) {
                 >
                     <StyledTab label="Profile" value={'Profile'} />
                     <StyledTab label="Operating Hours" value={'Operating Hours'} />
-                    {/* <StyledTab label="Plots" value={'Relevant Posts'} /> */}
+                    <StyledTab label="Relevant Posts" value={'Relevant Posts'} />
                 </StyledTabs>
                 <TabPanel value={tabValue} index={'Profile'}>
 
@@ -98,9 +99,23 @@ export default function Profile({ profileData }) {
                         </div>
                     </div>
                 </TabPanel>
+                <TabPanel value={tabValue} index={'Relevant Posts'}>
+                    <div>
+                        <Typography variant="h6">Links</Typography>
+                        <List>
+                            {profileData.links ? (Object.entries(profileData.links).map((k, v) => (
+                                <ListItem key={k}>
+                                    <Link>
+                                        {v}
+                                    </Link>
+                                </ListItem>
+                            ))): ''}
+                        </List>
+                    </div>
+                </TabPanel>
 
                 <div className='container d-flex justify-content-center'>
-                    <Button onClick={handleButtonClick} style={{backgroundColor: theme.primaryColor, color: 'white'}}>Ask about business</Button>
+                    <Button onClick={handleButtonClick} style={{ backgroundColor: theme.primaryColor, color: 'white' }}>Ask about business</Button>
                 </div>
             </div>
         </div>
