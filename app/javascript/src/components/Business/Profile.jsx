@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Avatar from '../Avatar'
-import { Typography, withStyles, Tab, TextField, Box } from '@material-ui/core'
+
+import { Typography, withStyles, Tab, TextField, Box, Avatar } from '@material-ui/core'
 import { StyledTabs, TabPanel } from '../../components/Tabs'
 import Status from '../../components/StatusBadge'
 
@@ -11,6 +11,7 @@ export const StyledTab = withStyles({
         color: 'inherit'
     }
 })(props => <Tab {...props} />)
+
 export default function Profile() {
     const [tabValue, setValue] = useState('Profile')
 
@@ -20,20 +21,30 @@ export default function Profile() {
     return (
         <div className="container">
             <div className="row d-flex justify-content-between">
-                <div className="col-4 d-flex justify-content-end">
-                    <Avatar />
+                <div className="col-4 d-flex justify-content-end align-items-center">
+                    <Avatar style={{ height: 80, width: 80 }}>
+                        A
+                    </Avatar>
                 </div>
-                <div className="col-8">
+                <div className="col-8 justify-content-around">
                     <Typography variant="h6">
                         <strong>Company Name</strong>
                     </Typography>
-                    <Typography variant="subtitle1">
-                        Link
+                    <Typography variant="subtitle2">
+                        Phone Number
                     </Typography >
-                    <Box style={{ width: '20%' }}><Status label={'verified'} /></Box>
+                    <Typography variant="subtitle2">
+                        Email Address
+                    </Typography >
+                    <Typography variant="subtitle2">
+                        Address
+                    </Typography >
+                    <Box style={{ width: '50%', marginTop: 5 }}><Status label={'verified'} /></Box>
 
                 </div>
             </div>
+
+            <br />
             <div>
                 <StyledTabs
                     value={tabValue}
@@ -42,68 +53,29 @@ export default function Profile() {
                     centered
                 >
                     <StyledTab label="Profile" value={'Profile'} />
-                    <StyledTab label="Contact" value={'Contact'} />
+                    <StyledTab label="Operating Hours" value={'Operating Hours'} />
                     {/* <StyledTab label="Plots" value={'Relevant Posts'} /> */}
                 </StyledTabs>
                 <TabPanel value={tabValue} index={'Profile'}>
-                
-                        <Typography variant="h6">Description</Typography>
-                        <Typography variant="body1">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+                    <Typography variant="h6">Description</Typography>
+                    <Typography variant="body1">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                         </Typography>
-                    
+
                 </TabPanel>
-                <TabPanel value={tabValue} index={'Contact'}>
+                <TabPanel value={tabValue} index={'Operating Hours'}>
                   
-                        <form  >
-                            <TextField
-                                id="standard-full-width"
-                                disabled
-                                label="Company Name"
-                                style={{ margin: 8 }}
-                                placeholder="Company Name"
-                                fullWidth
-                                margin="normal"
-                            />
-                            <TextField
-                                id="standard-full-width"
-                                disabled
-                                style={{ margin: 8 }}
-                                placeholder="Phone Number"
-                                fullWidth
-                                margin="normal"
-                                label="Phone Number"
-                            />
-                            <TextField
-                                id="standard-full-width"
-                                disabled
-                                style={{ margin: 8 }}
-                                placeholder="Email Address"
-                                fullWidth
-                                margin="normal"
-                                label="Email Address"
-                            />
-                            <TextField
-                                id="standard-full-width"
-                                disabled
-                                style={{ margin: 8 }}
-                                placeholder="Address"
-                                fullWidth
-                                margin="normal"
-                                label="Address"
-                                
-                            />
-                            <TextField
-                                id="standard-full-width"
-                                disabled
-                                style={{ margin: 8 }}
-                                placeholder="Operating Hours"
-                                fullWidth
-                                label="Operating Hours"
-                                margin="normal"
-                            />
-                        </form>
-                    
+                    <div className='d-flex  justify-content-center'>
+                        <p>
+                        <Typography variant="h6">
+                            Operating Hours
+                        </Typography>
+                            <br />
+                            Monday - Friday: <b>8:00 - 16:00</b> <br />
+                            Saturday: <b>8:00 - 12:00</b> <br />
+                        </p>
+                    </div>
                 </TabPanel>
             </div>
         </div>

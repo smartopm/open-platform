@@ -7,7 +7,6 @@ export default function BusinessProfile() {
         <div>
             <Fragment>
                 <Nav navName="Business Profile" menuButton="back" backTo="/business" />
-
                 <Profile />
             </Fragment>
 
