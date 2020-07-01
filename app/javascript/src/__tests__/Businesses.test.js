@@ -20,12 +20,7 @@ describe('It tests the business directory list', () => {
             ]
         }
     }
-    it('It should render with props', () => {
-        const container = render(
-            <BrowserRouter>
-                <Business {...props} />
-            </BrowserRouter>)
-    });
+  
     it('It should render business name', () => {
         const container = render(
             <BrowserRouter>

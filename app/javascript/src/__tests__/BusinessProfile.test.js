@@ -1,7 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
-import { MockedProvider } from '@apollo/react-testing'
 import Profile from '../components/Business/Profile'
 
 describe('It tests the business profile page', () => {
