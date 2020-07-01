@@ -33,10 +33,7 @@ export default function StatusBadge({ label }) {
     )
     case 'notVerified': 
       return (
-        <p className={css(styles.badge, styles.statusBadgeValid)}>
-          <i className={`material-icons ${css(styles.icon)}`}>{label}</i>
-          {label}
-        </p>
+        <p className={css(styles.badge, styles.statusBadgeInvalid)}>{label}</p>
     )
     default:
       return <p className={css(styles.statusBadgePending)}>{label}</p>

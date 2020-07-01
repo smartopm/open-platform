@@ -6,11 +6,10 @@ import { useQuery } from 'react-apollo'
 import {BusinessesQuery} from '../../graphql/queries'
 
 
-
 export default function Businesses() {
     const { loading, error, data } = useQuery(BusinessesQuery)
-    console.log(data)
     if (loading) return <Loading />
+    console.log(data)
     return (
         <div>
             <Fragment>

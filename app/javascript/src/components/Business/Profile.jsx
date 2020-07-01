@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react'
+import {Link} from 'react-router-dom'
 import { Typography, withStyles, Tab, Button, Box, Avatar } from '@material-ui/core'
 import { StyledTabs, TabPanel } from '../../components/Tabs'
 import Status from '../../components/StatusBadge'
+import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider.js'
 import { useHistory } from 'react-router-dom'
 
@@ -14,21 +16,22 @@ export const StyledTab = withStyles({
 
 
 
-export default function Profile() {
+export default function Profile({ profileData }) {
     const [tabValue, setValue] = useState('Profile')
     const history = useHistory()
     const authState = useContext(AuthStateContext)
+    const theme = useContext(ThemeContext)
     const CSMNumber = '260974624243'
 
-    function handleButtonClick(){
+    function handleButtonClick() {
         history.push({
             pathname: `/message/${authState.user.id}`,
             state: {
-              clientName: authState.user.name,
-              clientNumber: CSMNumber,
-              from: 'contact'
+                clientName: authState.user.name,
+                clientNumber: CSMNumber,
+                from: 'Business Directory'
             }
-          })
+        })
     }
     function handleChange(_event, newValue) {
         setValue(newValue)
@@ -37,25 +40,28 @@ export default function Profile() {
         <div className="container">
             <div className="row d-flex justify-content-between">
                 <div className="col-4 d-flex justify-content-end align-items-center">
-                    <Avatar style={{ height: 80, width: 80 }}>
-                        A
+                    <Avatar style={{ height: 80, width: 80, fontSize: 20}}>
+                        {profileData.name.charAt(0)}
                     </Avatar>
                 </div>
-                <div className="col-8 justify-content-around">
+                <div className="col-8 justify-content-around" data-testid="details-holder">
                     <Typography variant="h6" arial-label='pf-company-name'>
-                        Company Name
+                        {profileData.name}
                     </Typography>
-                    <Typography variant="subtitle2" arial-label='pf-phone-number'>
-                        Phone Number
+                    <Typography variant="subtitle2" data-testid="pf-number" arial-label='pf-phone-number'>
+                        {profileData.phoneNumber}
                     </Typography >
                     <Typography variant="subtitle2" arial-label='pf-email-address'>
-                        Email Address
+                        {profileData.email}
                     </Typography >
                     <Typography variant="subtitle2" arial-label='pf-address'>
-                        Address
+                        {profileData.address}
                     </Typography >
-                    <Box style={{ width: '50%', marginTop: 5 }}><Status label={'verified'} /></Box>
+                    <Typography variant="subtitle2">
 
+                        {profileData.homeUrl ? <Link to={profileData.homeUrl}>{profileData.homeUrl}</Link> : 'No Link'}
+                    </Typography >
+                    <Box style={{ width: '50%', marginTop: 5 }}><Status label={'notVerified'} /></Box>
                 </div>
             </div>
 
@@ -75,7 +81,7 @@ export default function Profile() {
 
                     <Typography variant="h6">Description</Typography>
                     <Typography variant="body1" arial-label='pf-description'>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        {profileData.description || 'No Description'}
                     </Typography>
 
                 </TabPanel>
@@ -87,15 +93,14 @@ export default function Profile() {
                             </Typography>
                             <br />
                             <p>
-                                Monday - Friday: <b>8:00 - 16:00</b> <br />
-                            Saturday: <b>8:00 - 12:00</b> <br />
+                                {profileData.operationHours}
                             </p>
                         </div>
                     </div>
                 </TabPanel>
 
                 <div className='container d-flex justify-content-center'>
-                    <Button onClick={handleButtonClick}>Ask about business</Button>
+                    <Button onClick={handleButtonClick} style={{backgroundColor: theme.primaryColor, color: 'white'}}>Ask about business</Button>
                 </div>
             </div>
         </div>

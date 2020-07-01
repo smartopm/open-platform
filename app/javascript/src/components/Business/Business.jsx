@@ -8,7 +8,7 @@ export default function Business({ businessData }) {
             <List>
                 {
                     businessData.businesses.map(business => (
-                        <Link to={`/business/${business.id}`}>
+                        <Link key={business.id} to={`/business/${business.id}`} className={`card-link`}>
                             <ListItem key={business.id}>
                                 <ListItemAvatar>
                                     <Avatar>
@@ -16,11 +16,11 @@ export default function Business({ businessData }) {
                                     </Avatar>
                                 </ListItemAvatar>
                                 <Box style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                                    <Typography data-testid="business-name">
+                                    <Typography variant="subtitle1" data-testid="business-name">
                                         {business.name}
                                     </Typography>
-                                    <Typography data-testid="business-category">
-                                        {business.name}
+                                    <Typography variant="caption" data-testid="business-category">
+                                        {business.category}
                                     </Typography>
                                 </Box>
                                 <Divider variant="middle" />
