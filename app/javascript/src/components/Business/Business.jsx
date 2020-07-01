@@ -7,20 +7,23 @@ export default function Business({ businessData }) {
         <div className="container">
             <List>
                 {
-                    <Link to={`business/${id}`}>
-                        <ListItem>
+                    businessData.businesses.map(business =>(
+                    <Link to={`/business/${business.id}`}>
+                        <ListItem key={business.id}>
                             <ListItemAvatar>
                                 <Avatar>
-                                    B
+                                {business.name.charAt(0)}
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary="Test Test" />
+                            <ListItemText primary={business.name}/>
                             <Divider variant="middle" />
                         </ListItem>
                     </Link>
+                    ))
                 }
             </List>
 
         </div>
+        
     )
 }

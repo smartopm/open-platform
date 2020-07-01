@@ -335,7 +335,7 @@ export const BusinessesQuery = gql`
     userId
     id
     description
-    verified
+    status
   }
 }
 `
