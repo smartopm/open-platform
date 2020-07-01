@@ -19,7 +19,7 @@ module Types::Queries::Comment
 
     # Find out if we can use User.allowed...
     Comment.where(post_id: post_id)
-            .limit(limit)
-            .offset(offset)
+           .limit(limit)
+           .offset(offset)
   end
 end

@@ -3,12 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
- let!(:current_user) { create(:user_with_community) }
- # create a campaign for the user community
- let!(:user_discussion) do
-    create(:discussion, user_id: current_user.id, post_id: "20")
- end
-
+  let!(:current_user) { create(:user_with_community) }
+  # create a discussion for the user community
+  let!(:user_discussion) do
+    create(:discussion, user_id: current_user.id, post_id: '20')
+  end
 
   describe 'community comments' do
     it 'should allow to create comments for the community' do
