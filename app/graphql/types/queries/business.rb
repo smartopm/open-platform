@@ -11,6 +11,12 @@ module Types::Queries::Business
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+    
+    # Get business entries
+    field :business, Types::BusinessType, null: true do
+      description 'Get a business by id'
+      argument :id, GraphQL::Types::ID, required: true
+    end
   end
 
   def businesses(offset: 0, limit: 100)
@@ -21,5 +27,10 @@ module Types::Queries::Business
             .order(name: :asc)
             .limit(limit)
             .offset(offset)
+  end
+
+  def business(id:)
+    business = context[:current_user].businesses.find_by(id: id)
+    business
   end
 end
