@@ -7,10 +7,11 @@ import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 import { Spinner } from '../../components/Loading'
 import IframeContainer from '../../components/IframeContainer'
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
-import Discuss from '../../components/Discussion/Discuss'
+import { Button } from '@material-ui/core'
+import { DiscussionMutation } from '../../graphql/mutations'
 
 export default function PostPage() {
     const { id } = useParams()
@@ -21,9 +22,12 @@ export default function PostPage() {
     const { data, loading } = useQuery(DiscussionQuery, {
         variables: { postId: id}
     })
+    const [discuss] = useMutation(DiscussionMutation)
 
-    function createDiscussion(e, d) {
-        console.log(e, d)
+    function createDiscussion(title, id) {
+        discuss({ variables: { postId: id, title } })
+            .then(() => { })
+            .catch(err => console.log(err.message))
     }
     if (error) {
         return error.message
@@ -34,6 +38,7 @@ export default function PostPage() {
     if (response.categories?.Private && !authState.loggedIn) {
         return <Redirect to="/welcome" />
     }
+    console.log(response)
     return (
         <Fragment>
             <Nav menuButton="back" backTo={authState.loggedIn ? '/nkwashi_news' : '/welcome'} />
@@ -45,7 +50,11 @@ export default function PostPage() {
                 !loading && data.discussionPost ? (
                     <Comments />
                 )
-                : <Discuss submit={createDiscussion} />
+                    : (
+                        <Button variant="outlined" onClick={() => createDiscussion(response?.title, response?.ID)}>
+                            Create Discussion
+                        </Button>
+                )
             }
         </Fragment>
     )

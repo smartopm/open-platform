@@ -4,9 +4,9 @@ module Mutations
   module Discussion
     # Create a new Discussion
     class DiscussionCreate < BaseMutation
-      argument :post_id, String, required: true
       argument :title, String, required: true
       argument :description, String, required: false
+      argument :post_id, String, required: false
 
       field :discussion, Types::DiscussionType, null: true
 
