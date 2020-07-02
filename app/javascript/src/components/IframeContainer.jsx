@@ -7,7 +7,7 @@ export default function IframeContainer({ link, height, width }) {
       <iframe
         data-testid="iframe"
         src={link} height={height} width={width}
-        style={{ border: 0 }}
+        style={{ border: 0, position: 'fixed'}}
         />
     </div>
   )
