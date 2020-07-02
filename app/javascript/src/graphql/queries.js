@@ -333,6 +333,7 @@ export const PostCommentsQuery = gql`
         id
         user {
           name
+          id
         }
       }
     }
@@ -345,6 +346,7 @@ export const DiscussionCommentsQuery = gql`
         createdAt
         id
         user {
+          id
           name
         }
       }
@@ -360,6 +362,7 @@ export const DiscussionQuery = gql`
         createdAt
         user {
             name
+            id
         }
       }
     }

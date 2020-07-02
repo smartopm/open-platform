@@ -108,14 +108,14 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange }
                 <TextField
                     id="standard-full-width"
                     style={{ width: '95vw', margin: 26, marginTop: 7 }}
-                    placeholder="Type message here"
+                    placeholder="Type a comment here"
                     value={data.message}
                     onChange={handleCommentChange}
-                    helperText={`Character count: ${data.message.length}`}
                     multiline
                     rows={3}
                     margin="normal"
                     variant="outlined"
+                    inputProps={{ "data-testid": "comment_content" }}
                     InputLabelProps={{
                         shrink: true
                     }}
@@ -124,6 +124,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange }
             <Button
                 color="primary"
                 onClick={sendComment}
+                data-testid="comment_button"
                 disabled={data.isLoading}
                 style={{ marginTop: -37, marginRight: 34, float: 'right' }}
             >
