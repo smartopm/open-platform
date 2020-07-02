@@ -12,7 +12,6 @@ export default function DiscussonPage() {
      const { loading, error, data } = useQuery(DiscussionQuery, {
          variables: { id }
      })
-     console.log(data)
      if (loading) return <Loading />
      if (error ) {
          return <ErrorPage title={error.message || error} />
