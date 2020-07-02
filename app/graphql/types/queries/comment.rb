@@ -16,7 +16,7 @@ module Types::Queries::Comment
     # Get comments for wordpress posts
     field :discuss_comments, [Types::CommentType], null: true do
       description 'Get all comment entries per post'
-      argument :id, String, required: true
+      argument :id, GraphQL::Types::ID, required: true
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
@@ -31,7 +31,7 @@ module Types::Queries::Comment
     # Get discussion
     field :discussion, Types::DiscussionType, null: true do
       description 'Get a discussion '
-      argument :id, String, required: true
+      argument :id, GraphQL::Types::ID, required: true
     end
 
     # Get discussion for wordpress posts ==>

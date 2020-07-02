@@ -20,7 +20,6 @@ RSpec.describe Comment, type: :model do
   end
   describe 'community discussions' do
     it 'should check for discussions for the community' do
-      puts user_discussion.to_json
       expect(user_discussion.id).not_to be_nil
       expect(user_discussion.user_id).to eql current_user.id
       expect(user_discussion.title).to include 'Community Discussion'
