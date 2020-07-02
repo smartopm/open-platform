@@ -26,18 +26,18 @@ module Types::Queries::Comment
       description 'Get all discussions'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-    end  
+    end
 
-    # Get discussion 
+    # Get discussion
     field :discussion, Types::DiscussionType, null: true do
       description 'Get a discussion '
-       argument :id, String, required: true
-    end 
+      argument :id, String, required: true
+    end
 
-    # Get discussion for wordpress posts ==> 
+    # Get discussion for wordpress posts ==>
     field :post_discussion, Types::DiscussionType, null: true do
       description 'Get a discussion for wordpress pages using postId'
-       argument :post_id, String, required: true
+      argument :post_id, String, required: true
     end
   end
 
@@ -48,8 +48,8 @@ module Types::Queries::Comment
     return [] if discs.nil?
 
     discs.comments.limit(limit).offset(offset)
-  end  
-  
+  end
+
   def discuss_comments(offset: 0, limit: 100, id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
@@ -66,15 +66,15 @@ module Types::Queries::Comment
     return [] if discussions.nil?
 
     discussions.limit(limit).offset(offset)
-  end  
-  
+  end
+
   def discussion(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussion =  community_discussions(id)
+    discussion = community_discussions(id)
     discussion
-  end  
-  
+  end
+
   def post_discussion(post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
@@ -87,8 +87,8 @@ module Types::Queries::Comment
 
     discs = Discussion.find_by(community_id: context[:current_user].community_id, post_id: post_id)
     discs
-  end  
-  
+  end
+
   def community_discussions(id)
     return if id.nil?
 
