@@ -356,6 +356,11 @@ export const DiscussionQuery = gql`
       discussion(id: $id) {
         title
         id
+        description
+        createdAt
+        user {
+            name
+        }
       }
     }
 `

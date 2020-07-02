@@ -33,10 +33,11 @@ export default function DiscussionList({ data }) {
                                 }
                             />
                         </ListItem>
+                        <Divider component="li" />
                     </Link>
                 )) : 'No Discussions Topics'
                 }
-                <Divider component="li" />
+               
             </List>
 
         </div>

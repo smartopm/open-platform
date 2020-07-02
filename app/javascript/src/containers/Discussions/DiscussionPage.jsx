@@ -12,15 +12,15 @@ export default function DiscussonPage() {
      const { loading, error, data } = useQuery(DiscussionQuery, {
          variables: { id }
      })
-
+     console.log(data)
      if (loading) return <Loading />
-     if (error) {
+     if (error ) {
          return <ErrorPage title={error.message || error} />
      }
     return (
         <div>
             <Nav navName="Discussion" menuButton="back" backTo="/discussions"/>
-            <Discussion data={data.discussion}/>
+            <Discussion discussionData={data.discussion}/>
         </div>
     )
 }
