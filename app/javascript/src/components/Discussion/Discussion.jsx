@@ -15,13 +15,13 @@ export default function Discussion({ discussionData }) {
     if (error) {
         return <ErrorPage title={error.message || error} />
     }
-    console.log(id)
+    
     return (
         <div className="container">
             <Fragment>
                 <Typography variant="h6">{discussionData.title}</Typography>
                 <Typography variant="body1">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                   {discussionData.description || 'No Description'}
                 </Typography>
                 <br />
                 <Typography variant="body2">
