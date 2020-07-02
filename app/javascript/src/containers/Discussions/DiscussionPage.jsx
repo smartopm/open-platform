@@ -7,16 +7,16 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 
 export default function DiscussonPage() {
-     const { id} = useParams()
-    //  const { loading, error, data } = useQuery(DiscussionQuery, {
-    //      variables: {id}
-    //  })
+     const { id } = useParams()
+     const { loading, error, data } = useQuery(DiscussionQuery, {
+         variables: { id }
+     })
 
-    //  if (loading) return <Loading />
-    //  if (error) {
-    //      return <ErrorPage title={error.message || error} />
-    //  }
-     console.log(id)
+     if (loading) return <Loading />
+     if (error) {
+         return <ErrorPage title={error.message || error} />
+     }
+     console.log({id, data})
     return (
         <div>
             <Nav navName="Discussion" menuButton="back" backTo="/discussions"/>
