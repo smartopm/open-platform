@@ -1,6 +1,7 @@
 import React from 'react'
 import { List, ListItem, Divider, ListItemText, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { truncateString } from '../../utils/helpers';
 
 
 export default function DiscussionList({ data }) {
@@ -25,8 +26,9 @@ export default function DiscussionList({ data }) {
                                             color="textPrimary"
                                         >
                                             {discussion.user.name}
-                                </Typography>
-                                        {discussion.description}
+                                        </Typography>
+                                        { discussion.description ? ` — ${truncateString(discussion.description, 100)}` : ''}
+                                       
                                     </React.Fragment>
                                 }
                             />

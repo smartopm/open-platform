@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 
-
-export default function Discussion(){
+export default function Discussion(data){
     return (
         <div>
             
@@ -12,8 +10,5 @@ export default function Discussion(){
 };
 
 
-Discussion.propTypes = {
-
-};
 
 

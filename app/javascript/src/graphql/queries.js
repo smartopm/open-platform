@@ -353,7 +353,7 @@ export const DiscussionCommentsQuery = gql`
 
 export const DiscussionQuery = gql`
     query discussion($id: ID!) {
-      discuss(id: $id) {
+      discussion(id: $id) {
         title
         id
       }
