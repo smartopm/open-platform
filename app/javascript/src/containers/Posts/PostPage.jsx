@@ -50,20 +50,20 @@ export default function PostPage() {
                 <IframeContainer link={response?.URL || ""} width={width} height={height} />
                 <ShareButton url={currentUrl} />
             </div>
-            {
-                queryResponse.data.postDiscussion ? (
-                    <Comments
-                        comments={data.postComments}
-                        refetch={refetch}
-                        discussionId={queryResponse.data.postDiscussion.id}
-                    />
-                )
-                    : (
-                        <Button variant="outlined" onClick={() => createDiscussion(response?.title, response?.ID)}>
-                            Create Discussion
-                        </Button>
+                {
+                    queryResponse.data.postDiscussion ? (
+                        <Comments
+                            comments={data.postComments}
+                            refetch={refetch}
+                            discussionId={queryResponse.data.postDiscussion.id}
+                        />
                     )
-            }
+                        : (
+                            <Button variant="outlined" onClick={() => createDiscussion(response?.title, response?.ID)}>
+                                Create Discussion
+                            </Button>
+                        )
+                }
         </Fragment>
     )
 }
