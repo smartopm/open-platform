@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-export default function Discussion(data){
+export default function Discussion(){
     return (
         <div>
             
