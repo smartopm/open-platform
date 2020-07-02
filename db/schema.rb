@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_07_102652) do
+ActiveRecord::Schema.define(version: 2020_07_01_083731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -60,6 +60,26 @@ ActiveRecord::Schema.define(version: 2020_06_07_102652) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "reporting_user_id"
+  end
+
+  create_table "businesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.string "name"
+    t.string "status"
+    t.string "home_url"
+    t.string "category"
+    t.text "description"
+    t.string "image_url"
+    t.string "email"
+    t.string "phone_number"
+    t.string "address"
+    t.string "operation_hours"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.json "links"
+    t.index ["community_id"], name: "index_businesses_on_community_id"
+    t.index ["user_id"], name: "index_businesses_on_user_id"
   end
 
   create_table "campaigns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -250,8 +270,11 @@ ActiveRecord::Schema.define(version: 2020_06_07_102652) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "businesses", "communities"
+  add_foreign_key "businesses", "users"
   add_foreign_key "campaigns", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
+
 end
