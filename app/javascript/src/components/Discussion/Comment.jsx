@@ -1,5 +1,8 @@
 import React from 'react'
 import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List } from '@material-ui/core'
+import { useMutation } from 'react-apollo'
+import { useParams } from 'react-router'
+import PropTypes from 'prop-types'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import { StyleSheet, css } from 'aphrodite'
@@ -7,8 +10,7 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
-import { useMutation } from 'react-apollo'
-import { useParams } from 'react-router'
+
 
 export default function Comments({ comments, refetch, discussionId }) {
     const init = {
@@ -41,10 +43,11 @@ export default function Comments({ comments, refetch, discussionId }) {
             setData({ ..._data, isLoading: false, message: '' })
             refetch()
         })
-            .catch(err => setData({ ..._data, error: err.message }))
+        .catch(err => setData({ ..._data, error: err.message }))
 
     }
-    if (!id) return <span /> // don't show comments on pages that dont have known posts like /nkwashi_news
+    if (!id) return <span />
+    // don't show comments on pages that dont have known posts like /nkwashi_news
     return (
         <List>
             <CommentBox
@@ -96,7 +99,6 @@ export function CommentSection({ user, createdAt, comment }) {
 }
 
 export function CommentBox({ authState, sendComment, data, handleCommentChange }) {
-
     return (
         <>
             <ListItem alignItems="flex-start">
@@ -131,6 +133,26 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange }
     )
 }
 
+
+
+Comments.propType = {
+    comments: PropTypes.array,
+    discussionId: PropTypes.string.isRequired,
+    refetch: PropTypes.func.isRequired,
+}
+
+CommentBox.propType = {
+    authState: PropTypes.object.isRequired,
+    sendComment: PropTypes.func.isRequired,
+    handleCommentChange: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
+}
+
+CommentSection.propType = {
+    user: PropTypes.object.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    comment: PropTypes.string.isRequired
+}
 
 const styles = StyleSheet.create({
     timeStamp: {
