@@ -75,6 +75,8 @@ import Posts from '../src/containers/Posts/Posts'
 import NewsPage from '../src/containers/Posts/NewsPage'
 import PostPage from '../src/containers/Posts/PostPage'
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider'
+import Discussions from '../src/containers/Discussions/Discussions'
+import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
 
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -265,6 +267,8 @@ const App = () => {
 
                       <Route path="/nkwashi_news" exact component={NewsPage} />
                       <Route path="/nkwashi_news/:slug" exact component={Posts} />
+                      <Route path="/discussions" exact component={Discussions} />
+                      <Route path="/discussions/:id" exact component={DiscussonPage} />
 
 
                       <AdminRoutes>
