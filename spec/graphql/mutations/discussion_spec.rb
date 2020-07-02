@@ -56,7 +56,8 @@ RSpec.describe Mutations::Discussion do
                                               }).as_json
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to eql 'Variable postId of type String! was provided invalid value'
+      expect(result.dig('errors', 0, 'message'))
+        .to eql 'Variable postId of type String! was provided invalid value'
     end
   end
 end

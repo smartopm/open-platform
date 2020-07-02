@@ -44,6 +44,24 @@ RSpec.describe Types::Queries::Comment do
           }
         })
     end
+    let(:discussion_comments_query) do
+      %(query {
+            discussComments(id: "#{user_discussion.id}") {
+              content
+              discussionId
+              id
+            }
+        })
+    end
+
+    let(:discussion_query) do
+      %(query {
+            discussion(id: "#{user_discussion.id}") {
+              title
+              id
+            }
+        })
+    end
 
     it 'should retrieve list of comments' do
       result = DoubleGdpSchema.execute(comments_query,
@@ -70,6 +88,23 @@ RSpec.describe Types::Queries::Comment do
       expect(result.dig('data', 'postDiscussion', 'id')).to eql user_discussion.id
       expect(result.dig('data', 'postDiscussion', 'postId')).to eql '20'
       expect(result.dig('data', 'postDiscussion', 'title')).to include 'Community Discussion'
+    end
+
+    it 'should retrieve single discussion' do
+      result = DoubleGdpSchema.execute(discussion_query,
+                                       context: { current_user: current_user }).as_json
+      expect(result.dig('data', 'discussion', 'id')).to eql user_discussion.id
+      expect(result.dig('data', 'discussion', 'title')).to include 'Community Discussion'
+    end
+
+    it 'should retrieve comments for discussion' do
+      result = DoubleGdpSchema.execute(discussion_comments_query,
+                                       context: { current_user: current_user }).as_json
+      expect(result.dig('data', 'discussComments', 0, 'id')).to eql user_comments.id
+      expect(result.dig('data', 'discussComments').length).to eql 1
+      expect(result.dig('data', 'discussComments', 0, 'discussionId')).to eql user_discussion.id
+      expect(result.dig('data', 'discussComments', 0, 'content'))
+        .to include 'This is an awesome comment'
     end
   end
 end

@@ -10,6 +10,7 @@ module Mutations
 
       field :discussion, Types::DiscussionType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         discussion = context[:current_user].community.discussions.new
         discussion.user_id = context[:current_user].id
@@ -22,6 +23,7 @@ module Mutations
 
         raise GraphQL::ExecutionError, discussion.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         current_user = context[:current_user]
