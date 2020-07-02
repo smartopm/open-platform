@@ -3,35 +3,37 @@ import { List, ListItem, Divider, ListItemText, Typography } from '@material-ui/
 import { Link } from 'react-router-dom';
 
 
-
-export default function DiscussionList({data}) {
+export default function DiscussionList({ data }) {
     return (
         <div>
             <List >
-                <Link to="/discussions/" style={{color: '#fff'}} className={`card-link`}>
-                    <ListItem alignItems="flex-start">
-                        <ListItemText
-                            primary={
-                                <Typography variant="h6" color='textPrimary' >
-                                    Brunch this weekend?
-                            </Typography>
-                            }
-                            secondary={
-                                <React.Fragment>
-                                    <Typography
-                                        component="span"
-                                        variant="body2"
-                                        // className={classes.inline}
-                                        color="textPrimary"
-                                    >
-                                        Ali Connors
+                {data.length ? data.map(discussion => (
+                    <Link key={discussion.id} to={`/discussions/${discussion.id}`} style={{ color: '#fff' }} className={`card-link`}>
+                        <ListItem alignItems="flex-start">
+                            <ListItemText
+                                primary={
+                                    <Typography variant="h6" color='textPrimary' >
+                                        {discussion.title}
+                                    </Typography>
+                                }
+                                secondary={
+                                    <React.Fragment>
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            // className={classes.inline}
+                                            color="textPrimary"
+                                        >
+                                            {discussion.user.name}
                                 </Typography>
-                                    {" — I'll be in your neighborhood doing errands this…"}
-                                </React.Fragment>
-                            }
-                        />
-                    </ListItem>
-                </Link>
+                                        {discussion.description}
+                                    </React.Fragment>
+                                }
+                            />
+                        </ListItem>
+                    </Link>
+                )) : 'No Discussions Topics'
+                }
                 <Divider component="li" />
             </List>
 

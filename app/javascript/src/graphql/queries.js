@@ -376,6 +376,10 @@ export const DiscussionsQuery = gql`
         description
         createdAt
         id
+        user{
+          name
+          id
+        }
       }
     }
 `
