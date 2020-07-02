@@ -7,13 +7,10 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
-import { useMutation, useQuery } from 'react-apollo'
+import { useMutation } from 'react-apollo'
 import { useParams } from 'react-router'
-import { CommentsQuery } from '../../graphql/queries'
-import Loading from '../Loading'
-import ErrorPage from '../Error'
 
-export default function Comments() {
+export default function Comments({ comments, refetch, discussionId }) {
     const init = {
         message: '',
         error: '',
@@ -21,10 +18,6 @@ export default function Comments() {
     }
     const authState = useContext(Context)
     const { id } = useParams()
-    const { loading, error, data, refetch } = useQuery(CommentsQuery, {
-        variables: { postId: id }
-    })
-
     const [_data, setData] = useState(init)
     const [createComment] = useMutation(CommentMutation)
 
@@ -41,7 +34,7 @@ export default function Comments() {
         createComment({
             variables: {
                 content: _data.message,
-                postId: id
+                discussionId
             }
         })
         .then(() => {
@@ -52,8 +45,6 @@ export default function Comments() {
 
     }
     if (!id) return <span /> // don't show comments on pages that dont have known posts like /nkwashi_news
-    if (loading) return <Loading />
-    if (error) return <ErrorPage title={error.message} />
     return (
         <List>
             <CommentBox
@@ -62,7 +53,7 @@ export default function Comments() {
                 handleCommentChange={handleCommentChange}
                 sendComment={sendComment} />
             {
-                data.comments.map(comment => (
+                comments.map(comment => (
                     <CommentSection
                         key={comment.id}
                         user={comment.user}
