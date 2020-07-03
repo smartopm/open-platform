@@ -9,6 +9,7 @@ import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
+import MessageIcon from '@material-ui/icons/Message';
 import NotesIcon from '@material-ui/icons/Notes'
 import ForumIcon from '@material-ui/icons/Forum'
 import { Footer } from '../components/Footer.jsx'
@@ -240,7 +241,25 @@ export default function Homepage({ authState }) {
         'resident',
         'visitor'
       ]
-    }
+    },
+    
+    {
+      card_id: 20,
+      title: `Discussions`,
+      path: `/discussions`,
+      titleStyle: css(styles.CardtextImg),
+      icon: <MessageIcon fontSize="large"/>,
+      access: [
+        'admin',
+        'client',
+        'security_guard',
+        'prospective_client',
+        'contractor',
+        'resident',
+        'visitor'
+      ]
+    },
+
   ]
 
   return (

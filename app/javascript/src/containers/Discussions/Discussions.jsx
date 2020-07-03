@@ -13,7 +13,6 @@ export default function Discussions() {
     if (error) {
         return <ErrorPage title={error.message || error} />
     }
-    console.log(data)
     return (
 
         <div>
