@@ -18,6 +18,7 @@ import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import LocalMallIcon from '@material-ui/icons/LocalMall';
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
@@ -260,6 +261,20 @@ export default function Homepage({ authState }) {
       ]
     },
 
+     {
+      card_id: 19,
+      title: `Business`,
+      path: `/business`,
+      titleStyle: css(styles.CardtextImg),
+      icon: <LocalMallIcon fontSize="large" />,
+      access: [
+        'admin',
+        'client',
+        'prospective_client',
+        'resident',
+        'visitor'
+      ]
+    }
   ]
 
   return (
