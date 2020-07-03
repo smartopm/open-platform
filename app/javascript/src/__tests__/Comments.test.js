@@ -1,10 +1,7 @@
 import React from 'react'
-import Comments, { CommentBox, CommentSection } from '../components/Discussion/Comment'
+import { CommentBox, CommentSection } from '../components/Discussion/Comment'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { MockedProvider } from '@apollo/react-testing'
-import { BrowserRouter } from 'react-router-dom'
-import { CommentMutation } from '../graphql/mutations'
 
 const commentBtn = jest.fn()
 const props = {
