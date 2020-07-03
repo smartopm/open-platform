@@ -78,6 +78,8 @@ import ThemeProvider from '../Themes/Nkwashi/ThemeProvider'
 import Discussions from '../src/containers/Discussions/Discussions'
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
 import Discuss from '../src/components/Discussion/Discuss'
+import Businesses from '../src/containers/Businesses/Businesses'
+import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
 
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -271,6 +273,8 @@ const App = () => {
                       <Route path="/discussions" exact component={Discussions} />
                       <Route path="/discussions/:id" exact component={DiscussonPage} />
                       <Route path="/discuss" exact component={Discuss} />
+                      <Route path="/business" exact component={Businesses} />
+                      <Route path="/business/:id" exact component={BusinessProfile} />
 
 
                       <AdminRoutes>

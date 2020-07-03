@@ -10,6 +10,7 @@ module Types
     include Types::Queries::TimeSheet
     include Types::Queries::Comment
     include Types::Queries::User
+    include Types::Queries::Business
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 

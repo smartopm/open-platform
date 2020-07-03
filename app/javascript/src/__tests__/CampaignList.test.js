@@ -50,7 +50,6 @@ describe('Campaign List page', () => {
       expect(btn).toHaveTextContent('More Details')
     }, { timeout: 1000 }
     )
-
   })
   it('should render with an error', () => {
     const err = 'oops something went wrong'

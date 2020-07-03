@@ -1,19 +1,24 @@
 import React from 'react'
-import { List, ListItem, Divider, ListItemText, Typography } from '@material-ui/core';
+import { List, ListItem, Divider, ListItemText, Typography, ListItemAvatar } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { truncateString } from '../../utils/helpers';
+import Avatar from '../Avatar';
+import { css, StyleSheet } from 'aphrodite';
 
 
 export default function DiscussionList({ data }) {
     return (
-        <div>
+        <div className={css(styles.discussionList)}>
             <List >
                 {data.length ? data.map(discussion => (
                     <Link key={discussion.id} to={`/discussions/${discussion.id}`} style={{ color: '#fff' }} className={`card-link`}>
                         <ListItem alignItems="flex-start">
+                            <ListItemAvatar style={{ marginRight: 20 }}>
+                                <Avatar user={discussion.user} />
+                            </ListItemAvatar>
                             <ListItemText
                                 primary={
-                                    <Typography variant="h6" color='textPrimary' >
+                                    <Typography variant="h6" color='textPrimary' data-testid="disc_title">
                                         {discussion.title}
                                     </Typography>
                                 }
@@ -22,24 +27,31 @@ export default function DiscussionList({ data }) {
                                         <Typography
                                             component="span"
                                             variant="body2"
-                                            // className={classes.inline}
                                             color="textPrimary"
                                         >
                                             {discussion.user.name}
                                         </Typography>
                                         { discussion.description ? ` — ${truncateString(discussion.description, 100)}` : ''}
-                                       
                                     </React.Fragment>
                                 }
                             />
                         </ListItem>
+                        <Divider component="li" />
                     </Link>
                 )) : 'No Discussions Topics'
                 }
-                <Divider component="li" />
             </List>
-
         </div>
-
     )
 }
+
+const styles = StyleSheet.create({
+    discussionList: {
+        marginLeft: '11%',
+        marginRight: '12%',
+        '@media (max-width: 700px)': {
+            marginLeft: '2%',
+            marginRight: '2%',
+        }
+    }
+})

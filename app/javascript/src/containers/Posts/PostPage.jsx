@@ -15,17 +15,13 @@ import { DiscussionMutation } from '../../graphql/mutations'
 import { StyleSheet, css } from 'aphrodite'
 import {
   Dialog,
-  ListItemText,
-  ListItem,
-  List,
-  Divider,
   AppBar,
   Toolbar,
   IconButton,
   Typography,
-//   CloseIcon,
   Slide
 } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -85,24 +81,28 @@ export default function PostPage() {
       </div>
 
       <div className={css(styles.commetns)}>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        View Comments
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+        className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+      >
+        <span>View comments</span>
       </Button>
 
       </div>
       <div> 
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <AppBar >
+        <AppBar className={css(styles.appBar)} >
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-              {/* <CloseIcon /> */}
+              <CloseIcon />
             </IconButton>
             <Typography variant="h6">
               Comments
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            {/* <Button autoFocus color="inherit" onClick={handleClose}>
               close
-            </Button>
+            </Button> */}
           </Toolbar>
         </AppBar>
         <br/>
@@ -122,15 +122,6 @@ export default function PostPage() {
             Create Discussion
           </Button>
         )}
-        {/* <List>
-          <ListItem button>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
-          </ListItem>
-          <Divider />
-          <ListItem button>
-            <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-          </ListItem>
-        </List> */}
       </Dialog>
       </div>
     </Fragment>
@@ -144,5 +135,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0
     // paddingBottom: "60px"
-  }
+  },
+  appBar: {
+    backgroundColor: '#25c0b0',
+    minHeight: '50px'
+  },
+  getStartedButton: {
+    backgroundColor: "#25c0b0",
+    color: "#FFF",
+    width: "30%",
+    height: 51,
+    boxShadow: "none",
+    marginTop: 50,
+    alignItems: 'center',
+  },
 })
