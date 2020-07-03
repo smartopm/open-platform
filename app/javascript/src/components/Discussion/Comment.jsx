@@ -88,7 +88,7 @@ export function CommentSection({ user, createdAt, comment }) {
                 }
                 secondary={
                     <React.Fragment>
-                        <span >
+                        <span data-testid="comment" >
                             {comment}
                         </span>
                     </React.Fragment>

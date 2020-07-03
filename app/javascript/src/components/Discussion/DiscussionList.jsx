@@ -13,7 +13,7 @@ export default function DiscussionList({ data }) {
                         <ListItem alignItems="flex-start">
                             <ListItemText
                                 primary={
-                                    <Typography variant="h6" color='textPrimary' >
+                                    <Typography variant="h6" color='textPrimary' data-testid="disc_title">
                                         {discussion.title}
                                     </Typography>
                                 }
@@ -22,7 +22,6 @@ export default function DiscussionList({ data }) {
                                         <Typography
                                             component="span"
                                             variant="body2"
-                                            // className={classes.inline}
                                             color="textPrimary"
                                         >
                                             {discussion.user.name}
@@ -37,10 +36,7 @@ export default function DiscussionList({ data }) {
                     </Link>
                 )) : 'No Discussions Topics'
                 }
-               
             </List>
-
         </div>
-
     )
 }
