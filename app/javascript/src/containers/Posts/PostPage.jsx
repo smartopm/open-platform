@@ -49,7 +49,7 @@ export default function PostPage() {
       .then(() => queryResponse.refetch())
       .catch(err => console.log(err.message))
   }
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
     setOpen(true)
