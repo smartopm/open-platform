@@ -15,28 +15,27 @@ export default function Discussion({ discussionData }) {
     if (error) {
         return <ErrorPage title={error.message || error} />
     }
-    
+
     return (
         <div className="container">
             <Fragment>
-                <Typography variant="h6">{discussionData.title}</Typography>
-                <Typography variant="body1">
-                   {discussionData.description || 'No Description'}
+                <Typography data-testid="disc_title" variant="h6">{discussionData.title}</Typography>
+                <Typography variant="body1" data-testid="disc_desc" >
+                    {discussionData.description || 'No Description'}
                 </Typography>
                 <br />
-                <Typography variant="body2">
+                <Typography variant="body2" data-testid="disc_author">
                     <strong>{discussionData.user.name}</strong>
                 </Typography>
-                <Typography variant="caption">
+                <Typography variant="caption" >
                     {discussionData.createdAt}
                 </Typography>
                 <Divider />
                 <br />
                 <Typography variant='subtitle1'>
-                        Comments
+                    Comments
                     </Typography>
                 <br />
-                
                 <Comment comments={data.discussComments} discussionId={id} refetch={refetch} />
             </Fragment>
         </div>

@@ -387,6 +387,8 @@ export const DiscussionsQuery = gql`
         user{
           name
           id
+          imageUrl
+          avatarUrl
         }
       }
     }
