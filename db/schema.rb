@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_01_110441) do
+ActiveRecord::Schema.define(version: 2020_07_05_084658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -113,6 +113,16 @@ ActiveRecord::Schema.define(version: 2020_07_01_110441) do
     t.string "slack_webhook_url"
     t.string "timezone"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
+  end
+
+  create_table "discussion_users", id: false, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "discussion_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["discussion_id"], name: "index_discussion_users_on_discussion_id"
+    t.index ["user_id", "discussion_id"], name: "index_discussion_users_on_user_id_and_discussion_id", unique: true
+    t.index ["user_id"], name: "index_discussion_users_on_user_id"
   end
 
   create_table "discussions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -293,10 +303,11 @@ ActiveRecord::Schema.define(version: 2020_07_01_110441) do
   add_foreign_key "businesses", "communities"
   add_foreign_key "businesses", "users"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "discussion_users", "discussions"
+  add_foreign_key "discussion_users", "users"
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
-
 end
