@@ -1,7 +1,16 @@
 import React, { Fragment, useContext, useState } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { Button, Fab } from '@material-ui/core'
+import {
+  Button, Fab, Dialog,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Slide
+} from '@material-ui/core'
+import { StyleSheet, css } from 'aphrodite'
+import CloseIcon from '@material-ui/icons/Close';
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch, useWindowDimensions } from '../../utils/customHooks'
 import { ShareButton } from '../../components/ShareButton'
@@ -12,16 +21,8 @@ import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../graphql/mutations'
-import { StyleSheet, css } from 'aphrodite'
-import {
-  Dialog,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Slide
-} from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close';
+
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -46,17 +47,13 @@ export default function PostPage() {
     discuss({
       variables: { postId: id.toString(), title }
     })
-      .then(() => queryResponse.refetch())
-      .catch(err => console.log(err.message))
+    .then(() => queryResponse.refetch())
+    .catch(err => console.log(err.message))
   }
   const [open, setOpen] = useState(false)
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
+  function handleCommentsView() {
+    setOpen(!open)
   }
   if (!response || queryResponse.loading || loading) {
     return <Spinner />
@@ -77,19 +74,26 @@ export default function PostPage() {
           width={width}
           height={height}
         />
-        <ShareButton url={currentUrl} />
+        <ShareButton
+          url={currentUrl}
+          styles={{
+            position: 'fixed',
+            bottom: 80,
+            right: 57
+          }}
+        />
         <Fab variant="extended"
-            onClick={handleClickOpen}
+          onClick={handleCommentsView}
             className={`btn ${css(styles.getStartedButton)} `}
           >
             View comments
         </Fab>
       </div>
       <div> 
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog fullScreen open={open} onClose={handleCommentsView} TransitionComponent={Transition}>
         <AppBar className={css(styles.appBar)} >
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton edge="start" color="inherit" onClick={handleCommentsView} aria-label="close">
               <CloseIcon />
             </IconButton>
             <Typography variant="h6">
@@ -121,13 +125,6 @@ export default function PostPage() {
 }
 
 const styles = StyleSheet.create({
-  commetns: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    right: 0
-    // paddingBottom: "60px"
-  },
   appBar: {
     backgroundColor: '#25c0b0',
     minHeight: '50px'
@@ -135,14 +132,11 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: "#25c0b0",
     color: "#FFF",
-    width: "30%",
     height: 51,
     boxShadow: "none",
-    marginTop: 50,
     position: 'fixed',
     bottom: 20,
     right: 57,
-    alignItems: 'center',
     marginLeft: '30%',
     '@media (max-width: 500px)': {
       width: "45%",

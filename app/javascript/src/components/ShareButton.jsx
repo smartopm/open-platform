@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// import FacebookIcon from '@material-ui/icons/Facebook'
 import Fab from "@material-ui/core/Fab"
 import Box from "@material-ui/core/Box"
 import Popper from '@material-ui/core/Popper'
@@ -21,12 +20,11 @@ import {
     TwitterIcon,
     WhatsappIcon
 } from 'react-share'
-
-export function ShareButton({ url }) {
+import PropTypes from 'prop-types'
+export function ShareButton({ url, styles }) {
     const [openPopper, setOpenPopper] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false)
-
 
     function onShareClick(linkType) {
         ReactGA.event({
@@ -41,12 +39,14 @@ export function ShareButton({ url }) {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     }
     function handleCopy(url) {
-        if (copyText(url)) setOpen(!open)
+        if (copyText(url)) {
+            setOpen(!open)
+            return
+        }
     }
 
     return (
         <>
-
             <Popper
                 placement="top"
                 open={openPopper}
@@ -76,12 +76,9 @@ export function ShareButton({ url }) {
                 </Box>
             </Popper>
 
-            <Fab variant="extended"
-                style={{
-                    position: 'fixed',
-                    bottom: 80,
-                    right: 57
-                }}
+            <Fab
+                variant="extended"
+                style={styles}
                 color="primary"
                 onClick={handleClick}
             >
@@ -89,23 +86,46 @@ export function ShareButton({ url }) {
                 {"  "} Share
         </Fab>
             <div className="row container flex-row">
-                <Snackbar className="snackBar" anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                }} open={open} autoHideDuration={3000} onClose={() => setOpen(!open)}>
-                    <SnackbarContent style={{
-                        backgroundColor: '#25c0b0',
+                <Snackbar
+                    className="snackBar"
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
                     }}
-
-                        message={<div className="row d-flex m-20"> <CheckCircleIconBase /> <span className="justify-content-center" id="client-snackbar">Copied to Clipboard!</span> </div>}
+                    open={open}
+                    autoHideDuration={3000}
+                    onClose={() => setOpen(!open)}
+                >
+                    <SnackbarContent
+                        style={{
+                            backgroundColor: '#25c0b0',
+                        }}
+                        message={
+                            <div className="row d-flex m-20">
+                                <CheckCircleIconBase />
+                                <span className="justify-content-center" id="client-snackbar">
+                                    Copied to Clipboard!
+                                </span>
+                            </div>
+                        }
                     />
                 </Snackbar>
-
             </div>
         </>
     )
 }
 
 
+ShareButton.defaultProps = {
+    styles: {
+        position: 'fixed',
+        bottom: 24,
+        right: 57
+    }
+}
+ShareButton.propTypes = {
+    styles: PropTypes.object.isRequired,
+    url: PropTypes.string.isRequired,
+}
 
 
