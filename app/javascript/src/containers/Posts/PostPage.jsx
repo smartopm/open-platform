@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useState } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { Button } from '@material-ui/core'
+import { Button, Fab } from '@material-ui/core'
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch, useWindowDimensions } from '../../utils/customHooks'
 import { ShareButton } from '../../components/ShareButton'
@@ -78,17 +78,12 @@ export default function PostPage() {
           height={height}
         />
         <ShareButton url={currentUrl} />
-      </div>
-
-      <div className={css(styles.commetns)}>
-      <Button
-        variant="contained"
-        onClick={handleClickOpen}
-        className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-      >
-        <span>View comments</span>
-      </Button>
-
+        <Fab variant="extended"
+            onClick={handleClickOpen}
+            className={`btn ${css(styles.getStartedButton)} `}
+          >
+            View comments
+        </Fab>
       </div>
       <div> 
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -100,9 +95,6 @@ export default function PostPage() {
             <Typography variant="h6">
               Comments
             </Typography>
-            {/* <Button autoFocus color="inherit" onClick={handleClose}>
-              close
-            </Button> */}
           </Toolbar>
         </AppBar>
         <br/>
@@ -147,6 +139,13 @@ const styles = StyleSheet.create({
     height: 51,
     boxShadow: "none",
     marginTop: 50,
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
     alignItems: 'center',
+    marginLeft: '30%',
+    '@media (max-width: 500px)': {
+      width: "45%",
+    }
   },
 })

@@ -161,20 +161,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#737380'
     },
-    messageSection: {
-        overflow: 'auto',
-        maxHeight: '74vh'
-    },
-    ownerType: {
-        marginLeft: 20,
-        color: '#737380'
-    },
-    smsBadge: {
-        backgroundColor: '#98fffc'
-    },
-    emailBadge: {
-        backgroundColor: '#1a8683',
-        color: 'white',
-        marginLeft: 5
-    }
 })
