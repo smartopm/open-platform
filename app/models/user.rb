@@ -40,7 +40,7 @@ class User < ApplicationRecord
   has_many :time_sheets, dependent: :destroy
   has_many :accounts, dependent: :destroy
   has_many :comments, dependent: :destroy
-  has_many :discussions_users, dependent: :destroy
+  has_many :discussion_users, dependent: :destroy
   has_many :discussions, through: :discussions_users
   has_many :businesses, dependent: :destroy
 
