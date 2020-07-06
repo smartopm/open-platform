@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(discussion_id:)
         discussion_user = context[:current_user].discussion_users.new(
-            discussion_id: discussion_id
+          discussion_id: discussion_id,
         )
         discussion_user.save!
 
