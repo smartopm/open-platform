@@ -324,6 +324,74 @@ query campaign($id: ID!){
     }
 }
 `
+// Discussions and comments
+export const PostCommentsQuery = gql`
+    query postComments($postId: String!) {
+      postComments(postId: $postId) {
+        content
+        createdAt
+        id
+        user {
+          name
+          id
+        }
+      }
+    }
+`
+
+export const DiscussionCommentsQuery = gql`
+    query discussComments($id: ID!) {
+      discussComments(id: $id) {
+        content
+        createdAt
+        id
+        user {
+          id
+          name
+        }
+      }
+    }
+`
+
+export const DiscussionQuery = gql`
+    query discussion($id: ID!) {
+      discussion(id: $id) {
+        title
+        id
+        description
+        createdAt
+        user {
+            name
+            id
+        }
+      }
+    }
+`
+
+export const PostDiscussionQuery = gql`
+    query postDiscussion($postId: String!) {
+      postDiscussion(postId: $postId) {
+        title
+        id
+      }
+    }
+`
+// add pagination here
+export const DiscussionsQuery = gql`
+    {
+      discussions {
+        title
+        description
+        createdAt
+        id
+        user{
+          name
+          id
+          imageUrl
+          avatarUrl
+        }
+      }
+    }`
 // reduce the query to only get what's needed
 export const BusinessesQuery = gql`
   {

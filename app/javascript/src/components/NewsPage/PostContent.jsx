@@ -16,9 +16,9 @@ export default function PostContent({ response }) {
 }
 
 PostContent.propType = {
-    response: PropTypes.shape({
-        post_thumbnail: PropTypes.object,
-        title: PropTypes.string,
-        content: PropTypes.string,
-    }),
+  response: PropTypes.shape({
+    post_thumbnail: PropTypes.object,
+    title: PropTypes.string,
+    content: PropTypes.string
+  })
 }

@@ -71,16 +71,8 @@ RSpec.describe Mutations::Campaign do
             userIdList: $userIdList
           ) {
             campaign {
-              batchTime
-              communityId
-              createdAt
-              endTime
               id
-              message
               name
-              startTime
-              updatedAt
-              userIdList
             }
           }
         }
