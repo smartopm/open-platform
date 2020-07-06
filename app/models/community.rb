@@ -7,6 +7,19 @@ class Community < ApplicationRecord
   has_many :event_logs, dependent: :destroy
   has_many :campaigns, dependent: :destroy
 
+  # DOMAINS_COMMUNITY_MAP = {
+  #   'doublegdp.com': 'Nkwashi',
+  #   'thebe-im.com': 'Nkwashi',
+  # }.freeze
+
+  DOMAINS_COMMUNITY_MAP = {
+    'Nkwashi': ['doublegdp.com','thebe-im.com']
+  }.freeze
+
+  def domain_admin?(domain)
+    DOMAINS_COMMUNITY_MAP[self.name].include?(domain)
+  end
+
   def notify_slack(message)
     return unless self[:slack_webhook_url]
 

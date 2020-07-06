@@ -50,6 +50,7 @@ module Types::Queries::User
 
   def users(offset: 0, limit: 100, query: nil)
     adm = context[:current_user]
+    puts "CDDFDFDFDFDFDFD: #{context[:site_community].inspect}" if context[:site_community].present?
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
     User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)

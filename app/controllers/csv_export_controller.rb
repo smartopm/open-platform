@@ -4,7 +4,9 @@ require 'csv'
 
 # Export Event logs as a CSV
 class CsvExportController < ApplicationController
-  before_action :ensure_admin
+  before action do |controller|
+    ensure_admin
+  end
 
   def event_logs
     # Auth with a token
@@ -52,7 +54,7 @@ class CsvExportController < ApplicationController
   end
 
   def ensure_admin
-    @user = User.find_via_auth_token(params[:token])
+    @user = User.find_via_auth_token(params[:token], @site_community)
     raise 'Unauthorized' unless @user && @user&.role?(%i[admin])
   end
 end

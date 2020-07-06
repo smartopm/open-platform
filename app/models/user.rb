@@ -64,10 +64,6 @@ class User < ApplicationRecord
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
-  DOMAINS_COMMUNITY_MAP = {
-    'doublegdp.com': 'Nkwashi',
-    'thebe-im.com': 'Nkwashi',
-  }.freeze
 
   ATTACHMENTS = {
     avatar_blob_id: :avatar,
@@ -95,22 +91,22 @@ class User < ApplicationRecord
     security_guard: { except: %i[state user_type] },
   }.freeze
 
-  def self.from_omniauth(auth)
+  def self.from_omniauth(auth, site_community)
     # Either create a User record or update it based on the provider (Google) and the UID
-    user = find_or_initialize_from_oauth(auth)
+    user = find_or_initialize_from_oauth(auth, site_community)
     OAUTH_FIELDS_MAP.keys.each do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
-    user.assign_default_community
+    user.assign_default_community(site_community)
     user.save!
     user
   end
 
-  def self.find_or_initialize_from_oauth(auth)
-    by_email = find_by(email: auth.info.email)
+  def self.find_or_initialize_from_oauth(auth, site_community)
+    by_email = site_community.users.find_by(email: auth.info.email)
     return by_email if by_email
 
-    User.new
+    site_community.users.new
   end
 
   # We may want to do a bit more work here massaing the number entered
@@ -283,15 +279,21 @@ class User < ApplicationRecord
 
   # Assign known hardcoded domains to a community
   # TODO: Make this happen from the DB vs hardcoding
-  def assign_default_community
-    return if self[:community_id]
+  def assign_default_community(site_community)
+    return if self[:community_id].present? && self[:user_type].present?
     return unless self[:provider] == 'google_oauth2'
 
-    mapped_name = DOMAINS_COMMUNITY_MAP[domain.to_sym]
-    return unless mapped_name
+    if site_community.domain_admin?(domain.to_sym) 
+      update(community_id: site_cmmunity.id, user_type: 'admin')
+    else
+      update(community_id: site_community.id, 
+             user_type: 'visitor', 
+             expires_at: Time.current + 180.days)
+    end
+    # return unless mapped_name
 
-    community = Community.find_or_create_by(name: mapped_name)
-    update(community_id: community.id, user_type: 'admin')
+    # community = Community.find_or_create_by(name: mapped_name)
+    #update(community_id: community.id, user_type: 'admin')
   end
 
   def send_phone_token
@@ -342,13 +344,13 @@ class User < ApplicationRecord
     JWT.encode({ user_id: self[:id] }, Rails.application.credentials.secret_key_base, 'HS256')
   end
 
-  def self.find_via_auth_token(auth_token)
+  def self.find_via_auth_token(auth_token, community)
     decoded_token = JWT.decode auth_token,
                                Rails.application.credentials.secret_key_base,
                                true,
                                algorithm: 'HS256'
     payload = decoded_token[0]
-    User.find(payload['user_id'])
+    community.users.find(payload['user_id'])
   end
 
   def send_email_msg
