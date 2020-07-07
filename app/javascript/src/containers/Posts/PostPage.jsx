@@ -21,6 +21,7 @@ import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../graphql/mutations'
+import CenteredContent from '../../components/CenteredContent'
 
 
 
@@ -29,17 +30,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   });
 
 export default function PostPage() {
+  const limit = 20
   const { id } = useParams()
   const authState = useContext(AuthStateContext)
   const currentUrl = window.location.href
   const { width, height } = useWindowDimensions()
   const { response } = useFetch(`${wordpressEndpoint}/posts/${id}`)
-
+  const [isLoading, setLoading] = useState(false);
   const queryResponse = useQuery(PostDiscussionQuery, {
     variables: { postId: id }
   })
-  const { loading, data, refetch } = useQuery(PostCommentsQuery, {
-    variables: { postId: id }
+  const { loading, data, refetch, fetchMore } = useQuery(PostCommentsQuery, {
+    variables: { postId: id, limit }
   })
   const [discuss] = useMutation(DiscussionMutation)
 
@@ -55,6 +57,23 @@ export default function PostPage() {
   function handleCommentsView() {
     setOpen(!open)
   }
+
+
+  function fetchMoreComments() {
+    setLoading(true)
+    fetchMore({
+      variables: { postId: id, offset: data.postComments.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+        setLoading(false)
+        return Object.assign({}, prev, {
+          postComments: [...prev.postComments, ...fetchMoreResult.postComments]
+        })
+      }
+    })
+  }
+
+
   if (!response || queryResponse.loading || loading) {
     return <Spinner />
   }
@@ -105,11 +124,24 @@ export default function PostPage() {
         <br/>
         <br/>
         {queryResponse.data.postDiscussion ? (
-          <Comments
-            comments={data.postComments}
-            refetch={refetch}
-            discussionId={queryResponse.data.postDiscussion.id}
-          />
+            <Fragment>
+              <Comments
+                comments={data.postComments}
+                refetch={refetch}
+                discussionId={queryResponse.data.postDiscussion.id}
+              />
+              {
+                data.postComments.length >= limit && (
+                  <CenteredContent>
+                    <Button
+                      variant="outlined"
+                      onClick={fetchMoreComments}>
+                      {isLoading ? <Spinner /> : 'Load more comments'}
+                    </Button>
+                  </CenteredContent>
+                )
+              }
+          </Fragment>
         ) : (
           <Button
             variant="outlined"

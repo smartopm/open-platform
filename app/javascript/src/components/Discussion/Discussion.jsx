@@ -6,12 +6,14 @@ import { useQuery } from 'react-apollo'
 import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../CenteredContent';
+import { useState } from 'react';
 
 export default function Discussion({ discussionData }) {
+    const limit = 20
     const { id } = discussionData
-    const [isLoading, setLoading] = React.useState(false);
+    const [isLoading, setLoading] = useState(false);
     const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionCommentsQuery, {
-        variables: { id, limit: 3 }
+        variables: { id, limit }
     })
 
     function fetchMoreComments(){
@@ -53,13 +55,17 @@ export default function Discussion({ discussionData }) {
                     </Typography>
                 <br />
                 <Comment comments={data.discussComments} discussionId={id} refetch={refetch} />
-                <CenteredContent>
-                    <Button
-                        variant="outlined"
-                        onClick={fetchMoreComments}>
-                        {isLoading ? <Spinner /> : 'Load more comments'}
-                    </Button>
-                </CenteredContent>
+                {
+                    data.discussComments.length >= limit && (
+                        <CenteredContent>
+                            <Button
+                                variant="outlined"
+                                onClick={fetchMoreComments}>
+                                {isLoading ? <Spinner /> : 'Load more comments'}
+                            </Button>
+                        </CenteredContent>
+                    )
+                }
             </Fragment>
         </div>
     );

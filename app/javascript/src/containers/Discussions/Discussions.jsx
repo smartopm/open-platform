@@ -13,8 +13,9 @@ import { useTheme } from '@material-ui/core/styles';
 import CenteredContent from '../../components/CenteredContent'
 
 export default function Discussions() {
+    const limit = 20
     const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionsQuery, {
-        variables: { limit: 5 }
+        variables: { limit }
     })
     const [open, setOpen] = React.useState(false)
     const [isLoading, setLoading] = React.useState(false)
@@ -65,13 +66,18 @@ export default function Discussions() {
                 </Dialog>
                 
                 <DiscussionList data={data.discussions} />
-                <CenteredContent>
-                    <Button
-                        variant="outlined"
-                        onClick={fetchMoreDiscussions}>
-                        {isLoading ? <Spinner /> : 'Load more discussions'}
-                </Button>
-                </CenteredContent>
+                {
+                    data.discussions.length >= limit && (
+                        <CenteredContent>
+                            <Button
+                                variant="outlined"
+                                onClick={fetchMoreDiscussions}>
+                                {isLoading ? <Spinner /> : 'Load more discussions'}
+                            </Button>
+                        </CenteredContent>
+                    )
+                }
+
                 <Fab variant="extended"
                     onClick={openModal}
                     className={`btn ${css(styles.getStartedButton)} `}
