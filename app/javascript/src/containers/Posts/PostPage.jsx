@@ -9,11 +9,11 @@ import {
   Typography,
   Slide
 } from '@material-ui/core'
-import { StyleSheet, css } from 'aphrodite'
+import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch, useWindowDimensions } from '../../utils/customHooks'
-import { ShareButton } from '../../components/ShareButton'
+import { ShareButton, styles } from '../../components/ShareButton'
 import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { Spinner } from '../../components/Loading'
@@ -124,22 +124,4 @@ export default function PostPage() {
   )
 }
 
-const styles = StyleSheet.create({
-  appBar: {
-    backgroundColor: '#25c0b0',
-    minHeight: '50px'
-  },
-  getStartedButton: {
-    backgroundColor: "#25c0b0",
-    color: "#FFF",
-    height: 51,
-    boxShadow: "none",
-    position: 'fixed',
-    bottom: 20,
-    right: 57,
-    marginLeft: '30%',
-    '@media (max-width: 500px)': {
-      width: "45%",
-    }
-  },
-})
+

@@ -21,6 +21,7 @@ import {
     WhatsappIcon
 } from 'react-share'
 import PropTypes from 'prop-types'
+import { StyleSheet } from 'aphrodite';
 export function ShareButton({ url, styles }) {
     const [openPopper, setOpenPopper] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
@@ -128,4 +129,19 @@ ShareButton.propTypes = {
     url: PropTypes.string.isRequired,
 }
 
-
+export const styles = StyleSheet.create({
+    appBar: {
+        backgroundColor: '#25c0b0',
+        minHeight: '50px'
+    },
+    getStartedButton: {
+        backgroundColor: "#25c0b0",
+        color: "#FFF",
+        height: 51,
+        boxShadow: "none",
+        position: 'fixed',
+        bottom: 20,
+        right: 57,
+        marginLeft: '30%',
+    },
+})

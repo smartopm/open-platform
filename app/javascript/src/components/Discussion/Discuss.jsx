@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { DiscussionMutation } from '../../graphql/mutations'
 
-export default function Discuss() {
+export default function Discuss({ update }) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [msg, setMessage] = useState('')
@@ -14,8 +14,10 @@ export default function Discuss() {
     function handleSubmit(e) {
         e.preventDefault()
         createDiscuss({ variables: { title, description } })
-            .then(() =>
+            .then(() => {
                 setMessage('Discussion created')
+                update()
+            }
             )
             .catch(err => {
                 setMessage(err.message)
@@ -60,11 +62,20 @@ export default function Discuss() {
                 <div className="d-flex row justify-content-center">
                     <Button
                         variant="contained"
+                        aria-label="discussion_cancel"
+                        color="secondary"
+                        onClick={update}
+                        className={`btn ${css(styles.cancelBtn)}`}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
                         type="submit"
                         aria-label="discussion_submit"
-                        className={`btn ${css(styles.getStartedButton)}`}
+                        className={`btn ${css(styles.submitBtn)}`}
                     >
-                        <span>Submit</span>
+                        Submit
                     </Button>
                 </div>
                 <br />
@@ -76,12 +87,19 @@ export default function Discuss() {
     )
 }
 const styles = StyleSheet.create({
-    getStartedButton: {
+    submitBtn: {
         backgroundColor: '#25c0b0',
         color: '#FFF',
         width: '30%',
         height: 51,
         boxShadow: 'none',
+        marginTop: 50,
+        alignItems: 'center'
+    },
+    cancelBtn: {
+        width: '30%',
+        marginRight: '20%',
+        height: 51,
         marginTop: 50,
         alignItems: 'center'
     }
