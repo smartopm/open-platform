@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'Creating a user from a oauth authentication callback' do
+    let!(:community) { create(:community, name: 'Nkwashi') }
     auth_obj = OpenStruct.new(
       uid: 'abc12345',
       provider: 'google_oauth2',
@@ -21,17 +22,17 @@ RSpec.describe User, type: :model do
     )
 
     it 'should create a new user' do
-      user = User.from_omniauth(auth_obj)
+      user = User.from_omniauth(auth_obj, community)
       expect(user.persisted?).to be true
       # TODO: Remove this once we fix hardcoding
       expect(user.community.name).to eql('Nkwashi')
     end
 
     it 'should update an existing user' do
-      User.from_omniauth(auth_obj)
+      User.from_omniauth(auth_obj, community)
       auth_obj.info.name = 'Mark Percival'
       auth_obj.info.image = 'https://newprofile.com/pic.png'
-      User.from_omniauth(auth_obj)
+      User.from_omniauth(auth_obj, community)
       users = User.where(uid: auth_obj.uid, provider: auth_obj.provider).all
       expect(users.length).to be 1
       expect(users[0].name).to eq 'Mark Percival'
