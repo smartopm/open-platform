@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { Button } from '@material-ui/core'
+import { Button, TextField } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { DiscussionMutation } from '../../graphql/mutations'
 
@@ -8,7 +8,6 @@ export default function Discuss({ update }) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [msg, setMessage] = useState('')
-
     const [createDiscuss] = useMutation(DiscussionMutation)
 
     function handleSubmit(e) {
@@ -31,30 +30,40 @@ export default function Discuss({ update }) {
                 aria-label="discuss-form"
             >
                 <div className="form-group">
-                    <label className="bmd-label-static" htmlFor="title">
-                        Discussion Title
-                    </label>
-                    <input
-                        className="form-control"
-                        type="text"
+                    <TextField
+                        name="title"
+                        label="Discussion Title"
+                        style={{ width: '80vw' }}
+                        placeholder="Type a comment here"
                         onChange={e => setTitle(e.target.value)}
                         value={title}
-                        name="title"
-                        aria-label="discuss_title"
+                        margin="normal"
+                        inputProps={{
+                            "aria-label":"discuss_title"
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label className="bmd-label-static" htmlFor="description">
-                        Description
-                    </label>
-                    <input
-                        className="form-control"
-                        type="text"
+                    <TextField
+                        name="description"
+                        label="Discussion Description"
+                        style={{ width: '80vw'}}
+                        placeholder="Type a comment here"
                         onChange={e => setDescription(e.target.value)}
                         value={description}
-                        name="description"
-                        aria-label="discuss_description"
+                        multiline
+                        rows={3}
+                        margin="normal"
+                        inputProps={{
+                            "aria-label": "discuss_description"
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
                         required
                     />
                 </div>
