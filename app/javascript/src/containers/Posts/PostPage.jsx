@@ -46,10 +46,14 @@ export default function PostPage() {
   const [discuss] = useMutation(DiscussionMutation)
 
   function createDiscussion(title, id) {
+    setLoading(true)
     discuss({
       variables: { postId: id.toString(), title }
     })
-    .then(() => queryResponse.refetch())
+      .then(() => {
+        queryResponse.refetch()
+        setLoading(false)
+    })
     .catch(err => console.log(err.message))
   }
   const [open, setOpen] = useState(false)
@@ -57,7 +61,6 @@ export default function PostPage() {
   function handleCommentsView() {
     setOpen(!open)
   }
-
 
   function fetchMoreComments() {
     setLoading(true)
@@ -153,6 +156,7 @@ export default function PostPage() {
                     <Button
                       variant="outlined"
                       onClick={() => createDiscussion(response?.title, response?.ID)}
+                      disabled={isLoading}
                     >
                       Create Discussion
                     </Button>

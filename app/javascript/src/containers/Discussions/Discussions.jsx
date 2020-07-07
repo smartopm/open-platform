@@ -11,14 +11,15 @@ import { styles } from '../../components/ShareButton'
 import Discuss from '../../components/Discussion/Discuss'
 import { useTheme } from '@material-ui/core/styles';
 import CenteredContent from '../../components/CenteredContent'
+import { useState } from 'react'
 
 export default function Discussions() {
     const limit = 20
     const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionsQuery, {
         variables: { limit }
     })
-    const [open, setOpen] = React.useState(false)
-    const [isLoading, setLoading] = React.useState(false)
+    const [open, setOpen] = useState(false)
+    const [isLoading, setLoading] = useState(false)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
     function openModal() {
