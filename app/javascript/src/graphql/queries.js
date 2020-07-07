@@ -326,8 +326,8 @@ query campaign($id: ID!){
 `
 // Discussions and comments
 export const PostCommentsQuery = gql`
-    query postComments($postId: String!) {
-      postComments(postId: $postId) {
+    query postComments($postId: String!, $limit: Int, $offset: Int) {
+      postComments(postId: $postId, limit: $limit, offset: $offset) {
         content
         createdAt
         id
@@ -340,8 +340,8 @@ export const PostCommentsQuery = gql`
 `
 
 export const DiscussionCommentsQuery = gql`
-    query discussComments($id: ID!) {
-      discussComments(id: $id) {
+    query discussComments($id: ID!, $limit: Int, $offset: Int) {
+      discussComments(id: $id, limit: $limit, offset: $offset) {
         content
         createdAt
         id
@@ -378,8 +378,8 @@ export const PostDiscussionQuery = gql`
 `
 // add pagination here
 export const DiscussionsQuery = gql`
-    {
-      discussions {
+    query discussions($limit: Int, $offset: Int){
+      discussions(limit: $limit, offset: $offset) {
         title
         description
         createdAt

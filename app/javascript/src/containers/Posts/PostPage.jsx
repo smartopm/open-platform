@@ -9,11 +9,11 @@ import {
   Typography,
   Slide
 } from '@material-ui/core'
-import { StyleSheet, css } from 'aphrodite'
+import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch, useWindowDimensions } from '../../utils/customHooks'
-import { ShareButton } from '../../components/ShareButton'
+import { ShareButton, styles } from '../../components/ShareButton'
 import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { Spinner } from '../../components/Loading'
@@ -21,6 +21,7 @@ import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../graphql/mutations'
+import CenteredContent from '../../components/CenteredContent'
 
 
 
@@ -29,25 +30,30 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   });
 
 export default function PostPage() {
+  const limit = 20
   const { id } = useParams()
   const authState = useContext(AuthStateContext)
   const currentUrl = window.location.href
   const { width, height } = useWindowDimensions()
   const { response } = useFetch(`${wordpressEndpoint}/posts/${id}`)
-
+  const [isLoading, setLoading] = useState(false);
   const queryResponse = useQuery(PostDiscussionQuery, {
     variables: { postId: id }
   })
-  const { loading, data, refetch } = useQuery(PostCommentsQuery, {
-    variables: { postId: id }
+  const { loading, data, refetch, fetchMore } = useQuery(PostCommentsQuery, {
+    variables: { postId: id, limit }
   })
   const [discuss] = useMutation(DiscussionMutation)
 
   function createDiscussion(title, id) {
+    setLoading(true)
     discuss({
       variables: { postId: id.toString(), title }
     })
-    .then(() => queryResponse.refetch())
+      .then(() => {
+        queryResponse.refetch()
+        setLoading(false)
+    })
     .catch(err => console.log(err.message))
   }
   const [open, setOpen] = useState(false)
@@ -55,6 +61,22 @@ export default function PostPage() {
   function handleCommentsView() {
     setOpen(!open)
   }
+
+  function fetchMoreComments() {
+    setLoading(true)
+    fetchMore({
+      variables: { postId: id, offset: data.postComments.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+        setLoading(false)
+        return Object.assign({}, prev, {
+          postComments: [...prev.postComments, ...fetchMoreResult.postComments]
+        })
+      }
+    })
+  }
+
+
   if (!response || queryResponse.loading || loading) {
     return <Spinner />
   }
@@ -105,18 +127,42 @@ export default function PostPage() {
         <br/>
         <br/>
         {queryResponse.data.postDiscussion ? (
-          <Comments
-            comments={data.postComments}
-            refetch={refetch}
-            discussionId={queryResponse.data.postDiscussion.id}
-          />
+            <Fragment>
+              <CenteredContent>
+                <h4>{queryResponse.data.postDiscussion.title} Post Discussion</h4>
+              </CenteredContent>
+              <Comments
+                comments={data.postComments}
+                refetch={refetch}
+                discussionId={queryResponse.data.postDiscussion.id}
+              />
+              {
+                data.postComments.length >= limit && (
+                  <CenteredContent>
+                    <Button
+                      variant="outlined"
+                      onClick={fetchMoreComments}>
+                      {isLoading ? <Spinner /> : 'Load more comments'}
+                    </Button>
+                  </CenteredContent>
+                )
+              }
+          </Fragment>
         ) : (
-          <Button
-            variant="outlined"
-            onClick={() => createDiscussion(response?.title, response?.ID)}
-          >
-            Create Discussion
-          </Button>
+              <CenteredContent>
+                <br/>
+                {
+                  authState.user.userType === 'admin' ? (
+                    <Button
+                      variant="outlined"
+                      onClick={() => createDiscussion(response?.title, response?.ID)}
+                      disabled={isLoading}
+                    >
+                      Create Discussion
+                    </Button>
+                  ) : 'Discussion has not yet been enabled for this post'
+                }
+         </CenteredContent>
         )}
       </Dialog>
       </div>
@@ -124,22 +170,4 @@ export default function PostPage() {
   )
 }
 
-const styles = StyleSheet.create({
-  appBar: {
-    backgroundColor: '#25c0b0',
-    minHeight: '50px'
-  },
-  getStartedButton: {
-    backgroundColor: "#25c0b0",
-    color: "#FFF",
-    height: 51,
-    boxShadow: "none",
-    position: 'fixed',
-    bottom: 20,
-    right: 57,
-    marginLeft: '30%',
-    '@media (max-width: 500px)': {
-      width: "45%",
-    }
-  },
-})
+

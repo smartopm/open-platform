@@ -231,6 +231,14 @@ class User < ApplicationRecord
     mess
   end
 
+  def find_user_discussion(id, type)
+    if type == 'post'
+      community.discussions.find_by(post_id: id)
+    else
+      community.discussions.find(id)
+    end
+  end
+
   def find_a_user(a_user_id)
     community.users.find(a_user_id)
   end

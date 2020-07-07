@@ -77,7 +77,6 @@ import PostPage from '../src/containers/Posts/PostPage'
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider'
 import Discussions from '../src/containers/Discussions/Discussions'
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
-import Discuss from '../src/components/Discussion/Discuss'
 import Businesses from '../src/containers/Businesses/Businesses'
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
 
@@ -272,7 +271,6 @@ const App = () => {
                       <Route path="/nkwashi_news/:slug" exact component={Posts} />
                       <Route path="/discussions" exact component={Discussions} />
                       <Route path="/discussions/:id" exact component={DiscussonPage} />
-                      <Route path="/discuss" exact component={Discuss} />
                       <Route path="/business" exact component={Businesses} />
                       <Route path="/business/:id" exact component={BusinessProfile} />
 

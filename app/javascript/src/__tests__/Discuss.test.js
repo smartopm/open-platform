@@ -10,8 +10,6 @@ describe('Discuss form component', () => {
     it('should render with wrong props', () => {
         const container = render(<MockedProvider><Discuss /></MockedProvider>)
         expect(container.queryByText('Submit')).toBeInTheDocument()
-        expect(container.queryByText('Discussion Title')).toBeInTheDocument()
-        expect(container.queryByText('Description')).toBeInTheDocument()
 
         const title = container.queryByLabelText('discuss_title')
         fireEvent.change(title, { target: { value: 'This is a title' } })

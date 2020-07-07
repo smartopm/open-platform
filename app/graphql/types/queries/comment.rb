@@ -44,7 +44,7 @@ module Types::Queries::Comment
   def post_comments(offset: 0, limit: 100, post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discs = community_post_discussions(post_id)
+    discs = community_discussions(post_id, 'post')
     return [] if discs.nil?
 
     discs.comments.limit(limit).offset(offset)
@@ -53,7 +53,7 @@ module Types::Queries::Comment
   def discuss_comments(offset: 0, limit: 100, id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discs = community_discussions(id)
+    discs = community_discussions(id, 'discuss')
     return [] if discs.nil?
 
     discs.comments.limit(limit).offset(offset)
@@ -62,37 +62,28 @@ module Types::Queries::Comment
   def discussions(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussions = Discussion.where(community_id: context[:current_user].community_id)
-    return [] if discussions.nil?
-
-    discussions.limit(limit).offset(offset)
+    discussions = context[:current_user].community.discussions.limit(limit).offset(offset)
+    discussions
   end
 
   def discussion(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussion = community_discussions(id)
+    discussion = community_discussions(id, 'discuss')
     discussion
   end
 
   def post_discussion(post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussion = community_post_discussions(post_id)
+    discussion = community_discussions(post_id, 'post')
     discussion
   end
 
-  def community_post_discussions(post_id)
-    return if post_id.nil?
-
-    discs = Discussion.find_by(community_id: context[:current_user].community_id, post_id: post_id)
-    discs
-  end
-
-  def community_discussions(id)
+  def community_discussions(id, type)
     return if id.nil?
 
-    discs = Discussion.find_by(community_id: context[:current_user].community_id, id: id)
+    discs = context[:current_user].find_user_discussion(id, type)
     discs
   end
 end

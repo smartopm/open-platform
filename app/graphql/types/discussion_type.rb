@@ -5,7 +5,7 @@ module Types
   class DiscussionType < Types::BaseObject
     field :id, ID, null: false
     field :user_id, ID, null: false
-    field :post_id, String, null: false
+    field :post_id, String, null: true
     field :title, String, null: true
     field :description, String, null: true
     field :user, Types::UserType, null: false

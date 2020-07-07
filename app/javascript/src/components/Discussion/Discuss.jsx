@@ -1,70 +1,102 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { Button } from '@material-ui/core'
+import { Button, TextField, Snackbar } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { DiscussionMutation } from '../../graphql/mutations'
 
-export default function Discuss() {
+export default function Discuss({ update }) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [msg, setMessage] = useState('')
-
+    const [loading, setLoading] = useState(false)
+    const [open, setOpen] = useState(false)
     const [createDiscuss] = useMutation(DiscussionMutation)
 
     function handleSubmit(e) {
         e.preventDefault()
+        setLoading(true)
         createDiscuss({ variables: { title, description } })
-            .then(() =>
+            .then(() => {
                 setMessage('Discussion created')
+                setLoading(false)
+                setTimeout(() => {
+                    update()
+                }, 1000)
+                setOpen(!open)
+            }
             )
             .catch(err => {
+                setLoading(false)
                 setMessage(err.message)
             })
     }
 
     return (
         <div className="container">
+            <Snackbar
+                color={"success"}
+                open={open} autoHideDuration={6000}
+                onClose={() => setOpen(!open)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                message="Discussion topic successfully created"
+            />
             <form
                 onSubmit={handleSubmit}
                 aria-label="discuss-form"
             >
-                <div className="form-group">
-                    <label className="bmd-label-static" htmlFor="title">
-                        Discussion Title
-                    </label>
-                    <input
-                        className="form-control"
-                        type="text"
+                    <TextField
+                        name="title"
+                        label="Discussion Title"
+                        style={{ width: '63vw' }}
+                        placeholder="Type a comment here"
                         onChange={e => setTitle(e.target.value)}
                         value={title}
-                        name="title"
-                        aria-label="discuss_title"
+                        margin="normal"
+                        inputProps={{
+                            "aria-label":"discuss_title"
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
                         required
                     />
-                </div>
-                <div className="form-group">
-                    <label className="bmd-label-static" htmlFor="description">
-                        Description
-                    </label>
-                    <input
-                        className="form-control"
-                        type="text"
+                    <TextField
+                        name="description"
+                        label="Discussion Description"
+                        style={{ width: '63vw'}}
+                        placeholder="Type a comment here"
                         onChange={e => setDescription(e.target.value)}
                         value={description}
-                        name="description"
-                        aria-label="discuss_description"
+                        multiline
+                        rows={3}
+                        margin="normal"
+                        inputProps={{
+                            "aria-label": "discuss_description"
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
                         required
                     />
-                </div>
                 <br />
                 <div className="d-flex row justify-content-center">
                     <Button
                         variant="contained"
-                        type="submit"
-                        aria-label="discussion_submit"
-                        className={`btn ${css(styles.getStartedButton)}`}
+                        aria-label="discussion_cancel"
+                        color="secondary"
+                        onClick={update}
+                        className={`btn ${css(styles.cancelBtn)}`}
                     >
-                        <span>Submit</span>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        disabled={loading}
+                        aria-label="discussion_submit"
+                        className={`btn ${css(styles.submitBtn)}`}
+                    >
+                        {loading ? 'Submitting ...' : 'Submit'}
                     </Button>
                 </div>
                 <br />
@@ -76,12 +108,19 @@ export default function Discuss() {
     )
 }
 const styles = StyleSheet.create({
-    getStartedButton: {
+    submitBtn: {
         backgroundColor: '#25c0b0',
         color: '#FFF',
         width: '30%',
         height: 51,
         boxShadow: 'none',
+        marginTop: 50,
+        alignItems: 'center'
+    },
+    cancelBtn: {
+        width: '30%',
+        marginRight: '20vw',
+        height: 51,
         marginTop: 50,
         alignItems: 'center'
     }

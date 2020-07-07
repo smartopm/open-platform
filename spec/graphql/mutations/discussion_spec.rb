@@ -5,12 +5,14 @@ require 'rails_helper'
 RSpec.describe Mutations::Discussion do
   describe 'creating a Discussion' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:non_admin) { create(:user_with_community, user_type: 'resident') }
+    let!(:guard) { create(:user_with_community, user_type: 'security_guard') }
     let(:query) do
       <<~GQL
         mutation discussionCreate(
           $title: String!
           $description: String
-          $postId: String!
+          $postId: String
         ) {
             discussionCreate(postId:$postId, title:$title, description:$description){
                 discussion {
@@ -44,9 +46,27 @@ RSpec.describe Mutations::Discussion do
       expect(result.dig('errors')).to be_nil
     end
 
+    it 'doesnt allow non admin users to create a discussion' do
+      variables = {
+        postId: '21',
+        title: 'Welcome to Discussion',
+        description: 'Lets finish it right now',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: non_admin,
+                                              }).as_json
+      expect(result.dig('data', 'discussionCreate', 'discussion', 'id')).to be_nil
+      expect(result.dig('data', 'discussionCreate', 'discussion', 'userId')).to be_nil
+      expect(result.dig('data', 'discussionCreate', 'discussion', 'postId')).to be_nil
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Not authorized'
+    end
+
     it 'returns error when not supplied properly' do
       variables = {
-        title: 'Welcome to Discussion',
+        titl: 'Welcome to Discussion',
         description: 'Lets finish it right now',
       }
 
@@ -57,7 +77,21 @@ RSpec.describe Mutations::Discussion do
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message'))
-        .to eql 'Variable postId of type String! was provided invalid value'
+        .to eql 'Variable title of type String! was provided invalid value'
+    end
+    it 'returns error when user is not resident, client or admin' do
+      variables = {
+        title: 'Welcome to Discussion',
+        description: 'Lets finish it right now',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: guard,
+                                              }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end
