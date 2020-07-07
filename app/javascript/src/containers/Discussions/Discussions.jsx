@@ -59,7 +59,11 @@ export default function Discussions() {
                     onClose={openModal}
                     aria-labelledby="responsive-dialog-title"
                 >
-                    <DialogTitle id="responsive-dialog-title">{"Create a discussion topic"}</DialogTitle>
+                    <DialogTitle id="responsive-dialog-title">
+                        <CenteredContent>
+                            <span>Create a discussion topic</span>
+                        </CenteredContent>
+                    </DialogTitle>
                     <DialogContent>
                         <Discuss update={updateList}/>
                     </DialogContent>
