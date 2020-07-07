@@ -8,6 +8,5 @@ FactoryBot.define do
   factory :discussion do
     community
     title { generate(:discussion_title) }
-    post_id { '20' }
   end
 end

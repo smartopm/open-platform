@@ -214,7 +214,8 @@ RSpec.describe User, type: :model do
       create(:discussion, user_id: current_user.id, community_id: current_user.community_id)
     end
     let!(:user_post_discussion) do
-      create(:discussion, user_id: current_user.id, post_id: '20')
+      create(:discussion, user_id: current_user.id, post_id: '20',
+                          community_id: current_user.community_id)
     end
     it 'should return community discussions' do
       expect(current_user.find_user_discussion(user_discussion.id, 'discuss')).not_to be_nil
