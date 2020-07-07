@@ -1,16 +1,32 @@
 import React, { Fragment } from 'react';
-import { Divider, Typography } from '@material-ui/core';
+import { Divider, Typography, Button } from '@material-ui/core';
 import Comment from './Comment';
 import { DiscussionCommentsQuery } from '../../graphql/queries'
 import { useQuery } from 'react-apollo'
-import Loading from '../../components/Loading'
+import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
+import CenteredContent from '../CenteredContent';
 
 export default function Discussion({ discussionData }) {
     const { id } = discussionData
-    const { loading, error, data, refetch } = useQuery(DiscussionCommentsQuery, {
-        variables: { id }
+    const [isLoading, setLoading] = React.useState(false);
+    const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionCommentsQuery, {
+        variables: { id, limit: 3 }
     })
+
+    function fetchMoreComments(){
+        setLoading(true)
+        fetchMore({
+            variables: { id, offset: data.discussComments.length },
+            updateQuery: (prev, { fetchMoreResult }) => {
+                if (!fetchMoreResult) return prev
+                setLoading(false)
+                return Object.assign({}, prev, {
+                    discussComments: [...prev.discussComments, ...fetchMoreResult.discussComments]
+                })
+            }
+        })
+    }
     if (loading) return <Loading />
     if (error) {
         return <ErrorPage title={error.message || error} />
@@ -37,6 +53,13 @@ export default function Discussion({ discussionData }) {
                     </Typography>
                 <br />
                 <Comment comments={data.discussComments} discussionId={id} refetch={refetch} />
+                <CenteredContent>
+                    <Button
+                        variant="outlined"
+                        onClick={fetchMoreComments}>
+                        {isLoading ? <Spinner /> : 'Load more comments'}
+                    </Button>
+                </CenteredContent>
             </Fragment>
         </div>
     );
