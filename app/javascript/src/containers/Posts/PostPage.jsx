@@ -125,6 +125,9 @@ export default function PostPage() {
         <br/>
         {queryResponse.data.postDiscussion ? (
             <Fragment>
+              <CenteredContent>
+                <h4>{queryResponse.data.postDiscussion.title} Post Discussion</h4>
+              </CenteredContent>
               <Comments
                 comments={data.postComments}
                 refetch={refetch}
@@ -143,12 +146,19 @@ export default function PostPage() {
               }
           </Fragment>
         ) : (
-          <Button
-            variant="outlined"
-            onClick={() => createDiscussion(response?.title, response?.ID)}
-          >
-            Create Discussion
-          </Button>
+              <CenteredContent>
+                <br/>
+                {
+                  authState.user.userType === 'admin' ? (
+                    <Button
+                      variant="outlined"
+                      onClick={() => createDiscussion(response?.title, response?.ID)}
+                    >
+                      Create Discussion
+                    </Button>
+                  ) : 'Discussion has not yet been enabled for this post'
+                }
+         </CenteredContent>
         )}
       </Dialog>
       </div>
