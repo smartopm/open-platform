@@ -206,23 +206,26 @@ RSpec.describe User, type: :model do
   end
 
   describe 'User discussions' do
-      let!(:community) { create(:community) }
-      let!(:current_user) { create(:user, community_id: community.id) }
-      # create a discussion for the user community
-      let!(:user_discussion) do
-        create(:discussion, user_id: current_user.id, community_id: current_user.community_id)
-      end      
-      let!(:user_post_discussion) do
-        create(:discussion, user_id: current_user.id, post_id: '20')
-      end
-      it 'should return community discussions' do
-        expect(current_user.find_user_discussion(user_discussion.id, 'discuss')).not_to be_nil
-        expect(current_user.find_user_discussion(user_discussion.id, 'discuss').id).to eql user_discussion.id
-      end    
-      it 'should return community post discussions' do
-        expect(current_user.find_user_discussion(user_post_discussion.post_id, 'post')).not_to be_nil
-        expect(current_user.find_user_discussion(user_post_discussion.post_id, 'post').post_id).not_to be_nil
-        expect(current_user.find_user_discussion(user_post_discussion.post_id, 'post').post_id).to eql "20"
-      end
+    let!(:community) { create(:community) }
+    let!(:current_user) { create(:user, community_id: community.id) }
+    # create a discussion for the user community
+    let!(:user_discussion) do
+      create(:discussion, user_id: current_user.id, community_id: current_user.community_id)
+    end
+    let!(:user_post_discussion) do
+      create(:discussion, user_id: current_user.id, post_id: '20')
+    end
+    it 'should return community discussions' do
+      expect(current_user.find_user_discussion(user_discussion.id, 'discuss')).not_to be_nil
+      expect(current_user.find_user_discussion(user_discussion.id,
+                                               'discuss').id).to eql user_discussion.id
+    end
+    it 'should return community post discussions' do
+      expect(current_user.find_user_discussion(user_post_discussion.post_id, 'post')).not_to be_nil
+      expect(current_user.find_user_discussion(user_post_discussion.post_id,
+                                               'post').post_id).not_to be_nil
+      expect(current_user.find_user_discussion(user_post_discussion.post_id,
+                                               'post').post_id).to eql '20'
+    end
   end
 end
