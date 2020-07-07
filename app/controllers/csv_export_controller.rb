@@ -4,9 +4,7 @@ require 'csv'
 
 # Export Event logs as a CSV
 class CsvExportController < ApplicationController
-  before action do |controller|
-    ensure_admin
-  end
+  before action :ensure_admin
 
   def event_logs
     # Auth with a token

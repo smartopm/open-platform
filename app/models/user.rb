@@ -64,7 +64,6 @@ class User < ApplicationRecord
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
-
   ATTACHMENTS = {
     avatar_blob_id: :avatar,
     document_blob_id: :document,
@@ -283,17 +282,13 @@ class User < ApplicationRecord
     return if self[:community_id].present? && self[:user_type].present?
     return unless self[:provider] == 'google_oauth2'
 
-    if site_community.domain_admin?(domain.to_sym) 
-      update(community_id: site_cmmunity.id, user_type: 'admin')
+    if site_community.domain_admin?(domain)
+      update(community_id: site_community.id, user_type: 'admin')
     else
-      update(community_id: site_community.id, 
-             user_type: 'visitor', 
-             expires_at: Time.current + 180.days)
+      update(community_id: site_community.id,
+             user_type: 'visitor',
+             expires_at: Time.current)
     end
-    # return unless mapped_name
-
-    # community = Community.find_or_create_by(name: mapped_name)
-    #update(community_id: community.id, user_type: 'admin')
   end
 
   def send_phone_token
