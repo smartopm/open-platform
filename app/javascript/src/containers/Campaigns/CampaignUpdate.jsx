@@ -1,7 +1,17 @@
 import React, { useState, useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'
-import { Button, TextField } from '@material-ui/core'
+import {
+  Button,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
+} from '@material-ui/core'
 import { DateAndTimePickers } from '../../components/DatePickerDialog'
 import { useMutation, useQuery } from 'react-apollo'
 import { CampaignUpdate } from '../../graphql/mutations'
@@ -44,8 +54,6 @@ export default function UpdateCampaign({ match }) {
   }
 
   function handleInputChange(e) {
-    console.log(formData.message)
-
     const { name, value } = e.target
     setFormData({
       ...formData,
@@ -59,9 +67,11 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
-    if(batchTime === ''){
-      setBatchTime(formData.batchTime)
-      console.log(formData.batchTime)
+    if (batchTime !== '') {
+      setFormData({
+        ...formData,
+        batchTime: batchTime
+      })
     }
     const campaingData = {
       id: formData.id,
@@ -70,9 +80,9 @@ export default function UpdateCampaign({ match }) {
       batchTime: formData.batchTime,
       userIdList: formData.userIdList
     }
-    console.log(campaingData)
+
     campaign({ variables: campaingData })
-      .then( () => {
+      .then(() => {
         setIsSubmitted(true)
       })
       .catch(err => {
@@ -134,16 +144,7 @@ export default function UpdateCampaign({ match }) {
             />
           </div>
           <br />
-          <div>
-            <label className={css(styles.access)} htmlFor="batchTime">
-              <strong>
-                Batch Time: {dateTimeToString(new Date(formData.batchTime))}
-              </strong>
-              <br />
-              <strong>Batch Date: {dateToString(formData.batchTime)}</strong>
-            </label>
-            <br />
-            <br />
+          <div style={{paddingBottom:'3%'}}>
             <DateAndTimePickers
               label="Start Time"
               required
@@ -151,6 +152,29 @@ export default function UpdateCampaign({ match }) {
               handleDateChange={e => setBatchTime(e.target.value)}
             />
           </div>
+          <div>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Batch&nbsp;Date</TableCell>
+                    <TableCell align="left">Batch&nbsp;Time</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="left">
+                      {dateToString(formData.batchTime)}
+                    </TableCell>
+                    <TableCell align="left">
+                      {dateTimeToString(new Date(formData.batchTime))}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+
           <div className="d-flex row justify-content-center">
             <Button
               variant="contained"
