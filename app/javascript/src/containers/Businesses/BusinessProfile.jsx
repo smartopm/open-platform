@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import Nav from '../../components/Nav'
-import Profile from '../../components/Business/Profile'
+import Profile from '../../components/Business/BusinessProfile'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
 import { BusinessByIdQuery } from '../../graphql/queries'

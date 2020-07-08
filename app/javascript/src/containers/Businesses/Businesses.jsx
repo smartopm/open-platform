@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import Nav from '../../components/Nav'
-import Business from '../../components/Business/Business'
+import Business from '../../components/Business/BusinessList'
 import Loading from '../../components/Loading'
 import { useQuery } from 'react-apollo'
 import {BusinessesQuery} from '../../graphql/queries'

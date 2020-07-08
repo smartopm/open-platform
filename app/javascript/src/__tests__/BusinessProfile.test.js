@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
-import Profile from '../components/Business/Profile'
+import Profile from '../components/Business/BusinessProfile'
 
 describe('It tests the business profile page', () => {
     const props = {

@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Typography, withStyles, Tab, Button, Box, Avatar, ListItem, List } from '@material-ui/core'
+import { Typography, withStyles, Tab, Button, Box, ListItem, List } from '@material-ui/core'
 import { StyledTabs, TabPanel } from '../../components/Tabs'
 import Status from '../../components/StatusBadge'
 import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider.js'
 import { useHistory } from 'react-router-dom'
-
+import Avatar from '../Avatar'
 
 export const StyledTab = withStyles({
     root: {
@@ -16,8 +16,7 @@ export const StyledTab = withStyles({
 })(props => <Tab {...props} />)
 
 
-
-export default function Profile({ profileData }) {
+export default function BusinessProfile({ profileData }) {
     const [tabValue, setValue] = useState('Profile')
     const history = useHistory()
     const authState = useContext(AuthStateContext)
@@ -41,9 +40,7 @@ export default function Profile({ profileData }) {
         <div className="container">
             <div className="row d-flex justify-content-between">
                 <div className="col-4 d-flex justify-content-end align-items-center">
-                    <Avatar style={{ height: 80, width: 80, fontSize: 20 }}>
-                        {profileData.name.charAt(0)}
-                    </Avatar>
+                    <Avatar imageUrl={profileData.imageUrl} style="big"/>
                 </div>
                 <div className="col-8 justify-content-around" data-testid="details-holder">
                     <Typography variant="h6" arial-label='pf-company-name'>
@@ -62,7 +59,7 @@ export default function Profile({ profileData }) {
 
                         {profileData.homeUrl ? <Link to={profileData.homeUrl}>{profileData.homeUrl}</Link> : null}
                     </Typography >
-                    <Box style={{ width: '50%', marginTop: 5 }}><Status label={'notVerified'} /></Box>
+                    <Box style={{ width: '50%', marginTop: 5 }}><Status label={profileData.status} /></Box>
                 </div>
             </div>
 
