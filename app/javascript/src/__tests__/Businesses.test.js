@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import Business from '../components/Business/Business';
+import Business from '../components/Business/BusinessList';
 import { BrowserRouter } from 'react-router-dom/'
 describe('It tests the business directory list', () => {
 
