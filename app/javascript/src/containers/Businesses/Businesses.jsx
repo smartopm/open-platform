@@ -13,7 +13,7 @@ export default function Businesses() {
     if (error) {
         return <ErrorPage title={error.message || error} /> // error could be a string sometimes
       }
-    console.log(data)
+   
     return (
         <div>
             <Fragment>
