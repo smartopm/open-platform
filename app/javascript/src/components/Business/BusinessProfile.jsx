@@ -33,6 +33,13 @@ export default function BusinessProfile({ profileData }) {
             }
         })
     }
+    function openLink(link) {
+        const lk = /^https?:\/\//i;
+        if (!lk.test(link)) {
+            return window.open(`http://${link}`, "_blank")
+        }
+        return window.open(link, "_blank")
+    }
     function handleChange(_event, newValue) {
         setValue(newValue)
     }
@@ -57,7 +64,7 @@ export default function BusinessProfile({ profileData }) {
                     </Typography >
                     <Typography variant="subtitle2">
 
-                        {profileData.homeUrl ? <Link to={profileData.homeUrl}>{profileData.homeUrl}</Link> : null}
+                        <a><span onClick={() => openLink(profileData.homeUrl)}>{profileData.homeUrl}</span></a>
                     </Typography >
                     <Box style={{ width: '50%', marginTop: 5 }}><Status label={profileData.status} /></Box>
                 </div>
@@ -100,13 +107,13 @@ export default function BusinessProfile({ profileData }) {
                     <div>
                         <Typography variant="h6">Links</Typography>
                         <List>
-                            {profileData.links ? (Object.entries(profileData.links).map((k, v) => (
+                            {profileData?.links ? (Object.entries(profileData.links).map((k, v) => (
                                 <ListItem key={k}>
                                     <Link>
                                         {v}
                                     </Link>
                                 </ListItem>
-                            ))): ''}
+                            ))) : ''}
                         </List>
                     </div>
                 </TabPanel>
