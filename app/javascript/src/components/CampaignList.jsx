@@ -1,52 +1,59 @@
 import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab'
+import AddIcon from '@material-ui/icons/Add'
 import { useHistory } from 'react-router-dom'
 import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
+import { styles } from '../components/ShareButton'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
 
 export default function CampaignList() {
   const history = useHistory()
-  const { data, error, loading } = useQuery(allCampaigns,{fetchPolicy: "cache-and-network"})
+  const { data, error, loading } = useQuery(allCampaigns, {
+    fetchPolicy: 'cache-and-network'
+  })
   function routeToAction(_event, id) {
     return history.push(`/campaign/${id}`)
   }
-  function routeToCreateCampaign(){
+  function routeToCreateCampaign() {
     return history.push('/campaign-create')
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage />
-  
+
   return (
     <div className="container">
-      { data.campaigns.map(c => (
+      {data.campaigns.map(c => (
         <Fragment key={c.id}>
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.logTitle)} data-testid="c_name" >{c.name}</span>
+                <span className={css(style.logTitle)} data-testid="c_name">
+                  {c.name}
+                </span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.access)}>
+                <span className={css(style.access)}>
                   <strong>Batch Time </strong>
                 </span>
-                <span className={css(styles.subTitle)}>
+                <span className={css(style.subTitle)}>
                   {dateTimeToString(new Date(c.batchTime))}
                 </span>
               </div>
             </div>
             <div className="row justify-content-between">
               <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
+                <span className={css(style.subTitle)}>
                   <strong>{dateToString(c.batchTime)}</strong>
                 </span>
               </div>
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)} data-testid="c_message" >{c.message}</span>
+                <span className={css(style.subTitle)} data-testid="c_message">
+                  {c.message}
+                </span>
               </div>
             </div>
             <br />
@@ -58,7 +65,7 @@ export default function CampaignList() {
                     color: '#009688'
                   }}
                   data-testid="more_details_btn"
-                  onClick={(event) => routeToAction(event, c.id)}
+                  onClick={event => routeToAction(event, c.id)}
                 >
                   More Details
                 </span>
@@ -69,24 +76,27 @@ export default function CampaignList() {
           <div className="border-top my-3" />
         </Fragment>
       ))}
-            <Fab variant="extended"
-            style={{
-                position: 'fixed',
-                bottom: 24,
-                right: 57,
-                color: '#009688'
-            }}
-            onClick={()=> {routeToCreateCampaign()}}
-            color="inherit"
-            >
-        <AddIcon />
-       {" "} Create 
+      <Fab
+        variant="extended"
+        style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 57,
+          color: '#009688'
+        }}
+        className={`btn ${css(styles.getStartedButton)} `}
+        onClick={() => {
+          routeToCreateCampaign()
+        }}
+        color="inherit"
+      >
+        <AddIcon /> Create
       </Fab>
     </div>
   )
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   logTitle: {
     color: '#1f2026',
     fontSize: 16,
