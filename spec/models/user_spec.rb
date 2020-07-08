@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  describe 'associations' do
+    it { is_expected.to have_many(:user_labels) }
+    it { is_expected.to have_many(:labels) }
+    it { is_expected.to have_many(:contact_infos) }
+  end
+
   describe 'Creating a user from a oauth authentication callback' do
     auth_obj = OpenStruct.new(
       uid: 'abc12345',

@@ -7,6 +7,7 @@ class Community < ApplicationRecord
   has_many :event_logs, dependent: :destroy
   has_many :campaigns, dependent: :destroy
   has_many :discussions, dependent: :destroy
+  has_many :labels, dependent: :destroy
 
   def notify_slack(message)
     return unless self[:slack_webhook_url]

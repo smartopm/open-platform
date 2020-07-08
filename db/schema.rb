@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_05_084658) do
+ActiveRecord::Schema.define(version: 2020_07_07_193811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -115,6 +115,15 @@ ActiveRecord::Schema.define(version: 2020_07_05_084658) do
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
+  create_table "contact_infos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "contact_type"
+    t.string "info"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_contact_infos_on_user_id"
+  end
+
   create_table "discussion_users", id: false, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "discussion_id", null: false
@@ -174,6 +183,14 @@ ActiveRecord::Schema.define(version: 2020_07_05_084658) do
     t.string "review"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "short_desc"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_labels_on_community_id"
   end
 
   create_table "land_parcel_accounts", id: false, force: :cascade do |t|
@@ -255,6 +272,16 @@ ActiveRecord::Schema.define(version: 2020_07_05_084658) do
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
+  create_table "user_labels", id: false, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "label_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["label_id"], name: "index_user_labels_on_label_id"
+    t.index ["user_id", "label_id"], name: "index_user_labels_on_user_id_and_label_id", unique: true
+    t.index ["user_id"], name: "index_user_labels_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -303,11 +330,15 @@ ActiveRecord::Schema.define(version: 2020_07_05_084658) do
   add_foreign_key "businesses", "communities"
   add_foreign_key "businesses", "users"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"
   add_foreign_key "discussion_users", "users"
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
+  add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
+  add_foreign_key "user_labels", "labels"
+  add_foreign_key "user_labels", "users"
 end
