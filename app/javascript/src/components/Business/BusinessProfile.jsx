@@ -17,7 +17,7 @@ export const StyledTab = withStyles({
 
 
 
-export default function Profile({ profileData }) {
+export default function BusinessProfile({ profileData }) {
     const [tabValue, setValue] = useState('Profile')
     const history = useHistory()
     const authState = useContext(AuthStateContext)

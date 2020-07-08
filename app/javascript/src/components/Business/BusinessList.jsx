@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { List, ListItem, ListItemAvatar, Avatar, Divider, Typography, Box } from '@material-ui/core'
 
-export default function Business({ businessData }) {
+export default function BusinessList({ businessData }) {
     return (
         <div className="container">
             <List>
