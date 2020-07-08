@@ -48,6 +48,13 @@ export default function Avatar({ imageUrl, user, style = 'small' }) {
   }
 }
 
+Avatar.defaultProps = {
+  user: {
+    avatarUrl: '/images/default_avatar.svg',
+    imageUrl: '/images/default_avatar.svg'
+  }
+}
+
 Avatar.propTypes = {
   imageUrl: PropTypes.string,
   user: PropTypes.object.isRequired,

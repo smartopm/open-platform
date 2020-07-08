@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, ListItem, ListItemAvatar, Avatar, Divider, Typography, Box } from '@material-ui/core'
+import { List, ListItem, ListItemAvatar, Divider, Typography, Box } from '@material-ui/core'
+import Avatar from '../Avatar'
 
 export default function BusinessList({ businessData }) {
     return (
@@ -11,11 +12,16 @@ export default function BusinessList({ businessData }) {
                         <Link key={business.id} to={`/business/${business.id}`} className={`card-link`}>
                             <ListItem key={business.id}>
                                 <ListItemAvatar>
-                                    <Avatar>
-                                        {business.name.charAt(0)}
-                                    </Avatar>
+                                    <Avatar imageUrl={business.imageUrl} style={"medium"} />
                                 </ListItemAvatar>
-                                <Box style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                                <Box
+                                    style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    width: '100%',
+                                    marginLeft: 30
+                                }}>
                                     <Typography variant="subtitle1" data-testid="business-name">
                                         {business.name}
                                     </Typography>
