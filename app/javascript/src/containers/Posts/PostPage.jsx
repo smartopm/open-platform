@@ -126,7 +126,7 @@ export default function PostPage() {
         <br/>
         <br/>
         <br/>
-        {queryResponse.data.postDiscussion ? (
+        {queryResponse.data?.postDiscussion ? (
             <Fragment>
               <CenteredContent>
                 <h4>{queryResponse.data.postDiscussion.title} Post Discussion</h4>

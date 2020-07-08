@@ -3,6 +3,7 @@ import { Divider, Typography, Button } from '@material-ui/core';
 import Comment from './Comment';
 import { DiscussionCommentsQuery } from '../../graphql/queries'
 import { useQuery } from 'react-apollo'
+import DateContainer from '../DateContainer'
 import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../CenteredContent';
@@ -16,7 +17,7 @@ export default function Discussion({ discussionData }) {
         variables: { id, limit }
     })
 
-    function fetchMoreComments(){
+    function fetchMoreComments() {
         setLoading(true)
         fetchMore({
             variables: { id, offset: data.discussComments.length },
@@ -46,7 +47,7 @@ export default function Discussion({ discussionData }) {
                     <strong>{discussionData.user.name}</strong>
                 </Typography>
                 <Typography variant="caption" >
-                    {discussionData.createdAt}
+                    <DateContainer date={discussionData.createdAt} />
                 </Typography>
                 <Divider />
                 <br />
