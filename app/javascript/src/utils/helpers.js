@@ -1,3 +1,4 @@
+
 // keep string methods [helpers]
 
 /**
@@ -20,7 +21,7 @@ export function findLinkAndReplace(msg) {
 
 /**
  * 
- * @param {Strin} message 
+ * @param {String} message 
  * @param {Number} count
  * @description returns a substring of the given message after the character count passed to the function
  */
@@ -29,3 +30,55 @@ export function truncateString(message, count) {
   if (message.length <= count) return message
   return `${message.substring(0, count)}...`
 }
+
+/**
+ * 
+ * @param {string} word string to be uppercased
+ * @description makes the first letter of a string to uppercase
+ */
+export function titleCase(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+const cleanedFields = {
+  userType: 'User Type',
+  phoneNumber: 'Phone Number',
+  name: 'name',
+  email: 'email'
+}
+
+/**
+ *
+ * @param {String} requiredFields
+ * @param {String} errorMessage
+ * @returns a more readable error
+ * @description Gets GraphQL errors and return a minimal human readable error
+ *
+ */
+export function saniteError(requiredFields, errorMessage) {
+  
+  if (!errorMessage.length) return;
+  const errArr = errorMessage.split(" ");
+  const foundFields = requiredFields.filter(field => errArr.includes(field));
+  const cleanFields = foundFields.map(field => cleanedFields[field])
+  // duplicate errors are already sanitized, we just need to remove the GraphQL
+  if (errArr.includes("Duplicate")) {
+    return `${errorMessage.replace(/GraphQL error:/, "")}`;
+  }
+  // if we don't know the error
+  if (!foundFields.length) {
+    return "Unexpected error happened, Please try again";
+  }
+  return `${cleanFields.join(" or ")} value is blank`;
+}
+
+export function DelimitorFormator(params) {
+  return params.split('\n').join(',').split(',')
+}
+
+/**
+* @param {String} text
+* @returns copied text in the clipboard
+*/
+export function copyText(text) {
+    if (text) return navigator.clipboard.writeText(text)
+  }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { BrowserRouter } from 'react-router-dom'
-import UserMessageItem from '../components/Messaging/UserMessageItem'
+import UserMessageItem, { check_route } from '../components/Messaging/UserMessageItem'
 
 describe('user message item component', () => {
   const message =
@@ -11,6 +11,7 @@ describe('user message item component', () => {
     id: 1,
     name: 'joen',
     user: {},
+    category: 'SMS',
     message,
     clientNumber: '2603434343',
     dateMessageCreated: new Date(),
@@ -34,7 +35,7 @@ describe('user message item component', () => {
     expect(messageItem.find('img')).toBeTruthy()
   })
   it('message owner should contain children of spans', () => {
-    expect(messageItem.find('.nz_msg_owner').children()).toHaveLength(2)
+    expect(messageItem.find('.nz_msg_owner').children()).toHaveLength(3)
   })
   it('message element should only contain one child element', () => {
     expect(messageItem.find('.nz_msg').children()).toHaveLength(1)
@@ -52,8 +53,9 @@ describe('user message item component', () => {
   it('displayes not seen if message not seen yet by the user', () => {
     expect(messageItem.find('.nz_read').text()).toBe('Not Read')
   })
-
-
+  it('It should display SMS tag ', () => {
+    expect(messageItem.find('.nz_msg_tag').first().text()).toBe(' SMS')  
+  })
   // new data
 
   const new_data = {
@@ -91,4 +93,25 @@ describe('user message item component', () => {
   it('shows admin the user type of the message owner', () => {
     expect(truncateMessageItem.find('.nz_msg_owner').text()).toContain('Client')
   })
+
 })
+
+describe('check route', () => {
+  const location1 = '/message/348534'
+  const location4 = '/messages'
+  const location2 = '/user/348534'
+  const location3 = '/nkwashi_news/348534'
+  
+  it('should know when it is being used on messages', () => {
+    expect(check_route(location1)).toBe('is_message')
+  });
+  it('should know when it is being used on user profile', () => {
+    expect(check_route(location2)).toBe('is_profile')
+  });
+  it('should know when it is being used on nkwashi news posts', () => {
+    expect(check_route(location3)).toBe('is_post')
+  });
+  it('should know when it is being used on nkwashi news posts', () => {
+    expect(check_route(location4)).toBe('is_message')
+  });
+});

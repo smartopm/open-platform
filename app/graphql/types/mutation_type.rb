@@ -41,5 +41,16 @@ module Types
 
     # track time
     field :manage_shift, mutation: Mutations::Timesheet::ManageShift
+
+    # campaigns
+    field :campaign_create, mutation: Mutations::Campaign::CampaignCreate
+    field :campaign_update, mutation: Mutations::Campaign::CampaignUpdate
+
+    # comments
+    field :comment_create, mutation: Mutations::Comment::CommentCreate
+
+    # discussions
+    field :discussion_create, mutation: Mutations::Discussion::DiscussionCreate
+    field :discussion_user_create, mutation: Mutations::Discussion::DiscussionUserCreate
   end
 end

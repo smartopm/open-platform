@@ -6,7 +6,7 @@ export const CreateUserMutation = gql`
     $name: String!
     $email: String
     $phoneNumber: String!
-    $userType: String
+    $userType: String!
     $state: String
     $vehicle: String
     $requestReason: String
@@ -38,7 +38,7 @@ export const UpdateUserMutation = gql`
     $name: String
     $email: String
     $phoneNumber: String
-    $userType: String
+    $userType: String!
     $requestReason: String
     $vehicle: String
     $state: String
@@ -71,12 +71,14 @@ export const CreatePendingUserMutation = gql`
   mutation CreatePendingUserMutation(
     $name: String!
     $requestReason: String!
+    $userType: String!
     $vehicle: String
   ) {
     result: userCreate(
       name: $name
       requestReason: $requestReason
       vehicle: $vehicle
+      userType: $userType
     ) {
       user {
         ...UserFields
@@ -92,12 +94,14 @@ export const UpdatePendingUserMutation = gql`
     $name: String!
     $requestReason: String!
     $vehicle: String
+    $userType: String!
   ) {
     result: userUpdate(
       id: $id
       name: $name
       requestReason: $requestReason
       vehicle: $vehicle
+      userType: $userType
     ) {
       user {
         ...UserFields
@@ -382,29 +386,29 @@ export const MessageCreate = gql`
 `
 
 export const TemperateRecord = gql`
-         mutation temperatureUpdate(
-           $refId: ID!
-           $temp: String!
-           $refName: String!
-           $refType: String!
-         ) {
-           temperatureUpdate(
-             refId: $refId
-             temp: $temp
-             refName: $refName
-             refType: $refType
-           ) {
-             eventLog {
-               sentence
-             }
-           }
-         }
-       `
+  mutation temperatureUpdate(
+    $refId: ID!
+    $temp: String!
+    $refName: String!
+    $refType: String!
+  ) {
+    temperatureUpdate(
+      refId: $refId
+      temp: $temp
+      refName: $refName
+      refType: $refType
+    ) {
+      eventLog {
+        sentence
+      }
+    }
+  }
+`
 // Start shift
 // End shift
 export const ManageShiftMutation = gql`
   mutation manageShift($userId: ID!, $eventTag: String!) {
-    manageShift(userId: $userId, eventTag: $eventTag){
+    manageShift(userId: $userId, eventTag: $eventTag) {
       timeSheet {
         id
       }
@@ -413,11 +417,85 @@ export const ManageShiftMutation = gql`
 `
 
 export const UpdateLogMutation = gql`
-         mutation activityLogUpdateLog($refId: ID!) {
-           activityLogUpdateLog(refId: $refId) {
-             eventLog {
-               data
-             }
-           }
-         }
-       `
+  mutation activityLogUpdateLog($refId: ID!) {
+    activityLogUpdateLog(refId: $refId) {
+      eventLog {
+        data
+      }
+    }
+  }
+`
+
+export const CampaignCreate = gql`
+  mutation campaignCreate(
+    $name: String!
+    $message: String!
+    $batchTime: String!
+    $userIdList: String!
+  ) {
+    campaignCreate(
+      name: $name
+      message: $message
+      batchTime: $batchTime
+      userIdList: $userIdList
+    ) {
+      campaign {
+        name
+      }
+    }
+  }
+`
+export const CampaignUpdate = gql`
+  mutation campaignUpdate(
+    $id: ID!
+    $name: String
+    $message: String
+    $batchTime: String
+    $userIdList: String
+  ) {
+    campaignUpdate(
+      id: $id
+      name: $name
+      message: $message
+      batchTime: $batchTime
+      userIdList: $userIdList
+    ) {
+      campaign {
+        batchTime
+        communityId
+        createdAt
+        endTime
+        id
+        message
+        name
+        startTime
+        updatedAt
+        userIdList
+      }
+    }
+  }
+`
+
+export const CommentMutation = gql`
+  mutation commentCreate($discussionId: ID!, $content: String!){
+  commentCreate(discussionId: $discussionId, content: $content){
+    comment {
+      content
+    }
+  }
+}
+`
+
+export const DiscussionMutation = gql`
+    mutation discussionCreate(
+      $postId: String
+      $title: String!
+      $description: String
+    ) {
+      discussionCreate(postId: $postId, title: $title, description: $description) {
+        discussion {
+          id
+        }
+      }
+    }
+`

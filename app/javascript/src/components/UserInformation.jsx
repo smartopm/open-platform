@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { UserPlotInfo } from './UserPlotInfo'
 import IconButton from '@material-ui/core/IconButton'
@@ -24,6 +24,8 @@ import { CreateNote, UpdateNote } from '../graphql/mutations'
 import { withStyles, Tab } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import Loading from './Loading.jsx'
+import UserCommunication from './UserCommunication'
+import ReactGA from 'react-ga';
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
@@ -41,12 +43,13 @@ export default function UserInformation({
   router
 }) {
   const CSMNumber = '260974624243'
-  const [tabValue, setValue] = useState(0)
+  const [tabValue, setValue] = useState('Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
   const [isLoading, setLoading] = useState(false)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
   const { handleSubmit, register } = useForm()
+  let location = useLocation();
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
     noteCreate({
@@ -61,6 +64,18 @@ export default function UserInformation({
 
   const handleChange = (_event, newValue) => {
     setValue(newValue)
+    const pages = {
+      Contacts: 'Contacts',
+      Notes: 'Notes',
+      Communication: 'Communication',
+      Plots: 'Plots',
+      Payments: 'Payments'
+    }
+    if ( location.pathname.includes('/user')) {
+      let [, rootURL, , userPage] = location.pathname.split('/')
+      let pageHit = `/${rootURL}/${userPage}/${pages[newValue]}`
+      ReactGA.pageview(pageHit)
+    }
   }
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
@@ -267,15 +282,18 @@ export default function UserInformation({
           aria-label="request tabs"
           centered
         >
-          <StyledTab label="Contact" value={0} />
+          <StyledTab label="Contact" value={'Contacts'} />
           {['admin'].includes(userType) && (
-            <StyledTab label="Notes" value={1} />
+            <StyledTab label="Notes" value={'Notes'} />
           )}
-          <StyledTab label="Plots" value={2} />
-          <StyledTab label="Payments" value={3} />
+             {['admin'].includes(userType) && (
+            <StyledTab label="Communication" value={'Communication'} />
+          )}
+          <StyledTab label="Plots" value={'Plots'} />
+          <StyledTab label="Payments" value={'Payments'} />
         </StyledTabs>
 
-        <TabPanel value={tabValue} index={0}>
+        <TabPanel value={tabValue}  index={'Contacts'}>
           <div className="container">
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="name">
@@ -335,7 +353,8 @@ export default function UserInformation({
           </div>
         </TabPanel>
         {['admin'].includes(userType) && (
-          <TabPanel value={tabValue} index={1}>
+          <>
+          <TabPanel value={tabValue}  index={'Notes'}>
             <div className="container">
               <form id="note-form">
                 <div className="form-group">
@@ -367,6 +386,7 @@ export default function UserInformation({
                 <Loading />
               ) : data.user.notes ? (
                 data.user.notes.map(note => (
+                  
                   <Fragment key={note.id}>
                     <div className={css(styles.commentBox)}>
                       <p className="comment">{note.body}</p>
@@ -412,11 +432,19 @@ export default function UserInformation({
                   )}
             </div>
           </TabPanel>
+
+          <TabPanel value={tabValue}  index={'Communication'}>
+
+            <UserCommunication user={authState.user}/>
+
+          </TabPanel>
+
+          </>
         )}
-        <TabPanel value={tabValue} index={2}>
-          <UserPlotInfo accounts={data.user.accounts} />
+        <TabPanel value={tabValue}  index={'Plots'}>
+          <UserPlotInfo accounts={data.user.accounts}  />
         </TabPanel>
-        <TabPanel value={tabValue} index={3}>
+        <TabPanel value={tabValue}  index={'Payments'}>
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
 

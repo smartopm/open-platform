@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_223525) do
+ActiveRecord::Schema.define(version: 2020_07_07_193811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -62,6 +62,26 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.uuid "reporting_user_id"
   end
 
+  create_table "businesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.string "name"
+    t.string "status"
+    t.string "home_url"
+    t.string "category"
+    t.text "description"
+    t.string "image_url"
+    t.string "email"
+    t.string "phone_number"
+    t.string "address"
+    t.string "operation_hours"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.json "links"
+    t.index ["community_id"], name: "index_businesses_on_community_id"
+    t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
   create_table "campaigns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "community_id", null: false
     t.string "name"
@@ -75,6 +95,14 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
+  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "discussion_id"
+  end
+
   create_table "communities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "google_domain"
@@ -85,6 +113,37 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.string "slack_webhook_url"
     t.string "timezone"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
+  end
+
+  create_table "contact_infos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "contact_type"
+    t.string "info"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_contact_infos_on_user_id"
+  end
+
+  create_table "discussion_users", id: false, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "discussion_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["discussion_id"], name: "index_discussion_users_on_discussion_id"
+    t.index ["user_id", "discussion_id"], name: "index_discussion_users_on_user_id_and_discussion_id", unique: true
+    t.index ["user_id"], name: "index_discussion_users_on_user_id"
+  end
+
+  create_table "discussions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.text "description"
+    t.string "title"
+    t.string "post_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["community_id"], name: "index_discussions_on_community_id"
+    t.index ["user_id"], name: "index_discussions_on_user_id"
   end
 
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -126,6 +185,14 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "short_desc"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_labels_on_community_id"
+  end
+
   create_table "land_parcel_accounts", id: false, force: :cascade do |t|
     t.uuid "land_parcel_id", null: false
     t.uuid "account_id", null: false
@@ -162,6 +229,8 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.boolean "is_read"
     t.datetime "read_at"
     t.uuid "campaign_id"
+    t.string "source_system_id"
+    t.string "category"
     t.index ["campaign_id"], name: "index_messages_on_campaign_id"
   end
 
@@ -174,6 +243,7 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.datetime "created_at"
     t.boolean "completed"
     t.datetime "due_date"
+    t.string "category"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -200,6 +270,16 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
     t.index ["shift_end_event_log_id"], name: "index_time_sheets_on_shift_end_event_log_id"
     t.index ["shift_start_event_log_id"], name: "index_time_sheets_on_shift_start_event_log_id"
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
+  end
+
+  create_table "user_labels", id: false, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "label_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["label_id"], name: "index_user_labels_on_label_id"
+    t.index ["user_id", "label_id"], name: "index_user_labels_on_user_id_and_label_id", unique: true
+    t.index ["user_id"], name: "index_user_labels_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -247,8 +327,18 @@ ActiveRecord::Schema.define(version: 2020_05_19_223525) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "businesses", "communities"
+  add_foreign_key "businesses", "users"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "contact_infos", "users"
+  add_foreign_key "discussion_users", "discussions"
+  add_foreign_key "discussion_users", "users"
+  add_foreign_key "discussions", "communities"
+  add_foreign_key "discussions", "users"
+  add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
+  add_foreign_key "user_labels", "labels"
+  add_foreign_key "user_labels", "users"
 end

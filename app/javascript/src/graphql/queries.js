@@ -29,6 +29,7 @@ export const AllEntryRequestsQuery = gql`
       ...EntryRequestFields
       guard: user {
         name
+        id
       }
     }
   }
@@ -129,8 +130,8 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  {
-    flaggedNotes {
+  query GetTodos($offset: Int, $limit: Int) {
+    flaggedNotes(offset: $offset, limit: $limit) {
       body
       createdAt
       id
@@ -164,8 +165,8 @@ export const allFeedback = gql`
 `
 
 export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int, $userType: String) {
-    users(limit: $limit, offset: $offset, userType: $userType) {
+  query users($limit: Int, $offset: Int, $query: String) {
+    users(limit: $limit, offset: $offset, query: $query) {
       ...UserFields
     }
   }
@@ -186,8 +187,6 @@ export const UserSearchQuery = gql`
     }
   }
 `
-
-
 
 export const ShowroomEntriesQuery = gql`
   {
@@ -210,13 +209,17 @@ export const MessagesQuery = gql`
     messages(query: $searchTerm, limit: $limit, offset: $offset) {
       id
       message
+      category
       createdAt
       user {
-        ...UserFields
+        name
+        id
+        phoneNumber
+        avatarUrl
+        imageUrl
       }
     }
   }
-  ${UserFragment.publicFields}
 `
 
 export const UserMessageQuery = gql`
@@ -226,6 +229,7 @@ export const UserMessageQuery = gql`
       message
       createdAt
       readAt
+      category
       isRead
       sender {
         name
@@ -238,49 +242,186 @@ export const UserMessageQuery = gql`
 `
 
 export const UserTimeSheetQuery = gql`
-         query userTimeSheetLogs(
-           $userId: ID!
-           $limit: Int
-           $offset: Int
-           $dateFrom: String
-           $dateTo: String!
-         ) {
-           userTimeSheetLogs(
-             userId: $userId
-             limit: $limit
-             offset: $offset
-             dateFrom: $dateFrom
-             dateTo: $dateTo
-           ) {
-             startedAt
-             endedAt
-             id
-             user {
-               name
-             }
-           }
-         }
-       ` 
+  query userTimeSheetLogs(
+    $userId: ID!
+    $limit: Int
+    $offset: Int
+    $dateFrom: String
+    $dateTo: String!
+  ) {
+    userTimeSheetLogs(
+      userId: $userId
+      limit: $limit
+      offset: $offset
+      dateFrom: $dateFrom
+      dateTo: $dateTo
+    ) {
+      startedAt
+      endedAt
+      id
+      user {
+        name
+        id
+      }
+    }
+  }
+`
 
 export const TimeSheetLogsQuery = gql`
-         query timeSheetLogs($limit: Int, $offset: Int) {
-           timeSheetLogs(limit: $limit, offset: $offset) {
-             endedAt
-             startedAt
-             id
-             user {
-               name
-             }
-             userId
-           }
-         }
-       `
+  query timeSheetLogs($limit: Int, $offset: Int) {
+    timeSheetLogs(limit: $limit, offset: $offset) {
+      endedAt
+      startedAt
+      id
+      user {
+        name
+        id
+      }
+      userId
+    }
+  }
+`
 
 export const lastUserTimeSheet = gql`
-      query userLastShift($userId: ID!){
-        userLastShift(userId: $userId){
-          endedAt
-          startedAt
+  query userLastShift($userId: ID!) {
+    userLastShift(userId: $userId) {
+      endedAt
+      startedAt
+      id
+    }
+  }
+`
+export const allCampaigns = gql`
+  {
+    campaigns {
+      id
+      batchTime
+      communityId
+      createdAt
+      endTime
+      message
+      name
+      startTime
+      updatedAt
+      userIdList
+    }
+  }
+`
+export const Campaign = gql`
+query campaign($id: ID!){
+
+    campaign(id: $id){
+    batchTime
+    communityId
+    createdAt
+    endTime
+    id
+    message
+    name
+    startTime
+    updatedAt
+    userIdList
+    }
+}
+`
+// Discussions and comments
+export const PostCommentsQuery = gql`
+    query postComments($postId: String!, $limit: Int, $offset: Int) {
+      postComments(postId: $postId, limit: $limit, offset: $offset) {
+        content
+        createdAt
+        id
+        user {
+          name
+          id
         }
+      }
+    }
+`
+
+export const DiscussionCommentsQuery = gql`
+    query discussComments($id: ID!, $limit: Int, $offset: Int) {
+      discussComments(id: $id, limit: $limit, offset: $offset) {
+        content
+        createdAt
+        id
+        user {
+          id
+          name
+        }
+      }
+    }
+`
+
+export const DiscussionQuery = gql`
+    query discussion($id: ID!) {
+      discussion(id: $id) {
+        title
+        id
+        description
+        createdAt
+        user {
+            name
+            id
+        }
+      }
+    }
+`
+
+export const PostDiscussionQuery = gql`
+    query postDiscussion($postId: String!) {
+      postDiscussion(postId: $postId) {
+        title
+        id
+      }
+    }
+`
+// add pagination here
+export const DiscussionsQuery = gql`
+    query discussions($limit: Int, $offset: Int){
+      discussions(limit: $limit, offset: $offset) {
+        title
+        description
+        createdAt
+        id
+        user{
+          name
+          id
+          imageUrl
+          avatarUrl
+        }
+      }
+    }`
+// reduce the query to only get what's needed
+export const BusinessesQuery = gql`
+  {
+  businesses {
+    category
+    imageUrl
+    name
+    userId
+    id
+  }
+}
+`
+export const BusinessByIdQuery = gql`
+query businessById($id: ID!){
+
+  business(id: $id) {
+    category
+   	createdAt
+    homeUrl
+    imageUrl
+    name
+    userId
+    id
+    address
+    email
+    description
+    status
+    phoneNumber
+    operationHours
+    links
+  }
 }
 `

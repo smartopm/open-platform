@@ -59,6 +59,7 @@ RSpec.describe Types::Queries::Message do
           createdAt
           isRead
           readAt
+          category
           user {
             id
           }
@@ -103,6 +104,10 @@ RSpec.describe Types::Queries::Message do
       result = DoubleGdpSchema.execute(auser_msgs, context: { current_user: admin }).as_json
       expect(result.dig('data', 'userMessages', 0, 'isRead')).to be_nil
       expect(result.dig('data', 'userMessages', 0, 'readAt')).to be_nil
+    end
+    it 'returns default value of category in message' do
+      result = DoubleGdpSchema.execute(auser_msgs, context: { current_user: admin }).as_json
+      expect(result.dig('data', 'userMessages', 0, 'category')).to be_nil
     end
   end
 end

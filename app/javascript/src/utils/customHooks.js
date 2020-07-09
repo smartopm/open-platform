@@ -15,7 +15,7 @@ export default function useTimer(initialTime, delay) {
       setTime(time - 1)
     }, delay)
     return () => clearInterval(intervalId)
-  }, [time])
+  }, [delay, time])
 
   return time
 }
@@ -48,3 +48,32 @@ export function useWindowDimensions() {
 
   return windowDimensions
 }
+
+
+/**
+ * 
+ * @param {string} url API endpoint to fetch from
+ * @param {object} options include headers and http method here [GET, POST, ...]
+ * @returns {object} response and error
+ * 
+ */
+export function useFetch(url) {
+  const [response, setData] = useState({});
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await fetch(url);
+        const json = await result.json();
+        setData(json);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    fetchData();
+  }, [url]);
+  return { response, error };
+}
+
+

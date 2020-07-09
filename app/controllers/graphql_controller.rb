@@ -30,10 +30,11 @@ class GraphqlController < ApplicationController
     token = bearer_token(request)
     return nil unless token
 
-    user = User.find_via_auth_token(token)
+    user = User.find_via_auth_token(token, @site_community)
     log_active_user(user)
     {
       current_user: user,
+      site_community: @site_community,
     }
   end
 

@@ -5,15 +5,16 @@ module Types
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
-    field :email, String, null: true
+    field :email, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :name, String, null: false
     field :image_url, String, null: true
     field :user_type, String, null: true
-    field :vehicle, String, null: true
-    field :request_reason, String, null: true
+    field :vehicle, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
+    field :request_reason, String, null: true, visible: { roles: %i[admin security_guard],
+                                                          user: :id }
     field :phone_number, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
-    field :request_note, String, null: true
-    field :role_name, String, null: true
+    field :request_note, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
+    field :role_name, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :state, String, null: true
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
@@ -21,26 +22,22 @@ module Types
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
     field :avatar_url, String, null: true
     field :document_url, String, null: true
-    field :source, String, null: true
-    field :stage, String, null: true
-    field :owner_id, ID, null: true
+    field :source, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
+    field :stage, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
+    field :owner_id, ID, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
     field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
-    field :messages_count, Int, null: true
     field :accounts, [Types::AccountType], null: true, visible: { roles: %i[admin], user: :id }
     field :messages, [Types::MessageType], null: true, visible: { roles: %i[admin], user: :id }
     field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
                                                                        user: :id }
+    field :businesses, [Types::BusinessType], null: true, visible: { roles: %i[admin], user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?
 
       Rails.application.routes.url_helpers
            .rails_blob_url(object.avatar)
-    end
-
-    def messages_count
-      object.messages.size
     end
 
     def document_url

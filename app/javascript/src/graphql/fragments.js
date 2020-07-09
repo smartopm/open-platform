@@ -14,7 +14,7 @@ export const UserFragment = {
       state
       expiresAt
       email
-      accounts{
+      accounts {
         id
         updatedAt
         landParcels{

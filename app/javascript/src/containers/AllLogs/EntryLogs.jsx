@@ -3,7 +3,6 @@ import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../../components/Loading.jsx'
-import DateUtil from '../../utils/dateutil.js'
 import { AllEventLogsQuery } from '../../graphql/queries.js'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
@@ -18,14 +17,15 @@ import {
   TabPanel,
   a11yProps
 } from '../../components/Tabs'
+import { dateTimeToString, dateToString } from '../../components/DateContainer'
 
 export default ({ history, match }) => {
-  return allEventLogs(history, match)
+  return AllEventLogs(history, match)
 }
 
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50
-const allEventLogs = (history, match) => {
+const AllEventLogs = (history, match) => {
   const subjects = ['user_entry', 'visitor_entry', 'showroom','user_temp']
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
@@ -163,7 +163,7 @@ export function IndexComponent({
                   <strong>{accessStatus} </strong>
                 </span>
                 <span className={css(styles.subTitle)}>
-                  {DateUtil.dateToString(new Date(event.createdAt))}
+                  {dateToString(event.createdAt)}
                 </span>
               </div>
             </div>
@@ -173,7 +173,7 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  {DateUtil.dateTimeToString(new Date(event.createdAt))}
+                  {dateTimeToString(new Date(event.createdAt))}
                 </span>
               </div>
             </div>
@@ -181,7 +181,7 @@ export function IndexComponent({
             <div className="row justify-content-between">
               <div className="col-xs-8">
                 <span className={css(styles.subTitle)}>
-                  {event.actingUser.name}
+                  {event.actingUser && event.actingUser.name}
                 </span>
               </div>
               <div className="col-xs-4">
@@ -278,7 +278,6 @@ export function IndexComponent({
           {/*Todo: Handle the listing of enrolled users here*/}
 
           {data.result.map(user => {
-
             return (
               <Fragment key={user.id}>
                 <div className="container">
@@ -288,7 +287,7 @@ export function IndexComponent({
                     </div>
                     <div className="col-xs-4">
                       <span className={css(styles.subTitle)}>
-                        {DateUtil.dateToString(new Date(user.createdAt))}
+                        {dateToString(user.createdAt)}
                       </span>
                     </div>
                   </div>
@@ -299,14 +298,13 @@ export function IndexComponent({
                     </div>
                     <div className="col-xs-4">
                       <span className={css(styles.subTitle)}>
-                        {DateUtil.dateTimeToString(new Date(user.createdAt))}
+                        {dateTimeToString(new Date(user.createdAt))}
                       </span>
                     </div>
                   </div>
                   <br />
                   <div className="border-top my-3" />
                 </div>
-
               </Fragment>
             )
           })}

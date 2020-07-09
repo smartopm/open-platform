@@ -3,18 +3,18 @@ import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
 
 import Loading from "../../components/Loading.jsx";
-import DateUtil from "../../utils/dateutil.js";
 import { AllEventLogsForUserQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
+import { dateToString, dateTimeToString } from "../../components/DateContainer";
 
 export default ({ history, match }) => {
   const subjects = null;
-  return allEventLogs(history, match, subjects);
+  return AllEventLogs(history, match, subjects);
 };
 
-// Todo: Find the total number of allEventLogs
+// Todo: Find the total number of AllEventLogs
 const limit = 50;
-const allEventLogs = (history, match, subjects) => {
+const AllEventLogs = (history, match, subjects) => {
   const [offset, setOffset] = useState(0);
   const userId = match.params.id || null;
   const { loading, error, data } = useQuery(AllEventLogsForUserQuery, {
@@ -73,8 +73,8 @@ export function IndexComponent({
             cursor: "pointer"
           }}
         >
-          <td>{DateUtil.dateToString(new Date(event.createdAt))}</td>
-          <td>{DateUtil.dateTimeToString(new Date(event.createdAt))}</td>
+          <td>{dateToString(event.createdAt)}</td>
+          <td>{dateTimeToString(new Date(event.createdAt))}</td>
           <td>{event.sentence}</td>
         </tr>
       );

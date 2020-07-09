@@ -8,7 +8,9 @@ module Types
     include Types::Queries::Message
     include Types::Queries::Showroom
     include Types::Queries::TimeSheet
+    include Types::Queries::Comment
     include Types::Queries::User
+    include Types::Queries::Business
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -32,7 +34,7 @@ module Types
     def all_notes(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      Note.all.order(created_at: :desc)
+      Note.all.includes(:user).order(created_at: :desc)
           .limit(limit).offset(offset)
     end
 
@@ -49,12 +51,15 @@ module Types
 
     field :flagged_notes, [NoteType], null: false do
       description 'Returns a list of all the flagged notes, basically todos'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
-    def flagged_notes
+    def flagged_notes(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      Note.where(flagged: true).order(completed: :desc, created_at: :desc)
+      Note.includes(:user).where(flagged: true).order(completed: :desc, created_at: :desc)
+          .limit(limit).offset(offset)
     end
 
     field :entry_search, [EntryRequestType], null: true do
@@ -80,6 +85,30 @@ module Types
 
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
+    end
+
+    field :campaigns, [Types::CampaignType], null: true do
+      description 'Get a list of all Campaigns'
+    end
+
+    def campaigns
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+      com_id = context[:current_user].community_id
+      campaign = Campaign.where(community_id: com_id).offset(0).limit(100)
+      campaign
+    end
+
+    field :campaign, Types::CampaignType, null: true do
+      description 'Find Campaign by Id'
+      argument :id, ID, required: true
+    end
+
+    def campaign(id:)
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+      campaign = context[:current_user].community.campaigns.find_by(id: id)
+      campaign
     end
   end
 end

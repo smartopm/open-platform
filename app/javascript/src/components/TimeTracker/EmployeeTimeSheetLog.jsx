@@ -3,13 +3,12 @@ import { useLocation } from 'react-router'
 import dateutil from '../../utils/dateutil'
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable'
 import Typography from '@material-ui/core/Typography'
-import { zonedTimeDate } from '../DateContainer'
+import { dateTimeToString, dateToString } from '../DateContainer'
 import { PropTypes } from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 
-export default function EmployeeTimeSheetLog({ data, name }) {
+export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) {
   const { state } = useLocation()
-
   const shifts = data.userTimeSheetLogs
   const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours']
   // Day, Date, Start Time, Stop Time, Total Hours in the day
@@ -27,11 +26,9 @@ export default function EmployeeTimeSheetLog({ data, name }) {
           <br />
 
           <Grid container justify="flex-start">
-            <Grid item xs={8}>
-              <strong>Total days worked this month: {days}</strong>
-            </Grid>
-            <Grid item xs={4}>
-              <strong>Total hours worked this month: {hours}</strong>
+            <Grid item xs={10}>
+               <strong data-testid='summary'>Worked {days} days for a total of {hours} hrs between {firstDay} - {lastDay}
+              </strong>
             </Grid>
           </Grid>
         </div>
@@ -41,17 +38,17 @@ export default function EmployeeTimeSheetLog({ data, name }) {
             shifts.map(shift => (
               <StyledTableRow key={shift.id}>
                 <StyledTableCell>
-                  {dateutil.getWeekDay(zonedTimeDate(shift.startedAt))}
+                  {dateutil.getWeekDay(new Date(dateToString(shift.startedAt)))}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {dateutil.dateToString(shift.startedAt)}
+                  {dateToString(shift.startedAt)}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {dateutil.dateTimeToString(shift.startedAt)}
+                  {dateTimeToString(new Date(shift.startedAt))}
                 </StyledTableCell>
                 <StyledTableCell>
                   {shift.endedAt
-                    ? dateutil.dateTimeToString(shift.endedAt)
+                    ? dateTimeToString(new Date(shift.endedAt))
                     : 'In-Progress'}
                 </StyledTableCell>
                 <StyledTableCell data-testid="prog">
@@ -78,8 +75,8 @@ export function calculateHoursAndDays(shifts) {
   // return hours || minutes diffs in shifts
   const shiftArray = shifts.map(shift =>
     dateutil.differenceInHours(
-      zonedTimeDate(shift.startedAt),
-      zonedTimeDate(shift.endedAt || new Date())
+      shift.startedAt,
+      shift.endedAt
     )
   )
   // separate shifts that are under one hour
@@ -109,5 +106,6 @@ export function calculateHoursAndDays(shifts) {
 
 EmployeeTimeSheetLog.prototype = {
   data: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  month: PropTypes.string.isRequired,
 }

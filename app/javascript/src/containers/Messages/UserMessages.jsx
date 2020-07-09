@@ -2,7 +2,7 @@ import React, { useContext, Fragment, useState } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserMessageQuery } from '../../graphql/queries'
-import Loading from '../../components/Loading'
+import {Spinner} from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
@@ -15,6 +15,7 @@ import Avatar from '../../components/Avatar'
 import { css, StyleSheet } from 'aphrodite'
 import Nav from '../../components/Nav'
 import UserMessageItem from '../../components/Messaging/UserMessageItem'
+import CenteredContent from '../../components/CenteredContent'
 
 export default function UserMessages() {
   const { id } = useParams()
@@ -42,7 +43,6 @@ export default function UserMessages() {
     })
   }
 
-  if (loading) return <Loading />
   if (error){
     return <ErrorPage error={error.message} />
   }
@@ -58,7 +58,7 @@ export default function UserMessages() {
       </Nav>
       <div className={css(styles.messageSection)}>
         <List>
-          {data.userMessages.length ? (
+          { loading ? <CenteredContent > <Spinner /> </CenteredContent> : data.userMessages.length ? (
             data.userMessages.map(message => (
               <UserMessageItem
                 key={message.id}
@@ -69,6 +69,7 @@ export default function UserMessages() {
                 clientNumber={message.sender.phoneNumber}
                 dateMessageCreated={message.createdAt}
                 readAt={message.readAt}
+                category={message.category}
                 isTruncate={false}
                 isRead={message.isRead}
                 isAdmin={authState.user.userType === 'admin'}
@@ -79,7 +80,7 @@ export default function UserMessages() {
               <span>
                 {state && state.from === 'contact'
                   ? 'Send Message to Support, You should receive an answer soon'
-                  : `There are no messages yet for ${state.clientName}`}
+                    : `There are no messages yet for ${state && state.clientName ? state.clientName : 'this user  '}`}
               </span>
             </p>
           )}

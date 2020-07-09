@@ -11,7 +11,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def google_oauth2
-    @user = User.from_omniauth(request.env['omniauth.auth'])
+    @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
     if @user.persisted?
       @user.generate_events('user_login', @user)
       redirect_to "/google/#{@user.auth_token}"
@@ -22,7 +22,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # facebook callback
   def facebook
-    @user = User.from_omniauth(request.env['omniauth.auth'])
+    @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
     if @user.persisted?
       @user.generate_events('user_login', @user)
       redirect_to "/facebook/#{@user.auth_token}"

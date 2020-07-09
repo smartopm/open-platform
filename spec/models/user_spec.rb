@@ -3,7 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  describe 'associations' do
+    it { is_expected.to have_many(:user_labels) }
+    it { is_expected.to have_many(:labels) }
+    it { is_expected.to have_many(:contact_infos) }
+  end
+
   describe 'Creating a user from a oauth authentication callback' do
+    let!(:community) { create(:community, name: 'Nkwashi') }
     auth_obj = OpenStruct.new(
       uid: 'abc12345',
       provider: 'google_oauth2',
@@ -21,17 +28,17 @@ RSpec.describe User, type: :model do
     )
 
     it 'should create a new user' do
-      user = User.from_omniauth(auth_obj)
+      user = User.from_omniauth(auth_obj, community)
       expect(user.persisted?).to be true
       # TODO: Remove this once we fix hardcoding
       expect(user.community.name).to eql('Nkwashi')
     end
 
     it 'should update an existing user' do
-      User.from_omniauth(auth_obj)
+      User.from_omniauth(auth_obj, community)
       auth_obj.info.name = 'Mark Percival'
       auth_obj.info.image = 'https://newprofile.com/pic.png'
-      User.from_omniauth(auth_obj)
+      User.from_omniauth(auth_obj, community)
       users = User.where(uid: auth_obj.uid, provider: auth_obj.provider).all
       expect(users.length).to be 1
       expect(users[0].name).to eq 'Mark Percival'
@@ -190,16 +197,43 @@ RSpec.describe User, type: :model do
 
     it 'it should create a todo after a referral client has been created' do
       user = FactoryBot.create(:user_with_community, phone_number: '34566784567')
-      other_user = FactoryBot.create(:user_with_community, phone_number: '34566784567')
+      other_user = FactoryBot.create(:user_with_community, phone_number: '34566784561',
+                                                           user_type: 'client')
       user_ref = {
         id: user.id,
         name: 'Test name',
       }
+      expect(other_user.user_type).to_not eql 'admin'
       todo = other_user.referral_todo(user_ref)
       notes = Note.where(author_id: other_user.id)
       expect(Note.all.count).to eql 1
       expect(notes.length).to eql 1
       expect(todo).to_not be_nil
+    end
+  end
+
+  describe 'User discussions' do
+    let!(:community) { create(:community) }
+    let!(:current_user) { create(:user, community_id: community.id) }
+    # create a discussion for the user community
+    let!(:user_discussion) do
+      create(:discussion, user_id: current_user.id, community_id: current_user.community_id)
+    end
+    let!(:user_post_discussion) do
+      create(:discussion, user_id: current_user.id, post_id: '20',
+                          community_id: current_user.community_id)
+    end
+    it 'should return community discussions' do
+      expect(current_user.find_user_discussion(user_discussion.id, 'discuss')).not_to be_nil
+      expect(current_user.find_user_discussion(user_discussion.id,
+                                               'discuss').id).to eql user_discussion.id
+    end
+    it 'should return community post discussions' do
+      expect(current_user.find_user_discussion(user_post_discussion.post_id, 'post')).not_to be_nil
+      expect(current_user.find_user_discussion(user_post_discussion.post_id,
+                                               'post').post_id).not_to be_nil
+      expect(current_user.find_user_discussion(user_post_discussion.post_id,
+                                               'post').post_id).to eql '20'
     end
   end
 end

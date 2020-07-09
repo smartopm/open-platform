@@ -18,6 +18,18 @@ class User < ApplicationRecord
     attributes :name, :phone_number, :user_type
   end
 
+  scope :allowed_users, lambda { |current_user|
+    policy = UserPolicy.new(current_user, nil)
+    allowed_user_types = policy.roles_user_can_see
+    relat = where(community_id: current_user.community_id)
+    return relat if allowed_user_types == '*'
+    if policy.role_can_see_self?
+      return relat.where(user_type: allowed_user_types).or(relat.where(id: current_user.id))
+    end
+
+    return relat.where(user_type: allowed_user_types)
+  }
+
   belongs_to :community, optional: true
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
@@ -27,6 +39,13 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
   has_many :accounts, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :discussion_users, dependent: :destroy
+  has_many :discussions, through: :discussions_users
+  has_many :businesses, dependent: :destroy
+  has_many :user_labels, dependent: :destroy
+  has_many :contact_infos, dependent: :destroy
+  has_many :labels, through: :user_labels
 
   has_one_attached :avatar
   has_one_attached :document
@@ -51,11 +70,6 @@ class User < ApplicationRecord
   PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
-
-  DOMAINS_COMMUNITY_MAP = {
-    'doublegdp.com': 'Nkwashi',
-    'thebe-im.com': 'Nkwashi',
-  }.freeze
 
   ATTACHMENTS = {
     avatar_blob_id: :avatar,
@@ -83,27 +97,32 @@ class User < ApplicationRecord
     security_guard: { except: %i[state user_type] },
   }.freeze
 
-  def self.from_omniauth(auth)
+  def self.from_omniauth(auth, site_community)
     # Either create a User record or update it based on the provider (Google) and the UID
-    user = find_or_initialize_from_oauth(auth)
+    user = find_or_initialize_from_oauth(auth, site_community)
     OAUTH_FIELDS_MAP.keys.each do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
-    user.assign_default_community
+    user.assign_default_community(site_community)
     user.save!
     user
   end
 
-  def self.find_or_initialize_from_oauth(auth)
-    by_email = find_by(email: auth.info.email)
+  def self.find_or_initialize_from_oauth(auth, site_community)
+    by_email = site_community.users.find_by(email: auth.info.email)
     return by_email if by_email
 
-    User.new
+    site_community.users.new
   end
 
   # We may want to do a bit more work here massaing the number entered
-  def self.find_via_phone_number(phone_number)
+  def self.find_any_via_phone_number(phone_number)
     find_by(phone_number: phone_number)
+  end
+
+  # We may want to do a bit more work here massaing the number entered
+  def find_via_phone_number(phone_number)
+    community.users.find_by(phone_number: phone_number)
   end
 
   def self.lookup_by_id_card_token(token)
@@ -120,7 +139,7 @@ class User < ApplicationRecord
       enrolled_user.send(attr).attach(vals[key]) if vals[key]
     end
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-    return unless enrolled_user.save
+    return enrolled_user unless enrolled_user.save
 
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)
@@ -130,7 +149,7 @@ class User < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
   def process_referral(enrolled_user, data)
-    return unless user_type == 'admin'
+    return unless user_type != 'admin'
 
     generate_events('user_referred', enrolled_user, data)
     referral_todo(enrolled_user)
@@ -171,6 +190,17 @@ class User < ApplicationRecord
                       data: data)
   end
 
+  def generate_note(vals)
+    ::Note.create(
+      user_id: vals[:user_id],
+      body: vals[:body],
+      category: vals[:category],
+      flagged: false,
+      author_id: self[:id],
+      completed: false,
+    )
+  end
+
   # rubocop:disable MethodLength
 
   def manage_shift(target_user_id, event_tag)
@@ -197,6 +227,14 @@ class User < ApplicationRecord
     mess[:user_id] = vals[:user_id]
     mess.sender_id = self[:id]
     mess
+  end
+
+  def find_user_discussion(id, type)
+    if type == 'post'
+      community.discussions.find_by(post_id: id)
+    else
+      community.discussions.find(id)
+    end
   end
 
   def find_a_user(a_user_id)
@@ -255,19 +293,17 @@ class User < ApplicationRecord
 
   # Assign known hardcoded domains to a community
   # TODO: Make this happen from the DB vs hardcoding
-  def assign_default_community
-    return if self[:community_id]
-    #  check for both providers
+  def assign_default_community(site_community)
+    return if self[:community_id].present? && self[:user_type].present?
     return unless %w[google_oauth2 facebook].include?(self[:provider])
 
-    mapped_name = DOMAINS_COMMUNITY_MAP[domain.to_sym]
-    # return unless mapped_name
-
-    # users coming from facebook won't have a community
-    # so if mapped_name is nil then we give them Nkwashi
-    # In the future this should be as dynamic as possible to allow multiple communities
-    community = Community.find_or_create_by(name: mapped_name || 'Nkwashi')
-    update(community_id: community.id, user_type: mapped_name.nil? ? 'prospective_client' : 'admin')
+    if site_community.domain_admin?(domain)
+      update(community_id: site_community.id, user_type: 'admin')
+    else
+      update(community_id: site_community.id,
+             user_type: 'visitor',
+             expires_at: Time.current)
+    end
   end
 
   def send_phone_token
@@ -318,13 +354,13 @@ class User < ApplicationRecord
     JWT.encode({ user_id: self[:id] }, Rails.application.credentials.secret_key_base, 'HS256')
   end
 
-  def self.find_via_auth_token(auth_token)
+  def self.find_via_auth_token(auth_token, community)
     decoded_token = JWT.decode auth_token,
                                Rails.application.credentials.secret_key_base,
                                true,
                                algorithm: 'HS256'
     payload = decoded_token[0]
-    User.find(payload['user_id'])
+    community.users.find(payload['user_id'])
   end
 
   def send_email_msg

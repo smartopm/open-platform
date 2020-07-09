@@ -1,8 +1,4 @@
-import { dateTimeToString as newTime, newCatDate } from '../components/DateContainer'
 import { isWeekend, isSaturday } from 'date-fns'
-import { zonedDate } from '../components/DateContainer'
-
-// TODO: @olivier => write tests for these
 
 const date = new Date()
 export const lastDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 26)
@@ -38,12 +34,6 @@ function dateToString(date) {
   )
 }
 
-function dateTimeToString(date) {
-  return newTime(date)
-}
-function dateTimeToCatString(date) {
-  return newCatDate(date)
-}
 function formatDate(datetime) {
   if (datetime) {
     const date = fromISO8601(datetime)
@@ -88,6 +78,23 @@ export function getWeekDay(date) {
   return weekdays[day];
 }
 
+/**
+ *
+ * @param {Date} date
+ * @description returns the month in a year in word format based on a given day
+ * @returns {String} month in a year
+ */
+export function getMonthName(date) {
+  let monthDate
+  if (!(date instanceof Date)) {
+    monthDate = new Date(date)
+  }
+  monthDate = date
+  const months = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"]
+  const monthIndex = monthDate.getMonth();
+  return months[monthIndex];
+}
 
 /**
  * 
@@ -100,7 +107,7 @@ export function differenceInHours(startDate, endDate) {
   if (!startDate) return
   // in case ended_at is null, initialize it.
   const lastDate = endDate || new Date()
-  const diff_seconds = (zonedDate(lastDate).getTime() - zonedDate(startDate).getTime()) / 1000;
+  const diff_seconds = (new Date(lastDate).getTime() - new Date(startDate).getTime()) / 1000;
   const diff_hours = diff_seconds / (60 * 60)
   const diff_minutes = diff_seconds / 60
   const hours = Math.abs(diff_hours.toFixed(2))
@@ -113,13 +120,11 @@ export function differenceInHours(startDate, endDate) {
 
 export default {
   fromISO8601,
-  dateTimeToString,
   dateToString,
   isExpired,
   formatDate,
   getWeekDay,
   differenceInHours,
-  dateTimeToCatString
 }
 
 // pad("00", "1") => "01"
