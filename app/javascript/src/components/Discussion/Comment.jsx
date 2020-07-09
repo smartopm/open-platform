@@ -56,13 +56,13 @@ export default function Comments({ comments, refetch, discussionId }) {
                 handleCommentChange={handleCommentChange}
                 sendComment={sendComment} />
             {
-                comments.map(comment => (
+                comments.length >= 1 ? comments.map(comment => (
                     <CommentSection
                         key={comment.id}
                         user={comment.user}
                         createdAt={comment.createdAt}
                         comment={comment.content} />
-                ))
+                )) : <p className="text-center">Be the first to comment on this post</p>
             }
         </List>
     )
