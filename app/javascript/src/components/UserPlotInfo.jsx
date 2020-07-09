@@ -13,11 +13,13 @@ export function UserPlotInfo(props) {
       land_parcels = [...land_parcels, ...account.landParcels]
     })
 
-  let plotInformation = (
+  function plotInformation() {
+      return(
     <div className="container">
       <p data-testid="no_plot">No plots information available. </p>
     </div>
-  )
+      )
+}
   if (accounts && accounts.length > 0 && land_parcels.length > 0) {
 
     const convertedDateTime = dateToString(accounts[0].updatedAt)
@@ -46,7 +48,7 @@ export function UserPlotInfo(props) {
       </div>
     )
   }
-  return plotInformation
+  return plotInformation()
 }
 
 const styles = StyleSheet.create({
