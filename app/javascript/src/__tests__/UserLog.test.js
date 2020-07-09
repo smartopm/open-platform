@@ -14,11 +14,7 @@ describe('User infromation component loads', () => {
           sentence : "I am testing this again"
       }]
   }
-  const authstate = {
-    user: {
-      userType: 'admin'
-    }
-  }
+
   it('should render user name on contacts tab', () => {
     const { getByText } = render(
       <MockedProvider mock={[]}>
