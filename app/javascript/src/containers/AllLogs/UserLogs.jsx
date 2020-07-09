@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
-
 import Loading from "../../components/Loading.jsx";
 import { AllEventLogsForUserQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
-import { dateToString, dateTimeToString } from "../../components/DateContainer";
-
+import UserLog from "../../components/UserLog"
 export default ({ history, match }) => {
   const subjects = null;
   return AllEventLogs(history, match, subjects);
@@ -34,93 +32,18 @@ const AllEventLogs = (history, match, subjects) => {
     setOffset(offset - limit);
   }
   return (
-    <IndexComponent
+    <>
+     <Nav menuButton="back" navName="Logs" boxShadow={"none"}  backTo={`/user/${userId}`} />
+    <UserLog
       data={data}
       previousPage={handlePreviousPage}
       offset={offset}
+      limit = {limit}
       nextPage={handleNextPage}
       router={history}
-      userId={userId}
     />
+    </>
   );
 };
 
-export function IndexComponent({
-  data,
-  router,
-  nextPage,
-  previousPage,
-  offset,
-  userId
-}) {
-  function routeToAction(eventLog) {
-    if (eventLog.refType === "EntryRequest") {
-      return router.push(`/request/${eventLog.refId}`);
-    } else if (eventLog.refType === "User") {
-      return router.push(`/user/${eventLog.refId}`);
-    }
-  }
-  function logs(eventLogs) {
-    if (!eventLogs) {
-      return;
-    }
-    return eventLogs.map(event => {
-      return (
-        <tr
-          key={event.id}
-          onClick={() => routeToAction(event)}
-          style={{
-            cursor: "pointer"
-          }}
-        >
-          <td>{dateToString(event.createdAt)}</td>
-          <td>{dateTimeToString(new Date(event.createdAt))}</td>
-          <td>{event.sentence}</td>
-        </tr>
-      );
-    });
-  }
- 
-  return (
-    <div>
-      <div
-        style={{
-          backgroundColor: "#25c0b0"
-        }}
-      >
-        <Nav menuButton="back" navName="Logs" boxShadow={"none"}  backTo={`/user/${userId}`} />
-      </div>
-      <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6 table-responsive">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Time</th>
-                <th scope="col">Description</th>
-              </tr>
-            </thead>
-            <tbody>{logs(data.result)}</tbody>
-          </table>
-          <nav aria-label="Page navigation">
-            <ul className="pagination">
-              <li className={`page-item ${offset < limit && "disabled"}`}>
-                <a className="page-link" onClick={previousPage} href="#">
-                  Previous
-                </a>
-              </li>
-              <li
-                className={`page-item ${data.result.length < limit &&
-                  "disabled"}`}
-              >
-                <a className="page-link" onClick={nextPage} href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
-  );
-}
+
