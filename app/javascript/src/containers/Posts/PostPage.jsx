@@ -152,7 +152,7 @@ export default function PostPage() {
               <CenteredContent>
                 <br/>
                 {
-                  authState.user.userType === 'admin' ? (
+                  authState.loggedIn && authState.user.userType === 'admin' ? (
                     <Button
                       variant="outlined"
                       onClick={() => createDiscussion(response?.title, response?.ID)}
