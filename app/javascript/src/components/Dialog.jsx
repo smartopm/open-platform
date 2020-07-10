@@ -39,7 +39,7 @@ export function ModalDialog({
           {action}
         </Button>
         <Button className="btn-close" onClick={handleClose}>
-          Never Mind
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>
