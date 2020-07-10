@@ -5,7 +5,8 @@ import {
   InputAdornment,
   CircularProgress,
   Select,
-  Typography
+  Typography,
+  Divider
 } from "@material-ui/core";
 import { StyleSheet, css } from "aphrodite";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -15,6 +16,7 @@ import { getAuthToken } from "../../utils/apollo";
 import { ModalDialog } from "../Dialog";
 import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
+import GoogleIcon from '../../../../assets/images/google_icon.svg'
 
 
 export function LoginScreen() {
@@ -68,19 +70,16 @@ export function LoginScreen() {
     setOpen(!open)
   }
   function handleClick() {
-       //Google Analytics tracking 
-       ReactGA.event({
-        category: 'LoginPage',
-        action: 'TroubleLogging',
-        eventLabel: "Trouble Logging on Login Page",
-        nonInteraction: true
-      });
+    //Google Analytics tracking 
+    ReactGA.event({
+      category: 'LoginPage',
+      action: 'TroubleLogging',
+      eventLabel: "Trouble Logging on Login Page",
+      nonInteraction: true
+    });
     window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`, 'emailWindow')
     setOpen(!open);
-
- 
   }
-
 
   return (
     <div style={{ height: "100vh" }} className="login-page">
@@ -165,15 +164,24 @@ export function LoginScreen() {
           </Button>
         </div>
 
-        <div className="row justify-content-center align-items-center">
-          <a className={css(styles.googleLink)} href={"/login_oauth"}>
-            Or Login with Google instead
-          </a>
+        <br />
+        <div className="d-flex row justify-content-center align-items-center">
+          <Divider style={{ width: '24%', height: 1, backgroundColor: 'grey' }} /> <p style={{ margin: 10 }}>OR</p> <Divider style={{ width: '24%', height: 1, backgroundColor: 'grey' }} />
         </div>
+
+        <div className="container">
+          <div className="d-flex row justify-content-center ">
+            <Button href={"/login_oauth"} style={{ backgroundColor: 'white', textTransform: 'none', width: '50%'}} variant="contained" startIcon={<img src={GoogleIcon} alt={"google-icon"} />}>
+              Sign In with Google
+          </Button>
+          </div>
+          <br />
+        </div>
+      
       </div>
 
       <div data-testid="trouble-logging-div" className="row justify-content-center align-items-center">
-        <p onClick={handleModal} style={{ marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
+        <p onClick={handleModal} style={{ marginTop: '1%' }}><u><strong>Dont have an Account?</strong></u></p>
       </div>
 
       <ModalDialog
@@ -182,28 +190,46 @@ export function LoginScreen() {
         handleConfirm={handleClick}
         action='Send Email'
       >
+
+        <div className="container">
+          <div className="d-flex row justify-content-center ">
+            <Button href={"/login_oauth"} style={{ backgroundColor: 'white', textTransform: 'none', }} variant="contained" startIcon={<img src={GoogleIcon} alt={"google-icon"} />}>
+              Sign Up with Google
+          </Button>
+          </div>
+          
+        </div>
+        <div className="d-flex row justify-content-center align-items-center">
+          <Divider style={{ width: '42%', height: 1, backgroundColor: 'grey' }} /> <strong><p style={{ margin: 10 }}>OR</p></strong> <Divider style={{ width: '42%', height: 1, backgroundColor: 'grey' }} />
+        </div>
+
+        <br />
         <h6>
           To request your login information, email: <a>support@doublegdp.com</a>
         </h6>
         <br />
-        <input
-          className="form-control"
-          type="text"
-          onChange={event => setUsername(event.target.value)}
+        <TextField
+          variant="outlined"
+
+          required
+          fullWidth
           name="name"
-          placeholder="Enter Full name here"
-        />
-        <input
-          className="form-control"
-          type="text"
-          onChange={event => setValue(event.target.value)}
-          name="email-number"
-          placeholder="Enter Email/Phone number"
+          label="Full name"
+          onChange={event => setUsername(event.target.value)}
         />
 
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="email-number"
+          label="Email/Phone number"
+          onChange={event => setValue(event.target.value)}
+        />
       </ModalDialog>
 
-    </div>
+    </div >
   );
 }
 

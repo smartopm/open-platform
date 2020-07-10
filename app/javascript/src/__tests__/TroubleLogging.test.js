@@ -15,7 +15,9 @@ describe('Tests email request on the login screen', () => {
                 </MemoryRouter>
             </MockedProvider>)
         expect(container.queryByTestId('trouble-logging-div')).toBeTruthy()
-        expect(container.queryByText('Trouble logging in?')).toBeTruthy()
+        expect(container.queryByText('Dont have an Account?')).toBeTruthy()
+        expect(container.queryByText('Sign In with Google')).toBeTruthy()
+        
     });
 
 
