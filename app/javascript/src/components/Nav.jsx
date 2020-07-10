@@ -12,6 +12,7 @@ import Drawer from '@material-ui/core/Drawer'
 import { SideList } from './SideList.jsx'
 import { avatarUrl } from './Avatar.jsx'
 import { FormContext } from '../containers/UserEdit.jsx'
+import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 export default withRouter(function Nav({
   children,
@@ -48,6 +49,7 @@ export function Component({
 }) {
   const [state, setState] = React.useState(false)
   const { values, handleSubmit } = useContext(FormContext)
+  const theme = useContext(ThemeContext)
 
 
   function backButtonOrMenu() {
@@ -166,8 +168,8 @@ export function Component({
         )
       }
       <nav
-        className={`navbar navbar-dark ${css(styles.navBar)}`}
-        style={{ boxShadow }}
+        className={`navbar navbar-dark`}
+        style={{ boxShadow, backgroundColor: theme.primaryColor, minHeight: '50px' }}
       >
         <div className={css(styles.topNav)}>
           {backButtonOrMenu()}
@@ -201,7 +203,7 @@ export function NewsNav({ children }) {
 }
 
 Component.defaultProps = {
-  boxShadow: '0 2px 2px 0 rgba(0,0,0,.14)'
+  boxShadow: '0 2px 2px 0 rgba(0,0,0,.14)',
 }
 
 const styles = StyleSheet.create({

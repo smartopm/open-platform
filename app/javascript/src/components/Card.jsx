@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
+import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 export default function Card({
   title,
@@ -16,9 +17,11 @@ export default function Card({
   access,
   authState
 }) {
+  const theme = useContext(ThemeContext)
   if (!access.includes(authState.user.userType.toLowerCase())) {
     return null
   }
+  
   return (
       <div
       className={`${css(styles.cardSize)} card align-self-center text-center`}
@@ -40,7 +43,7 @@ export default function Card({
         >
           <div className="card-body">
             <h5 className="card-title">
-              <span className={css(styles.homeIconColor)} >
+              <span style={{color: theme.primaryColor}} >
                 {icon}
               </span>
             </h5>
@@ -68,9 +71,6 @@ Card.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  homeIconColor: {
-    color: '#25c0b0'
-  },
   CardtextIcon: {
     marginTop: '15.5%'
   },
