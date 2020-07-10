@@ -82,7 +82,7 @@ export function LoginScreen() {
   }
 
   return (
-    <div style={{ height: "100vh" }} className="login-page">
+    <div >
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to={"/welcome"}>
           <i className={`material-icons`}>arrow_back</i>
@@ -90,7 +90,7 @@ export function LoginScreen() {
       </nav>
       <div className="container ">
         <div
-          className={`row justify-content-center align-items-center ${css(
+          className={`justify-content-center align-items-center ${css(
             styles.welcomeContainer
           )}`}
         >
@@ -142,7 +142,6 @@ export function LoginScreen() {
             }}
           />
         </div>
-        <br />
         <br />
         {error && <p className=" text-center text-danger">{error}</p>}
         <div
@@ -240,7 +239,7 @@ const styles = StyleSheet.create({
     width: "55%",
     height: 51,
     boxShadow: "none",
-    marginTop: 50
+    marginTop: 30
   },
   linksSection: {
     marginTop: 20
@@ -264,7 +263,7 @@ const styles = StyleSheet.create({
     marginLeft: 6
   },
   welcomeContainer: {
-    position: "relative",
+   
     textAlign: "center",
     color: "white"
   },
