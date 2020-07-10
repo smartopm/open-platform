@@ -435,7 +435,7 @@ export default function UserInformation({
 
           <TabPanel value={tabValue}  index={'Communication'}>
 
-            <UserCommunication user={authState.user}/>
+            <UserCommunication user={authState.user} phoneNumber={data.user.phoneNumber}/>
 
           </TabPanel>
 
