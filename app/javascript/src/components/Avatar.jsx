@@ -15,6 +15,7 @@ export const avatarUrl = ({ imageUrl, user }) => {
 }
 
 export default function Avatar({ imageUrl, user, style = 'small' }) {
+  // sanitize protocol
   if (style === 'big') {
     return (
       <div className="d-flex justify-content-center">
@@ -25,7 +26,7 @@ export default function Avatar({ imageUrl, user, style = 'small' }) {
         />
       </div>
     )
-  } else if (style==='small') {
+  } else if (style === 'small') {
     return (
       <div className="d-flex justify-content-center">
         <img
@@ -35,7 +36,7 @@ export default function Avatar({ imageUrl, user, style = 'small' }) {
         />
       </div>
     )
-  }else if(style==='medium'){
+  } else if (style === 'medium') {
     return (
       <div style={{ width: 80 }}>
         <img
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: '8px'
   },
   avatarMedium: {
-     width: '80px',
+    width: '80px',
     height: '80px',
     borderRadius: '8px'
   },
