@@ -19,7 +19,7 @@ module Types
 
     def visible_to_role(context)
       if @visible[:roles]
-        return false unless context[:current_user]&.role?(@visible[:roles])
+        raise GraphQL::AnalysisError.new("You do not have permission to access #{self.original_name.to_s}") unless context[:current_user]&.role?(@visible[:roles])
       end
       true
     end
