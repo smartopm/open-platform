@@ -284,7 +284,7 @@ Devise.setup do |config|
   }
   # config.omniauth :facebook, fb_app_id, fb_app_secret, scope: 'public_profile,email'
   config.omniauth :facebook, fb_app_id, fb_app_secret,
-      :scope => 'email,read_stream, public_profile',
+      :scope => 'email, public_profile',
       :client_options => {
         :site => 'https://graph.facebook.com/v6.0',
         :authorize_url => "https://www.facebook.com/v6.0/dialog/oauth"

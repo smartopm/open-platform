@@ -13,7 +13,12 @@ export default function FBLogin() {
       style={{ minHeight: '100vh' }}
     >
       <Grid item xs={3}>
-        <Button color="primary" href="/fb_oauth" startIcon={<FacebookIcon />} data-testid="fblogin" >
+        <Button
+          color="primary"
+          href="/fb_oauth"
+          startIcon={<FacebookIcon />}
+          data-testid="fblogin"
+        >
           Login with Facebook
         </Button>
       </Grid>

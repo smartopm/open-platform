@@ -8,14 +8,17 @@ export const avatarUrl = ({ imageUrl, user }) => {
   } else if (user && user.avatarUrl) {
     return user.avatarUrl
   } else if (user && user.imageUrl) {
-    return user.imageUrl
+    const lk = /^https:\/\//i
+    const link = !lk.test(user.imageUrl)
+      ? user.imageUrl.replace('http', 'https') //force image to pull from https
+      : user.imageUrl
+    return link
   } else {
     return '/images/default_avatar.svg'
   }
 }
 
 export default function Avatar({ imageUrl, user, style = 'small' }) {
-  // sanitize protocol
   if (style === 'big') {
     return (
       <div className="d-flex justify-content-center">

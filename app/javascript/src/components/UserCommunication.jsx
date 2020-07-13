@@ -12,7 +12,7 @@ import {Spinner} from '../components/Loading'
 import CenteredContent from '../components/CenteredContent'
 import { Button, TextField } from '@material-ui/core'
 
-export default function UserCommunication(user, state) {
+export default function UserCommunication({user, phoneNumber}) {
     const { id } = useParams()
     const [messageCreate] = useMutation(MessageCreate)
     const [message, setMessage] = useState('')
@@ -21,10 +21,9 @@ export default function UserCommunication(user, state) {
     const { loading, error, data, refetch } = useQuery(UserMessageQuery, {
         variables: { id }
     })
-
     function sendMessage() {
         setLoading(true)
-        const receiver = (user && user.user.name) || ''
+        const receiver = phoneNumber 
         if (!message.length) {
             setError('The message must contain some text')
             return
@@ -61,9 +60,7 @@ export default function UserCommunication(user, state) {
                 ) : (
                         <p className="text-center">
                             <span>
-                                {state && state.from === 'contact'
-                                    ? 'Send Message to Support, You should receive an answer soon'
-                                    : `There are no messages yet for ${user.user.name}`}
+                                    {`There are no messages yet for ${user.name}`}
                             </span>
                         </p>
                     ))}
