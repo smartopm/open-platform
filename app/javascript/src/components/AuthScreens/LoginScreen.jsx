@@ -85,7 +85,7 @@ export function LoginScreen() {
   }
 
   return (
-    <div>
+    <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to={'/welcome'}>
           <i className={`material-icons`}>arrow_back</i>
@@ -240,15 +240,6 @@ export function LoginScreen() {
               startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
             >
               Sign Up with Google
-            </Button>
-
-            <Button
-              href={'/fb_oauth'}
-              style={{ backgroundColor: 'white', textTransform: 'none' }}
-              variant="contained"
-              startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
-            >
-              Sign Up with Facebook
             </Button>
           </div>
         </div>
