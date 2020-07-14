@@ -241,6 +241,14 @@ export function LoginScreen() {
             >
               Sign Up with Google
             </Button>
+            <Button
+              href="/fb_oauth"
+              variant="contained"
+              startIcon={<FacebookIcon />}
+              className={css(styles.signUpBtns)}
+            >
+              Sign Up with Facebook
+            </Button>
           </div>
         </div>
         <div className="d-flex row justify-content-center align-items-center">
@@ -327,5 +335,15 @@ const styles = StyleSheet.create({
   },
   "[type='number']": {
     fontSize: 30
+  },
+  signUpBtns: {
+    backgroundColor: 'white',
+    textTransform: 'none',
+    color: '#3b5998',
+    marginLeft: 20,
+    '@media (max-width: 520px)': {
+      marginTop: 12,
+      marginLeft: 0
+    }
   }
 })
