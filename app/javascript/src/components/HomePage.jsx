@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
@@ -25,12 +25,17 @@ import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />
   }
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
   const cards = [
     {
       card_id: 1,
@@ -152,16 +157,40 @@ export default function Homepage({ authState }) {
       path: `/`,
       id: 'crfl',
 
-      handleClick: () =>
-        window.open(
-          `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
-            /\s+/g,
-            '+'
-          )}&entry.1055458143=${
-            authState.user.phoneNumber ? authState.user.phoneNumber : ''
-          }`,
-          '_blank'
-        ),
+      handleClick: (event) => {
+        setAnchorEl(event.currentTarget)
+
+        console.log(event.currentTarget);
+        return (
+          <Menu
+            id="fade-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem onClick={() => {
+              window.open(
+                `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
+                  /\s+/g,
+                  '+'
+                )}&entry.1055458143=${
+                authState.user.phoneNumber ? authState.user.phoneNumber : ''
+                }`,
+                '_blank'
+              )
+            }}>Client Request Form</MenuItem>
+            <MenuItem >Building Permit Application Form</MenuItem>
+          </Menu>
+        )
+      },
       icon: <ListAltIcon fontSize="large" />,
       access: ['admin', 'resident', 'client']
     },
@@ -243,13 +272,13 @@ export default function Homepage({ authState }) {
         'visitor'
       ]
     },
-    
+
     {
       card_id: 20,
       title: `Discussions`,
       path: `/discussions`,
       titleStyle: css(styles.CardtextImg),
-      icon: <MessageIcon fontSize="large"/>,
+      icon: <MessageIcon fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -261,7 +290,7 @@ export default function Homepage({ authState }) {
       ]
     },
 
-     {
+    {
       card_id: 19,
       title: `Business`,
       path: `/business`,
