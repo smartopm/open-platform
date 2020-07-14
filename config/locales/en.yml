@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+
+  error:
+    visibility: "You do not have permission to access %{field}"

@@ -34,13 +34,9 @@ module Types::Queries::EventLog
 
   def query_all_logs(name, subject, ref_id, ref_type, limit, offset)
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
-    if name.nil?
-      EventLog.where(query)
-              .limit(limit).offset(offset)
-    else
-      EventLog.where(query).where("data->>'ref_name' ILIKE ?", "%#{name}%")
-              .limit(limit).offset(offset)
-    end
+    query_logs_with_name(query, name, limit, offset) if name.present?
+
+    context[:site_community].event_logs.where(query).limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -49,12 +45,10 @@ module Types::Queries::EventLog
     authorized = current_user&.role?(%i[security_guard admin custodian])
     raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
 
-    user = User.find(user_id)
+    user = context[:site_community].users.find(user_id)
     raise GraphQL::ExecutionError, 'Unauthorized' if current_user.community_id != user.community_id
 
-    query = build_event_log_user_query(user, subject)
-    EventLog.where(query)
-            .limit(limit).offset(offset)
+    query_user_logs(user, subject, limit, offset)
   end
 
   def build_event_log_query(user, subject, ref_id, ref_type)
@@ -74,5 +68,16 @@ module Types::Queries::EventLog
     query[:subject] = subject if subject
     query[:acting_user_id] = user.id
     query
+  end
+
+  def query_user_logs(user, subject, limit, offset)
+    query = build_event_log_user_query(user, subject)
+    context[:site_community].event_logs.where(query).limit(limit).offset(offset)
+  end
+
+  def query_logs_with_name(query, name, limit, offset)
+    context[:site_community].event_logs.where(query)
+                            .where("data->>'ref_name' ILIKE ?", "%#{name}%")
+                            .limit(limit).offset(offset)
   end
 end

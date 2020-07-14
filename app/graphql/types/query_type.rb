@@ -20,7 +20,7 @@ module Types
     end
 
     def community(id:)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
       Community.find(id)
     end
@@ -32,7 +32,7 @@ module Types
     end
 
     def all_notes(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
       Note.all.includes(:user).order(created_at: :desc)
           .limit(limit).offset(offset)
@@ -44,7 +44,7 @@ module Types
     end
 
     def user_notes(id:)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
       Note.where(user_id: id).order(created_at: :desc)
     end
@@ -56,7 +56,7 @@ module Types
     end
 
     def flagged_notes(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
       Note.includes(:user).where(flagged: true).order(completed: :desc, created_at: :desc)
           .limit(limit).offset(offset)
@@ -70,7 +70,7 @@ module Types
     def entry_search(name:)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      EntryRequest.where('name ILIKE ?', '%' + name + '%').limit(20)
+      context[:site_community].entry_requests.where('name ILIKE ?', '%' + name + '%').limit(20)
     end
 
     # feedback
@@ -81,7 +81,7 @@ module Types
     end
 
     def users_feedback(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+      raise GraphQL::ExecutionError, 'Unauthorized' if current_user&.admin?
 
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
@@ -94,8 +94,7 @@ module Types
     def campaigns
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      com_id = context[:current_user].community_id
-      campaign = Campaign.where(community_id: com_id).offset(0).limit(100)
+      campaign = context[:site_community].campaigns.offset(0).limit(100)
       campaign
     end
 
@@ -107,7 +106,7 @@ module Types
     def campaign(id:)
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      campaign = context[:current_user].community.campaigns.find_by(id: id)
+      campaign = context[:site_community].campaigns.find_by(id: id)
       campaign
     end
   end

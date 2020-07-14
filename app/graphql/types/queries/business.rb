@@ -29,25 +29,22 @@ module Types::Queries::Business
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     # Find out if we can use User.allowed...
-    Business.where(community_id: context[:current_user].community_id)
-            .order(name: :asc)
-            .limit(limit)
-            .offset(offset)
+    context[:site_community].businesses
+                            .order(name: :asc)
+                            .limit(limit)
+                            .offset(offset)
   end
 
   def business(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    business = Business.find_by(community_id: context[:current_user].community_id, id: id)
+    business = context[:site_community].businesses.find(id)
     business
   end
 
   def user_business(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    u_business = User.find_by(
-      community_id: context[:current_user].community_id, id: user_id,
-    ).businesses.all
-    u_business
+    context[:site_community].businesses.find_by(user_id: user_id)
   end
 end
