@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import { dateToString } from '../components/DateContainer'
 import { Grid } from '@material-ui/core'
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import GeoData from '../data/nkwashi_plots.json'
 import GeoMap from '../components/GeoMap'
 // Todo: Refactor this to use best practices of React

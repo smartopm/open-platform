@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { Map, GeoJSON, Marker, TileLayer, Popup } from 'react-leaflet'
+import { Map, GeoJSON, TileLayer } from 'react-leaflet'
 
 const center = [-15.524234821346493, 28.65281581878662]
 
@@ -14,18 +14,20 @@ function geoJSONStyle(feature) {
 }
 
 function onEachFeature(feature, layer) {
-  if (feature.properties.name) {
-    layer.bindTooltip(feature.properties.name, {
-      permanent: true,
-      direction: 'center',
-      offset: [0, 0],
-      className: 'text-label'
-    })
-  }
+  // if (feature.properties.name) {
+  //   layer.bindTooltip(feature.properties.name, {
+  //     permanent: true,
+  //     direction: 'center',
+  //     offset: [0, 0],
+  //     className: 'text-label'
+  //   })
+  // }
+  if (feature.properties && feature.properties.name) {
+    layer.bindPopup(feature.properties.name);
+    }
 }
 
 export default function GeoMap({ GeoJSONData }) {
-  const [activePlot, setActivePlot] = useState(null)
   return (
     <div>
       <style
@@ -62,19 +64,7 @@ export default function GeoMap({ GeoJSONData }) {
           data={GeoJSONData}
           style={geoJSONStyle}
           onEachFeature={onEachFeature}
-          onClick={() => {
-            setActivePlot(GeoJSONData)
-          }}
         />
-        {activePlot && (
-          <Popup position={center}>
-            <div>
-              <h1> Plots Number 1234</h1>
-            </div>
-          </Popup>
-        )}
-
-        {/* <Polygon color="purple" positions={multiPolygon}/> */}
       </Map>
     </div>
   )
