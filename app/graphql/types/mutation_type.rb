@@ -52,5 +52,8 @@ module Types
     # discussions
     field :discussion_create, mutation: Mutations::Discussion::DiscussionCreate
     field :discussion_user_create, mutation: Mutations::Discussion::DiscussionUserCreate
+
+    # labels
+    field :label_create, mutation: Mutations::Label::LabelCreate
   end
 end
