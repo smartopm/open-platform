@@ -4,7 +4,7 @@ import { css, StyleSheet } from 'aphrodite'
 import { dateToString } from '../components/DateContainer'
 import { Grid } from '@material-ui/core'
 import GeoData from '../data/nkwashi_plots.json'
-import GeoMap from '../components/GeoMap'
+import GeoMap from './Map/GeoMap'
 // Todo: Refactor this to use best practices of React
 
 export function UserPlotInfo(props) {
@@ -14,7 +14,19 @@ export function UserPlotInfo(props) {
     accounts.forEach(account => {
       land_parcels = [...land_parcels, ...account.landParcels]
     })
-
+/**
+ * 
+ * @param {object} jsonData 
+ * @param {string} value 
+ * @description return feature in geodata that matches property name 
+ * @example getPropertyByName(data, 'Basic')
+ * @returns {object}
+ */
+function getPropertyByName(jsonData, value) {
+  const data = jsonData.features
+  const property = data.filter(feature => feature.properties.name === value)
+  return property
+}
   function plotInformation() {
     return (
       <div className="container">
@@ -26,31 +38,6 @@ export function UserPlotInfo(props) {
     const convertedDateTime = dateToString(accounts[0].updatedAt)
     return (
       <div className="container">
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-        .leaflet-tooltip-top:before, 
-        .leaflet-tooltip-bottom:before, 
-        .leaflet-tooltip-left:before, 
-        .leaflet-tooltip-right:before {
-          border: none !important;
-        }
-        .text-label {
-          font-size: 1.75em;
-          background-color: none;
-          border-color: none;
-          background: none;
-          border: none;
-          box-shadow: none;
-        }
-        .leaflet-container {
-          height: 800px;
-          width: 100%;
-          margin: 0 auto;
-        }
-        `
-          }}
-        ></style>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <p>Plots associated with this account:</p>
@@ -74,9 +61,15 @@ export function UserPlotInfo(props) {
               </span>
             </p>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item md={12}>
+            {/* {
+              land_parcels.map(plot =>{
+
+              })
+            } */}
             <GeoMap GeoJSONData={GeoData} />
           </Grid>
+          
         </Grid>
       </div>
     )
