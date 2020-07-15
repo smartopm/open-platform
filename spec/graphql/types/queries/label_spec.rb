@@ -16,13 +16,12 @@ RSpec.describe Types::Queries::Label do
     end
 
     let!(:user_label) do
-        current_user.user_labels.create!(label_id: first_label.id)
+      current_user.user_labels.create!(label_id: first_label.id)
     end
 
     let!(:other_user_label) do
-        user2.user_labels.create!(label_id: second_label.id)
+      user2.user_labels.create!(label_id: second_label.id)
     end
-
 
     let(:labels_query) do
       %(query {
@@ -33,21 +32,21 @@ RSpec.describe Types::Queries::Label do
     end
 
     let(:user_label_query) do
-        %(query {
-              userLabels(userId: "#{current_user.id}") {
-                  id
-                  shortDesc
-              }
-          })
-      end
+      %(query {
+            userLabels(userId: "#{current_user.id}") {
+                id
+                shortDesc
+            }
+        })
+    end
     let(:other_user_label_query) do
-        %(query {
-              userLabels(userId: "#{user2.id}") {
-                  id
-                  shortDesc
-              }
-          })
-      end
+      %(query {
+            userLabels(userId: "#{user2.id}") {
+                id
+                shortDesc
+            }
+        })
+    end
 
     it 'should retrieve list of labels' do
       result = DoubleGdpSchema.execute(labels_query, context: {
@@ -57,12 +56,11 @@ RSpec.describe Types::Queries::Label do
       expect(result.dig('data', 'labels', 0, 'shortDesc')).to include 'label'
     end
 
-
     it 'should retrieve labels for the other user' do
       result = DoubleGdpSchema.execute(other_user_label_query, context: {
                                          current_user: current_user,
                                        }).as_json
-      expect(result.dig('data', 'userLabels',  0, 'shortDesc')).to include 'label'
+      expect(result.dig('data', 'userLabels', 0, 'shortDesc')).to include 'label'
       expect(result.dig('data', 'userLabels', 0, 'id')).to eql second_label.id
     end
 
