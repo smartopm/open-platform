@@ -44,6 +44,7 @@ gem "aws-sdk-s3", require: false
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem "devise", "~> 4.7"
 gem 'jwt'
+gem "omniauth-facebook", "~> 6.0.0"
 
 # QR Code library for building SVG's
 gem 'rqrcode'

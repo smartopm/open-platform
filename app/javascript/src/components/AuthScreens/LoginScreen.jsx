@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   TextField,
@@ -7,54 +7,54 @@ import {
   Select,
   Typography,
   Divider
-} from "@material-ui/core";
-import { StyleSheet, css } from "aphrodite";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import { useMutation } from "react-apollo";
-import { loginPhone } from "../../graphql/mutations";
-import { getAuthToken } from "../../utils/apollo";
-import { ModalDialog } from "../Dialog";
+} from '@material-ui/core'
+import { StyleSheet, css } from 'aphrodite'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useMutation } from 'react-apollo'
+import { loginPhone } from '../../graphql/mutations'
+import { getAuthToken } from '../../utils/apollo'
+import { ModalDialog } from '../Dialog'
 import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
-
+import FacebookIcon from '@material-ui/icons/Facebook'
 
 export function LoginScreen() {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [loginPhoneStart] = useMutation(loginPhone);
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [loginPhoneStart] = useMutation(loginPhone)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
   const [value, setValue] = useState('')
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [countryCode, setCountryCode] = useState(260);
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [countryCode, setCountryCode] = useState(260)
   const history = useHistory()
   const { state } = useLocation()
 
-  function loginWithPhone(event, type = "input") {
+  function loginWithPhone(event, type = 'input') {
     // submit on both click and Enter Key pressed
-    if (event.keyCode === 13 || type === "btnClick") {
-      setIsLoading(true);
+    if (event.keyCode === 13 || type === 'btnClick') {
+      setIsLoading(true)
       loginPhoneStart({
         variables: { phoneNumber: `${countryCode}${phoneNumber}` }
       })
         .then(({ data }) => {
-          setIsLoading(false);
-          return data;
+          setIsLoading(false)
+          return data
         })
         .then(data => {
           history.push({
-            pathname: "/code/" + data.loginPhoneStart.user.id,
+            pathname: '/code/' + data.loginPhoneStart.user.id,
             state: {
               phoneNumber: `${countryCode}${phoneNumber}`,
               from: `${!state ? '/' : state.from.pathname}`
             }
-          });
+          })
         })
         .catch(error => {
-          setError(error.message);
-          setIsLoading(false);
-        });
+          setError(error.message)
+          setIsLoading(false)
+        })
     }
   }
   useEffect(() => {
@@ -70,21 +70,24 @@ export function LoginScreen() {
     setOpen(!open)
   }
   function handleClick() {
-    //Google Analytics tracking 
+    //Google Analytics tracking
     ReactGA.event({
       category: 'LoginPage',
       action: 'TroubleLogging',
-      eventLabel: "Trouble Logging on Login Page",
+      eventLabel: 'Trouble Logging on Login Page',
       nonInteraction: true
-    });
-    window.open(`mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`, 'emailWindow')
-    setOpen(!open);
+    })
+    window.open(
+      `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`,
+      'emailWindow'
+    )
+    setOpen(!open)
   }
 
   return (
-    <div >
+    <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={"/welcome"}>
+        <Link to={'/welcome'}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -96,7 +99,8 @@ export function LoginScreen() {
         >
           <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
           <Typography color="textSecondary" variant="body2">
-            Hello! This is your all inclusive stop for Nkwashi news, payments, client requests, gate access, and support.
+            Hello! This is your all inclusive stop for Nkwashi news, payments,
+            client requests, gate access, and support.
           </Typography>
 
           <br />
@@ -117,7 +121,7 @@ export function LoginScreen() {
             maxLength={10}
             autoFocus
             style={{
-              width: "65%"
+              width: '65%'
             }}
             value={phoneNumber}
             onChange={e => setPhoneNumber(e.target.value)}
@@ -134,7 +138,9 @@ export function LoginScreen() {
                     onChange={e => setCountryCode(e.target.value)}
                   >
                     {Object.entries(areaCode).map(([key, val]) => (
-                      <option key={key} value={key}>{val}</option>
+                      <option key={key} value={key}>
+                        {val}
+                      </option>
                     ))}
                   </Select>
                 </InputAdornment>
@@ -152,54 +158,109 @@ export function LoginScreen() {
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-            onClick={event => loginWithPhone(event, "btnClick")}
+            onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Next</span>
-              )}
+              <span>Next</span>
+            )}
           </Button>
         </div>
 
         <br />
         <div className="d-flex row justify-content-center align-items-center">
-          <Divider style={{ width: '24%', height: 1, backgroundColor: 'grey' }} /> <p style={{ margin: 10 }}>OR</p> <Divider style={{ width: '24%', height: 1, backgroundColor: 'grey' }} />
+          <Divider
+            style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
+          />{' '}
+          <p style={{ margin: 10 }}>OR</p>{' '}
+          <Divider
+            style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
+          />
         </div>
 
         <div className="container">
           <div className="d-flex row justify-content-center ">
-            <Button href={"/login_oauth"} style={{ backgroundColor: 'white', textTransform: 'none', width: '50%'}} variant="contained" startIcon={<img src={GoogleIcon} alt={"google-icon"} />}>
+            <Button
+              href={'/login_oauth'}
+              style={{
+                backgroundColor: 'white',
+                textTransform: 'none'
+              }}
+              variant="contained"
+              startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
+            >
               Sign In with Google
-          </Button>
+            </Button>
+          </div>
+          <br />
+          <br />
+          <div className="d-flex row justify-content-center ">
+            <Button
+              href="/fb_oauth"
+              variant="contained"
+              startIcon={<FacebookIcon />}
+              style={{
+                backgroundColor: 'white',
+                textTransform: 'none',
+                color: '#3b5998'
+              }}
+            >
+              Sign In with Facebook
+            </Button>
           </div>
           <br />
         </div>
-      
       </div>
 
-      <div data-testid="trouble-logging-div" className="row justify-content-center align-items-center">
-        <p onClick={handleModal} style={{ marginTop: '1%' }}><u><strong>Dont have an Account?</strong></u></p>
+      <div
+        data-testid="trouble-logging-div"
+        className="row justify-content-center align-items-center"
+      >
+        <p onClick={handleModal} style={{ marginTop: '1%' }}>
+          <u>
+            <strong>Dont have an Account?</strong>
+          </u>
+        </p>
       </div>
 
       <ModalDialog
         open={open}
         handleClose={handleModal}
         handleConfirm={handleClick}
-        action='Send Email'
+        action="Send Email"
       >
-
         <div className="container">
           <div className="d-flex row justify-content-center ">
-            <Button href={"/login_oauth"} style={{ backgroundColor: 'white', textTransform: 'none', }} variant="contained" startIcon={<img src={GoogleIcon} alt={"google-icon"} />}>
+            <Button
+              href={'/login_oauth'}
+              style={{ backgroundColor: 'white', textTransform: 'none' }}
+              variant="contained"
+              startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
+            >
               Sign Up with Google
-          </Button>
+            </Button>
+            <Button
+              href="/fb_oauth"
+              variant="contained"
+              startIcon={<FacebookIcon />}
+              className={css(styles.signUpBtns)}
+            >
+              Sign Up with Facebook
+            </Button>
           </div>
-          
         </div>
         <div className="d-flex row justify-content-center align-items-center">
-          <Divider style={{ width: '42%', height: 1, backgroundColor: 'grey' }} /> <strong><p style={{ margin: 10 }}>OR</p></strong> <Divider style={{ width: '42%', height: 1, backgroundColor: 'grey' }} />
+          <Divider
+            style={{ width: '42%', height: 1, backgroundColor: 'grey' }}
+          />{' '}
+          <strong>
+            <p style={{ margin: 10 }}>OR</p>
+          </strong>{' '}
+          <Divider
+            style={{ width: '42%', height: 1, backgroundColor: 'grey' }}
+          />
         </div>
 
         <br />
@@ -209,7 +270,6 @@ export function LoginScreen() {
         <br />
         <TextField
           variant="outlined"
-
           required
           fullWidth
           name="name"
@@ -227,45 +287,43 @@ export function LoginScreen() {
           onChange={event => setValue(event.target.value)}
         />
       </ModalDialog>
-
-    </div >
-  );
+    </div>
+  )
 }
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: "#25c0b0",
-    color: "#FFF",
-    width: "55%",
+    backgroundColor: '#25c0b0',
+    color: '#FFF',
+    width: '55%',
     height: 51,
-    boxShadow: "none",
+    boxShadow: 'none',
     marginTop: 30
   },
   linksSection: {
     marginTop: 20
   },
   navBar: {
-    boxShadow: "none",
-    backgroundColor: "#fafafa"
+    boxShadow: 'none',
+    backgroundColor: '#fafafa'
   },
   welcomeText: {
     marginTop: 33,
-    color: "#1f2026"
+    color: '#1f2026'
     // fontSize: "1.3em",
   },
   flag: {
-    display: "inline-block",
+    display: 'inline-block',
     marginTop: 7
   },
   countryCode: {
-    display: "inline-block",
+    display: 'inline-block',
     marginTop: -2,
     marginLeft: 6
   },
   welcomeContainer: {
-   
-    textAlign: "center",
-    color: "white"
+    textAlign: 'center',
+    color: 'white'
   },
   phoneNumberInput: {
     marginTop: 30
@@ -273,9 +331,19 @@ const styles = StyleSheet.create({
   googleLink: {
     margin: 40,
     marginBottom: 47,
-    textDecoration: "none"
+    textDecoration: 'none'
   },
   "[type='number']": {
     fontSize: 30
+  },
+  signUpBtns: {
+    backgroundColor: 'white',
+    textTransform: 'none',
+    color: '#3b5998',
+    marginLeft: 20,
+    '@media (max-width: 520px)': {
+      marginTop: 12,
+      marginLeft: 0
+    }
   }
-});
+})

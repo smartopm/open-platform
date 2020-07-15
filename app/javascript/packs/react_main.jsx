@@ -44,7 +44,7 @@ import RequestConfirm from '../src/containers/Requests/RequestConfirm'
 import WaitScreen from '../src/containers/Requests/WaitingScreen'
 import RequestApproval from '../src/containers/Requests/RequestApproval'
 import ErrorPage from '../src/components/Error'
-import GoogleAuthCallback from '../src/components/AuthScreens/GoogleAuthCallback'
+import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback'
 import ShowRoom from '../src/containers/showroom/Home'
 import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
 import ComingSoon from '../src/containers/showroom/ComingSoon'
@@ -67,7 +67,7 @@ import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
 import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
 import CampaignCreate from '../src/containers/Campaigns/CampaignCreate'
-import Campaigns from "../src/containers/Campaigns/Campaigns";
+import Campaigns from '../src/containers/Campaigns/Campaigns'
 import Scan from '../src/containers/Scan.jsx'
 import WelcomePage from '../src/components/AuthScreens/WelcomePage'
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate'
@@ -79,7 +79,6 @@ import Discussions from '../src/containers/Discussions/Discussions'
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
 import Businesses from '../src/containers/Businesses/Businesses'
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
-
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -121,7 +120,7 @@ const Logout = () => {
   return <Redirect to="/login" />
 }
 //page tracking
-ReactGA.initialize('UA-150647211-2');
+ReactGA.initialize('UA-150647211-2')
 
 const Analytics = props => {
   const gtag = window.gtag
@@ -148,20 +147,22 @@ const Analytics = props => {
         })
       } else {
         console.log('GA DEVELOPMENT MODE: log user', user)
-
       }
     }
-    return history.listen((location) => {
-      if (location.pathname.includes('/id') || location.pathname.includes('/user')) {
+    return history.listen(location => {
+      if (
+        location.pathname.includes('/id') ||
+        location.pathname.includes('/user')
+      ) {
         let [, rootURL, , userPage] = location.pathname.split('/')
 
         let pageHit = `/${rootURL}/${userPage}`
         ReactGA.pageview(pageHit)
       } else {
-        ReactGA.set({ page: location.pathname });
+        ReactGA.set({ page: location.pathname })
         ReactGA.pageview(location.pathname)
       }
-    });
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState.user, history])
 
@@ -187,12 +188,15 @@ const App = () => {
                   <Route path="/code/:id" component={ConfirmCodeScreen} />
                   <Route path="/l/:id/:code" component={OneTimeLoginCode} />
                   <Route path="/logout" component={Logout} />
-                  <Route path="/google/:token" component={GoogleAuthCallback} />
-                  {/* <Route path="/welcome_page" component={WelcomePage} /> */}
+                  <Route path="/google/:token" component={MainAuthCallback} />
+                  <Route path="/facebook/:token" component={MainAuthCallback} />
 
                   {/* Spike page */}
-                  <Route path="/nkwashi_news/post/:id" exact component={PostPage} />
-
+                  <Route
+                    path="/nkwashi_news/post/:id"
+                    exact
+                    component={PostPage}
+                  />
 
                   <LoggedInOnly>
                     <Switch>
@@ -203,19 +207,15 @@ const App = () => {
                       <Route path="/print/:id" component={IDPrint} />
                       <Route path="/entry_logs/:userId" component={EntryLogs} />
                       <Route path="/entry_logs" component={EntryLogs} />
-
                       <Route path="/user" exact component={UserEdit} />
                       <Route path="/map" component={Map} />
                       <Route path="/mobile_money" component={MobileMoney} />
                       <Route path="/contact" component={Support} />
                       <Route path="/otp_sent" component={OTPFeedbackScreen} />
-
                       <Route path="/referral" component={UserEdit} />
                       <Route path="/myaccount/:id" component={UserShow} />
-
                       {/* new routes => guards */}
                       <Route path="/guard_home" component={GuardHome} />
-
                       {/* requests */}
                       <Route path="/entry_request" component={EntryRequest} />
                       <Route path="/request/:id" component={RequestUpdate} />
@@ -234,11 +234,13 @@ const App = () => {
                       />
                       {/* Showroom kiosk routes */}
                       <Route path="/showroom_kiosk" component={ShowRoom} />
-                      <Route path="/sh_reason" component={VisitingReasonScreen} />
+                      <Route
+                        path="/sh_reason"
+                        component={VisitingReasonScreen}
+                      />
                       <Route path="/sh_entry" component={VisitingClientForm} />
                       <Route path="/sh_complete" component={CheckInComplete} />
                       <Route path="/sh_soon" component={ComingSoon} />
-
                       {/* activity */}
                       <Route path="/todo" component={Todo} />
                       <Route path="/feedback" component={Feedback} />
@@ -246,41 +248,80 @@ const App = () => {
                         path="/feedback_success"
                         component={FeedbackSuccess}
                       />
-
                       <Route path="/message/:id" component={UserMessages} />
-                      <Route path="/campaign-create" component={CampaignCreate} />
+                      <Route
+                        path="/campaign-create"
+                        component={CampaignCreate}
+                      />
                       <Route path="/campaigns" component={Campaigns} />
                       <Route path="/campaign/:id" component={CampaignUpdate} />
-
                       {/* users */}
                       <Route path="/news/" exact component={NewsContentPage} />
                       <Route path="/news/:link" component={NewsContentPage} />
-
                       {/*Nkwashi account management*/}
-                      <Route path="/account" component={NkwashiAccountManagement} />
-
-                      <Route path="/user/:id/edit" exact component={UserEdit} /> {/* Still admin route */}
-                      <Route path="/user/:id/logs" exact component={UserLogs} /> {/* Still admin route */}
+                      <Route
+                        path="/account"
+                        component={NkwashiAccountManagement}
+                      />
+                      <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
+                      {/* Still admin route */}
+                      <Route
+                        path="/user/:id/logs"
+                        exact
+                        component={UserLogs}
+                      />{' '}
+                      {/* Still admin route */}
                       <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
-                      <Route path="/timesheet" exact component={CustodianLogs} />
-                      <Route path="/timesheet/:id" exact component={EmployeeLogs} />
-
-                      <Route path="/client_request_from" exact component={ClientRequestForm} />
-
+                      <Route
+                        path="/timesheet"
+                        exact
+                        component={CustodianLogs}
+                      />
+                      <Route
+                        path="/timesheet/:id"
+                        exact
+                        component={EmployeeLogs}
+                      />
+                      <Route
+                        path="/client_request_from"
+                        exact
+                        component={ClientRequestForm}
+                      />
                       <Route path="/nkwashi_news" exact component={NewsPage} />
-                      <Route path="/nkwashi_news/:slug" exact component={Posts} />
-                      <Route path="/discussions" exact component={Discussions} />
-                      <Route path="/discussions/:id" exact component={DiscussonPage} />
+                      <Route
+                        path="/nkwashi_news/:slug"
+                        exact
+                        component={Posts}
+                      />
+                      <Route
+                        path="/discussions"
+                        exact
+                        component={Discussions}
+                      />
+                      <Route
+                        path="/discussions/:id"
+                        exact
+                        component={DiscussonPage}
+                      />
                       <Route path="/business" exact component={Businesses} />
-                      <Route path="/business/:id" exact component={BusinessProfile} />
-
-
+                      <Route
+                        path="/business/:id"
+                        exact
+                        component={BusinessProfile}
+                      />
                       <AdminRoutes>
                         <Switch>
-                          <Route path="/client_request_from" exact component={ClientRequestForm} />
+                          <Route
+                            path="/client_request_from"
+                            exact
+                            component={ClientRequestForm}
+                          />
                           <Route path="/users" component={UsersList} />
                           <Route path="/messages" component={AllMessages} />
-                          <Route path="/showroom_logs" component={ShowroomLogs} />
+                          <Route
+                            path="/showroom_logs"
+                            component={ShowroomLogs}
+                          />
                           <Route path="/notes" component={AllNotes} />
                           <Route path="/feedbacks" component={FeedbackPage} />
                           <Route path="/event_logs" component={EventLogs} />
@@ -291,14 +332,13 @@ const App = () => {
                             exact
                             component={PendingUsers}
                           />
-
                         </Switch>
                       </AdminRoutes>
-
-
                       <Route
                         path="*"
-                        render={() => <ErrorPage title="Sorry Page not Found" />}
+                        render={() => (
+                          <ErrorPage title="Sorry Page not Found" />
+                        )}
                       />
                     </Switch>
                   </LoggedInOnly>
