@@ -11,7 +11,7 @@ module Types::Queries::Label
     end
 
     # Get label for the user, using the user id
-    field :user_label, [Types::LabelType], null: true do
+    field :user_labels, [Types::LabelType], null: true do
       description 'Get label by its owner id'
       argument :user_id, GraphQL::Types::ID, required: true
     end
@@ -23,7 +23,7 @@ module Types::Queries::Label
     context[:current_user].community.labels
   end
 
-  def user_label(user_id:)
+  def user_labels(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     context[:current_user].find_a_user(user_id).labels
