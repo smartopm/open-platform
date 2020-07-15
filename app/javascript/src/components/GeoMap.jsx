@@ -27,7 +27,24 @@ function onEachFeature(feature, layer) {
     }
 }
 
+// there are other ways of doing this, like using a filter if you want more things(returns an array)
+/**
+ * 
+ * @param {object} jsonData 
+ * @param {string} value 
+ * @description return feature in geodata that matches property name 
+ * @example getPropertyByName(data, 'Basic')
+ * @returns {object}
+ */
+function getPropertyByName(jsonData, value) {
+  // just get features from the json == array
+  const data = jsonData.features
+  const property = data.find(feature => feature.properties.name === value)
+  return property
+}
+
 export default function GeoMap({ GeoJSONData }) { 
+  console.log(getPropertyByName(GeoJSONData, 'Basic-1001'))
   return (
     <div>
       <style
