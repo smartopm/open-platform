@@ -164,6 +164,7 @@ export default function Homepage({ authState }) {
         anchorEl={anchorEl}
         keepMounted
         open={open}
+        onClose={()=>setAnchorEl(null)}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',
@@ -183,15 +184,16 @@ export default function Homepage({ authState }) {
             }`,
             '_blank'
           )
+          location.reload()
         }}>Client Request Form</MenuItem>
         <MenuItem onClick={()=>{
            window.open('https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform?usp=sf_link',
             '_blank'
           )
-          
+          location.reload()
         }}>Building Permit Application Form</MenuItem> 
       </Menu>, 
-      anchorEl: anchorEl
+     
     },
     {
       card_id: 12,
@@ -326,7 +328,6 @@ export default function Homepage({ authState }) {
                   id={card.id}
                   handleClick={card.handleClick}
                   menu={card.menu}
-                  anchorEl={card.anchorEl}
                 >
                   {card.children}
                 </Card>

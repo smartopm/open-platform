@@ -1,8 +1,8 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
-import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 
 export default function Card({
   title,
@@ -13,7 +13,6 @@ export default function Card({
   clientNumber,
   children,
   handleClick,
-  anchorEl,
   id,
   menu,
   access,
@@ -23,41 +22,41 @@ export default function Card({
   if (!access.includes(authState.user.userType.toLowerCase())) {
     return null
   }
-  
+
   return (
-      <div
+    <div
       className={`${css(styles.cardSize)} card align-self-center text-center`}
       onClick={handleClick}
-      >
-        <span>{children}</span>
-        <Link
-          to={{
-            pathname: path,
-            state: {
-              clientName: clientName,
-              clientNumber: clientNumber,
-              from: from
-            }
-          }}
-          
-          id={id}
-          className={`card-link`}
-        >
-          {anchorEl ? menu : null}
-           
-          <div className="card-body">
-            <h5 className="card-title">
-              <span style={{color: theme.primaryColor}} >
-                {icon}
-              </span>
-            </h5>
-            <p className={css(styles.CardtextIcon)}>{title}</p>
-           
-          </div>
-        </Link>
+    >
+      <span>{children}</span>
+      <Link
+        to={{
+          pathname: path,
+          state: {
+            clientName: clientName,
+            clientNumber: clientNumber,
+            from: from
+          }
+        }}
 
-        
-      </div>
+        id={id}
+        className={`card-link`}
+      >
+        {menu}
+
+        <div className="card-body">
+          <h5 className="card-title">
+            <span style={{ color: theme.primaryColor }} >
+              {icon}
+            </span>
+          </h5>
+          <p className={css(styles.CardtextIcon)}>{title}</p>
+
+        </div>
+      </Link>
+
+
+    </div>
   )
 }
 
