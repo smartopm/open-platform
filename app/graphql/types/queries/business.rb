@@ -38,13 +38,12 @@ module Types::Queries::Business
   def business(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    business = context[:site_community].businesses.find(id)
-    business
+    context[:site_community].businesses.find(id)
   end
 
   def user_business(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].businesses.find_by(user_id: user_id)
+    context[:site_community].users.find(user_id)&.businesses&.all
   end
 end

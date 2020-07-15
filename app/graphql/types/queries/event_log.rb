@@ -34,7 +34,7 @@ module Types::Queries::EventLog
 
   def query_all_logs(name, subject, ref_id, ref_type, limit, offset)
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
-    query_logs_with_name(query, name, limit, offset) if name.present?
+    return query_logs_with_name(query, name, limit, offset) if name.present?
 
     context[:site_community].event_logs.where(query).limit(limit).offset(offset)
   end

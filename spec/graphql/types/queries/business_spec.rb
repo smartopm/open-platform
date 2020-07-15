@@ -58,6 +58,7 @@ RSpec.describe Types::Queries::Business do
     it 'should retrieve list of businesses' do
       result = DoubleGdpSchema.execute(businesses_query, context: {
                                          current_user: current_user,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'businesses').length).to eql 2
       expect(result.dig('data', 'businesses', 0, 'user', 'id')).to eql current_user.id
@@ -67,6 +68,7 @@ RSpec.describe Types::Queries::Business do
     it 'should retrieve businesses for the current user' do
       result = DoubleGdpSchema.execute(business_query, context: {
                                          current_user: current_user,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'business', 'name')).to include 'artist'
       expect(result.dig('data', 'business', 'userId')).to eql current_user.id
@@ -75,13 +77,16 @@ RSpec.describe Types::Queries::Business do
     it 'should retrieve businesses for the other user' do
       result = DoubleGdpSchema.execute(other_user_business_query, context: {
                                          current_user: current_user,
+                                         site_community: user2.community,
                                        }).as_json
       expect(result.dig('data', 'business', 'name')).to include 'artist'
       expect(result.dig('data', 'business', 'userId')).to eql user2.id
     end
+
     it 'should retrieve businesses for the other user' do
       result = DoubleGdpSchema.execute(user_business_query, context: {
                                          current_user: current_user,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'userBusiness', 0, 'name')).to include 'artist'
       expect(result.dig('data', 'userBusiness', 0, 'userId')).to eql current_user.id

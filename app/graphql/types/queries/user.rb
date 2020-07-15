@@ -43,9 +43,11 @@ module Types::Queries::User
   end
 
   def user(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    authorized = context[:current_user].present? &&
+                 User.allowed_users(context[:current_user]).pluck(:id).include?(id)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
 
-    User.allowed_users(context[:current_user]).find(id)
+    find_community_user(id)
   end
 
   def users(offset: 0, limit: 100, query: nil)
@@ -89,5 +91,12 @@ module Types::Queries::User
       community_id: context[:current_user].community_id,
       user_type: 'security_guard',
     ).order(name: :asc).with_attached_avatar
+  end
+
+  def find_community_user(id)
+    user = User.allowed_users(context[:current_user]).find(id)
+    return user if user.present?
+
+    raise GraphQL::ExecutionError, 'User not found'
   end
 end
