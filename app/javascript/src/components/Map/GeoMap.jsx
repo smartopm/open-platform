@@ -37,9 +37,10 @@ function getPropertyByName(jsonData, value) {
 /**
  * 
  * @param {Array} cords 
- * @param {Number} initial 
- * @param {Number} final 
- * @description return new array with changed index positions
+ * @param {Number} initial  index to move from 
+ * @param {Number} final  index to move to
+ * @description return new array with changed index positions 
+ * @tutorial check docs here https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
  * @returns {Array}
  */
 function pindamuraArray(cords, initial, final){
