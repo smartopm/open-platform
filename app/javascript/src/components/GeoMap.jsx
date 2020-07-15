@@ -43,7 +43,24 @@ function getPropertyByName(jsonData, value) {
   return property
 }
 
+/**
+ * 
+ * @param {Array} cords 
+ * @param {Number} initial 
+ * @param {Number} final 
+ * @description return new array with changed index positions
+ * @returns {Array}
+ */
+function pindamuraArray(cords, initial, final){
+    const initialElement = cords[initial];
+    cords.splice(initial, 1);
+    cords.splice(final, 0, initialElement);
+    // check docs here https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    return cords
+}
+
 export default function GeoMap({ GeoJSONData }) { 
+  console.log(pindamuraArray(GeoJSONData.features[0].geometry.coordinates[0][0], 0, 1))
   console.log(getPropertyByName(GeoJSONData, 'Basic-1001'))
   return (
     <div>
