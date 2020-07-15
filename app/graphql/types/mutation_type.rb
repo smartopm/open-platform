@@ -55,5 +55,6 @@ module Types
 
     # labels
     field :label_create, mutation: Mutations::Label::LabelCreate
+    field :user_label_create, mutation: Mutations::Label::UserLabelCreate
   end
 end
