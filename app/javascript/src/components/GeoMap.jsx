@@ -27,7 +27,7 @@ function onEachFeature(feature, layer) {
     }
 }
 
-export default function GeoMap({ GeoJSONData }) {
+export default function GeoMap({ GeoJSONData }) { 
   return (
     <div>
       <style
