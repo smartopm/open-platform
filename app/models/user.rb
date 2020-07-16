@@ -241,8 +241,9 @@ class User < ApplicationRecord
     community.users.find(a_user_id)
   end
 
-  def find_label_users(id)
-    User.includes(:user_labels).where(user_labels: { label_id: id }, community_id: community_id)
+  def find_label_users(ids)
+    query = ids.split(',')
+    User.includes(:user_labels).where(user_labels: { label_id: query }, community_id: community_id)
   end
 
   def id_card_token

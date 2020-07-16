@@ -16,10 +16,10 @@ module Types::Queries::Label
       argument :user_id, GraphQL::Types::ID, required: true
     end
 
-    # Get users with a label_id
+    # Get users with a label_ids
     field :label_users, [Types::UserType], null: true do
-      description 'Get users by the label id'
-      argument :label_id, GraphQL::Types::ID, required: true
+      description 'Get users by the label ids, this should be a comma separated string'
+      argument :labels, String, required: true
     end
   end
 
@@ -35,7 +35,7 @@ module Types::Queries::Label
     context[:current_user].find_a_user(user_id).labels
   end
 
-  def label_users(label_id:)
-    context[:current_user].find_label_users(label_id)
+  def label_users(labels:)
+    context[:current_user].find_label_users(labels)
   end
 end
