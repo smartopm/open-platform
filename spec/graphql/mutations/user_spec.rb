@@ -6,6 +6,7 @@ RSpec.describe Mutations::User do
   describe 'create pending member' do
     let!(:current_user) { create(:user_with_community, user_type: 'security_guard') }
     let!(:user) { create(:user_with_community, user_type: 'client') }
+    let!(:admin_user) { create(:user_with_community, user_type: 'admin') }
 
     let(:query) do
       <<~GQL
@@ -131,7 +132,8 @@ RSpec.describe Mutations::User do
 
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: user,
+                                                current_user: admin_user,
+                                                site_community: admin_user.community,
                                               }).as_json
       expect(result.dig('errors')).to be_nil
       # expect(result.dig('data', 'userCreate', 'user', 'requestReason')).to eql 'Resident'

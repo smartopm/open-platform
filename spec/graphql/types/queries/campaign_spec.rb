@@ -31,14 +31,20 @@ RSpec.describe Types::QueryType do
     end
 
     it 'should retrieve list of campaigns' do
-      result = DoubleGdpSchema.execute(campaigns_query, context: { current_user: admin }).as_json
+      result = DoubleGdpSchema.execute(campaigns_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
       expect(result.dig('data', 'campaigns').length).to eql 1
       expect(result.dig('data', 'campaigns', 0, 'communityId')).to eql current_user.community_id
       expect(result.dig('data', 'campaigns', 0, 'message')).to eql 'Visiting'
     end
 
     it 'should retrieve the requested campaing via id' do
-      result = DoubleGdpSchema.execute(campaign_query, context: { current_user: admin }).as_json
+      result = DoubleGdpSchema.execute(campaign_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
       expect(result.dig('data', 'campaign', 'communityId')).to eql current_user.community_id
       expect(result.dig('data', 'campaign', 'name')).to include 'Campaign'
     end
