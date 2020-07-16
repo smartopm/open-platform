@@ -64,7 +64,7 @@ class User < ApplicationRecord
   validate :phone_number_valid?
   before_save :ensure_default_state
 
-  devise :omniauthable, omniauth_providers: [:google_oauth2]
+  devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
   PHONE_TOKEN_LEN = 6
   PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
@@ -295,7 +295,7 @@ class User < ApplicationRecord
   # TODO: Make this happen from the DB vs hardcoding
   def assign_default_community(site_community)
     return if self[:community_id].present? && self[:user_type].present?
-    return unless self[:provider] == 'google_oauth2'
+    return unless %w[google_oauth2 facebook].include?(self[:provider])
 
     if site_community.domain_admin?(domain)
       update(community_id: site_community.id, user_type: 'admin')

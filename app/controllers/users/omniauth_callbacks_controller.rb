@@ -6,16 +6,28 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     redirect_to user_google_oauth2_omniauth_authorize_path
   end
 
+  def fblogin
+    redirect_to user_facebook_omniauth_authorize_path
+  end
+
   def google_oauth2
     @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
     if @user.persisted?
-      EventLog.create(
-        acting_user: @user, community: @user.community,
-        subject: 'user_login', ref_id: nil, ref_type: nil
-      )
+      @user.generate_events('user_login', @user)
       redirect_to "/google/#{@user.auth_token}"
     else
       session['devise.google_data'] = request.env['omniauth.auth']
+    end
+  end
+
+  # facebook callback
+  def facebook
+    @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
+    if @user.persisted?
+      @user.generate_events('user_login', @user)
+      redirect_to "/facebook/#{@user.auth_token}"
+    else
+      session['devise.facebook_data'] = request.env['omniauth.auth']
     end
   end
 end
