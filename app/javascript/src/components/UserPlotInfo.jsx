@@ -16,18 +16,19 @@ export function UserPlotInfo(props) {
       land_parcels = [...land_parcels, ...account.landParcels]
     })
   /**
- *
- * @param {object} jsonData
- * @param {string} value
- * @description return feature in geodata that matches property name
- * @example getPropertyByName(data, 'Basic')
- * @returns {object}
- */
-function getPropertyByName(jsonData, value) {
-  const data = jsonData.features
-  const property = data.filter(feature => value.includes(feature.properties.name))
-  return property
-}
+   * @param {object} jsonData
+   * @param {string} value
+   * @description return feature in geodata that matches property name
+   * @example getPropertyByName(data, 'Basic')
+   * @returns {object}
+   */
+  function getPropertyByName(jsonData, value) {
+    const data = jsonData.features
+    const property = data.find(feature =>
+      value.includes(feature.properties.name)
+    )
+    return property
+  }
   function plotInformation() {
     return (
       <div className="container">
@@ -45,7 +46,6 @@ function getPropertyByName(jsonData, value) {
             <ol data-testid="parcel_list">
               {land_parcels.map((plot, index) => (
                 <li key={index}>{plot.parcelNumber}</li>
-                plotNumber=[plot.parcelNumber]
               ))}
             </ol>
             <p>
@@ -63,11 +63,10 @@ function getPropertyByName(jsonData, value) {
               </span>
             </p>
           </Grid>
-          <Grid item md={12}>
-{ console.log(plotNumber)}
-            <GeoMap GeoJSONData={GeoData} />
+          <Grid item md={12} xs={12}>
+            {land_parcels.map(plot => (plotNumber = [plot.parcelNumber]))}
+            <GeoMap GeoJSONData={getPropertyByName(GeoData, plotNumber)} />
           </Grid>
-          
         </Grid>
       </div>
     )

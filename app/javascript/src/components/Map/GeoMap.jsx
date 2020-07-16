@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
-import { StyleSheet, css } from 'aphrodite'
-import { Map, GeoJSON, TileLayer, Marker, Popup } from 'react-leaflet'
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import './map.css'
 
 const center = [-15.524234821346493, 28.65281581878662]
-
-
 
 /**
  *
@@ -26,7 +23,7 @@ function InvertArray(cords, initial, final) {
 export default function GeoMap({ GeoJSONData}) {
   const [activePlot, setActivePlot] = useState(null)
   return (
-    <Map center={center} zoom={13}>
+    <Map center={center} zoom={14}>
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
