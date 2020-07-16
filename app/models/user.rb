@@ -241,6 +241,10 @@ class User < ApplicationRecord
     community.users.find(a_user_id)
   end
 
+  def find_label_users(id)
+    User.includes(:user_labels).where(user_labels: { label_id: id }, community_id: community_id)
+  end
+
   def id_card_token
     # May want to do more to secure this in the future with some extra token
     self[:id]
