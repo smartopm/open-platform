@@ -21,7 +21,7 @@ module Types::Queries::Message
   end
 
   def messages(query: '', offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     com_id = context[:current_user].community_id
     iq = Message.users_newest_msgs(query, offset, limit, com_id)
@@ -32,7 +32,7 @@ module Types::Queries::Message
 
   # rubocop:disable Metrics/AbcSize
   def user_messages(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_self(id)
 
     com_id = context[:current_user].community_id
     messages =

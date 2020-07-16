@@ -30,7 +30,7 @@ module Types::Queries::TimeSheet
 
   # rubocop:disable Metrics/MethodLength
   def time_sheet_logs(offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_custodian
 
     com_id = context[:current_user].community_id
     query = ''
@@ -51,8 +51,10 @@ module Types::Queries::TimeSheet
   # but i think you call this method from the custodian screen.
   # this will need to get reworked a bit to make sure only custodian can retreive .
 
-  def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to:, date_from: nil)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+  # rubocop:disable Metrics/AbcSize
+  def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to: nil, date_from: nil)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_custodian ||
+                                                         context[:current_user]&.id.eql?(user_id)
 
     date_from = date_from.blank? ? Time.current.beginning_of_month : DateTime.parse(date_from)
     u = get_allow_user(user_id)
@@ -61,18 +63,23 @@ module Types::Queries::TimeSheet
 
     []
   end
+  # rubocop:enable Metrics/AbcSize
 
   def user_last_shift(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:current_user].find_a_user(user_id).time_sheets.first
+    context[:site_community].users.find(user_id).time_sheets.first
   end
 
+  private
+
   def get_allow_user(user_id)
-    if context[:current_user].id == user_id # means employee / can see own data.
-      context[:current_user]
-    elsif %w[admin custodian].include?(context[:current_user].user_type)
-      context[:current_user].find_a_user(user_id)
-    end
+    return context[:site_community].users.find(user_id) if admin_or_custodian
+
+    context[:current_user]
+  end
+
+  def admin_or_custodian
+    context[:current_user].admin? || context[:current_user].custodian?
   end
 end
