@@ -26,6 +26,7 @@ import { useMutation } from 'react-apollo'
 import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
+import UserLabels from './UserLabels'
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
@@ -71,7 +72,7 @@ export default function UserInformation({
       Plots: 'Plots',
       Payments: 'Payments'
     }
-    if ( location.pathname.includes('/user')) {
+    if (location.pathname.includes('/user')) {
       let [, rootURL, , userPage] = location.pathname.split('/')
       let pageHit = `/${rootURL}/${userPage}/${pages[newValue]}`
       ReactGA.pageview(pageHit)
@@ -130,13 +131,15 @@ export default function UserInformation({
               {DateUtil.isExpired(data.user.expiresAt) ? (
                 <p className={css(styles.badge, styles.statusBadgeBanned)}>
                   Expired
-                  </p>
+                </p>
               ) : (
                   ['admin'].includes(userType) && (
                     <Status label={data.user.state} />
                   )
                 )}
+                <UserLabels />
             </div>
+
             <div className="col-2 ml-auto">
 
               {Boolean(authState.user.userType !== 'security_guard') && (
@@ -286,14 +289,14 @@ export default function UserInformation({
           {['admin'].includes(userType) && (
             <StyledTab label="Notes" value={'Notes'} />
           )}
-             {['admin'].includes(userType) && (
+          {['admin'].includes(userType) && (
             <StyledTab label="Communication" value={'Communication'} />
           )}
           <StyledTab label="Plots" value={'Plots'} />
           <StyledTab label="Payments" value={'Payments'} />
         </StyledTabs>
 
-        <TabPanel value={tabValue}  index={'Contacts'}>
+        <TabPanel value={tabValue} index={'Contacts'}>
           <div className="container">
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="name">
@@ -354,97 +357,97 @@ export default function UserInformation({
         </TabPanel>
         {['admin'].includes(userType) && (
           <>
-          <TabPanel value={tabValue}  index={'Notes'}>
-            <div className="container">
-              <form id="note-form">
-                <div className="form-group">
-                  <label htmlFor="notes">Notes</label>
-                  <br />
-                  <textarea
-                    className="form-control"
-                    placeholder="Add your notes here"
-                    id="notes"
-                    rows="4"
-                    ref={register({ required: true })}
-                    name="note"
-                  />
-                </div>
-                <button
-                  type="button"
-                  style={{ float: 'right' }}
-                  className="btn btn-outline-primary "
-                  onClick={handleSubmit(onSaveNote)}
-                  disabled={mutationLoading}
-                >
-                  {/* Save */}
-                  {mutationLoading ? 'Saving ...' : 'Save'}
-                </button>
-              </form>
-              <br />
-              <br />
-              {isLoading ? (
-                <Loading />
-              ) : data.user.notes ? (
-                data.user.notes.map(note => (
-                  
-                  <Fragment key={note.id}>
-                    <div className={css(styles.commentBox)}>
-                      <p className="comment">{note.body}</p>
-                      <i>created at: {DateUtil.formatDate(note.createdAt)}</i>
-                    </div>
-
-                    {note.completed ? (
-                      <span
-                        className={css(styles.actionIcon)}
-                        onClick={() => handleOnComplete(note.id, note.completed)}
-                      >
-                        <Tooltip title="Mark this note as incomplete">
-                          <CheckBoxIcon />
-                        </Tooltip>
-                      </span>
-                    ) : !note.flagged ? (
-                      <span />
-                    ) : (
-                          <span
-                            className={css(styles.actionIcon)}
-                            onClick={() => handleOnComplete(note.id, note.completed)}
-                          >
-                            <Tooltip title="Mark this note complete">
-                              <CheckBoxOutlineBlankIcon />
-                            </Tooltip>
-                          </span>
-                        )}
-                    {!note.flagged && (
-                      <span
-                        className={css(styles.actionIcon)}
-                        onClick={() => handleFlagNote(note.id)}
-                      >
-                        <Tooltip title="Flag this note as a todo ">
-                          <AddBoxIcon />
-                        </Tooltip>
-                      </span>
-                    )}
+            <TabPanel value={tabValue} index={'Notes'}>
+              <div className="container">
+                <form id="note-form">
+                  <div className="form-group">
+                    <label htmlFor="notes">Notes</label>
                     <br />
-                  </Fragment>
-                ))
-              ) : (
-                    'No Notes Yet'
-                  )}
-            </div>
-          </TabPanel>
+                    <textarea
+                      className="form-control"
+                      placeholder="Add your notes here"
+                      id="notes"
+                      rows="4"
+                      ref={register({ required: true })}
+                      name="note"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    style={{ float: 'right' }}
+                    className="btn btn-outline-primary "
+                    onClick={handleSubmit(onSaveNote)}
+                    disabled={mutationLoading}
+                  >
+                    {/* Save */}
+                    {mutationLoading ? 'Saving ...' : 'Save'}
+                  </button>
+                </form>
+                <br />
+                <br />
+                {isLoading ? (
+                  <Loading />
+                ) : data.user.notes ? (
+                  data.user.notes.map(note => (
 
-          <TabPanel value={tabValue}  index={'Communication'}>
+                    <Fragment key={note.id}>
+                      <div className={css(styles.commentBox)}>
+                        <p className="comment">{note.body}</p>
+                        <i>created at: {DateUtil.formatDate(note.createdAt)}</i>
+                      </div>
 
-            <UserCommunication user={authState.user} phoneNumber={data.user.phoneNumber}/>
+                      {note.completed ? (
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() => handleOnComplete(note.id, note.completed)}
+                        >
+                          <Tooltip title="Mark this note as incomplete">
+                            <CheckBoxIcon />
+                          </Tooltip>
+                        </span>
+                      ) : !note.flagged ? (
+                        <span />
+                      ) : (
+                            <span
+                              className={css(styles.actionIcon)}
+                              onClick={() => handleOnComplete(note.id, note.completed)}
+                            >
+                              <Tooltip title="Mark this note complete">
+                                <CheckBoxOutlineBlankIcon />
+                              </Tooltip>
+                            </span>
+                          )}
+                      {!note.flagged && (
+                        <span
+                          className={css(styles.actionIcon)}
+                          onClick={() => handleFlagNote(note.id)}
+                        >
+                          <Tooltip title="Flag this note as a todo ">
+                            <AddBoxIcon />
+                          </Tooltip>
+                        </span>
+                      )}
+                      <br />
+                    </Fragment>
+                  ))
+                ) : (
+                      'No Notes Yet'
+                    )}
+              </div>
+            </TabPanel>
 
-          </TabPanel>
+            <TabPanel value={tabValue} index={'Communication'}>
+
+              <UserCommunication user={authState.user} phoneNumber={data.user.phoneNumber} />
+
+            </TabPanel>
 
           </>
         )}
-        <TabPanel value={tabValue}  index={'Plots'}>
-          <UserPlotInfo accounts={data.user.accounts}  />
+        <TabPanel value={tabValue} index={'Plots'}>
+          <UserPlotInfo accounts={data.user.accounts} />
         </TabPanel>
-        <TabPanel value={tabValue}  index={'Payments'}>
+        <TabPanel value={tabValue} index={'Payments'}>
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
 
@@ -454,12 +457,12 @@ export default function UserInformation({
             authState.user.userType === 'security_guard' ? (
               <Button id="log-entry" className={`${css(styles.logButton)}`} onClick={onLogEntry}>
                 Log This Entry
-                </Button>) : null}
+              </Button>) : null}
 
           {authState.user.userType === 'security_guard' ? (
             <Button id="call_poniso" startIcon={<PhoneIcon />} className={`${css(styles.callButton)}`} href={`tel:${ponisoNumber}`}>
               Call Poniso
-              </Button>) : null}
+            </Button>) : null}
 
         </div>
       </Fragment>
