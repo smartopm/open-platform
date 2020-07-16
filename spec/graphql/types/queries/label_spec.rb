@@ -48,6 +48,17 @@ RSpec.describe Types::Queries::Label do
         })
     end
 
+    let(:label_users) do
+      %(query {
+        labelUsers(labelId: "#{first_label.id}") {
+          id
+          labels {
+            id
+          }
+        }
+        })
+    end
+
     it 'should retrieve list of labels' do
       result = DoubleGdpSchema.execute(labels_query, context: {
                                          current_user: current_user,
@@ -69,6 +80,15 @@ RSpec.describe Types::Queries::Label do
                                          current_user: current_user,
                                        }).as_json
       expect(result.dig('data', 'userLabels', 0, 'id')).to eql first_label.id
+    end
+
+    it 'should retrieve all users who have this label' do
+      result = DoubleGdpSchema.execute(label_users, context: {
+                                         current_user: current_user,
+                                       }).as_json
+      expect(result.dig('data', 'labelUsers').length).to eql 1
+      expect(result.dig('data', 'labelUsers', 0, 'id')).to eql current_user.id
+      expect(result.dig('data', 'labelUsers', 0, 'labels', 0, 'id')).to eql first_label.id
     end
   end
 end
