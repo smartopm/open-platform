@@ -109,5 +109,9 @@ module Types
       campaign = context[:site_community].campaigns.find_by(id: id)
       campaign
     end
+
+    def admin_or_self(id)
+      context[:current_user]&.admin? || context[:current_user]&.id.eql?(id)
+    end
   end
 end
