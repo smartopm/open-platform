@@ -74,7 +74,7 @@ export default function ConfirmCodeScreen({ match }) {
           type: "update",
           token: data.loginPhoneComplete.authToken
         });
-        setIsLoading(true);
+        setIsLoading(false);
       })
       .catch(error => {
         setError(error.message);

@@ -258,7 +258,6 @@ export const loginPhone = gql`
   mutation loginPhoneStart($phoneNumber: String!) {
     loginPhoneStart(phoneNumber: $phoneNumber) {
       user {
-        phoneNumber
         id
       }
     }

@@ -28,14 +28,6 @@ const QUERY = gql`
       expiresAt
       imageUrl
       avatarUrl
-     accounts{
-       id
-       updatedAt
-       landParcels{
-         id
-         parcelNumber
-       }
-     }
       community {
         id
         name
