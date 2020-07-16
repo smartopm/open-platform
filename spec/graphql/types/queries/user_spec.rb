@@ -195,22 +195,29 @@ RSpec.describe Types::Queries::User do
     end
 
     it 'hide priviledged information' do
-      result = DoubleGdpSchema.execute(priviledged_query, context:
-                                       { current_user: another_user }).as_json
+      result = DoubleGdpSchema.execute(priviledged_query, context: {
+                                         current_user: another_user,
+                                         site_community: another_user.community,
+                                       }).as_json
       current_user.notes.create(author_id: admin.id, body: 'test')
       expect(result.dig('errors')).to_not be_nil
-      expect(result.dig('errors')[0]['message']).to eql 'User not found'
+      expect(result.dig('errors')[0]['message']).to eql 'Unauthorized'
       expect(result.dig('data', 'user', 'id')).to be_nil
       expect(result.dig('data', 'user', 'phoneNumber')).to be_nil
       expect(result.dig('data', 'user', 'notes')).to be_nil
 
-      result = DoubleGdpSchema.execute(priviledged_query, context: { current_user: admin }).as_json
+      result = DoubleGdpSchema.execute(priviledged_query, context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
       expect(result.dig('data', 'user', 'phoneNumber')).to eql current_user.phone_number
-      expect(result.dig('data', 'user', 'notes').length).to eql 1
+      expect(result.dig('data', 'user', 'notes')).to be_nil
 
       # Visible to the owner
-      result = DoubleGdpSchema.execute(priviledged_query, context:
-                                       { current_user: current_user }).as_json
+      result = DoubleGdpSchema.execute(priviledged_query, context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
       expect(result.dig('data', 'user', 'phoneNumber')).to eql current_user.phone_number
     end
 
