@@ -27,7 +27,7 @@ module Types
     field :stage, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :owner_id, ID, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
-    field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin client], user: :id }
+    field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
     field :accounts, [Types::AccountType], null: true, visible: { roles: %i[admin], user: :id }
     field :messages, [Types::MessageType], null: true, visible: { roles: %i[admin], user: :id }
     field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
