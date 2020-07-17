@@ -17,7 +17,7 @@ export const UserFragment = {
       accounts {
         id
         updatedAt
-        landParcels{
+        landParcels {
           id
           parcelNumber
         }
@@ -30,7 +30,7 @@ export const UserFragment = {
         flagged
         user {
           name
-        },
+        }
         completed
         createdAt
       }
