@@ -50,7 +50,7 @@ RSpec.describe Types::Queries::Label do
 
     let(:label_users) do
       %(query {
-        labelUsers(labelId: "#{first_label.id}") {
+        labelUsers(labels: "#{first_label.id}, #{second_label.id}") {
           id
           labels {
             id
