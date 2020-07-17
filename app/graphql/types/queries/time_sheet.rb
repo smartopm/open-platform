@@ -66,7 +66,7 @@ module Types::Queries::TimeSheet
   # rubocop:enable Metrics/AbcSize
 
   def user_last_shift(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_custodian
 
     context[:site_community].users.find(user_id).time_sheets.first
   end
