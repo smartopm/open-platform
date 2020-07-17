@@ -21,7 +21,8 @@ export default function ShiftButtons({ userId }) {
       userId,
       dateTo: lastDayOfTheMonth.toUTCString()
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all'
   })
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
@@ -68,7 +69,9 @@ export default function ShiftButtons({ userId }) {
       .catch(err => setMessage(err.message))
   }
   if (loading) return <Spinner />
-  if (error) return setMessage(error.message)
+  if (error && !error.message.includes('permission')) {
+    return error.message
+  }
 
   return (
     <Grid
