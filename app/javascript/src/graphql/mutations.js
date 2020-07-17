@@ -499,3 +499,16 @@ export const DiscussionMutation = gql`
       }
     }
 `
+
+export const LabelCreate = gql`
+
+    mutation labelCreate($shortDesc: String!){
+       labelCreate(shortDesc: $shortDesc){
+         label{
+           id
+         }
+       }
+
+    }
+
+`
