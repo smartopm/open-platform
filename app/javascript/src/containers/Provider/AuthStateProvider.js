@@ -28,14 +28,6 @@ const QUERY = gql`
       expiresAt
       imageUrl
       avatarUrl
-     accounts{
-       id
-       updatedAt
-       landParcels{
-         id
-         parcelNumber
-       }
-     }
       community {
         id
         name
@@ -78,7 +70,11 @@ export const Context = AuthStateContext
 
 // Returns a promise with currentUser query
 function getCurrentUser(client) {
-  return client.query({ query: QUERY, fetchPolicy: 'no-cache' })
+  return client.query({
+    query: QUERY,
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  })
 }
 
 // Provider is the default export
@@ -113,7 +109,7 @@ export function AuthStateProvider({ children, token, setToken }) {
       setState({ ...state, user: null, loaded: true, loggedIn: false })
     }
     // Get query if token changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   if (state.error && token) {
