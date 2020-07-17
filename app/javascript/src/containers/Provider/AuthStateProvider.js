@@ -70,7 +70,11 @@ export const Context = AuthStateContext
 
 // Returns a promise with currentUser query
 function getCurrentUser(client) {
-  return client.query({ query: QUERY, fetchPolicy: 'no-cache' })
+  return client.query({
+    query: QUERY,
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  })
 }
 
 // Provider is the default export

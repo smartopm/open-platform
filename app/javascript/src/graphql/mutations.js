@@ -370,14 +370,6 @@ export const MessageCreate = gql`
       message {
         id
         message
-        sender {
-          id
-          name
-        }
-        user {
-          id
-          name
-        }
       }
     }
   }

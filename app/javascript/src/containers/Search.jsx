@@ -12,7 +12,6 @@ import { Context } from './Provider/AuthStateProvider.js'
 import CenteredContent from '../components/CenteredContent.jsx'
 import { UserSearchQuery } from '../graphql/queries.js'
 
-
 export function NewRequestButton() {
   return (
     <CenteredContent>
@@ -86,7 +85,10 @@ export default function SearchContainer({ location }) {
     const { value } = e.target
     setName(value || '')
     if (value && value.length > 0) {
-      loadGQL({ variables: { query: value, limit, offset } })
+      loadGQL({
+        variables: { query: value, limit, offset },
+        errorPolicy: 'all'
+      })
     }
   }
 
@@ -106,14 +108,18 @@ export default function SearchContainer({ location }) {
         })
       }
     })
-    // Allow next search to go through all records 
+    // Allow next search to go through all records
     setOffset(0)
   }
 
-  if (!['security_guard', 'admin', 'custodian'].includes(authState.user.userType.toLowerCase())) {
-    return <Redirect to='/' />
+  if (
+    !['security_guard', 'admin', 'custodian'].includes(
+      authState.user.userType.toLowerCase()
+    )
+  ) {
+    return <Redirect to="/" />
   }
-  if (error) {
+  if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message} />
   }
 
@@ -129,7 +135,7 @@ export default function SearchContainer({ location }) {
           autoFocus
         />
         <Link
-          to={location.state && location.state.from || '/'}
+          to={(location.state && location.state.from) || '/'}
           className={css(styles.cancelBtn)}
         >
           <i className="material-icons">arrow_back</i>
