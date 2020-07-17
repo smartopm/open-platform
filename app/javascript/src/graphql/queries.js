@@ -425,14 +425,21 @@ query businessById($id: ID!){
   }
 }
 `
-export const userLabelsQuery= gql`
+export const UserLabelsQuery= gql`
   query userLabelsbyId($userId: ID!){
-
     userLabels(userId: $userId) {
       id
       shortDesc
     }
-
   }
+`
+
+export const LabelsQuery = gql`
+{
+  labels{
+    id
+    shortDesc
+  }
+}
 
 `
