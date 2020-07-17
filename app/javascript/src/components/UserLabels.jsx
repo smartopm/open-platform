@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import useDebounce  from '../utils/useDebounce' 
 import {
     FormControl,
     InputLabel,
@@ -12,6 +13,18 @@ import {
 
 export default function UserLabels({ labels }) {
     const [showAddTextBox, setshowAddTextBox] = useState(false)
+    const [label, setLabel] = useState('')
+    const newUserLabel = useDebounce(label, 500); 
+
+    useEffect(
+        () => {
+            setLabel(newUserLabel)
+        },
+        [newUserLabel]
+      );
+
+      console.log(label);
+
     return (
         <div className="container">
             <div className=" row d-flex justifiy-content-around align-items-center">
@@ -30,6 +43,7 @@ export default function UserLabels({ labels }) {
                         <InputLabel id="demo-mutiple-chip-label">Add new label</InputLabel>
                         <Input
                             variant="outlined"
+                            onChange={event => setLabel(event.target.value)}
                             startAdornment={
                                 <InputAdornment>
                                     <Chip label="Admin" size="medium" />
