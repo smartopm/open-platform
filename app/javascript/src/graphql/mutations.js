@@ -162,11 +162,10 @@ export const AddActivityLog = gql`
       note: $note
     ) {
       user {
-        ...UserFields
+        id
       }
     }
   }
-  ${UserFragment.publicFields}
 `
 
 export const SendOneTimePasscode = gql`
@@ -476,25 +475,29 @@ export const CampaignUpdate = gql`
 `
 
 export const CommentMutation = gql`
-  mutation commentCreate($discussionId: ID!, $content: String!){
-  commentCreate(discussionId: $discussionId, content: $content){
-    comment {
-      content
+  mutation commentCreate($discussionId: ID!, $content: String!) {
+    commentCreate(discussionId: $discussionId, content: $content) {
+      comment {
+        content
+      }
     }
   }
-}
 `
 
 export const DiscussionMutation = gql`
-    mutation discussionCreate(
-      $postId: String
-      $title: String!
-      $description: String
+  mutation discussionCreate(
+    $postId: String
+    $title: String!
+    $description: String
+  ) {
+    discussionCreate(
+      postId: $postId
+      title: $title
+      description: $description
     ) {
-      discussionCreate(postId: $postId, title: $title, description: $description) {
-        discussion {
-          id
-        }
+      discussion {
+        id
       }
     }
+  }
 `
