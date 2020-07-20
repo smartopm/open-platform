@@ -3,6 +3,7 @@
 # Queries module for breaking out queries
 module Types::Queries::Message
   extend ActiveSupport::Concern
+  VALID_FILTERS = %w[campaign non_campaign].freeze
 
   included do
     # Get messages
@@ -11,6 +12,7 @@ module Types::Queries::Message
       argument :query, String, required: false
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :filter, String, required: false
     end
 
     # Get messages for one user
@@ -20,17 +22,20 @@ module Types::Queries::Message
     end
   end
 
-  def messages(query: '', offset: 0, limit: 100)
+  # rubocop:disable Metrics/AbcSize
+  def messages(query: '', offset: 0, limit: 100, filter: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
+    raise GraphQL::ExecutionError, 'Invalid Argument Value' if filter.present? &&
+                                                               VALID_FILTERS.exclude?(filter)
+
     com_id = context[:current_user].community_id
-    iq = Message.users_newest_msgs(query, offset, limit, com_id)
+    iq = Message.users_newest_msgs(query, offset, limit, com_id, filter)
     Message.joins(:user, :sender).eager_load(
       user: { notes: {}, avatar_attachment: {}, accounts: { land_parcel_accounts: :land_parcel } },
     ).unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
   end
 
-  # rubocop:disable Metrics/AbcSize
   def user_messages(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_self(id)
 

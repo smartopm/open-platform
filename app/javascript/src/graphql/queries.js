@@ -205,8 +205,8 @@ export const ShowroomEntriesQuery = gql`
 `
 
 export const MessagesQuery = gql`
-  query messages($searchTerm: String, $limit: Int, $offset: Int) {
-    messages(query: $searchTerm, limit: $limit, offset: $offset) {
+  query messages($searchTerm: String, $limit: Int, $offset: Int, $filter: String) {
+    messages(query: $searchTerm, limit: $limit, offset: $offset, filter: $filter) {
       id
       message
       category
