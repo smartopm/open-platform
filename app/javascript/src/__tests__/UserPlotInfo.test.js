@@ -25,7 +25,7 @@ describe('User Plot Info Page', () => {
       landParcels: [
         {
           id: '6f1f-4200-8jfa',
-          parcelNumber: 'Basic-2'
+          parcelNumber: 'Basic-1'
         }
       ]
     }
@@ -52,7 +52,7 @@ describe('User Plot Info Page', () => {
         <UserPlotInfo accounts={accounts} />
       </BrowserRouter>
     )
-    expect(getByTestId('parcel_list').textContent).toContain('Standard456')
+    expect(getByTestId('parcel_list').textContent).toContain('Basic-1')
   })
 
   it('should show no plot when plots are empty', () => {

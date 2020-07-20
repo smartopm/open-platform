@@ -30,7 +30,8 @@ function copyProps(src, target) {
 global.window = window
 global.document = window.document
 global.navigator = {
-  userAgent: 'node.js'
+  userAgent: 'node.js',
+  platform: 'Win32'
 }
 global.requestAnimationFrame = function(callback) {
   return setTimeout(callback, 0)
