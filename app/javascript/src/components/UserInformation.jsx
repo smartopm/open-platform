@@ -27,6 +27,8 @@ import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
 import UserLabels from './UserLabels'
+
+
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
@@ -137,7 +139,7 @@ export default function UserInformation({
                     <Status label={data.user.state} />
                   )
                 )}
-                <UserLabels />
+                <UserLabels userId={data.user.id} />
             </div>
 
             <div className="col-2 ml-auto">

@@ -504,7 +504,7 @@ export const LabelCreate = gql`
 
     mutation labelCreate($shortDesc: String!){
        labelCreate(shortDesc: $shortDesc){
-         label{
+         label {
            id
          }
        }
@@ -512,3 +512,17 @@ export const LabelCreate = gql`
     }
 
 `
+
+// UserLabelCreate
+export const UserLabelCreate = gql`
+    mutation userLabelCreate($userId: ID!, $labelId: ID!){
+       userLabelCreate(userId: $userId, labelId: $labelId){
+         label {
+           labelId
+         }
+       }
+
+    }
+
+`
+
