@@ -521,8 +521,18 @@ export const UserLabelCreate = gql`
            labelId
          }
        }
-
     }
+
+`
+
+export const UserLabelUpdate = gql`
+  mutation userLabelUpdate($userId: ID!, $labelId: ID!){
+    userLabelUpdate(userId: $userId, labelId: $labelId){
+      label {
+        labelId
+      }
+    }
+  }
 
 `
 

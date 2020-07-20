@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
-import DoneIcon from '@material-ui/icons/Done';
 import { useQuery, useMutation } from 'react-apollo'
 import { UserLabelsQuery, LabelsQuery } from '../graphql/queries'
-import { LabelCreate, UserLabelCreate } from '../graphql/mutations'
+import { LabelCreate, UserLabelCreate,UserLabelUpdate } from '../graphql/mutations'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import useDebounce from '../utils/useDebounce'
 import { TextField, IconButton, Chip } from '@material-ui/core'
@@ -12,18 +11,20 @@ import { TextField, IconButton, Chip } from '@material-ui/core'
 export default function UserLabels({ userId }) {
     const [showAddTextBox, setshowAddTextBox] = useState(false)
     const [label, setLabel] = useState('')
+    const [selectedLabel, setSelectedLabel] = useState('')
     const newUserLabel = useDebounce(label, 500)
     const [labelCreate] = useMutation(LabelCreate)
     const [userLabelCreate] = useMutation(UserLabelCreate)
+    const [userLabelUpdate] = useMutation(UserLabelUpdate)
 
     useEffect(() => {
         setLabel(newUserLabel)
     }, [newUserLabel])
 
-    function createLabel(event) {
-        if (event.key === "Enter") {
+    function createLabel(event,_newValue) {
+        if (event.key === "Enter" ) {
             labelCreate({
-                variables: { shortDesc: newUserLabel }
+                variables: { shortDesc: newUserLabel}
             }).then(({ data }) => {
                 LabelRefetch()
                 return userLabelCreate({
@@ -33,7 +34,9 @@ export default function UserLabels({ userId }) {
         }
     }
     function handleDelete(id){
-       
+        userLabelUpdate({
+            variables: {userId, labelId: id}
+        }).then(()=> userLabelRefetch())
     }
 
 
@@ -57,7 +60,6 @@ export default function UserLabels({ userId }) {
                             size="medium"
                             label={label.shortDesc}
                             onDelete={()=>handleDelete(label.id)}
-                          
                         />
                     ))
                     : null}
@@ -78,6 +80,10 @@ export default function UserLabels({ userId }) {
                         freeSolo
                         id="tags-filled"
                         options={data.labels.map(option => option.shortDesc)}
+                        onChange={(event, newValue) =>{
+                            console.log(event.currentTarget.innerHTML)
+                            createLabel(newValue[newValue.length -1])
+                        }}
                         renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
                                 <Chip
@@ -86,6 +92,7 @@ export default function UserLabels({ userId }) {
                                     label={option}
                                     {...getTagProps({ index })}
                                 />
+                                
                             ))
                         }
                         renderInput={params => (
