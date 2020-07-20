@@ -14,7 +14,7 @@ describe('It should test the user label component', () => {
         )
     })
 
-    it('',()=>{
+    it('it should display the chip',()=>{
 
         const container = render(
             <MockedProvider>
