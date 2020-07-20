@@ -2,7 +2,7 @@ import React from 'react'
 import { UserPlotInfo } from '../components/UserPlotInfo'
 import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render } from '@testing-library/react'
-
+import { MockedProvider } from '@apollo/react-testing'
 describe('User Plot Info Page', () => {
   const accounts = [
     {
@@ -15,7 +15,7 @@ describe('User Plot Info Page', () => {
         },
         {
           id: '6f1f-4200-8cea',
-          parcelNumber: 'Standard485'
+          parcelNumber: 'Basic-1'
         }
       ]
     },
@@ -25,7 +25,7 @@ describe('User Plot Info Page', () => {
       landParcels: [
         {
           id: '6f1f-4200-8jfa',
-          parcelNumber: 'Standard456'
+          parcelNumber: 'Basic-2'
         }
       ]
     }
@@ -36,9 +36,11 @@ describe('User Plot Info Page', () => {
       return account.landParcels.length + sum
     }, 0)
     const { getByTestId } = render(
+      <MockedProvider  mock={[]} >
       <BrowserRouter>
         <UserPlotInfo accounts={accounts} />
       </BrowserRouter>
+      </MockedProvider>
     )
     const ol = getByTestId('parcel_list')
     expect(ol.children.length).toBe(numberOfPlots)

@@ -443,6 +443,7 @@ export default function UserInformation({
         )}
         <TabPanel value={tabValue}  index={'Plots'}>
           <UserPlotInfo accounts={data.user.accounts}  />
+          
         </TabPanel>
         <TabPanel value={tabValue}  index={'Payments'}>
           <h4 className="text-center">Coming soon</h4>
