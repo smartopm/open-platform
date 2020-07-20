@@ -4,7 +4,6 @@ import GeoData from "../data/nkwashi_plots.json"
 import { render,} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import { MockedProvider } from '@apollo/react-testing'
 
 describe("Render Map based on Geo data",()=>{
     it('should render map with plots',()=>{
