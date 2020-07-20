@@ -3,7 +3,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo'
 import { UserLabelsQuery, LabelsQuery } from '../graphql/queries'
-import {LabelCreate} from '../graphql/mutations'
+import { LabelCreate } from '../graphql/mutations'
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import useDebounce from '../utils/useDebounce'
 import {
@@ -15,9 +15,9 @@ import {
 export default function UserLabels({ userId }) {
     const [showAddTextBox, setshowAddTextBox] = useState(false)
     const [label, setLabel] = useState('')
-    const newUserLabel = useDebounce(label, 500);
+    const newUserLabel = useDebounce(label, 300);
     const [labelCreate] = useMutation(LabelCreate)
-    
+
     useEffect(
         () => {
             setLabel(newUserLabel)
@@ -25,17 +25,19 @@ export default function UserLabels({ userId }) {
         [newUserLabel]
     );
 
-    function createLabel(event){
-        setLabel(event.target.value) 
-        labelCreate({
-            variables: { shortDesc: newUserLabel } }).then(() => {
-            refetch()
-        })
+    function createLabel(event) {
+        setLabel(event.target.value)
+        //@Olivier uncomment this 
+        
+        // labelCreate({
+        //     variables: { shortDesc: newUserLabel } }).then(() => {
+        //     refetch()
+        // })   
     }
 
     const { loading, error, data, refetch } = useQuery(LabelsQuery)
 
-    if(loading) return "loading"
+    if (loading) return "loading"
     const ulabels = [{
         id: "2345",
         shortDesc: "Client"
@@ -58,7 +60,7 @@ export default function UserLabels({ userId }) {
             <div className=" row d-flex justifiy-content-around align-items-center">
                 {showAddTextBox ?
                     <Autocomplete
-                    data-testid="userLabel-autoCreate"
+                        data-testid="userLabel-autoCreate"
                         style={{ width: "100%" }}
                         multiple
                         freeSolo
@@ -69,7 +71,6 @@ export default function UserLabels({ userId }) {
                                 <Chip
                                     variant="outlined"
                                     label={option}
-                                    onChange={event => console.log(event.target.value)}
                                     {...getTagProps({ index })}
                                 />
                             ))
@@ -80,7 +81,7 @@ export default function UserLabels({ userId }) {
                                 variant="outlined"
                                 label="User Label"
                                 placeholder="Add Label"
-                                onKeyDown={event =>createLabel(event)}
+                                onKeyDown={event => createLabel(event)}
                             />
                         )}
                     />
