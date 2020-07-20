@@ -38,7 +38,7 @@ export default function AllMessages() {
             searchTerm,
             offset,
             limit,
-            // add a variable here
+            filter: category
         }
     });
     if (error) return <ErrorPage error={error.message} />
@@ -105,7 +105,7 @@ export default function AllMessages() {
               onChange={handleFilter}
             >
               <MenuItem value={'campaign'}>Campaign</MenuItem>
-              <MenuItem value={'non-campaign'}>Non-Campaign</MenuItem>
+              <MenuItem value={'non_campaign'}>Non-Campaign</MenuItem>
             </Select>
           </FormControl>
         </CenteredContent>
