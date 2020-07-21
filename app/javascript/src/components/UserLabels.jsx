@@ -3,7 +3,7 @@ import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
 import { useQuery, useMutation } from 'react-apollo'
 import { UserLabelsQuery, LabelsQuery } from '../graphql/queries'
-import { LabelCreate, UserLabelCreate,UserLabelUpdate } from '../graphql/mutations'
+import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../graphql/mutations'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import useDebounce from '../utils/useDebounce'
 import { TextField, IconButton, Chip } from '@material-ui/core'
@@ -22,9 +22,9 @@ export default function UserLabels({ userId }) {
     }, [newUserLabel])
 
     function createLabel(event) {
-        if (event.key === "Enter" ) {
+        if (event.key === "Enter") {
             labelCreate({
-                variables: { shortDesc: newUserLabel}
+                variables: { shortDesc: newUserLabel }
             }).then(({ data }) => {
                 LabelRefetch()
                 return userLabelCreate({
@@ -33,16 +33,16 @@ export default function UserLabels({ userId }) {
             }).then(() => userLabelRefetch())
         }
     }
-    function handleDelete(id){
+    function handleDelete(id) {
         userLabelUpdate({
-            variables: {userId, labelId: id}
-        }).then(()=> userLabelRefetch())
+            variables: { userId, labelId: id }
+        }).then(() => userLabelRefetch())
     }
 
-    function handleLabelSelect(){
+    function handleLabelSelect(id) {
         userLabelCreate({
-                    variables: { userId, labelId: data.labelCreate.label.id }
-                }).then(() => userLabelRefetch())
+            variables: { userId, labelId: id }
+        }).then(() => userLabelRefetch())
     }
 
 
@@ -65,7 +65,7 @@ export default function UserLabels({ userId }) {
                             key={label.id}
                             size="medium"
                             label={label.shortDesc}
-                            onDelete={()=>handleDelete(label.id)}
+                            onDelete={() => handleDelete(label.id)}
                         />
                     ))
                     : null}
@@ -85,20 +85,23 @@ export default function UserLabels({ userId }) {
                         multiple
                         freeSolo
                         id="tags-filled"
-                        options={data.labels.map(option => option.shortDesc)}
-                        onChange={(event, newValue) =>{
-                            console.log(newValue)
+                        options={data.labels}
+                        getOptionLabel={option => option.shortDesc}
+                        onChange={(event, newValue) => {
+                            (newValue.map(id => handleLabelSelect(id.id)))
                         }}
-                        renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
+                        renderTags={(value, getTagProps) => {
+                            return value.map((option, index) => (
                                 <Chip
                                     key={index}
                                     variant="outlined"
-                                    label={option}
+                                    label={option.shortDesc}
                                     {...getTagProps({ index })}
                                 />
-                                
+
                             ))
+                        }
+
                         }
                         renderInput={params => (
                             <TextField
