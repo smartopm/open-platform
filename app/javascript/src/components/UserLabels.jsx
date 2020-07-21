@@ -6,12 +6,13 @@ import { UserLabelsQuery, LabelsQuery } from '../graphql/queries'
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../graphql/mutations'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import useDebounce from '../utils/useDebounce'
+import ErrorPage from '../components/Error.jsx'
 import { TextField, IconButton, Chip } from '@material-ui/core'
+import Loading from './Loading'
 
 export default function UserLabels({ userId }) {
     const [showAddTextBox, setshowAddTextBox] = useState(false)
     const [label, setLabel] = useState('')
-    const [selectedLabel, setSelectedLabel] = useState('')
     const newUserLabel = useDebounce(label, 500)
     const [labelCreate] = useMutation(LabelCreate)
     const [userLabelCreate] = useMutation(UserLabelCreate)
@@ -40,11 +41,12 @@ export default function UserLabels({ userId }) {
     }
 
     function handleLabelSelect(id) {
+        
         userLabelCreate({
             variables: { userId, labelId: id }
         })
         .then(() => userLabelRefetch())
-        .catch(error => console.log(error.message)) // do something useful with this error
+        .catch(error => (<ErrorPage title={error.message} />)) // do something useful with this error
     }
 
 
@@ -55,8 +57,10 @@ export default function UserLabels({ userId }) {
     })
 
 
-    if (loading || _loading) return 'loading'
-    console.log({ error, _error })
+    if (loading || _loading) return <Loading />
+    if (error || _error) {
+        return <ErrorPage title={error.message || _error.message} /> // error could be a string sometimes
+      }
     return (
         <div className="container">
             <div className=" row d-flex justifiy-content-around align-items-center">
