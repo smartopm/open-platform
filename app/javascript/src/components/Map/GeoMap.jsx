@@ -2,24 +2,9 @@ import React, { useState } from 'react'
 import { Map, GeoJSON, TileLayer, Marker, Popup } from 'react-leaflet'
 import GeoData from '../../data/nkwashi_geo.json'
 import './map.css'
+import { invertArray } from '../../utils/helpers'
 
 const center = [-15.524234821346493, 28.65281581878662, 0]
-
-/**
- *
- * @param {Array} cords
- * @param {Number} initial  index to move from
- * @param {Number} final  index to move to
- * @description return new array with changed index positions
- * @tutorial check docs here https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
- * @returns {Array}
- */
-function InvertArray(cords, initial, final) {
-  const initialElement = cords[initial]
-  cords.splice(initial, 1)
-  cords.splice(final, 0, initialElement)
-  return cords
-}
 
 function geoJSONStyle(feature) {
   return {
@@ -30,11 +15,12 @@ function geoJSONStyle(feature) {
   }
 }
 
-function onEachFeature(feature, layer) {
+export function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.name) {
     layer.bindPopup(feature.properties.name)
   }
 }
+
 
 export default function GeoMap({ GeoJSONData }) {
   const [activePlot, setActivePlot] = useState(null)
@@ -48,7 +34,7 @@ export default function GeoMap({ GeoJSONData }) {
       {GeoJSONData.map(plot => (
         <Marker
           key={Math.random()}
-          position={InvertArray(plot.geometry.coordinates[0][0], 0, 1)}
+          position={invertArray(plot.geometry.coordinates[0][0], 0, 1)}
           onClick={() => {
             setActivePlot(plot)
           }}
@@ -57,7 +43,7 @@ export default function GeoMap({ GeoJSONData }) {
 
       {activePlot && (
         <Popup
-          position={InvertArray(activePlot.geometry.coordinates[0][0], 0, 1)}
+          position={invertArray(activePlot.geometry.coordinates[0][0], 0, 1)}
           onClose={() => {
             setActivePlot(null)
           }}

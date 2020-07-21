@@ -1,6 +1,7 @@
 import React from 'react'
 import { Map, GeoJSON, TileLayer } from 'react-leaflet'
 import './map.css'
+import { onEachFeature } from './GeoMap'
 
 const center = [-15.524234821346493, 28.65281581878662]
 
@@ -10,12 +11,6 @@ function geoJSONStyle(feature) {
     weight: 1,
     fillOpacity: 0.5,
     fillColor: feature.properties.fill
-  }
-}
-
-function onEachFeature(feature, layer) {
-  if (feature.properties && feature.properties.name) {
-    layer.bindPopup(feature.properties.name)
   }
 }
 
