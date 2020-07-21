@@ -42,7 +42,9 @@ export default function UserLabels({ userId }) {
     function handleLabelSelect(id) {
         userLabelCreate({
             variables: { userId, labelId: id }
-        }).then(() => userLabelRefetch())
+        })
+        .then(() => userLabelRefetch())
+        .catch(error => console.log(error.message)) // do something useful with this error
     }
 
 
@@ -88,14 +90,21 @@ export default function UserLabels({ userId }) {
                         options={data.labels}
                         getOptionLabel={option => option.shortDesc}
                         onChange={(event, newValue) => {
-                            (newValue.map(id => handleLabelSelect(id.id)))
+                            // 2 things are happening here, there is a new value and an autocompleted value
+                            // if it is a new value then it is a string otherwise it is an array
+                            if (newValue.some(value => value.id != null )) {
+                                // if it is an array then it is wise to get the last item of the array
+                                const [lastLabel] = newValue.slice(-1)
+                                return handleLabelSelect(lastLabel.id)
+                            }
+                            return setLabel(newValue)
                         }}
                         renderTags={(value, getTagProps) => {
                             return value.map((option, index) => (
                                 <Chip
                                     key={index}
                                     variant="outlined"
-                                    label={option.shortDesc}
+                                    label={option.shortDesc || option}
                                     {...getTagProps({ index })}
                                 />
 
