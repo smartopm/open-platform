@@ -21,7 +21,7 @@ export default function UserLabels({ userId }) {
         setLabel(newUserLabel)
     }, [newUserLabel])
 
-    function createLabel(event,_newValue) {
+    function createLabel(event) {
         if (event.key === "Enter" ) {
             labelCreate({
                 variables: { shortDesc: newUserLabel}
@@ -37,6 +37,12 @@ export default function UserLabels({ userId }) {
         userLabelUpdate({
             variables: {userId, labelId: id}
         }).then(()=> userLabelRefetch())
+    }
+
+    function handleLabelSelect(){
+        userLabelCreate({
+                    variables: { userId, labelId: data.labelCreate.label.id }
+                }).then(() => userLabelRefetch())
     }
 
 
@@ -81,8 +87,7 @@ export default function UserLabels({ userId }) {
                         id="tags-filled"
                         options={data.labels.map(option => option.shortDesc)}
                         onChange={(event, newValue) =>{
-                            console.log(event.currentTarget.innerHTML)
-                            createLabel(newValue[newValue.length -1])
+                            console.log(newValue)
                         }}
                         renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
