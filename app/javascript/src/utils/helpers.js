@@ -82,3 +82,23 @@ export function DelimitorFormator(params) {
 export function copyText(text) {
     if (text) return navigator.clipboard.writeText(text)
   }
+
+
+  /**
+ *
+ * @param {Array} cords
+ * @param {Number} initial  index to move from
+ * @param {Number} final  index to move to
+ * @description return new array with changed index positions
+ * @tutorial check docs here https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+ * @returns {[Number]}
+ */
+export function invertArray(cords, initial, final) {
+  if (!Array.isArray(cords) || typeof initial !== 'number' || typeof final !== 'number' ) {
+    throw new Error('You must provide proper values')
+  }
+  const initialElement = cords[initial]
+  cords.splice(initial, 1)
+  cords.splice(final, 0, initialElement)
+  return cords
+}
