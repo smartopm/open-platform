@@ -101,7 +101,6 @@ export default function UserLabels({ userId }) {
 
                             ))
                         }
-
                         }
                         renderInput={params => (
                             <TextField
