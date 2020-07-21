@@ -205,8 +205,8 @@ export const ShowroomEntriesQuery = gql`
 `
 
 export const MessagesQuery = gql`
-  query messages($searchTerm: String, $limit: Int, $offset: Int) {
-    messages(query: $searchTerm, limit: $limit, offset: $offset) {
+  query messages($searchTerm: String, $limit: Int, $offset: Int, $filter: String) {
+    messages(query: $searchTerm, limit: $limit, offset: $offset, filter: $filter) {
       id
       message
       category
@@ -308,120 +308,119 @@ export const allCampaigns = gql`
   }
 `
 export const Campaign = gql`
-query campaign($id: ID!){
-
-    campaign(id: $id){
-    batchTime
-    communityId
-    createdAt
-    endTime
-    id
-    message
-    name
-    startTime
-    updatedAt
-    userIdList
+  query campaign($id: ID!) {
+    campaign(id: $id) {
+      batchTime
+      communityId
+      createdAt
+      endTime
+      id
+      message
+      name
+      startTime
+      updatedAt
+      userIdList
     }
-}
+  }
 `
 // Discussions and comments
 export const PostCommentsQuery = gql`
-    query postComments($postId: String!, $limit: Int, $offset: Int) {
-      postComments(postId: $postId, limit: $limit, offset: $offset) {
-        content
-        createdAt
+  query postComments($postId: String!, $limit: Int, $offset: Int) {
+    postComments(postId: $postId, limit: $limit, offset: $offset) {
+      content
+      createdAt
+      id
+      user {
+        name
         id
-        user {
-          name
-          id
-        }
       }
     }
+  }
 `
 
 export const DiscussionCommentsQuery = gql`
-    query discussComments($id: ID!, $limit: Int, $offset: Int) {
-      discussComments(id: $id, limit: $limit, offset: $offset) {
-        content
-        createdAt
+  query discussComments($id: ID!, $limit: Int, $offset: Int) {
+    discussComments(id: $id, limit: $limit, offset: $offset) {
+      content
+      createdAt
+      id
+      user {
         id
-        user {
-          id
-          name
-        }
+        name
       }
     }
+  }
 `
 
 export const DiscussionQuery = gql`
-    query discussion($id: ID!) {
-      discussion(id: $id) {
-        title
+  query discussion($id: ID!) {
+    discussion(id: $id) {
+      title
+      id
+      description
+      createdAt
+      user {
+        name
         id
-        description
-        createdAt
-        user {
-            name
-            id
-        }
       }
     }
+  }
 `
 
 export const PostDiscussionQuery = gql`
-    query postDiscussion($postId: String!) {
-      postDiscussion(postId: $postId) {
-        title
-        id
-      }
+  query postDiscussion($postId: String!) {
+    postDiscussion(postId: $postId) {
+      title
+      id
     }
+  }
 `
 // add pagination here
 export const DiscussionsQuery = gql`
-    query discussions($limit: Int, $offset: Int){
-      discussions(limit: $limit, offset: $offset) {
-        title
-        description
-        createdAt
+  query discussions($limit: Int, $offset: Int) {
+    discussions(limit: $limit, offset: $offset) {
+      title
+      description
+      createdAt
+      id
+      user {
+        name
         id
-        user{
-          name
-          id
-          imageUrl
-          avatarUrl
-        }
+        imageUrl
+        avatarUrl
       }
-    }`
+    }
+  }
+`
 // reduce the query to only get what's needed
 export const BusinessesQuery = gql`
   {
-  businesses {
-    category
-    imageUrl
-    name
-    userId
-    id
+    businesses {
+      category
+      imageUrl
+      name
+      userId
+      id
+    }
   }
-}
 `
 export const BusinessByIdQuery = gql`
-query businessById($id: ID!){
-
-  business(id: $id) {
-    category
-   	createdAt
-    homeUrl
-    imageUrl
-    name
-    userId
-    id
-    address
-    email
-    description
-    status
-    phoneNumber
-    operationHours
-    links
+  query businessById($id: ID!) {
+    business(id: $id) {
+      category
+      createdAt
+      homeUrl
+      imageUrl
+      name
+      userId
+      id
+      address
+      email
+      description
+      status
+      phoneNumber
+      operationHours
+      links
+    }
   }
-}
 `

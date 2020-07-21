@@ -12,15 +12,19 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import useDebounce from '../../utils/useDebounce'
 import { useWindowDimensions } from '../../utils/customHooks'
 import { Spinner } from '../../components/Loading';
+import { MenuItem, FormControl, Select, InputLabel } from '@material-ui/core';
+import { useStyles } from '../Users';
 
 
 const limit = 50
 export default function AllMessages() {
     const { width } = useWindowDimensions()
+    const classes = useStyles()
     const [offset, setOffset] = useState(0)
     const [searchTerm, setSearchTerm] = useState('')
     const [searchTermCurrent, setSearchTermCurrent] = useState('')
     const dbcSearchTerm = useDebounce(searchTermCurrent, 500);
+    const [category, setCategory] = useState("")
 
     useEffect(
         () => {
@@ -33,7 +37,8 @@ export default function AllMessages() {
         variables: {
             searchTerm,
             offset,
-            limit
+            limit,
+            filter: category
         }
     });
     if (error) return <ErrorPage error={error.message} />
@@ -46,6 +51,11 @@ export default function AllMessages() {
             return
         }
         setOffset(offset - limit)
+    }
+
+    function handleFilter(event){
+        setCategory(event.target.value)
+        // refetch after changing filter 
     }
 
     function handleSearch() {
@@ -85,6 +95,21 @@ export default function AllMessages() {
                     placeholder="search message content, user name and phone number"
                 />
             </div>
+        <CenteredContent>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="category-filter">Filter by: Category</InputLabel>
+            <Select
+              labelId="category-filter"
+              id="demo-controlled-open-select"
+              value={category}
+              onChange={handleFilter}
+            >
+              <MenuItem value={'campaign'}>Campaign</MenuItem>
+              <MenuItem value={'non_campaign'}>Non-Campaign</MenuItem>
+            </Select>
+          </FormControl>
+        </CenteredContent>
+
             {loading ? <CenteredContent > <Spinner /> </CenteredContent> : 
             data && data.messages ? (
                 <div>
@@ -95,15 +120,13 @@ export default function AllMessages() {
                                 <li className={`page-item ${offset < limit && 'disabled'}`}>
                                     <a className="page-link" onClick={handlePreviousPage} href="#">
                                         Previous
-              </a>
+                                     </a>
                                 </li>
-                                <li
-                                    className={`page-item ${data.messages.length < limit &&
-                                        'disabled'}`}
-                                >
+                                <li className={`page-item ${data.messages.length < limit &&
+                                        'disabled'}`}>
                                     <a className="page-link" onClick={handleNextPage} href="#">
                                         Next
-              </a>
+                                    </a>
                                 </li>
                             </ul>
                         </nav>

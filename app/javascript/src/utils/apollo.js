@@ -59,6 +59,8 @@ const logError = error => console.error(error)
 const createErrorLink = () =>
   onError(({ graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
+      // visualize error better, rollbar might not like this.
+      console.error(graphQLErrors[0].message)
       logError('GraphQL - Error', {
         errors: graphQLErrors,
         operationName: operation.operationName,
@@ -66,6 +68,7 @@ const createErrorLink = () =>
       })
     }
     if (networkError) {
+      console.error(networkError.message)
       logError('GraphQL - NetworkError', networkError)
     }
   })

@@ -4,82 +4,86 @@ import React, {
   useRef,
   useEffect,
   createRef
-} from "react";
-import { Redirect } from "react-router-dom";
-import { Button, CircularProgress } from "@material-ui/core";
-import { StyleSheet, css } from "aphrodite";
-import { Link, useLocation } from "react-router-dom";
-import { useMutation } from "react-apollo";
-import { loginPhoneConfirmCode, loginPhone } from "../../graphql/mutations";
-import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
-import useTimer from "../../utils/customHooks";
+} from 'react'
+import { Redirect } from 'react-router-dom'
+import { Button, CircularProgress } from '@material-ui/core'
+import { StyleSheet, css } from 'aphrodite'
+import { Link, useLocation } from 'react-router-dom'
+import { useMutation } from 'react-apollo'
+import { loginPhoneConfirmCode, loginPhone } from '../../graphql/mutations'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import useTimer from '../../utils/customHooks'
 
-const randomCodeData = [1, 2, 3, 4, 5, 6, 7];
+const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 
 export default function ConfirmCodeScreen({ match }) {
-  const authState = useContext(AuthStateContext);
-  const { id } = match.params;
-  const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode);
-  const [resendCodeToPhone] = useMutation(loginPhone);
-  const [error, setError] = useState(null);
-  const [msg, setMsg] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const authState = useContext(AuthStateContext)
+  const { id } = match.params
+  const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode)
+  const [resendCodeToPhone] = useMutation(loginPhone)
+  const [error, setError] = useState(null)
+  const [msg, setMsg] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const timer = useTimer(10, 1000)
 
   // generate refs to use later
-  let elementsRef = useRef(randomCodeData.map(() => createRef()));
-  const submitRef = useRef(null);
+  let elementsRef = useRef(randomCodeData.map(() => createRef()))
+  const submitRef = useRef(null)
 
   useEffect(() => {
     // force focus to just be on the first element
     // check if the refs are not null to avoid breaking the app
     if (elementsRef.current[1].current) {
-      elementsRef.current[1].current.focus();
+      elementsRef.current[1].current.focus()
     }
-  }, []);
+  }, [])
 
   function resendCode() {
-    setIsLoading(true);
+    setIsLoading(true)
     resendCodeToPhone({
-      variables: { phoneNumber: state && state.phoneNumber || '' }
-    }).then(() => {
-      setIsLoading(false);
-      setMsg(`We have resent the code to +${state.phoneNumber}`)
-    }).catch(error => {
-      setError(error.message);
-      setIsLoading(false);
-    });
+      variables: { phoneNumber: (state && state.phoneNumber) || '' }
+    })
+      .then(() => {
+        setIsLoading(false)
+        setMsg(`We have resent the code to +${state.phoneNumber}`)
+      })
+      .catch(error => {
+        setError(error.message)
+        setIsLoading(false)
+      })
   }
 
   function handleConfirmCode() {
-    setIsLoading(true);
+    setIsLoading(true)
 
     // Todo: Find more efficient way of getting values from the input
-    const code1 = elementsRef.current[1].current.value;
-    const code2 = elementsRef.current[2].current.value;
-    const code3 = elementsRef.current[3].current.value;
-    const code4 = elementsRef.current[4].current.value;
-    const code5 = elementsRef.current[5].current.value;
-    const code6 = elementsRef.current[6].current.value;
+    const code1 = elementsRef.current[1].current.value
+    const code2 = elementsRef.current[2].current.value
+    const code3 = elementsRef.current[3].current.value
+    const code4 = elementsRef.current[4].current.value
+    const code5 = elementsRef.current[5].current.value
+    const code6 = elementsRef.current[6].current.value
 
     // Todo: refactor this
-    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`;
+    const code = `${code1}${code2}${code3}${code4}${code5}${code6}`
 
     loginPhoneComplete({
-      variables: { id, token: code }
+      variables: { id, token: code },
+      errorPolicy: 'all'
     })
       .then(({ data }) => {
+        console.log(data)
         authState.setToken({
-          type: "update",
+          type: 'update',
           token: data.loginPhoneComplete.authToken
-        });
-        setIsLoading(true);
+        })
+        setIsLoading(false)
       })
       .catch(error => {
-        setError(error.message);
-        setIsLoading(false);
-      });
+        setError(error.message)
+        setIsLoading(false)
+      })
   }
 
   // Redirect once our authState.setToken does it's job
@@ -88,9 +92,9 @@ export default function ConfirmCodeScreen({ match }) {
   }
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: '100vh' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={"/login"}>
+        <Link to={'/login'}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -128,8 +132,6 @@ export default function ConfirmCodeScreen({ match }) {
         <br />
         <br />
 
-
-
         {error && <p className="text-center text-danger">{error}</p>}
         {msg && <p className="text-center text-primary">{msg}</p>}
         <div
@@ -147,72 +149,66 @@ export default function ConfirmCodeScreen({ match }) {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Next</span>
-              )}
+              <span>Next</span>
+            )}
           </Button>
         </div>
 
         {/* show a button to re-send code */}
-        {
-          timer === 0 && (
-            <div
-              className={`row justify-content-center align-items-center ${css(
-                styles.linksSection
-              )}`}
-            >
-              <Button
-                onClick={resendCode}
-                disabled={isLoading}
-              >
-                {isLoading ? 'loading ...' : 'Re-send the code'}
-
-              </Button>
-            </div>
-          )
-        }
+        {timer === 0 && (
+          <div
+            className={`row justify-content-center align-items-center ${css(
+              styles.linksSection
+            )}`}
+          >
+            <Button onClick={resendCode} disabled={isLoading}>
+              {isLoading ? 'loading ...' : 'Re-send the code'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: "#25c0b0",
-    color: "#FFF",
-    width: "55%",
+    backgroundColor: '#25c0b0',
+    color: '#FFF',
+    width: '55%',
     height: 51,
-    boxShadow: "none",
+    boxShadow: 'none',
     marginTop: 80
   },
   getStartedLink: {
-    textDecoration: "none",
-    color: "#FFFFFF"
+    textDecoration: 'none',
+    color: '#FFFFFF'
   },
   linksSection: {
     marginTop: 20
   },
   navBar: {
-    boxShadow: "none",
-    backgroundColor: "#fafafa"
+    boxShadow: 'none',
+    backgroundColor: '#fafafa'
   },
   welcomeText: {
     marginTop: 33,
-    color: "#1f2026",
+    color: '#1f2026',
     fontSize: 18
   },
   flag: {
-    display: "inline-block",
+    display: 'inline-block',
     marginTop: 7
   },
   countryCode: {
-    display: "inline-block",
+    display: 'inline-block',
     marginTop: -2,
     marginLeft: 6
   },
   welcomeContainer: {
-    position: "relative",
-    textAlign: "center",
-    color: "white"
+    position: 'relative',
+    textAlign: 'center',
+    color: 'white'
   },
   phoneCodeInput: {
     marginTop: 50
@@ -221,14 +217,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 60,
     fontSize: 27,
-    textAlign: "center",
-    border: "2px solid #5189dd",
+    textAlign: 'center',
+    border: '2px solid #5189dd',
     borderRadius: 2,
-    borderTop: "none",
-    borderRight: "none",
-    borderLeft: "none",
+    borderTop: 'none',
+    borderRight: 'none',
+    borderLeft: 'none',
     // padding: 20,
     margin: 9
     // paddingRight: 13,
   }
-});
+})
