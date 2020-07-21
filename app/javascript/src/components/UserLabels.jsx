@@ -85,20 +85,24 @@ export default function UserLabels({ userId }) {
                         multiple
                         freeSolo
                         id="tags-filled"
-                        options={data.labels.map(option => option.shortDesc)}
-                        onChange={(event, newValue) =>{
+                        options={data.labels}
+                        getOptionLabel={option => option.shortDesc}
+                        onChange={(event, newValue) => {
+                            //@Dennis here you have access to both id and shortDesc of the selected label
                             console.log(newValue)
                         }}
-                        renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
+                        renderTags={(value, getTagProps) => {
+                            return value.map((option, index) => (
                                 <Chip
                                     key={index}
                                     variant="outlined"
-                                    label={option}
+                                    label={option.shortDesc}
                                     {...getTagProps({ index })}
                                 />
                                 
                             ))
+                        }
+                            
                         }
                         renderInput={params => (
                             <TextField
