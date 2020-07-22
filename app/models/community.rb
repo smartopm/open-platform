@@ -16,7 +16,7 @@ class Community < ApplicationRecord
   }.freeze
 
   def label_exists?(label_name)
-    label = self.labels.find_by(short_desc: label_name)
+    label = labels.find_by(short_desc: label_name)
     return false if label.nil?
 
     true
