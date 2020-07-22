@@ -85,7 +85,10 @@ RSpec.describe Types::Queries::TimeSheet do
     end
 
     it 'can retrieve timesheet per employee' do
-      result = DoubleGdpSchema.execute(single_user, context: { current_user: custodian }).as_json
+      result = DoubleGdpSchema.execute(single_user, context: {
+                                         current_user: custodian,
+                                         site_community: custodian.community,
+                                       }).as_json
       expect(result.dig('data', 'userTimeSheetLogs').length).to eql 2
       expect(result.dig('data', 'userTimeSheetLogs', 0, 'id')).to eql time_log2_user1.id
       expect(result.dig('data', 'userTimeSheetLogs', 1, 'id')).to eql time_log1_user1.id

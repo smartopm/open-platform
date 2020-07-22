@@ -5,19 +5,17 @@ import UserInformation from '../components/UserInformation'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading.jsx'
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga'
 import { UserQuery } from '../graphql/queries'
-import {
-  AddActivityLog,
-  SendOneTimePasscode
-} from '../graphql/mutations'
+import { AddActivityLog, SendOneTimePasscode } from '../graphql/mutations'
 import ErrorPage from '../components/Error.jsx'
 
 export default ({ history }) => {
   const { id, dg, tm } = useParams() // get timestamp and dg
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(UserQuery, {
-    variables: { id }
+    variables: { id },
+    errorPolicy: 'all'
   })
   //GA-event Digital scanning
   ReactGA.event({
@@ -25,7 +23,7 @@ export default ({ history }) => {
     action: 'DigitalScan',
     eventLabel: tm + dg,
     nonInteraction: true
-  });
+  })
   const [addLogEntry, entry] = useMutation(AddActivityLog, {
     variables: {
       userId: id,
@@ -38,7 +36,7 @@ export default ({ history }) => {
 
   if (loading || entry.loading) return <Loading />
   if (entry.data) return <Redirect to="/" />
-  if (error) {
+  if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message || error} /> // error could be a string sometimes
   }
   return (

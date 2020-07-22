@@ -42,7 +42,10 @@ RSpec.describe Types::QueryType do
     it 'returns all event logs' do
       result = DoubleGdpSchema.execute(
         @query,
-        context: { current_user: @current_user },
+        context: {
+          current_user: @current_user,
+          site_community: @current_user.community,
+        },
         variables: {
           subject: nil, refId: nil, refType: nil
         },
@@ -53,7 +56,10 @@ RSpec.describe Types::QueryType do
     it 'returns select event logs' do
       result = DoubleGdpSchema.execute(
         @query,
-        context: { current_user: @current_user },
+        context: {
+          current_user: @current_user,
+          site_community: @current_user.community,
+        },
         variables: {
           subject: 'user_entry', refId: nil, refType: nil
         },
@@ -62,7 +68,10 @@ RSpec.describe Types::QueryType do
 
       result = DoubleGdpSchema.execute(
         @query,
-        context: { current_user: @current_user },
+        context: {
+          current_user: @current_user,
+          site_community: @current_user.community,
+        },
         variables: {
           subject: nil, refId: nil, refType: 'User'
         },
@@ -71,7 +80,10 @@ RSpec.describe Types::QueryType do
 
       result = DoubleGdpSchema.execute(
         @query,
-        context: { current_user: @current_user },
+        context: {
+          current_user: @current_user,
+          site_community: @current_user.community,
+        },
         variables: {
           subject: nil, refId: @user.id, refType: nil
         },
@@ -126,7 +138,10 @@ RSpec.describe Types::QueryType do
     it 'returns all event logs' do
       result = DoubleGdpSchema.execute(
         @query,
-        context: { current_user: @current_user },
+        context: {
+          current_user: @current_user,
+          site_community: @current_user.community,
+        },
         variables: {
           subject: nil, userId: @user.id, refType: nil
         },
@@ -167,6 +182,7 @@ RSpec.describe Types::QueryType do
     it 'returns all security guards logs' do
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
+                                         site_community: @current_user.community,
                                        }).as_json
       expect(result.dig('data', 'securityGuards').length).to eql 3
     end
@@ -197,6 +213,7 @@ RSpec.describe Types::QueryType do
     it 'returns all user feedback' do
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @current_user,
+                                         site_community: @current_user.community,
                                        }).as_json
       expect(result.dig('data', 'usersFeedback')).not_to be_nil
       expect(result.dig('errors')).to be_nil

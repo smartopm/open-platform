@@ -4,6 +4,7 @@ import { render,} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+// import data from '../data/nkwashi_plots.json'
 
 describe("User infromation component loads",()=>{
     const data = {
@@ -20,7 +21,7 @@ describe("User infromation component loads",()=>{
     }
     it('should render user name on contacts tab',()=>{
         const {getByText} = render(
-            <MockedProvider mock={[]} >
+            <MockedProvider mock={data} >
               <BrowserRouter>
                 <UserInformation
                 data ={data}
@@ -34,7 +35,7 @@ describe("User infromation component loads",()=>{
     })    
     it('should render tab elemets',()=>{
         const {getByText} = render(
-            <MockedProvider mock={[]} >
+            <MockedProvider mock={data} >
               <BrowserRouter>
                 <UserInformation
                 data ={data}
@@ -50,7 +51,7 @@ describe("User infromation component loads",()=>{
     })
     it('should render Comming soon',()=>{
         const {getByText} = render(
-            <MockedProvider mock={[]} >
+            <MockedProvider mock={data} >
               <BrowserRouter>
                 <UserInformation
                 data ={data}
@@ -63,7 +64,7 @@ describe("User infromation component loads",()=>{
     })
     it('should render Menue',()=>{
         const {getByText} = render(
-            <MockedProvider mock={[]} >
+            <MockedProvider mock={data} >
               <BrowserRouter>
                 <UserInformation
                 data ={data}

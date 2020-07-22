@@ -253,12 +253,10 @@ class User < ApplicationRecord
     self[:id]
   end
 
-  def admin?
-    self[:user_type] == 'admin'
-  end
-
-  def custodian?
-    self[:user_type] == 'custodian'
+  %w[admin custodian security_guard].each do |user_type|
+    define_method "#{user_type}?" do
+      self[:user_type] == user_type
+    end
   end
 
   def role_name
