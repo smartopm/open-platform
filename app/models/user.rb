@@ -16,6 +16,7 @@ class User < ApplicationRecord
 
   search_scope :search do
     attributes :name, :phone_number, :user_type
+    attributes labels: ["labels.short_desc"]
   end
 
   scope :allowed_users, lambda { |current_user|

@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import DateUtil from '../utils/dateutil'
 import { Redirect, Link } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-import { UsersQuery, LabelUsersQuery, LabelsQuery } from '../graphql/queries'
+import { UsersQuery, LabelsQuery } from '../graphql/queries'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk'
@@ -46,8 +46,7 @@ export default function UsersList() {
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
   const [type, setType] = useState([])
-  const [label, setLabel] = useState([''])
-  const [users, setUsers] = useState([])
+  const [labels, setLabels] = useState([])
   const [phoneNumbers, setPhoneNumbers] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
@@ -58,23 +57,31 @@ export default function UsersList() {
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
 
+  const search = {
+    type,
+    phone: phoneNumbers,
+    label: labels
+  }
+
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
-      query: joinSearchQuery(searchType === 'type' ? type : searchType === 'phone' ? phoneNumbers : type, searchType),
+      query: joinSearchQuery(search[searchType], searchType),
       limit,
       offset
     },
     fetchPolicy: 'cache-and-network'
   })
 
-  // const { loading: labelsUserLoading, error: labelsUserError, data: labelsUserData } = useQuery(LabelUsersQuery, {
-  //   variables: { labels: label + ''}
-  // })
-  const [getUserLabels, { loading: labelsUserLoading, data: labelsUserData }] = useLazyQuery(LabelUsersQuery)
   const {loading: labelsLoading, error: labelsError, data: labelsData} = useQuery(LabelsQuery)
 
   function joinSearchQuery(query, type) {
-    const filterType = type === 'phone' ? 'phone_number' : 'user_type'
+    const types = {
+      phone: 'phone_number',
+      label: 'labels',
+      type: 'user_type'
+    }
+    console.log(query)
+    const filterType = types[type]
     return query.map(query => `${filterType} = ${query}`).join(' OR ')
   }
   function handleFilterModal() {
@@ -120,15 +127,15 @@ export default function UsersList() {
   }
 
   function handleLabelChange(event) {
+    setLabels(event.target.value)
     setSearchType('label')
-    setLabel(event.target.value?.id)
   }
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
         return
       }
-      setOffset(offset - limit)
+      setOffset(offset - limit) 
     } else {
       setOffset(offset + limit)
     }
@@ -137,18 +144,12 @@ export default function UsersList() {
   // reset pagination when the filter changes
   useEffect(() => {
     setOffset(0)
-    if (type === 'label') {
-      getUserLabels({ variables: { labels: label + '' } }).then(() => (setUsers(labelsUserData), console.log('done actually')))
-    }
-    setUsers(data)
-  }, [type, label, labelsUserData, data])
+  }, [type])
 
 
   if (loading || labelsLoading) return <Loading />
   if (error || labelsError) return <ErrorPage error={error.message || labelsError.message} />
-  // if (!users?.length) {
-  //   return 'no data yet'
-  // }
+
   if (redirect) {
     return (
       <Redirect
@@ -161,8 +162,6 @@ export default function UsersList() {
     )
   }
 
-  console.log(label + '')
-  console.log(label.join(''))
   return (
     <Fragment>
       <Nav navName="Users" menuButton="back" backTo="/" />
@@ -264,8 +263,8 @@ export default function UsersList() {
                 input={<Input id="select-by-role" />}
                 renderValue={selected => (
                   <div>
-                    {selected.map(value => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, i) => (
+                      <Chip key={i} label={value} />
                     ))}
                   </div>
                 )}
@@ -281,32 +280,32 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs >
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end'}}>
           <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Filter by Labels</InputLabel>
               <Select
-                labelId="select-by-role"
+                labelId="select-by-label"
                 id="role-chip"
                 multiple
-                value={label}
+                value={labels}
                 onChange={handleLabelChange}
-                input={<Input id="select-by-role" />}
+                input={<Input id="select-by-label" />}
                 renderValue={selected => (
                   <div>
-                    {selected.map(value => (
-                      <Chip key={value.id} label={value.shortDesc} />
+                    {selected.map((value, i) => (
+                      <Chip key={i} label={value} />
                     ))}
                   </div>
                 )}
               >
                 {labelsData.labels.map(label => (
-                  <MenuItem key={label.id} value={label}>
+                  <MenuItem key={label.id} value={label.shortDesc}>
                     {label.shortDesc}
                   </MenuItem>
                 ))}
               </Select>
-              {Boolean(label.length) && (
-                <Button onClick={() => setType([])}>Clear Filter</Button>
+              {Boolean(labels.length) && (
+                <Button onClick={() => setLabels([])}>Clear Filter</Button>
               )}
             </FormControl>
           </Grid>
@@ -337,7 +336,7 @@ export default function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users?.length && users.map(user => (
+            {data.users.map(user => (
               <StyledTableRow key={user.id}>
                 <StyledTableCell component="th" scope="row">
                   <Link to={`/user/${user.id}`} key={user.id}>
