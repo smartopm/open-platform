@@ -493,3 +493,35 @@ export const DiscussionMutation = gql`
     }
   }
 `
+
+export const LabelCreate = gql`
+    mutation labelCreate($shortDesc: String!){
+       labelCreate(shortDesc: $shortDesc){
+         label {
+           id
+         }
+       }
+    }
+`
+
+// UserLabelCreate
+export const UserLabelCreate = gql`
+    mutation userLabelCreate($userId: ID!, $labelId: ID!){
+       userLabelCreate(userId: $userId, labelId: $labelId){
+         label {
+           labelId
+         }
+       }
+    }
+`
+
+export const UserLabelUpdate = gql`
+  mutation userLabelUpdate($userId: ID!, $labelId: ID!){
+    userLabelUpdate(userId: $userId, labelId: $labelId){
+      label {
+        labelId
+      }
+    }
+  }
+`
+

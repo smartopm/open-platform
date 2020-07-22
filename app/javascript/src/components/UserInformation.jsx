@@ -25,7 +25,10 @@ import { withStyles, Tab } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga';
+import UserLabels from './UserLabels'
+
+
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
@@ -132,11 +135,13 @@ export default function UserInformation({
                   Expired
                 </p>
               ) : (
-                ['admin'].includes(userType) && (
-                  <Status label={data.user.state} />
-                )
-              )}
+                  ['admin'].includes(userType) && (
+                    <Status label={data.user.state} />
+                  )
+                )}
+                <UserLabels userId={data.user.id} />
             </div>
+
             <div className="col-2 ml-auto">
               {Boolean(authState.user.userType !== 'security_guard') && (
                 <IconButton
@@ -392,6 +397,7 @@ export default function UserInformation({
                   <Loading />
                 ) : data.user.notes ? (
                   data.user.notes.map(note => (
+
                     <Fragment key={note.id}>
                       <div className={css(styles.commentBox)}>
                         <p className="comment">{note.body}</p>
