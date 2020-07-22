@@ -22,11 +22,22 @@ RSpec.describe Mutations::Label do
     it 'returns a created Label' do
       result = DoubleGdpSchema.execute(query, context: {
                                          current_user: admin,
+                                         site_community: user.community,
                                        }).as_json
+      dub_result = DoubleGdpSchema.execute(query, context: {
+                                             current_user: admin,
+                                             site_community: user.community,
+                                           }).as_json
       expect(result.dig('data', 'labelCreate', 'label', 'id')).not_to be_nil
       expect(result.dig('data', 'labelCreate', 'label', 'shortDesc')).to eql 'green'
       expect(result.dig('errors')).to be_nil
+
+      expect(dub_result.dig('data', 'labelCreate', 'label', 'id')).to be_nil
+      expect(dub_result.dig('data', 'labelCreate', 'label', 'shortDesc')).to be_nil
+      expect(dub_result.dig('errors')).not_to be_nil
+      expect(dub_result.dig('errors', 0, 'message')).to include 'Duplicate label'
     end
+
     it 'returns error when user is not admin' do
       result = DoubleGdpSchema.execute(query,
                                        context: {
@@ -60,6 +71,7 @@ RSpec.describe Mutations::Label do
     it 'returns a created userLabel' do
       result = DoubleGdpSchema.execute(lquery, context: {
                                          current_user: admin,
+                                         site_community: user.community,
                                        }).as_json
       expect(result.dig('data', 'userLabelCreate', 'label', 'userId')).to eql user.id
       expect(result.dig('errors')).to be_nil

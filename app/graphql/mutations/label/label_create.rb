@@ -9,8 +9,10 @@ module Mutations
       field :label, Types::LabelType, null: true
 
       def resolve(short_desc:)
-        label = context[:current_user].community.labels.create!(short_desc: short_desc)
+        raise GraphQL::ExecutionError, 'Duplicate label' if context[:site_community]
+                                                            .label_exists?(short_desc)
 
+        label = context[:site_community].labels.create!(short_desc: short_desc)
         return { label: label } if label.persisted?
 
         raise GraphQL::ExecutionError, label.errors.full_messages
