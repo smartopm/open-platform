@@ -4,7 +4,7 @@ import GeoData from '../../data/nkwashi_geo.json'
 import { StyleSheet, css } from "aphrodite";
 import { invertArray } from '../../utils/helpers'
 
-const center = [-15.524234821346493, 28.65281581878662, 0]
+const center = [-15.524234821346493, 28.65281581878662]
 
 function geoJSONStyle(feature) {
   return {
