@@ -441,11 +441,3 @@ export const LabelsQuery = gql`
       }
     }
 `
-export const LabelUsersQuery = gql`
-    query labelsusers($labels: String!, $limit: Int, $offset: Int,){
-      labelUsers(labels: $labels, limit: $limit, offset: $offset){
-      ...UserFields
-      }
-    }
-  ${UserFragment.publicFields}
-`
