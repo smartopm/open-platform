@@ -45,7 +45,8 @@ land_parcels &&
   if (accounts && accounts.length > 0 && land_parcels.length > 0) {
     const convertedDateTime = dateToString(accounts[0].updatedAt)
     
-    let features = getPropertyByName(GeoData, plotNumber)
+    // let features = 
+    getPropertyByName(GeoData, plotNumber)
 
     return (
       <>
