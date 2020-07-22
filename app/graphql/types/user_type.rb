@@ -34,6 +34,7 @@ module Types
     field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
                                                                        user: :id }
     field :businesses, [Types::BusinessType], null: true, visible: { roles: %i[admin], user: :id }
+    field :labels, [Types::LabelType], null: true, visible: { roles: %i[admin], user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?

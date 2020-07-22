@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::TimeSheet do
   describe 'retrieving custodian retrieves employee list' do
-    let!(:user1) { create(:user_with_community) }
-    let!(:user2) { create(:user, community_id: user1.community_id) }
+    let!(:user1) { create(:contractor) }
+    let!(:user2) { create(:user, user_type: user1.user_type, community_id: user1.community_id) }
     let!(:admin) { create(:admin_user, community_id: user1.community_id) }
     let!(:custodian) { create(:store_custodian, community_id: user1.community_id) }
     let!(:security_guard) { create(:security_guard, community_id: user1.community_id) }
