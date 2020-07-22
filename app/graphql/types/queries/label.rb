@@ -26,18 +26,18 @@ module Types::Queries::Label
   def labels
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:current_user].community.labels
+    context[:site_community].labels
   end
 
   def user_labels(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:current_user].find_a_user(user_id).labels
+    context[:site_community].users.find(user_id)&.labels&.all
   end
 
   def label_users(labels:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    context[:current_user].find_label_users(labels)
+    context[:site_community].users.find(context[:current_user].id)&.find_label_users(labels)&.all
   end
 end

@@ -63,6 +63,7 @@ RSpec.describe Types::Queries::Label do
     it 'should retrieve list of labels' do
       result = DoubleGdpSchema.execute(labels_query, context: {
                                          current_user: current_user,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'labels').length).to eql 2
       expect(result.dig('data', 'labels', 0, 'shortDesc')).to include 'label'
@@ -71,6 +72,7 @@ RSpec.describe Types::Queries::Label do
     it 'should retrieve labels for the other user' do
       result = DoubleGdpSchema.execute(other_user_label_query, context: {
                                          current_user: admin,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'userLabels', 0, 'shortDesc')).to include 'label'
       expect(result.dig('data', 'userLabels', 0, 'id')).to eql second_label.id
@@ -79,6 +81,7 @@ RSpec.describe Types::Queries::Label do
     it 'should retrieve labels for the other user' do
       result = DoubleGdpSchema.execute(user_label_query, context: {
                                          current_user: current_user,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'userLabels', 0, 'id')).to eql first_label.id
     end
@@ -86,6 +89,7 @@ RSpec.describe Types::Queries::Label do
     it 'should retrieve all users who have this label' do
       result = DoubleGdpSchema.execute(label_users, context: {
                                          current_user: admin,
+                                         site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'labelUsers').length).to eql 1
       expect(result.dig('data', 'labelUsers', 0, 'id')).to eql current_user.id
