@@ -15,8 +15,8 @@ class Community < ApplicationRecord
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
   }.freeze
 
-  def label_exists?(label)
-    label = self.labels.find_by(short_desc: label)
+  def label_exists?(label_name)
+    label = self.labels.find_by(short_desc: label_name)
     return false if label.nil?
 
     true
