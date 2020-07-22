@@ -36,6 +36,8 @@ module Types::Queries::Label
   end
 
   def label_users(labels:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+
     context[:current_user].find_label_users(labels)
   end
 end

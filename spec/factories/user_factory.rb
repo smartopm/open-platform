@@ -22,6 +22,12 @@ FactoryBot.define do
     factory :user_with_community do
       community
     end
+
+    factory :contractor do
+      user_type { 'contractor' }
+      community
+    end
+
     factory :security_guard do
       user_type { 'security_guard' }
       community

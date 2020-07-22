@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::Label do
   describe 'label queries' do
     let!(:current_user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:user2) { create(:user, community_id: current_user.community_id) }
 
     # create a label for the user
@@ -69,7 +70,7 @@ RSpec.describe Types::Queries::Label do
 
     it 'should retrieve labels for the other user' do
       result = DoubleGdpSchema.execute(other_user_label_query, context: {
-                                         current_user: current_user,
+                                         current_user: admin,
                                        }).as_json
       expect(result.dig('data', 'userLabels', 0, 'shortDesc')).to include 'label'
       expect(result.dig('data', 'userLabels', 0, 'id')).to eql second_label.id
@@ -84,7 +85,7 @@ RSpec.describe Types::Queries::Label do
 
     it 'should retrieve all users who have this label' do
       result = DoubleGdpSchema.execute(label_users, context: {
-                                         current_user: current_user,
+                                         current_user: admin,
                                        }).as_json
       expect(result.dig('data', 'labelUsers').length).to eql 1
       expect(result.dig('data', 'labelUsers', 0, 'id')).to eql current_user.id
