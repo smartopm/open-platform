@@ -4,7 +4,7 @@ import { css, StyleSheet } from 'aphrodite'
 import { dateToString } from '../components/DateContainer'
 import { Grid } from '@material-ui/core'
 import GeoData from '../data/nkwashi_plots.json'
-import GeoMap from './Map/GeoMap'
+// import GeoMap from './Map/GeoMap'
 
 /**
  * @param {object} jsonData
@@ -74,7 +74,7 @@ land_parcels &&
             </p>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <GeoMap GeoJSONData={features} />
+            {/* <GeoMap GeoJSONData={features} /> */}
           </Grid>
         </Grid>
       </div>
