@@ -491,19 +491,17 @@ export const DiscussionMutation = gql`
         id
       }
     }
+  }
 `
 
 export const LabelCreate = gql`
-
     mutation labelCreate($shortDesc: String!){
        labelCreate(shortDesc: $shortDesc){
          label {
            id
          }
        }
-
     }
-
 `
 
 // UserLabelCreate
@@ -515,7 +513,6 @@ export const UserLabelCreate = gql`
          }
        }
     }
-
 `
 
 export const UserLabelUpdate = gql`
@@ -526,6 +523,5 @@ export const UserLabelUpdate = gql`
       }
     }
   }
-
 `
 

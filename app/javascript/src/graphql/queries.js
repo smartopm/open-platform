@@ -423,7 +423,6 @@ export const BusinessByIdQuery = gql`
       links
     }
   }
-}
 `
 export const UserLabelsQuery= gql`
   query userLabelsbyId($userId: ID!){
