@@ -25,9 +25,9 @@ RSpec.describe Mutations::Label do
                                          site_community: user.community,
                                        }).as_json
       dub_result = DoubleGdpSchema.execute(query, context: {
-                                        current_user: admin,
-                                        site_community: user.community,
-                                      }).as_json
+                                             current_user: admin,
+                                             site_community: user.community,
+                                           }).as_json
       expect(result.dig('data', 'labelCreate', 'label', 'id')).not_to be_nil
       expect(result.dig('data', 'labelCreate', 'label', 'shortDesc')).to eql 'green'
       expect(result.dig('errors')).to be_nil
