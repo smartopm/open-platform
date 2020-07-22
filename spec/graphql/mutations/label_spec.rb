@@ -119,12 +119,15 @@ RSpec.describe Mutations::Label do
     it 'deletes a label from a user' do
       result = DoubleGdpSchema.execute(dquery, context: {
                                          current_user: admin,
+                                         site_community: user.community,
                                        }).as_json
       res = DoubleGdpSchema.execute(user_label_query, context: {
                                       current_user: admin,
+                                      site_community: user.community,
                                     }).as_json
       labels = DoubleGdpSchema.execute(labels_query, context: {
                                          current_user: admin,
+                                         site_community: user.community,
                                        }).as_json
       # user labels should be gone after the mutation
       expect(res.dig('data', 'userLabels').length).to eql 0
