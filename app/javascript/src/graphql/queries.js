@@ -434,11 +434,10 @@ export const UserLabelsQuery= gql`
 `
 
 export const LabelsQuery = gql`
-{
-  labels{
-    id
-    shortDesc
-  }
-}
-
+    {
+      labels {
+        id
+        shortDesc
+      }
+    }
 `
