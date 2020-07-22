@@ -15,6 +15,13 @@ class Community < ApplicationRecord
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
   }.freeze
 
+  def label_exists?(label)
+    label = self.labels.find_by(short_desc: label)
+    return false if label.nil?
+
+    true
+  end
+
   def domain_admin?(domain)
     DOMAINS_COMMUNITY_MAP[name.to_sym].include?(domain)
   end
