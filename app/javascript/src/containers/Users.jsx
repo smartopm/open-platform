@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
+import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import Nav from '../components/Nav'
 import DateUtil from '../utils/dateutil'
 import { Redirect, Link } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-import { UsersQuery } from '../graphql/queries'
+import { UsersQuery, LabelUsersQuery, LabelsQuery } from '../graphql/queries'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk'
@@ -38,48 +38,7 @@ import {
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 
-export const useStyles = makeStyles(theme => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'right',
-    width: '100%'
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1
-  },
-  table: {
-    display: 'block',
-    width: '100%',
-    overflowX: 'auto'
-  },
-  iconButton: {
-    padding: 10
-  },
-  divider: {
-    height: 28,
-    margin: 4
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 150,
-    maxWidth: '100%'
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  chip: {
-    margin: 2
-  },
-  filterButton : {
-    backgroundColor: '#25c0b0','&:hover': {
-      backgroundColor: '#25c0b0',
-    },
-    textTransform: 'none'
-  }
-}))
+
 const limit = 50
 export default function UsersList() {
   const classes = useStyles()
@@ -87,6 +46,8 @@ export default function UsersList() {
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
   const [type, setType] = useState([])
+  const [label, setLabel] = useState([''])
+  const [users, setUsers] = useState([])
   const [phoneNumbers, setPhoneNumbers] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
@@ -96,6 +57,7 @@ export default function UsersList() {
   const [userName, setName] = useState('')
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
+
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
       query: joinSearchQuery(searchType === 'type' ? type : searchType === 'phone' ? phoneNumbers : type, searchType),
@@ -104,6 +66,13 @@ export default function UsersList() {
     },
     fetchPolicy: 'cache-and-network'
   })
+
+  // const { loading: labelsUserLoading, error: labelsUserError, data: labelsUserData } = useQuery(LabelUsersQuery, {
+  //   variables: { labels: label + ''}
+  // })
+  const [getUserLabels, { loading: labelsUserLoading, data: labelsUserData }] = useLazyQuery(LabelUsersQuery)
+  const {loading: labelsLoading, error: labelsError, data: labelsData} = useQuery(LabelsQuery)
+
   function joinSearchQuery(query, type) {
     const filterType = type === 'phone' ? 'phone_number' : 'user_type'
     return query.map(query => `${filterType} = ${query}`).join(' OR ')
@@ -149,6 +118,11 @@ export default function UsersList() {
     setType(event.target.value)
     setSearchType('type')
   }
+
+  function handleLabelChange(event) {
+    setSearchType('label')
+    setLabel(event.target.value?.id)
+  }
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
@@ -163,12 +137,18 @@ export default function UsersList() {
   // reset pagination when the filter changes
   useEffect(() => {
     setOffset(0)
-  }, [type])
+    if (type === 'label') {
+      getUserLabels({ variables: { labels: label + '' } }).then(() => (setUsers(labelsUserData), console.log('done actually')))
+    }
+    setUsers(data)
+  }, [type, label, labelsUserData, data])
 
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
-
+  if (loading || labelsLoading) return <Loading />
+  if (error || labelsError) return <ErrorPage error={error.message || labelsError.message} />
+  // if (!users?.length) {
+  //   return 'no data yet'
+  // }
   if (redirect) {
     return (
       <Redirect
@@ -180,6 +160,9 @@ export default function UsersList() {
       />
     )
   }
+
+  console.log(label + '')
+  console.log(label.join(''))
   return (
     <Fragment>
       <Nav navName="Users" menuButton="back" backTo="/" />
@@ -298,6 +281,35 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
+          <Grid item xs >
+          <FormControl className={classes.formControl}>
+              <InputLabel id="demo-mutiple-chip-label">Filter by Labels</InputLabel>
+              <Select
+                labelId="select-by-role"
+                id="role-chip"
+                multiple
+                value={label}
+                onChange={handleLabelChange}
+                input={<Input id="select-by-role" />}
+                renderValue={selected => (
+                  <div>
+                    {selected.map(value => (
+                      <Chip key={value.id} label={value.shortDesc} />
+                    ))}
+                  </div>
+                )}
+              >
+                {labelsData.labels.map(label => (
+                  <MenuItem key={label.id} value={label}>
+                    {label.shortDesc}
+                  </MenuItem>
+                ))}
+              </Select>
+              {Boolean(label.length) && (
+                <Button onClick={() => setType([])}>Clear Filter</Button>
+              )}
+            </FormControl>
+          </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end'}}>
             <Button variant="contained"
               color="primary"
@@ -307,6 +319,7 @@ export default function UsersList() {
                 <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
               )}
           </Grid>
+          
         </Grid>
         <br />
         <br />
@@ -324,7 +337,7 @@ export default function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.users.map(user => (
+            {users?.length && users.map(user => (
               <StyledTableRow key={user.id}>
                 <StyledTableCell component="th" scope="row">
                   <Link to={`/user/${user.id}`} key={user.id}>
@@ -385,4 +398,46 @@ export default function UsersList() {
   )
 }
 
+export const useStyles = makeStyles(theme => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'right',
+    width: '100%'
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1
+  },
+  table: {
+    display: 'block',
+    width: '100%',
+    overflowX: 'auto'
+  },
+  iconButton: {
+    padding: 10
+  },
+  divider: {
+    height: 28,
+    margin: 4
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 150,
+    maxWidth: '100%'
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: 2
+  },
+  filterButton : {
+    backgroundColor: '#25c0b0','&:hover': {
+      backgroundColor: '#25c0b0',
+    },
+    textTransform: 'none'
+  }
+}))
 

@@ -434,11 +434,18 @@ export const UserLabelsQuery= gql`
 `
 
 export const LabelsQuery = gql`
-{
-  labels{
-    id
-    shortDesc
-  }
-}
-
+    {
+      labels {
+        id
+        shortDesc
+      }
+    }
+`
+export const LabelUsersQuery = gql`
+    query labelsusers($labels: String!, $limit: Int, $offset: Int,){
+      labelUsers(labels: $labels, limit: $limit, offset: $offset){
+      ...UserFields
+      }
+    }
+  ${UserFragment.publicFields}
 `

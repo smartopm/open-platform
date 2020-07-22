@@ -20,6 +20,8 @@ module Types::Queries::Label
     field :label_users, [Types::UserType], null: true do
       description 'Get users by the label ids, this should be a comma separated string'
       argument :labels, String, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -35,9 +37,11 @@ module Types::Queries::Label
     context[:site_community].users.find(user_id)&.labels&.all
   end
 
-  def label_users(labels:)
+  def label_users(labels:, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    context[:site_community].users.find(context[:current_user].id)&.find_label_users(labels)&.all
+    context[:site_community].users
+                            .find(context[:current_user].id)&.find_label_users(labels)&.limit(limit)
+                            .offset(offset)
   end
 end
