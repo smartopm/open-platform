@@ -32,7 +32,7 @@ export function UserPlotInfo({ accounts }) {
 
   land_parcels &&
     land_parcels.forEach(plot => {
-      plotNumber = [plot.parcelNumber]
+      plotNumber.push(plot.parcelNumber)
     })
   let history = useHistory()
   function plotInformation() {
@@ -47,7 +47,6 @@ export function UserPlotInfo({ accounts }) {
     const convertedDateTime = dateToString(accounts[0].updatedAt)
 
     let features = getPropertyByName(GeoData, plotNumber)
-
     return (
       <>
         <div className="container">
