@@ -42,10 +42,9 @@
     <div id="root">
     </div>
     <%= javascript_pack_tag 'react_main' %>
-      <div class="alert text-center"id="btnSection" role="alert">
+      <div class="alert text-center" id="btnSection" role="alert">
         <span id="btn">Click here to add this application to your home screen </span> <span id="closeBtn">close</span>
       </div>
-    </div>
   
   <noscript>Javascript is not enabled</noscript>
 
@@ -94,21 +93,23 @@
     function addToHomeScreen() {
       // show the install app prompt
       if (window.promptEvent) {
-        // window.promptEvent.prompt();
       window.promptEvent.prompt();
         // handle the Decline/Accept choice of the user
         window.promptEvent.userChoice.then(function (choiceResult) {
           // hide the prompt banner here
           if (choiceResult.outcome === "accepted") {
-             ga('send', 'event', 'PWA-installed', 'Accepted',);
+             ga('send', 'event', 'PWA-installed', 'Accepted');
             window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
           } else {
-            ga('send', 'event', 'PWA-rejected', 'mm User dismissed the A2HS prompt',);
+            ga('send', 'event', 'PWA-rejected', 'mm User dismissed the A2HS prompt');
             console.info("mm User dismissed the A2HS prompt");
           }
           window.promptEvent = null;
-        });
+        }, function(err){ 
+          ga('send', 'event', 'PWA-Errored', err + '');
+        }); 
       }
+      ga('send', 'event', 'PWA-Errored', 'Can\'t install PWA (possibly unsupported browser)');
     }
 
     // check if browser is safari 
