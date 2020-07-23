@@ -79,6 +79,7 @@ import Discussions from '../src/containers/Discussions/Discussions'
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
 import Businesses from '../src/containers/Businesses/Businesses'
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
+import GeoMap from '../src/components/Map/GeoMap'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -209,6 +210,7 @@ const App = () => {
                       <Route path="/entry_logs" component={EntryLogs} />
                       <Route path="/user" exact component={UserEdit} />
                       <Route path="/map" component={Map} />
+                      <Route path="/myplot" component={GeoMap} />
                       <Route path="/mobile_money" component={MobileMoney} />
                       <Route path="/contact" component={Support} />
                       <Route path="/otp_sent" component={OTPFeedbackScreen} />
