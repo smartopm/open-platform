@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Map, GeoJSON, TileLayer, Marker, Popup } from 'react-leaflet'
 import GeoData from '../../data/nkwashi_geo.json'
 import { StyleSheet, css } from "aphrodite";
+import { useLocation } from 'react-router-dom'
 import { invertArray } from '../../utils/helpers'
 
 const center = [-15.524234821346493, 28.65281581878662]
@@ -21,8 +22,10 @@ export function onEachFeature(feature, layer) {
   }
 }
 
-export default function GeoMap({ GeoJSONData }) {
+export default function GeoMap() {
   const [activePlot, setActivePlot] = useState(null)
+  const { state } = useLocation()
+
   return (
     <div>
       <style
@@ -57,7 +60,7 @@ export default function GeoMap({ GeoJSONData }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {GeoJSONData.map(plot => (
+        {state?.features.map(plot => (
           <Marker
             key={Math.random()}
             position={invertArray(plot.geometry.coordinates[0][0], 0, 1)}

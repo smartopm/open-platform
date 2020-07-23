@@ -79,12 +79,11 @@ console.log(features)
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => history.push({ pathname: '/myplot', state: {features} })}
+                onClick={() => history.push({ pathname: '/myplot', state: { features } })}
                 className={`${css(styles.chatButton)}`}
               >
                 My Plot Location
               </Button>
-              {/* <GeoMap GeoJSONData={features} /> */}
             </Grid>
           </Grid>
         </div>
