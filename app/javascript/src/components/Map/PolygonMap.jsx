@@ -1,7 +1,7 @@
 import React from 'react'
 import { Map, GeoJSON, TileLayer } from 'react-leaflet'
 import { StyleSheet, css } from "aphrodite";
-import { onEachFeature } from './GeoMap'
+import { onEachFeature } from '../../containers/GeoMap'
 
 const center = [-15.524234821346493, 28.65281581878662]
 
