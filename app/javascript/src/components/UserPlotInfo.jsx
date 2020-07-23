@@ -1,12 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
-import { Typography, Button } from '@material-ui/core'
+import {  Button } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import { dateToString } from '../components/DateContainer'
 import { Grid } from '@material-ui/core'
 import GeoData from '../data/nkwashi_plots.json'
-import GeoMap from './Map/GeoMap'
 
 /**
  * @param {object} jsonData
@@ -48,7 +47,7 @@ export function UserPlotInfo({ accounts }) {
     const convertedDateTime = dateToString(accounts[0].updatedAt)
 
     let features = getPropertyByName(GeoData, plotNumber)
-console.log(features)
+
     return (
       <>
         <div className="container">

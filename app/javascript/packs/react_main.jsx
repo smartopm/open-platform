@@ -79,7 +79,7 @@ import Discussions from '../src/containers/Discussions/Discussions'
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
 import Businesses from '../src/containers/Businesses/Businesses'
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
-import GeoMap from '../src/components/Map/GeoMap'
+import GeoMap from '../src/containers/GeoMap'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
