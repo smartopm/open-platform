@@ -100,7 +100,7 @@ export default function UpdateCampaign({ match }) {
 
   return (
     <>
-      <Nav navName="Campaign Udate" menuButton="back" backTo="/campaigns" />
+      <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
       <div className="container">
         <form
           onSubmit={e => {
