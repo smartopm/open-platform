@@ -80,7 +80,6 @@ export default function UsersList() {
       label: 'labels',
       type: 'user_type'
     }
-    console.log(query)
     const filterType = types[type]
     return query.map(query => `${filterType} = ${query}`).join(' OR ')
   }
