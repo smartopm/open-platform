@@ -68,6 +68,7 @@ export default function UsersList() {
 
  
  //TODO: @dennis, add the userLabel query 
+ //TODO: @dennis, add pop up for notes 
 
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
 
