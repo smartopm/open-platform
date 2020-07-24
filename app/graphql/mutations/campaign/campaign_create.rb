@@ -19,11 +19,11 @@ module Mutations
         campaign.message = vals[:message]
         campaign.user_id_list = vals[:user_id_list]
         campaign.batch_time = vals[:batch_time]
-        campaign.save!
-        Array(vals[:labels]&.split(',')).each { |label| create_label(campaign, label) }
-        return { campaign: campaign } if campaign.persisted?
+        raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
-        raise GraphQL::ExecutionError, campaign.errors.full_message
+        labels = Array(vals[:labels]&.split(',')).map(&:downcase)
+        labels.each { |label| create_campaign_label(campaign, label) }
+        return { campaign: campaign } if campaign.persisted?
       end
       # rubocop:enable Metrics/AbcSize
 
@@ -32,20 +32,6 @@ module Mutations
         raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
         true
-      end
-
-      def create_label(campaign, label)
-        existing_label = Label.find_by(short_desc: label)
-        return associate_label(campaign, existing_label) if existing_label.present?
-
-        label = context[:site_community].labels.new(short_desc: label)
-        return associate_label(campaign, label) if label.save!
-
-        raise GraphQL::ExecutionError, 'Something went wrong'
-      end
-
-      def associate_label(campaign, existing_label)
-        CampaignLabel.new(campaign_id: campaign.id, label_id: existing_label.id).save!
       end
     end
   end

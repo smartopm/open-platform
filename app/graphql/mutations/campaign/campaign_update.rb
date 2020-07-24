@@ -9,6 +9,7 @@ module Mutations
       argument :message, String, required: false
       argument :batch_time, String, required: false
       argument :user_id_list, String, required: false
+      argument :labels, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 
@@ -16,11 +17,37 @@ module Mutations
         campaign = ::Campaign.find(id)
         return if campaign.nil?
 
+        update_labels(campaign, vals.delete(:labels)&.split(','))
         campaign.update!(vals)
 
         return { campaign: campaign } if campaign.persisted?
 
         raise GraphQL::ExecutionError, campaign.errors.full_message
+      end
+
+      def update_labels(campaign, labels)
+        labels = labels&.map(&:downcase)
+        Array(labels).each do |label|
+          next if association_exists?(campaign, label)
+
+          create_campaign_label(campaign, label)
+        end
+        disassociate_labels(campaign, Array(campaign.labels&.pluck(:short_desc)) - Array(labels))
+      end
+
+      def disassociate_labels(campaign, labels)
+        labels.each do |label|
+          label_record = Label.find_by(short_desc: label)
+          relation = CampaignLabel.find_by(campaign_id: campaign.id, label_id: label_record.id)
+          raise GraphQL::ExecutionError, relation.errors.full_message unless relation.destroy
+        end
+      end
+
+      def association_exists?(campaign, label_text)
+        campaign_labels = campaign.labels
+        return false if campaign_labels.empty?
+
+        campaign_labels.pluck(:short_desc).include?(label_text)
       end
 
       def authorized?(_vals)
