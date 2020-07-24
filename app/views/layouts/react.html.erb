@@ -69,7 +69,8 @@
     // this is important because the prompt will only show once according to google 
     window.onload = function() {
       const isInstalled = window.localStorage.getItem('installed');
-      if (JSON.parse(isInstalled) || isSafari()) {
+      // don't display the installer on browsers we know it is not supported
+      if (JSON.parse(isInstalled) || isSafari || !isChrome || isSamsungBrowser) {
          btSection.style.display = 'none'
          return
       }
@@ -101,8 +102,7 @@
              ga('send', 'event', 'PWA-installed', 'Accepted');
             window.localStorage.setItem('installed', 'true'); // keep this is the localStorage to access later
           } else {
-            ga('send', 'event', 'PWA-rejected', 'mm User dismissed the A2HS prompt');
-            console.info("mm User dismissed the A2HS prompt");
+            ga('send', 'event', 'PWA-rejected', 'User dismissed the A2HS prompt');
           }
           window.promptEvent = null;
         }, function(err){ 
@@ -113,9 +113,13 @@
     }
 
     // check if browser is safari 
-    function isSafari(){
-      return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    }
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    // check if browser is chrome or samsung browser using the user-agent and vendor
+    // I tested this in Edge(false), IE11(false), Firefox desktop and android(false), 
+    // Chrome desktop and android(true), samsung mobile
+    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    const isSamsungBrowser = /SamsungBrowser/.test(navigator.userAgent)
 
   </script>
   </body>
