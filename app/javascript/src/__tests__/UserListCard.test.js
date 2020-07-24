@@ -7,20 +7,27 @@ describe('It displays the user list and interactions', () => {
 
 const props = {
     userData: {
-    users: [
-         {
-            avatarUrl: null,
-            email: "domain@email.com",
-            id: "59927651-9bb4-4e47-8afe-0989d03d210d",
-            imageUrl: null,
-            name: "Test Referral 2",
-            notes: [],
-            phoneNumber: "0987654123",
-            roleName: "Admin",
-        }
-    ] },
-    handleNoteModal : jest.fn()
-}
+        users: [
+             {
+                avatarUrl: null,
+                email: "domain@email.com",
+                id: "59927651-9bb4-4e47-8afe-0989d03d210d",
+                imageUrl: null,
+                name: "Test Referral 2",
+                notes: [],
+                phoneNumber: "0987654123",
+                roleName: "Admin",
+                labels: [
+                    {
+                    id: "de2392ec-398f-40e2-a983-7caee40b2073",
+                    shortDesc: "Res"
+                    }
+                ]
+             }
+            ], 
+        },
+        handleNoteModal : jest.fn()
+    }
     it('it mounts component without error', () => {
         const container = render(
             <BrowserRouter>

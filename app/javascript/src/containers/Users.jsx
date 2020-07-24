@@ -1,15 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
-import DateUtil from '../utils/dateutil'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
-import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk'
-import PhoneMissedIcon from '@material-ui/icons/PhoneMissed'
 import {
   Button,
   TextField,
@@ -23,8 +20,7 @@ import {
   FormControl,
   InputLabel,
   Input,
-  Chip,
-  List
+  Chip
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
@@ -66,8 +62,7 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
- 
- //TODO: @dennis, add the userLabel query 
+  
  //TODO: @dennis, add pop up for notes 
 
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)

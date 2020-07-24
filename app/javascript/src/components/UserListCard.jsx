@@ -22,7 +22,7 @@ export default function UserListCard({
     userData,
     handleNoteModal
 }) {
-
+ 
     const classes = useStyles()
     return (
        
@@ -31,65 +31,71 @@ export default function UserListCard({
                 {userData.users.map(user => (
                     <Fragment key={user.id}>
                     <ListItem style={{margin: 10}}>
-                        <Grid container spacing={3}>
+                        <Grid container alignItems="center" spacing={3}>
                             <Grid item xs={12} sm={6}>
                                 <Box className={classes.detailsRow} >
                                     <ListItemAvatar>
                                         <Avatar imageUrl={user.imageUrl} style={"medium"} />
                                     </ListItemAvatar>
-                                    <Box>
+                                    <Box style={{margin: 5}}>
                                         <Box
                                             style={{
                                                 display: "flex",
-                                                flexDirection: "row",
-                                                justifyContent: "space-around"
+                                                flexDirection: "column",
+                                                justifyContent: "space-around",
                                             }}
                                         >
                                         <Link to={`/user/${user.id}`} key={user.id}>
-                                            <Typography  component="span" variant="body2">
+                                            <Typography  component="span" variant="subtitle1">
                                                <strong> {user.name} </strong>
                                             </Typography>
                                         </Link>
-                                            <span>{' / '} </span>
-                                            <Typography variant="subtitle1">{user.roleName}</Typography>
+                                           
+                                            <Typography component="span" variant="body2">{user.roleName}</Typography>
                                         </Box>
                                         <Box
                                             style={{
                                                 display: "flex",
-                                                flexDirection: "row",
+                                                flexDirection: "column",
                                                 justifyContent: "space-around",
                                                 marginRight: 30
                                             }}
                                         >
                                             <Typography variant="body2" color="textSecondary">
-                                                {user.phoneNumber || 'None'}
+                                                {user.phoneNumber }
                                             </Typography>
-                                            <span>{' / '} </span>
+                                           
                                             <Typography variant="body2" color="textSecondary">
                                                 {user.email}
                                             </Typography>
                                         </Box>
                                         <Box
                                             style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                justifyContent: "flex-start",
-                                                marginTop: 5
+                                                display: 'flex',
+                                                justifyContent: 'flex-start',
+                                                flexWrap: 'wrap',
+                                                listStyle: 'none',
+                                                marginTop: 5,
                                             }}
                                         >
-                                            <Chip
-                                                label="Basic"
+                                        {user.labels.map(label =>(
+
+                                         <Chip key={label.id}
+                                                label={label.shortDesc}
                                                 style={{ height: 25, marginRight: 5 }}
                                             />
+                                             ))
+                                          
+                                            }
                                         </Box>
                                     </Box>
                                 </Box>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Box className={classes.root}>
-                                    <Box>
+                                    <Box style={{justifyContent: 'center', alignItems: 'center'}}>
                                         <Typography variant="body2">
-                                            {user.notes && user.notes[0] ? user.notes[0].body : 'None'}
+                                            {user.notes && user.notes[0] ? user.notes[0].body : ''}
                                         </Typography>
                                     </Box>
 
@@ -115,7 +121,7 @@ export default function UserListCard({
                             </Grid>
                         </Grid>
                     </ListItem>
-                    <Divider  />
+                    <Divider  ariant="middle"   />
                     </Fragment>   
                 ))
                 }
@@ -149,6 +155,7 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-start",
+        alignItems: "center",
         width: 400
     }
 
