@@ -8,6 +8,7 @@ import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
 export default function Categories() {
     const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
+    const theme = useContext(ThemeContext)
     // TODO: @olivier ==> add better error page and loading component here
     if (error) {
         return error.message
@@ -16,7 +17,7 @@ export default function Categories() {
         return <Spinner />
     }
     const cats = response.categories.filter(cat => cat.slug !== 'private')
-    const theme = useContext(ThemeContext)
+    
     return (
         <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
             <Grid >
