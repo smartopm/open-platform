@@ -97,7 +97,7 @@ export function LoginScreen() {
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/welcome'}>
+        <Link to={'/welcome'} style={{color: theme.primaryColor}}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
