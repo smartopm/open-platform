@@ -12,6 +12,7 @@ module Mutations
 
       field :campaign, Types::CampaignType, null: true
 
+      # TODO: Rollback if Label fails to save - Saurabh
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         campaign = context[:current_user].community.campaigns.new
