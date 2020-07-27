@@ -6,6 +6,7 @@ module Types
     field :id, ID, null: false
     field :user, Types::UserType, null: false
     field :user_id, ID, null: false
+    field :assigned_to, ID, null: true
     field :author, Types::UserType, null: false
     field :body, String, null: true
     field :category, String, null: true

@@ -15,7 +15,7 @@ module Types::Queries::Note
 
     field :user_notes, [Types::NoteType], null: false do
       description 'Returns notes for the specific user'
-      argument :id, GraphQL::Types::ID, required: true
+      argument :id, String, required: true
     end
 
     field :flagged_notes, [Types::NoteType], null: false do
@@ -34,8 +34,8 @@ module Types::Queries::Note
 
   def user_notes(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-
-    Note.where(user_id: id).order(created_at: :desc)
+    Note.where(assigned_to: id.split(',')).order(created_at: :desc)
+    # context[:current_user].user_notes
   end
 
   def flagged_notes(offset: 0, limit: 50)
