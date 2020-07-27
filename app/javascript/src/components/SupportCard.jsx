@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, Button, Grid } from '@material-ui/core'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
@@ -7,27 +7,15 @@ import PhoneIcon from '@material-ui/icons/Phone'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    margin: 'auto',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
 
-  title: {
-    fontSize: 14
-  },
-  pos: {
-    margin: 10
-  }
-})
 
 export default function SupportCard({ handleSendMessage, user }) {
   const classes = useStyles()
+  const theme = useContext(ThemeContext)
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
   const CSMNumber = '260974624243'
@@ -115,6 +103,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             color="primary"
             onClick={handleSendMessage}
             className={css(styles.chatButton)}
+            style={{backgroundColor: theme.primaryColor}}
           >
             Support Chat
           </Button>
@@ -137,6 +126,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               )
             }
             className={`${css(styles.chatButton)}`}
+            style={{backgroundColor: theme.primaryColor}}
           >
             Client Request Form
           </Button>
@@ -149,6 +139,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             color="primary"
             onClick={() => history.push('/mobile_money')}
             className={`${css(styles.chatButton)}`}
+            style={{backgroundColor: theme.primaryColor}}
           >
             Pay With Mobile Money
           </Button>
@@ -161,6 +152,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               color="primary"
               onClick={() => history.push('/feedback')}
               className={`${css(styles.chatButton)}`}
+              style={{backgroundColor: theme.primaryColor}}
             >
               Feedback
             </Button>
@@ -176,6 +168,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               color="primary"
               onClick={() => history.push('/map')}
               className={`${css(styles.chatButton)}`}
+              style={{backgroundColor: theme.primaryColor}}
             >
               Explore
             </Button>
@@ -198,11 +191,26 @@ SupportCard.propTypes = {
 
 const styles = StyleSheet.create({
   chatButton: {
-    backgroundColor: '#25c0b0',
     color: '#FFF',
     width: '55%',
     height: 51,
     boxShadow: 'none',
     marginTop: 50
+  }
+})
+
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+    margin: 'auto',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  title: {
+    fontSize: 14
+  },
+  pos: {
+    margin: 10
   }
 })
