@@ -68,9 +68,11 @@ export default function TodoList({
   todoAction
 }) {
     const classes = useStyles()
+    // eslint-disable-next-line no-unused-vars
     const [name, setName] = useState('')
+      // eslint-disable-next-line no-unused-vars
     const [loaded, setLoading] = useState(false)
-    const { loading, error, data: liteData, refetch, fetchMore } = useQuery(UsersLiteQuery, {
+    const { loading, error, data: liteData, fetchMore } = useQuery(UsersLiteQuery, {
         variables: {
           query: name,
           limit: 30,
@@ -78,7 +80,7 @@ export default function TodoList({
         fetchPolicy: 'cache-and-network'
       })
 
-    
+      // eslint-disable-next-line no-unused-vars
       function fetchMoreUsers() {
         setLoading(true)
         fetchMore({
@@ -199,7 +201,7 @@ console.log(liteData)
                         style={{ width: 300 }}
                         multiple
                         freeSolo
-                        renderTags={(value, getTagProps) => {
+                        renderTags={(value) => {
                             return value.map((option, index) => (
                                <ListItem key={index} alignItems="flex-start">
                                   <ListItemAvatar>

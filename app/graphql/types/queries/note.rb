@@ -34,7 +34,7 @@ module Types::Queries::Note
   def user_notes(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].users.find(id)&.notes
+    context[:site_community].notes.where(user_id: id)
   end
 
   def flagged_notes(offset: 0, limit: 50)
