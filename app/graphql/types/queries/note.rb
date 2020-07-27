@@ -27,22 +27,21 @@ module Types::Queries::Note
 
   def all_notes(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-
-    Note.all.includes(:user).order(created_at: :desc)
-        .limit(limit).offset(offset)
+    
+    context[:site_community].notes.includes(:user).limit(limit).offset(offset)
   end
 
   def user_notes(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    Note.where(assigned_to: id.split(',')).order(created_at: :desc)
-    # context[:current_user].user_notes
+    context[:site_community].users.find(id)&.notes
   end
 
   def flagged_notes(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    Note.includes(:user).where(flagged: true).order(completed: :desc, created_at: :desc)
-        .limit(limit).offset(offset)
+    context[:site_community].notes.includes(:user).where(flagged: true)
+                            .order(completed: :desc, created_at: :desc)
+                            .limit(limit).offset(offset)
   end
 end
