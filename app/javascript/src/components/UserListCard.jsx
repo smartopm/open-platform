@@ -82,7 +82,7 @@ export default function UserListCard({
 
                                          <Chip key={label.id}
                                                 label={label.shortDesc}
-                                                style={{ height: 25, marginRight: 5 }}
+                                                style={{ height: 25, margin: 5 }}
                                             />
                                              ))
                                           
