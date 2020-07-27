@@ -31,7 +31,7 @@ class User < ApplicationRecord
     return relat.where(user_type: allowed_user_types)
   }
 
-  belongs_to :community, optional: true
+  belongs_to :community, dependent: :destroy
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
                                     dependent: :destroy, inverse_of: :user
