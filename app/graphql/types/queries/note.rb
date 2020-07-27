@@ -34,6 +34,7 @@ module Types::Queries::Note
 
   def user_notes(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
     Note.where(assigned_to: id.split(',')).order(created_at: :desc)
     # context[:current_user].user_notes
   end
