@@ -252,7 +252,6 @@ export default function Homepage({ authState }) {
       access: ['contractor']
     },
     {
-      card_id: 20,
       title: `Discussions`,
       path: `/discussions`,
       titleStyle: css(styles.CardtextImg),
@@ -277,7 +276,6 @@ export default function Homepage({ authState }) {
       access: ['admin', 'client', 'prospective_client', 'resident', 'visitor']
     },
     {
-      card_id: 15,
       title: `${authState.user.community.name} Support`,
       path: `/contact`,
 
