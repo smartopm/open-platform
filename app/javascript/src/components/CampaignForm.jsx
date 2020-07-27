@@ -70,17 +70,19 @@ export default function CampaignForm({authState }) {
           />
         </div>
         <div className="form-group">
-            <TextField
-              label="Message"
-              name="message"
-              rows={5}
-              multiline
-              required
-              className="form-control"
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-            />
-          </div>
+          <label className="bmd-label-static" htmlFor="firstName">
+            Message
+          </label>
+          <input
+            className="form-control"
+            type="text"
+            onChange={e => setMessage(e.target.value)}
+            value={message}
+            name="name"
+            aria-label="campaign_message"
+            required
+          />
+        </div>
         <div>
           <TextField
             label="User ID List"
