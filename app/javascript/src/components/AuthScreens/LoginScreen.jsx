@@ -34,10 +34,7 @@ export function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const [countryCode, setCountryCode] = useState(260)
   const { state } = useLocation()
-<<<<<<< HEAD
   const history = useHistory()
-=======
->>>>>>> 9a8f93000e531c0c1ee25feb2fbfdb47085d16a8
   const theme = useContext(ThemeContext)
 
   function loginWithPhone(event, type = 'input') {
