@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable Metrics/LineLength
 RSpec.describe Mutations::Campaign do
   describe 'creating a Campaign' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
@@ -12,16 +13,21 @@ RSpec.describe Mutations::Campaign do
           $message: String!
           $batchTime: String!
           $userIdList: String!
+          $labels: String!
         ) {
           campaignCreate(
             name: $name
             message: $message
             batchTime: $batchTime
             userIdList: $userIdList
+            labels: $labels
             ){
               campaign{
                 name
                 id
+                labels {
+                  shortDesc
+                }
               }
             }
           }
@@ -34,13 +40,17 @@ RSpec.describe Mutations::Campaign do
         message: 'Visiting',
         batchTime: '17/06/2020 03:49',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: 'label 1,label 2',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
+                                                site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'campaignCreate', 'campaign', 'name')).not_to be_nil
+      expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0)).not_to be_nil
+      expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc')).to eql 'label 1'
       expect(result.dig('errors')).to be_nil
     end
   end
@@ -60,19 +70,21 @@ RSpec.describe Mutations::Campaign do
           $id: ID!
           $name: String!
           $message: String!
-          $batchTime: String!
-          $userIdList: String!
+          $labels: String!
         ) {
           campaignUpdate(
             id: $id
             name: $name
             message: $message
-            batchTime: $batchTime
-            userIdList: $userIdList
+            labels: $labels
           ) {
             campaign {
               id
               name
+              message
+              labels {
+                shortDesc
+              }
             }
           }
         }
@@ -82,18 +94,21 @@ RSpec.describe Mutations::Campaign do
     it 'returns an Campaign' do
       variables = {
         id: campaign.id,
-        name: 'This is a Campaign',
-        message: 'Visiting',
-        batchTime: '17/06/2020 03:49',
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        name: 'This is a Campaign Update',
+        message: 'Visiting Update',
+        labels: 'label 3',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
+                                                site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'id')).not_to be_nil
-      expect(result.dig('data', 'campaignUpdate', 'campaign', 'name')).to eql 'This is a Campaign'
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'name')).to eql 'This is a Campaign Update'
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'message')).to eql 'Visiting Update'
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc')).to eql 'label 3'
       expect(result.dig('errors')).to be_nil
     end
   end
 end
+# rubocop:enable Metrics/LineLength

@@ -4,5 +4,6 @@ class CreateCampaignLabel < ActiveRecord::Migration[6.0]
       t.references :campaign, null: false, type: :uuid, foreign_key: true
       t.references :label, null: false, type: :uuid, foreign_key: true
     end
+    add_index :campaign_labels, [:campaign_id, :label_id], :unique => true
   end
 end

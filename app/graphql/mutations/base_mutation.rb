@@ -31,19 +31,5 @@ module Mutations
         raise MutationArgumentError, 'Unauthorized Arguments' if values.key?(key)
       end
     end
-
-    def create_campaign_label(campaign, label)
-      existing_label = Label.find_by(short_desc: label)
-      return associate_campaign_label(campaign, existing_label) if existing_label.present?
-
-      label = context[:site_community].labels.new(short_desc: label)
-      return associate_campaign_label(campaign, label) if label.save!
-
-      raise GraphQL::ExecutionError, label.errors.full_message
-    end
-
-    def associate_campaign_label(campaign, existing_label)
-      CampaignLabel.create!(campaign_id: campaign.id, label_id: existing_label.id)
-    end
   end
 end

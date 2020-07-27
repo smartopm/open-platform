@@ -4,6 +4,8 @@ module Mutations
   module Campaign
     # CampaignCreate
     class CampaignCreate < BaseMutation
+      include Helpers::Campaign
+
       argument :name, String, required: true
       argument :message, String, required: true
       argument :batch_time, String, required: true

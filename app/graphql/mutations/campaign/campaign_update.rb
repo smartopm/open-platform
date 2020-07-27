@@ -4,6 +4,8 @@ module Mutations
   module Campaign
     # CampaignUpdate
     class CampaignUpdate < BaseMutation
+      include Helpers::Campaign
+
       argument :id, ID, required: true
       argument :name, String, required: false
       argument :message, String, required: false
@@ -17,7 +19,7 @@ module Mutations
         campaign = ::Campaign.find(id)
         return if campaign.nil?
 
-        update_labels(campaign, vals.delete(:labels)&.split(','))
+        update_campaign_label(campaign, vals.delete(:labels)&.split(','))
         campaign.update!(vals)
 
         return { campaign: campaign } if campaign.persisted?
@@ -25,17 +27,17 @@ module Mutations
         raise GraphQL::ExecutionError, campaign.errors.full_message
       end
 
-      def update_labels(campaign, labels)
+      def update_campaign_label(campaign, labels)
         labels = labels&.map(&:downcase)
         Array(labels).each do |label|
-          next if association_exists?(campaign, label)
+          next if campaign_label_exists?(campaign, label)
 
           create_campaign_label(campaign, label)
         end
-        disassociate_labels(campaign, Array(campaign.labels&.pluck(:short_desc)) - Array(labels))
+        remove_campaign_label(campaign, Array(campaign.labels&.pluck(:short_desc)) - Array(labels))
       end
 
-      def disassociate_labels(campaign, labels)
+      def remove_campaign_label(campaign, labels)
         labels.each do |label|
           label_record = Label.find_by(short_desc: label)
           relation = CampaignLabel.find_by(campaign_id: campaign.id, label_id: label_record.id)
@@ -43,7 +45,7 @@ module Mutations
         end
       end
 
-      def association_exists?(campaign, label_text)
+      def campaign_label_exists?(campaign, label_text)
         campaign_labels = campaign.labels
         return false if campaign_labels.empty?
 
