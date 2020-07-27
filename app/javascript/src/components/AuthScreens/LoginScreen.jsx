@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
   TextField,
@@ -21,6 +21,7 @@ import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import FacebookIcon from '@material-ui/icons/Facebook'
+import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -34,8 +35,10 @@ export function LoginScreen() {
   const [countryCode, setCountryCode] = useState(260)
   const { state } = useLocation()
   const history = useHistory()
+  const theme = useContext(ThemeContext)
 
   function loginWithPhone(event, type = 'input') {
+    
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
@@ -89,6 +92,7 @@ export function LoginScreen() {
     )
     setOpen(!open)
   }
+
 
   return (
     <div style={{ overflow: 'hidden' }}>
@@ -164,6 +168,7 @@ export function LoginScreen() {
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+            style={{backgroundColor: theme.primaryColor}}
             onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >
@@ -321,7 +326,6 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
     color: '#FFF',
     width: '55%',
     height: 51,
