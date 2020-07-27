@@ -1,6 +1,17 @@
 import React, { Fragment } from 'react'
-import { Divider, Typography, Button, Chip, Avatar  } from '@material-ui/core'
-import DoneIcon from '@material-ui/icons/Done';
+import {
+  Divider,
+  Typography,
+  Button,
+  Chip,
+  Avatar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@material-ui/core'
+import DoneIcon from '@material-ui/icons/Done'
 import Comment from './Comment'
 import { DiscussionCommentsQuery } from '../../graphql/queries'
 import { useQuery } from 'react-apollo'
@@ -15,7 +26,7 @@ export default function Discussion({ discussionData }) {
   const { id } = discussionData
   const [isLoading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const [subscribe, setSubscribe] =useState('')
+  const [subscribe, setSubscribe] = useState('')
   const { loading, error, data, refetch, fetchMore } = useQuery(
     DiscussionCommentsQuery,
     {
@@ -24,12 +35,12 @@ export default function Discussion({ discussionData }) {
   )
 
   const handleClickOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   function fetchMoreComments() {
     setLoading(true)
@@ -62,22 +73,38 @@ export default function Discussion({ discussionData }) {
           {discussionData.description || 'No Description'}
         </Typography>
         <Chip
-        avatar={<Avatar>M</Avatar>}
-        label="Subscribe"
-         clickable
-         onClick={handleClickOpen}
-        color="success"
-        // onDelete={handleDelete}
-        deleteIcon={<DoneIcon />}
-      />
-        {/* <Chip
-        avatar={<Avatar>X</Avatar>}
-        label="UnSubscribe"
-        clickable
-        color="success"
-        // onDelete={handleDelete}
-        deleteIcon={<DoneIcon />}
-      /> */}
+          label="Subscribe"
+          clickable
+          onClick={handleClickOpen}
+          color="success"
+          // onDelete={handleDelete}
+          deleteIcon={<DoneIcon />}
+        />
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Use Google's location service?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Let Google help apps determine location. This means sending
+              anonymous location data to Google, even when no apps are running.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <br />
         <Typography variant="body2" data-testid="disc_author">
           <strong>{discussionData.user.name}</strong>
