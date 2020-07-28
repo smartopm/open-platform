@@ -2,7 +2,6 @@
 
 # AssigneeNote
 class AssigneeNote < ApplicationRecord
-    belongs_to :user
-    belongs_to :note
+  belongs_to :user
+  belongs_to :note
 end
-  
