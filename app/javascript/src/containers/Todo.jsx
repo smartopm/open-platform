@@ -1,10 +1,7 @@
 import React, { Fragment, useState, useContext } from 'react'
 import Nav from '../components/Nav'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
-import { useQuery, useMutation } from 'react-apollo'
-import { flaggedNotes } from '../graphql/queries'
-import Loading from '../components/Loading'
-import ErrorPage from '../components/Error'
+import { useMutation } from 'react-apollo'
 import { UpdateNote } from '../graphql/mutations'
 import Paginate from '../components/Paginate'
 import TodoList from '../components/TodoList'
@@ -12,6 +9,7 @@ import CenteredContent from '../components/CenteredContent'
 
 export default function Todo({ history }) {
   const [offset, setOffset] = useState(0)
+  // eslint-disable-next-line no-unused-vars
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
 
@@ -20,19 +18,14 @@ export default function Todo({ history }) {
   const [userId, setUserId] = React.useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const limit = 50
+
   function todoAction(id, isCompleted) {
     setLoading(true)
     noteUpdate({ variables: { id, completed: !isCompleted, } }).then(() => {
       setLoading(false)
-      refetch()
     })
   }
 
-  const { loading, error, data, refetch } = useQuery(flaggedNotes, {
-    variables: {
-      offset, limit
-    }
-  })
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
@@ -52,7 +45,6 @@ export default function Todo({ history }) {
   function saveDate() {
     let id = userId
     noteUpdate({ variables: { id, dueDate: selectedDate } }).then(() => {
-      refetch()
       setIsDialogOpen(!isDialogOpen)
     })
   }
@@ -64,9 +56,6 @@ export default function Todo({ history }) {
     // re-route to home
     history.push('/')
   }
-  if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
-
   return (
     <Fragment>
       <Nav navName="Todo" menuButton="back" backTo="/" />
@@ -77,11 +66,7 @@ export default function Todo({ history }) {
        saveDate={saveDate}
        selectedDate={selectedDate}
        handleDateChange={handleDateChange}
-      //  data={data}
-      //  isLoading={isLoading}
        todoAction={todoAction}
-
-      
       />
 
         <div data-testid="pagination-container">

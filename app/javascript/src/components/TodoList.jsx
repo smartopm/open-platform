@@ -40,6 +40,7 @@ export default function TodoList({
         },
         fetchPolicy: 'cache-and-network'
     })
+  // eslint-disable-next-line no-unused-vars
     const { loading: isLoading, error: tasksError, data, refetch } = useQuery(flaggedNotes, {
       variables: {
         offset: 0, limit: 50
@@ -165,6 +166,7 @@ export default function TodoList({
                       note.assignees.map(user => (
                               <Chip
                                 key={user.id}
+                                style={{ margin: 5 }}
                                 variant="outlined"
                                 label={user.name}
                                 size="medium"
