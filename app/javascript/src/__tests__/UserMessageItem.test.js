@@ -100,7 +100,7 @@ describe('check route', () => {
   const location1 = '/message/348534'
   const location4 = '/messages'
   const location2 = '/user/348534'
-  const location3 = '/nkwashi_news/348534'
+  const location3 = '/news/348534'
   
   it('should know when it is being used on messages', () => {
     expect(check_route(location1)).toBe('is_message')

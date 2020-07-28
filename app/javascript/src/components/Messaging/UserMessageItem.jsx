@@ -108,13 +108,13 @@ export default function UserMessageItem({
 }
 
 // identify between posts, messages and user profile
-// /nkwashi_news ==> posts
+// /news ==> posts
 // /user/blahblah ==> user profile
 // /messages ==> messages
 // /message/blah
 export function check_route(location) {
   const routes = {
-    nkwashi_news: 'is_post',
+    news: 'is_post',
     user: 'is_profile',
     message: 'is_message',
     messages: 'is_message'

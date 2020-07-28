@@ -4,7 +4,6 @@ import { render,} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-// import data from '../data/nkwashi_plots.json'
 
 describe("User infromation component loads",()=>{
     const data = {
