@@ -160,7 +160,7 @@ class User < ApplicationRecord
   end
 
   def referral_todo(vals)
-    ::Note.create(
+    community.notes.create(
       user_id: vals[:id],
       body: "Contact #{vals[:name]}: Prospective client referred by #{self[:name]}.
       Please reach out to the set up a call or visit.",
@@ -195,7 +195,7 @@ class User < ApplicationRecord
   end
 
   def generate_note(vals)
-    ::Note.create(
+    community.notes.create(
       user_id: vals[:user_id],
       body: vals[:body],
       category: vals[:category],
