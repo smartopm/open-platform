@@ -9,6 +9,7 @@ module Types
     field :user_id, ID, null: false
     field :assigned_to, ID, null: true
     field :author, Types::UserType, null: false
+    field :assignees, [Types::UserType], null: true
     field :body, String, null: true
     field :category, String, null: true
     field :flagged, Boolean, null: true
