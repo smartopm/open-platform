@@ -45,7 +45,7 @@ export default function UserListCard({
                                                 justifyContent: "space-around",
                                             }}
                                         >
-                                        <Link to={`/user/${user.id}`} key={user.id}>
+                                        <Link style={{color: 'black'}} to={`/user/${user.id}`} key={user.id}>
                                             <Typography  component="span" variant="subtitle1">
                                                <strong> {user.name} </strong>
                                             </Typography>

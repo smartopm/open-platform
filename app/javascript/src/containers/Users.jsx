@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import { Redirect } from 'react-router-dom'
@@ -27,11 +27,13 @@ import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
+import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 
 const limit = 50
 export default function UsersList() {
   const classes = useStyles()
+  const theme = useContext(ThemeContext)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
@@ -306,6 +308,7 @@ export default function UsersList() {
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
+              style={{backgroundColor: theme.primaryColor}}
               endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
             {Boolean(phoneNumbers.length) && (
               <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
@@ -369,9 +372,7 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   },
   filterButton: {
-    backgroundColor: '#25c0b0', '&:hover': {
-      backgroundColor: '#25c0b0',
-    },
+    
     textTransform: 'none'
   }
 }))
