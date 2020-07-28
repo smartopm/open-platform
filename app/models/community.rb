@@ -23,6 +23,10 @@ class Community < ApplicationRecord
     true
   end
 
+  def assign_task_to_user(user_id, note_id)
+    self.users.find(user_id).assignee_notes.create!(note_id: note_id)
+  end
+
   def domain_admin?(domain)
     DOMAINS_COMMUNITY_MAP[name.to_sym].include?(domain)
   end

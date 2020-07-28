@@ -26,6 +26,7 @@ module Types
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate
     field :note_update, mutation: Mutations::Note::NoteUpdate
+    field :note_assign, mutation: Mutations::Note::NoteAssign
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate

@@ -4,7 +4,6 @@ module Types
   # NoteType
   class NoteType < Types::BaseObject
     field :id, ID, null: false
-    field :community_id, ID, null: false
     field :user, Types::UserType, null: false
     field :user_id, ID, null: false
     field :assigned_to, ID, null: true
