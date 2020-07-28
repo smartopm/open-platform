@@ -1,8 +1,8 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from './Dialog'
 import DateUtil from '../utils/dateutil'
-import { createMuiTheme } from '@material-ui/core'
+import { createMuiTheme, Chip, Avatar } from '@material-ui/core'
 import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from './Loading'
@@ -16,10 +16,6 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useQuery } from 'react-apollo'
 import { UsersLiteQuery } from '../graphql/queries'
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ListItem from '@material-ui/core/ListItem';
 
 const useStyles = makeStyles({
   root: {
@@ -80,6 +76,11 @@ export default function TodoList({
         fetchPolicy: 'cache-and-network'
       })
 
+    // unsubscribe the user
+    function handleDelete(userId, noteId) {
+      console.log({userId, noteId})
+    }
+
       // eslint-disable-next-line no-unused-vars
       function fetchMoreUsers() {
         setLoading(true)
@@ -97,7 +98,7 @@ export default function TodoList({
     if(loading || error){
         return 'loading'
     }
-console.log(liteData)
+
   return (
     <div className="container" data-testid="todo-container">
       <ModalDialog
@@ -129,7 +130,7 @@ console.log(liteData)
             <Loading />
           ) : data.flaggedNotes.length ? (
             data.flaggedNotes.map(note => (
-              <li key={note.id} className={`${css(styles.listItem)} card`}>
+              <li key={note.id} className={`${css(styles.listItem)}`}>
                 <div className="custom-control custom-checkbox text">
                   <input
                     type="checkbox"
@@ -171,14 +172,6 @@ console.log(liteData)
                   />
 
                   <br />
-                  <br />
-                  <span>
-                    By <i>{note.author.name}</i>
-                  </span>
-
-                  <br />
-
-                  <br />
                   <span style={{ marginRight: 10 }}>
                     Created{' '}
                     <i>
@@ -192,32 +185,54 @@ console.log(liteData)
                     Associated with <i>{note.user.name}</i>
                   </span>
                 </div>
+                <br />
+                {/* notes assignees */}
+                    
+                    {
+                      note.assignees.map(user => (
+                              <Chip
+                                key={user.id}
+                                variant="outlined"
+                                label={user.name}
+                                size="medium"
+                                onDelete={() => handleDelete(user.id, note.id)}
+                                avatar={<Avatar src={user.imageUrl} alt={user.name} />}
+                                />
+                      ))
+                    }
+
+                    <br />
+                    <br />
+
                     {/* autocomplete for assignees */}
                     {
                       <Autocomplete
-                        id="combo-box-demo"
+                        id={note.id}
                         options={liteData.users}
                         getOptionLabel={(option) => option.name}
                         style={{ width: 300 }}
                         multiple
                         freeSolo
-                        renderTags={(value) => {
-                            return value.map((option, index) => (
-                               <ListItem key={index} alignItems="flex-start">
-                                  <ListItemAvatar>
-                                    <Avatar alt="Remy Sharp" src={option.imageUrl} />
-                                  </ListItemAvatar>
-                                  <ListItemText primary={option.name}/>
-                                </ListItem>
-                            ))
-                        }
-                        }
-                        renderInput={(params) => (
-                          <Fragment>       
-                            <TextField {...params} label="Assignees" variant="outlined" />
-                           </Fragment>
-                        )}
-                        />
+                        onChange={(_evt, value) => {
+                          // subscribe the user here
+                          console.log(value)
+                        }}
+                        renderTags={(value, getTagProps) => {
+                          return value.map((option, index) => (
+                              <Chip
+                                  key={index}
+                                  variant="outlined"
+                                  label={option.name}
+                                  avatar={<Avatar src={option.imageUrl} alt={option.name} />}
+                                  {...getTagProps({ index })}
+                              />
+                                ))
+                              }
+                            }
+                          renderInput={(params) => (
+                              <TextField {...params} label="Assignees" variant="outlined" />
+                          )}
+                       />
                     }
               </li>
             ))

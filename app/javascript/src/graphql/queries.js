@@ -126,6 +126,7 @@ export const allNotes = gql`
         name
         id
       }
+      
     }
   }
 `
@@ -144,6 +145,11 @@ export const flaggedNotes = gql`
       author {
         id
         name
+      }
+      assignees {
+        id
+        name
+        imageUrl
       }
     }
   }

@@ -11,7 +11,7 @@ module Mutations
 
       def resolve(note_id:, user_id:)
         note = context[:site_community].assign_or_unassign_user(user_id, note_id)
-        return { assignee_note: note } if note.update!(attributes)
+        return { assignee_note: note } if note.persisted?
 
         raise GraphQL::ExecutionError, note.errors.full_messages
       end
