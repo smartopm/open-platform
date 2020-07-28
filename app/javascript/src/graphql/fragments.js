@@ -34,6 +34,10 @@ export const UserFragment = {
         completed
         createdAt
       }
+      labels{
+        id
+        shortDesc
+      }
     }
   `
 }

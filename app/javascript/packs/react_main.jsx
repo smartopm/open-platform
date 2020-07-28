@@ -60,8 +60,7 @@ import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users'
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
-import UserMessages from '../src/containers/Messages/UserMessages'
-import NewsContentPage from '../src/containers/NewsContentPage'
+import UserMessages from '../src/containers/Messages/UserMessages' 
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
@@ -258,8 +257,7 @@ const App = () => {
                       <Route path="/campaigns" component={Campaigns} />
                       <Route path="/campaign/:id" component={CampaignUpdate} />
                       {/* users */}
-                      <Route path="/news/" exact component={NewsContentPage} />
-                      <Route path="/news/:link" component={NewsContentPage} />
+
                       {/*Nkwashi account management*/}
                       <Route
                         path="/account"
