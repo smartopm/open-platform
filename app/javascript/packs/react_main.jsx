@@ -60,7 +60,7 @@ import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users'
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
-import UserMessages from '../src/containers/Messages/UserMessages' 
+import UserMessages from '../src/containers/Messages/UserMessages'
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
@@ -192,11 +192,7 @@ const App = () => {
                   <Route path="/facebook/:token" component={MainAuthCallback} />
 
                   {/* Spike page */}
-                  <Route
-                    path="/nkwashi_news/post/:id"
-                    exact
-                    component={PostPage}
-                  />
+                  <Route path="/news/post/:id" exact component={PostPage} />
 
                   <LoggedInOnly>
                     <Switch>
@@ -257,7 +253,6 @@ const App = () => {
                       <Route path="/campaigns" component={Campaigns} />
                       <Route path="/campaign/:id" component={CampaignUpdate} />
                       {/* users */}
-
                       {/*Nkwashi account management*/}
                       <Route
                         path="/account"
@@ -287,12 +282,8 @@ const App = () => {
                         exact
                         component={ClientRequestForm}
                       />
-                      <Route path="/nkwashi_news" exact component={NewsPage} />
-                      <Route
-                        path="/nkwashi_news/:slug"
-                        exact
-                        component={Posts}
-                      />
+                      <Route path="/news" exact component={NewsPage} />
+                      <Route path="/news/:slug" exact component={Posts} />
                       <Route
                         path="/discussions"
                         exact

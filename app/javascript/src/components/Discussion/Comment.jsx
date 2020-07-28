@@ -47,7 +47,7 @@ export default function Comments({ comments, refetch, discussionId }) {
 
     }
     if (!id) return <span />
-    // don't show comments on pages that dont have known posts like /nkwashi_news
+    // don't show comments on pages that dont have known posts like /news
     return (
         <List>
             <CommentBox
