@@ -85,7 +85,7 @@ export function LoginScreen() {
     window.open(
       `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
        I would like access to the Nkwashi app. Please provide me with my login credentials. 
-       Full Name: ${username}, Email: ${value}, Phone Number: ${phoneNumber}, Why are you interested in Nkwashi?: ${Interest}`,
+       Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
       'emailWindow'
     )
     setOpen(!open)
