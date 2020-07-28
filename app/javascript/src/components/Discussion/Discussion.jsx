@@ -10,7 +10,7 @@ import {
   DialogContentText,
   DialogTitle,
   Grid
-} from '@material-ui/core' 
+} from '@material-ui/core'
 import Comment from './Comment'
 import { DiscussionCommentsQuery } from '../../graphql/queries'
 import { useQuery } from 'react-apollo'
@@ -81,53 +81,53 @@ export default function Discussion({ discussionData }) {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-          <Typography variant="body1" data-testid="disc_desc">
-            {discussionData.description || 'No Description'}
-          </Typography>
+            <Typography variant="body1" data-testid="disc_desc">
+              {discussionData.description || 'No Description'}
+            </Typography>
           </Grid>
           <Grid item xs={6}>
-          <Typography variant="body2" data-testid="disc_author">
-            <strong>{discussionData.user.name}</strong>
-          </Typography>
-          <Typography variant="caption">
-            <DateContainer date={discussionData.createdAt} />
-          </Typography>
-          <Divider />
+            <Typography variant="body2" data-testid="disc_author">
+              <strong>{discussionData.user.name}</strong>
+            </Typography>
+            <Typography variant="caption">
+              <DateContainer date={discussionData.createdAt} />
+            </Typography>
+            <Divider />
           </Grid>
           <Grid item xs={6}>
-          {subscribe ? (
-            <Chip
-              label="unfollow"
-              clickable
-              onClick={handleClickOpen}
-              color="secondary"
-            />
-          ) : (
-            <Chip
-              label="follow"
-              clickable
-              onClick={handleClickOpen}
-              color="primary"
-            />
-          )}
+            {subscribe ? (
+              <Chip
+                label="unfollow"
+                clickable
+                onClick={handleClickOpen}
+                color="secondary"
+              />
+            ) : (
+              <Chip
+                label="follow"
+                clickable
+                onClick={handleClickOpen}
+                color="primary"
+              />
+            )}
           </Grid>
           <br />
           <Grid item xs={12}>
-          <Typography variant="subtitle1">Comments</Typography>
+            <Typography variant="subtitle1">Comments</Typography>
           </Grid>
           <Grid item xs={12}>
-          <Comment
-            comments={data.discussComments}
-            discussionId={id}
-            refetch={refetch}
-          />
-          {data.discussComments.length >= limit && (
-            <CenteredContent>
-              <Button variant="outlined" onClick={fetchMoreComments}>
-                {isLoading ? <Spinner /> : 'Load more comments'}
-              </Button>
-            </CenteredContent>
-          )}
+            <Comment
+              comments={data.discussComments}
+              discussionId={id}
+              refetch={refetch}
+            />
+            {data.discussComments.length >= limit && (
+              <CenteredContent>
+                <Button variant="outlined" onClick={fetchMoreComments}>
+                  {isLoading ? <Spinner /> : 'Load more comments'}
+                </Button>
+              </CenteredContent>
+            )}
           </Grid>
         </Grid>
 
@@ -138,7 +138,7 @@ export default function Discussion({ discussionData }) {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {'Subscribe to discussion'}
+            {'Subscribe to Discussion'}
           </DialogTitle>
           <DialogContent>
             {subscribe ? (
