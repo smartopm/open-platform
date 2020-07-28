@@ -18,6 +18,7 @@ class User < ApplicationRecord
     attributes :name, :phone_number, :user_type
     attributes labels: ['labels.short_desc']
   end
+  
 
   scope :allowed_users, lambda { |current_user|
     policy = UserPolicy.new(current_user, nil)
@@ -47,6 +48,9 @@ class User < ApplicationRecord
   has_many :user_labels, dependent: :destroy
   has_many :contact_infos, dependent: :destroy
   has_many :labels, through: :user_labels
+  # alias_attribute :notes, :tasks
+  has_many :assignee_notes #, through: :assignee_notes
+  # has_many :assignees, through: :assignee_notes
 
   has_one_attached :avatar
   has_one_attached :document
