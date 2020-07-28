@@ -14,44 +14,9 @@ import DateFnsUtils from '@date-io/date-fns'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery } from '../graphql/queries'
-
-const useStyles = makeStyles({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'right',
-    width: '100%',
-    overflowX: 'auto'
-  }
-})
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiPickersToolbar: {
-      toolbar: {
-        backgroundColor: '#25c0b0'
-      }
-    },
-    MuiPickersDay: {
-      day: {
-        color: '#25c0b0'
-      },
-      daySelected: {
-        backgroundColor: '#25c0b0'
-      },
-      current: {
-        color: '#25c0b0'
-      }
-    },
-    MuiPickersModal: {
-      dialogAction: {
-        color: '#25c0b0'
-      }
-    }
-  }
-})
+import { AssignUser } from '../graphql/mutations'
 
 export default function TodoList({
   isDialogOpen,
@@ -74,7 +39,8 @@ export default function TodoList({
           limit: 30,
         },
         fetchPolicy: 'cache-and-network'
-      })
+    })
+  const [assignUserToNote] = useMutation(AssignUser)
 
     // unsubscribe the user
     function handleDelete(userId, noteId) {
@@ -216,6 +182,8 @@ export default function TodoList({
                         onChange={(_evt, value) => {
                           // subscribe the user here
                           console.log(value)
+                          const [lastUser] = value.slice(-1)
+                          assignUserToNote({ variables: { noteId: note.id, userId: lastUser.id } }).then(() => console.log('done'))
                         }}
                         renderTags={(value, getTagProps) => {
                           return value.map((option, index) => (
@@ -244,6 +212,42 @@ export default function TodoList({
     </div>
   )
 }
+
+const useStyles = makeStyles({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'right',
+    width: '100%',
+    overflowX: 'auto'
+  }
+})
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiPickersToolbar: {
+      toolbar: {
+        backgroundColor: '#25c0b0'
+      }
+    },
+    MuiPickersDay: {
+      day: {
+        color: '#25c0b0'
+      },
+      daySelected: {
+        backgroundColor: '#25c0b0'
+      },
+      current: {
+        color: '#25c0b0'
+      }
+    },
+    MuiPickersModal: {
+      dialogAction: {
+        color: '#25c0b0'
+      }
+    }
+  }
+})
 
 const styles = StyleSheet.create({
   list: {
