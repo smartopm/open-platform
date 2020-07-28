@@ -77,8 +77,8 @@ export default function Todo({ history }) {
        saveDate={saveDate}
        selectedDate={selectedDate}
        handleDateChange={handleDateChange}
-       data={data}
-       isLoading={isLoading}
+      //  data={data}
+      //  isLoading={isLoading}
        todoAction={todoAction}
 
       

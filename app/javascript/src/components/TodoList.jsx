@@ -15,7 +15,7 @@ import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useQuery, useMutation } from 'react-apollo'
-import { UsersLiteQuery } from '../graphql/queries'
+import { UsersLiteQuery, flaggedNotes } from '../graphql/queries'
 import { AssignUser } from '../graphql/mutations'
 
 export default function TodoList({
@@ -24,8 +24,8 @@ export default function TodoList({
   saveDate,
   selectedDate,
   handleDateChange,
-  data,
-  isLoading,
+  // data,
+  // isLoading,
   todoAction
 }) {
     const classes = useStyles()
@@ -39,6 +39,11 @@ export default function TodoList({
           limit: 30,
         },
         fetchPolicy: 'cache-and-network'
+    })
+    const { loading: isLoading, error: tasksError, data, refetch } = useQuery(flaggedNotes, {
+      variables: {
+        offset: 0, limit: 50
+      }
     })
   const [assignUserToNote] = useMutation(AssignUser)
 
@@ -178,12 +183,11 @@ export default function TodoList({
                         getOptionLabel={(option) => option.name}
                         style={{ width: 300 }}
                         multiple
-                        freeSolo
                         onChange={(_evt, value) => {
                           // subscribe the user here
                           console.log(value)
                           const [lastUser] = value.slice(-1)
-                          assignUserToNote({ variables: { noteId: note.id, userId: lastUser.id } }).then(() => console.log('done'))
+                          assignUserToNote({ variables: { noteId: note.id, userId: lastUser.id } }).then(() => refetch())
                         }}
                         renderTags={(value, getTagProps) => {
                           return value.map((option, index) => (
