@@ -45,6 +45,7 @@ export default function UsersList() {
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
   const [searchType, setSearchType] = useState('type')
+  const [userListById, setUserListById] = useState([])
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
   const [modalAction, setModalAction] = useState('')
@@ -64,8 +65,12 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
+  let userList
+  if (data) {
+    userList = data.users.map(user => user.id)
+  }
   
- //TODO: @dennis, add pop up for notes 
+  //TODO: @dennis, add pop up for notes 
 
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
 
@@ -295,13 +300,18 @@ export default function UsersList() {
             )}
           </Grid>
 
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            {/* <UserLabels /> */} <span>create label</span>
+
+          </Grid>
+
         </Grid>
         <br />
         <br />
 
- 
+
         <UserListCard userData={data} handleNoteModal={handleNoteModal} />
-      
+
         <Grid container direction="row" justify="center" alignItems="center">
           <Paginate
             count={data.users.length}
