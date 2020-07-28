@@ -50,6 +50,9 @@ export default function TodoList({
     // unsubscribe the user
     function handleDelete(userId, noteId) {
       console.log({userId, noteId})
+      assignUserToNote({ variables: { noteId, userId } })
+                                    .then(() => refetch())
+                                    .catch(err => console.log(err))
     }
 
       // eslint-disable-next-line no-unused-vars
@@ -158,7 +161,6 @@ export default function TodoList({
                 </div>
                 <br />
                 {/* notes assignees */}
-                    
                     {
                       note.assignees.map(user => (
                               <Chip
@@ -178,16 +180,20 @@ export default function TodoList({
                     {/* autocomplete for assignees */}
                     {
                       <Autocomplete
+                        clearOnEscape
                         id={note.id}
                         options={liteData.users}
                         getOptionLabel={(option) => option.name}
                         style={{ width: 300 }}
-                        multiple
                         onChange={(_evt, value) => {
-                          // subscribe the user here
-                          console.log(value)
-                          const [lastUser] = value.slice(-1)
-                          assignUserToNote({ variables: { noteId: note.id, userId: lastUser.id } }).then(() => refetch())
+                          // if nothing selected, ignore and move on  
+                          if (!value) {
+                            return
+                          }
+                           // subscribe the user here
+                          assignUserToNote({ variables: { noteId: note.id, userId: value.id } })
+                                          .then(() => refetch())
+                                          .catch(err => console.log(err.message))
                         }}
                         renderTags={(value, getTagProps) => {
                           return value.map((option, index) => (

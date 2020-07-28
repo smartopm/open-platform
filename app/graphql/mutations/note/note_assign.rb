@@ -7,11 +7,11 @@ module Mutations
       argument :note_id, ID, required: true
       argument :user_id, ID, required: true
 
-      field :assignee_note, Types::NoteType, null: true
+      field :assignee_note, String, null: true
 
       def resolve(note_id:, user_id:)
-        note = context[:site_community].assign_or_unassign_user(user_id, note_id)
-        return { assignee_note: note } if note.persisted?
+        note = context[:site_community].notes.find(note_id).assign_or_unassign_user(user_id)
+        return { assignee_note: 'success' } if note.errors.blank?
 
         raise GraphQL::ExecutionError, note.errors.full_messages
       end

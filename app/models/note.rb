@@ -11,9 +11,13 @@ class Note < ApplicationRecord
   default_scope { order(created_at: :desc) }
   VALID_CATEGORY = %w[call email text message to_do other].freeze
   validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
-end
 
-# # user_id
-# user.notes ==> owner(already implemented via user_id)
-# user.assigned_notes
-# note.assignees ~
+  def assign_or_unassign_user(user_id)
+    a_notes = assignee_notes.find_by(user_id: user_id)
+    if a_notes.present?
+      a_notes.delete
+    else
+      assignee_notes.create!(user_id: user_id, note_id: self[:id])
+    end
+  end
+end

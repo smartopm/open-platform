@@ -23,16 +23,6 @@ class Community < ApplicationRecord
     true
   end
 
-  def assign_or_unassign_user(user_id, note_id)
-    notes = users.find(user_id).assignee_notes
-
-    if notes.find_by(note_id: note_id)
-      AssigneeNote.find_by(note_id: note_id).delete
-    else
-      notes.create!(note_id: note_id)
-    end
-  end
-
   def domain_admin?(domain)
     DOMAINS_COMMUNITY_MAP[name.to_sym].include?(domain)
   end
