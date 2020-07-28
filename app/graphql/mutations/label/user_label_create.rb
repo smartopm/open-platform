@@ -9,7 +9,10 @@ module Mutations
 
       field :label, [Types::UserLabelType], null: true
 
+<<<<<<< HEAD
       # TODO: move create label operations to background job : Saurabh
+=======
+>>>>>>> Changed create user labels migration to accept multiple user with multiple labels
       # rubocop:disable Metrics/AbcSize
       def resolve(user_id:, label_id:)
         user_ids = user_id.split(',')
