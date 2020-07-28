@@ -54,7 +54,8 @@ module Types::Queries::User
     adm = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
-    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)
+    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+        .eager_load(:notes, :accounts, :labels)
         .search(query)
         .limit(limit)
         .offset(offset).with_attached_avatar
@@ -63,7 +64,8 @@ module Types::Queries::User
   def user_search(query: nil, offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)
+    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+        .eager_load(:notes, :accounts, :labels)
         .search(query)
         .order(name: :asc)
         .limit(limit)
@@ -79,7 +81,8 @@ module Types::Queries::User
   def pending_users
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts)
+    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+        .eager_load(:notes, :accounts, :labels)
         .where(state: 'pending',
                community_id: context[:current_user].community_id).with_attached_avatar
   end
@@ -87,10 +90,12 @@ module Types::Queries::User
   def security_guards
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.allowed_users(context[:current_user]).eager_load(:notes, :accounts).where(
-      community_id: context[:current_user].community_id,
-      user_type: 'security_guard',
-    ).order(name: :asc).with_attached_avatar
+    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+        .eager_load(:notes, :accounts, :labels)
+        .where(
+          community_id: context[:current_user].community_id,
+          user_type: 'security_guard',
+        ).order(name: :asc).with_attached_avatar
   end
 
   def find_community_user(id)
