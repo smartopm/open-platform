@@ -7,7 +7,6 @@ module Types
     field :activity_log_update_log, mutation: Mutations::ActivityLog::UpdateLog
     field :user_create, mutation: Mutations::User::Create
     field :user_update, mutation: Mutations::User::Update
-    field :user_delete, mutation: Mutations::User::Delete
     field :one_time_login, mutation: Mutations::User::OneTimeLogin
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
 

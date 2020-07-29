@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from './Dialog'
 import DateUtil from '../utils/dateutil'
-import { createMuiTheme, Chip, Avatar } from '@material-ui/core'
+import { createMuiTheme, Chip } from '@material-ui/core'
 import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
 import Loading, { Spinner } from './Loading'
@@ -18,8 +18,9 @@ import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../graphql/queries'
 import { AssignUser } from '../graphql/mutations'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from '@material-ui/icons/Cancel'
 import { UserChip } from './UserChip'
+import ErrorPage from './Error'
 
 export default function TodoList({
   isDialogOpen,
@@ -33,19 +34,17 @@ export default function TodoList({
   const [loaded, setLoadingAssignee] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
-  const [message, setErrorMessage] = useState('')
-  const { loading, error, data: liteData } = useQuery(
-    UsersLiteQuery,
-    {
-      variables: {
-        query: "user_type='admin'",
-      },
-      fetchPolicy: 'cache-and-network'
-    }
-  )
+  const [message, setErrorMessage] = useState('an error coccurec')
+  const { loading, error, data: liteData } = useQuery(UsersLiteQuery, {
+    variables: {
+      query: "user_type='admin'"
+    },
+    fetchPolicy: 'cache-and-network'
+  })
   // eslint-disable-next-line no-unused-vars
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
-    flaggedNotes, {
+    flaggedNotes,
+    {
       variables: {
         offset: 0,
         limit: 50
@@ -71,9 +70,8 @@ export default function TodoList({
       .catch(err => setErrorMessage(err.message))
   }
 
-  if (isLoading || tasksError) {
-    return 'loading'
-  }
+  if (isLoading) return <Loading />
+  if (tasksError) return <ErrorPage error={error.message} />
 
   return (
     <div className="container" data-testid="todo-container">
@@ -163,20 +161,42 @@ export default function TodoList({
                 </div>
                 <br />
                 {/* notes assignees */}
-                {note.assignees.map(user => <UserChip key={user.id} user={user} size="medium" onDelete={() => handleDelete(user.id, note.id)} />)}
-                
+                {note.assignees.map(user => (
+                  <UserChip
+                    key={user.id}
+                    user={user}
+                    size="medium"
+                    onDelete={() => handleDelete(user.id, note.id)}
+                  />
+                ))}
+                {/* error messaeg */}
                 {
-                  loaded && id === note.id ? <Spinner /> : (
-                    <Chip
-                      key={note.id}
-                      variant="outlined"
-                      label={ autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee' }
-                      size="medium"
-                      icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
-                      onClick={event => handleOpenAutoComplete(event, note.id)}
-                    />
-                  )
+                  Boolean(message.length) && <span>{message}</span>
                 }
+
+                {/* loader */}
+                {loaded && id === note.id ? (
+                  <Spinner />
+                ) : (
+                  <Chip
+                    key={note.id}
+                    variant="outlined"
+                    label={
+                      autoCompleteOpen && id === note.id
+                        ? 'Close'
+                        : 'Add Assignee'
+                    }
+                    size="medium"
+                    icon={
+                      autoCompleteOpen && id === note.id ? (
+                        <CancelIcon />
+                      ) : (
+                        <AddCircleIcon />
+                      )
+                    }
+                    onClick={event => handleOpenAutoComplete(event, note.id)}
+                  />
+                )}
 
                 <br />
                 <br />
@@ -187,6 +207,7 @@ export default function TodoList({
                   <Autocomplete
                     clearOnEscape
                     clearOnBlur
+                    loading={loading}
                     id={note.id}
                     options={liteData.users}
                     getOptionLabel={option => option.name}
@@ -200,10 +221,7 @@ export default function TodoList({
                       assignUnassignUser(note.id, value.id)
                     }}
                     renderInput={params => (
-                      <TextField
-                        {...params}
-                        placeholder="Name of assignee"
-                      />
+                      <TextField {...params} placeholder="Name of assignee" />
                     )}
                   />
                 )}
@@ -217,8 +235,6 @@ export default function TodoList({
     </div>
   )
 }
-
-
 
 const useStyles = makeStyles({
   root: {
