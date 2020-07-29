@@ -12,11 +12,12 @@ import {
 } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../graphql/queries'
 import { AssignUser } from '../graphql/mutations'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 
 export default function TodoList({
   isDialogOpen,
@@ -24,55 +25,73 @@ export default function TodoList({
   saveDate,
   selectedDate,
   handleDateChange,
-  // data,
-  // isLoading,
   todoAction
 }) {
-    const classes = useStyles()
-    // eslint-disable-next-line no-unused-vars
-    const [name, setName] = useState('')
-      // eslint-disable-next-line no-unused-vars
-    const [loaded, setLoading] = useState(false)
-    const { loading, error, data: liteData, fetchMore } = useQuery(UsersLiteQuery, {
-        variables: {
-          query: name,
-          limit: 30,
-        },
-        fetchPolicy: 'cache-and-network'
-    })
+  const classes = useStyles()
   // eslint-disable-next-line no-unused-vars
-    const { loading: isLoading, error: tasksError, data, refetch } = useQuery(flaggedNotes, {
+  const [name, setName] = useState('')
+  // eslint-disable-next-line no-unused-vars
+  const [loaded, setLoading] = useState(false)
+  const [autoCompleteOpen, setOpen] = useState(false)
+  const [id, setNoteId] = useState('')
+  const { loading, error, data: liteData, fetchMore } = useQuery(
+    UsersLiteQuery,
+    {
       variables: {
-        offset: 0, limit: 50
+        query: name,
+        limit: 30
+      },
+      fetchPolicy: 'cache-and-network'
+    }
+  )
+  // eslint-disable-next-line no-unused-vars
+  const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
+    flaggedNotes,
+    {
+      variables: {
+        offset: 0,
+        limit: 50
       }
-    })
+    }
+  )
   const [assignUserToNote] = useMutation(AssignUser)
 
-    // unsubscribe the user
-    function handleDelete(userId, noteId) {
-      console.log({userId, noteId})
-      assignUserToNote({ variables: { noteId, userId } })
-                                    .then(() => refetch())
-                                    .catch(err => console.log(err))
-    }
+  // unsubscribe the user
+  function handleDelete(userId, noteId) {
+    assignUserToNote({ variables: { noteId, userId } })
+      .then(() => refetch())
+      .catch(err => console.log(err))
+  }
 
-      // eslint-disable-next-line no-unused-vars
-      function fetchMoreUsers() {
-        setLoading(true)
-        fetchMore({
-            variables: { offset: liteData.users.length },
-            updateQuery: (prev, { fetchMoreResult }) => {
-                if (!fetchMoreResult) return prev
-                setLoading(false)
-                return Object.assign({}, prev, {
-                    users: [...prev.users, ...fetchMoreResult.users]
-                })
-            }
+  function handleOpenAutoComplete(event, noteId) {
+    setOpen(!autoCompleteOpen)
+    setNoteId(noteId)
+  }
+
+  function assignUnassignUser(noteId, userId) {
+    assignUserToNote({ variables: { noteId, userId } })
+      .then(() => refetch())
+      .catch(err => console.log(err.message))
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function fetchMoreUsers() {
+    setLoading(true)
+    fetchMore({
+      variables: { offset: liteData.users.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+        setLoading(false)
+        return Object.assign({}, prev, {
+          users: [...prev.users, ...fetchMoreResult.users]
         })
-    }
-    if(loading || error){
-        return 'loading'
-    }
+      }
+    })
+  }
+
+  if (loading || error) {
+    return 'loading'
+  }
 
   return (
     <div className="container" data-testid="todo-container">
@@ -162,58 +181,56 @@ export default function TodoList({
                 </div>
                 <br />
                 {/* notes assignees */}
-                    {
-                      note.assignees.map(user => (
-                              <Chip
-                                key={user.id}
-                                style={{ margin: 5 }}
-                                variant="outlined"
-                                label={user.name}
-                                size="medium"
-                                onDelete={() => handleDelete(user.id, note.id)}
-                                avatar={<Avatar src={user.imageUrl} alt={user.name} />}
-                                />
-                      ))
-                    }
+                {note.assignees.map(user => (
+                  <Chip
+                    key={user.id}
+                    style={{ margin: 5 }}
+                    variant="outlined"
+                    label={user.name}
+                    size="medium"
+                    onDelete={() => handleDelete(user.id, note.id)}
+                    avatar={<Avatar src={user.imageUrl} alt={user.name} />}
+                  />
+                ))}
+                <Chip
+                  key={note.id}
+                  variant="outlined"
+                  label={'Add'}
+                  size="medium"
+                  icon={<AddCircleIcon />}
+                  onClick={event => handleOpenAutoComplete(event, note.id)}
+                />
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    {/* autocomplete for assignees */}
-                    {
-                      <Autocomplete
-                        clearOnEscape
-                        id={note.id}
-                        options={liteData.users}
-                        getOptionLabel={(option) => option.name}
-                        style={{ width: 300 }}
-                        onChange={(_evt, value) => {
-                          // if nothing selected, ignore and move on  
-                          if (!value) {
-                            return
-                          }
-                           // subscribe the user here
-                          assignUserToNote({ variables: { noteId: note.id, userId: value.id } })
-                                          .then(() => refetch())
-                                          .catch(err => console.log(err.message))
-                        }}
-                        renderTags={(value, getTagProps) => {
-                          return value.map((option, index) => (
-                              <Chip
-                                  key={index}
-                                  variant="outlined"
-                                  label={option.name}
-                                  avatar={<Avatar src={option.imageUrl} alt={option.name} />}
-                                  {...getTagProps({ index })}
-                              />
-                                ))
-                              }
-                            }
-                          renderInput={(params) => (
-                              <TextField {...params} label="Assignees" variant="outlined" />
-                          )}
-                       />
-                    }
+                {/* autocomplete for assignees */}
+                {// avoid opening autocomplete for other notes
+                autoCompleteOpen && id === note.id && (
+                  <Autocomplete
+                    clearOnEscape
+                    clearOnBlur
+                    id={note.id}
+                    options={liteData.users}
+                    getOptionLabel={option => option.name}
+                    style={{ width: 300 }}
+                    onChange={(_evt, value) => {
+                      // if nothing selected, ignore and move on
+                      if (!value) {
+                        return
+                      }
+                      // subscribe the user here
+                      assignUnassignUser(note.id, value.id)
+                    }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        placeholder="Name of assignee"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                )}
               </li>
             ))
           ) : (
