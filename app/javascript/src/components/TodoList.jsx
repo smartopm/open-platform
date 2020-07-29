@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from './Dialog'
 import DateUtil from '../utils/dateutil'
-import { createMuiTheme, Chip } from '@material-ui/core'
+import { createMuiTheme, Chip, Divider } from '@material-ui/core'
 import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
 import Loading, { Spinner } from './Loading'
@@ -22,6 +22,7 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { UserChip } from './UserChip'
 import ErrorPage from './Error'
 
+// component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
   handleModal,
@@ -47,7 +48,8 @@ export default function TodoList({
       variables: {
         offset: 0,
         limit: 50
-      }
+      },
+      fetchPolicy: 'cache-and-network'
     }
   )
   const [assignUserToNote] = useMutation(AssignUser)
@@ -68,6 +70,14 @@ export default function TodoList({
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => (refetch(), setLoadingAssignee(false)))
       .catch(err => setErrorMessage(err.message))
+  }
+
+  function handleCompleteNote(noteId, completed) {
+    todoAction(noteId, completed)
+    // allow the mutation above to finish running before refetching
+    setTimeout(() => {
+      refetch()
+    }, 300)
   }
 
   if (isLoading) return <Loading />
@@ -109,7 +119,7 @@ export default function TodoList({
                   <input
                     type="checkbox"
                     checked={note.completed}
-                    onChange={() => todoAction(note.id, note.completed)}
+                    onChange={() => handleCompleteNote(note.id, note.completed)}
                     className="custom-control-input"
                     id={`todo-check-${note.id}`}
                   />
@@ -213,12 +223,14 @@ export default function TodoList({
                       <TextField {...params} placeholder="Name of assignee" />
                     )}
                   />
-                )}
+                  )}
+                <Divider />
               </li>
             ))
           ) : (
             <span>No Actions yet</span>
-          )}
+              )}
+          
         </ul>
       </div>
     </div>
@@ -265,7 +277,6 @@ const styles = StyleSheet.create({
   list: {
     margin: 0,
     padding: 0,
-    background: 'white'
   },
   listItem: {
     position: 'relative',
