@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_162619) do
   create_table "campaign_labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "campaign_id", null: false
     t.uuid "label_id", null: false
+    t.index ["campaign_id", "label_id"], name: "index_campaign_labels_on_campaign_id_and_label_id", unique: true
     t.index ["campaign_id"], name: "index_campaign_labels_on_campaign_id"
     t.index ["label_id"], name: "index_campaign_labels_on_label_id"
   end
@@ -255,9 +256,9 @@ ActiveRecord::Schema.define(version: 2020_07_27_162619) do
     t.uuid "user_id"
     t.uuid "author_id"
     t.text "body"
-    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "flagged"
+    t.datetime "created_at"
     t.boolean "completed"
     t.datetime "due_date"
     t.string "category"

@@ -2,7 +2,13 @@ import React from 'react'
 import { Chip, Avatar } from '@material-ui/core'
 import { forceLinkHttps } from '../utils/helpers'
 
-export function UserChip(user, props) {
+/**
+ * 
+ * @param {Object} user (a user object) 
+ * @param {Object} props anything else that the Chip components uses from material-ui
+ * @returns
+ */
+export function UserChip({user, ...props}) {
   return (
     <Chip
       style={{ margin: 5 }}
