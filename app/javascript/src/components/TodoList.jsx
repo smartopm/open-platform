@@ -49,7 +49,6 @@ export default function TodoList({
         offset: 0,
         limit: 50
       },
-      fetchPolicy: 'cache-and-network'
     }
   )
   const [assignUserToNote] = useMutation(AssignUser)
