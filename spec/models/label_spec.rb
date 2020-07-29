@@ -16,6 +16,8 @@ RSpec.describe Label, type: :model do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to have_many(:users) }
     it { is_expected.to have_many(:user_labels) }
+    it { is_expected.to have_many(:campaigns) }
+    it { is_expected.to have_many(:campaign_labels) }
   end
 
   it 'has a valid factory' do

@@ -17,4 +17,6 @@ class Label < ApplicationRecord
   belongs_to :community
   has_many :user_labels, dependent: :destroy
   has_many :users, through: :user_labels
+  has_many :campaign_labels, dependent: :destroy
+  has_many :campaigns, through: :campaign_labels
 end
