@@ -5,7 +5,7 @@ import DateUtil from '../utils/dateutil'
 import { createMuiTheme, Chip, Avatar } from '@material-ui/core'
 import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
-import Loading from './Loading'
+import Loading, { Spinner } from './Loading'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -30,12 +30,10 @@ export default function TodoList({
   todoAction
 }) {
   const classes = useStyles()
-  // eslint-disable-next-line no-unused-vars
-  const [name, setName] = useState('')
-  // eslint-disable-next-line no-unused-vars
-  const [loaded, setLoading] = useState(false)
+  const [loaded, setLoadingAssignee] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
+  const [message, setErrorMessage] = useState('')
   const { loading, error, data: liteData } = useQuery(
     UsersLiteQuery,
     {
@@ -67,12 +65,13 @@ export default function TodoList({
   }
 
   function assignUnassignUser(noteId, userId) {
+    setLoadingAssignee(true)
     assignUserToNote({ variables: { noteId, userId } })
-      .then(() => refetch())
-      .catch(err => console.log(err.message))
+      .then(() => (refetch(), setLoadingAssignee(false)))
+      .catch(err => setErrorMessage(err.message))
   }
 
-  if (loading || error) {
+  if (isLoading || tasksError) {
     return 'loading'
   }
 
@@ -166,14 +165,18 @@ export default function TodoList({
                 {/* notes assignees */}
                 {note.assignees.map(user => <UserChip key={user.id} user={user} size="medium" onDelete={() => handleDelete(user.id, note.id)} />)}
                 
-                <Chip
-                  key={note.id}
-                  variant="outlined"
-                  label={ autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee' }
-                  size="medium"
-                  icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
-                  onClick={event => handleOpenAutoComplete(event, note.id)}
-                />
+                {
+                  loaded && id === note.id ? <Spinner /> : (
+                    <Chip
+                      key={note.id}
+                      variant="outlined"
+                      label={ autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee' }
+                      size="medium"
+                      icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
+                      onClick={event => handleOpenAutoComplete(event, note.id)}
+                    />
+                  )
+                }
 
                 <br />
                 <br />

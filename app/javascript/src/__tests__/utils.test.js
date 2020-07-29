@@ -1,4 +1,4 @@
-import { findLinkAndReplace, truncateString, saniteError, invertArray } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -80,5 +80,12 @@ describe('array methods', () => {
     const arr2 = [ ...arr ] // since splice mutate the original array, good to copy for us to better tests other cases
     expect(invertArray(arr, 0, 1)).toStrictEqual([2, 1, 3, 4, 5])
     expect(invertArray(arr2, 1, 2)).toStrictEqual([1, 3, 2, 4, 5])
+  })
+  // links with http
+  it('should replace http with https in links that are not secure', () => {
+    const link = 'http://doubglegdp.com/some_image_link.jpg'
+    const httpsLink = 'https://doubglegdp.com/some_https_image_link.jpg'
+    expect(forceLinkHttps(link)).toBe('https://doubglegdp.com/some_image_link.jpg')
+    expect(forceLinkHttps(httpsLink)).toBe(httpsLink)
   })
 })
