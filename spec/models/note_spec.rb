@@ -22,14 +22,6 @@ RSpec.describe Note, type: :model do
       current_user.notes.create(author_id: admin.id, body: 'Test Note', category: 'email')
       expect(current_user.notes.length).to eql 1
     end
-
-    it 'should assign or unassign a note from a user' do
-      admin_note.assign_or_unassign_user(current_user.id)
-      expect(current_user.assignee_notes.length).to eql 1
-      # unassign
-      # admin_note.assign_or_unassign_user(current_user.id)
-      # expect(current_user.assignee_notes.length).to eql 0
-    end
   end
 
   describe 'associations' do

@@ -8,15 +8,15 @@ module Mutations
 
       field :success, GraphQL::Types::Boolean, null: false
 
-      def resolve(vals)
-        user = ::User.find(vals[:id])
+      def resolve(id:)
+        user = context[:site_community].users.find(:id)
 
         { success: user.destroy }
       end
 
       def authorized?(vals)
         current_user = context[:current_user]
-        user_record = ::User.find(vals[:id])
+        user_record = context[:site_community].users.find(vals[:id])
         authorized = current_user&.admin? && user_record.community_id == current_user.community_id
         raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
         raise GraphQL::ExecutionError, 'Can\'t delete self' if current_user.id == user_record.id
