@@ -102,3 +102,16 @@ export function invertArray(cords, initial, final) {
   cords.splice(final, 0, initialElement)
   return cords
 }
+
+/**
+ * 
+ * @param {string} imageLink 
+ * @description check if the link is an http if not it replaces it with https(mostly for facebook profile pics)
+ * @returns {string} link
+ */
+export function forceLinkHttps(imageLink) {
+  if(!imageLink) return
+  const lkReg = /^https:\/\//i
+  const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink
+  return link
+}

@@ -7,7 +7,6 @@ module Types
     field :activity_log_update_log, mutation: Mutations::ActivityLog::UpdateLog
     field :user_create, mutation: Mutations::User::Create
     field :user_update, mutation: Mutations::User::Update
-    field :user_delete, mutation: Mutations::User::Delete
     field :one_time_login, mutation: Mutations::User::OneTimeLogin
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
 
@@ -26,6 +25,7 @@ module Types
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate
     field :note_update, mutation: Mutations::Note::NoteUpdate
+    field :note_assign, mutation: Mutations::Note::NoteAssign
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate

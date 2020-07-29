@@ -1,18 +1,15 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
+import { forceLinkHttps } from '../utils/helpers'
 
 export const avatarUrl = ({ imageUrl, user }) => {
   if (imageUrl) {
-    return imageUrl
+    return forceLinkHttps(imageUrl)
   } else if (user && user.avatarUrl) {
     return user.avatarUrl
   } else if (user && user.imageUrl) {
-    const lk = /^https:\/\//i
-    const link = !lk.test(user.imageUrl)
-      ? user.imageUrl.replace('http', 'https') //force image to pull from https
-      : user.imageUrl
-    return link
+    return forceLinkHttps(user.imageUrl)
   } else {
     return '/images/default_avatar.svg'
   }
