@@ -102,3 +102,9 @@ export function invertArray(cords, initial, final) {
   cords.splice(final, 0, initialElement)
   return cords
 }
+
+export function forceLinkHttps(imageLink){
+  const lkReg = /^https:\/\//i
+  const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink
+  return link
+}

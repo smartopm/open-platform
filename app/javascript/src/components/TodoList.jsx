@@ -18,6 +18,8 @@ import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../graphql/queries'
 import { AssignUser } from '../graphql/mutations'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
+import CancelIcon from '@material-ui/icons/Cancel';
+import { UserChip } from './UserChip'
 
 export default function TodoList({
   isDialogOpen,
@@ -34,7 +36,7 @@ export default function TodoList({
   const [loaded, setLoading] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
-  const { loading, error, data: liteData, fetchMore } = useQuery(
+  const { loading, error, data: liteData } = useQuery(
     UsersLiteQuery,
     {
       variables: {
@@ -54,11 +56,9 @@ export default function TodoList({
   )
   const [assignUserToNote] = useMutation(AssignUser)
 
-  // unsubscribe the user
+  // unsubscribe the user if already subscribed
   function handleDelete(userId, noteId) {
-    assignUserToNote({ variables: { noteId, userId } })
-      .then(() => refetch())
-      .catch(err => console.log(err))
+    return assignUnassignUser(noteId, userId)
   }
 
   function handleOpenAutoComplete(event, noteId) {
@@ -70,21 +70,6 @@ export default function TodoList({
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => refetch())
       .catch(err => console.log(err.message))
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  function fetchMoreUsers() {
-    setLoading(true)
-    fetchMore({
-      variables: { offset: liteData.users.length },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev
-        setLoading(false)
-        return Object.assign({}, prev, {
-          users: [...prev.users, ...fetchMoreResult.users]
-        })
-      }
-    })
   }
 
   if (loading || error) {
@@ -179,23 +164,14 @@ export default function TodoList({
                 </div>
                 <br />
                 {/* notes assignees */}
-                {note.assignees.map(user => (
-                  <Chip
-                    key={user.id}
-                    style={{ margin: 5 }}
-                    variant="outlined"
-                    label={user.name}
-                    size="medium"
-                    onDelete={() => handleDelete(user.id, note.id)}
-                    avatar={<Avatar src={user.imageUrl} alt={user.name} />}
-                  />
-                ))}
+                {note.assignees.map(user => <UserChip key={user.id} user={user} size="medium" onDelete={() => handleDelete(user.id, note.id)} />)}
+                
                 <Chip
                   key={note.id}
                   variant="outlined"
-                  label={'Add'}
+                  label={ autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee' }
                   size="medium"
-                  icon={<AddCircleIcon />}
+                  icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
                   onClick={event => handleOpenAutoComplete(event, note.id)}
                 />
 
@@ -203,7 +179,7 @@ export default function TodoList({
                 <br />
 
                 {/* autocomplete for assignees */}
-                {// avoid opening autocomplete for other notes
+                {// avoid opening autocomplete box for other notes
                 autoCompleteOpen && id === note.id && (
                   <Autocomplete
                     clearOnEscape
@@ -224,7 +200,6 @@ export default function TodoList({
                       <TextField
                         {...params}
                         placeholder="Name of assignee"
-                        variant="outlined"
                       />
                     )}
                   />
@@ -239,6 +214,8 @@ export default function TodoList({
     </div>
   )
 }
+
+
 
 const useStyles = makeStyles({
   root: {
