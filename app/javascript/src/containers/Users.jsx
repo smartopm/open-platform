@@ -54,7 +54,6 @@ export default function UsersList() {
     phone: phoneNumbers,
     label: labels
   }
-
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
       query: joinSearchQuery(search[searchType], searchType),
@@ -76,7 +75,7 @@ export default function UsersList() {
       type: 'user_type'
     }
     const filterType = types[type]
-    return query.map(query => `${filterType} = ${query}`).join(' OR ')
+    return query.map(query => `${filterType} = "${query}"`).join(' OR ')
   }
   function handleFilterModal() {
     setOpen(!open)
