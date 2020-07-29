@@ -6,8 +6,10 @@ RSpec.describe Mutations::Note do
   describe 'creating an note' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:user_note) { create(:note, community_id: user.community_id, 
-                                    user_id: user.id, author_id: admin.id) }
+    let!(:user_note) do
+      create(:note, community_id: user.community_id,
+                    user_id: user.id, author_id: admin.id)
+    end
 
     let(:create_query) do
       <<~GQL
@@ -57,9 +59,9 @@ RSpec.describe Mutations::Note do
           }
         }
       GQL
-      end
-    
-      it 'returns a created note with category' do
+    end
+
+    it 'returns a created note with category' do
       variables = {
         userId: user.id,
         body: 'A note about the user',
@@ -74,8 +76,6 @@ RSpec.describe Mutations::Note do
       expect(result.dig('data', 'result', 'note', 'category')).to eql 'email'
       expect(result.dig('errors')).to be_nil
     end
-
-
 
     it 'does not return a created note with the right category' do
       variables = {
@@ -136,10 +136,10 @@ RSpec.describe Mutations::Note do
       }
 
       result = DoubleGdpSchema.execute(note_assign_query, variables: variables,
-                                                      context: {
-                                                        current_user: admin,
-                                                        site_community: user.community,
-                                                      }).as_json
+                                                          context: {
+                                                            current_user: admin,
+                                                            site_community: user.community,
+                                                          }).as_json
 
       expect(result.dig('data', 'noteAssign', 'assigneeNote')).not_to be_nil
       expect(result.dig('data', 'noteAssign', 'assigneeNote')).to include 'success'

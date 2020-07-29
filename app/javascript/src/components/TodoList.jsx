@@ -34,7 +34,7 @@ export default function TodoList({
   const [loaded, setLoadingAssignee] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
-  const [message, setErrorMessage] = useState('an error coccurec')
+  const [message, setErrorMessage] = useState('')
   const { loading, error, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
@@ -61,6 +61,7 @@ export default function TodoList({
   function handleOpenAutoComplete(event, noteId) {
     setOpen(!autoCompleteOpen)
     setNoteId(noteId)
+    setErrorMessage('')
   }
 
   function assignUnassignUser(noteId, userId) {
@@ -169,11 +170,7 @@ export default function TodoList({
                     onDelete={() => handleDelete(user.id, note.id)}
                   />
                 ))}
-                {/* error messaeg */}
-                {
-                  Boolean(message.length) && <span>{message}</span>
-                }
-
+               
                 {/* loader */}
                 {loaded && id === note.id ? (
                   <Spinner />
@@ -181,28 +178,21 @@ export default function TodoList({
                   <Chip
                     key={note.id}
                     variant="outlined"
-                    label={
-                      autoCompleteOpen && id === note.id
-                        ? 'Close'
-                        : 'Add Assignee'
-                    }
+                    label={autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee' }
                     size="medium"
-                    icon={
-                      autoCompleteOpen && id === note.id ? (
-                        <CancelIcon />
-                      ) : (
-                        <AddCircleIcon />
-                      )
-                    }
+                    icon={ autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
                     onClick={event => handleOpenAutoComplete(event, note.id)}
                   />
                 )}
-
-                <br />
-                <br />
+              {/* error message */}
+              <br />
+              {Boolean(message.length) && <span>{message}</span>}
+              <br />
+              <br />
 
                 {/* autocomplete for assignees */}
-                {// avoid opening autocomplete box for other notes
+                {
+                // avoid opening autocomplete box for other notes
                 autoCompleteOpen && id === note.id && (
                   <Autocomplete
                     clearOnEscape
