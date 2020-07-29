@@ -21,6 +21,8 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { UserChip } from './UserChip'
 import ErrorPage from './Error'
+import Paginate from './Paginate'
+import CenteredContent from './CenteredContent'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -32,22 +34,25 @@ export default function TodoList({
   todoAction
 }) {
   const classes = useStyles()
+  const limit = 50
+  const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
   const [message, setErrorMessage] = useState('')
-  const { loading, error, data: liteData } = useQuery(UsersLiteQuery, {
+  const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
   })
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
     flaggedNotes,
     {
       variables: {
-        offset: 0,
-        limit: 50
+        offset,
+        limit
       },
     }
   )
@@ -79,8 +84,19 @@ export default function TodoList({
     }, 300)
   }
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) {
+        return
+      }
+      setOffset(offset - limit)
+    } else if (action === 'next') {
+      setOffset(offset + limit)
+    }
+  }
+
   if (isLoading) return <Loading />
-  if (tasksError) return <ErrorPage error={error.message} />
+  if (tasksError) return <ErrorPage error={tasksError.message} />
 
   return (
     <div className="container" data-testid="todo-container">
@@ -232,6 +248,14 @@ export default function TodoList({
           
         </ul>
       </div>
+      <CenteredContent>
+            <Paginate
+              offSet={offset}
+              limit={limit}
+              active={true}
+              handlePageChange={paginate}
+            />
+          </CenteredContent>
     </div>
   )
 }
