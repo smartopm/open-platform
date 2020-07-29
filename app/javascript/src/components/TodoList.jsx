@@ -38,16 +38,14 @@ export default function TodoList({
     UsersLiteQuery,
     {
       variables: {
-        query: name,
-        limit: 30
+        query: "user_type='admin'",
       },
       fetchPolicy: 'cache-and-network'
     }
   )
   // eslint-disable-next-line no-unused-vars
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
-    flaggedNotes,
-    {
+    flaggedNotes, {
       variables: {
         offset: 0,
         limit: 50
