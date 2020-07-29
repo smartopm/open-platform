@@ -9,7 +9,7 @@ import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
-import MessageIcon from '@material-ui/icons/Message';
+import MessageIcon from '@material-ui/icons/Message'
 import NotesIcon from '@material-ui/icons/Notes'
 import ForumIcon from '@material-ui/icons/Forum'
 import { Footer } from '../components/Footer.jsx'
@@ -18,20 +18,20 @@ import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
 import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import LocalMallIcon from '@material-ui/icons/LocalMall';
+import LocalMallIcon from '@material-ui/icons/LocalMall'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />
   }
@@ -79,8 +79,8 @@ export default function Homepage({ authState }) {
       access: ['admin']
     },
     {
-      card_id: 5,
-      title: `${authState.user.community.name} News`,
+      card_id: 18,
+      title: `${authState.user.community.name}`,
       path: `/news`,
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
@@ -156,44 +156,54 @@ export default function Homepage({ authState }) {
       title: 'Permits and Request Forms',
       path: `/`,
       id: 'crfl',
-      handleClick: (event) => setAnchorEl(event.currentTarget),
+      handleClick: event => setAnchorEl(event.currentTarget),
       icon: <ListAltIcon fontSize="large" />,
       access: ['admin', 'resident', 'client'],
-      menu: <Menu
-        id="fade-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={open}
-        onClose={()=>setAnchorEl(null)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <MenuItem onClick={() => {
-          window.open(
-            `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
-              /\s+/g,
-              '+'
-            )}&entry.1055458143=${
-            authState.user.phoneNumber ? authState.user.phoneNumber : ''
-            }`,
-            '_blank'
-          )
-          location.reload()
-        }}>Client Request Form</MenuItem>
-        <MenuItem onClick={()=>{
-           window.open('https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform?usp=sf_link',
-            '_blank'
-          )
-          location.reload()
-        }}>Building Permit Application Form</MenuItem> 
-      </Menu>, 
-     
+      menu: (
+        <Menu
+          id="fade-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={open}
+          onClose={() => setAnchorEl(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left'
+          }}
+        >
+          <MenuItem
+            onClick={() => {
+              window.open(
+                `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
+                  /\s+/g,
+                  '+'
+                )}&entry.1055458143=${
+                  authState.user.phoneNumber ? authState.user.phoneNumber : ''
+                }`,
+                '_blank'
+              )
+              location.reload()
+            }}
+          >
+            Client Request Form
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              window.open(
+                'https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform?usp=sf_link',
+                '_blank'
+              )
+              location.reload()
+            }}
+          >
+            Building Permit Application Form
+          </MenuItem>
+        </Menu>
+      )
     },
     {
       card_id: 12,
@@ -220,22 +230,6 @@ export default function Homepage({ authState }) {
       access: ['admin', 'resident', 'client']
     },
     {
-      card_id: 15,
-      title: `${authState.user.community.name} Support`,
-      path: `/contact`,
-
-      icon: <HelpIcon fontSize="large" />,
-      access: [
-        'admin',
-        'client',
-        'security_guard',
-        'prospective_client',
-        'contractor',
-        'resident',
-        'visitor'
-      ]
-    },
-    {
       card_id: 16,
       title: `Time Card`,
       path: `/timesheet/${authState.user.id}`,
@@ -258,24 +252,6 @@ export default function Homepage({ authState }) {
       access: ['contractor']
     },
     {
-      card_id: 18,
-      title: `${authState.user.community.name} News 2.0`,
-      path: `/nkwashi_news`,
-      titleStyle: css(styles.CardtextImg),
-      icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
-      access: [
-        'admin',
-        'client',
-        'security_guard',
-        'prospective_client',
-        'contractor',
-        'resident',
-        'visitor'
-      ]
-    },
-
-    {
-      card_id: 20,
       title: `Discussions`,
       path: `/discussions`,
       titleStyle: css(styles.CardtextImg),
@@ -297,10 +273,19 @@ export default function Homepage({ authState }) {
       path: `/business`,
       titleStyle: css(styles.CardtextImg),
       icon: <LocalMallIcon fontSize="large" />,
+      access: ['admin', 'client', 'prospective_client', 'resident', 'visitor']
+    },
+    {
+      title: `${authState.user.community.name} Support`,
+      path: `/contact`,
+
+      icon: <HelpIcon fontSize="large" />,
       access: [
         'admin',
         'client',
+        'security_guard',
         'prospective_client',
+        'contractor',
         'resident',
         'visitor'
       ]
@@ -313,9 +298,9 @@ export default function Homepage({ authState }) {
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              {cards.map(card => (
+              {cards.map((card, index) => (
                 <Card
-                  key={card.card_id}
+                  key={index}
                   path={card.path}
                   title={card.title}
                   titleStyle={css(styles.CardtextImg)}

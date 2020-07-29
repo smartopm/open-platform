@@ -135,7 +135,6 @@ export const styles = StyleSheet.create({
         minHeight: '50px'
     },
     getStartedButton: {
-        backgroundColor: "#25c0b0",
         color: "#FFF",
         height: 51,
         boxShadow: "none",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
   TextField,
@@ -6,7 +6,10 @@ import {
   CircularProgress,
   Select,
   Typography,
-  Divider
+  Divider,
+  FormControl,
+  MenuItem,
+  InputLabel
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link, useHistory, useLocation } from 'react-router-dom'
@@ -18,20 +21,25 @@ import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import FacebookIcon from '@material-ui/icons/Facebook'
+import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [loginPhoneStart] = useMutation(loginPhone)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
   const [value, setValue] = useState('')
+  const [Interest, setInterest] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [countryCode, setCountryCode] = useState(260)
-  const history = useHistory()
   const { state } = useLocation()
+  const history = useHistory()
+  const theme = useContext(ThemeContext)
 
   function loginWithPhone(event, type = 'input') {
+    
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
@@ -78,16 +86,19 @@ export function LoginScreen() {
       nonInteraction: true
     })
     window.open(
-      `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi, I would like access to the Nkwashi app. Please provide me with my login credentials. Full Name: ${username}, Phone Number or Email: ${value}`,
+      `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
+       I would like access to the Nkwashi app. Please provide me with my login credentials. 
+       Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
       'emailWindow'
     )
     setOpen(!open)
   }
 
+
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/welcome'}>
+        <Link to={'/welcome'} style={{color: theme.primaryColor}}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -158,6 +169,7 @@ export function LoginScreen() {
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+            style={{backgroundColor: theme.primaryColor}}
             onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >
@@ -280,12 +292,45 @@ export function LoginScreen() {
         <TextField
           variant="outlined"
           margin="normal"
+          type="email"
           required
           fullWidth
-          name="email-number"
-          label="Email/Phone number"
+          name="email"
+          label="Email"
           onChange={event => setValue(event.target.value)}
         />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          type="number"
+          required
+          fullWidth
+          name="number"
+          label="Phone number"
+          onChange={event => setPhone(event.target.value)}
+        />
+        <FormControl className={css(styles.formControl)}>
+          <InputLabel id="demo-simple-select-outlined-label">
+            Why are you interested in Nkwashi?
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={Interest}
+            onChange={event => setInterest(event.target.value)}
+            label="interest"
+          >
+            <MenuItem value={'I own property at Nkwashi'}>
+              I own property at Nkwashi.
+            </MenuItem>
+            <MenuItem value={'I want to own property at Nkwashi'}>
+              I want to own property at Nkwashi
+            </MenuItem>
+            <MenuItem value={'I want to learn more about Nkwashi.'}>
+              I want to learn more about Nkwashi.
+            </MenuItem>
+          </Select>
+        </FormControl>
       </ModalDialog>
     </div>
   )
@@ -293,7 +338,6 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
     color: '#FFF',
     width: '55%',
     height: 51,
@@ -345,5 +389,9 @@ const styles = StyleSheet.create({
       marginTop: 12,
       marginLeft: 0
     }
+  },
+  formControl: {
+    minWidth: 120,
+    width: '100%'
   }
 })

@@ -22,6 +22,7 @@ import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
+import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
 
 
 
@@ -30,6 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   });
 
 export default function PostPage() {
+  const theme = useContext(ThemeContext)
   const limit = 20
   const { id } = useParams()
   const authState = useContext(AuthStateContext)
@@ -88,7 +90,7 @@ export default function PostPage() {
     <Fragment>
       <Nav
         menuButton="back"
-        backTo={authState.loggedIn ? '/nkwashi_news' : '/welcome'}
+        backTo={authState.loggedIn ? '/news' : '/welcome'}
       />
       <div className="post_page">
         <IframeContainer
@@ -107,6 +109,7 @@ export default function PostPage() {
         <Fab variant="extended"
           onClick={handleCommentsView}
             className={`btn ${css(styles.getStartedButton)} `}
+            style={{backgroundColor: theme.primaryColor}}
           >
             View comments
         </Fab>

@@ -1,20 +1,13 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
-import DateUtil from '../utils/dateutil'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
-import PhoneInTalkIcon from '@material-ui/icons/PhoneInTalk'
-import PhoneMissedIcon from '@material-ui/icons/PhoneMissed'
 import {
-  Table,
-  TableBody,
-  TableHead,
-  TableRow,
   Button,
   TextField,
   Divider,
@@ -31,17 +24,16 @@ import {
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
-import {
-  StyledTableRow,
-  StyledTableCell
-} from '../components/TimeTracker/DataTable'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
+import UserListCard from '../components/UserListCard'
+import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 
 const limit = 50
 export default function UsersList() {
   const classes = useStyles()
+  const theme = useContext(ThemeContext)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
@@ -72,7 +64,10 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  const {loading: labelsLoading, error: labelsError, data: labelsData} = useQuery(LabelsQuery)
+  
+ //TODO: @dennis, add pop up for notes 
+
+  const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
 
   function joinSearchQuery(query, type) {
     const types = {
@@ -93,13 +88,13 @@ export default function UsersList() {
   }
   function handleSaveNote() {
     let noteType = ''
-    if (modalAction === 'Answered'){
+    if (modalAction === 'Answered') {
       noteType = "Outgoing Call Answered: "
-    }else if(modalAction === 'Missed'){
+    } else if (modalAction === 'Missed') {
       noteType = "Outgoing Call not Answered: "
     }
     noteCreate({
-      variables: { userId, body: noteType+note, flagged: false }
+      variables: { userId, body: noteType + note, flagged: false }
     }).then(() => {
       refetch()
       setIsDialogOpen(!isDialogOpen)
@@ -134,7 +129,7 @@ export default function UsersList() {
       if (offset < limit) {
         return
       }
-      setOffset(offset - limit) 
+      setOffset(offset - limit)
     } else {
       setOffset(offset + limit)
     }
@@ -146,9 +141,9 @@ export default function UsersList() {
   }, [type])
 
 
+
   if (loading || labelsLoading) return <Loading />
   if (error || labelsError) return <ErrorPage error={error.message || labelsError.message} />
-
   if (redirect) {
     return (
       <Redirect
@@ -172,62 +167,62 @@ export default function UsersList() {
           handleBatchFilter={handleBatchFilter}
           handleModal={handleFilterModal}>
           <TextField rows={5}
-          multiline className="form-control" onChange={event => setSearchValue(event.target.value)} />
+            multiline className="form-control" onChange={event => setSearchValue(event.target.value)} />
         </CustomizedDialogs>
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
           open={isDialogOpen}
         >
-          {modalAction === 'Note'&&(
-          <div className="form-group">
-            <h6>
-              Add note for <strong>{userName}</strong>{' '}
-            </h6>
-            <input
-              className="form-control"
-              type="text"
-              value={note}
-              onChange={event => setNote(event.target.value)}
-              name="note"
-              placeholder="Type action note here"
-            />
-            {mutationLoading && <p className="text-center">Saving note ...</p>}
-          </div>
+          {modalAction === 'Note' && (
+            <div className="form-group">
+              <h6>
+                Add note for <strong>{userName}</strong>{' '}
+              </h6>
+              <input
+                className="form-control"
+                type="text"
+                value={note}
+                onChange={event => setNote(event.target.value)}
+                name="note"
+                placeholder="Type action note here"
+              />
+              {mutationLoading && <p className="text-center">Saving note ...</p>}
+            </div>
           )}
-          {modalAction === 'Answered'&&(
+          {modalAction === 'Answered' && (
 
-          <div className="form-group">
-            <h6>
-              Add Outgoing call answered for <strong>{userName}</strong>{' '}
-            </h6>
-            <input
-              className="form-control"
-              type="call"
-              value={note}
-              onChange={event => setNote(event.target.value)}
-              name="note"
-              placeholder="Type action note here"
-            />
-            {mutationLoading && <p className="text-center">Saving note ...</p>}
-          </div>
+            <div className="form-group">
+              <h6>
+                Add Outgoing call answered for <strong>{userName}</strong>{' '}
+              </h6>
+              <input
+                className="form-control"
+                type="call"
+                value={note}
+                onChange={event => setNote(event.target.value)}
+                name="note"
+                placeholder="Type action note here"
+              />
+              {mutationLoading && <p className="text-center">Saving note ...</p>}
+            </div>
           )}
-          {modalAction === 'Missed'&&(
+          {modalAction === 'Missed' && (
 
-          <div className="form-group">
-            <h6>
-              Add Outgoing call not answered for <strong>{userName}</strong>{' '}
-            </h6>
-            <input
-              className="form-control"
-              type="call"
-              value={note}
-              onChange={event => setNote(event.target.value)}
-              name="note"
-              placeholder="Type action note here"
-            />
-            {mutationLoading && <p className="text-center">Saving note ...</p>}
-          </div>
+            <div className="form-group">
+              <h6>
+                Add Outgoing call not answered for <strong>{userName}</strong>{' '}
+              </h6>
+              <input
+                className="form-control"
+                type="call"
+                value={note}
+                onChange={event => setNote(event.target.value)}
+                name="note"
+                placeholder="Type action note here"
+              />
+              {mutationLoading && <p className="text-center">Saving note ...</p>}
+            </div>
           )}
         </ModalDialog>
         <div className={classes.root}>
@@ -279,8 +274,8 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end'}}>
-          <FormControl className={classes.formControl}>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Filter by Labels</InputLabel>
               <Select
                 labelId="select-by-label"
@@ -308,80 +303,24 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end'}}>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-               endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
-               {Boolean(phoneNumbers.length) && (
-                <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
-              )}
+              style={{backgroundColor: theme.primaryColor}}
+              endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
+            {Boolean(phoneNumbers.length) && (
+              <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
+            )}
           </Grid>
-          
+
         </Grid>
         <br />
         <br />
-        <Table stickyHeader className={classes.table} aria-label="user table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell align="right">Role</StyledTableCell>
-              <StyledTableCell align="right">Phone Number</StyledTableCell>
-              <StyledTableCell align="right">Email</StyledTableCell>
-              <StyledTableCell align="right">Date</StyledTableCell>
-              <StyledTableCell align="right">Note</StyledTableCell>
-              <StyledTableCell align="right">Quick Note</StyledTableCell>
-              <StyledTableCell align="right">Add Note</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.users.map(user => (
-              <StyledTableRow key={user.id}>
-                <StyledTableCell component="th" scope="row">
-                  <Link to={`/user/${user.id}`} key={user.id}>
-                    {' '}
-                    {user.name}{' '}
-                  </Link>
-                </StyledTableCell>
-                <StyledTableCell align="right">{user.roleName}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {user.phoneNumber || 'None'}
-                </StyledTableCell>
-                <StyledTableCell align="right">{user.email}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {user.notes && user.notes[0]
-                    ? DateUtil.formatDate(user.notes[0].createdAt)
-                    : 'N/A'}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  {user.notes && user.notes[0] ? user.notes[0].body : 'None'}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Button
-                    color="secondary"
-                    onClick={() => handleNoteModal(user.id, user.name,'Answered')}
-                  >
-                    <PhoneInTalkIcon />
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onClick={() => handleNoteModal(user.id, user.name,'Missed')}
-                  >
-                   <PhoneMissedIcon />
-                  </Button>
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Button
-                    color="secondary"
-                    onClick={() => handleNoteModal(user.id, user.name,'Note')}
-                  >
-                    +
-                  </Button>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
+
+ 
+        <UserListCard userData={data} handleNoteModal={handleNoteModal} />
+      
         <Grid container direction="row" justify="center" alignItems="center">
           <Paginate
             count={data.users.length}
@@ -431,10 +370,8 @@ export const useStyles = makeStyles(theme => ({
   chip: {
     margin: 2
   },
-  filterButton : {
-    backgroundColor: '#25c0b0','&:hover': {
-      backgroundColor: '#25c0b0',
-    },
+  filterButton: {
+    
     textTransform: 'none'
   }
 }))

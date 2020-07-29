@@ -24,7 +24,7 @@ export default function Posts() {
     }
     return (
         <React.Fragment>
-            <Nav  navName="News" menuButton="back" backTo="/nkwashi_news" />
+            <Nav  navName="News" menuButton="back" backTo="/news" />
             <Categories />
             <div>
                 <br />
@@ -40,7 +40,7 @@ export default function Posts() {
                         <Grid item  key={post.ID}>
                             <Box style={{display: 'flex', justifyContent: 'flex-start'}}>
                                 <Link key={post.ID} style={{ textDecoration: 'none' }}
-                                    to={`/nkwashi_news/post/${post.ID}`}
+                                    to={`/news/post/${post.ID}`}
                                 >
                                     <PostItem
                                         key={post.ID}
