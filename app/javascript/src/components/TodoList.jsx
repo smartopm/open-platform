@@ -41,7 +41,6 @@ export default function TodoList({
     },
     fetchPolicy: 'cache-and-network'
   })
-  // eslint-disable-next-line no-unused-vars
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
     flaggedNotes,
     {
@@ -58,7 +57,7 @@ export default function TodoList({
     return assignUnassignUser(noteId, userId)
   }
 
-  function handleOpenAutoComplete(event, noteId) {
+  function handleOpenAutoComplete(_event, noteId) {
     setOpen(!autoCompleteOpen)
     setNoteId(noteId)
     setErrorMessage('')
