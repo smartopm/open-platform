@@ -307,6 +307,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'result', 'success')).to be true
       expect(result.dig('errors')).to be_nil
@@ -319,6 +320,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: security_guard,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'result', 'success')).to be nil
       expect(result.dig('errors')).not_to be_nil
@@ -331,6 +333,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: other_community_admin,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'result', 'success')).to be nil
       expect(result.dig('errors')).not_to be_nil
@@ -411,6 +414,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
                                                        current_user: admin,
+                                                       site_community: admin.community,
                                                      }).as_json
 
       expect(result.dig('data', 'userCreate', 'user', 'avatarUrl')).not_to be_nil
@@ -433,6 +437,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(update_query, variables: variables,
                                                      context: {
                                                        current_user: admin,
+                                                       site_community: admin.community,
                                                      }).as_json
 
       expect(result.dig('data', 'userUpdate', 'user', 'avatarUrl')).not_to be_nil
@@ -466,6 +471,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
                                                             context: {
                                                               current_user: admin,
+                                                              site_community: admin.community,
                                                             }).as_json
       expect(result.dig('data', 'result', 'success')).to be true
       expect(result.dig('errors')).to be_nil
@@ -478,6 +484,7 @@ RSpec.describe Mutations::User do
       result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
                                                             context: {
                                                               current_user: non_admin,
+                                                              site_community: admin.community,
                                                             }).as_json
       expect(result.dig('data', 'result')).to be nil
       expect(result.dig('errors')).not_to be_nil
