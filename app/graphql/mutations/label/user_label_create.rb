@@ -9,6 +9,7 @@ module Mutations
 
       field :label, [Types::UserLabelType], null: true
 
+      # TODO: move create label operations to background job : Saurabh
       # rubocop:disable Metrics/AbcSize
       def resolve(user_id:, label_id:)
         user_ids = user_id.split(',')
