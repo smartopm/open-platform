@@ -373,14 +373,6 @@ class User < ApplicationRecord
     EmailMsg.send_welcome_msg(self[:email], self[:name], community.name) unless self[:email].nil?
   end
 
-  # def follow_or_unfollow_discussion(user_id, discussion_id)
-  #   discussion = DiscussionUser.find(user_id)
-  #   if discussion.find_by(discussion_id: discussion_id)
-  #     DiscussionUser.find_by(discussion_id: discussion_id).delete
-  #   else
-
-  # end
-
   private
 
   def phone_number_valid?
