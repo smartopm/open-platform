@@ -47,7 +47,6 @@ export default function UsersList() {
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
   const [searchType, setSearchType] = useState('type')
-  const [userListById, setUserListById] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
   const [modalAction, setModalAction] = useState('')
@@ -127,7 +126,7 @@ export default function UsersList() {
     setSearchType('type')
   }
   function handleLabelSelect(lastLabel) {
-    const {id, shortDesc} = lastLabel
+    const {id} = lastLabel
     if (userList) {
       userLabelCreate({
         variables: { userId: userList.toString(), labelId: id }
