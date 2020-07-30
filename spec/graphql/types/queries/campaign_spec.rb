@@ -15,6 +15,9 @@ RSpec.describe Types::QueryType do
     end
 
     let!(:campaign_label) { create(:campaign_label, label_id: label.id, campaign_id: campaigns.id) }
+    let!(:sent_message) do
+      create(:message, user_id: current_user.id, sender_id: admin.id, campaign_id: campaigns.id)
+    end
 
     let(:campaigns_query) do
       %(query {
@@ -23,6 +26,14 @@ RSpec.describe Types::QueryType do
               message
               labels {
                 shortDesc
+              }
+              campaignMetrics {
+                batchTime
+                startTime
+                endTime
+                totalScheduled
+                totalSent
+                totalClicked
               }
             }
         })
@@ -39,6 +50,7 @@ RSpec.describe Types::QueryType do
         })
     end
 
+    # rubocop:disable Metrics/LineLength
     it 'should retrieve list of campaigns' do
       result = DoubleGdpSchema.execute(campaigns_query, context: {
                                          current_user: admin,
@@ -49,7 +61,14 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'campaigns', 0, 'message')).to eql 'Visiting'
       expect(result.dig('data', 'campaigns', 0, 'labels', 0).key?('shortDesc')).to be_truthy
       expect(result.dig('data', 'campaigns', 0, 'labels', 0, 'shortDesc')).to eql label.short_desc
+      expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('batchTime')).to be_truthy
+      expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('startTime')).to be_truthy
+      expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('endTime')).to be_truthy
+      expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('totalScheduled')).to be_truthy
+      expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('totalSent')).to be_truthy
+      expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('totalClicked')).to be_truthy
     end
+    # rubocop:enable Metrics/LineLength
 
     it 'should retrieve the requested campaing via id' do
       result = DoubleGdpSchema.execute(campaign_query, context: {
