@@ -5,18 +5,17 @@ import { useQuery } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
 
 export default function CreateLabel({ handleLabelSelect }) {
-    const { loading, error, data: labels, refetch } = useQuery(LabelsQuery)
-
+    const { data } = useQuery(LabelsQuery)
     return (
         <div>
             <Fragment>
                 <Autocomplete
                     data-testid="userLabel-creator"
-                    style={{ width: '100%' }}
+                    style={{ width: 150, margin: 1 }}
                     multiple
                     freeSolo
                     id="tags-filled"
-                    options={labels.labels}
+                    options={data.labels}
                     getOptionLabel={option => option.shortDesc}
                     onChange={(event, newValue) => {
                         // 2 things are happening here, there is a new value and an autocompleted value
@@ -26,7 +25,7 @@ export default function CreateLabel({ handleLabelSelect }) {
                             const [lastLabel] = newValue.slice(-1)
                             return handleLabelSelect(lastLabel)
                         }
-                        return setLabel(newValue)
+                           
                     }}
                     renderTags={(value, getTagProps) => {
                         return value.map((option, index) => (
@@ -43,8 +42,9 @@ export default function CreateLabel({ handleLabelSelect }) {
                     renderInput={params => (
                         <TextField
                             {...params}
-                            variant="outlined"
-                            label="Assign Label"
+                            placeholder="Assign Label"
+                            style={{width: "100%"}}
+
                         />
                     )}
                 />
