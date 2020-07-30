@@ -7,6 +7,8 @@ class Campaign < ApplicationRecord
   has_many :campaign_labels, dependent: :destroy
   has_many :labels, through: :campaign_labels
 
+  EXPIRATION_DAYS = 7
+
   default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids
@@ -51,18 +53,39 @@ class Campaign < ApplicationRecord
     true
   end
 
+  # rubocop:disable Metrics/AbcSize
   def run_campaign
     admin_user = campaign_admin_user
     update(start_time: Time.current)
-    target_list_user.each do |acc|
+    users = target_list_user
+    CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.join(','))
+    users.each do |acc|
       if acc.phone_number.present?
         return false unless send_messages(admin_user, acc)
       end
     end
     update(end_time: Time.current)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def label_users
     labels.map(&:users)
+  end
+
+  def campaign_metrics
+    {
+      batch_time: batch_time,
+      start_time: start_time,
+      end_time: end_time,
+      total_scheduled: user_id_list.split(',').count,
+      total_sent: messages.count,
+      total_clicked: total_clicked || 0,
+    }
+  end
+
+  def expired?
+    return false if start_time.nil?
+
+    Time.zone.now > (start_time + EXPIRATION_DAYS)
   end
 end

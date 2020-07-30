@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_123311) do
+ActiveRecord::Schema.define(version: 2020_07_29_130936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -110,6 +110,8 @@ ActiveRecord::Schema.define(version: 2020_07_29_123311) do
     t.datetime "batch_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "total_sent"
+    t.integer "total_clicked"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
@@ -292,7 +294,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_123311) do
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
-  create_table "user_labels", id: false, force: :cascade do |t|
+  create_table "user_labels", force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "label_id", null: false
     t.datetime "created_at", precision: 6, null: false
