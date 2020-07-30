@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_123311) do
+ActiveRecord::Schema.define(version: 2020_07_27_162619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -62,6 +62,16 @@ ActiveRecord::Schema.define(version: 2020_07_29_123311) do
     t.uuid "reporting_user_id"
   end
 
+  create_table "assignee_notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "note_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["note_id"], name: "index_assignee_notes_on_note_id"
+    t.index ["user_id", "note_id"], name: "index_assignee_notes_on_user_id_and_note_id", unique: true
+    t.index ["user_id"], name: "index_assignee_notes_on_user_id"
+  end
+
   create_table "businesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "community_id", null: false
     t.uuid "user_id", null: false
@@ -80,6 +90,14 @@ ActiveRecord::Schema.define(version: 2020_07_29_123311) do
     t.json "links"
     t.index ["community_id"], name: "index_businesses_on_community_id"
     t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
+  create_table "campaign_labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "campaign_id", null: false
+    t.uuid "label_id", null: false
+    t.index ["campaign_id", "label_id"], name: "index_campaign_labels_on_campaign_id_and_label_id", unique: true
+    t.index ["campaign_id"], name: "index_campaign_labels_on_campaign_id"
+    t.index ["label_id"], name: "index_campaign_labels_on_label_id"
   end
 
   create_table "campaigns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -244,6 +262,8 @@ ActiveRecord::Schema.define(version: 2020_07_29_123311) do
     t.boolean "completed"
     t.datetime "due_date"
     t.string "category"
+    t.uuid "assigned_to"
+    t.uuid "community_id"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -327,8 +347,12 @@ ActiveRecord::Schema.define(version: 2020_07_29_123311) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "assignee_notes", "notes"
+  add_foreign_key "assignee_notes", "users"
   add_foreign_key "businesses", "communities"
   add_foreign_key "businesses", "users"
+  add_foreign_key "campaign_labels", "campaigns"
+  add_foreign_key "campaign_labels", "labels"
   add_foreign_key "campaigns", "communities"
   add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"

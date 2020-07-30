@@ -538,3 +538,12 @@ export const UserLabelUpdate = gql`
     }
   }
 `
+
+export const AssignUser = gql`
+  mutation noteAssign($noteId: ID!, $userId: ID!){
+    noteAssign(noteId: $noteId, userId: $userId){
+      assigneeNote
+    }
+  }
+`
+

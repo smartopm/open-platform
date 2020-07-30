@@ -21,5 +21,7 @@ RSpec.describe Campaign, type: :model do
   end
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
+    it { is_expected.to have_many(:labels) }
+    it { is_expected.to have_many(:campaign_labels) }
   end
 end

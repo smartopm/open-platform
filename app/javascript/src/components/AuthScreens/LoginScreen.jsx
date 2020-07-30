@@ -28,6 +28,7 @@ export function LoginScreen() {
   const [loginPhoneStart] = useMutation(loginPhone)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
   const [value, setValue] = useState('')
   const [Interest, setInterest] = useState('')
   const [error, setError] = useState(null)
@@ -87,7 +88,7 @@ export function LoginScreen() {
     window.open(
       `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
        I would like access to the Nkwashi app. Please provide me with my login credentials. 
-       Full Name: ${username}, Phone Number or Email: ${value}, Why are you interested in Nkwashi?: ${Interest}`,
+       Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
       'emailWindow'
     )
     setOpen(!open)
@@ -291,11 +292,22 @@ export function LoginScreen() {
         <TextField
           variant="outlined"
           margin="normal"
+          type="email"
           required
           fullWidth
-          name="email-number"
-          label="Email/Phone number"
+          name="email"
+          label="Email"
           onChange={event => setValue(event.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          type="number"
+          required
+          fullWidth
+          name="number"
+          label="Phone number"
+          onChange={event => setPhone(event.target.value)}
         />
         <FormControl className={css(styles.formControl)}>
           <InputLabel id="demo-simple-select-outlined-label">

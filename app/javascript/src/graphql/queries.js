@@ -126,6 +126,7 @@ export const allNotes = gql`
         name
         id
       }
+      
     }
   }
 `
@@ -144,6 +145,11 @@ export const flaggedNotes = gql`
       author {
         id
         name
+      }
+      assignees {
+        id
+        name
+        imageUrl
       }
     }
   }
@@ -174,6 +180,19 @@ export const UsersQuery = gql`
 
   ${UserFragment.publicFields}
 `
+
+export const UsersLiteQuery = gql`
+  query users($limit: Int, $offset: Int, $query: String) {
+    users(limit: $limit, offset: $offset, query: $query) {
+      id
+      name
+      imageUrl
+      avatarUrl
+    }
+  }
+`
+
+
 
 export const UserSearchQuery = gql`
   query UserSearch($query: String!, $limit: Int, $offset: Int) {

@@ -235,6 +235,7 @@ RSpec.describe Types::QueryType do
       admin.notes.create(
         body: 'This is a note',
         user_id: current_user.id,
+        community_id: admin.community_id,
         flagged: true,
       )
     end
@@ -271,6 +272,7 @@ RSpec.describe Types::QueryType do
     it 'should query all to-dos' do
       result = DoubleGdpSchema.execute(flagged_query, context: {
                                          current_user: admin,
+                                         site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'flaggedNotes')).not_to be_nil
@@ -279,6 +281,7 @@ RSpec.describe Types::QueryType do
     it 'should query all to-dos' do
       result = DoubleGdpSchema.execute(notes_query, context: {
                                          current_user: admin,
+                                         site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'allNotes')).not_to be_nil
@@ -287,6 +290,7 @@ RSpec.describe Types::QueryType do
     it 'should query all to-dos' do
       result = DoubleGdpSchema.execute(user_notes_query, context: {
                                          current_user: admin,
+                                         site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'userNotes')).not_to be_nil
