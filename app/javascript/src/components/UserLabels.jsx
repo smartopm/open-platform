@@ -59,13 +59,13 @@ export default function UserLabels({ userId }) {
 
     if (loading || _loading) return <Loading />
     if (error || _error) {
-        return <ErrorPage title={error.message || _error.message} /> // error could be a string sometimes
+        return <ErrorPage title={error || _error} /> // error could be a string sometimes
       }
     return (
         <div className="container">
             <div className=" row d-flex justifiy-content-around align-items-center">
                 {userData.userLabels.length
-                    ? userData.userLabels.map(label => (
+                    ? userData?.userLabels.map(label => (
                         <Chip
                             data-testid="chip-label"
                             key={label.id}

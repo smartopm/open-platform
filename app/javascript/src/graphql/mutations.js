@@ -506,7 +506,7 @@ export const LabelCreate = gql`
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-    mutation userLabelCreate($userId: ID!, $labelId: ID!){
+    mutation userLabelCreate($userId: String!, $labelId: String!){
        userLabelCreate(userId: $userId, labelId: $labelId){
          label {
            labelId
