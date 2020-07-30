@@ -21,6 +21,7 @@ import {
   FormControl,
   InputLabel,
   Input,
+  CircularProgress,
   Chip
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
@@ -44,6 +45,8 @@ export default function UsersList() {
   const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
+  const [labelError, setError] = useState('')
+  const [labelLoading, setLabelLoading] = useState(false)
   const [searchType, setSearchType] = useState('type')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
@@ -125,12 +128,22 @@ export default function UsersList() {
     setSearchType('type')
   }
   function handleLabelSelect(lastLabel) {
-    const {id} = lastLabel
+    const { id, shortDesc } = lastLabel
+    setLabelLoading(true)
     if (userList) {
       userLabelCreate({
         variables: { userId: userList.toString(), labelId: id }
+      }).then(()=>{
+        refetch()
+        setLabelLoading(false)
+        setType(shortDesc)
+        setSearchType('type')
+      }).catch(error => {
+        setLabelLoading(false)
+        setError(error.message)
+
       })
-      
+
     }
 
   }
@@ -321,6 +334,9 @@ export default function UsersList() {
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
             <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            { labelLoading ? <CircularProgress size={25} /> : '' }
+          </Grid>
 
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
@@ -331,7 +347,14 @@ export default function UsersList() {
               <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
+          
         </Grid>
+
+        <br />
+        <div className="d-flex justify-content-center row">
+        <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span>
+        </div>
+        
         <br />
         <br />
 
