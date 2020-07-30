@@ -494,7 +494,7 @@ export const DiscussionMutation = gql`
   }
 `
 
-export const DiscussionSubscription = gql`{
+export const DiscussionSubscription = gql`
   mutation discussionUserCreate(
     $discussionId: ID!
   ){
@@ -506,7 +506,7 @@ export const DiscussionSubscription = gql`{
       id
     }
   }
-}`
+`
 
 export const LabelCreate = gql`
   mutation labelCreate($shortDesc: String!) {
