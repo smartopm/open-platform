@@ -10,7 +10,8 @@ module Mutations
 
       def resolve(discussion_id:)
         user_id = context[:current_user]
-        discussion_user = context[:site_community].discussions.find(discussion_id).follow_or_unfollow_discussion(user_id)
+        discussion_user = context[:site_community].discussions.find(discussion_id)
+                                                  .follow_or_unfollow_discussion(user_id)
         return { discussion_user: discussion_user } if discussion_user.errors.blank?
 
         raise GraphQL::ExecutionError, discussion_user.errors.full_messages

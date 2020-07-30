@@ -11,11 +11,11 @@ class Discussion < ApplicationRecord
 
   def follow_or_unfollow_discussion(user_id)
     a_discussion = DiscussionUser.find_by(user_id: user_id)
+
     if a_discussion.present?
       a_discussion.delete
     else
-      discussion_users.create!(user_id: user_id, discussion_id: self[:id])
+      DiscussionUser.create!(user_id: user_id, discussion_id: self[:id])
     end
   end
-
 end

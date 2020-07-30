@@ -13,7 +13,8 @@ import {
 } from '@material-ui/core'
 import Comment from './Comment'
 import { DiscussionCommentsQuery } from '../../graphql/queries'
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
+import  {DiscussionSubscription} from '../../graphql/mutations'
 import DateContainer from '../DateContainer'
 import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
@@ -26,12 +27,14 @@ export default function Discussion({ discussionData }) {
   const [isLoading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const [subscribe, setSubscribe] = useState(null)
+  const [follow] = useMutation(DiscussionSubscription)
   const { loading, error, data, refetch, fetchMore } = useQuery(
     DiscussionCommentsQuery,
     {
       variables: { id, limit }
     }
   )
+
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -44,6 +47,7 @@ export default function Discussion({ discussionData }) {
   let handlefollow = () => {
     setSubscribe(true)
     setOpen(false)
+    follow({variables:{discussionId: id}})
   }
   let handleUnfollow = () => {
     setSubscribe(false)
