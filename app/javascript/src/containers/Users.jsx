@@ -31,6 +31,7 @@ import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
+import CreateLabel from '../components/CreateLabel'
 
 
 const limit = 50
@@ -50,7 +51,7 @@ export default function UsersList() {
   const [labelError, setError] = useState('')
   const [labelLoading, setLabelLoading] = useState(false)
   const [searchType, setSearchType] = useState('type')
-  const [userListById, setUserListById] = useState([])
+  const [userListById, setUserListById] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
   const [modalAction, setModalAction] = useState('')
@@ -138,8 +139,6 @@ export default function UsersList() {
       }).then(()=>{
         refetch()
         setLabelLoading(false)
-        setType(shortDesc)
-        setSearchType('type')
       }).catch(error => {
         setLabelLoading(false)
         setError(error.message)
@@ -320,6 +319,9 @@ export default function UsersList() {
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             { labelLoading ? <CircularProgress size={25} /> : '' }
           </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
+            <CreateLabel handleLabelSelect={handleLabelSelect} />
+          </Grid>
 
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
@@ -331,7 +333,6 @@ export default function UsersList() {
               <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
-          
         </Grid>
 
         <br />
