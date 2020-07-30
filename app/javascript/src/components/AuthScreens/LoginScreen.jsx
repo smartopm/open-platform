@@ -91,8 +91,7 @@ export function LoginScreen() {
     )
     setOpen(!open)
   }
-
-  console.log(phoneNumber)
+  
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
