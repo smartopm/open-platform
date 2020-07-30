@@ -111,7 +111,7 @@ export default function PostPage() {
             className={`btn ${css(styles.getStartedButton)} `}
             style={{backgroundColor: theme.primaryColor}}
           >
-            View comments
+            Share comments
         </Fab>
       </div>
       <div> 
