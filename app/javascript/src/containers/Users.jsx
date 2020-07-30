@@ -130,7 +130,8 @@ export default function UsersList() {
     setSearchType('type')
   }
   function handleLabelSelect(lastLabel) {
-    const {id} = lastLabel
+    const { id, shortDesc } = lastLabel
+    setLabelLoading(true)
     if (userList) {
       userLabelCreate({
         variables: { userId: userList.toString(), labelId: id }
@@ -320,6 +321,9 @@ export default function UsersList() {
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
             <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            { labelLoading ? <CircularProgress size={25} /> : '' }
+          </Grid>
 
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
@@ -331,6 +335,7 @@ export default function UsersList() {
               <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
+          
         </Grid>
 
         <br />
