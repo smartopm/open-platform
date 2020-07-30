@@ -52,16 +52,6 @@ describe('Login screen', () => {
       '9297392'
     )
   })
-  it('should have a select element ', () => {
-    expect(loginWrapper.find('select')).toHaveLength(1)
-    expect(loginWrapper.find('select').children()).toHaveLength(4)
-    expect(
-      loginWrapper
-        .find('select')
-        .children()
-        .contains(['🇿🇲 +260'])
-    ).toBe(true)
-  })
   it('should have a button', () => {
     expect(loginWrapper.find('button').exists()).toBe(true)
   })
