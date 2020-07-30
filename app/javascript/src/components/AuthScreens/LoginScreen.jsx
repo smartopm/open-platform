@@ -128,7 +128,6 @@ export function LoginScreen() {
               country={'zm'}
               value={phoneNumber}
               enableSearch={true}
-              autoFocus
               placeholder={'260 900 000000'}
               onChange={phone => setPhoneNumber(phone)}
             />
