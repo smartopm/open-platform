@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
+import { UserLabelCreate } from '../graphql/mutations'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -32,6 +33,7 @@ import FilterComponent from '../components/FilterComponent'
 
 
 const limit = 50
+
 export default function UsersList() {
   const classes = useStyles()
   const theme = useContext(ThemeContext)
@@ -45,7 +47,7 @@ export default function UsersList() {
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
   const [searchType, setSearchType] = useState('type')
-  const [userListById, setUserListById] = useState([])
+  const [userListById, setUserListById] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
   const [modalAction, setModalAction] = useState('')
@@ -69,9 +71,9 @@ export default function UsersList() {
   if (data) {
     userList = data.users.map(user => user.id)
   }
-  
-  //TODO: @dennis, add pop up for notes 
 
+  //TODO: @dennis, add pop up for notes 
+  const [userLabelCreate] = useMutation(UserLabelCreate)
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
 
   function joinSearchQuery(query, type) {
@@ -123,6 +125,16 @@ export default function UsersList() {
   function handleInputChange(event) {
     setType(event.target.value)
     setSearchType('type')
+  }
+  function handleLabelSelect(lastLabel) {
+    const {id, shortDesc} = lastLabel
+    if (userList) {
+      userLabelCreate({
+        variables: { userId: userList.toString(), labelId: id }
+      })
+      
+    }
+
   }
 
   function handleLabelChange(event) {
@@ -289,6 +301,10 @@ export default function UsersList() {
               type="labels"
             />
           </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
+            <CreateLabel handleLabelSelect={handleLabelSelect} />
+          </Grid>
+
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
               color="primary"
@@ -299,12 +315,6 @@ export default function UsersList() {
               <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
-
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            {/* <UserLabels /> */} <span>create label</span>
-
-          </Grid>
-
         </Grid>
         <br />
         <br />
