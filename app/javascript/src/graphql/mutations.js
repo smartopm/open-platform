@@ -501,9 +501,11 @@ export const DiscussionSubscription = gql`
     discussionUserCreate(
       discussionId: $discussionId
     ){
-      userId
-      discussionId
-      id
+      discussionUser{
+        userId
+        discussionId
+        id
+      }      
     }
   }
 `

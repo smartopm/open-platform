@@ -27,10 +27,10 @@ RSpec.describe Mutations::Discussion do
       variables = {
         discussionId: user_discussion.id,
       }
-
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
+                                                site_community: current_user.community
                                               }).as_json
       expect(result.dig('data', 'discussionUserCreate', 'discussionUser',
                         'userId')).to eql current_user.id
