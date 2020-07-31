@@ -91,7 +91,7 @@ export function LoginScreen() {
     )
     setOpen(!open)
   }
-  
+
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
@@ -126,7 +126,7 @@ export function LoginScreen() {
             <PhoneInput
               country={'zm'}
               value={phoneNumber}
-              enableSearch={true}
+              autofocus
               placeholder={'260 900 000000'}
               onChange={phone => setPhoneNumber(phone)}
             />
