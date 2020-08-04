@@ -148,7 +148,7 @@ export default function TodoList({
             </CenteredContent>
         </DialogTitle>
         <DialogContent>
-            <TaskForm refetch={refetch} close={() => setModalOpen(!open)} />
+            <TaskForm refetch={refetch} close={() => setModalOpen(!open)} users={liteData.users}  />
         </DialogContent>
       </Dialog>
 
