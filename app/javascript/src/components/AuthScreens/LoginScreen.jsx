@@ -44,7 +44,7 @@ export function LoginScreen() {
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
       loginPhoneStart({
-        variables: { phoneNumber: `${countryCode}${phoneNumber}` }
+        variables: { phoneNumber: `${countryCode}${phoneNumber.trim()}` }
       })
         .then(({ data }) => {
           setIsLoading(false)
