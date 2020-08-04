@@ -25,6 +25,7 @@ import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import { dateToString } from '../DateContainer'
 
+
 // component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
@@ -148,7 +149,12 @@ export default function TodoList({
             </CenteredContent>
         </DialogTitle>
         <DialogContent>
-            <TaskForm refetch={refetch} close={() => setModalOpen(!open)} />
+            <TaskForm
+              refetch={refetch}
+              close={() => setModalOpen(!open)}
+              assignUser={assignUnassignUser}
+              users={liteData?.users}
+            />
         </DialogContent>
       </Dialog>
 
@@ -306,7 +312,11 @@ const useStyles = makeStyles({
     alignItems: 'right',
     width: '100%',
     overflowX: 'auto'
-  }
+  },
+  formControl: {
+    minWidth: 120,
+    maxWidth: 300,
+  },
 })
 
 // this should be in one place, basically just one theme

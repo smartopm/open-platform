@@ -283,6 +283,7 @@ export const CreateNote = gql`
     noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due) {
       note {
         body
+        id
       }
     }
   }
