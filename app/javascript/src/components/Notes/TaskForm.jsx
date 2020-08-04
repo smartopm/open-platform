@@ -156,7 +156,10 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         </FormControl>
         ) : Boolean(taskUser.length) && !isLoading && `${taskUser} not found in users`
       }
-     
+      {
+        // separate radios from checkbox only after search
+        data?.users.length && <hr />
+      }
       <br />
       <FormControlLabel
         value="end"
