@@ -8,24 +8,34 @@ import {
   MenuItem,
   Select,
   InputLabel,
-  FormControl
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio
 } from '@material-ui/core'
 import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
-import { useMutation } from 'react-apollo'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { CreateNote } from '../../graphql/mutations'
 import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
+import { UsersLiteQuery } from '../../graphql/queries'
+import { Spinner } from '../Loading'
 
 export default function TaskForm({ close, refetch, users, assignUser}) {
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
   const [assignees, setAssignees] = useState([])
+  const [taskUser, setTaskUser] = useState('')
+  const [taskUserId, setTaskUserId] = useState('')
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
   const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
+
+  // this will be used only for user association
+  const [loadUsers, { loading: isLoading, error: queryErrors, data }] = useLazyQuery(UsersLiteQuery)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -33,9 +43,10 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     createTask({
       variables: {
         body: title,
-        due: selectedDate.toISOString(),
+        due: selectedDate ? selectedDate.toISOString() : null,
         completed: taskStatus,
-        flagged: true
+        flagged: true,
+        userId: taskUserId
       }
     })
       .then(({ data }) => {
@@ -47,7 +58,19 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     .catch(err => setErrorMessage(err.message))
   }
 
-
+  function handleTaskUser(event) {
+    setTaskUser(event.target.value)
+  
+    setTimeout(() => {
+      loadUsers({
+        variables: {
+          query: taskUser,
+          errorPolicy: 'all',
+          fetchPolicy: 'cache-and-network',
+        },
+      })
+    }, 1000)
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -95,7 +118,46 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
               ))}
         </Select>
       </FormControl>
-      <br/>
+      <br />
+      {/* have a normal text field */}
+      {
+        !isLoading && !queryErrors ? (
+          <TextField
+            name="task user"
+            label="Task User"
+            placeholder="Type the user name here"
+            style={{ width: '100%' }}
+            onChange={handleTaskUser}
+            value={taskUser}
+            fullWidth
+            margin="normal"
+            inputProps={{
+              'aria-label': 'task user'
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+        )
+        : <Spinner />
+      }
+    {/* associated user */}
+      {
+        data?.users.length ? (
+          <FormControl component="fieldset">
+          <FormLabel component="legend">Task User</FormLabel>
+          <RadioGroup aria-label="user" name="task_user" value={taskUserId} onChange={e => setTaskUserId(e.target.value)}>
+          {
+            data?.users.map(user => (
+              <FormControlLabel key={user.id} value={user.id} control={<Radio />} label={user.name} />
+            ))
+            }
+          </RadioGroup>
+        </FormControl>
+        ) : Boolean(taskUser.length) && !isLoading && `${taskUser} not found in users`
+      }
+     
+      <br />
       <FormControlLabel
         value="end"
         control={
