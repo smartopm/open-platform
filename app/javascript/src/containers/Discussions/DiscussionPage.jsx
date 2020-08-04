@@ -16,7 +16,7 @@ export default function DiscussonPage() {
      if (error ) {
          return <ErrorPage title={error.message || error} />
      }
-     console.log(data.discussion);
+     
     return (
         <div>
             <Nav navName="Discussion" menuButton="back" backTo="/discussions"/>
