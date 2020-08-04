@@ -202,6 +202,7 @@ class User < ApplicationRecord
       flagged: vals[:flagged],
       author_id: self[:id],
       completed: vals[:completed],
+      due_date: vals[:due_date]
     )
   end
 
