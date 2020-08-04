@@ -13,16 +13,16 @@ import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionSubscription } from '../../graphql/mutations'
 
 export default function FollowButtion({ discussionId }) {
-    const id = discussionId
+  const id = discussionId
   const [open, setOpen] = useState(false)
   const [subscribe, setSubscribe] = useState(null)
   const [follow] = useMutation(DiscussionSubscription)
-  const {
-    loading: isLoadings,
-    data: followData
-  } = useQuery(discussionUserQuery, {
-    variables: { disucssionId: discussionId }
-  })
+  const { loading: isLoadings, data: followData } = useQuery(
+    discussionUserQuery,
+    {
+      variables: { disucssionId: discussionId }
+    }
+  )
 
   useEffect(() => {
     if (!isLoadings && followData) {
@@ -42,14 +42,15 @@ export default function FollowButtion({ discussionId }) {
 
   let handlefollow = () => {
     setOpen(false)
-    follow({ variables: { discussionId: id } }).then(() => setSubscribe(true))
+    follow({ variables: { discussionId: id } }).then(() => {
+      if (subscribe) {
+        setSubscribe(false)
+      } else {
+        setSubscribe(true)
+      }
+    })
   }
 
-  let handleUnfollow = () => {
-    setSubscribe(false)
-    setOpen(false)
-    follow({ variables: { discussionId: id } }).then(() => setSubscribe(false))
-  }
 
   return (
     <>
@@ -95,25 +96,14 @@ export default function FollowButtion({ discussionId }) {
             </DialogContentText>
           )}
         </DialogContent>
-        {subscribe ? (
-          <DialogActions>
-            <Button onClick={handleClose} color="secondary">
-              Disagree
-            </Button>
-            <Button onClick={handleUnfollow} color="primary" autoFocus>
-              Agree
-            </Button>
-          </DialogActions>
-        ) : (
-          <DialogActions>
-            <Button onClick={handleClose} color="secondary">
-              Disagree
-            </Button>
-            <Button onClick={handlefollow} color="primary" autoFocus>
-              Agree
-            </Button>
-          </DialogActions>
-        )}
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Disagree
+          </Button>
+          <Button onClick={handlefollow} color="primary" autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   )
