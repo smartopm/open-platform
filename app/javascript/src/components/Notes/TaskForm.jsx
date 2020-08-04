@@ -32,7 +32,7 @@ export default function TaskForm({ close, refetch }) {
     createTask({
       variables: {
         body: title,
-        dueDate: selectedDate.toISOString(),
+        due: selectedDate.toISOString(),
         completed: taskStatus,
         flagged: true
       }
