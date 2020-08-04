@@ -90,7 +90,7 @@ export default function PostPage() {
     <Fragment>
       <Nav
         menuButton="back"
-        backTo={authState.loggedIn ? '/nkwashi_news' : '/welcome'}
+        backTo={authState.loggedIn ? '/news' : '/welcome'}
       />
       <div className="post_page">
         <IframeContainer
@@ -111,7 +111,7 @@ export default function PostPage() {
             className={`btn ${css(styles.getStartedButton)} `}
             style={{backgroundColor: theme.primaryColor}}
           >
-            View comments
+            Share comments
         </Fab>
       </div>
       <div> 

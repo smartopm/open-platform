@@ -4,6 +4,9 @@
 class Campaign < ApplicationRecord
   belongs_to :community
   has_many :messages, dependent: :restrict_with_exception
+  has_many :campaign_labels, dependent: :destroy
+  has_many :labels, through: :campaign_labels
+
   default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids
@@ -57,5 +60,9 @@ class Campaign < ApplicationRecord
       end
     end
     update(end_time: Time.current)
+  end
+
+  def label_users
+    labels.map(&:users)
   end
 end

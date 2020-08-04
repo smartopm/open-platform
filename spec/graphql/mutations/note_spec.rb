@@ -6,6 +6,10 @@ RSpec.describe Mutations::Note do
   describe 'creating an note' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:user_note) do
+      create(:note, community_id: user.community_id,
+                    user_id: user.id, author_id: admin.id)
+    end
 
     let(:create_query) do
       <<~GQL
@@ -47,6 +51,15 @@ RSpec.describe Mutations::Note do
         }
       GQL
     end
+    let(:note_assign_query) do
+      <<~GQL
+        mutation noteAssign($noteId: ID!, $userId: ID!){
+          noteAssign(noteId: $noteId, userId: $userId){
+            assigneeNote
+          }
+        }
+      GQL
+    end
 
     it 'returns a created note with category' do
       variables = {
@@ -57,6 +70,7 @@ RSpec.describe Mutations::Note do
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
                                                        current_user: admin,
+                                                       site_community: user.community,
                                                      }).as_json
       expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'note', 'category')).to eql 'email'
@@ -72,6 +86,7 @@ RSpec.describe Mutations::Note do
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
                                                        current_user: admin,
+                                                       site_community: user.community,
                                                      }).as_json
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('data', 'result', 'note', 'id')).to be_nil
@@ -86,6 +101,7 @@ RSpec.describe Mutations::Note do
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
                                                        current_user: admin,
+                                                       site_community: user.community,
                                                      }).as_json
       expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
@@ -98,6 +114,7 @@ RSpec.describe Mutations::Note do
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
                                                      context: {
                                                        current_user: admin,
+                                                       site_community: user.community,
                                                      }).as_json
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'noteUpdate', 'note', 'body')).to include 'modified'
@@ -106,9 +123,27 @@ RSpec.describe Mutations::Note do
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
                                                      context: {
                                                        current_user: user,
+                                                       site_community: user.community,
                                                      }).as_json
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'assigns or unassigns user' do
+      variables = {
+        userId: user.id,
+        noteId: user_note.id,
+      }
+
+      result = DoubleGdpSchema.execute(note_assign_query, variables: variables,
+                                                          context: {
+                                                            current_user: admin,
+                                                            site_community: user.community,
+                                                          }).as_json
+
+      expect(result.dig('data', 'noteAssign', 'assigneeNote')).not_to be_nil
+      expect(result.dig('data', 'noteAssign', 'assigneeNote')).to include 'success'
+      expect(result.dig('errors')).to be_nil
     end
   end
 end

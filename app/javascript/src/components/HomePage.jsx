@@ -81,7 +81,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 18,
       title: `${authState.user.community.name}`,
-      path: `/nkwashi_news`,
+      path: `/news`,
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
       access: [

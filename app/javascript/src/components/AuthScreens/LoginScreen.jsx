@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
   TextField,
-  InputAdornment,
   CircularProgress,
   Select,
   Typography,
@@ -12,38 +11,38 @@ import {
   InputLabel
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import { loginPhone } from '../../graphql/mutations'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
-import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import FacebookIcon from '@material-ui/icons/Facebook'
-import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
+import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [loginPhoneStart] = useMutation(loginPhone)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
   const [value, setValue] = useState('')
   const [Interest, setInterest] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [countryCode, setCountryCode] = useState(260)
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
 
   function loginWithPhone(event, type = 'input') {
-    
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
       loginPhoneStart({
-        variables: { phoneNumber: `${countryCode}${phoneNumber}` }
+        variables: { phoneNumber: `${phoneNumber}` }
       })
         .then(({ data }) => {
           setIsLoading(false)
@@ -53,7 +52,7 @@ export function LoginScreen() {
           history.push({
             pathname: '/code/' + data.loginPhoneStart.user.id,
             state: {
-              phoneNumber: `${countryCode}${phoneNumber}`,
+              phoneNumber: `${phoneNumber}`,
               from: `${!state ? '/' : state.from.pathname}`
             }
           })
@@ -87,17 +86,16 @@ export function LoginScreen() {
     window.open(
       `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
        I would like access to the Nkwashi app. Please provide me with my login credentials. 
-       Full Name: ${username}, Phone Number or Email: ${value}, Why are you interested in Nkwashi?: ${Interest}`,
+       Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
       'emailWindow'
     )
     setOpen(!open)
   }
 
-
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/welcome'} style={{color: theme.primaryColor}}>
+        <Link to={'/welcome'} style={{ color: theme.primaryColor }}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -124,39 +122,15 @@ export function LoginScreen() {
             styles.phoneNumberInput
           )} row justify-content-center align-items-center`}
         >
-          <TextField
-            id="phone"
-            placeholder="Enter Phone Number"
-            type="tel"
-            maxLength={10}
-            autoFocus
-            style={{
-              width: '65%'
-            }}
-            value={phoneNumber}
-            onChange={e => setPhoneNumber(e.target.value)}
-            onKeyDown={loginWithPhone}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Select
-                    native
-                    value={countryCode}
-                    style={{
-                      width: 85
-                    }}
-                    onChange={e => setCountryCode(e.target.value)}
-                  >
-                    {Object.entries(areaCode).map(([key, val]) => (
-                      <option key={key} value={key}>
-                        {val}
-                      </option>
-                    ))}
-                  </Select>
-                </InputAdornment>
-              )
-            }}
-          />
+          <div className={css(styles.phone)}>
+            <PhoneInput
+              country={'zm'}
+              value={phoneNumber}
+              autofocus
+              placeholder={'260 900 000000'}
+              onChange={phone => setPhoneNumber(phone)}
+            />
+          </div>
         </div>
         <br />
         {error && <p className=" text-center text-danger">{error}</p>}
@@ -168,7 +142,7 @@ export function LoginScreen() {
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-            style={{backgroundColor: theme.primaryColor}}
+            style={{ backgroundColor: theme.primaryColor }}
             onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >
@@ -291,11 +265,22 @@ export function LoginScreen() {
         <TextField
           variant="outlined"
           margin="normal"
+          type="email"
           required
           fullWidth
-          name="email-number"
-          label="Email/Phone number"
+          name="email"
+          label="Email"
           onChange={event => setValue(event.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          type="number"
+          required
+          fullWidth
+          name="number"
+          label="Phone number"
+          onChange={event => setPhone(event.target.value)}
         />
         <FormControl className={css(styles.formControl)}>
           <InputLabel id="demo-simple-select-outlined-label">
@@ -327,7 +312,7 @@ export function LoginScreen() {
 const styles = StyleSheet.create({
   getStartedButton: {
     color: '#FFF',
-    width: '55%',
+    width: '35%',
     height: 51,
     boxShadow: 'none',
     marginTop: 30
@@ -381,5 +366,8 @@ const styles = StyleSheet.create({
   formControl: {
     minWidth: 120,
     width: '100%'
+  },
+  phone: {
+    paddingLeft: 50
   }
 })

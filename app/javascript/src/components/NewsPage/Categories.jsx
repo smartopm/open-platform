@@ -23,8 +23,8 @@ export default function Categories() {
             <Grid >
                 <Grid item xs >
                     {cats.map(category => (
-                        <Button key={category.ID} >
-                            <Link stytle={{color: theme.primaryColor }} to={`/nkwashi_news/${category.slug}`}>
+                        <Button key={category.ID}>
+                            <Link stytle={{color: theme.primaryColor}} to={`/news/${category.slug}`}>
                                 {category.name}
                             </Link>
                         </Button>

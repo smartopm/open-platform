@@ -13,7 +13,7 @@ module Mutations
       field :note, Types::NoteType, null: true
 
       def resolve(id:, **attributes)
-        note = ::Note.find(id)
+        note = context[:site_community].notes.find(id)
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
         # TODO: @olivier Find a way of adding an updated_at datetime
