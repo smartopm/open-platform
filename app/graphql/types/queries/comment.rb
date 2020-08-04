@@ -39,6 +39,12 @@ module Types::Queries::Comment
       description 'Get a discussion for wordpress pages using postId'
       argument :post_id, String, required: true
     end
+
+    # Get discussion for wordpress posts ==>
+    field :discussion_user, Types::DiscussionUserType, null: true do
+      description 'Get a discussionUser subscription'
+      argument :disucssion_id, String, required: true
+    end
   end
 
   def post_comments(offset: 0, limit: 100, post_id:)
@@ -87,4 +93,10 @@ module Types::Queries::Comment
     discs = context[:current_user].find_user_discussion(id, type)
     discs
   end
+
+  def discussion_user(disucssion_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    DiscussionUser.find_by(user_id: context[:current_user].id ,discussion_id: disucssion_id)
+  end
+
 end

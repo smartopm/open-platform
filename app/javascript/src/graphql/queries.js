@@ -126,7 +126,6 @@ export const allNotes = gql`
         name
         id
       }
-      
     }
   }
 `
@@ -192,8 +191,6 @@ export const UsersLiteQuery = gql`
   }
 `
 
-
-
 export const UserSearchQuery = gql`
   query UserSearch($query: String!, $limit: Int, $offset: Int) {
     userSearch(query: $query, limit: $limit, offset: $offset) {
@@ -225,8 +222,18 @@ export const ShowroomEntriesQuery = gql`
 `
 
 export const MessagesQuery = gql`
-  query messages($searchTerm: String, $limit: Int, $offset: Int, $filter: String) {
-    messages(query: $searchTerm, limit: $limit, offset: $offset, filter: $filter) {
+  query messages(
+    $searchTerm: String
+    $limit: Int
+    $offset: Int
+    $filter: String
+  ) {
+    messages(
+      query: $searchTerm
+      limit: $limit
+      offset: $offset
+      filter: $filter
+    ) {
       id
       message
       category
@@ -395,6 +402,18 @@ export const PostDiscussionQuery = gql`
     }
   }
 `
+export const discussionUserQuery = gql`
+  query discussionUser($disucssionId: String!) {
+    discussionUser(disucssionId: $disucssionId) {
+      createdAt
+      discussionId
+      id
+      updatedAt
+      userId
+    }
+  }
+`
+
 // add pagination here
 export const DiscussionsQuery = gql`
   query discussions($limit: Int, $offset: Int) {
@@ -444,8 +463,8 @@ export const BusinessByIdQuery = gql`
     }
   }
 `
-export const UserLabelsQuery= gql`
-  query userLabelsbyId($userId: ID!){
+export const UserLabelsQuery = gql`
+  query userLabelsbyId($userId: ID!) {
     userLabels(userId: $userId) {
       id
       shortDesc
@@ -454,10 +473,10 @@ export const UserLabelsQuery= gql`
 `
 
 export const LabelsQuery = gql`
-    {
-      labels {
-        id
-        shortDesc
-      }
+  {
+    labels {
+      id
+      shortDesc
     }
+  }
 `
