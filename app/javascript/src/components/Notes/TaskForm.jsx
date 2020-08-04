@@ -4,7 +4,8 @@ import {
   Button,
   FormControlLabel,
   Checkbox,
-  FormHelperText
+  FormHelperText,
+  MenuItem
 } from '@material-ui/core'
 import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
@@ -12,9 +13,10 @@ import { useMutation } from 'react-apollo'
 import { CreateNote } from '../../graphql/mutations'
 import { discussStyles } from '../Discussion/Discuss'
 
-export default function TaskForm({ close, refetch }) {
+export default function TaskForm({ close, refetch, users }) {
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
+  const [assignee, setAssignee] = useState('')
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
   const [loading, setLoadingStatus] = useState(false)
@@ -39,18 +41,18 @@ export default function TaskForm({ close, refetch }) {
     .catch(err => setErrorMessage(err.message))
   }
 
+
+
   return (
     <form onSubmit={handleSubmit}>
       <TextField
         name="task_description"
         label="Task Description"
         style={{ width: '100%' }}
-        placeholder="Type a task description"
         onChange={e => setTitle(e.target.value)}
         value={title}
         multiline
         fullWidth
-
         rows={2}
         margin="normal"
         inputProps={{
@@ -62,6 +64,25 @@ export default function TaskForm({ close, refetch }) {
         required
       />
       <br />
+
+      <TextField
+          id="userType"
+          select
+          label="Assigne this task to a user"
+          value={assignee || ''}
+          onChange={event => setAssignee(event.target.value)}
+          margin="normal"
+          name="assignee"
+          fullWidth
+        >
+            {users.map((user) => (
+              <MenuItem key={user.id} value={user.id}>
+                {user.name}
+              </MenuItem>
+            ))}
+      </TextField>
+
+      <br/>
       <FormControlLabel
         value="end"
         control={
