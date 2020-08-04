@@ -1,28 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
-import { ModalDialog } from './Dialog'
-import DateUtil from '../utils/dateutil'
+import { ModalDialog } from '../Dialog'
+import DateUtil from '../../utils/dateutil'
 import { createMuiTheme, Chip, Divider } from '@material-ui/core'
 import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
-import Loading, { Spinner } from './Loading'
+import Loading, { Spinner } from '../Loading'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
+import { Fab, Dialog, DialogTitle, DialogContent } from '@material-ui/core'
+import TaskForm from './TaskForm'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { useQuery, useMutation } from 'react-apollo'
-import { UsersLiteQuery, flaggedNotes } from '../graphql/queries'
-import { AssignUser } from '../graphql/mutations'
+import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
+import { AssignUser } from '../../graphql/mutations'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { UserChip } from './UserChip'
-import ErrorPage from './Error'
-import Paginate from './Paginate'
-import CenteredContent from './CenteredContent'
+import { UserChip } from '../UserChip'
+import ErrorPage from '../Error'
+import Paginate from '../Paginate'
+import CenteredContent from '../CenteredContent'
+// import { styles } from '../components/ShareButton'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -38,8 +41,11 @@ export default function TodoList({
   const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
+  const [open, setModalOpen] = useState(false)
   const [id, setNoteId] = useState('')
   const [message, setErrorMessage] = useState('')
+
+
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
@@ -58,7 +64,11 @@ export default function TodoList({
   )
   const [assignUserToNote] = useMutation(AssignUser)
 
-  // unsubscribe the user if already subscribed
+  function openModal() {
+    setModalOpen(!open)
+  }
+
+  // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
   }
@@ -95,10 +105,13 @@ export default function TodoList({
     }
   }
 
+
+
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
   return (
+    <Fragment>
     <div className="container" data-testid="todo-container">
       <ModalDialog
         open={isDialogOpen}
@@ -122,6 +135,24 @@ export default function TodoList({
           </MuiPickersUtilsProvider>
         </ThemeProvider>
       </ModalDialog>
+      
+      <Dialog
+        // fullScreen={fullScreen}
+        open={open}
+        fullWidth={true}
+        maxWidth={'lg'}
+        onClose={openModal}
+        aria-labelledby="task_modal"
+          >
+        <DialogTitle id="task_modal">
+            <CenteredContent>
+                <span>Create a task</span>
+            </CenteredContent>
+        </DialogTitle>
+        <DialogContent>
+            <TaskForm close={() => setModalOpen(!open)} />
+        </DialogContent>
+      </Dialog>
 
       <div classes={classes.root}>
         <ul className={css(styles.list)}>
@@ -231,7 +262,7 @@ export default function TodoList({
                       if (!value) {
                         return
                       }
-                      // subscribe the user here
+                      // assign or unassign the user here
                       assignUnassignUser(note.id, value.id)
                     }}
                     renderInput={params => (
@@ -248,15 +279,25 @@ export default function TodoList({
           
         </ul>
       </div>
+
       <CenteredContent>
-            <Paginate
-              offSet={offset}
-              limit={limit}
-              active={true}
-              handlePageChange={paginate}
-            />
-          </CenteredContent>
-    </div>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={true}
+          handlePageChange={paginate}
+        />
+        </CenteredContent>
+        <Fab
+        variant="extended"
+        onClick={openModal}
+        className={`btn ${css(styles.getStartedButton)} `}
+       >
+          Create task
+      </Fab>
+      </div>
+ 
+    </Fragment>
   )
 }
 
@@ -305,5 +346,14 @@ const styles = StyleSheet.create({
     position: 'relative',
     listStyle: 'none',
     padding: 15
-  }
+  },
+  getStartedButton: {
+    color: "#FFF",
+    height: 51,
+    boxShadow: "none",
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+},
 })
