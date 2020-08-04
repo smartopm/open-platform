@@ -54,6 +54,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       <TextField
         name="task_description"
         label="Task Description"
+        placeholder="Describe the task here"
         style={{ width: '100%' }}
         onChange={e => setTitle(e.target.value)}
         value={title}
@@ -110,12 +111,12 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         labelPlacement="end"
       />
       <FormHelperText>Checked for complete</FormHelperText>
-      <br />
       <div>
         <DatePickerDialog
           handleDateChange={date => setDate(date)}
           selectedDate={selectedDate}
         />
+        <FormHelperText>Pick a due date</FormHelperText>
       </div>
 
       <br />
