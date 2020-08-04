@@ -16,19 +16,19 @@ import {
 import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
-import { styles } from '../ShareButton'
 import { CreateNote } from '../../graphql/mutations'
+import { discussStyles } from '../Discussion/Discuss'
 
 export default function TaskForm({ close, refetch }) {
   const [title, setTitle] = useState('')
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
+  const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
 
   function handleSubmit(event) {
     event.preventDefault()
-    // author is logged in
-    console.log({ title, selectedDate, taskStatus })
+    setLoadingStatus(true)
     createTask({
       variables: {
         body: title,
@@ -40,6 +40,7 @@ export default function TaskForm({ close, refetch }) {
       .then(() => {
         close()
         refetch()
+        setLoadingStatus(false)
     })
     .catch(err => console.err(err))
   }
@@ -48,13 +49,15 @@ export default function TaskForm({ close, refetch }) {
     <form onSubmit={handleSubmit}>
       <TextField
         name="task_description"
-        label="Discussion Description"
-        style={{ width: '63vw' }}
+        label="Task Description"
+        style={{ width: '100%' }}
         placeholder="Type a task description"
         onChange={e => setTitle(e.target.value)}
         value={title}
         multiline
-        rows={3}
+        fullWidth
+
+        rows={2}
         margin="normal"
         inputProps={{
           'aria-label': 'task_description'
@@ -91,21 +94,20 @@ export default function TaskForm({ close, refetch }) {
         <Button
           variant="contained"
           aria-label="discussion_cancel"
-          //   color="secondary"
+          color="secondary"
           onClick={close}
-          className={`btn ${css(styles.cancelBtn)}`}
+          className={`btn ${css(discussStyles.cancelBtn)}`}
         >
           Cancel
         </Button>
         <Button
           variant="contained"
           type="submit"
-          // disabled={loading}
+          disabled={loading}
           aria-label="discussion_submit"
-          className={`btn ${css(styles.submitBtn)}`}
+          className={`btn ${css(discussStyles.submitBtn)}`}
         >
-          {/* {loading ? 'Submitting ...' : 'Submit'} */}
-          Create Task
+          {loading ? 'Creating a task ...' : 'Create Task'}
         </Button>
       </div>
     </form>

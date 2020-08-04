@@ -85,7 +85,7 @@ export default function Discuss({ update }) {
                         aria-label="discussion_cancel"
                         color="secondary"
                         onClick={update}
-                        className={`btn ${css(styles.cancelBtn)}`}
+                        className={`btn ${css(discussStyles.cancelBtn)}`}
                     >
                         Cancel
                     </Button>
@@ -94,7 +94,7 @@ export default function Discuss({ update }) {
                         type="submit"
                         disabled={loading}
                         aria-label="discussion_submit"
-                        className={`btn ${css(styles.submitBtn)}`}
+                        className={`btn ${css(discussStyles.submitBtn)}`}
                     >
                         {loading ? 'Submitting ...' : 'Submit'}
                     </Button>
@@ -107,7 +107,7 @@ export default function Discuss({ update }) {
         </div>
     )
 }
-const styles = StyleSheet.create({
+export const discussStyles = StyleSheet.create({
     submitBtn: {
         backgroundColor: '#25c0b0',
         color: '#FFF',
@@ -122,6 +122,9 @@ const styles = StyleSheet.create({
         marginRight: '20vw',
         height: 51,
         marginTop: 50,
-        alignItems: 'center'
+        alignItems: 'center',
+        ':hover': {
+            color: '#FFFFFF'
+        }
     }
 })
