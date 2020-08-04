@@ -7,20 +7,41 @@
 
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
-import { Button, FormControlLabel, Checkbox, FormHelperText } from '@material-ui/core'
+import {
+  Button,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText
+} from '@material-ui/core'
 import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
+import { useMutation } from 'react-apollo'
 import { styles } from '../ShareButton'
+import { CreateNote } from '../../graphql/mutations'
 
-export default function TaskForm({ close }) {
+export default function TaskForm({ close, refetch }) {
   const [title, setTitle] = useState('')
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
+  const [createTask] = useMutation(CreateNote)
 
   function handleSubmit(event) {
     event.preventDefault()
     // author is logged in
-    console.log({title, selectedDate, taskStatus})
+    console.log({ title, selectedDate, taskStatus })
+    createTask({
+      variables: {
+        body: title,
+        dueDate: selectedDate.toISOString(),
+        completed: taskStatus,
+        flagged: true
+      }
+    })
+      .then(() => {
+        close()
+        refetch()
+    })
+    .catch(err => console.err(err))
   }
 
   return (
@@ -43,7 +64,7 @@ export default function TaskForm({ close }) {
         }}
         required
       />
-      <br/>
+      <br />
       <FormControlLabel
         value="end"
         control={
@@ -55,8 +76,8 @@ export default function TaskForm({ close }) {
         }
         label="Task Status"
         labelPlacement="end"
-          />
-        <FormHelperText>Checked for complete</FormHelperText>
+      />
+      <FormHelperText>Checked for complete</FormHelperText>
       <br />
       <div>
         <DatePickerDialog
@@ -70,7 +91,7 @@ export default function TaskForm({ close }) {
         <Button
           variant="contained"
           aria-label="discussion_cancel"
-        //   color="secondary"
+          //   color="secondary"
           onClick={close}
           className={`btn ${css(styles.cancelBtn)}`}
         >
