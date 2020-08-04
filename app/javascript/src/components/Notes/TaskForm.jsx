@@ -5,18 +5,23 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
-  MenuItem
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl
 } from '@material-ui/core'
 import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
+import PropTypes from 'prop-types'
 import { CreateNote } from '../../graphql/mutations'
 import { discussStyles } from '../Discussion/Discuss'
+import { UserChip } from '../UserChip'
 
-export default function TaskForm({ close, refetch, users }) {
+export default function TaskForm({ close, refetch, users, assignUser}) {
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
-  const [assignee, setAssignee] = useState('')
+  const [assignees, setAssignees] = useState([])
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
   const [loading, setLoadingStatus] = useState(false)
@@ -33,7 +38,8 @@ export default function TaskForm({ close, refetch, users }) {
         flagged: true
       }
     })
-      .then(() => {
+      .then(({ data }) => {
+        assignees.map(user => assignUser(data.noteCreate.note.id, user.id))
         close()
         refetch()
         setLoadingStatus(false)
@@ -64,24 +70,30 @@ export default function TaskForm({ close, refetch, users }) {
         required
       />
       <br />
-
-      <TextField
-          id="userType"
-          select
-          label="Assigne this task to a user"
-          value={assignee || ''}
-          onChange={event => setAssignee(event.target.value)}
-          margin="normal"
-          name="assignee"
-          fullWidth
+      <FormControl fullWidth >
+        <InputLabel id="assignees">Assign this task to users</InputLabel>
+        <Select
+            id="assignees"
+            value={assignees}
+            onChange={event => setAssignees(event.target.value)}
+            name="assignees"
+            fullWidth
+            multiple
+            renderValue={selected => (
+              <div>
+                {selected.map((value, i) => (
+                  <UserChip user={value} key={i} label={value.name} />
+                ))}
+              </div>
+            )}
         >
-            {users.map((user) => (
-              <MenuItem key={user.id} value={user.id}>
-                {user.name}
-              </MenuItem>
-            ))}
-      </TextField>
-
+              {Boolean(users.length) && users.map((user) => (
+                <MenuItem key={user.id} value={user}>
+                  {user.name}
+                </MenuItem>
+              ))}
+        </Select>
+      </FormControl>
       <br/>
       <FormControlLabel
         value="end"
@@ -132,4 +144,14 @@ export default function TaskForm({ close, refetch, users }) {
       </p>
     </form>
   )
+}
+
+TaskForm.defaultProps = {
+  users: []
+}
+
+TaskForm.propTypes = {
+  users: PropTypes.array.isRequired,
+  close: PropTypes.func,
+  refetch: PropTypes.func,
 }
