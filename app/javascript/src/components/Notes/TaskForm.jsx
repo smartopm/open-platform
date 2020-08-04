@@ -145,7 +145,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       {
         data?.users.length ? (
           <FormControl component="fieldset">
-          <FormLabel component="legend">Task User</FormLabel>
+          <FormLabel component="legend">Choose a user</FormLabel>
           <RadioGroup aria-label="user" name="task_user" value={taskUserId} onChange={e => setTaskUserId(e.target.value)}>
           {
             data?.users.map(user => (
