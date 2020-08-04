@@ -73,6 +73,8 @@ export default function TaskForm({ close, refetch }) {
         value="end"
         control={
           <Checkbox
+            aria-label="task_status"
+            data-testid="task_status"
             checked={taskStatus}
             onChange={() => setTaskStatus(!taskStatus)}
             color="primary"
