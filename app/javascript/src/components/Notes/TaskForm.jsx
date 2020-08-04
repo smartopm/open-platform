@@ -21,6 +21,7 @@ import { discussStyles } from '../Discussion/Discuss'
 
 export default function TaskForm({ close, refetch }) {
   const [title, setTitle] = useState('')
+  const [error, setErrorMessage] = useState('')
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
   const [loading, setLoadingStatus] = useState(false)
@@ -42,7 +43,7 @@ export default function TaskForm({ close, refetch }) {
         refetch()
         setLoadingStatus(false)
     })
-    .catch(err => console.err(err))
+    .catch(err => setErrorMessage(err.message))
   }
 
   return (
@@ -93,7 +94,7 @@ export default function TaskForm({ close, refetch }) {
       <div className="d-flex row justify-content-center">
         <Button
           variant="contained"
-          aria-label="discussion_cancel"
+          aria-label="task_cancel"
           color="secondary"
           onClick={close}
           className={`btn ${css(discussStyles.cancelBtn)}`}
@@ -104,12 +105,15 @@ export default function TaskForm({ close, refetch }) {
           variant="contained"
           type="submit"
           disabled={loading}
-          aria-label="discussion_submit"
+          aria-label="task_submit"
           className={`btn ${css(discussStyles.submitBtn)}`}
         >
           {loading ? 'Creating a task ...' : 'Create Task'}
         </Button>
       </div>
+      <p className="text-center">
+          {Boolean(error.length) && error}
+      </p>
     </form>
   )
 }

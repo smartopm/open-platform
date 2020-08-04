@@ -1,8 +1,9 @@
 import React, { useState, Fragment } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from '../Dialog'
-import DateUtil from '../../utils/dateutil'
-import { createMuiTheme, Chip, Divider } from '@material-ui/core'
+import { createMuiTheme, Chip, Divider, Fab, Dialog, DialogTitle, DialogContent } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
 import Loading, { Spinner } from '../Loading'
@@ -11,22 +12,18 @@ import {
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
+import CancelIcon from '@material-ui/icons/Cancel'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
-import { Fab, Dialog, DialogTitle, DialogContent } from '@material-ui/core'
-import TaskForm from './TaskForm'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CancelIcon from '@material-ui/icons/Cancel'
+import TaskForm from './TaskForm'
 import { UserChip } from '../UserChip'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import { dateToString } from '../DateContainer'
-// import { styles } from '../components/ShareButton'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -312,6 +309,7 @@ const useStyles = makeStyles({
   }
 })
 
+// this should be in one place, basically just one theme
 const theme = createMuiTheme({
   overrides: {
     MuiPickersToolbar: {
@@ -350,6 +348,7 @@ const styles = StyleSheet.create({
   },
   getStartedButton: {
     color: "#FFF",
+    backgroundColor: '#69ABA4',
     height: 51,
     boxShadow: "none",
     position: 'fixed',

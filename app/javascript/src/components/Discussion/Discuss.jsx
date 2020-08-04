@@ -109,7 +109,7 @@ export default function Discuss({ update }) {
 }
 export const discussStyles = StyleSheet.create({
     submitBtn: {
-        backgroundColor: '#25c0b0',
+        backgroundColor: '#69ABA4',
         color: '#FFF',
         width: '30%',
         height: 51,
