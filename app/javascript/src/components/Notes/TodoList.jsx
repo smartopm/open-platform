@@ -109,7 +109,6 @@ export default function TodoList({
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
-  console.log(liteData.users)
   return (
     <Fragment>
     <div className="container" data-testid="todo-container">
