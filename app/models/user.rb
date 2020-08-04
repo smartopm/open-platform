@@ -195,14 +195,14 @@ class User < ApplicationRecord
 
   def generate_note(vals)
     community.notes.create(
-      # give the note to the author if no other user 
+      # give the note to the author if no other user
       user_id: vals[:user_id] || self[:id],
       body: vals[:body],
       category: vals[:category],
       flagged: vals[:flagged],
       author_id: self[:id],
       completed: vals[:completed],
-      due_date: vals[:due_date]
+      due_date: vals[:due_date],
     )
   end
 
