@@ -78,5 +78,15 @@ module Types
     def admin_or_self(id)
       context[:current_user]&.admin? || context[:current_user]&.id.eql?(id)
     end
+
+    field :discussion_user, Types::DiscussionUserType, null: true do
+      description 'Get a discussionUser subscription'
+      argument :disucssion_id, String, required: true
+    end
+    def discussion_user(disucssion_id:)
+      raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+      DiscussionUser.find_by(user_id: context[:current_user].id, discussion_id: disucssion_id)
+    end
   end
 end
