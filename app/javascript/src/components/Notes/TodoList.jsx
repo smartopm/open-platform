@@ -25,6 +25,7 @@ import { UserChip } from '../UserChip'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
+import { dateToString } from '../DateContainer'
 // import { styles } from '../components/ShareButton'
 
 // component needs a redesign both implementation and UI
@@ -150,7 +151,7 @@ export default function TodoList({
             </CenteredContent>
         </DialogTitle>
         <DialogContent>
-            <TaskForm close={() => setModalOpen(!open)} />
+            <TaskForm refetch={refetch} close={() => setModalOpen(!open)} />
         </DialogContent>
       </Dialog>
 
@@ -187,7 +188,7 @@ export default function TodoList({
 
                   <label style={{ float: 'right', fontSize: 17 }}>
                     <span>
-                      Due at:{' ' + DateUtil.formatDate(note.dueDate)}
+                      Due at:{note.dueDate ? `  ${dateToString(note.dueDate)}` : ' Never'}
                     </span>
                   </label>
                   {'  '}
