@@ -154,7 +154,7 @@ export default function TodoList({
               refetch={refetch}
               close={() => setModalOpen(!open)}
               assignUser={assignUnassignUser}
-              users={!isLoading ? liteData.users : []}
+              users={liteData?.users}
             />
         </DialogContent>
       </Dialog>
