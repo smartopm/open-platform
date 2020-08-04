@@ -80,9 +80,11 @@ export default function FormContainer({ match, history, location }) {
 
   function handleSubmit(event) {
     event.preventDefault()
+    
     const values = {
       ...data,
       name: data.name.trim(),
+      phoneNumber: data.phoneNumber.replace(/ /g, '',),
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }
