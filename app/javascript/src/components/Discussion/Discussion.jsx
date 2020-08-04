@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import {
   Divider,
   Typography,
@@ -12,9 +12,12 @@ import {
   Grid
 } from '@material-ui/core'
 import Comment from './Comment'
-import { DiscussionCommentsQuery } from '../../graphql/queries'
+import {
+  DiscussionCommentsQuery,
+  discussionUserQuery
+} from '../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
-import  {DiscussionSubscription} from '../../graphql/mutations'
+import { DiscussionSubscription } from '../../graphql/mutations'
 import DateContainer from '../DateContainer'
 import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
@@ -34,7 +37,21 @@ export default function Discussion({ discussionData }) {
       variables: { id, limit }
     }
   )
+  const {
+    loading: isLoadings,
+    error: followErrors,
+    data: followData
+  } = useQuery(discussionUserQuery, {
+    variables: { disucssionId: id }
+  })
 
+  useEffect(() => {
+    if (!isLoadings && followData) {
+      if (followData.discussionUser !== null) {
+        setSubscribe(true)
+      }
+    }
+  }, [isLoadings, followData])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -45,13 +62,14 @@ export default function Discussion({ discussionData }) {
   }
 
   let handlefollow = () => {
-    setSubscribe(true)
     setOpen(false)
-    follow({variables:{discussionId: id}})
+    follow({ variables: { discussionId: id } }).then(() => setSubscribe(true))
   }
+
   let handleUnfollow = () => {
     setSubscribe(false)
     setOpen(false)
+    follow({ variables: { discussionId: id } }).then(() => setSubscribe(false))
   }
 
   function fetchMoreComments() {
@@ -70,6 +88,7 @@ export default function Discussion({ discussionData }) {
       }
     })
   }
+
   if (loading) return <Loading />
   if (error) {
     return <ErrorPage title={error.message || error} />
