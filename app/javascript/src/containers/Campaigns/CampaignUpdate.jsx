@@ -67,13 +67,14 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
-    if (batchTime !== '') {
+
+    if (batchTime !== ' ') {
       setFormData({
         ...formData,
         batchTime: batchTime
       })
     }
-    const campaingData = {
+    const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
@@ -81,7 +82,7 @@ export default function UpdateCampaign({ match }) {
       userIdList: formData.userIdList
     }
 
-    campaign({ variables: campaingData })
+    campaign({ variables: campaignData })
       .then(() => {
         setIsSubmitted(true)
       })
@@ -97,7 +98,7 @@ export default function UpdateCampaign({ match }) {
       userIdList: userIds.toString()
     })
   }
-
+  console.log(formData.batchTime);
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
