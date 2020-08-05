@@ -64,20 +64,13 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    // setTimeout(() => {
-    //   window.location.reload(false)
-    // }, 3000)
-    if (batchTime !== '') {
-      setFormData({
-        ...formData,
-        batchTime // even after updating here you wont be able to get the updated time immediately
-      })
-    }
+    setTimeout(() => {
+      window.location.reload(false)
+    }, 3000)
     const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      // alternatively you can set the batchtime in formdate in the datepicker
       batchTime,
       userIdList: formData.userIdList
     }
