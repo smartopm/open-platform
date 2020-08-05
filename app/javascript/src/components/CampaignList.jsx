@@ -29,7 +29,7 @@ export default function CampaignList() {
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage />
-
+console.log(data.campaigns[0].batchTime)
   return (
     <div className="container">
       {data.campaigns.map(c => (

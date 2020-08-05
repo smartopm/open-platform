@@ -6,7 +6,8 @@ import { createMuiTheme } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField';
 import {
     KeyboardDatePicker,
-    MuiPickersUtilsProvider
+    MuiPickersUtilsProvider,
+    DateTimePicker
 } from '@material-ui/pickers'
 
 
@@ -60,29 +61,18 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
 
 }
 
-export function DateAndTimePickers({ selectedDateTime, handleDateChange,label}) {
+export function DateAndTimePickers({ selectedDateTime, handleDateChange}) {
 
     return (
         <ThemeProvider theme={theme}>
-        <TextField
-          id="datetime-local"
-          label={label}
-          type="datetime-local"
-          className={css(styles.fileInput)}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={selectedDateTime}
-          onChange={date => handleDateChange(date)}
-        />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DateTimePicker
+                label="DateTimePicker"
+                inputVariant="outlined"
+                value={selectedDateTime}
+                onChange={handleDateChange}
+            />
+        </MuiPickersUtilsProvider>
         </ThemeProvider>
     );
   }
-
-  const styles = StyleSheet.create({
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 200,
-      }
-  })

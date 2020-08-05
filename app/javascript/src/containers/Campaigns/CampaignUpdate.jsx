@@ -64,20 +64,21 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
+    // setTimeout(() => {
+    //   window.location.reload(false)
+    // }, 3000)
     if (batchTime !== '') {
       setFormData({
         ...formData,
-        batchTime: batchTime
+        batchTime // even after updating here you wont be able to get the updated time immediately
       })
     }
     const campaingData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      batchTime: formData.batchTime,
+      // alternatively you can set the batchtime in formdate in the datepicker
+      batchTime,
       userIdList: formData.userIdList
     }
 
@@ -149,7 +150,7 @@ export default function UpdateCampaign({ match }) {
               label="Start Time"
               required
               selectedDateTime={batchTime}
-              handleDateChange={e => setBatchTime(e.target.value)}
+              handleDateChange={e => setBatchTime(e)}
             />
           </div>
           <div>
