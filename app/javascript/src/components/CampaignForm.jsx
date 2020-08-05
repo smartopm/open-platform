@@ -4,9 +4,10 @@ import { Redirect } from 'react-router-dom'
 import { Button, TextField } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
-import { CampaignCreate } from '../graphql/mutations'
+import { CampaignCreate, UserLabelCreate  } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
+import CampaignLabels from './CampaignLabels.jsx'
 
 export default function CampaignForm({authState }) {
   const [name, setName] = useState('')
@@ -17,7 +18,8 @@ export default function CampaignForm({authState }) {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const [campaign] = useMutation(CampaignCreate)
-
+  const [userLabelCreate] = useMutation(UserLabelCreate)
+  
   function handleSubmit(e) {
     e.preventDefault()
     const campaingData = {
@@ -37,6 +39,21 @@ export default function CampaignForm({authState }) {
       .catch(err => {
         setErrorMsg(err.message)
       })
+  }
+
+  function handleLabelSelect(lastLabel) {
+    const { id } = lastLabel
+    if (userIdList) {
+      userLabelCreate({
+        variables: { userId: userIdList, labelId: id }
+      }).then(()=>{
+      }).catch(error => {
+        setErrorMsg(error.message)
+      })
+    }else {
+     
+    }
+
   }
 
   function handleUserIDList(_event, value) {
@@ -96,6 +113,10 @@ export default function CampaignForm({authState }) {
             onChange={e => handleUserIDList(e, e.target.value)}
           />
         </div>
+
+        <div>
+            <CampaignLabels handleLabelSelect={handleLabelSelect} />
+        </div>
         <br />
         <div>
           <DateAndTimePickers
@@ -103,7 +124,7 @@ export default function CampaignForm({authState }) {
             required
             selectedDateTime={batchTime}
             handleDateChange={e => setBatchTime(e.target.value)}
-          />
+          />    
         </div>
         <div className="d-flex row justify-content-center">
           <Button

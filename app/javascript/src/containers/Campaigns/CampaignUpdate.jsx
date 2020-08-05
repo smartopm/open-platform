@@ -14,13 +14,14 @@ import {
 } from '@material-ui/core'
 import { DateAndTimePickers } from '../../components/DatePickerDialog'
 import { useMutation, useQuery } from 'react-apollo'
-import { CampaignUpdate } from '../../graphql/mutations'
+import { CampaignUpdate, UserLabelUpdate} from '../../graphql/mutations'
 import { Campaign } from '../../graphql/queries'
 import { DelimitorFormator } from '../../utils/helpers'
 import { saniteError } from '../../utils/helpers'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
+import CampaignLabels from '../../components/CampaignLabels.jsx'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 
@@ -30,6 +31,7 @@ export default function UpdateCampaign({ match }) {
     variables: { id: match.params.id }
   })
   const [campaign] = useMutation(CampaignUpdate)
+  const [userLabelUpdate] = useMutation(UserLabelUpdate)
 
   const [formData, setFormData] = useState({
     id: '',
@@ -90,6 +92,21 @@ export default function UpdateCampaign({ match }) {
       })
   }
 
+   function handleLabelSelect(lastLabel) {
+    const { id } = lastLabel
+    if (formData.userIdList) {
+      userLabelCreate({
+        variables: { userId: formData.userIdList, labelId: id }
+      }).then(()=>{
+      }).catch(error => {
+        setErrorMsg(error.message)
+      })
+    }else {
+     
+    }
+
+  }
+
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)
     setFormData({
@@ -142,6 +159,9 @@ export default function UpdateCampaign({ match }) {
               value={formData.userIdList}
               onChange={e => handleUserIDList(e, e.target.value)}
             />
+          </div>
+          <div>
+            <CampaignLabels handleLabelSelect={handleLabelSelect} />
           </div>
           <br />
           <div style={{paddingBottom:'3%'}}>
