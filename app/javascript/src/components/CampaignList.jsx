@@ -13,11 +13,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Badge from '@material-ui/core/Badge';
-import { useTheme } from '@material-ui/core/styles';
 
 export default function CampaignList() {
   const history = useHistory()
-  const theme = useTheme();
+  
   //const theme = useContext(ThemeContext)
   const { data, error, loading } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
@@ -39,11 +38,11 @@ export default function CampaignList() {
         <Grid container spacing={2}>
           <Grid item container direction="column" spacing={2}>
             <Grid item>
-              <Typography className={css(style.logTitle)} gutterBottom variant="subtitle1">{c.name}</Typography>
-              <Typography className={css(style.subTitle)} variant="body2" color="textSecondary">{c.message}</Typography>
+              <Typography className={css(style.logTitle)} gutterBottom variant="subtitle1" data-testid="c_name">{c.name}</Typography>
+              <Typography className={css(style.subTitle)} variant="body2" data-testid="c_message" color="textSecondary">{c.message}</Typography>
             </Grid>
             <Grid item>
-              <Typography className={css(style.subTitle)} variant="body2" gutterBottom>
+              <Typography className={css(style.subTitle)} variant="body2" gutterBottom >
                 <strong>Scheduled Date: </strong>{dateToString(c.batchTime)}  <strong>Scheduled Time: </strong>{dateTimeToString(new Date(c.batchTime))}
               </Typography>
             </Grid>
@@ -55,7 +54,7 @@ export default function CampaignList() {
                   </Badge>
                 </Grid>
                 <Grid item>
-                  <Badge max={9999} color="primary" badgeContent={c.campaignMetrics.totalSent}>
+                  <Badge max={9999} color="primary" badgeContent={c.campaignMetrics.totalSent}>
                     <Typography className={css(style.subTitle)} >Total Sent</Typography>
                   </Badge>
                 </Grid>
@@ -73,7 +72,7 @@ export default function CampaignList() {
             </Grid>
             <Grid item>
               <Typography variant="body1" style={{ cursor: 'pointer', color: '#009688' }}>
-                <Link href="#" style={{ cursor: 'pointer', color: '#009688' }} onClick={event => routeToAction(event, c.id)}>More Details</Link>
+                <Link data-testid="more_details_btn" href="#" style={{ cursor: 'pointer', color: '#009688' }} onClick={event => routeToAction(event, c.id)}>More Details</Link>
               </Typography>
             </Grid>
           </Grid>
