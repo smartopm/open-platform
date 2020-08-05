@@ -91,7 +91,6 @@ export default function UpdateCampaign({ match }) {
       userIdList: userIds.toString()
     })
   }
-  console.log(formData.batchTime);
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
