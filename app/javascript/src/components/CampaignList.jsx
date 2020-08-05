@@ -9,9 +9,15 @@ import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { styles } from '../components/ShareButton'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import Badge from '@material-ui/core/Badge';
 
 export default function CampaignList() {
   const history = useHistory()
+  
+  //const theme = useContext(ThemeContext)
   const { data, error, loading } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
@@ -28,51 +34,50 @@ export default function CampaignList() {
     <div className="container">
       {data.campaigns.map(c => (
         <Fragment key={c.id}>
-          <div className="container">
-            <div className="row justify-content-between">
-              <div className="col-xs-8">
-                <span className={css(style.logTitle)} data-testid="c_name">
-                  {c.name}
-                </span>
-              </div>
-              <div className="col-xs-4">
-                <span className={css(style.access)}>
-                  <strong>Batch Time </strong>
-                </span>
-                <span className={css(style.subTitle)}>
-                  {dateTimeToString(new Date(c.batchTime))}
-                </span>
-              </div>
-            </div>
-            <div className="row justify-content-between">
-              <div className="col-xs-4">
-                <span className={css(style.subTitle)}>
-                  <strong>{dateToString(c.batchTime)}</strong>
-                </span>
-              </div>
-              <div className="col-xs-8">
-                <span className={css(style.subTitle)} data-testid="c_message">
-                  {c.message}
-                </span>
-              </div>
-            </div>
-            <br />
-            <div className="row justify-content-between">
-              <div className="col-xs-4">
-                <span
-                  style={{
-                    cursor: 'pointer',
-                    color: '#009688'
-                  }}
-                  data-testid="more_details_btn"
-                  onClick={event => routeToAction(event, c.id)}
-                >
-                  More Details
-                </span>
-              </div>
-            </div>
-            <br />
-          </div>
+    <div>
+        <Grid container spacing={2}>
+          <Grid item container direction="column" spacing={2}>
+            <Grid item>
+              <Typography className={css(style.logTitle)} gutterBottom variant="subtitle1" data-testid="c_name">{c.name}</Typography>
+              <Typography className={css(style.subTitle)} variant="body2" data-testid="c_message" color="textSecondary">{c.message}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={css(style.subTitle)} variant="body2" gutterBottom >
+                <strong>Scheduled Date: </strong>{dateToString(c.batchTime)}  <strong>Scheduled Time: </strong>{dateTimeToString(new Date(c.batchTime))}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Grid item container direction="row" spacing={2}>
+                <Grid item>
+                  <Badge max={9999} color="primary" badgeContent={c.campaignMetrics.totalScheduled}>
+                    <Typography className={css(style.subTitle)} >Total Scheduled</Typography>
+                  </Badge>
+                </Grid>
+                <Grid item>
+                  <Badge max={9999} color="primary" badgeContent={c.campaignMetrics.totalSent}>
+                    <Typography className={css(style.subTitle)} >Total Sent</Typography>
+                  </Badge>
+                </Grid>
+                <Grid item>
+                  <Badge max={9999} color="primary" badgeContent={c.campaignMetrics.totalClicked}>
+                    <Typography className={css(style.subTitle)} >Total Clicked</Typography>
+                  </Badge>
+                </Grid>
+                <Grid item>
+                  <Badge max={9999} color="primary" badgeContent={String((100 * c.campaignMetrics.totalClicked) /(c.campaignMetrics.totalSent && c.campaignMetrics.totalSent > 0 ? c.campaignMetrics.totalSent : 1))}>
+                    <Typography className={css(style.subTitle)}>% Success</Typography>
+                  </Badge> 
+                </Grid>
+              </Grid>                             
+            </Grid>
+            <Grid item>
+              <Typography variant="body1" style={{ cursor: 'pointer', color: '#009688' }}>
+                <Link data-testid="more_details_btn" href="#" style={{ cursor: 'pointer', color: '#009688' }} onClick={event => routeToAction(event, c.id)}>More Details</Link>
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+    </div>
           <div className="border-top my-3" />
         </Fragment>
       ))}

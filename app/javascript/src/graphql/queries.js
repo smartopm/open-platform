@@ -331,6 +331,14 @@ export const allCampaigns = gql`
       startTime
       updatedAt
       userIdList
+      campaignMetrics {
+        batchTime
+        startTime
+        endTime
+        totalScheduled
+        totalSent
+        totalClicked
+      }
     }
   }
 `
@@ -347,6 +355,14 @@ export const Campaign = gql`
       startTime
       updatedAt
       userIdList
+      campaignMetrics {
+        batchTime
+        startTime
+        endTime
+        totalScheduled
+        totalSent
+        totalClicked
+      }
     }
   }
 `
