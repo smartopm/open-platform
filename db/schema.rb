@@ -110,6 +110,8 @@ ActiveRecord::Schema.define(version: 2020_07_28_134353) do
     t.datetime "batch_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "total_sent"
+    t.integer "total_clicked"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
@@ -142,7 +144,7 @@ ActiveRecord::Schema.define(version: 2020_07_28_134353) do
     t.index ["user_id"], name: "index_contact_infos_on_user_id"
   end
 
-  create_table "discussion_users", id: false, force: :cascade do |t|
+  create_table "discussion_users", force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "discussion_id", null: false
     t.datetime "created_at", precision: 6, null: false

@@ -15,5 +15,6 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: true
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :campaign_metrics, Types::CampaignMetricsType, null: true
   end
 end
