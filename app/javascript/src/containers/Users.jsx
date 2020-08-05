@@ -137,8 +137,6 @@ export default function UsersList() {
       }).then(()=>{
         refetch()
         setLabelLoading(false)
-        setType(shortDesc)
-        setSearchType('type')
       }).catch(error => {
         setLabelLoading(false)
         setError(error.message)
