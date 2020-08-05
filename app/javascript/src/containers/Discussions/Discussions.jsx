@@ -22,6 +22,7 @@ export default function Discussions() {
     const [isLoading, setLoading] = useState(false)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+    
     function openModal() {
         setOpen(!open)
     }

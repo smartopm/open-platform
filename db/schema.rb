@@ -62,6 +62,16 @@ ActiveRecord::Schema.define(version: 2020_07_29_130936) do
     t.uuid "reporting_user_id"
   end
 
+  create_table "assignee_notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "note_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["note_id"], name: "index_assignee_notes_on_note_id"
+    t.index ["user_id", "note_id"], name: "index_assignee_notes_on_user_id_and_note_id", unique: true
+    t.index ["user_id"], name: "index_assignee_notes_on_user_id"
+  end
+
   create_table "businesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "community_id", null: false
     t.uuid "user_id", null: false
@@ -134,7 +144,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_130936) do
     t.index ["user_id"], name: "index_contact_infos_on_user_id"
   end
 
-  create_table "discussion_users", id: false, force: :cascade do |t|
+  create_table "discussion_users", force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "discussion_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -248,12 +258,14 @@ ActiveRecord::Schema.define(version: 2020_07_29_130936) do
     t.uuid "user_id"
     t.uuid "author_id"
     t.text "body"
-    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "flagged"
+    t.datetime "created_at"
     t.boolean "completed"
     t.datetime "due_date"
     t.string "category"
+    t.uuid "assigned_to"
+    t.uuid "community_id"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -337,6 +349,8 @@ ActiveRecord::Schema.define(version: 2020_07_29_130936) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "assignee_notes", "notes"
+  add_foreign_key "assignee_notes", "users"
   add_foreign_key "businesses", "communities"
   add_foreign_key "businesses", "users"
   add_foreign_key "campaign_labels", "campaigns"

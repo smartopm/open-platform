@@ -31,7 +31,7 @@ class User < ApplicationRecord
     return relat.where(user_type: allowed_user_types)
   }
 
-  belongs_to :community, optional: true
+  belongs_to :community, dependent: :destroy
   has_many :entry_requests, dependent: :destroy
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
                                     dependent: :destroy, inverse_of: :user
@@ -47,6 +47,8 @@ class User < ApplicationRecord
   has_many :user_labels, dependent: :destroy
   has_many :contact_infos, dependent: :destroy
   has_many :labels, through: :user_labels
+  has_many :assignee_notes, dependent: :destroy
+  has_many :tasks, through: :assignee_notes, source: :note
 
   has_one_attached :avatar
   has_one_attached :document
@@ -157,7 +159,7 @@ class User < ApplicationRecord
   end
 
   def referral_todo(vals)
-    ::Note.create(
+    community.notes.create(
       user_id: vals[:id],
       body: "Contact #{vals[:name]}: Prospective client referred by #{self[:name]}.
       Please reach out to the set up a call or visit.",
@@ -192,18 +194,19 @@ class User < ApplicationRecord
   end
 
   def generate_note(vals)
-    ::Note.create(
-      user_id: vals[:user_id],
+    community.notes.create(
+      # give the note to the author if no other user
+      user_id: vals[:user_id] || self[:id],
       body: vals[:body],
       category: vals[:category],
-      flagged: false,
+      flagged: vals[:flagged],
       author_id: self[:id],
-      completed: false,
+      completed: vals[:completed],
+      due_date: vals[:due_date],
     )
   end
 
   # rubocop:disable MethodLength
-
   def manage_shift(target_user_id, event_tag)
     user = find_a_user(target_user_id)
     data = { ref_name: user.name, type: user.user_type }
