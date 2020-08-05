@@ -1,9 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core/styles'
 import DateFnsUtils from '@date-io/date-fns'
-import { StyleSheet, css } from 'aphrodite'
 import { createMuiTheme } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField';
 import {
     KeyboardDatePicker,
     MuiPickersUtilsProvider,
