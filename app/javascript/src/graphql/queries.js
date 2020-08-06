@@ -355,7 +355,6 @@ export const Campaign = gql`
       startTime
       updatedAt
       userIdList
-<<<<<<< HEAD
       campaignMetrics {
         batchTime
         startTime
@@ -363,11 +362,10 @@ export const Campaign = gql`
         totalScheduled
         totalSent
         totalClicked
-=======
+      }
       labels{
         id
         shortDesc
->>>>>>> Updated queries to retrive labels and update colors
       }
     }
   }
