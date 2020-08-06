@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from '../Dialog'
-import { createMuiTheme, Chip, Divider, Fab, Dialog, DialogTitle, DialogContent } from '@material-ui/core'
+import { createMuiTheme, Chip, Divider, Fab, Dialog, DialogTitle, DialogContent, FormControl, InputLabel, Select, Input, MenuItem, Button } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { formatDistance } from 'date-fns'
@@ -43,7 +43,7 @@ export default function TodoList({
   const [open, setModalOpen] = useState(false)
   const [id, setNoteId] = useState('')
   const [message, setErrorMessage] = useState('')
-
+  const [assignee, setAssignee] = useState([])
 
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
@@ -57,7 +57,8 @@ export default function TodoList({
     {
       variables: {
         offset,
-        limit
+        limit,
+        query: assignee.map(query => `assignees = "${query}"`).join(' OR ')
       },
     }
   )
@@ -104,6 +105,10 @@ export default function TodoList({
     }
   }
 
+
+  function handleAssigneeInputChange(event) {
+    setAssignee(event.target.value)
+  }
 
 
   if (isLoading) return <Loading />
@@ -158,7 +163,17 @@ export default function TodoList({
         </DialogContent>
       </Dialog>
 
-      <div classes={classes.root}>
+        <div classes={classes.root}>
+          <CenteredContent>
+            <FilterComponent
+              stateList={assignee}
+              list={liteData?.users}
+              handleInputChange={handleAssigneeInputChange}
+              classes={classes}
+              resetFilter={() => setAssignee([])}
+            /> 
+          </CenteredContent>
+          <br/>
         <ul className={css(styles.list)}>
           {isLoading ? (
             <Loading />
@@ -293,17 +308,65 @@ export default function TodoList({
         />
         </CenteredContent>
         <Fab
-        variant="extended"
-        onClick={openModal}
-        className={`btn ${css(styles.getStartedButton)} `}
-       >
+          variant="extended"
+          onClick={openModal}
+          className={`btn ${css(styles.getStartedButton)} `}
+        >
           Create task
-      </Fab>
+         </Fab>
       </div>
  
     </Fragment>
   )
 }
+
+
+export function FilterComponent({ handleInputChange, list, stateList, classes, resetFilter }) {
+  return (
+    <FormControl className={classes.formControl}>
+    <InputLabel id="demo-mutiple-chip-label">Filter by Assignee</InputLabel>
+    <Select
+      labelId="select-by-assignee"
+      id="assignee-chip"
+      multiple
+      value={stateList}
+      onChange={handleInputChange}
+      input={<Input id="select-by-assignee" />}
+        renderValue={selected => (
+          <div>
+            {selected.map((value, i) => (
+              <Chip key={i} label={value} />
+            ))}
+          </div>
+        )}
+    >
+      {list.map(item => (
+          <MenuItem key={item.id} value={item.name}>
+            {item.name}
+          </MenuItem>
+        ))}
+    </Select>
+    {Boolean(stateList.length) && (
+      <Button onClick={resetFilter}>Clear Filter</Button>
+    )}
+  </FormControl>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const useStyles = makeStyles({
   root: {
@@ -314,7 +377,7 @@ const useStyles = makeStyles({
     overflowX: 'auto'
   },
   formControl: {
-    minWidth: 120,
+    minWidth: 160,
     maxWidth: 300,
   },
 })

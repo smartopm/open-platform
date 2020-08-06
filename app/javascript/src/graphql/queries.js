@@ -130,8 +130,8 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  query GetTodos($offset: Int, $limit: Int) {
-    flaggedNotes(offset: $offset, limit: $limit) {
+  query GetTodos($offset: Int, $limit: Int, $query: String) {
+    flaggedNotes(offset: $offset, limit: $limit, query: $query) {
       ...NoteFields
     }
   }
