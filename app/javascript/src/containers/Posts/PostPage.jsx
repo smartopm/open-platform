@@ -7,7 +7,9 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Slide
+  Slide,
+  Badge,
+  Avatar 
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
@@ -86,6 +88,7 @@ export default function PostPage() {
   if (response.categories?.Private && !authState.loggedIn) {
     return <Redirect to="/welcome" />
   }
+  console.log(data.postComments)
   return (
     <Fragment>
       <Nav
@@ -106,12 +109,14 @@ export default function PostPage() {
             right: 57
           }}
         />
+        
         <Fab variant="extended"
           onClick={handleCommentsView}
             className={`btn ${css(styles.getStartedButton)} `}
             style={{backgroundColor: theme.primaryColor}}
           >
-            Share comments
+            Share comments <Avatar>{data.postComments.length}</Avatar>
+            
         </Fab>
       </div>
       <div> 
