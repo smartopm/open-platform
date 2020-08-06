@@ -538,7 +538,6 @@ export const UserLabelCreate = gql`
          }
        }
     }
-  }
 `
 
 export const UserLabelUpdate = gql`

@@ -59,7 +59,7 @@ export default function UserLabels({ userId }) {
 
     if (loading || _loading) return <Loading />
     if (error || _error) {
-        return <ErrorPage title={error || _error} /> // error could be a string sometimes
+        return <ErrorPage title={error.message || _error.message} />
       }
     return (
         <div className="container">
