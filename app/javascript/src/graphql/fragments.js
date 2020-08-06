@@ -60,3 +60,29 @@ export const EntryRequestFragment = {
     }
   `
 }
+
+
+export const NotesFragment = {
+  note: gql`
+    fragment NoteFields on Note {
+      body
+      createdAt
+      id
+      completed
+      dueDate
+      user {
+        id
+        name
+      }
+      author {
+        id
+        name
+      }
+      assignees {
+        id
+        name
+        imageUrl
+      }
+    }
+  `
+}

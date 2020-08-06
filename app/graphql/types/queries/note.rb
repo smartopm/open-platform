@@ -22,10 +22,6 @@ module Types::Queries::Note
       description 'Returns a list of all the flagged notes, basically todos'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-    end
-
-    field :search_notes, [Types::NoteType], null: false do
-      description 'Returns a list of all the notes based on who assigned'
       argument :query, String, required: false
     end
   end
@@ -42,19 +38,14 @@ module Types::Queries::Note
     context[:site_community].notes.where(user_id: id)
   end
 
-  def flagged_notes(offset: 0, limit: 50)
+  def flagged_notes(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:user, :assignees, :author)
-                            .eager_load(:user, :assignee_notes, :assignees)
+    context[:site_community].notes.includes(:assignees, :author)
+                            .eager_load(:assignee_notes, :assignees)
                             .where(flagged: true)
+                            .search(query)
                             .order(completed: :desc, created_at: :desc)
                             .limit(limit).offset(offset)
-  end
-
-  def search_notes(query: nil)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-
-    context[:site_community].notes.where(flagged: true).search(query)
   end
 end
