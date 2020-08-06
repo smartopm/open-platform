@@ -7,31 +7,34 @@ import { useMutation } from 'react-apollo'
 import { CampaignCreate } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
+import CampaignLabels from './CampaignLabels.jsx'
 
-export default function CampaignForm({authState }) {
+export default function CampaignForm({ authState }) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [userIdList, setUserIdList] = useState('')
+  const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [batchTime, setBatchTime] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
-
   const [campaign] = useMutation(CampaignCreate)
 
   function handleSubmit(e) {
     e.preventDefault()
-    const campaingData = {
+    const campaignData = {
       name,
       message,
       batchTime,
-      userIdList
+      userIdList,
+      labels: label.toString()
     }
+
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
 
-    campaign({ variables: campaingData })
-      .then(()=> 
+    campaign({ variables: campaignData })
+      .then(() =>
         setIsSubmitted(true)
       )
       .catch(err => {
@@ -39,6 +42,11 @@ export default function CampaignForm({authState }) {
       })
   }
 
+  function handleLabelSelect(lastLabel) {
+    const { id } = lastLabel
+    setLabel([...label, id])
+
+  }
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)
     setUserIdList(userIds.toString())
@@ -46,7 +54,7 @@ export default function CampaignForm({authState }) {
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
   }
-  
+
   return (
     <div className="container">
       <form
@@ -95,6 +103,10 @@ export default function CampaignForm({authState }) {
             inputProps={{ "data-testid": "campaign_ids" }}
             onChange={e => handleUserIDList(e, e.target.value)}
           />
+        </div>
+
+        <div>
+          <CampaignLabels handleLabelSelect={handleLabelSelect} />
         </div>
         <br />
         <div>

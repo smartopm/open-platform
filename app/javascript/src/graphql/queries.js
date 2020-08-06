@@ -363,6 +363,10 @@ export const Campaign = gql`
         totalSent
         totalClicked
       }
+      labels{
+        id
+        shortDesc
+      }
     }
   }
 `
