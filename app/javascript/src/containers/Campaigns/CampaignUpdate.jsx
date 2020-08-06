@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core'
 import { DateAndTimePickers } from '../../components/DatePickerDialog'
 import { useMutation, useQuery } from 'react-apollo'
-import { CampaignUpdate, UserLabelUpdate} from '../../graphql/mutations'
+import { CampaignUpdate} from '../../graphql/mutations'
 import { Campaign } from '../../graphql/queries'
 import { DelimitorFormator } from '../../utils/helpers'
 import { saniteError } from '../../utils/helpers'
@@ -31,7 +31,6 @@ export default function UpdateCampaign({ match }) {
     variables: { id: match.params.id }
   })
   const [campaign] = useMutation(CampaignUpdate)
-  const [userLabelUpdate] = useMutation(UserLabelUpdate)
 
   const [formData, setFormData] = useState({
     id: '',
