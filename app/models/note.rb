@@ -3,9 +3,10 @@
 # Notes for the CRM portion of the app, attached to a user
 class Note < ApplicationRecord
   include SearchCop
-  
+
   search_scope :search do
     attributes assignees: ['assignees.name']
+    scope { includes(:assignees, :author).eager_load(:assignee_notes, :assignees) }
   end
 
   belongs_to :community

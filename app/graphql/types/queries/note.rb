@@ -23,6 +23,11 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    field :search_notes, [Types::NoteType], null: false do
+      description 'Returns a list of all the notes based on who assigned'
+      argument :query, String, required: false
+    end
   end
 
   def all_notes(offset: 0, limit: 50)
@@ -45,5 +50,11 @@ module Types::Queries::Note
                             .where(flagged: true)
                             .order(completed: :desc, created_at: :desc)
                             .limit(limit).offset(offset)
+  end
+
+  def search_notes(query: nil)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:site_community].notes.where(flagged: true).search(query)
   end
 end
