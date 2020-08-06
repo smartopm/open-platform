@@ -4,11 +4,12 @@ module Mutations
   module Note
     # Create a new request/pending member
     class NoteCreate < BaseMutation
-      argument :user_id, ID, required: true
+      argument :user_id, ID, required: false
       argument :body, String, required: true
       argument :category, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
+      argument :due_date, String, required: false
 
       field :note, Types::NoteType, null: true
 

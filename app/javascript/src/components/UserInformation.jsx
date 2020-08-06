@@ -139,7 +139,7 @@ export default function UserInformation({
                     <Status label={data.user.state} />
                   )
                 )}
-                <UserLabels userId={data.user.id} />
+              {['admin'].includes(userType) && (<UserLabels userId={data.user.id} />)}
             </div>
 
             <div className="col-2 ml-auto">
