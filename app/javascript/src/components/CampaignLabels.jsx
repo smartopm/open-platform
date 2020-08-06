@@ -11,7 +11,7 @@ export default function CampaignLabels({ handleLabelSelect }) {
         <div>
             <Fragment>
                 {data && (<Autocomplete
-                    data-testid="userLabel-creator"
+                    data-testid="campaignLabel-creator"
                     style={{ width: "100%", marginTop: 20 }}
                     multiple
                     freeSolo

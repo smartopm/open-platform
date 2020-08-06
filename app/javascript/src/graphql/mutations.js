@@ -422,12 +422,14 @@ export const CampaignCreate = gql`
     $message: String!
     $batchTime: String!
     $userIdList: String!
+    $labels: String
   ) {
     campaignCreate(
       name: $name
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
+      labels: $labels
     ) {
       campaign {
         name
@@ -442,6 +444,7 @@ export const CampaignUpdate = gql`
     $message: String
     $batchTime: String
     $userIdList: String
+    $labels: String
   ) {
     campaignUpdate(
       id: $id
@@ -449,6 +452,7 @@ export const CampaignUpdate = gql`
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
+      labels: $labels
     ) {
       campaign {
         batchTime
