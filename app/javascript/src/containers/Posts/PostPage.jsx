@@ -8,7 +8,6 @@ import {
   IconButton,
   Typography,
   Slide,
-  Badge,
   Avatar 
 } from '@material-ui/core'
 import { css } from 'aphrodite'
@@ -88,7 +87,7 @@ export default function PostPage() {
   if (response.categories?.Private && !authState.loggedIn) {
     return <Redirect to="/welcome" />
   }
-  console.log(data.postComments)
+
   return (
     <Fragment>
       <Nav
@@ -115,7 +114,7 @@ export default function PostPage() {
             className={`btn ${css(styles.getStartedButton)} `}
             style={{backgroundColor: theme.primaryColor}}
           >
-            Share comments <Avatar>{data.postComments.length}</Avatar>
+            Share comments&nbsp;<Avatar>{data.postComments.length}</Avatar>
             
         </Fab>
       </div>
