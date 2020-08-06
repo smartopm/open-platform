@@ -294,7 +294,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_103234) do
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
-  create_table "user_labels", force: :cascade do |t|
+  create_table "user_labels", id: false, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "label_id", null: false
     t.datetime "created_at", precision: 6, null: false
