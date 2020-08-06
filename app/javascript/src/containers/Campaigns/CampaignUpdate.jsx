@@ -94,16 +94,7 @@ export default function UpdateCampaign({ match }) {
 
    function handleLabelSelect(lastLabel) {
     const { id } = lastLabel
-    if (formData.userIdList) {
-      userLabelCreate({
-        variables: { userId: formData.userIdList, labelId: id }
-      }).then(()=>{
-      }).catch(error => {
-        setErrorMsg(error.message)
-      })
-    }else {
-     
-    }
+
 
   }
 

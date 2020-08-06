@@ -4,56 +4,53 @@ import { Redirect } from 'react-router-dom'
 import { Button, TextField } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
-import { CampaignCreate, UserLabelCreate  } from '../graphql/mutations'
+import { CampaignCreate } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels.jsx'
 
-export default function CampaignForm({authState }) {
+export default function CampaignForm({ authState }) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [userIdList, setUserIdList] = useState('')
+  const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [batchTime, setBatchTime] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
-
   const [campaign] = useMutation(CampaignCreate)
-  const [userLabelCreate] = useMutation(UserLabelCreate)
-  
+
   function handleSubmit(e) {
     e.preventDefault()
     const campaingData = {
       name,
       message,
       batchTime,
-      userIdList
+      userIdList,
+      labels: label.toString()
     }
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
 
-    campaign({ variables: campaingData })
-      .then(()=> 
-        setIsSubmitted(true)
-      )
-      .catch(err => {
-        setErrorMsg(err.message)
-      })
+    console.log(campaingData)
+
+    // setTimeout(() => {
+    //   window.location.reload(false)
+    // }, 3000)
+
+    // campaign({ variables: campaingData })
+    //   .then(()=> 
+    //     setIsSubmitted(true)
+    //   )
+    //   .catch(err => {
+    //     setErrorMsg(err.message)
+    //   })
   }
 
   function handleLabelSelect(lastLabel) {
     const { id } = lastLabel
-    if (userIdList) {
-      userLabelCreate({
-        variables: { userId: userIdList, labelId: id }
-      }).then(()=>{
-      }).catch(error => {
-        setErrorMsg(error.message)
-      })
-    }else {
-     
-    }
+    setLabel([...label, id])
 
+  }
+  function handleDelete(element){
+    return label.filter(e => e !== element)
   }
 
   function handleUserIDList(_event, value) {
@@ -63,7 +60,7 @@ export default function CampaignForm({authState }) {
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
   }
-  
+
   return (
     <div className="container">
       <form
@@ -115,7 +112,7 @@ export default function CampaignForm({authState }) {
         </div>
 
         <div>
-            <CampaignLabels handleLabelSelect={handleLabelSelect} />
+          <CampaignLabels handleLabelSelect={handleLabelSelect} handleDelete={handleDelete} />
         </div>
         <br />
         <div>
@@ -124,7 +121,7 @@ export default function CampaignForm({authState }) {
             required
             selectedDateTime={batchTime}
             handleDateChange={e => setBatchTime(e.target.value)}
-          />    
+          />
         </div>
         <div className="d-flex row justify-content-center">
           <Button
