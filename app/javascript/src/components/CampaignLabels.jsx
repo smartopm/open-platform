@@ -1,16 +1,16 @@
-import React, {Fragment} from 'react'
+import React, { Fragment } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField, Chip } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
 
-export default function CampaignLabels({handleLabelSelect}) {
+export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
 
     const { data } = useQuery(LabelsQuery)
     return (
         <div>
-        <Fragment>
-            { data && (<Autocomplete
+            <Fragment>
+                {data && (<Autocomplete
                     data-testid="userLabel-creator"
                     style={{ width: "100%", marginTop: 20 }}
                     multiple
@@ -26,7 +26,7 @@ export default function CampaignLabels({handleLabelSelect}) {
                             const [lastLabel] = newValue.slice(-1)
                             return handleLabelSelect(lastLabel)
                         }
-                           
+
                     }}
                     renderTags={(value, getTagProps) => {
                         return value.map((option, index) => (
@@ -35,6 +35,7 @@ export default function CampaignLabels({handleLabelSelect}) {
                                 variant="outlined"
                                 label={option.shortDesc || option}
                                 {...getTagProps({ index })}
+                                onDelete={handleDelete(option.id)}
                             />
 
                         ))
@@ -44,13 +45,13 @@ export default function CampaignLabels({handleLabelSelect}) {
                         <TextField
                             {...params}
                             label="Assign Label"
-                            style={{width: "100%"}}
+                            style={{ width: "100%" }}
 
                         />
                     )}
-                /> )}
-    </Fragment>
-            
+                />)}
+            </Fragment>
+
         </div>
     )
 }
