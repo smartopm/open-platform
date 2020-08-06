@@ -129,7 +129,7 @@ export default function UsersList() {
     setSearchType('type')
   }
   function handleLabelSelect(lastLabel) {
-    const { id, shortDesc } = lastLabel
+    const { id } = lastLabel
     setLabelLoading(true)
     if (userList) {
       userLabelCreate({
