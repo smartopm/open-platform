@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core'
 import { DateAndTimePickers } from '../../components/DatePickerDialog'
 import { useMutation, useQuery } from 'react-apollo'
-import { CampaignUpdate} from '../../graphql/mutations'
+import { CampaignUpdate } from '../../graphql/mutations'
 import { Campaign } from '../../graphql/queries'
 import { DelimitorFormator } from '../../utils/helpers'
 import { saniteError } from '../../utils/helpers'
@@ -27,11 +27,13 @@ import ErrorPage from '../../components/Error'
 
 export default function UpdateCampaign({ match }) {
   const authState = useContext(AuthStateContext)
+  const [label, setLabel] = useState([])
   const { data, error, loading } = useQuery(Campaign, {
     variables: { id: match.params.id }
   })
   const [campaign] = useMutation(CampaignUpdate)
 
+  // TODO: @Dennis, populate the the autocorrect with labels 
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -39,6 +41,7 @@ export default function UpdateCampaign({ match }) {
     batchTime: '',
     userIdList: '',
     loaded: false
+
   })
   const [batchTime, setBatchTime] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
@@ -74,15 +77,16 @@ export default function UpdateCampaign({ match }) {
         batchTime: batchTime
       })
     }
-    const campaingData = {
+    const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
       batchTime: formData.batchTime,
-      userIdList: formData.userIdList
+      userIdList: formData.userIdList,
+      labels: label.toString()
     }
 
-    campaign({ variables: campaingData })
+    campaign({ variables: campaignData })
       .then(() => {
         setIsSubmitted(true)
       })
@@ -91,10 +95,9 @@ export default function UpdateCampaign({ match }) {
       })
   }
 
-   function handleLabelSelect(lastLabel) {
+  function handleLabelSelect(lastLabel) {
     const { id } = lastLabel
-
-
+    setLabel([...label, id])
   }
 
   function handleUserIDList(_event, value) {
@@ -154,7 +157,7 @@ export default function UpdateCampaign({ match }) {
             <CampaignLabels handleLabelSelect={handleLabelSelect} />
           </div>
           <br />
-          <div style={{paddingBottom:'3%'}}>
+          <div style={{ paddingBottom: '3%' }}>
             <DateAndTimePickers
               label="Start Time"
               required
