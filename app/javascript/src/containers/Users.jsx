@@ -28,6 +28,7 @@ import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+import FilterComponent from '../components/FilterComponent'
 
 
 const limit = 50
@@ -274,33 +275,14 @@ export default function UsersList() {
             </FormControl>
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-mutiple-chip-label">Filter by Labels</InputLabel>
-              <Select
-                labelId="select-by-label"
-                id="role-chip"
-                multiple
-                value={labels}
-                onChange={handleLabelChange}
-                input={<Input id="select-by-label" />}
-                renderValue={selected => (
-                  <div>
-                    {selected.map((value, i) => (
-                      <Chip key={i} label={value} />
-                    ))}
-                  </div>
-                )}
-              >
-                {labelsData.labels.map(label => (
-                  <MenuItem key={label.id} value={label.shortDesc}>
-                    {label.shortDesc}
-                  </MenuItem>
-                ))}
-              </Select>
-              {Boolean(labels.length) && (
-                <Button onClick={() => setLabels([])}>Clear Filter</Button>
-              )}
-            </FormControl>
+            <FilterComponent
+              stateList={labels}
+              list={labelsData.labels}
+              handleInputChange={handleLabelChange}
+              classes={classes}
+              resetFilter={() => setLabels([])}
+              type="labels"
+            />
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"

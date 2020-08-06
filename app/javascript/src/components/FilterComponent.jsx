@@ -5,22 +5,22 @@ import {
   Select,
   Input,
   MenuItem,
-  Button,Chip
+  Button,
+  Chip
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-
 /**
- * 
- * @param {*} param0 
+ *
  * @description this component will not work with single array type of dropdown, e.g: userType, userState
+ * @returns ReactNode
  */
 export default function FilterComponent({
   handleInputChange,
   list,
   stateList,
   classes,
-    resetFilter,
+  resetFilter,
   type
 }) {
   return (
@@ -28,7 +28,7 @@ export default function FilterComponent({
       <InputLabel id="demo-mutiple-chip-label">Filter by {type}</InputLabel>
       <Select
         labelId={`select-by-${type}`}
-        id="assignee-chip"
+        id={`${type}-chip`}
         multiple
         value={stateList}
         onChange={handleInputChange}
@@ -42,8 +42,9 @@ export default function FilterComponent({
         )}
       >
         {list.map(item => (
-          <MenuItem key={item.id} value={item.name}>
-            {item.name}
+          // change the below line depending on the usage
+          <MenuItem key={item.id} value={item.name || item.shortDesc}>
+            {item.name || item.shortDesc}
           </MenuItem>
         ))}
       </Select>
@@ -55,10 +56,10 @@ export default function FilterComponent({
 }
 
 FilterComponent.propTypes = {
-    handleInputChange: PropTypes.func.isRequired,
-    list: PropTypes.array.isRequired,
-    stateList: PropTypes.array.isRequired,
-    classes: PropTypes.object.isRequired,
-    resetFilter: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  list: PropTypes.array.isRequired,
+  stateList: PropTypes.array.isRequired,
+  classes: PropTypes.object.isRequired,
+  resetFilter: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired
 }
