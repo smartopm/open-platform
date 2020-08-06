@@ -17,7 +17,7 @@ import { DateAndTimePickers } from '../../components/DatePickerDialog'
 import { useMutation, useQuery } from 'react-apollo'
 import { CampaignUpdate } from '../../graphql/mutations'
 import { Campaign } from '../../graphql/queries'
-import { DelimitorFormator } from '../../utils/helpers'
+import { DelimitorFormator as DelimiterFormatter } from '../../utils/helpers'
 import { saniteError } from '../../utils/helpers'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
@@ -103,13 +103,12 @@ export default function UpdateCampaign({ match }) {
   }
 
   function handleUserIDList(_event, value) {
-    let userIds = DelimitorFormator(value)
+    let userIds = DelimiterFormatter(value)
     setFormData({
       ...formData,
       userIdList: userIds.toString()
     })
   }
-
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
@@ -178,7 +177,7 @@ export default function UpdateCampaign({ match }) {
               label="Start Time"
               required
               selectedDateTime={batchTime}
-              handleDateChange={e => setBatchTime(e.target.value)}
+              handleDateChange={e => setBatchTime(e)}
             />
           </div>
           <div>

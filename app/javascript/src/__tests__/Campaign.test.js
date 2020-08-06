@@ -44,7 +44,6 @@ describe('Campaign page', () => {
     expect(getByText('Message')).toBeInTheDocument()
     expect(getByText('Campaign Name')).toBeInTheDocument()
     expect(getByText('User ID List')).toBeInTheDocument()
-    expect(getByText('Batch Time')).toBeInTheDocument()
   })
   it('should not render form when user is not admin', () => {
     const authState = {
@@ -73,7 +72,6 @@ describe('Campaign page', () => {
     expect(container.queryByText('Tasks')).toBeNull()
     expect(container.queryByText('Campaign Name')).toBeNull()
     expect(container.queryByText('User ID List')).toBeNull()
-    expect(container.queryByText('Batch Time')).toBeNull()
   })
 
   it('should allow campain name inputs', () => {
