@@ -6,7 +6,6 @@ class Note < ApplicationRecord
 
   search_scope :search do
     attributes assignees: ['assignees.name']
-    scope { includes(:assignees, :author).eager_load(:assignee_notes, :assignees) }
   end
 
   belongs_to :community
