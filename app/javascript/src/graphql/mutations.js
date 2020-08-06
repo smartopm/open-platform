@@ -279,10 +279,11 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID!, $body: String!, $flagged: Boolean) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged) {
+  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due) {
       note {
         body
+        id
       }
     }
   }
@@ -465,6 +466,14 @@ export const CampaignUpdate = gql`
         startTime
         updatedAt
         userIdList
+        campaignMetrics {
+          batchTime
+          startTime
+          endTime
+          totalScheduled
+          totalSent
+          totalClicked
+        }
       }
     }
   }
@@ -498,30 +507,46 @@ export const DiscussionMutation = gql`
   }
 `
 
-export const LabelCreate = gql`
-    mutation labelCreate($shortDesc: String!){
-       labelCreate(shortDesc: $shortDesc){
-         label {
-           id
-         }
-       }
+export const DiscussionSubscription = gql`
+  mutation discussionUserCreate(
+    $discussionId: ID!
+  ){
+    discussionUserCreate(
+      discussionId: $discussionId
+    ){
+      discussionUser{
+        userId
+        discussionId
+        id
+      }      
     }
+  }
+`
+
+export const LabelCreate = gql`
+  mutation labelCreate($shortDesc: String!) {
+    labelCreate(shortDesc: $shortDesc) {
+      label {
+        id
+      }
+    }
+  }
 `
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-    mutation userLabelCreate($userId: ID!, $labelId: ID!){
-       userLabelCreate(userId: $userId, labelId: $labelId){
-         label {
-           labelId
-         }
-       }
+  mutation userLabelCreate($userId: ID!, $labelId: ID!) {
+    userLabelCreate(userId: $userId, labelId: $labelId) {
+      label {
+        labelId
+      }
     }
+  }
 `
 
 export const UserLabelUpdate = gql`
-  mutation userLabelUpdate($userId: ID!, $labelId: ID!){
-    userLabelUpdate(userId: $userId, labelId: $labelId){
+  mutation userLabelUpdate($userId: ID!, $labelId: ID!) {
+    userLabelUpdate(userId: $userId, labelId: $labelId) {
       label {
         labelId
       }
