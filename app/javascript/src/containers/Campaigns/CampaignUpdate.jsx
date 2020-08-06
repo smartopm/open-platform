@@ -10,7 +10,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
+  Chip
 } from '@material-ui/core'
 import { DateAndTimePickers } from '../../components/DatePickerDialog'
 import { useMutation, useQuery } from 'react-apollo'
@@ -40,7 +41,8 @@ export default function UpdateCampaign({ match }) {
     message: '',
     batchTime: '',
     userIdList: '',
-    loaded: false
+    loaded: false,
+    labels: []
 
   })
   const [batchTime, setBatchTime] = useState('')
@@ -154,6 +156,20 @@ export default function UpdateCampaign({ match }) {
             />
           </div>
           <div>
+            <br />
+            <br />
+            <div className=" row d-flex justify-content-start align-items-center">
+              {formData.labels.length
+                ? formData.labels.map(label => (
+                  <Chip
+                    data-testid="campaignChip-label"
+                    key={label.id}
+                    size="medium"
+                    label={label.shortDesc}
+                  />
+                )) : null
+              }
+            </div>
             <CampaignLabels handleLabelSelect={handleLabelSelect} />
           </div>
           <br />

@@ -24,7 +24,7 @@ describe('It should test the create label component', () => {
         }
     }
 
-    const props= {
+    const props = {
         handleLabelSelect: jest.fn()
     }
     

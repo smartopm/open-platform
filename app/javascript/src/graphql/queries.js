@@ -340,6 +340,10 @@ export const Campaign = gql`
       startTime
       updatedAt
       userIdList
+      labels{
+        id
+        shortDesc
+      }
     }
   }
 `
