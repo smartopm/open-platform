@@ -38,6 +38,7 @@ import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import { dateToString } from '../DateContainer'
+import FilterComponent from '../FilterComponent'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -182,6 +183,7 @@ export default function TodoList({
               handleInputChange={handleAssigneeInputChange}
               classes={classes}
               resetFilter={() => setAssignee([])}
+              type="assignee"
             />
           </CenteredContent>
           <br />
@@ -343,43 +345,6 @@ export default function TodoList({
   )
 }
 
-export function FilterComponent({
-  handleInputChange,
-  list,
-  stateList,
-  classes,
-  resetFilter
-}) {
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel id="demo-mutiple-chip-label">Filter by Assignee</InputLabel>
-      <Select
-        labelId="select-by-assignee"
-        id="assignee-chip"
-        multiple
-        value={stateList}
-        onChange={handleInputChange}
-        input={<Input id="select-by-assignee" />}
-        renderValue={selected => (
-          <div>
-            {selected.map((value, i) => (
-              <Chip key={i} label={value} />
-            ))}
-          </div>
-        )}
-      >
-        {list.map(item => (
-          <MenuItem key={item.id} value={item.name}>
-            {item.name}
-          </MenuItem>
-        ))}
-      </Select>
-      {Boolean(stateList.length) && (
-        <Button onClick={resetFilter}>Clear Filter</Button>
-      )}
-    </FormControl>
-  )
-}
 
 const useStyles = makeStyles({
   root: {
