@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField, Chip } from '@material-ui/core'
-import { useMutation, useQuery } from 'react-apollo'
+import { useQuery } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
 
-export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
+export default function CampaignLabels({ handleLabelSelect }) {
 
     const { data } = useQuery(LabelsQuery)
     return (
@@ -35,7 +35,7 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                                 variant="outlined"
                                 label={option.shortDesc || option}
                                 {...getTagProps({ index })}
-                                onDelete={handleDelete(option.id)}
+                                
                             />
 
                         ))

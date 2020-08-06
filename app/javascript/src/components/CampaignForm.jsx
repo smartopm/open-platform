@@ -21,7 +21,7 @@ export default function CampaignForm({ authState }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const campaingData = {
+    const campaignData = {
       name,
       message,
       batchTime,
@@ -29,19 +29,17 @@ export default function CampaignForm({ authState }) {
       labels: label.toString()
     }
 
-    console.log(campaingData)
+    setTimeout(() => {
+      window.location.reload(false)
+    }, 3000)
 
-    // setTimeout(() => {
-    //   window.location.reload(false)
-    // }, 3000)
-
-    // campaign({ variables: campaingData })
-    //   .then(()=> 
-    //     setIsSubmitted(true)
-    //   )
-    //   .catch(err => {
-    //     setErrorMsg(err.message)
-    //   })
+    campaign({ variables: campaignData })
+      .then(() =>
+        setIsSubmitted(true)
+      )
+      .catch(err => {
+        setErrorMsg(err.message)
+      })
   }
 
   function handleLabelSelect(lastLabel) {
@@ -49,10 +47,6 @@ export default function CampaignForm({ authState }) {
     setLabel([...label, id])
 
   }
-  function handleDelete(element){
-    return label.filter(e => e !== element)
-  }
-
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)
     setUserIdList(userIds.toString())
@@ -112,7 +106,7 @@ export default function CampaignForm({ authState }) {
         </div>
 
         <div>
-          <CampaignLabels handleLabelSelect={handleLabelSelect} handleDelete={handleDelete} />
+          <CampaignLabels handleLabelSelect={handleLabelSelect} />
         </div>
         <br />
         <div>
