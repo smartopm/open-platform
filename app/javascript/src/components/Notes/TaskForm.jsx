@@ -22,11 +22,13 @@ import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { UsersLiteQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
+import { NotesCategories } from '../../utils/constants'
 
 export default function TaskForm({ close, refetch, users, assignUser}) {
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
   const [assignees, setAssignees] = useState([])
+  const [taskType, setTaskType] = useState('')
   const [taskUser, setTaskUser] = useState('')
   const [taskUserId, setTaskUserId] = useState('')
   const [selectedDate, setDate] = useState(new Date())
@@ -45,6 +47,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         body: title,
         due: selectedDate ? selectedDate.toISOString() : null,
         completed: taskStatus,
+        category: taskType,
         flagged: true,
         userId: taskUserId
       }
@@ -71,7 +74,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       })
     }, 1000)
   }
-
   return (
     <form onSubmit={handleSubmit}>
       <TextField
@@ -93,6 +95,23 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         }}
         required
       />
+      <br/>
+      <FormControl fullWidth >
+        <InputLabel id="taskType">Task Type</InputLabel>
+        <Select
+            id="taskType"
+            value={taskType}
+            onChange={event => setTaskType(event.target.value)}
+            name="taskType"
+            fullWidth
+        >
+            {Object.entries(NotesCategories).map(([key, val]) => (
+              <MenuItem key={key} value={key}>
+                {val}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
       <br />
       <FormControl fullWidth >
         <InputLabel id="assignees">Assign this task to users</InputLabel>
