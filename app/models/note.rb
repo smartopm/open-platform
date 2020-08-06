@@ -2,6 +2,12 @@
 
 # Notes for the CRM portion of the app, attached to a user
 class Note < ApplicationRecord
+  include SearchCop
+
+  search_scope :search do
+    attributes assignees: ['assignees.name']
+  end
+
   belongs_to :community
   belongs_to :user
   belongs_to :author, class_name: 'User'
