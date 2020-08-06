@@ -54,4 +54,13 @@ export const areaCode = {
   64: '🇳🇿 +64',
   971: '🇦🇪 +971'
 }
+
+export const NotesCategories = {
+  call:  'Call',
+  message:  'Message',
+  email:  'Email',
+  to_do:  'To-Do',
+}
+
+
 export const ponisoNumber = '+260976064298'

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment,useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
@@ -7,17 +7,17 @@ import { useHistory } from 'react-router-dom'
 import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-import { styles } from '../components/ShareButton'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link'
-import Badge from '@material-ui/core/Badge'
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import Badge from '@material-ui/core/Badge';
+import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+
 
 export default function CampaignList() {
   const history = useHistory()
-
-  //const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext)
   const { data, error, loading } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
@@ -148,9 +148,10 @@ export default function CampaignList() {
           position: 'fixed',
           bottom: 24,
           right: 57,
-          color: '#009688'
+          color: 'white',
+          backgroundColor: theme.primaryColor
         }}
-        className={`btn ${css(styles.getStartedButton)} `}
+        
         onClick={() => {
           routeToCreateCampaign()
         }}

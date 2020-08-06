@@ -279,8 +279,8 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due) {
+  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category) {
       note {
         body
         id
@@ -423,12 +423,14 @@ export const CampaignCreate = gql`
     $message: String!
     $batchTime: String!
     $userIdList: String!
+    $labels: String
   ) {
     campaignCreate(
       name: $name
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
+      labels: $labels
     ) {
       campaign {
         name
@@ -443,6 +445,7 @@ export const CampaignUpdate = gql`
     $message: String
     $batchTime: String
     $userIdList: String
+    $labels: String
   ) {
     campaignUpdate(
       id: $id
@@ -450,6 +453,7 @@ export const CampaignUpdate = gql`
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
+      labels: $labels
     ) {
       campaign {
         batchTime
