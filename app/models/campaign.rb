@@ -86,6 +86,6 @@ class Campaign < ApplicationRecord
   def expired?
     return false if start_time.nil?
 
-    Time.zone.now > (start_time + EXPIRATION_DAYS)
+    Time.zone.now > (start_time + EXPIRATION_DAYS.days)
   end
 end
