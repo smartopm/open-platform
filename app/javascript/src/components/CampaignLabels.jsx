@@ -7,9 +7,11 @@ import { LabelsQuery } from '../graphql/queries'
 export default function CampaignLabels({ handleLabelSelect }) {
 
     const { data } = useQuery(LabelsQuery)
+ 
     return (
         <div>
             <Fragment>
+         
                 {data && (<Autocomplete
                     data-testid="campaignLabel-creator"
                     style={{ width: "100%", marginTop: 20 }}
@@ -35,7 +37,7 @@ export default function CampaignLabels({ handleLabelSelect }) {
                                 variant="outlined"
                                 label={option.shortDesc || option}
                                 {...getTagProps({ index })}
-                                
+
                             />
 
                         ))
