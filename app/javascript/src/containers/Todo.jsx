@@ -1,11 +1,10 @@
-import React, { Fragment, useState, useContext, useEffect } from 'react'
-import { useMutation, useLazyQuery } from 'react-apollo'
+import React, { Fragment, useState, useContext } from 'react'
+import { useMutation } from 'react-apollo'
 import { UpdateNote } from '../graphql/mutations'
 import TodoList from '../components/Notes/TodoList'
 import Nav from '../components/Nav'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useLocation } from 'react-router'
-import { MyTaskQuery } from '../graphql/queries'
 
 export default function Todo({ history }) {
   // eslint-disable-next-line no-unused-vars
@@ -17,7 +16,6 @@ export default function Todo({ history }) {
   const [userId, setUserId] = React.useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const location = useLocation()
-  const [loadTask, {data}] = useLazyQuery(MyTaskQuery)
 
   function todoAction(id, isCompleted) {
     setLoading(true)
@@ -46,12 +44,6 @@ export default function Todo({ history }) {
     history.push('/')
   }
 
-  useEffect(() => {
-    if (location.pathname.includes('my_tasks')) {
-      loadTask()
-    }
-  }, [location, loadTask])
-
   // remove the forward slash and do pattern match for routes and nav name
   const path = {
     todo: 'Tasks',
@@ -68,7 +60,7 @@ export default function Todo({ history }) {
           handleDateChange={handleDateChange}
           todoAction={todoAction}
           location={location.pathname.replace(/\//, '')}
-          taskData={data}
+          currentUser={authState.user.name}
         />
     </Fragment>
   )

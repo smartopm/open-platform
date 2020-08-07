@@ -485,15 +485,6 @@ export const LabelsQuery = gql`
   }
 `
 
-export const MyTaskQuery = gql`
-    query {
-      myTasks {
-        ...NoteFields
-      }
-    } 
-  ${NotesFragment.note}
-`
-
 export const MyTaskCountQuery = gql`
   {
     myTasksCount

@@ -9,7 +9,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { Spinner } from '../Loading'
 
-export function Task({
+export default function Task({
   note,
   message,
   users,

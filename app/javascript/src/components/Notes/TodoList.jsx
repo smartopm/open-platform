@@ -23,7 +23,7 @@ import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import FilterComponent from '../FilterComponent'
-import { Task } from './Task'
+import Task from './Task'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -34,7 +34,7 @@ export default function TodoList({
   handleDateChange,
   todoAction,
   location,
-  taskData
+  currentUser
 }) {
   const classes = useStyles()
   const limit = 50
@@ -51,13 +51,14 @@ export default function TodoList({
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
+
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query: assignee.map(query => `assignees = "${query}"`).join(' OR ')
+        query: location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
       }
     }
   )
@@ -170,8 +171,7 @@ export default function TodoList({
           )}
           <br />
           <ul className={css(styles.list)}>
-            {location === 'todo'
-              ? data.flaggedNotes.map(note => (
+            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
                   <Task
                     key={note.id}
                     note={note}
@@ -186,27 +186,9 @@ export default function TodoList({
                     classes={classes.listItem}
                   />
                 ))
-              : taskData?.myTasks.map(task => (
-                  <Task
-                    key={task.id}
-                    note={task}
-                    message={message}
-                    users={liteData?.users}
-                    handleCompleteNote={handleCompleteNote}
-                    assignUnassignUser={assignUnassignUser}
-                    loaded={loaded}
-                    handleDelete={handleDelete}
-                    handleModal={handleModal}
-                    loading={loading}
-                    classes={classes.listItem}
-                  />
-                ))}
+              :  <CenteredContent>There are no tasks</CenteredContent>}
           </ul>
         </div>
-
-        {location === 'my_tasks' && !taskData?.myTasks.length && (
-          <CenteredContent>There are no tasks assigned to you</CenteredContent>
-        )}
       <br/>
         <CenteredContent>
           <Paginate
