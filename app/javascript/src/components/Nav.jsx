@@ -53,7 +53,7 @@ export function Component({
 }) {
   const [state, setState] = React.useState(false)
   const { values, handleSubmit } = useContext(FormContext)
-  const { data } = useQuery(MyTaskCountQuery)
+  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-and-network' })
   const theme = useContext(ThemeContext)
 
 
