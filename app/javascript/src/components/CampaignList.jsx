@@ -11,7 +11,6 @@ import { dateTimeToString, dateToString } from '../components/DateContainer'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import Badge from '@material-ui/core/Badge';
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 
@@ -70,54 +69,30 @@ export default function CampaignList() {
                 <Grid item>
                   <Grid item container direction="row" spacing={2}>
                     <Grid item>
-                      <Badge
-                        max={9999}
-                        color="primary"
-                        badgeContent={c.campaignMetrics.totalScheduled}
-                      >
-                        <Typography className={css(style.subTitle)}>
-                          Total Scheduled
-                        </Typography>
-                      </Badge>
+                      <Typography className={css(style.subTitle)}>
+                        Total Scheduled: {c.campaignMetrics.totalScheduled}
+                      </Typography>
                     </Grid>
                     <Grid item>
-                      <Badge
-                        max={9999}
-                        color="primary"
-                        badgeContent={c.campaignMetrics.totalSent}
-                      >
-                        <Typography className={css(style.subTitle)}>
-                          Total Sent
-                        </Typography>
-                      </Badge>
+                      <Typography className={css(style.subTitle)}>
+                        Total Sent: {c.campaignMetrics.totalSent}
+                      </Typography>
                     </Grid>
                     <Grid item>
-                      <Badge
-                        max={9999}
-                        color="primary"
-                        badgeContent={c.campaignMetrics.totalClicked}
-                      >
-                        <Typography className={css(style.subTitle)}>
-                          Total Clicked
-                        </Typography>
-                      </Badge>
+                      <Typography className={css(style.subTitle)}>
+                        Total Clicked: {c.campaignMetrics.totalClicked}
+                      </Typography>
                     </Grid>
                     <Grid item>
-                      <Badge
-                        max={9999}
-                        color="primary"
-                        badgeContent={String(
-                          (100 * c.campaignMetrics.totalClicked) /
-                            (c.campaignMetrics.totalSent &&
-                            c.campaignMetrics.totalSent > 0
-                              ? c.campaignMetrics.totalSent
-                              : 1)
-                        )}
-                      >
-                        <Typography className={css(style.subTitle)}>
-                          % Success
-                        </Typography>
-                      </Badge>
+                      <Typography className={css(style.subTitle)}>
+                        Success: %{String(parseInt(
+                        (100 * c.campaignMetrics.totalClicked) /
+                          (c.campaignMetrics.totalSent &&
+                          c.campaignMetrics.totalSent > 0
+                            ? c.campaignMetrics.totalSent
+                            : 1))
+                      )}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -129,7 +104,7 @@ export default function CampaignList() {
                     <Link
                       data-testid="more_details_btn"
                       href="#"
-                      style={{ cursor: 'pointer', color: '#009688' }}
+                      style={{ cursor: 'pointer', color: '#69ABA4' }}
                       onClick={event => routeToAction(event, c.id)}
                     >
                       More Details
