@@ -239,7 +239,7 @@ const App = () => {
                       <Route path="/sh_complete" component={CheckInComplete} />
                       <Route path="/sh_soon" component={ComingSoon} />
                       {/* activity */}
-                      <Route path="/todo" component={Todo} />
+                      
                       <Route path="/feedback" component={Feedback} />
                       <Route
                         path="/feedback_success"
@@ -314,6 +314,8 @@ const App = () => {
                             component={ShowroomLogs}
                           />
                           <Route path="/notes" component={AllNotes} />
+                          <Route path="/todo" component={Todo} />
+                          <Route path="/my_tasks" component={Todo} />
                           <Route path="/feedbacks" component={FeedbackPage} />
                           <Route path="/event_logs" component={EventLogs} />
 
