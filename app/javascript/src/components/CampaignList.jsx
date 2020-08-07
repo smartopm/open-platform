@@ -11,7 +11,6 @@ import { dateTimeToString, dateToString } from '../components/DateContainer'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import Badge from '@material-ui/core/Badge';
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 
