@@ -485,11 +485,17 @@ export const LabelsQuery = gql`
   }
 `
 
-export const SearchTodos = gql`
-  query {
-    searchNotes(query: String){
-      ...NoteFields
-    }
-  } 
+export const MyTaskQuery = gql`
+    query {
+      myTasks {
+        ...NoteFields
+      }
+    } 
   ${NotesFragment.note}
+`
+
+export const MyTaskCountQuery = gql`
+  {
+    myTasksCount
+  }
 `
