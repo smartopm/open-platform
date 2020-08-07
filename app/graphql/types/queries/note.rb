@@ -24,6 +24,14 @@ module Types::Queries::Note
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :my_tasks, [Types::NoteType], null: false do
+      description 'List of all task assigned to me'
+    end
+
+    field :my_tasks_count, Integer, null: false do
+      description 'List of all task assigned to me'
+    end
   end
 
   def all_notes(offset: 0, limit: 50)
@@ -47,5 +55,17 @@ module Types::Queries::Note
                             .search(query)
                             .order(completed: :desc, created_at: :desc)
                             .limit(limit).offset(offset)
+  end
+
+  def my_tasks
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:current_user].tasks
+  end
+
+  def my_tasks_count
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:current_user].tasks.count
   end
 end
