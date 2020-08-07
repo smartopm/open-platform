@@ -124,7 +124,7 @@ export function Component({
                     ? styles.rightSideIconGuard
                     : styles.rightSideIconAdmin
           )}`}
-           onClick={() => console.log('clicked me')}
+           onClick={() => history.push('/my_tasks')}
         >
           {
             data?.myTasksCount ? <NotificationsIcon /> :<NotificationsNoneOutlinedIcon />

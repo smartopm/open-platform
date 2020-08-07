@@ -66,6 +66,6 @@ module Types::Queries::Note
   def my_tasks_count
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:current_user].tasks.count
+    context[:current_user].tasks.where(completed: false).count
   end
 end

@@ -5,7 +5,7 @@ import {
   Fab,
   Dialog,
   DialogTitle,
-  DialogContent,
+  DialogContent
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
@@ -32,7 +32,9 @@ export default function TodoList({
   saveDate,
   selectedDate,
   handleDateChange,
-  todoAction
+  todoAction,
+  location,
+  taskData
 }) {
   const classes = useStyles()
   const limit = 50
@@ -59,6 +61,7 @@ export default function TodoList({
       }
     }
   )
+
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -153,42 +156,58 @@ export default function TodoList({
         </Dialog>
 
         <div classes={classes.root}>
-          <CenteredContent>
-            <FilterComponent
-              stateList={assignee}
-              list={liteData?.users}
-              handleInputChange={handleAssigneeInputChange}
-              classes={classes}
-              resetFilter={() => setAssignee([])}
-              type="assignee"
-            />
-          </CenteredContent>
+          {location === 'todo' && (
+            <CenteredContent>
+              <FilterComponent
+                stateList={assignee}
+                list={liteData?.users}
+                handleInputChange={handleAssigneeInputChange}
+                classes={classes}
+                resetFilter={() => setAssignee([])}
+                type="assignee"
+              />
+            </CenteredContent>
+          )}
           <br />
           <ul className={css(styles.list)}>
-            {isLoading ? (
-              <Loading />
-            ) : data.flaggedNotes.length ? (
-              data.flaggedNotes.map(note => (
-                <Task 
-                  key={note.id}
-                  note={note}
-                  message={message}
-                  users={liteData?.users}
-                  handleCompleteNote={handleCompleteNote}
-                  assignUnassignUser={assignUnassignUser}
-                  loaded={loaded}
-                  handleDelete={handleDelete}
-                  handleModal={handleModal}
-                  loading={loading}
-                  classes={classes.listItem}
+            {location === 'todo'
+              ? data.flaggedNotes.map(note => (
+                  <Task
+                    key={note.id}
+                    note={note}
+                    message={message}
+                    users={liteData?.users}
+                    handleCompleteNote={handleCompleteNote}
+                    assignUnassignUser={assignUnassignUser}
+                    loaded={loaded}
+                    handleDelete={handleDelete}
+                    handleModal={handleModal}
+                    loading={loading}
+                    classes={classes.listItem}
                   />
-              ))
-            ) : (
-              <span>No Actions yet</span>
-            )}
+                ))
+              : taskData?.myTasks.map(task => (
+                  <Task
+                    key={task.id}
+                    note={task}
+                    message={message}
+                    users={liteData?.users}
+                    handleCompleteNote={handleCompleteNote}
+                    assignUnassignUser={assignUnassignUser}
+                    loaded={loaded}
+                    handleDelete={handleDelete}
+                    handleModal={handleModal}
+                    loading={loading}
+                    classes={classes.listItem}
+                  />
+                ))}
           </ul>
         </div>
 
+        {location === 'my_tasks' && !taskData?.myTasks.length && (
+          <CenteredContent>There are no tasks assigned to you</CenteredContent>
+        )}
+      <br/>
         <CenteredContent>
           <Paginate
             offSet={offset}
@@ -209,7 +228,6 @@ export default function TodoList({
   )
 }
 
-
 const useStyles = makeStyles({
   root: {
     padding: '2px 4px',
@@ -226,7 +244,7 @@ const useStyles = makeStyles({
     position: 'relative',
     listStyle: 'none',
     padding: 15
-  },
+  }
 })
 
 // this should be in one place, basically just one theme
