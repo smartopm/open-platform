@@ -32,8 +32,5 @@ describe('component that centers divs', () => {
     expect(container.queryByText('Note example')).toBeInTheDocument()
     expect(container.queryByText('Johnsc')).toBeInTheDocument()
     expect(container.queryByText('somebody')).toBeInTheDocument()
-    expect(
-      container.queryByText('Associated with somebody')
-    ).toBeInTheDocument()
   })
 })
