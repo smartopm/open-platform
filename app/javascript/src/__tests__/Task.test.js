@@ -21,7 +21,10 @@ describe('component that centers divs', () => {
         handleCompleteNote: jest.fn(),
         loaded: false,
         loading: false,
-        classes: {}
+        classes: {},
+        assignUnassignUser: jest.fn(),
+        handleDelete: jest.fn(),
+        handleModal: jest.fn(),
     }
     const container = render(<Task {...props} />)
     expect(container.queryByText('Note example')).toBeInTheDocument()
@@ -30,3 +33,4 @@ describe('component that centers divs', () => {
     expect(container.queryByText('Associated with somebody')).toBeInTheDocument()
   })
 })
+
