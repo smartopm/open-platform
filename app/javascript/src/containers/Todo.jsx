@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useContext, useEffect } from 'react'
-import { useMutation, useQuery, useLazyQuery } from 'react-apollo'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import { UpdateNote } from '../graphql/mutations'
 import TodoList from '../components/Notes/TodoList'
 import Nav from '../components/Nav'
@@ -17,7 +17,7 @@ export default function Todo({ history }) {
   const [userId, setUserId] = React.useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const location = useLocation()
-  const [loadTask, {loading, error, data}] = useLazyQuery(MyTaskQuery)
+  const [loadTask, {data}] = useLazyQuery(MyTaskQuery)
 
   function todoAction(id, isCompleted) {
     setLoading(true)
