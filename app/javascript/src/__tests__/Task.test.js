@@ -1,5 +1,5 @@
 import React from 'react'
-import { Task } from '../components/Notes/Task'
+import Task from '../components/Notes/Task'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
