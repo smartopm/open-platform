@@ -1,38 +1,29 @@
 import React, { useState, Fragment } from 'react'
-import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from '../Dialog'
 import {
   createMuiTheme,
-  Chip,
-  Divider,
   Fab,
   Dialog,
   DialogTitle,
   DialogContent,
 } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
-import Loading, { Spinner } from '../Loading'
+import Loading from '../Loading'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CancelIcon from '@material-ui/icons/Cancel'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
-import { UserChip } from '../UserChip'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
-import { dateToString } from '../DateContainer'
 import FilterComponent from '../FilterComponent'
+import { Task } from './Task'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -47,9 +38,7 @@ export default function TodoList({
   const limit = 50
   const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
-  const [autoCompleteOpen, setOpen] = useState(false)
   const [open, setModalOpen] = useState(false)
-  const [id, setNoteId] = useState('')
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
 
@@ -79,12 +68,6 @@ export default function TodoList({
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
-  }
-
-  function handleOpenAutoComplete(_event, noteId) {
-    setOpen(!autoCompleteOpen)
-    setNoteId(noteId)
-    setErrorMessage('')
   }
 
   function assignUnassignUser(noteId, userId) {
@@ -186,132 +169,19 @@ export default function TodoList({
               <Loading />
             ) : data.flaggedNotes.length ? (
               data.flaggedNotes.map(note => (
-                <li key={note.id} className={`${css(styles.listItem)}`}>
-                  <div className="custom-control custom-checkbox text">
-                    <input
-                      type="checkbox"
-                      checked={note.completed}
-                      onChange={() =>
-                        handleCompleteNote(note.id, note.completed)
-                      }
-                      className="custom-control-input"
-                      id={`todo-check-${note.id}`}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor={`todo-check-${note.id}`}
-                      style={{
-                        textDecoration: note.completed && 'line-through',
-                        fontSize: 17
-                      }}
-                    >
-                      {note.body} {'  '}
-                      <br />
-                      <br />
-                      <span>
-                        By <i>{note.author.name}</i>
-                      </span>
-                    </label>
-
-                    <label style={{ float: 'right', fontSize: 17 }}>
-                      <span>
-                        Due at:
-                        {note.dueDate
-                          ? `  ${dateToString(note.dueDate)}`
-                          : ' Never'}
-                      </span>
-                    </label>
-                    {'  '}
-                    <EditIcon
-                      style={{
-                        float: 'right',
-                        cursor: 'pointer'
-                      }}
-                      fontSize="small"
-                      color="inherit"
-                      onClick={() => handleModal(note.id)}
-                    />
-
-                    <br />
-                    <span style={{ marginRight: 10 }}>
-                      Created{' '}
-                      <i>
-                        {formatDistance(new Date(note.createdAt), new Date(), {
-                          addSuffix: true,
-                          includeSeconds: true
-                        })}
-                      </i>
-                    </span>
-                    <span style={{ float: 'right' }}>
-                      Associated with <i>{note.user.name}</i>
-                    </span>
-                  </div>
-                  <br />
-                  {/* notes assignees */}
-                  {note.assignees.map(user => (
-                    <UserChip
-                      key={user.id}
-                      user={user}
-                      size="medium"
-                      onDelete={() => handleDelete(user.id, note.id)}
-                    />
-                  ))}
-
-                  {/* loader */}
-                  {loaded && id === note.id ? (
-                    <Spinner />
-                  ) : (
-                    <Chip
-                      key={note.id}
-                      variant="outlined"
-                      label={
-                        autoCompleteOpen && id === note.id
-                          ? 'Close'
-                          : 'Add Assignee'
-                      }
-                      size="medium"
-                      icon={
-                        autoCompleteOpen && id === note.id ? (
-                          <CancelIcon />
-                        ) : (
-                          <AddCircleIcon />
-                        )
-                      }
-                      onClick={event => handleOpenAutoComplete(event, note.id)}
-                    />
-                  )}
-                  {/* error message */}
-                  <br />
-                  {Boolean(message.length) && <span>{message}</span>}
-                  <br />
-                  <br />
-
-                  {/* autocomplete for assignees */}
-                  {// avoid opening autocomplete box for other notes
-                  autoCompleteOpen && id === note.id && (
-                    <Autocomplete
-                      clearOnEscape
-                      clearOnBlur
-                      loading={loading}
-                      id={note.id}
-                      options={liteData.users}
-                      getOptionLabel={option => option.name}
-                      style={{ width: 300 }}
-                      onChange={(_evt, value) => {
-                        // if nothing selected, ignore and move on
-                        if (!value) {
-                          return
-                        }
-                        // assign or unassign the user here
-                        assignUnassignUser(note.id, value.id)
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} placeholder="Name of assignee" />
-                      )}
-                    />
-                  )}
-                  <Divider />
-                </li>
+                <Task 
+                  key={note.id}
+                  note={note}
+                  message={message}
+                  users={liteData?.users}
+                  handleCompleteNote={handleCompleteNote}
+                  assignUnassignUser={assignUnassignUser}
+                  loaded={loaded}
+                  handleDelete={handleDelete}
+                  handleModal={handleModal}
+                  loading={loading}
+                  classes={classes.listItem}
+                  />
               ))
             ) : (
               <span>No Actions yet</span>
@@ -351,7 +221,12 @@ const useStyles = makeStyles({
   formControl: {
     minWidth: 160,
     maxWidth: 300
-  }
+  },
+  listItem: {
+    position: 'relative',
+    listStyle: 'none',
+    padding: 15
+  },
 })
 
 // this should be in one place, basically just one theme
@@ -385,11 +260,6 @@ const styles = StyleSheet.create({
   list: {
     margin: 0,
     padding: 0
-  },
-  listItem: {
-    position: 'relative',
-    listStyle: 'none',
-    padding: 15
   },
   getStartedButton: {
     color: '#FFF',

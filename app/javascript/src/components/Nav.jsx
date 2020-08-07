@@ -116,12 +116,16 @@ export function Component({
             />
           )}
 
-        <Badge badgeContent={data?.myTasksCount} color="secondary"
+        <Badge
+          badgeContent={data?.myTasksCount}
+          color="secondary"
               className={`${css(
                   authState.user.userType === 'security_guard'
                     ? styles.rightSideIconGuard
                     : styles.rightSideIconAdmin
-          )}`}>
+          )}`}
+           onClick={() => console.log('clicked me')}
+        >
           {
             data?.myTasksCount ? <NotificationsIcon /> :<NotificationsNoneOutlinedIcon />
           }
