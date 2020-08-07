@@ -98,6 +98,14 @@ export default function UpdateCampaign({ match }) {
     setLabel([...label, id])
   }
 
+  // TODO:@Dennis add handleDelete function to remove the labels when editing
+  function handleDelete(chipId) {
+    setFormData({
+      ...formData,
+      labels: formData.labels.filter(e => e !== chipId)
+    })
+    console.log(formData.labels)
+  }
   function handleUserIDList(_event, value) {
     let userIds = DelimiterFormatter(value)
     setFormData({
@@ -161,6 +169,7 @@ export default function UpdateCampaign({ match }) {
                     key={label.id}
                     size="medium"
                     label={label.shortDesc}
+                    onDelete={() => handleDelete(label.id)}
                   />
                 )) : null
               }

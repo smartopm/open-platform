@@ -1,12 +1,19 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField, Chip } from '@material-ui/core'
 import { useQuery } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
 
-export default function CampaignLabels({ handleLabelSelect }) {
+export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
 
     const { data } = useQuery(LabelsQuery)
+    const [chipData, setChipData] = useState([])
+
+
+    function handleChipDelete(chipId){
+        handleDelete(chipId)
+        setChipData(chipData.filter(e=> e !== chipId))
+    }
  
     return (
         <div>
@@ -23,6 +30,7 @@ export default function CampaignLabels({ handleLabelSelect }) {
                     onChange={(event, newValue) => {
                         // 2 things are happening here, there is a new value and an autocompleted value
                         // if it is a new value then it is a string otherwise it is an array
+                        setChipData(newValue)
                         if (newValue.some(value => value.id != null)) {
                             // if it is an array then it is wise to get the last item of the array
                             const [lastLabel] = newValue.slice(-1)
@@ -31,12 +39,13 @@ export default function CampaignLabels({ handleLabelSelect }) {
 
                     }}
                     renderTags={(value, getTagProps) => {
-                        return value.map((option, index) => (
+                        return chipData.map((option, index) => (
                             <Chip
                                 key={index}
                                 variant="outlined"
                                 label={option.shortDesc || option}
                                 {...getTagProps({ index })}
+                                onDelete={()=>handleChipDelete(option.id)}
 
                             />
 

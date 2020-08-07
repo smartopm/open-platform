@@ -29,22 +29,32 @@ export default function CampaignForm({ authState }) {
       labels: label.toString()
     }
 
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
+    console.log(campaignData)
 
-    campaign({ variables: campaignData })
-      .then(() =>
-        setIsSubmitted(true)
-      )
-      .catch(err => {
-        setErrorMsg(err.message)
-      })
+    //   setTimeout(() => {
+    //     window.location.reload(false)
+    //   }, 3000)
+
+    //   campaign({ variables: campaignData })
+    //     .then(() =>
+    //       setIsSubmitted(true)
+    //     )
+    //     .catch(err => {
+    //       setErrorMsg(err.message)
+    //     })
+    // 
   }
 
   function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
+    const { id, shortDesc } = lastLabel
+    console.log(shortDesc)
     setLabel([...label, id])
+
+  }
+
+  function handleDelete(labelId) {
+
+    setLabel(label.filter(e=> e !== labelId))
 
   }
   function handleUserIDList(_event, value) {
@@ -105,8 +115,13 @@ export default function CampaignForm({ authState }) {
           />
         </div>
 
+<<<<<<< HEAD
         <div >
           <CampaignLabels handleLabelSelect={handleLabelSelect} />
+=======
+        <div>
+          <CampaignLabels handleLabelSelect={handleLabelSelect} handleDelete={handleDelete} />
+>>>>>>> Adding editing labels to the campaign update page
         </div>
         <br />
         <div>
