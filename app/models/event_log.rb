@@ -11,7 +11,7 @@ class EventLog < ApplicationRecord
   validate :validate_log, :validate_acting_user
 
   default_scope { order(created_at: :desc) }
-  scope :for_days, ->(day_count) { where('created_at > ?', day_count.days.ago) }
+  scope :since_date, ->(date) { where('created_at > ?', date) }
   scope :by_user_activity, -> { where(subject: %w[user_login user_active]) }
   scope :with_acting_user_id, ->(user_ids) { where(acting_user_id: user_ids) }
 
