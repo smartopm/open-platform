@@ -56,14 +56,19 @@ export default function Comments({ comments, refetch, discussionId }) {
     }
     if (!id) return <span />
     // don't show comments on pages that dont have known posts like /news
+    const uploadData = {
+      handleFileUpload: onChange,
+      status,
+      url
+    }
     return (
         <List>
         <CommentBox
           authState={authState}
           data={_data}
           handleCommentChange={handleCommentChange}
-          handleFileUpload={onChange}
-                sendComment={sendComment} />
+          upload={uploadData}
+          sendComment={sendComment} />
             {
                 comments.length >= 1 ? comments.map(comment => (
                     <CommentSection
@@ -113,7 +118,7 @@ export function CommentSection({ user, createdAt, comment, imageUrl }) {
     )
 }
 
-export function CommentBox({ authState, sendComment, data, handleCommentChange, handleFileUpload }) {
+export function CommentBox({ authState, sendComment, data, handleCommentChange, upload }) {
   // in the future instead of using location, pass a prop called isUpload and show upload icon or don't
     const location = useLocation()
     return (
@@ -124,7 +129,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           </ListItemAvatar>
           <TextField
             id="standard-full-width"
-            style={{ width: '95vw', margin: 26, marginTop: 7 }}
+            style={{ width: '95vw', margin: 15, marginTop: 7 }}
             placeholder="Type a comment here"
             value={data.message}
             onChange={handleCommentChange}
@@ -137,32 +142,39 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
               shrink: true
             }}
           />
-            </ListItem>
-            <br/>
+        </ListItem>
+        <br />
         <Grid
           container
           direction="row"
           justify="flex-end"
           alignItems="flex-start"
           className={css(styles.actionBtns)}
-            >
+        >
+          {upload.status === 'DONE' && (
+            <Grid item>
+              <p style={{ marginTop: 5, marginRight: 35 }}>
+                Image uploaded{' '}
+                <a href={upload.url} target="_blank" rel="noreferrer">
+                  Click here to preview
+                </a>
+              </p>
+            </Grid>
+          )}
           <Grid item>
-            {
-              location.pathname.includes('discussion') && (
-                <label style={{ marginTop: 5 }} htmlFor="image">
+            {location.pathname.includes('discussion') && (
+              <label style={{ marginTop: 5 }} htmlFor="image">
                 <input
                   type="file"
                   name="image"
                   id="image"
                   capture
-                  onChange={handleFileUpload}
+                  onChange={upload.handleFileUpload}
                   style={{ display: 'none' }}
                 />
                 <AddPhotoAlternateIcon className={css(styles.uploadIcon)} />
               </label>
-              )
-            }
-
+            )}
           </Grid>
           <Grid item>
             <Button
@@ -191,7 +203,7 @@ CommentBox.propType = {
     authState: PropTypes.object.isRequired,
     sendComment: PropTypes.func.isRequired,
     handleCommentChange: PropTypes.func.isRequired,
-    handleFileUpload: PropTypes.func,
+    upload: PropTypes.object,
     data: PropTypes.object.isRequired,
 }
 
