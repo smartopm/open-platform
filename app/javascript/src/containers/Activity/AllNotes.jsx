@@ -37,11 +37,11 @@ export default function Notes() {
               <hr />
               <p>
                 <b>
-                  <a href={`/user/${note.author.id}`}>{note.author.name}</a>{' '}
+                  <a style={{color: 'black'}} href={`/user/${note.author.id}`}>{note.author.name}</a>{' '}
                 </b>{' '}
                 created a note for{' '}
                 <b>
-                  <a href={`/user/${note.user.id}`}>{note.user.name}</a>
+                  <a style={{color: 'black'}} href={`/user/${note.user.id}`}>{note.user.name}</a>
                 </b>{' '}
                 on{' '}
                 <i style={{ color: 'grey' }}>

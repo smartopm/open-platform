@@ -245,7 +245,7 @@ export function IndexComponent({
     <div>
       <div
         style={{
-          backgroundColor: '#25c0b0'
+          backgroundColor: '#69ABA4'
         }}
       >
         <Nav menuButton="back" navName="Log Book" boxShadow={'none'} backTo="/" />

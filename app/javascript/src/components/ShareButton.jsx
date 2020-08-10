@@ -99,7 +99,7 @@ export function ShareButton({ url, styles }) {
                 >
                     <SnackbarContent
                         style={{
-                            backgroundColor: '#25c0b0',
+                            backgroundColor: '#69ABA4',
                         }}
                         message={
                             <div className="row d-flex m-20">
@@ -131,7 +131,7 @@ ShareButton.propTypes = {
 
 export const styles = StyleSheet.create({
     appBar: {
-        backgroundColor: '#25c0b0',
+        backgroundColor: '#69ABA4',
         minHeight: '50px'
     },
     getStartedButton: {
@@ -139,8 +139,10 @@ export const styles = StyleSheet.create({
         height: 51,
         boxShadow: "none",
         position: 'fixed',
+        backgroundColor: '#69ABA4',
         bottom: 20,
         right: 57,
         marginLeft: '30%',
     },
+
 })

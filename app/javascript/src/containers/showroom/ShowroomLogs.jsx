@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 
 const StyledTableCell = withStyles(theme => ({
     head: {
-        backgroundColor: '#25c0b0',
+        backgroundColor: '#69ABA4',
         color: theme.palette.common.white,
         fontSize: 15,
         textAlign: 'center'
@@ -78,7 +78,7 @@ export default function ShowroomLogs() {
         <div>
             <div
                 style={{
-                    backgroundColor: "#25c0b0"
+                    backgroundColor: "#69ABA4"
                 }}
             >
                 <Nav menuButton="back" navName="Showroom Logs" boxShadow={"none"} backTo="/" />

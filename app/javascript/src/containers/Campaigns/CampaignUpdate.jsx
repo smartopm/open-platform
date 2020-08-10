@@ -226,7 +226,7 @@ export default function UpdateCampaign({ match }) {
 }
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF',
     width: '30%',
     height: 51,

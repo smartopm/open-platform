@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     'font-size': '1.5em'
   },
   navBar: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     minHeight: '50px'
   },
   buttonLeft: {

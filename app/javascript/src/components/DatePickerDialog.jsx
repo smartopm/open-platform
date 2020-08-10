@@ -13,18 +13,18 @@ const theme = createMuiTheme({
     overrides: {
         MuiPickersToolbar: {
             toolbar: {
-                backgroundColor: '#25c0b0',
+                backgroundColor: '#69ABA4',
             },
         },
         MuiPickersDay: {
             day: {
-                color: '#25c0b0',
+                color: '#69ABA4',
             },
             daySelected: {
-                backgroundColor: '#25c0b0',
+                backgroundColor: '#69ABA4',
             },
             current: {
-                color: '#25c0b0',
+                color: '#69ABA4',
             },
         },
     }
