@@ -37,6 +37,7 @@ RSpec.describe Mutations::Discussion do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
+                                                site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'discussionCreate', 'discussion', 'id')).not_to be_nil
       expect(result.dig('data', 'discussionCreate', 'discussion', 'title')).to include 'Welcome'
@@ -56,6 +57,7 @@ RSpec.describe Mutations::Discussion do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: non_admin,
+                                                site_community: non_admin.community,
                                               }).as_json
       expect(result.dig('data', 'discussionCreate', 'discussion', 'id')).to be_nil
       expect(result.dig('data', 'discussionCreate', 'discussion', 'userId')).to be_nil
@@ -73,6 +75,7 @@ RSpec.describe Mutations::Discussion do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
+                                                site_community: current_user.community,
                                               }).as_json
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
@@ -88,6 +91,7 @@ RSpec.describe Mutations::Discussion do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: guard,
+                                                site_community: guard.community,
                                               }).as_json
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
