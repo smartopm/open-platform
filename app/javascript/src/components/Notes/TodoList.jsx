@@ -5,7 +5,8 @@ import {
   Fab,
   Dialog,
   DialogTitle,
-  DialogContent
+  DialogContent,
+  Grid
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
@@ -24,7 +25,7 @@ import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import FilterComponent from '../FilterComponent'
 import Task from './Task'
-
+import Cards from '../AnalyticsCard'
 // component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
@@ -170,8 +171,50 @@ export default function TodoList({
             </CenteredContent>
           )}
           <br />
+          <Grid
+              container
+              spacing={3}
+            > 
+            <Grid
+            item
+            lg={3}
+            sm={6}
+            xl={3}
+            xs={12}
+          >
+            <Cards />
+          </Grid>
+          <Grid
+            item
+            lg={3}
+            sm={6}
+            xl={3}
+            xs={12}
+          >
+            <Cards />
+          </Grid>
+          <Grid
+            item
+            lg={3}
+            sm={6}
+            xl={3}
+            xs={12}
+          >
+            <Cards />
+          </Grid>
+          <Grid
+            item
+            lg={3}
+            sm={6}
+            xl={3}
+            xs={12}
+          >
+            <Cards />
+          </Grid>
+            </Grid>
           <ul className={css(styles.list)}>
             {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
+          
                   <Task
                     key={note.id}
                     note={note}
