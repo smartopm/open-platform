@@ -97,12 +97,12 @@ export function CommentSection({ user, createdAt, comment, imageUrl }) {
                 primary={
                     <React.Fragment>
                         <span >
-                          <Link
-                            style={{ cursor: 'pointer', textDecoration: 'none' }}
-                            to={`/user/${user.id}`}
-                          >
-                            {user.name}
-                          </Link>
+                        <Link
+                          style={{ cursor: 'pointer', textDecoration: 'none' }}
+                          to={`/user/${user.id}`}
+                        >
+                          {user.name}
+                        </Link>
                             <span className={css(styles.timeStamp)}>
                                 <DateContainer date={createdAt} />
                             </span>
@@ -119,7 +119,7 @@ export function CommentSection({ user, createdAt, comment, imageUrl }) {
                           />
                           <br />
                           <br />
-                          {imageUrl && <img src={imageUrl} className='img-responsive' alt={`image for ${comment}`} /> }
+                          {imageUrl && <img src={imageUrl} className='img-responsive img-thumbnail' alt={`image for ${comment}`} /> }
                         </span>
                     </React.Fragment>
                 }
@@ -180,7 +180,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
                   onChange={upload.handleFileUpload}
                   style={{ display: 'none' }}
                 />
-                <AddPhotoAlternateIcon className={css(styles.uploadIcon)} />
+                <AddPhotoAlternateIcon color="primary" className={css(styles.uploadIcon)} />
               </label>
             )}
           </Grid>
@@ -191,7 +191,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
               data-testid="comment_button"
               disabled={data.isLoading}
             >
-              Send
+              {location.pathname.includes('message') ?  'Send' : 'Comment'}
             </Button>
           </Grid>
         </Grid>
@@ -227,33 +227,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#737380'
     },
-    photoUpload: {
-        float: 'right',
-        marginRight: 99,
-        marginTop: -37
-      },
-      idUpload: {
-        width: '80%',
-        padding: '60px'
-      },
-      fileInput: {
-        width: 0.1,
-        height: 0.1,
-        opacity: 0,
-        overflow: 'hidden',
-        position: 'absolute',
-        zIndex: -1,
-        cursor: 'pointer'
-      },
-      uploadedImage: {
-        width: '40%',
-        borderRadius: 8
-      },
       actionBtns: {
           marginTop: -29,
           marginLeft: -29
       },
       uploadIcon: {
-        cursor: 'pointer' 
+        cursor: 'pointer',
+        // color: '#b4b8b7'
       }
 })
