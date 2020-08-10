@@ -70,15 +70,15 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    // setTimeout(() => {
-    //   window.location.reload(false)
-    // }, 3000)
-    // if (batchTime !== '') {
-    //   setFormData({
-    //     ...formData,
-    //     batchTime: batchTime
-    //   })
-    // }
+    setTimeout(() => {
+      window.location.reload(false)
+    }, 3000)
+    if (batchTime !== '') {
+      setFormData({
+        ...formData,
+        batchTime: batchTime
+      })
+    }
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -90,13 +90,13 @@ export default function UpdateCampaign({ match }) {
 
     console.log(batchTime)
 
-    // campaign({ variables: campaignData })
-    //   .then(() => {
-    //     setIsSubmitted(true)
-    //   })
-    //   .catch(err => {
-    //     setErrorMsg(err.message)
-    //   })
+    campaign({ variables: campaignData })
+      .then(() => {
+        setIsSubmitted(true)
+      })
+      .catch(err => {
+        setErrorMsg(err.message)
+      })
   }
 
   function handleLabelSelect(lastLabel) {
