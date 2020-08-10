@@ -1,5 +1,5 @@
 import React from 'react'
-import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List } from '@material-ui/core'
+import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { useParams } from 'react-router'
 import PropTypes from 'prop-types'
@@ -10,6 +10,9 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
+// import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+
 
 
 export default function Comments({ comments, refetch, discussionId }) {
@@ -100,37 +103,75 @@ export function CommentSection({ user, createdAt, comment }) {
 
 export function CommentBox({ authState, sendComment, data, handleCommentChange }) {
     return (
-        <>
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar user={authState.user} />
-                </ListItemAvatar>
-                <TextField
-                    id="standard-full-width"
-                    style={{ width: '95vw', margin: 26, marginTop: 7 }}
-                    placeholder="Type a comment here"
-                    value={data.message}
-                    onChange={handleCommentChange}
-                    multiline
-                    rows={3}
-                    margin="normal"
-                    variant="outlined"
-                    inputProps={{ "data-testid": "comment_content" }}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
+      <>
+        <ListItem alignItems="flex-start">
+          <ListItemAvatar>
+            <Avatar user={authState.user} />
+          </ListItemAvatar>
+          <TextField
+            id="standard-full-width"
+            style={{ width: '95vw', margin: 26, marginTop: 7 }}
+            placeholder="Type a comment here"
+            value={data.message}
+            onChange={handleCommentChange}
+            multiline
+            rows={3}
+            margin="normal"
+            variant="outlined"
+            inputProps={{ 'data-testid': 'comment_content' }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
             </ListItem>
-            <Button
-                color="primary"
-                onClick={sendComment}
-                data-testid="comment_button"
-                disabled={data.isLoading}
-                style={{ marginTop: -37, marginRight: 34, float: 'right' }}
+            <br/>
+        <Grid
+          container
+          direction="row"
+          justify="flex-end"
+          alignItems="flex-start"
+          className={css(styles.actionBtns)}
             >
-                Send
+          <Grid item>
+            <label style={{ marginTop: 5 }} htmlFor="image">
+              <input
+                type="file"
+                name="image"
+                id="image"
+                capture
+                style={{ display: 'none' }}
+              />
+              <AddPhotoAlternateIcon className={css(styles.uploadIcon)} />
+            </label>
+          </Grid>
+          <Grid item>
+            <Button
+              color="primary"
+              onClick={sendComment}
+              data-testid="comment_button"
+              disabled={data.isLoading}
+            >
+              Send
             </Button>
-        </>
+          </Grid>
+
+        </Grid>
+
+        {/* <span
+            className={`${css(styles.photoUpload)}`}
+            >
+                <input
+                  type="file"
+                  accepts="image/*"
+                  capture
+                  id="file"
+                  onChange={e => console.log(e)}
+                  className={`${css(styles.fileInput)}`}
+                />
+                
+                <label htmlFor="file">Attach Image</label>
+              </span> */}
+      </>
     )
 }
 
@@ -161,4 +202,33 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#737380'
     },
+    photoUpload: {
+        float: 'right',
+        marginRight: 99,
+        marginTop: -37
+      },
+      idUpload: {
+        width: '80%',
+        padding: '60px'
+      },
+      fileInput: {
+        width: 0.1,
+        height: 0.1,
+        opacity: 0,
+        overflow: 'hidden',
+        position: 'absolute',
+        zIndex: -1,
+        cursor: 'pointer'
+      },
+      uploadedImage: {
+        width: '40%',
+        borderRadius: 8
+      },
+      actionBtns: {
+          marginTop: -29,
+          marginLeft: -29
+      },
+      uploadIcon: {
+        cursor: 'pointer' 
+      }
 })
