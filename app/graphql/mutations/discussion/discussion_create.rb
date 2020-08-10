@@ -2,11 +2,17 @@
 
 module Mutations
   module Discussion
+
+    ATTACHMENTS = {
+      image_blob_id: :avatar,
+    }.freeze
+
     # Create a new Discussion
     class DiscussionCreate < BaseMutation
       argument :title, String, required: true
       argument :description, String, required: false
       argument :post_id, String, required: false
+      argument :image_blob_id, String, required: false
 
       field :discussion, Types::DiscussionType, null: true
 
@@ -18,11 +24,11 @@ module Mutations
           raise GraphQL::ExecutionError, 'Not authorized to create post discussions'
         end
 
-        discussion = context[:current_user].community.discussions.new
+        discussion = context[:site_community].discussions.new(vals.except(*ATTACHMENTS.keys))
         discussion.user_id = context[:current_user].id
-        discussion.post_id = vals[:post_id]
-        discussion.title = vals[:title]
-        discussion.description = vals[:description]
+
+        attach_avatars(disc, vals)
+
         discussion.save!
 
         return { discussion: discussion } if discussion.persisted?
@@ -31,6 +37,12 @@ module Mutations
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+
+      def attach_avatars(disc, vals)
+        ATTACHMENTS.each_pair do |key, attr|
+          disc.send(attr).attach(vals[key]) if vals[key]
+        end
+      end
 
       def authorized?(_vals)
         current_user = context[:current_user]
