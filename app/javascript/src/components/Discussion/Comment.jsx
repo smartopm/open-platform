@@ -13,6 +13,7 @@ import { CommentMutation } from '../../graphql/mutations'
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { useFileUpload } from '../../graphql/useFileUpload'
 import { findLinkAndReplace } from '../../utils/helpers'
+import { Link } from 'react-router-dom'
 
 
 
@@ -96,7 +97,12 @@ export function CommentSection({ user, createdAt, comment, imageUrl }) {
                 primary={
                     <React.Fragment>
                         <span >
+                          <Link
+                            style={{ cursor: 'pointer', textDecoration: 'none' }}
+                            to={`/user/${user.id}`}
+                          >
                             {user.name}
+                          </Link>
                             <span className={css(styles.timeStamp)}>
                                 <DateContainer date={createdAt} />
                             </span>
