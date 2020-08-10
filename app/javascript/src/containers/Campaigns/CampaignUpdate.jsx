@@ -45,7 +45,7 @@ export default function UpdateCampaign({ match }) {
     labels: []
 
   })
-  const [batchTime, setBatchTime] = useState('')
+  const [batchTime, setBatchTime] = useState(new Date().toISOString())
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -70,15 +70,15 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
-    if (batchTime !== '') {
-      setFormData({
-        ...formData,
-        batchTime: batchTime
-      })
-    }
+    // setTimeout(() => {
+    //   window.location.reload(false)
+    // }, 3000)
+    // if (batchTime !== '') {
+    //   setFormData({
+    //     ...formData,
+    //     batchTime: batchTime
+    //   })
+    // }
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -88,13 +88,15 @@ export default function UpdateCampaign({ match }) {
       labels: label.toString()
     }
 
-    campaign({ variables: campaignData })
-      .then(() => {
-        setIsSubmitted(true)
-      })
-      .catch(err => {
-        setErrorMsg(err.message)
-      })
+    console.log(batchTime)
+
+    // campaign({ variables: campaignData })
+    //   .then(() => {
+    //     setIsSubmitted(true)
+    //   })
+    //   .catch(err => {
+    //     setErrorMsg(err.message)
+    //   })
   }
 
   function handleLabelSelect(lastLabel) {
@@ -174,10 +176,10 @@ export default function UpdateCampaign({ match }) {
           <br />
           <div style={{ paddingBottom: '3%' }}>
             <DateAndTimePickers
-              label="Start Time"
+              label="Batch Time"
               required
               selectedDateTime={batchTime}
-              handleDateChange={e => setBatchTime(e)}
+              handleDateChange={setBatchTime}
             />
           </div>
           <div>
