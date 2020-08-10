@@ -12,6 +12,7 @@ import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { useFileUpload } from '../../graphql/useFileUpload'
+import { findLinkAndReplace } from '../../utils/helpers'
 
 
 
@@ -105,10 +106,14 @@ export function CommentSection({ user, createdAt, comment, imageUrl }) {
                 secondary={
                     <React.Fragment>
                         <span data-testid="comment" >
-                      {comment}
-                      <br />
-                      <br />
-                      {imageUrl && <img src={imageUrl} className='img-responsive' alt={`image for ${comment}`} /> }
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: findLinkAndReplace(comment)
+                            }}
+                          />
+                          <br />
+                          <br />
+                          {imageUrl && <img src={imageUrl} className='img-responsive' alt={`image for ${comment}`} /> }
                         </span>
                     </React.Fragment>
                 }
@@ -154,10 +159,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           {upload.status === 'DONE' && (
             <Grid item>
               <p style={{ marginTop: 5, marginRight: 35 }}>
-                Image uploaded{' '}
-                <a href={upload.url} target="_blank" rel="noreferrer">
-                  Click here to preview
-                </a>
+                Image uploaded
               </p>
             </Grid>
           )}
