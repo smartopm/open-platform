@@ -17,7 +17,7 @@ module Mutations
       def resolve(vals)
         comment = context[:current_user].comments.new(
           discussion_id: vals[:discussion_id],
-          content: vals[:content]
+          content: vals[:content],
         )
         attach_image(comment, vals)
         comment.save!

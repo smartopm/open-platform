@@ -11,7 +11,6 @@ module Mutations
       field :discussion, Types::DiscussionType, null: true
 
       # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         # TODO: ==> Find a better way of doing this
         if vals[:post_id] && context[:current_user].user_type != 'admin'
@@ -28,7 +27,6 @@ module Mutations
         raise GraphQL::ExecutionError, discussion.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
 
       def authorized?(_vals)
         current_user = context[:current_user]
