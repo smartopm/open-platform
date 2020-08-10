@@ -1,7 +1,7 @@
 import React from 'react'
 import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
-import { useParams } from 'react-router'
+import { useMutation, useApolloClient } from 'react-apollo'
+import { useParams, useLocation } from 'react-router'
 import PropTypes from 'prop-types'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
@@ -10,8 +10,8 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
-// import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import { useFileUpload } from '../../graphql/useFileUpload'
 
 
 
@@ -24,8 +24,12 @@ export default function Comments({ comments, refetch, discussionId }) {
     const authState = useContext(Context)
     const { id } = useParams()
     const [_data, setData] = useState(init)
-    const [createComment] = useMutation(CommentMutation)
-
+  const [createComment] = useMutation(CommentMutation)
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+// use the status and url to display the uploaded image
+  console.log({status, url})
     function handleCommentChange() {
         setData({ ..._data, message: event.target.value })
     }
@@ -39,7 +43,8 @@ export default function Comments({ comments, refetch, discussionId }) {
         createComment({
             variables: {
                 content: _data.message,
-                discussionId
+                discussionId,
+                imageBlobId: signedBlobId
             }
         })
         .then(() => {
@@ -53,10 +58,11 @@ export default function Comments({ comments, refetch, discussionId }) {
     // don't show comments on pages that dont have known posts like /news
     return (
         <List>
-            <CommentBox
-                authState={authState}
-                data={_data}
-                handleCommentChange={handleCommentChange}
+        <CommentBox
+          authState={authState}
+          data={_data}
+          handleCommentChange={handleCommentChange}
+          handleFileUpload={onChange}
                 sendComment={sendComment} />
             {
                 comments.length >= 1 ? comments.map(comment => (
@@ -101,7 +107,9 @@ export function CommentSection({ user, createdAt, comment }) {
     )
 }
 
-export function CommentBox({ authState, sendComment, data, handleCommentChange }) {
+export function CommentBox({ authState, sendComment, data, handleCommentChange, handleFileUpload }) {
+  // in the future instead of using location, pass a prop called isUpload and show upload icon or don't
+    const location = useLocation()
     return (
       <>
         <ListItem alignItems="flex-start">
@@ -133,16 +141,22 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange }
           className={css(styles.actionBtns)}
             >
           <Grid item>
-            <label style={{ marginTop: 5 }} htmlFor="image">
-              <input
-                type="file"
-                name="image"
-                id="image"
-                capture
-                style={{ display: 'none' }}
-              />
-              <AddPhotoAlternateIcon className={css(styles.uploadIcon)} />
-            </label>
+            {
+              location.pathname.includes('discussion') && (
+                <label style={{ marginTop: 5 }} htmlFor="image">
+                <input
+                  type="file"
+                  name="image"
+                  id="image"
+                  capture
+                  onChange={handleFileUpload}
+                  style={{ display: 'none' }}
+                />
+                <AddPhotoAlternateIcon className={css(styles.uploadIcon)} />
+              </label>
+              )
+            }
+
           </Grid>
           <Grid item>
             <Button
@@ -154,23 +168,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange }
               Send
             </Button>
           </Grid>
-
         </Grid>
-
-        {/* <span
-            className={`${css(styles.photoUpload)}`}
-            >
-                <input
-                  type="file"
-                  accepts="image/*"
-                  capture
-                  id="file"
-                  onChange={e => console.log(e)}
-                  className={`${css(styles.fileInput)}`}
-                />
-                
-                <label htmlFor="file">Attach Image</label>
-              </span> */}
       </>
     )
 }
@@ -187,6 +185,7 @@ CommentBox.propType = {
     authState: PropTypes.object.isRequired,
     sendComment: PropTypes.func.isRequired,
     handleCommentChange: PropTypes.func.isRequired,
+    handleFileUpload: PropTypes.func,
     data: PropTypes.object.isRequired,
 }
 
