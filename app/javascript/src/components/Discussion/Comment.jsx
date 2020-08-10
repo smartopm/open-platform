@@ -30,9 +30,8 @@ export default function Comments({ comments, refetch, discussionId }) {
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
-// use the status and url to display the uploaded image
-  console.log({status, url})
-    function handleCommentChange() {
+
+  function handleCommentChange() {
         setData({ ..._data, message: event.target.value })
     }
 
