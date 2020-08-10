@@ -70,7 +70,9 @@ export default function Comments({ comments, refetch, discussionId }) {
                         key={comment.id}
                         user={comment.user}
                         createdAt={comment.createdAt}
-                        comment={comment.content} />
+                        comment={comment.content}
+                        imageUrl={comment.imageUrl}
+                  />
                 )) : <p className="text-center">Be the first to comment on this post</p>
             }
         </List>
@@ -78,7 +80,7 @@ export default function Comments({ comments, refetch, discussionId }) {
 }
 
 
-export function CommentSection({ user, createdAt, comment }) {
+export function CommentSection({ user, createdAt, comment, imageUrl }) {
     return (
         <ListItem alignItems="flex-start" >
             <ListItemAvatar style={{ marginRight: 8 }}>
@@ -98,11 +100,15 @@ export function CommentSection({ user, createdAt, comment }) {
                 secondary={
                     <React.Fragment>
                         <span data-testid="comment" >
-                            {comment}
+                      {comment}
+                      <br />
+                      <br />
+                      {imageUrl && <img src={imageUrl} className='img-responsive' alt={`image for ${comment}`} /> }
                         </span>
                     </React.Fragment>
                 }
-            />
+        />
+       
         </ListItem>
     )
 }
