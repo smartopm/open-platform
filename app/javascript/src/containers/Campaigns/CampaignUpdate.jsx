@@ -74,15 +74,15 @@ export default function UpdateCampaign({ match }) {
       window.location.reload(false)
     }, 3000)
    
-      setFormData({
-        ...formData,
-        batchTime: batchTime
-      })
+      // setFormData({
+      //   ...formData,
+      //   batchTime: batchTime
+      // })
     const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      batchTime: formData.batchTime,
+      batchTime: batchTime,
       userIdList: formData.userIdList,
       labels: label.toString()
     }
