@@ -1,18 +1,19 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useContext } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import { ModalDialog } from '../Dialog'
 import {
-  createMuiTheme,
   Chip,
   Divider,
   Fab,
   Dialog,
   DialogTitle,
   DialogContent,
+  Grid,
+  Button,
+  Typography
 } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { formatDistance } from 'date-fns'
 import { StyleSheet, css } from 'aphrodite'
 import Loading, { Spinner } from '../Loading'
 import {
@@ -33,6 +34,7 @@ import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import { dateToString } from '../DateContainer'
 import FilterComponent from '../FilterComponent'
+import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -52,6 +54,7 @@ export default function TodoList({
   const [id, setNoteId] = useState('')
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
+  const theme = useContext(ThemeContext)
 
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
@@ -119,7 +122,7 @@ export default function TodoList({
 
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
-
+  
   return (
     <Fragment>
       <div className="container" data-testid="todo-container">
@@ -187,131 +190,161 @@ export default function TodoList({
             ) : data.flaggedNotes.length ? (
               data.flaggedNotes.map(note => (
                 <li key={note.id} className={`${css(styles.listItem)}`}>
-                  <div className="custom-control custom-checkbox text">
-                    <input
-                      type="checkbox"
-                      checked={note.completed}
-                      onChange={() =>
-                        handleCompleteNote(note.id, note.completed)
-                      }
-                      className="custom-control-input"
-                      id={`todo-check-${note.id}`}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor={`todo-check-${note.id}`}
-                      style={{
-                        textDecoration: note.completed && 'line-through',
-                        fontSize: 17
-                      }}
-                    >
-                      {note.body} {'  '}
-                      <br />
-                      <br />
-                      <span>
-                        By <i>{note.author.name}</i>
-                      </span>
-                    </label>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Grid
+                        container
+                        direction="column"
+                        justify="flex-start"
+                        alignItems="baseline"
+                      >
+                        <Grid
+                          container
+                          direction="row"
+                          justify="flex-end"
+                          alignItems="baseline"
+                        >
+                          <EditIcon
+                            style={{
+                              float: 'right',
+                              cursor: 'pointer'
+                            }}
+                            fontSize="small"
+                            color="inherit"
+                            onClick={() => handleModal(note.id)}
+                          />
+                          <label style={{ fontSize: 17 }}>
+                            <Typography  variant="subtitle1" gutterBottom>
+                              Due at:
+                              {note.dueDate
+                                ? `  ${dateToString(note.dueDate)}`
+                                : ' Never'}
+                            </Typography>
+                          </label>
+                        </Grid>
+                        <Typography variant="subtitle1" gutterBottom>
+                          Title:&nbsp;<i>{note.body}</i>
+                        </Typography>
+                        <Typography variant="body2" gutterBottom>
+                          Associated with:&nbsp;<i>{note.user.name}</i>
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="center"
+                      >
+                        {note.assignees.map(user => (
+                          <UserChip
+                            key={user.id}
+                            user={user}
+                            size="medium"
+                            onDelete={() => handleDelete(user.id, note.id)}
+                          />
+                        ))}
 
-                    <label style={{ float: 'right', fontSize: 17 }}>
-                      <span>
-                        Due at:
-                        {note.dueDate
-                          ? `  ${dateToString(note.dueDate)}`
-                          : ' Never'}
-                      </span>
-                    </label>
-                    {'  '}
-                    <EditIcon
-                      style={{
-                        float: 'right',
-                        cursor: 'pointer'
-                      }}
-                      fontSize="small"
-                      color="inherit"
-                      onClick={() => handleModal(note.id)}
-                    />
-
-                    <br />
-                    <span style={{ marginRight: 10 }}>
-                      Created{' '}
-                      <i>
-                        {formatDistance(new Date(note.createdAt), new Date(), {
-                          addSuffix: true,
-                          includeSeconds: true
-                        })}
-                      </i>
-                    </span>
-                    <span style={{ float: 'right' }}>
-                      Associated with <i>{note.user.name}</i>
-                    </span>
-                  </div>
-                  <br />
-                  {/* notes assignees */}
-                  {note.assignees.map(user => (
-                    <UserChip
-                      key={user.id}
-                      user={user}
-                      size="medium"
-                      onDelete={() => handleDelete(user.id, note.id)}
-                    />
-                  ))}
-
-                  {/* loader */}
-                  {loaded && id === note.id ? (
-                    <Spinner />
-                  ) : (
-                    <Chip
-                      key={note.id}
-                      variant="outlined"
-                      label={
-                        autoCompleteOpen && id === note.id
-                          ? 'Close'
-                          : 'Add Assignee'
-                      }
-                      size="medium"
-                      icon={
-                        autoCompleteOpen && id === note.id ? (
-                          <CancelIcon />
+                        {/* loader */}
+                        {loaded && id === note.id ? (
+                          <Spinner />
                         ) : (
-                          <AddCircleIcon />
-                        )
-                      }
-                      onClick={event => handleOpenAutoComplete(event, note.id)}
-                    />
-                  )}
-                  {/* error message */}
-                  <br />
-                  {Boolean(message.length) && <span>{message}</span>}
-                  <br />
-                  <br />
-
-                  {/* autocomplete for assignees */}
-                  {// avoid opening autocomplete box for other notes
-                  autoCompleteOpen && id === note.id && (
-                    <Autocomplete
-                      clearOnEscape
-                      clearOnBlur
-                      loading={loading}
-                      id={note.id}
-                      options={liteData.users}
-                      getOptionLabel={option => option.name}
-                      style={{ width: 300 }}
-                      onChange={(_evt, value) => {
-                        // if nothing selected, ignore and move on
-                        if (!value) {
-                          return
-                        }
-                        // assign or unassign the user here
-                        assignUnassignUser(note.id, value.id)
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} placeholder="Name of assignee" />
-                      )}
-                    />
-                  )}
+                          <Chip
+                            key={note.id}
+                            variant="outlined"
+                            label={
+                              autoCompleteOpen && id === note.id
+                                ? 'Close'
+                                : 'Add Assignee'
+                            }
+                            size="medium"
+                            icon={
+                              autoCompleteOpen && id === note.id ? (
+                                <CancelIcon />
+                              ) : (
+                                <AddCircleIcon />
+                              )
+                            }
+                            onClick={event =>
+                              handleOpenAutoComplete(event, note.id)
+                            }
+                          />
+                        )}
+                        {/* error message */}
+                        <br />
+                        {Boolean(message.length) && <span>{message}</span>}
+                        {/* autocomplete for assignees */}
+                        {// avoid opening autocomplete box for other notes
+                        autoCompleteOpen && id === note.id && (
+                          <Autocomplete
+                            clearOnEscape
+                            clearOnBlur
+                            loading={loading}
+                            id={note.id}
+                            options={liteData.users}
+                            getOptionLabel={option => option.name}
+                            style={{ width: 300 }}
+                            onChange={(_evt, value) => {
+                              // if nothing selected, ignore and move on
+                              if (!value) {
+                                return
+                              }
+                              // assign or unassign the user here
+                              assignUnassignUser(note.id, value.id)
+                            }}
+                            renderInput={params => (
+                              <TextField
+                                {...params}
+                                placeholder="Name of assignee"
+                              />
+                            )}
+                          />
+                        )}
+                      </Grid>
+                      <Grid
+                        container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-end"
+                      >
+                        <Typography variant="caption" display="block" gutterBottom>
+                          Created By:&nbsp;<i>{note.author.name}</i>&nbsp;
+                          On:&nbsp;<i>{dateToString(note.createdAt)}</i>
+                        </Typography>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="flex-end"
+                          alignItems="flex-end"
+                        >
+                          {note.completed?(
+                          <Button
+                          variant="contained"
+                          style={{ marginBottom: 3,color: '#FFF'}}
+                          onClick={() =>
+                            handleCompleteNote(note.id, note.completed)
+                          }
+                          
+                        >
+                          Complete
+                        </Button>
+                          ):(
+                            <Button
+                            variant="contained"
+                            style={{backgroundColor: theme.primaryColor, marginBottom: 3,color: '#FFF',}}
+                            onClick={() =>
+                              handleCompleteNote(note.id, note.completed)
+                            }
+                          >
+                            Mark as complete
+                          </Button>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                   <Divider />
                 </li>
+
               ))
             ) : (
               <span>No Actions yet</span>
@@ -339,7 +372,6 @@ export default function TodoList({
   )
 }
 
-
 const useStyles = makeStyles({
   root: {
     padding: '2px 4px',
@@ -353,34 +385,6 @@ const useStyles = makeStyles({
     maxWidth: 300
   }
 })
-
-// this should be in one place, basically just one theme
-const theme = createMuiTheme({
-  overrides: {
-    MuiPickersToolbar: {
-      toolbar: {
-        backgroundColor: '#25c0b0'
-      }
-    },
-    MuiPickersDay: {
-      day: {
-        color: '#25c0b0'
-      },
-      daySelected: {
-        backgroundColor: '#25c0b0'
-      },
-      current: {
-        color: '#25c0b0'
-      }
-    },
-    MuiPickersModal: {
-      dialogAction: {
-        color: '#25c0b0'
-      }
-    }
-  }
-})
-
 const styles = StyleSheet.create({
   list: {
     margin: 0,
