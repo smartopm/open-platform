@@ -3,6 +3,8 @@ import { CommentBox, CommentSection } from '../components/Discussion/Comment'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+
 const commentBtn = jest.fn()
 const props = {
     authState: { user: { imageUrl: "someimagesource" } },
