@@ -73,12 +73,11 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
-    if (batchTime !== '') {
+   
       setFormData({
         ...formData,
         batchTime: batchTime
       })
-    }
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -216,7 +215,7 @@ export default function UpdateCampaign({ match }) {
           </div>
           <br />
           <div className="d-flex row justify-content-center">
-            {Boolean(errorMsg.length) && (
+            {Boolean(errorMsg) && (
               <p className="text-danger text-center">{saniteError(errorMsg)}</p>
             )}
             {isSubmitted && <p>Campaign has been submitted</p>}

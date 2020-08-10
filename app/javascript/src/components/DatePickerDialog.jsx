@@ -5,7 +5,6 @@ import { createMuiTheme } from '@material-ui/core'
 import {
     KeyboardDatePicker,
     MuiPickersUtilsProvider,
-    DateTimePicker,
     KeyboardDateTimePicker
 } from '@material-ui/pickers'
 
