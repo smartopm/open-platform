@@ -74,10 +74,7 @@ export default function UpdateCampaign({ match }) {
       window.location.reload(false)
     }, 3000)
    
-      // setFormData({
-      //   ...formData,
-      //   batchTime: batchTime
-      // })
+ 
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -86,8 +83,6 @@ export default function UpdateCampaign({ match }) {
       userIdList: formData.userIdList,
       labels: label.toString()
     }
-
-    console.log(batchTime)
 
     campaign({ variables: campaignData })
       .then(() => {
