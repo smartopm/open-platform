@@ -171,7 +171,8 @@ export default function TodoList({
           )}
           <br />
           <ul className={css(styles.list)}>
-            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
+            {data.flaggedNotes.length ?
+            data.flaggedNotes.filter(note => note.completed === false).map(note => (
                   <Task
                     key={note.id}
                     note={note}

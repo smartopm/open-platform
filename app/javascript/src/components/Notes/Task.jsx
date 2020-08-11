@@ -37,10 +37,6 @@ export default function Task({
     setNoteId(noteId)
   }
 
-  if(note.completed){
-    return null
-  }
-
   return (
     <li key={note.id} className={classes}>
       <Grid container spacing={3}>
