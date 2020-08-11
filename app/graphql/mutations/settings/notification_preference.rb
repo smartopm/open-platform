@@ -4,17 +4,17 @@ module Mutations
   module Settings
     # Set notification preference for users
     class NotificationPreference < BaseMutation
-      PREFERENCE_OPTIONS = %w[com_news_sms com_news_email].freeze
       argument :preferences, String, required: false
 
       field :label, Types::UserLabelType, null: true
 
       def resolve(vals)
         preferences = vals[:preferences].split(',')
-        raise GraphQL::ExecutionError, 'Invalid Value' if (preferences - PREFERENCE_OPTIONS).any?
+        default_preference = ::User::DEFAULT_PREFERENCE
+        raise GraphQL::ExecutionError, 'Invalid Value' if (preferences - default_preference).any?
 
         unselected_values = context[:current_user].labels
-                                                  .where('short_desc IN (?)', PREFERENCE_OPTIONS)
+                                                  .where('short_desc IN (?)', default_preference)
                                                   .pluck(:short_desc) - preferences
         remove_preference(unselected_values)
         add_preference(preferences)

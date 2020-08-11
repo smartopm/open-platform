@@ -38,14 +38,14 @@ RSpec.describe Label, type: :model do
     expect(label.users.find(current_user2.id)).to eql current_user2
     expect(current_user1.labels[0].id).to eql label.id
     expect(current_user2.labels[0].id).to eql label.id
-    expect(current_user1.labels.length).to eql 1
-    expect(current_user2.labels.length).to eql 1
+    expect(current_user1.labels.length).to eql 3
+    expect(current_user2.labels.length).to eql 3
   end
 
   it 'label have a community' do
     label.users << current_user1
     label.users << current_user2
-    expect(label.community.labels.length).to eql 1
+    expect(label.community.labels.length).to eql 3
     expect(label.community.labels[0].users.find(current_user1.id)).to eql current_user1
     expect(label.community.labels[0].users.find(current_user2.id)).to eql current_user2
   end
