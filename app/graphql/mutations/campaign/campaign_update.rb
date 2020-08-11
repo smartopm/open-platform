@@ -39,7 +39,7 @@ module Mutations
 
       def remove_campaign_label(campaign, labels)
         labels.each do |label|
-          label_record = Label.find_by(short_desc: label)
+          label_record = context[:site_community].labels.find_by(short_desc: label)
           relation = CampaignLabel.find_by(campaign_id: campaign.id, label_id: label_record.id)
           raise GraphQL::ExecutionError, relation.errors.full_message unless relation.destroy
         end
