@@ -4,6 +4,7 @@ import { UpdateNote } from '../graphql/mutations'
 import TodoList from '../components/Notes/TodoList'
 import Nav from '../components/Nav'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
+import { useLocation } from 'react-router'
 
 export default function Todo({ history }) {
   // eslint-disable-next-line no-unused-vars
@@ -14,7 +15,7 @@ export default function Todo({ history }) {
   const [selectedDate, setSelectedDate] = React.useState(new Date())
   const [userId, setUserId] = React.useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
+  const location = useLocation()
 
   function todoAction(id, isCompleted) {
     setLoading(true)
@@ -42,9 +43,15 @@ export default function Todo({ history }) {
     // re-route to home
     history.push('/')
   }
+
+  // remove the forward slash and do pattern match for routes and nav name
+  const path = {
+    todo: 'Tasks',
+    my_tasks: 'My Tasks'
+  }
   return (
     <Fragment>
-      <Nav navName="Todo" menuButton="back" backTo="/" />
+      <Nav navName={path[location.pathname.replace(/\//, '')]} menuButton="back" backTo="/" />
         <TodoList
           isDialogOpen={isDialogOpen}
           handleModal={handleModal}
@@ -52,6 +59,8 @@ export default function Todo({ history }) {
           selectedDate={selectedDate}
           handleDateChange={handleDateChange}
           todoAction={todoAction}
+          location={location.pathname.replace(/\//, '')}
+          currentUser={authState.user.name}
         />
     </Fragment>
   )

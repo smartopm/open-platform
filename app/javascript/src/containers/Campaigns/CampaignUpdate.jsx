@@ -45,7 +45,7 @@ export default function UpdateCampaign({ match }) {
     labels: []
 
   })
-  const [batchTime, setBatchTime] = useState('')
+  const [batchTime, setBatchTime] = useState(new Date().toISOString())
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -73,17 +73,13 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
-    if (batchTime !== '') {
-      setFormData({
-        ...formData,
-        batchTime: batchTime
-      })
-    }
+   
+ 
     const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      batchTime: formData.batchTime,
+      batchTime: batchTime,
       userIdList: formData.userIdList,
       labels: label.toString()
     }
@@ -174,10 +170,10 @@ export default function UpdateCampaign({ match }) {
           <br />
           <div style={{ paddingBottom: '3%' }}>
             <DateAndTimePickers
-              label="Start Time"
+              label="Batch Time"
               required
               selectedDateTime={batchTime}
-              handleDateChange={e => setBatchTime(e)}
+              handleDateChange={setBatchTime}
             />
           </div>
           <div>
@@ -214,7 +210,7 @@ export default function UpdateCampaign({ match }) {
           </div>
           <br />
           <div className="d-flex row justify-content-center">
-            {Boolean(errorMsg.length) && (
+            {Boolean(errorMsg) && (
               <p className="text-danger text-center">{saniteError(errorMsg)}</p>
             )}
             {isSubmitted && <p>Campaign has been submitted</p>}
