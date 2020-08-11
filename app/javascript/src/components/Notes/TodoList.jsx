@@ -1,40 +1,29 @@
-import React, { useState, Fragment, useContext } from 'react'
-import EditIcon from '@material-ui/icons/Edit'
+import React, { useState, Fragment } from 'react'
 import { ModalDialog } from '../Dialog'
 import {
-  Chip,
-  Divider,
+  createMuiTheme,
   Fab,
   Dialog,
   DialogTitle,
-  DialogContent,
-  Grid,
-  Button,
-  Typography
+  DialogContent
 } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { StyleSheet, css } from 'aphrodite'
-import Loading, { Spinner } from '../Loading'
+import Loading from '../Loading'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CancelIcon from '@material-ui/icons/Cancel'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
-import { UserChip } from '../UserChip'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
-import { dateToString } from '../DateContainer'
 import FilterComponent from '../FilterComponent'
-import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
+import Task from './Task'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -43,18 +32,17 @@ export default function TodoList({
   saveDate,
   selectedDate,
   handleDateChange,
-  todoAction
+  todoAction,
+  location,
+  currentUser
 }) {
   const classes = useStyles()
   const limit = 50
   const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
-  const [autoCompleteOpen, setOpen] = useState(false)
   const [open, setModalOpen] = useState(false)
-  const [id, setNoteId] = useState('')
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
-  const theme = useContext(ThemeContext)
 
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
@@ -63,16 +51,18 @@ export default function TodoList({
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
+
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query: assignee.map(query => `assignees = "${query}"`).join(' OR ')
+        query: location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
       }
     }
   )
+
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -82,12 +72,6 @@ export default function TodoList({
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
-  }
-
-  function handleOpenAutoComplete(_event, noteId) {
-    setOpen(!autoCompleteOpen)
-    setNoteId(noteId)
-    setErrorMessage('')
   }
 
   function assignUnassignUser(noteId, userId) {
@@ -122,7 +106,7 @@ export default function TodoList({
 
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
-  
+
   return (
     <Fragment>
       <div className="container" data-testid="todo-container">
@@ -173,185 +157,39 @@ export default function TodoList({
         </Dialog>
 
         <div classes={classes.root}>
-          <CenteredContent>
-            <FilterComponent
-              stateList={assignee}
-              list={liteData?.users}
-              handleInputChange={handleAssigneeInputChange}
-              classes={classes}
-              resetFilter={() => setAssignee([])}
-              type="assignee"
-            />
-          </CenteredContent>
+          {location === 'todo' && (
+            <CenteredContent>
+              <FilterComponent
+                stateList={assignee}
+                list={liteData?.users}
+                handleInputChange={handleAssigneeInputChange}
+                classes={classes}
+                resetFilter={() => setAssignee([])}
+                type="assignee"
+              />
+            </CenteredContent>
+          )}
           <br />
           <ul className={css(styles.list)}>
-            {isLoading ? (
-              <Loading />
-            ) : data.flaggedNotes.length ? (
-              data.flaggedNotes.map(note => (
-                <li key={note.id} className={`${css(styles.listItem)}`}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid
-                        container
-                        direction="column"
-                        justify="flex-start"
-                        alignItems="baseline"
-                      >
-                        <Grid
-                          container
-                          direction="row"
-                          justify="flex-end"
-                          alignItems="baseline"
-                        >
-                          <EditIcon
-                            style={{
-                              float: 'right',
-                              cursor: 'pointer'
-                            }}
-                            fontSize="small"
-                            color="inherit"
-                            onClick={() => handleModal(note.id)}
-                          />
-                          <label style={{ fontSize: 17 }}>
-                            <Typography  variant="subtitle1" gutterBottom>
-                              Due at:
-                              {note.dueDate
-                                ? `  ${dateToString(note.dueDate)}`
-                                : ' Never'}
-                            </Typography>
-                          </label>
-                        </Grid>
-                        <Typography variant="subtitle1" gutterBottom>
-                          Title:&nbsp;<i>{note.body}</i>
-                        </Typography>
-                        <Typography variant="body2" gutterBottom>
-                          Associated with:&nbsp;<i>{note.user.name}</i>
-                        </Typography>
-                      </Grid>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center"
-                      >
-                        {note.assignees.map(user => (
-                          <UserChip
-                            key={user.id}
-                            user={user}
-                            size="medium"
-                            onDelete={() => handleDelete(user.id, note.id)}
-                          />
-                        ))}
-
-                        {/* loader */}
-                        {loaded && id === note.id ? (
-                          <Spinner />
-                        ) : (
-                          <Chip
-                            key={note.id}
-                            variant="outlined"
-                            label={
-                              autoCompleteOpen && id === note.id
-                                ? 'Close'
-                                : 'Add Assignee'
-                            }
-                            size="medium"
-                            icon={
-                              autoCompleteOpen && id === note.id ? (
-                                <CancelIcon />
-                              ) : (
-                                <AddCircleIcon />
-                              )
-                            }
-                            onClick={event =>
-                              handleOpenAutoComplete(event, note.id)
-                            }
-                          />
-                        )}
-                        {/* error message */}
-                        <br />
-                        {Boolean(message.length) && <span>{message}</span>}
-                        {/* autocomplete for assignees */}
-                        {// avoid opening autocomplete box for other notes
-                        autoCompleteOpen && id === note.id && (
-                          <Autocomplete
-                            clearOnEscape
-                            clearOnBlur
-                            loading={loading}
-                            id={note.id}
-                            options={liteData.users}
-                            getOptionLabel={option => option.name}
-                            style={{ width: 300 }}
-                            onChange={(_evt, value) => {
-                              // if nothing selected, ignore and move on
-                              if (!value) {
-                                return
-                              }
-                              // assign or unassign the user here
-                              assignUnassignUser(note.id, value.id)
-                            }}
-                            renderInput={params => (
-                              <TextField
-                                {...params}
-                                placeholder="Name of assignee"
-                              />
-                            )}
-                          />
-                        )}
-                      </Grid>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-end"
-                      >
-                        <Typography variant="caption" display="block" gutterBottom>
-                          Created By:&nbsp;<i>{note.author.name}</i>&nbsp;
-                          On:&nbsp;<i>{dateToString(note.createdAt)}</i>
-                        </Typography>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="flex-end"
-                          alignItems="flex-end"
-                        >
-                          {note.completed?(
-                          <Button
-                          variant="contained"
-                          style={{ marginBottom: 3,color: '#FFF'}}
-                          onClick={() =>
-                            handleCompleteNote(note.id, note.completed)
-                          }
-                          
-                        >
-                          Complete
-                        </Button>
-                          ):(
-                            <Button
-                            variant="contained"
-                            style={{backgroundColor: theme.primaryColor, marginBottom: 3,color: '#FFF',}}
-                            onClick={() =>
-                              handleCompleteNote(note.id, note.completed)
-                            }
-                          >
-                            Mark as complete
-                          </Button>
-                          )}
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Divider />
-                </li>
-
-              ))
-            ) : (
-              <span>No Actions yet</span>
-            )}
+            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
+                  <Task
+                    key={note.id}
+                    note={note}
+                    message={message}
+                    users={liteData?.users}
+                    handleCompleteNote={handleCompleteNote}
+                    assignUnassignUser={assignUnassignUser}
+                    loaded={loaded}
+                    handleDelete={handleDelete}
+                    handleModal={handleModal}
+                    loading={loading}
+                    classes={classes.listItem}
+                  />
+                ))
+              :  <CenteredContent>There are no tasks</CenteredContent>}
           </ul>
         </div>
-
+      <br/>
         <CenteredContent>
           <Paginate
             offSet={offset}
@@ -383,17 +221,45 @@ const useStyles = makeStyles({
   formControl: {
     minWidth: 160,
     maxWidth: 300
-  }
-})
-const styles = StyleSheet.create({
-  list: {
-    margin: 0,
-    padding: 0
   },
   listItem: {
     position: 'relative',
     listStyle: 'none',
     padding: 15
+  }
+})
+
+// this should be in one place, basically just one theme
+const theme = createMuiTheme({
+  overrides: {
+    MuiPickersToolbar: {
+      toolbar: {
+        backgroundColor: '#25c0b0'
+      }
+    },
+    MuiPickersDay: {
+      day: {
+        color: '#25c0b0'
+      },
+      daySelected: {
+        backgroundColor: '#25c0b0'
+      },
+      current: {
+        color: '#25c0b0'
+      }
+    },
+    MuiPickersModal: {
+      dialogAction: {
+        color: '#25c0b0'
+      }
+    }
+  }
+})
+
+const styles = StyleSheet.create({
+  list: {
+    margin: 0,
+    padding: 0
   },
   getStartedButton: {
     color: '#FFF',
