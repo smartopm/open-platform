@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import PeopleIcon from '@material-ui/icons/People'
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import CropFreeIcon from '@material-ui/icons/CropFree'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import HelpIcon from '@material-ui/icons/Help'
@@ -72,6 +73,14 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
           </ListItemIcon>
           <a href="/logout" className={`${css(styles.link)}`}>
             <ListItemText primary="Logout" />
+          </a>
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <NotificationsActiveIcon />
+          </ListItemIcon>
+          <a href="/notifications" className={`${css(styles.link)}`}>
+            <ListItemText primary="Notifications" />
           </a>
         </ListItem>
       </List>
