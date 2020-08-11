@@ -5,29 +5,16 @@ import { createMuiTheme } from '@material-ui/core'
 import {
     KeyboardDatePicker,
     MuiPickersUtilsProvider,
-    DateTimePicker
+    KeyboardDateTimePicker
 } from '@material-ui/pickers'
 
 
 const theme = createMuiTheme({
-    overrides: {
-        MuiPickersToolbar: {
-            toolbar: {
-                backgroundColor: '#25c0b0',
-            },
-        },
-        MuiPickersDay: {
-            day: {
-                color: '#25c0b0',
-            },
-            daySelected: {
-                backgroundColor: '#25c0b0',
-            },
-            current: {
-                color: '#25c0b0',
-            },
-        },
-    }
+    palette: {
+        primary: {
+            main: '#69ABA4'
+        }
+      },
 });
 
 
@@ -59,16 +46,19 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
 
 }
 
-export function DateAndTimePickers({ selectedDateTime, handleDateChange}) {
+export function DateAndTimePickers({ selectedDateTime, handleDateChange, label}) {
 
     return (
         <ThemeProvider theme={theme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DateTimePicker
-                label="DateTimePicker"
-                inputVariant="outlined"
+            <KeyboardDateTimePicker
+                label={label}
+                style={{width: '100%'}}
                 value={selectedDateTime}
-                onChange={handleDateChange}
+                format="yyyy/MM/dd hh:mm a"
+                placeholder="YYYY-MM-DD hh:mm a"
+                onChange={date => handleDateChange(new Date(date).toISOString())}
+                clearable
             />
         </MuiPickersUtilsProvider>
         </ThemeProvider>

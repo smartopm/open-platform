@@ -15,7 +15,7 @@ export default function CampaignForm({ authState }) {
   const [userIdList, setUserIdList] = useState('')
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
-  const [batchTime, setBatchTime] = useState('')
+  const [batchTime, setBatchTime] = useState(new Date())
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [campaign] = useMutation(CampaignCreate)
 
@@ -105,7 +105,7 @@ export default function CampaignForm({ authState }) {
           />
         </div>
 
-        <div>
+        <div >
           <CampaignLabels handleLabelSelect={handleLabelSelect} />
         </div>
         <br />
@@ -114,7 +114,7 @@ export default function CampaignForm({ authState }) {
             label="Batch Time"
             required
             selectedDateTime={batchTime}
-            handleDateChange={e => setBatchTime(e.target.value)}
+            handleDateChange={setBatchTime}
           />
         </div>
         <div className="d-flex row justify-content-center">
