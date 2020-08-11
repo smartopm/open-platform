@@ -21,7 +21,7 @@ RSpec.describe Mutations::Settings::NotificationPreference do
         preferences: 'com_news_sms,com_news_email',
       }
 
-      expect(user.labels.count).to eql 0
+      expect(user.labels.count).to eql 2
       DoubleGdpSchema.execute(query, variables: variables, context: {
                                 current_user: user,
                                 site_community: user.community,
@@ -32,7 +32,7 @@ RSpec.describe Mutations::Settings::NotificationPreference do
     end
 
     it 'should update relation between user and the preference label' do
-      expect(user.labels.count).to eql 0
+      expect(user.labels.count).to eql 2
       DoubleGdpSchema.execute(query, variables: { preferences: 'com_news_sms' },
                                      context: {
                                        current_user: user,
