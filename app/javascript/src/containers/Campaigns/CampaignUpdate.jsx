@@ -72,15 +72,15 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
-    if (batchTime !== '') {
-      setFormData({
-        ...formData,
-        batchTime: batchTime
-      })
-    }
+    // setTimeout(() => {
+    //   window.location.reload(false)
+    // }, 3000)
+    // if (batchTime !== '') {
+    //   setFormData({
+    //     ...formData,
+    //     batchTime: batchTime
+    //   })
+    // }
 
     let array = formData.labels.map(l => l.id)
     //joins the selected labels and the already existing labels as an array
@@ -95,13 +95,15 @@ export default function UpdateCampaign({ match }) {
       labels: joinedLabel.toString()
     }
 
-    campaign({ variables: campaignData })
-      .then(() => {
-        setIsSubmitted(true)
-      })
-      .catch(err => {
-        setErrorMsg(err.message)
-      })
+    console.log(campaignData)
+
+    // campaign({ variables: campaignData })
+    //   .then(() => {
+    //     setIsSubmitted(true)
+    //   })
+    //   .catch(err => {
+    //     setErrorMsg(err.message)
+    //   })
   }
 
   function handleLabelSelect(lastLabel) {
