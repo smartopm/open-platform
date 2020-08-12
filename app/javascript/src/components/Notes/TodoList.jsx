@@ -19,6 +19,7 @@ import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
+import { inDays } from '../../utils/helpers'
 import TaskForm from './TaskForm'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
@@ -110,9 +111,55 @@ export default function TodoList({
 
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
-
+  console.log(data.flaggedNotes)
+  let activeTask = data.flaggedNotes.filter(note => note.completed === false)
+    .length
+  let dueInTen = data.flaggedNotes.filter(
+    note =>
+      note.completed === false &&
+      inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 10 &&
+      inDays(new Date(note.createdAt), new Date(note.dueDate)) >= 0
+  ).length
+  let dueInThirty = data.flaggedNotes.filter(
+    note =>
+      note.completed === false &&
+      inDays(new Date(note.createdAt), new Date(note.dueDate)) >= 10 &&
+      inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 30
+  ).length
+  let Overdue = data.flaggedNotes.filter(
+    note =>
+      note.completed === false &&
+      inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 0
+  ).length
+  
+  let completed = data.flaggedNotes.filter(note => note.completed === true)
+    .length
+  console.log(dueInTen)
   return (
     <Fragment>
+      <br />
+      <div className="container-fluid">
+        <Grid container spacing={3}>
+          <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards title={'Active Tasks'} number={activeTask} />
+          </Grid>
+          <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards title={'Due in 10 days'} number={dueInTen} />
+          </Grid>
+          <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards title={'Due in 30 days'} number={dueInThirty} />
+          </Grid>
+          <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards title={'Overdue Tasks'} number={Overdue} />
+          </Grid>
+          {/* <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards title={'My Tasks'} number={1} />
+          </Grid> */}
+          <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards title={'Completed Tasks'} number={completed} />
+          </Grid>
+        </Grid>
+      </div>
       <div className="container" data-testid="todo-container">
         <ModalDialog
           open={isDialogOpen}
@@ -173,48 +220,6 @@ export default function TodoList({
               />
             </CenteredContent>
           )}
-          <br />
-          <Grid
-              container
-              spacing={3}
-            > 
-            <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-            </Grid>
           <ul className={css(styles.list)}>
             {data.flaggedNotes.length ? (
               data.flaggedNotes

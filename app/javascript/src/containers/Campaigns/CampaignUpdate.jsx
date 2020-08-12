@@ -79,7 +79,7 @@ export default function UpdateCampaign({ match }) {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      batchTime: batchTime,
+      batchTime,
       userIdList: formData.userIdList,
       labels: label.toString()
     }
@@ -105,6 +105,8 @@ export default function UpdateCampaign({ match }) {
       userIdList: userIds.toString()
     })
   }
+  console.log("new date"+batchTime);
+  console.log("db data"+formData.batchTime);
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />

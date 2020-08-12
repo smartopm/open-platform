@@ -115,3 +115,17 @@ export function forceLinkHttps(imageLink) {
   const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink
   return link
 }
+
+/**
+ * 
+ * @param {Date} d1 
+ * @param {Date} d2 
+ * @description checks for the difference in the number of days between date one and two
+ * @returns {Int}
+ */
+ export function inDays(d1, d2) {
+  var t2 = d2.getTime();
+  var t1 = d1.getTime();
+
+  return parseInt((t2-t1)/(24*3600*1000));
+}
