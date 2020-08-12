@@ -3,7 +3,7 @@ import { Box, Grid, Typography, Button, Divider, Checkbox, FormControl, FormGrou
 import SaveIcon from '@material-ui/icons/Save';
 import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 
-export default function NotificationPage({ handleChange, checkedState, handleSave, handleSmsChange }) {
+export default function NotificationPage({ handleChange, checkedState, handleSave, handleSmsChange, loading}) {
     const { sms, email } = checkedState
     const theme = useContext(ThemeContext)
     return (
@@ -37,6 +37,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                     <FormControl component="fieldset">
                         <FormGroup aria-label="position" row>
                             <FormControlLabel
+                                value="top"
                                 control={<Checkbox
                                     checked={sms}
                                     name="com_news_sms"
@@ -46,6 +47,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                                 label="SMS"
                             />
                             <FormControlLabel
+                                value="top"
                                 control={<Checkbox
                                     checked={email}
                                     name="com_news_email"
@@ -56,6 +58,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                             />
                         </FormGroup>
                     </FormControl>
+                    {loading ? 'Saving...' : null}
                 </Grid>
             </Grid>
 
