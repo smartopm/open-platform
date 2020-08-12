@@ -55,6 +55,43 @@ RSpec.describe Mutations::Campaign do
     end
   end
 
+  describe 'create Campaign through users' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let(:query) do
+      <<~GQL
+        mutation campaignCreateThroughUsers(
+          $filters: String!
+          $userIdList: String!
+        ) {
+          campaignCreateThroughUsers(
+            filters: $filters
+            userIdList: $userIdList
+            ){
+              campaign{
+                id
+                name
+              }
+            }
+          }
+      GQL
+    end
+
+    it 'returns an Campaign' do
+      variables = {
+        filters: 'admin,client,security_guard',
+        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name')).to eql 'admin_client_security_guard'
+      expect(result.dig('errors')).to be_nil
+    end
+  end
+
   describe 'updating a Campaign' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
     let!(:campaign) do

@@ -61,10 +61,13 @@ class User < ApplicationRecord
   VALID_USER_TYPES = %w[security_guard admin resident contractor
                         prospective_client client visitor custodian].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
+  DEFAULT_PREFERENCE = %w[com_news_sms com_news_email].freeze
+
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
   validate :phone_number_valid?
+  after_create :add_notification_preference
   before_save :ensure_default_state
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -389,6 +392,14 @@ class User < ApplicationRecord
     errors.add(:phone_number, 'must be a valid length') unless self[:phone_number]
                                                                .gsub(/[^0-9]/, '')
                                                                .length.between?(8, 15)
+  end
+
+  def add_notification_preference
+    DEFAULT_PREFERENCE.each do |pref|
+      label = community.labels.find_by(short_desc: pref).presence ||
+              community.labels.create!(short_desc: pref)
+      user_labels.create!(label_id: label.id)
+    end
   end
 end
 # rubocop:enable ClassLength
