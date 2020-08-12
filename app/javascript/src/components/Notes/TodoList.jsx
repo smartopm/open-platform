@@ -58,7 +58,10 @@ export default function TodoList({
       variables: {
         offset,
         limit,
-        query: location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+        query:
+          location === 'my_tasks'
+            ? currentUser
+            : assignee.map(query => `assignees = "${query}"`).join(' OR ')
       }
     }
   )
@@ -171,7 +174,10 @@ export default function TodoList({
           )}
           <br />
           <ul className={css(styles.list)}>
-            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
+            {data.flaggedNotes.length ? (
+              data.flaggedNotes
+                .filter(note => note.completed === false)
+                .map(note => (
                   <Task
                     key={note.id}
                     note={note}
@@ -186,10 +192,12 @@ export default function TodoList({
                     classes={classes.listItem}
                   />
                 ))
-              :  <CenteredContent>There are no tasks</CenteredContent>}
+            ) : (
+              <CenteredContent>There are no tasks</CenteredContent>
+            )}
           </ul>
         </div>
-      <br/>
+        <br />
         <CenteredContent>
           <Paginate
             offSet={offset}
