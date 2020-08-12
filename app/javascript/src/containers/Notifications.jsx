@@ -8,9 +8,10 @@ import { NotificationPreference } from '../graphql/mutations'
 export default function Notifications() {
     let labelId
     const [checkedState, setCheckedState] = useState({
-        sms: false,
-        email: false
+        com_news_sms: false,
+        com_news_email: false
     })
+    const [preferences, setPreferences] = useState([])
     const [notificationPreference] = useMutation(NotificationPreference)
     const { data } = useQuery(LabelsQuery)
     if (data) {
@@ -18,19 +19,23 @@ export default function Notifications() {
             return user.shortDesc === "com_news_email"
         })
     }
-    
+
     function handleChange(e) {
         setCheckedState({ ...checkedState, [e.target.name]: e.target.checked })
         //filter new array and get id for selected element
-        // labelId =  data.labels.filter(user => user.shortDesc === e.target.name )
+        if (data) {
+            labelId = data.labels.filter(user => user.shortDesc === e.target.name)
+            setPreferences([...preferences,labelId.map(label=>label.id).toString()]) 
+        }
+        console.log(preferences)
     }
 
     function handleSave() {
 
         notificationPreference({
-            variables: {preferences: labelId }
+            variables: { preferences: preferences }
 
-        }).then(()=>{
+        }).then(() => {
 
         })
 
