@@ -57,8 +57,10 @@ export default function UpdateCampaign({ match }) {
 
   if (!formData.loaded && data) {
     setFormData({ ...data.campaign, loaded: true })
+    
   }
-
+  console.log(formData)
+  
   function handleInputChange(e) {
     const { name, value } = e.target
     setFormData({
@@ -73,15 +75,24 @@ export default function UpdateCampaign({ match }) {
     setTimeout(() => {
       window.location.reload(false)
     }, 3000)
-   
- 
+    if (batchTime !== '') {
+      setFormData({
+        ...formData,
+        batchTime: batchTime
+      })
+    }
+
+    let array = formData.labels.map(l => l.id)
+    //joins the selected labels and the already existing labels as an array
+    const joinedLabel = label ? array.concat(label) : null
+
     const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
       batchTime: batchTime,
       userIdList: formData.userIdList,
-      labels: label.toString()
+      labels: joinedLabel.toString()
     }
 
     campaign({ variables: campaignData })
@@ -98,13 +109,15 @@ export default function UpdateCampaign({ match }) {
     setLabel([...label, id])
   }
 
-  // TODO:@Dennis add handleDelete function to remove the labels when editing
+  function handleChipLabelDelete(labelId) {
+    setLabel(label.filter(l => l !== labelId))
+  }
   function handleDelete(chipId) {
+
     setFormData({
       ...formData,
-      labels: formData.labels.filter(e => e !== chipId)
+      labels: formData.labels.filter(e => e.id !== chipId)
     })
-    console.log(formData.labels)
   }
   function handleUserIDList(_event, value) {
     let userIds = DelimiterFormatter(value)
@@ -174,7 +187,7 @@ export default function UpdateCampaign({ match }) {
                 )) : null
               }
             </div>
-            <CampaignLabels handleLabelSelect={handleLabelSelect} />
+            <CampaignLabels handleLabelSelect={handleLabelSelect} handleDelete={handleChipLabelDelete} />
           </div>
           <br />
           <div style={{ paddingBottom: '3%' }}>

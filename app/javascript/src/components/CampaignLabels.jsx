@@ -10,15 +10,15 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
     const [chipData, setChipData] = useState([])
 
 
-    function handleChipDelete(chipId){
-        handleDelete(chipId)
-        setChipData(chipData.filter(e=> e !== chipId))
+    function handleChipDelete(chipId) {
+
+        setChipData(chipData.filter(e => e.id !== chipId))
     }
- 
+
     return (
         <div>
             <Fragment>
-         
+
                 {data && (<Autocomplete
                     data-testid="campaignLabel-creator"
                     style={{ width: "100%", marginTop: 20 }}
@@ -31,11 +31,12 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                         // 2 things are happening here, there is a new value and an autocompleted value
                         // if it is a new value then it is a string otherwise it is an array
                         setChipData(newValue)
-                        if (newValue.some(value => value.id != null)) {
+                        if (!newValue) {
                             // if it is an array then it is wise to get the last item of the array
-                            const [lastLabel] = newValue.slice(-1)
-                            return handleLabelSelect(lastLabel)
+                            return
                         }
+                        const [lastLabel] = newValue.slice(-1)
+                        handleLabelSelect(lastLabel)
 
                     }}
                     renderTags={(value, getTagProps) => {
@@ -45,7 +46,10 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                                 variant="outlined"
                                 label={option.shortDesc || option}
                                 {...getTagProps({ index })}
-                                onDelete={()=>handleChipDelete(option.id)}
+                                onDelete={() => {
+                                    handleDelete(option.id)
+                                    handleChipDelete(option.id)
+                                }}
 
                             />
 

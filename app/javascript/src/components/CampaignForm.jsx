@@ -115,13 +115,8 @@ export default function CampaignForm({ authState }) {
           />
         </div>
 
-<<<<<<< HEAD
-        <div >
-          <CampaignLabels handleLabelSelect={handleLabelSelect} />
-=======
         <div>
           <CampaignLabels handleLabelSelect={handleLabelSelect} handleDelete={handleDelete} />
->>>>>>> Adding editing labels to the campaign update page
         </div>
         <br />
         <div>
