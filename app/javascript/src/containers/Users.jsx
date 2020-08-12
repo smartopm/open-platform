@@ -29,9 +29,9 @@ import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
+import CreateLabel from '../components/CreateLabel'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
-import CreateLabel from '../components/CreateLabel'
 
 
 const limit = 50
