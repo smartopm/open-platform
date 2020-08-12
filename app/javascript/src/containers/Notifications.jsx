@@ -1,60 +1,40 @@
 import React, { Fragment, useState } from 'react'
 import Nav from '../components/Nav'
-import { useQuery, useMutation } from 'react-apollo'
+import { useMutation } from 'react-apollo'
 import NotificationPage from '../components/NotificationPage'
-import { LabelsQuery } from '../graphql/queries'
 import { NotificationPreference } from '../graphql/mutations'
 
 export default function Notifications() {
-    let labelId = []
+
     const [checkedState, setCheckedState] = useState({
         com_news_sms: false,
         com_news_email: false
     })
+    
+    const [loading, setLoading] = useState(false)
     const [preferences, setPreference] = useState([])
     const [notificationPreference] = useMutation(NotificationPreference)
-    const { data } = useQuery(LabelsQuery)
 
     function handleChange(e) {
 
         setCheckedState({ ...checkedState, [e.target.name]: e.target.checked })
-        if (data && !checkedState.com_news_email) {
-            labelId = [...new Set(data.labels.filter(label => label.shortDesc === e.target.name).map(lab => lab.id))]
-            setPreference([...preferences,labelId.toString()])
-        }
-        else {
-            labelId = [...new Set(labelId.filter(label => label.shortDesc !== e.target.name).map(lab => lab.id))]
-            setPreference([...preferences,labelId.toString()])
-        }
-        console.log(preferences,labelId)
+        !checkedState.com_news_email ? setPreference([...preferences,e.target.name]) : null
     }
 
     function handleSmsChange(e) {
         setCheckedState({ ...checkedState, [e.target.name]: e.target.checked })
-        if (data && !checkedState.com_news_sms) {
-            labelId = [...new Set(data.labels.filter(label => label.shortDesc === e.target.name).map(lab => lab.id))]
-            setPreference([...preferences,labelId.toString()])
-        }
-        else {
-            labelId = [...new Set(labelId.filter(label => label.shortDesc !== e.target.name).map(lab => lab.id))]
-            setPreference([...preferences,labelId.toString()])
-        }
-
-        console.log(labelId)
+        !checkedState.com_news_sms ? setPreference([...preferences,e.target.name]) : null
 
     }
 
     function handleSave() {
-
-
+        setLoading(true)
         notificationPreference({
             variables: { preferences: preferences.toString() }
 
         }).then(() => {
-
+            setLoading(false)
         })
-
-
     }
 
 
@@ -66,6 +46,7 @@ export default function Notifications() {
                     handleChange={handleChange}
                     handleSmsChange={handleSmsChange}
                     checkedState={checkedState}
+                    loading={loading}
                     handleSave={handleSave} />
             </Fragment>
         </div>
