@@ -318,12 +318,6 @@ export default function UsersList() {
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             { labelLoading ? <CircularProgress size={25} /> : '' }
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
-            <CreateLabel handleLabelSelect={handleLabelSelect} />
-          </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            { labelLoading ? <CircularProgress size={25} /> : '' }
-          </Grid>
 
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
