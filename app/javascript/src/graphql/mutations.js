@@ -565,10 +565,8 @@ export const AssignUser = gql`
 export const NotificationPreference = gql`
   mutation notificationPreference($preferences: String){
     notificationPreference(preferences: $preferences){
-      label {
-        labelId
-      }
-    }
+        __typename
   }
+}
 `
 
