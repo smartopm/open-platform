@@ -29,8 +29,10 @@ import ErrorPage from '../../components/Error'
 export default function UpdateCampaign({ match }) {
   const authState = useContext(AuthStateContext)
   const [label, setLabel] = useState([])
-  const { data, error, loading } = useQuery(Campaign, {
-    variables: { id: match.params.id }
+  const { data, error, loading, refetch } = useQuery(Campaign, {
+    variables: { id: match.params.id },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
   })
   const [campaign] = useMutation(CampaignUpdate)
 
@@ -70,11 +72,10 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
+    // setTimeout(() => {
+    //   window.location.reload(false)
+    // }, 3000)
    
- 
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -87,15 +88,15 @@ export default function UpdateCampaign({ match }) {
     campaign({ variables: campaignData })
       .then(() => {
         setIsSubmitted(true)
+        refetch()
       })
       .catch(err => {
         setErrorMsg(err.message)
       })
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
-    setLabel([...label, id])
+  function handleLabelSelect(labels) {
+    setLabel([...label, ...getJustLabels(labels)])
   }
 
   function handleUserIDList(_event, value) {
@@ -105,6 +106,7 @@ export default function UpdateCampaign({ match }) {
       userIdList: userIds.toString()
     })
   }
+ 
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
@@ -211,7 +213,7 @@ export default function UpdateCampaign({ match }) {
           <br />
           <div className="d-flex row justify-content-center">
             {Boolean(errorMsg) && (
-              <p className="text-danger text-center">{saniteError(errorMsg)}</p>
+              <p className="text-danger text-center">{saniteError([], errorMsg)}</p>
             )}
             {isSubmitted && <p>Campaign has been submitted</p>}
           </div>
@@ -220,6 +222,20 @@ export default function UpdateCampaign({ match }) {
     </>
   )
 }
+
+export function getJustLabels(labels) {
+  let str = []
+  for (let index = 0; index < labels.length; index++) {
+    const element = labels[index]
+    if (typeof element === 'object') {
+      str.push(element.shortDesc)
+    }
+    str.push(element)
+  }
+  return str.filter(el => typeof el === 'string')
+}
+    
+
 const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: '#25c0b0',
