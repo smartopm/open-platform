@@ -8,6 +8,7 @@ import { CampaignCreate } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels.jsx'
+import { getJustLabels } from '../containers/Campaigns/CampaignUpdate'
 
 export default function CampaignForm({ authState }) {
   const [name, setName] = useState('')
@@ -42,10 +43,8 @@ export default function CampaignForm({ authState }) {
       })
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
-    setLabel([...label, id])
-
+  function handleLabelSelect(labels) {
+    setLabel([...label, ...getJustLabels(labels)])
   }
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)

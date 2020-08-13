@@ -106,6 +106,7 @@ export default function UpdateCampaign({ match }) {
       userIdList: userIds.toString()
     })
   }
+ 
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
@@ -222,7 +223,7 @@ export default function UpdateCampaign({ match }) {
   )
 }
 
-function getJustLabels(labels) {
+export function getJustLabels(labels) {
   let str = []
   for (let index = 0; index < labels.length; index++) {
     const element = labels[index]
