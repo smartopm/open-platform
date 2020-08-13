@@ -22,13 +22,13 @@ import { saniteError } from '../../utils/helpers'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
-import CampaignLabels from '../../components/CampaignLabels.jsx'
+// import CampaignLabels from '../../components/CampaignLabels.jsx'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 
 export default function UpdateCampaign({ match }) {
   const authState = useContext(AuthStateContext)
-  const [label, setLabel] = useState([])
+  // const [label, setLabel] = useState([])
   const { data, error, loading, refetch } = useQuery(Campaign, {
     variables: { id: match.params.id },
     fetchPolicy: 'cache-and-network',
@@ -82,7 +82,7 @@ export default function UpdateCampaign({ match }) {
       message: formData.message,
       batchTime: batchTime,
       userIdList: formData.userIdList,
-      labels: label.toString()
+      // labels: label.toString()
     }
 
     campaign({ variables: campaignData })
@@ -95,9 +95,9 @@ export default function UpdateCampaign({ match }) {
       })
   }
 
-  function handleLabelSelect(labels) {
-    setLabel([...label, ...getJustLabels(labels)])
-  }
+  // function handleLabelSelect(labels) {
+  //   setLabel([...label, ...getJustLabels(labels)])
+  // }
 
   function handleUserIDList(_event, value) {
     let userIds = DelimiterFormatter(value)
@@ -167,7 +167,7 @@ export default function UpdateCampaign({ match }) {
                 )) : null
               }
             </div>
-            <CampaignLabels handleLabelSelect={handleLabelSelect} />
+            {/* <CampaignLabels handleLabelSelect={handleLabelSelect} /> */}
           </div>
           <br />
           <div style={{ paddingBottom: '3%' }}>
