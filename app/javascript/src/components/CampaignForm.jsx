@@ -29,18 +29,17 @@ export default function CampaignForm({ authState }) {
       labels: label.toString()
     }
 
-    // setTimeout(() => {
-    //   window.location.reload(false)
-    // }, 3000)
+    setTimeout(() => {
+      window.location.reload(false)
+    }, 3000)
 
-    console.log(label)
-    // campaign({ variables: campaignData })
-    //   .then(() =>
-    //     setIsSubmitted(true)
-    //   )
-    //   .catch(err => {
-    //     setErrorMsg(err.message)
-    //   })
+    campaign({ variables: campaignData })
+      .then(() =>
+        setIsSubmitted(true)
+      )
+      .catch(err => {
+        setErrorMsg(err.message)
+      })
   }
 
   function handleLabelSelect(lastLabel) {
