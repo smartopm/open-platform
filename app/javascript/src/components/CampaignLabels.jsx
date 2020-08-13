@@ -20,15 +20,8 @@ export default function CampaignLabels({ handleLabelSelect }) {
                     id="tags-filled"
                     options={data.labels}
                     getOptionLabel={option => option.shortDesc}
-                    onChange={(event, newValue) => {
-                        // 2 things are happening here, there is a new value and an autocompleted value
-                        // if it is a new value then it is a string otherwise it is an array
-                        if (newValue.some(value => value.id != null)) {
-                            // if it is an array then it is wise to get the last item of the array
-                            const [lastLabel] = newValue.slice(-1)
-                            return handleLabelSelect(lastLabel)
-                        }
-
+                    onChange={(_event, newValue) => {
+                        return handleLabelSelect(newValue.shortDesc || newValue)
                     }}
                     renderTags={(value, getTagProps) => {
                         return value.map((option, index) => (
@@ -48,7 +41,6 @@ export default function CampaignLabels({ handleLabelSelect }) {
                             {...params}
                             label="Assign Label"
                             style={{ width: "100%" }}
-
                         />
                     )}
                 />)}
