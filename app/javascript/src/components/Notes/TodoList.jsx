@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment,useEffect } from 'react'
 import { ModalDialog } from '../Dialog'
 import {
   createMuiTheme,
@@ -6,7 +6,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid
+  Grid,
+  CardActionArea
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
@@ -45,6 +46,7 @@ export default function TodoList({
   const [open, setModalOpen] = useState(false)
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
+  const [metric, setMetric] = useState()
 
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
@@ -67,7 +69,11 @@ export default function TodoList({
       }
     }
   )
-
+  useEffect(() => {
+    if(data){
+      setMetric(data.flaggedNotes)
+    }
+  },[]);
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -77,6 +83,10 @@ export default function TodoList({
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
+  }
+
+  function filterCompleted() {
+  return  setMetric(data.flaggedNotes.filter(note => note.completed === true))
   }
 
   function assignUnassignUser(noteId, userId) {
@@ -112,6 +122,7 @@ export default function TodoList({
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
   console.log(data.flaggedNotes)
+  console.log(metric)
   let activeTask = data.flaggedNotes.filter(note => note.completed === false)
     .length
   let dueInTen = data.flaggedNotes.filter(
@@ -131,7 +142,7 @@ export default function TodoList({
       note.completed === false &&
       inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 0
   ).length
-  
+
   let completed = data.flaggedNotes.filter(note => note.completed === true)
     .length
   console.log(dueInTen)
@@ -141,7 +152,9 @@ export default function TodoList({
       <div className="container-fluid">
         <Grid container spacing={3}>
           <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'Active Tasks'} number={activeTask} />
+            <CardActionArea onClick={() => filterCompleted()}>
+              <Cards title={'Active Tasks'} number={activeTask} />
+            </CardActionArea>
           </Grid>
           <Grid item lg={2} sm={4} xl={2} xs={6}>
             <Cards title={'Due in 10 days'} number={dueInTen} />
@@ -152,11 +165,15 @@ export default function TodoList({
           <Grid item lg={2} sm={4} xl={2} xs={6}>
             <Cards title={'Overdue Tasks'} number={Overdue} />
           </Grid>
-          {/* <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'My Tasks'} number={1} />
-          </Grid> */}
           <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'Completed Tasks'} number={completed} />
+            <Cards title={'My Tasks'} number={1} />
+          </Grid>
+          <Grid item lg={2} sm={4} xl={2} xs={6}>
+            <Cards
+              title={'Completed Tasks'}
+              number={completed}
+              onClick={() => console.log('bums')}
+            />
           </Grid>
         </Grid>
       </div>
