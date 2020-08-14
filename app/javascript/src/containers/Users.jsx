@@ -130,13 +130,14 @@ export default function UsersList() {
     setSearchType('type')
   }
   function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
+    const { id, shortDesc } = lastLabel
     setLabelLoading(true)
     if (userList) {
       userLabelCreate({
         variables: { userId: userList.toString(), labelId: id }
       }).then(()=>{
         refetch()
+        setLabels([...labels, shortDesc])
         setLabelLoading(false)
       }).catch(error => {
         setLabelLoading(false)
