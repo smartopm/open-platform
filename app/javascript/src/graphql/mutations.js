@@ -535,13 +535,13 @@ export const LabelCreate = gql`
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-  mutation userLabelCreate($userId: ID!, $labelId: ID!) {
-    userLabelCreate(userId: $userId, labelId: $labelId) {
-      label {
-        labelId
-      }
+    mutation userLabelCreate($userId: String!, $labelId: String!){
+       userLabelCreate(userId: $userId, labelId: $labelId){
+         label {
+           labelId
+         }
+       }
     }
-  }
 `
 
 export const UserLabelUpdate = gql`
