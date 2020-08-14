@@ -158,14 +158,14 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     getStartedButton: {
-        backgroundColor: "#25c0b0",
+        backgroundColor: "#69ABA4",
         color: "#FFF",
         width: "35%",
         height: 51,
         boxShadow: "none"
     },
     icon: {
-        color: '#25c0b0'
+        color: '#69ABA4'
     },
     footerText: {
         color: '#767676',

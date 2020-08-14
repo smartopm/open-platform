@@ -329,7 +329,7 @@ export default function Homepage({ authState }) {
 
 const styles = StyleSheet.create({
   homeIconColor: {
-    color: '#25c0b0'
+    color: '#69ABA4'
   },
   CardtextIcon: {
     marginTop: '15.5%'

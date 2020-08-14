@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     margingTop: 70
   },
   getStartedButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#69ABA4",
     color: "#FFF",
     width: "75%",
     height: 51,

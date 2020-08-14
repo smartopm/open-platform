@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 export const StyledTableCell = withStyles(theme => ({
     head: {
-        backgroundColor: '#25c0b0',
+        backgroundColor: '#69ABA4',
         color: theme.palette.common.white,
         fontSize: 15,
         textAlign: 'center'
