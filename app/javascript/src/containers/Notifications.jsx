@@ -5,6 +5,7 @@ import NotificationPage from '../components/NotificationPage'
 import { NotificationPreference } from '../graphql/mutations'
 import { UserLabelsQuery } from '../graphql/queries'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
+import Loading from '../components/Loading'
 
 export default function Notifications() {
     const authState = useContext(AuthStateContext)
@@ -13,23 +14,23 @@ export default function Notifications() {
         com_news_email: false
     })
 
-    const { data, error } = useQuery(UserLabelsQuery, {
+
+    const { data, loading: labelsLoading } = useQuery(UserLabelsQuery, {
         variables: { userId: authState.user.id }
     })
+    let labelArray = []
+    let sms 
+    let email 
 
     const [loading, setLoading] = useState(false)
     const [preferences, setPreference] = useState([])
     const [notificationPreference] = useMutation(NotificationPreference)
 
+    if(labelsLoading) <Loading />
     if (data) {
-        let sms = data.userLabels.filter(label => label.shortDesc === "com_news_sms")
-        let email = data.userLabels.filter(label => label.shortDesc === "com_news_email")
-
-        // sms[0].shortDesc === 'com_news_sms' ? setCheckedState({...checkedState, com_news_sms: true}) : null
-        // sms[0].shortDesc === 'com_news_sms' ? setCheckedState({...checkedState, com_news_email: true}) : null
-
+        labelArray = data.userLabels.map(label => label.shortDesc)
+        labelArray.includes("com_news_email") ? email = true : null
     }
-
 
     function handleChange(e) {
 
@@ -58,12 +59,12 @@ export default function Notifications() {
         <div>
             <Fragment>
                 <Nav navName="Notifications" menuButton="back" backTo="/" />
-                <NotificationPage
+                 <NotificationPage
                     handleChange={handleChange}
                     handleSmsChange={handleSmsChange}
                     checkedState={checkedState}
                     loading={loading}
-                    handleSave={handleSave} />
+                    handleSave={handleSave} /> 
             </Fragment>
         </div>
     )
