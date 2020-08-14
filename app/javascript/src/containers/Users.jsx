@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
+import { UserLabelCreate } from '../graphql/mutations'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -20,6 +21,7 @@ import {
   FormControl,
   InputLabel,
   Input,
+  CircularProgress,
   Chip
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
@@ -27,11 +29,13 @@ import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
+import CreateLabel from '../components/CreateLabel'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
 
 
 const limit = 50
+
 export default function UsersList() {
   const classes = useStyles()
   const theme = useContext(ThemeContext)
@@ -44,6 +48,8 @@ export default function UsersList() {
   const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
+  const [labelError, setError] = useState('')
+  const [labelLoading, setLabelLoading] = useState(false)
   const [searchType, setSearchType] = useState('type')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
@@ -64,9 +70,13 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  
- //TODO: @dennis, add pop up for notes 
+  let userList
+  if (data) {
+    userList = data.users.map(user => user.id)
+  }
 
+  //TODO: @dennis, add pop up for notes 
+  const [userLabelCreate] = useMutation(UserLabelCreate)
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
 
   function joinSearchQuery(query, type) {
@@ -118,6 +128,24 @@ export default function UsersList() {
   function handleInputChange(event) {
     setType(event.target.value)
     setSearchType('type')
+  }
+  function handleLabelSelect(lastLabel) {
+    const { id } = lastLabel
+    setLabelLoading(true)
+    if (userList) {
+      userLabelCreate({
+        variables: { userId: userList.toString(), labelId: id }
+      }).then(()=>{
+        refetch()
+        setLabelLoading(false)
+      }).catch(error => {
+        setLabelLoading(false)
+        setError(error.message)
+
+      })
+
+    }
+
   }
 
   function handleLabelChange(event) {
@@ -284,6 +312,13 @@ export default function UsersList() {
               type="labels"
             />
           </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
+            <CreateLabel handleLabelSelect={handleLabelSelect} />
+          </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            { labelLoading ? <CircularProgress size={25} /> : '' }
+          </Grid>
+
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
               color="primary"
@@ -294,14 +329,20 @@ export default function UsersList() {
               <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
-
+          
         </Grid>
+
+        <br />
+        <div className="d-flex justify-content-center row">
+        <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span>
+        </div>
+        
         <br />
         <br />
 
- 
+
         <UserListCard userData={data} handleNoteModal={handleNoteModal} />
-      
+
         <Grid container direction="row" justify="center" alignItems="center">
           <Paginate
             count={data.users.length}

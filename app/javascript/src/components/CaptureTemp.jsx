@@ -43,7 +43,7 @@ export default function CaptureTemp({ refId, refName, refType }) {
                     horizontal: 'center',
                 }} open={open} autoHideDuration={6000} onClose={() => setOpen(!open)} >
                     <SnackbarContent style={{
-                        backgroundColor: '#25c0b0',
+                        backgroundColor: '#69ABA4',
                     }}
 
                         message={<div className="row d-flex m-20"> <CheckCircleIconBase /> <span className="justify-content-center" id="client-snackbar">Temperature recorded</span> </div>}
