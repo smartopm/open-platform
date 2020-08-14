@@ -30,7 +30,7 @@ import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import CreateLabel from '../components/CreateLabel'
-import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
 
 
@@ -135,7 +135,7 @@ export default function UsersList() {
     if (userList) {
       userLabelCreate({
         variables: { userId: userList.toString(), labelId: id }
-      }).then(()=>{
+      }).then(() => {
         refetch()
         setLabels([...labels, shortDesc])
         setLabelLoading(false)
@@ -273,7 +273,7 @@ export default function UsersList() {
             </IconButton>
           </Fragment>
         </div>
-        <Grid container>
+        <Grid container alignItems="center">
           <Grid item xs={'auto'}>
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
@@ -299,7 +299,7 @@ export default function UsersList() {
                 ))}
               </Select>
               {Boolean(type.length) && (
-                <Button onClick={() => setType([])}>Clear Filter</Button>
+                <Button size="small" onClick={() => setType([])}>Clear Filter</Button>
               )}
             </FormControl>
           </Grid>
@@ -313,31 +313,31 @@ export default function UsersList() {
               type="labels"
             />
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
-            <CreateLabel handleLabelSelect={handleLabelSelect} />
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5}}>
+              <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            { labelLoading ? <CircularProgress size={25} /> : '' }
+            {labelLoading ? <CircularProgress size={25} /> : ''}
           </Grid>
 
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-              style={{backgroundColor: theme.primaryColor}}
+              style={{ backgroundColor: theme.primaryColor }}
               endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
             {Boolean(phoneNumbers.length) && (
-              <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
+              <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
-          
+
         </Grid>
 
         <br />
         <div className="d-flex justify-content-center row">
-        <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span>
+          <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span>
         </div>
-        
+
         <br />
         <br />
 
@@ -394,7 +394,7 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   },
   filterButton: {
-    
+
     textTransform: 'none'
   }
 }))
