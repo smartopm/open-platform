@@ -28,6 +28,7 @@ describe('Sidelist component', () => {
     expect(getByText('Search People')).toBeInTheDocument()
     expect(getByText('Contact')).toBeInTheDocument()
     expect(getByText('Logout')).toBeInTheDocument()
+    expect(getByText('Notifications')).toBeInTheDocument()
     expect(getByText('Jetro')).toBeInTheDocument()
   })
 
