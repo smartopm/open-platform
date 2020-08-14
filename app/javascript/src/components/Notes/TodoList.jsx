@@ -89,7 +89,7 @@ export default function TodoList({
     // allow the mutation above to finish running before refetching
     setTimeout(() => {
       refetch()
-    }, 300)
+    }, 100)
   }
 
   function paginate(action) {
