@@ -22,9 +22,11 @@ export default function Notifications() {
     const [notificationPreference] = useMutation(NotificationPreference)
 
     if (data) {
+        let sms = data.userLabels.filter(label => label.shortDesc === "com_news_sms")
+        let email = data.userLabels.filter(label => label.shortDesc === "com_news_email")
 
-        let str = data.userLabels.map(label => label.shortDesc === "com_news_sms")
-        console.log(str)
+        // sms[0].shortDesc === 'com_news_sms' ? setCheckedState({...checkedState, com_news_sms: true}) : null
+        // sms[0].shortDesc === 'com_news_sms' ? setCheckedState({...checkedState, com_news_email: true}) : null
 
     }
 
