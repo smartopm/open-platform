@@ -114,7 +114,7 @@ export default function PostPage() {
             className={`btn ${css(styles.getStartedButton)} `}
             style={{backgroundColor: theme.primaryColor}}
           >
-            Share comments&nbsp;<Avatar>{data.postComments.length}</Avatar>
+            View comments&nbsp;<Avatar>{data ? data.postComments.length : 0}</Avatar>
             
         </Fab>
       </div>
@@ -144,7 +144,7 @@ export default function PostPage() {
                 discussionId={queryResponse.data.postDiscussion.id}
               />
               {
-                data.postComments.length >= limit && (
+                data?.postComments.length >= limit && (
                   <CenteredContent>
                     <Button
                       variant="outlined"
