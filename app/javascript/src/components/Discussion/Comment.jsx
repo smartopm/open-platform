@@ -78,6 +78,7 @@ export default function Comments({ comments, refetch, discussionId }) {
                         createdAt={comment.createdAt}
                         comment={comment.content}
                         imageUrl={comment.imageUrl}
+                        isAdmin={authState.user.userType === 'admin'}
                   />
                 )) : <p className="text-center">Be the first to comment on this post</p>
             }
@@ -86,7 +87,7 @@ export default function Comments({ comments, refetch, discussionId }) {
 }
 
 
-export function CommentSection({ user, createdAt, comment, imageUrl }) {
+export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin }) {
     return (
         <ListItem alignItems="flex-start" >
             <ListItemAvatar style={{ marginRight: 8 }}>
@@ -98,7 +99,7 @@ export function CommentSection({ user, createdAt, comment, imageUrl }) {
                         <span >
                         <Link
                           style={{ cursor: 'pointer', textDecoration: 'none' }}
-                          to={`/user/${user.id}`}
+                          to={isAdmin ? `/user/${user.id}` : '#'}
                         >
                           {user.name}
                         </Link>
@@ -217,7 +218,8 @@ CommentBox.propType = {
 CommentSection.propType = {
     user: PropTypes.object.isRequired,
     createdAt: PropTypes.string.isRequired,
-    comment: PropTypes.string.isRequired
+    comment: PropTypes.string.isRequired,
+    isAdmin: PropTypes.bool
 }
 
 const styles = StyleSheet.create({
