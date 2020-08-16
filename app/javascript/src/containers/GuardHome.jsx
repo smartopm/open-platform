@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     bottom: 12
   },
   homeIconColor: {
-    color: '#25c0b0'
+    color: '#69ABA4'
   },
 
   link: {

@@ -259,9 +259,9 @@ ActiveRecord::Schema.define(version: 2020_08_10_143844) do
     t.uuid "user_id"
     t.uuid "author_id"
     t.text "body"
+    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "flagged"
-    t.datetime "created_at"
     t.boolean "completed"
     t.datetime "due_date"
     t.string "category"
@@ -270,7 +270,7 @@ ActiveRecord::Schema.define(version: 2020_08_10_143844) do
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "userId"
+    t.uuid "userId"
     t.string "name"
     t.string "email"
     t.string "home_address"

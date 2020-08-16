@@ -42,7 +42,7 @@ export default function UserLog({
       <div>
         <div
           style={{
-            backgroundColor: "#25c0b0"
+            backgroundColor: "#69ABA4"
           }}
         >
          

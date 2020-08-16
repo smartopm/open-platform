@@ -14,13 +14,15 @@ RSpec.describe Mutations::Comment do
         mutation commentCreate(
           $content: String!
           $discussionId: ID!
+          $imageBlobId: String
         ) {
-            commentCreate(discussionId:$discussionId, content:$content){
+            commentCreate(discussionId:$discussionId, content:$content, imageBlobId: $imageBlobId){
                 comment {
                 id
                 discussionId
                 content
                 userId
+                imageUrl
                 }
             }
           }
@@ -42,6 +44,30 @@ RSpec.describe Mutations::Comment do
       expect(result.dig('data', 'commentCreate', 'comment', 'userId')).to eql user.id
       expect(result.dig('data', 'commentCreate', 'comment', 'discussionId'))
         .to eql user_discussion.id
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'should allow attaching images to a comment' do
+      file = fixture_file_upload(Rails.root.join('public', 'apple-touch-icon.png'), 'image/png')
+      image_blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
+        filename: 'test.jpg',
+        content_type: 'image/jpg',
+      )
+      variables = {
+        discussionId: user_discussion.id,
+        content: 'This is your last comment',
+        imageBlobId: image_blob.signed_id,
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
+
+      expect(result.dig('data', 'commentCreate', 'comment', 'imageUrl')).not_to be_nil
+      expect(result.dig('data', 'commentCreate', 'comment',
+                        'imageUrl')).to include image_blob.signed_id
       expect(result.dig('errors')).to be_nil
     end
 

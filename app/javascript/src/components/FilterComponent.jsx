@@ -49,7 +49,7 @@ export default function FilterComponent({
         ))}
       </Select>
       {Boolean(stateList.length) && (
-        <Button onClick={resetFilter}>Clear Filter</Button>
+        <Button size="small" onClick={resetFilter}>Clear Filter</Button>
       )}
     </FormControl>
   )
