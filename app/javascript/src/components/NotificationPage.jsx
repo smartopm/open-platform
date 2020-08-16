@@ -13,10 +13,8 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                     Notification Settings
                 </Typography>
             </Box>
-
             <Divider />
             <br />
-
             <Grid container alignItems="center" justify="center" spacing={3}>
                 <Grid item xs={12} sm={6}>
                     <Typography variant="body1" >
