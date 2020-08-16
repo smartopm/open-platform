@@ -39,10 +39,10 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                             <FormControlLabel
                                 value="top"
                                 control={<Checkbox
-                                    checked={sms}
-                                    name="com_news_sms"
-                                    onChange={handleSmsChange}
-                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                checked={sms}
+                                name="com_news_sms"
+                                onChange={handleSmsChange}
+                                inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />}
                                 label="SMS"
                             />

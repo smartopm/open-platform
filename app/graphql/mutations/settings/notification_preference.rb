@@ -6,8 +6,10 @@ module Mutations
     class NotificationPreference < BaseMutation
       argument :preferences, String, required: false
 
-      field :label, Types::UserLabelType, null: true
+      field :label, Boolean, null: true
 
+      # This mutation does not return anything
+      # make sure it returns something proper to validate its success
       def resolve(vals)
         preferences = vals[:preferences].split(',')
         default_preference = ::User::DEFAULT_PREFERENCE
@@ -29,18 +31,22 @@ module Mutations
 
           context[:current_user].user_labels.create!(label_id: label.id)
         end
+        # add this for debugging, TODO: remove
+        {label: true}
       end
 
       def remove_preference(unselected_values)
         unselected_values.each do |pref|
-          label_id = ::Label.find_by(short_desc: pref)&.id
+          label_id = context[:site_community].labels.find_by(short_desc: pref)&.id
           context[:current_user].user_labels.find_by(label_id: label_id).delete
         end
+        # add this for debugging, TODO: remove
+        {label: true}
       end
 
       def label_record(pref)
         context[:site_community].labels.find_by(short_desc: pref).presence ||
-          ::Label.create!(short_desc: pref, community_id: context[:site_community].id)
+        context[:site_community].create!(short_desc: pref)
       end
 
       def preference_exists?(label)
