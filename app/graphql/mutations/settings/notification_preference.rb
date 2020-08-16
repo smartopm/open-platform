@@ -33,7 +33,7 @@ module Mutations
           context[:current_user].user_labels.create!(label_id: label.id)
         end
         # add this for debugging, TODO: remove
-        {label: true}
+        { label: true }
       end
 
       def remove_preference(unselected_values)
@@ -42,12 +42,12 @@ module Mutations
           context[:current_user].user_labels.find_by(label_id: label_id).delete
         end
         # add this for debugging, TODO: remove
-        {label: true}
+        { label: true }
       end
 
       def label_record(pref)
         context[:site_community].labels.find_by(short_desc: pref).presence ||
-        context[:site_community].create!(short_desc: pref)
+          context[:site_community].labels.create!(short_desc: pref)
       end
 
       def preference_exists?(label)
