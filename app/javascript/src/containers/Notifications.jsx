@@ -19,8 +19,7 @@ export default function Notifications() {
         variables: { userId: authState.user.id }
     })
     const [loading, setLoading] = useState(false)
-    const [preferences, setPreference] = useState([])
-    const [notificationPreference] = useMutation(NotificationPreference)
+    const [savePreferredNotification] = useMutation(NotificationPreference)
 
     useEffect(() => {
         if (!labelsLoading && data) {
@@ -34,38 +33,31 @@ export default function Notifications() {
     }, [labelsLoading, data])
 
     if(labelsLoading) return <Loading />
-    // if (data) {
-    //     labelArray = data.userLabels.map(label => label.shortDesc)
-    //     labelArray.includes("com_news_email") ? email = true : null
-    // }
 
     function handleChange(e) {
         setCheckedState({ ...checkedState, [e.target.name]: e.target.checked })
-        !checkedState.com_news_email ? setPreference([...preferences, e.target.name]) : setPreference(preferences.filter(label => label !== e.target.name))
-    }
-
-    function handleSmsChange(e) {
-        setCheckedState({ ...checkedState, [e.target.name]: e.target.checked })
-        !checkedState.com_news_sms ? setPreference([...preferences, e.target.name]) : setPreference(preferences.filter(label => label !== e.target.name))
     }
 
     function handleSave() {
-        setLoading(true)
-        notificationPreference({
-            variables: { preferences: preferences.join() }
-        }).then(() => {
-            setLoading(false)
-        })
-    }
+      setLoading(true)
+      // fill an array with keys that are only checked
+        const preferences = [
+            checkedState.smsChecked ? 'com_news_sms' : null,
+            checkedState.emailChecked ? 'com_news_email' : null
+        ]
 
-    console.log(checkedState)
+      savePreferredNotification({
+        variables: { preferences: preferences.filter(Boolean).join() }
+      }).then(() => {
+        setLoading(false)
+      }).catch(err => console.log(err.message))
+    }
     return (
         <div>
             <Fragment>
                 <Nav navName="Notifications" menuButton="back" backTo="/" />
                  <NotificationPage
                     handleChange={handleChange}
-                    handleSmsChange={handleSmsChange}
                     checkedState={checkedState}
                     loading={loading}
                     handleSave={handleSave} /> 

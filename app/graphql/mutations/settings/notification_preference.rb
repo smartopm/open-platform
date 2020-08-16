@@ -10,6 +10,7 @@ module Mutations
 
       # This mutation does not return anything
       # make sure it returns something proper to validate its success
+      # handle cases where the user chooses not to select any preferences
       def resolve(vals)
         preferences = vals[:preferences].split(',')
         default_preference = ::User::DEFAULT_PREFERENCE
