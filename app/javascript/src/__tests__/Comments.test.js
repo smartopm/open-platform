@@ -46,7 +46,8 @@ describe('CommentSection', () => {
         user: { name: "someimagesource" },
         createdAt: new Date(),
         comment: "This is another comment",
-        imageUrl: 'https://dev.dgdp.site/activestorage'
+        imageUrl: 'https://dev.dgdp.site/activestorage',
+        isAdmin: true
     }
 
     it('should render with wrong props', () => {
