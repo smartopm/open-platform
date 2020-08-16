@@ -9,7 +9,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
     return (
         <Box style={{ height: 100, margin: 10 }}>
             <Box style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', margin: 10 }}>
-                <Typography variant="h4">
+                <Typography variant="h5">
                     Notification Settings
                 </Typography>
             </Box>
