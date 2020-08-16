@@ -5,11 +5,11 @@ module Mutations
     # Set notification preference for users
     class NotificationPreference < BaseMutation
       argument :preferences, String, required: false
-
+      # also changed this from UserLabelType
       field :label, Boolean, null: true
 
       # This mutation does not return anything
-      # make sure it returns something proper to validate its success
+      # it should return something proper to validate its success
       # handle cases where the user chooses not to select any preferences
       def resolve(vals)
         preferences = vals[:preferences].split(',')
@@ -32,7 +32,7 @@ module Mutations
 
           context[:current_user].user_labels.create!(label_id: label.id)
         end
-        # add this for debugging, TODO: remove
+        # I added this for debugging purposes, TODO: remove after adding proper return type
         { label: true }
       end
 
@@ -41,7 +41,7 @@ module Mutations
           label_id = context[:site_community].labels.find_by(short_desc: pref)&.id
           context[:current_user].user_labels.find_by(label_id: label_id).delete
         end
-        # add this for debugging, TODO: remove
+        # I added this for debugging purposes, TODO: remove after adding proper return type
         { label: true }
       end
 
