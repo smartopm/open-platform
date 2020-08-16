@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Box, Grid, Typography, Button, Divider, Checkbox, FormControl, FormGroup, FormControlLabel } from '@material-ui/core'
-import SaveIcon from '@material-ui/icons/Save';
 import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
+import CenteredContent from './CenteredContent';
 
-export default function NotificationPage({ handleChange, checkedState, handleSave, handleSmsChange, loading}) {
+export default function NotificationPage({ handleChange, checkedState, handleSave, loading}) {
     const { smsChecked, emailChecked } = checkedState
     const theme = useContext(ThemeContext)
     return (
@@ -11,15 +11,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
             <Box style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', margin: 10 }}>
                 <Typography variant="h4">
                     Notification Settings
-            </Typography>
-                <Button
-                    startIcon={<SaveIcon />}
-                    style={{ backgroundColor: theme.primaryColor, color: 'white' }}
-                    onClick={handleSave}
-                >
-                    Save
-            </Button>
-
+                </Typography>
             </Box>
 
             <Divider />
@@ -41,6 +33,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                                 control={<Checkbox
                                 checked={smsChecked}
                                 name="smsChecked"
+                                style={{color: theme.primaryColor}}
                                 onChange={handleChange}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />}
@@ -51,6 +44,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                                 control={<Checkbox
                                 checked={emailChecked}
                                 name="emailChecked"
+                                style={{color: theme.primaryColor}}
                                 onChange={handleChange}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />}
@@ -58,10 +52,17 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                             />
                         </FormGroup>
                     </FormControl>
-                    {loading ? 'Saving...' : null}
                 </Grid>
             </Grid>
-
+            <br/>
+            <CenteredContent>
+                <Button
+                    style={{ backgroundColor: theme.primaryColor, color: 'white' }}
+                    onClick={handleSave}
+                >
+                 {loading ? 'Saving...' : 'Save'}
+                </Button>
+            </CenteredContent>
         </Box>
     )
 }
