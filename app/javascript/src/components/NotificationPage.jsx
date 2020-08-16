@@ -4,7 +4,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 
 export default function NotificationPage({ handleChange, checkedState, handleSave, handleSmsChange, loading}) {
-    const { sms, email } = checkedState
+    const { smsChecked, emailChecked } = checkedState
     const theme = useContext(ThemeContext)
     return (
         <Box style={{ height: 100, margin: 10 }}>
@@ -39,7 +39,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                             <FormControlLabel
                                 value="top"
                                 control={<Checkbox
-                                checked={sms}
+                                checked={smsChecked}
                                 name="com_news_sms"
                                 onChange={handleSmsChange}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -49,7 +49,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                             <FormControlLabel
                                 value="top"
                                 control={<Checkbox
-                                    checked={email}
+                                    checked={emailChecked}
                                     name="com_news_email"
                                     onChange={handleChange}
                                     inputProps={{ 'aria-label': 'primary checkbox' }}
