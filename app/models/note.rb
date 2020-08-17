@@ -5,6 +5,7 @@ class Note < ApplicationRecord
   include SearchCop
 
   search_scope :search do
+    attributes :created_at, :completed, :due_date, :flagged
     attributes assignees: ['assignees.name']
   end
 
