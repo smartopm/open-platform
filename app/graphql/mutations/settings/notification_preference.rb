@@ -5,12 +5,8 @@ module Mutations
     # Set notification preference for users
     class NotificationPreference < BaseMutation
       argument :preferences, String, required: false
-      # also changed this from UserLabelType
-      field :label, Boolean, null: true
+      field :success, Boolean, null: true
 
-      # This mutation does not return anything
-      # it should return something proper to validate its success
-      # handle cases where the user chooses not to select any preferences
       def resolve(vals)
         preferences = vals[:preferences].split(',')
         default_preference = ::User::DEFAULT_PREFERENCE
@@ -28,12 +24,12 @@ module Mutations
       def add_preference(preferences)
         preferences.each do |pref|
           label = label_record(pref)
-          next if preference_exists?(label)
+          next if preference_exists?(label) ||
+                  context[:current_user].user_labels.create!(label_id: label.id)
 
-          context[:current_user].user_labels.create!(label_id: label.id)
+          raise GraphQL::ExecutionError, 'Preference Update Failed' 
         end
-        # I added this for debugging purposes, TODO: remove after adding proper return type
-        { label: true }
+        { success: true }
       end
 
       def remove_preference(unselected_values)
@@ -41,8 +37,6 @@ module Mutations
           label_id = context[:site_community].labels.find_by(short_desc: pref)&.id
           context[:current_user].user_labels.find_by(label_id: label_id).delete
         end
-        # I added this for debugging purposes, TODO: remove after adding proper return type
-        { label: true }
       end
 
       def label_record(pref)
