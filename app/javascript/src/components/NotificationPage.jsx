@@ -9,7 +9,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
     return (
         <Box style={{ height: 100, margin: 10 }}>
             <Box style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', margin: 10 }}>
-                <Typography variant="h5">
+                <Typography variant="h5" data-testid="notification-header">
                     Notification Settings
                 </Typography>
             </Box>
@@ -17,7 +17,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
             <br />
             <Grid container alignItems="center" justify="center" spacing={3}>
                 <Grid item xs={12} sm={6}>
-                    <Typography variant="body1" >
+                    <Typography variant="body1" data-testid="notification-description" >
                         We use notifications to share the latest news and updates on Nkwashi
                         and your account. Types of content include newsletters, community interviews,
                         construction progress, and account updates.
@@ -28,6 +28,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                         <FormGroup aria-label="position" row>
                             <FormControlLabel
                                 value="top"
+                                data-testid="sms-checkbox"
                                 control={<Checkbox
                                 checked={smsChecked}
                                 name="smsChecked"
@@ -39,6 +40,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                             />
                             <FormControlLabel
                                 value="top"
+                                data-testid="email-checkbox"
                                 control={<Checkbox
                                 checked={emailChecked}
                                 name="emailChecked"
@@ -55,6 +57,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
             <br/>
             <CenteredContent>
                 <Button
+                data-testid="preferences-save-button"
                     style={{ backgroundColor: theme.primaryColor, color: 'white' }}
                     onClick={handleSave}
                 >
