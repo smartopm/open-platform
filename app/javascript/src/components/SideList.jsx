@@ -35,54 +35,59 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
         {
           ['admin', 'custodian'].includes(authState.user.userType) && (
             <>
-              <ListItem button>
-                <ListItemIcon>
-                  <CropFreeIcon />
-                </ListItemIcon>
-                <Link to="/scan" className={`${css(styles.link)}`}>
+              <Link to="/scan" className={`${css(styles.link)}`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <CropFreeIcon />
+                  </ListItemIcon>
                   <ListItemText primary="Scanner" />
-                </Link>
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <PeopleIcon />
-                </ListItemIcon>
-                <Link
-                  to={{
-                    pathname: 'search',
-                    state: { from: '/' }
-                  }} className={`${css(styles.link)}`}>
+                </ListItem>
+              </Link>
+              <Link
+                to={{
+                  pathname: 'search',
+                  state: { from: '/' }
+                }} className={`${css(styles.link)}`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
                   <ListItemText primary="Search People" />
-                </Link>
-              </ListItem>  
+                </ListItem>
+              </Link>
             </>
-         )
+          )
         }
+        <Link to="/contact" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <HelpIcon />
+            </ListItemIcon>
 
-        <ListItem button>
-          <ListItemIcon>
-            <HelpIcon />
-          </ListItemIcon>
-          <Link to="/contact" className={`${css(styles.link)}`}>
             <ListItemText primary="Contact" />
-          </Link>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <MeetingRoomIcon />
-          </ListItemIcon>
-          <a href="/logout" className={`${css(styles.link)}`}>
+
+          </ListItem>
+        </Link>
+        <a href="/logout" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <MeetingRoomIcon />
+            </ListItemIcon>
+
             <ListItemText primary="Logout" />
-          </a>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <NotificationsActiveIcon />
-          </ListItemIcon>
-          <a href="/settings" className={`${css(styles.link)}`}>
+
+          </ListItem>
+        </a>
+        <a href="/settings" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <NotificationsActiveIcon />
+            </ListItemIcon>
+
             <ListItemText primary="Preferences" />
-          </a>
-        </ListItem>
+
+          </ListItem>
+        </a>
       </List>
       <Footer position="36vh" />
       <PrivacyPolicy />
