@@ -25,7 +25,9 @@ import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import FilterComponent from '../FilterComponent'
 import Task from './Task'
-import Cards from '../AnalyticsCard'
+import TaskStatCard from './TaskStatCard'
+import TaskDashboard from './TaskDashboard'
+
 // component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
@@ -177,44 +179,9 @@ export default function TodoList({
           <Grid
               container
               spacing={3}
-            > 
-            <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
+          > 
+            <TaskDashboard />
           </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Cards />
-          </Grid>
-            </Grid>
           <ul className={css(styles.list)}>
             {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
                   <Task

@@ -502,6 +502,7 @@ export const TaskStatsQuery = gql`
       tasksOpenAndOverdue
       overdueTasks
       tasksWithNoDueDate
+      myOpenTasks
     }
   }
 `
