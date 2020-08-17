@@ -190,7 +190,7 @@ function useFormInput(initialValue) {
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#69ABA4",
     color: "#FFF",
     width: "75%",
     boxShadow: "none",

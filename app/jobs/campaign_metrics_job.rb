@@ -10,15 +10,15 @@ class CampaignMetricsJob < ApplicationJob
 
     clicks_count = EventLog.since_date(campaign.start_time).by_user_activity
                            .with_acting_user_id(user_id_list.split(',')).count
-    update_clicks(campaign, clicks_count)
+    update_clicks(campaign, clicks_count, user_id_list)
   end
 
   private
 
-  def update_clicks(campaign, clicks_count)
+  def update_clicks(campaign, clicks_count, user_id_list)
     if campaign.update(total_clicked: clicks_count)
       return CampaignMetricsJob.set(wait: 2.hours)
-                               .perform_later(campaign.id, campaign.user_id_list)
+                               .perform_later(campaign.id, user_id_list)
     end
 
     Rollbar.error "Count Update Failed #{campaign_id}"

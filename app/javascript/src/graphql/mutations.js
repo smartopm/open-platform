@@ -480,8 +480,8 @@ export const CampaignUpdate = gql`
 `
 
 export const CommentMutation = gql`
-  mutation commentCreate($discussionId: ID!, $content: String!) {
-    commentCreate(discussionId: $discussionId, content: $content) {
+  mutation commentCreate($discussionId: ID!, $content: String!, $imageBlobId: String) {
+    commentCreate(discussionId: $discussionId, content: $content, imageBlobId: $imageBlobId) {
       comment {
         content
       }
@@ -535,13 +535,13 @@ export const LabelCreate = gql`
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-  mutation userLabelCreate($userId: ID!, $labelId: ID!) {
-    userLabelCreate(userId: $userId, labelId: $labelId) {
-      label {
-        labelId
-      }
+    mutation userLabelCreate($userId: String!, $labelId: String!){
+       userLabelCreate(userId: $userId, labelId: $labelId){
+         label {
+           labelId
+         }
+       }
     }
-  }
 `
 
 export const UserLabelUpdate = gql`
@@ -560,5 +560,13 @@ export const AssignUser = gql`
       assigneeNote
     }
   }
+`
+
+export const NotificationPreference = gql`
+  mutation notificationPreference($preferences: String){
+    notificationPreference(preferences: $preferences){
+        __typename
+  }
+}
 `
 

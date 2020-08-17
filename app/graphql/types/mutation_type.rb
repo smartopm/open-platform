@@ -45,6 +45,7 @@ module Types
     # campaigns
     field :campaign_create, mutation: Mutations::Campaign::CampaignCreate
     field :campaign_update, mutation: Mutations::Campaign::CampaignUpdate
+    field :campaign_create_through_users, mutation: Mutations::Campaign::CampaignCreateThroughUsers
 
     # comments
     field :comment_create, mutation: Mutations::Comment::CommentCreate
@@ -57,5 +58,8 @@ module Types
     field :label_create, mutation: Mutations::Label::LabelCreate
     field :user_label_create, mutation: Mutations::Label::UserLabelCreate
     field :user_label_update, mutation: Mutations::Label::UserLabelUpdate
+
+    # notifications
+    field :notification_preference, mutation: Mutations::Settings::NotificationPreference
   end
 end

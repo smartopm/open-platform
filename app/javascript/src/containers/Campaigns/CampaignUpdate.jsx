@@ -22,15 +22,17 @@ import { saniteError } from '../../utils/helpers'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
-import CampaignLabels from '../../components/CampaignLabels.jsx'
+// import CampaignLabels from '../../components/CampaignLabels.jsx'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 
 export default function UpdateCampaign({ match }) {
   const authState = useContext(AuthStateContext)
-  const [label, setLabel] = useState([])
-  const { data, error, loading } = useQuery(Campaign, {
-    variables: { id: match.params.id }
+  // const [label, setLabel] = useState([])
+  const { data, error, loading, refetch } = useQuery(Campaign, {
+    variables: { id: match.params.id },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
   })
   const [campaign] = useMutation(CampaignUpdate)
 
@@ -45,7 +47,7 @@ export default function UpdateCampaign({ match }) {
     labels: []
 
   })
-  const [batchTime, setBatchTime] = useState('')
+  const [batchTime, setBatchTime] = useState(new Date().toISOString())
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -70,37 +72,32 @@ export default function UpdateCampaign({ match }) {
   function handleSubmit(e) {
     e.preventDefault()
 
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
-    if (batchTime !== '') {
-      setFormData({
-        ...formData,
-        batchTime: batchTime
-      })
-    }
+    // setTimeout(() => {
+    //   window.location.reload(false)
+    // }, 3000)
+   
     const campaignData = {
       id: formData.id,
       name: formData.name,
       message: formData.message,
-      batchTime: formData.batchTime,
+      batchTime: batchTime,
       userIdList: formData.userIdList,
-      labels: label.toString()
+      // labels: label.toString()
     }
 
     campaign({ variables: campaignData })
       .then(() => {
         setIsSubmitted(true)
+        refetch()
       })
       .catch(err => {
         setErrorMsg(err.message)
       })
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
-    setLabel([...label, id])
-  }
+  // function handleLabelSelect(labels) {
+  //   setLabel([...label, ...getJustLabels(labels)])
+  // }
 
   function handleUserIDList(_event, value) {
     let userIds = DelimiterFormatter(value)
@@ -109,6 +106,7 @@ export default function UpdateCampaign({ match }) {
       userIdList: userIds.toString()
     })
   }
+ 
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
@@ -169,15 +167,15 @@ export default function UpdateCampaign({ match }) {
                 )) : null
               }
             </div>
-            <CampaignLabels handleLabelSelect={handleLabelSelect} />
+            {/* <CampaignLabels handleLabelSelect={handleLabelSelect} /> */}
           </div>
           <br />
           <div style={{ paddingBottom: '3%' }}>
             <DateAndTimePickers
-              label="Start Time"
+              label="Batch Time"
               required
               selectedDateTime={batchTime}
-              handleDateChange={e => setBatchTime(e)}
+              handleDateChange={setBatchTime}
             />
           </div>
           <div>
@@ -214,8 +212,8 @@ export default function UpdateCampaign({ match }) {
           </div>
           <br />
           <div className="d-flex row justify-content-center">
-            {Boolean(errorMsg.length) && (
-              <p className="text-danger text-center">{saniteError(errorMsg)}</p>
+            {Boolean(errorMsg) && (
+              <p className="text-danger text-center">{saniteError([], errorMsg)}</p>
             )}
             {isSubmitted && <p>Campaign has been submitted</p>}
           </div>
@@ -224,9 +222,23 @@ export default function UpdateCampaign({ match }) {
     </>
   )
 }
+
+export function getJustLabels(labels) {
+  let str = []
+  for (let index = 0; index < labels.length; index++) {
+    const element = labels[index]
+    if (typeof element === 'object') {
+      str.push(element.shortDesc)
+    }
+    str.push(element)
+  }
+  return str.filter(el => typeof el === 'string')
+}
+    
+
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF',
     width: '30%',
     height: 51,

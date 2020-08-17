@@ -375,6 +375,7 @@ export const DiscussionCommentsQuery = gql`
       content
       createdAt
       id
+      imageUrl
       user {
         id
         name

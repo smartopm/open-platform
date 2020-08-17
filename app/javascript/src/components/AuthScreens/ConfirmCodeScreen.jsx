@@ -173,7 +173,7 @@ export default function ConfirmCodeScreen({ match }) {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF',
     width: '55%',
     height: 51,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     height: 60,
     fontSize: 27,
     textAlign: 'center',
-    border: '2px solid #5189dd',
+    border: '2px solid #69ABA4',
     borderRadius: 2,
     borderTop: 'none',
     borderRight: 'none',

@@ -7,15 +7,16 @@ import { useMutation } from 'react-apollo'
 import { CampaignCreate } from '../graphql/mutations'
 import { DelimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
-import CampaignLabels from './CampaignLabels.jsx'
+// import CampaignLabels from './CampaignLabels.jsx'
+// import { getJustLabels } from '../containers/Campaigns/CampaignUpdate'
 
 export default function CampaignForm({ authState }) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [userIdList, setUserIdList] = useState('')
-  const [label, setLabel] = useState([])
+  // const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
-  const [batchTime, setBatchTime] = useState('')
+  const [batchTime, setBatchTime] = useState(new Date())
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [campaign] = useMutation(CampaignCreate)
 
@@ -26,7 +27,7 @@ export default function CampaignForm({ authState }) {
       message,
       batchTime,
       userIdList,
-      labels: label.toString()
+      // labels: label.toString()
     }
 
     setTimeout(() => {
@@ -42,11 +43,9 @@ export default function CampaignForm({ authState }) {
       })
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
-    setLabel([...label, id])
-
-  }
+  // function handleLabelSelect(labels) {
+  //   setLabel([...label, ...getJustLabels(labels)])
+  // }
   function handleUserIDList(_event, value) {
     let userIds = DelimitorFormator(value)
     setUserIdList(userIds.toString())
@@ -105,16 +104,16 @@ export default function CampaignForm({ authState }) {
           />
         </div>
 
-        <div>
+        {/* <div >
           <CampaignLabels handleLabelSelect={handleLabelSelect} />
-        </div>
+        </div> */}
         <br />
         <div>
           <DateAndTimePickers
             label="Batch Time"
             required
             selectedDateTime={batchTime}
-            handleDateChange={e => setBatchTime(e.target.value)}
+            handleDateChange={setBatchTime}
           />
         </div>
         <div className="d-flex row justify-content-center">
@@ -140,7 +139,7 @@ export default function CampaignForm({ authState }) {
 }
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF',
     width: '30%',
     height: 51,
