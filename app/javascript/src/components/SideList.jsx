@@ -79,8 +79,8 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
           <ListItemIcon>
             <NotificationsActiveIcon />
           </ListItemIcon>
-          <a href="/notifications" className={`${css(styles.link)}`}>
-            <ListItemText primary="Notifications" />
+          <a href="/settings" className={`${css(styles.link)}`}>
+            <ListItemText primary="Preferences" />
           </a>
         </ListItem>
       </List>
