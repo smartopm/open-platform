@@ -8,7 +8,7 @@ module Mutations
       field :success, Boolean, null: true
 
       def resolve(vals)
-        preferences = vals[:preferences].split(',')
+        preferences = vals[:preferences]&.split(',') || []
         default_preference = ::User::DEFAULT_PREFERENCE
         raise GraphQL::ExecutionError, 'Invalid Value' if (preferences - default_preference).any?
 
@@ -27,7 +27,7 @@ module Mutations
           next if preference_exists?(label) ||
                   context[:current_user].user_labels.create!(label_id: label.id)
 
-          raise GraphQL::ExecutionError, 'Preference Update Failed' 
+          raise GraphQL::ExecutionError, 'Preference Update Failed'
         end
         { success: true }
       end
