@@ -25,7 +25,6 @@ import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import FilterComponent from '../FilterComponent'
 import Task from './Task'
-import TaskStatCard from './TaskStatCard'
 import TaskDashboard from './TaskDashboard'
 
 // component needs a redesign both implementation and UI
@@ -110,6 +109,9 @@ export default function TodoList({
     setAssignee(event.target.value)
   }
 
+  function handleTaskFilter(evt, key) {
+    console.log(key)
+  }
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
@@ -180,7 +182,7 @@ export default function TodoList({
               container
               spacing={3}
           > 
-            <TaskDashboard />
+            <TaskDashboard filterTasks={handleTaskFilter} />
           </Grid>
           <ul className={css(styles.list)}>
             {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
