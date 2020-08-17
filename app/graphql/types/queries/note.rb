@@ -29,7 +29,7 @@ module Types::Queries::Note
       description 'count of all tasks assigned to me'
     end
 
-    field :task_stasts, Integer, null: false do
+    field :task_stasts, Types::TaskStatType, null: false do
       description 'return stats related to tasks'
     end
   end
@@ -60,7 +60,7 @@ module Types::Queries::Note
   def my_tasks_count
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:current_user].tasks.where(completed: false).count
+    my_task
   end
 
   def task_stasts
@@ -75,16 +75,35 @@ module Types::Queries::Note
     #  Completed tasks
     tasks = context[:site_community].notes.includes(:assignees, :author)
                                     .eager_load(:assignee_notes, :assignees)
-                                    .where(flagged: true)
+                                    .where(flagged: true, completed: false)
+
+    completed_tasks = context[:site_community].notes.includes(:assignees, :author)
+                                    .eager_load(:assignee_notes, :assignees)
+                                    .where(flagged: true, completed: true)
+                                    .count
     date_in_10 =  10.days.from_now
     date_in_30 =  30.days.from_now
     tasks_open =  tasks.count
     tasks_due_in_10 = tasks.where("due_date <= ?", date_in_10).count
     tasks_due_in_30 = tasks.where("due_date <= ?", date_in_30).count
+    tasks_with_no_due_date = tasks.where(due_date: nil).count
     overdue_tasks = tasks.where("due_date <= ?", Time.now).count
-    completed_tasks = tasks.where(completed: true).count
-    tasks_open_and_overdue =  tasks.where("due_date <= ?", Time.now, completed: false, ).count
+    tasks_open_and_overdue =  tasks.where(completed: false).where("due_date <= ?", Time.now).count
+    my_open_tasks = my_task
     
-    tasks_open
+    {
+      tasks_open: tasks_open,
+      tasks_due_in_10_days: tasks_due_in_10,
+      tasks_due_in_30_days: tasks_due_in_30,
+      overdue_tasks: overdue_tasks,
+      completed_tasks: completed_tasks,
+      tasks_open_and_overdue: tasks_open_and_overdue,
+      tasks_with_no_due_date: tasks_with_no_due_date,
+      my_open_tasks: my_open_tasks
+    }
+  end
+
+  def my_task
+    context[:current_user].tasks.where(completed: false).count
   end
 end
