@@ -63,47 +63,28 @@ module Types::Queries::Note
     my_task
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def task_stasts
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-    # Total number of tasks open (active)
-    #  Total number of tasks due in 10 days (active)
-    #  Total number of tasks due in 30 days (active)
-    #  Total overdue tasks
-    #  Total calls open
-    #  My open tasks
-    #  Number of tasks open (active) overdue
-    #  Completed tasks
-    tasks = context[:site_community].notes.includes(:assignees, :author)
-                                    .eager_load(:assignee_notes, :assignees)
-                                    .where(flagged: true, completed: false)
 
-    completed_tasks = context[:site_community].notes.includes(:assignees, :author)
-                                    .eager_load(:assignee_notes, :assignees)
-                                    .where(flagged: true, completed: true)
-                                    .count
-    date_in_10 =  10.days.from_now
-    date_in_30 =  30.days.from_now
-    tasks_open =  tasks.count
-    tasks_due_in_10 = tasks.where("due_date <= ?", date_in_10).count
-    tasks_due_in_30 = tasks.where("due_date <= ?", date_in_30).count
-    tasks_with_no_due_date = tasks.where(due_date: nil).count
-    overdue_tasks = tasks.where("due_date <= ?", Time.now).count
-    tasks_open_and_overdue =  tasks.where(completed: false).where("due_date <= ?", Time.now).count
-    my_open_tasks = my_task
-    
+    tasks = context[:site_community].notes.where(flagged: true)
+
     {
-      tasks_open: tasks_open,
-      tasks_due_in_10_days: tasks_due_in_10,
-      tasks_due_in_30_days: tasks_due_in_30,
-      overdue_tasks: overdue_tasks,
-      completed_tasks: completed_tasks,
-      tasks_open_and_overdue: tasks_open_and_overdue,
-      tasks_with_no_due_date: tasks_with_no_due_date,
-      my_open_tasks: my_open_tasks
+      tasks_open: tasks.by_completion(false).count,
+      tasks_due_in_10_days: tasks.by_due_date(10.days.from_now).count,
+      tasks_due_in_30_days: tasks.by_due_date(30.days.from_now).count,
+      overdue_tasks: tasks.by_due_date(Time.zone.now).count,
+      completed_tasks: tasks.by_completion(true).count,
+      tasks_open_and_overdue: tasks.by_completion(false).by_due_date(Time.zone.now).count,
+      tasks_with_no_due_date: tasks.where(due_date: nil).count,
+      my_open_tasks: my_task,
     }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def my_task
-    context[:current_user].tasks.where(completed: false).count
+    context[:current_user].tasks.by_completion(false).count
   end
 end
