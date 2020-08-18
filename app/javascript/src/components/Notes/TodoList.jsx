@@ -66,17 +66,16 @@ export default function TodoList({
     errorPolicy: 'all'
   })
 
+  // TODO: simplify this: @olivier
+  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query: query.length
-          ? query
-          : location === 'my_tasks'
-          ? currentUser
-          : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+        query: `${!qr.length ? 'completed: false': qr}`
       }
     }
   )
