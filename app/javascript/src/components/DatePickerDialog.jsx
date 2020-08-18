@@ -1,34 +1,20 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core/styles'
 import DateFnsUtils from '@date-io/date-fns'
-import { StyleSheet, css } from 'aphrodite'
 import { createMuiTheme } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField';
 import {
     KeyboardDatePicker,
-    MuiPickersUtilsProvider
+    MuiPickersUtilsProvider,
+    KeyboardDateTimePicker
 } from '@material-ui/pickers'
 
 
 const theme = createMuiTheme({
-    overrides: {
-        MuiPickersToolbar: {
-            toolbar: {
-                backgroundColor: '#25c0b0',
-            },
-        },
-        MuiPickersDay: {
-            day: {
-                color: '#25c0b0',
-            },
-            daySelected: {
-                backgroundColor: '#25c0b0',
-            },
-            current: {
-                color: '#25c0b0',
-            },
-        },
-    }
+    palette: {
+        primary: {
+            main: '#69ABA4'
+        }
+      },
 });
 
 
@@ -60,29 +46,21 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
 
 }
 
-export function DateAndTimePickers({ selectedDateTime, handleDateChange,label}) {
+export function DateAndTimePickers({ selectedDateTime, handleDateChange, label}) {
 
     return (
         <ThemeProvider theme={theme}>
-        <TextField
-          id="datetime-local"
-          label={label}
-          type="datetime-local"
-          className={css(styles.fileInput)}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={selectedDateTime}
-          onChange={date => handleDateChange(date)}
-        />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDateTimePicker
+                label={label}
+                style={{width: '100%'}}
+                value={selectedDateTime}
+                format="yyyy/MM/dd hh:mm a"
+                placeholder="YYYY-MM-DD hh:mm a"
+                onChange={date => handleDateChange(new Date(date).toISOString())}
+                clearable
+            />
+        </MuiPickersUtilsProvider>
         </ThemeProvider>
     );
   }
-
-  const styles = StyleSheet.create({
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 200,
-      }
-  })

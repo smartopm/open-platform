@@ -279,8 +279,8 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due) {
+  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category) {
       note {
         body
         id
@@ -423,12 +423,14 @@ export const CampaignCreate = gql`
     $message: String!
     $batchTime: String!
     $userIdList: String!
+    $labels: String
   ) {
     campaignCreate(
       name: $name
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
+      labels: $labels
     ) {
       campaign {
         name
@@ -443,6 +445,7 @@ export const CampaignUpdate = gql`
     $message: String
     $batchTime: String
     $userIdList: String
+    $labels: String
   ) {
     campaignUpdate(
       id: $id
@@ -450,6 +453,7 @@ export const CampaignUpdate = gql`
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
+      labels: $labels
     ) {
       campaign {
         batchTime
@@ -476,8 +480,8 @@ export const CampaignUpdate = gql`
 `
 
 export const CommentMutation = gql`
-  mutation commentCreate($discussionId: ID!, $content: String!) {
-    commentCreate(discussionId: $discussionId, content: $content) {
+  mutation commentCreate($discussionId: ID!, $content: String!, $imageBlobId: String) {
+    commentCreate(discussionId: $discussionId, content: $content, imageBlobId: $imageBlobId) {
       comment {
         content
       }
@@ -531,13 +535,13 @@ export const LabelCreate = gql`
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-  mutation userLabelCreate($userId: ID!, $labelId: ID!) {
-    userLabelCreate(userId: $userId, labelId: $labelId) {
-      label {
-        labelId
-      }
+    mutation userLabelCreate($userId: String!, $labelId: String!){
+       userLabelCreate(userId: $userId, labelId: $labelId){
+         label {
+           labelId
+         }
+       }
     }
-  }
 `
 
 export const UserLabelUpdate = gql`
@@ -556,5 +560,13 @@ export const AssignUser = gql`
       assigneeNote
     }
   }
+`
+
+export const NotificationPreference = gql`
+  mutation notificationPreference($preferences: String){
+    notificationPreference(preferences: $preferences){
+        __typename
+  }
+}
 `
 

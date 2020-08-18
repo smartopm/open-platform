@@ -22,6 +22,11 @@ module Types::Queries::Note
       description 'Returns a list of all the flagged notes, basically todos'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :query, String, required: false
+    end
+
+    field :my_tasks_count, Integer, null: false do
+      description 'count of all tasks assigned to me'
     end
   end
 
@@ -37,13 +42,20 @@ module Types::Queries::Note
     context[:site_community].notes.where(user_id: id)
   end
 
-  def flagged_notes(offset: 0, limit: 50)
+  def flagged_notes(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:user, :assignees, :author)
-                            .eager_load(:user, :assignee_notes, :assignees)
+    context[:site_community].notes.includes(:assignees, :author)
+                            .eager_load(:assignee_notes, :assignees)
                             .where(flagged: true)
+                            .search(query)
                             .order(completed: :desc, created_at: :desc)
                             .limit(limit).offset(offset)
+  end
+
+  def my_tasks_count
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:current_user].tasks.where(completed: false).count
   end
 end

@@ -58,7 +58,7 @@ class Campaign < ApplicationRecord
     admin_user = campaign_admin_user
     update(start_time: Time.current)
     users = target_list_user
-    CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.join(','))
+    CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
     users.each do |acc|
       if acc.phone_number.present?
         return false unless send_messages(admin_user, acc)
@@ -86,6 +86,6 @@ class Campaign < ApplicationRecord
   def expired?
     return false if start_time.nil?
 
-    Time.zone.now > (start_time + EXPIRATION_DAYS)
+    Time.zone.now > (start_time + EXPIRATION_DAYS.days)
   end
 end

@@ -6,6 +6,7 @@ import { StyleSheet, css } from 'aphrodite'
 import Avatar from '@material-ui/core/Avatar'
 import MenuIcon from '@material-ui/icons/Menu'
 import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined'
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider.js'
 import logoUrl from '../../../assets/images/nkwashi_white_logo_transparent.png'
 import Drawer from '@material-ui/core/Drawer'
@@ -13,6 +14,9 @@ import { SideList } from './SideList.jsx'
 import { avatarUrl } from './Avatar.jsx'
 import { FormContext } from '../containers/UserEdit.jsx'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+import { Badge } from '@material-ui/core';
+import { useQuery } from 'react-apollo';
+import { MyTaskCountQuery } from '../graphql/queries.js';
 
 export default withRouter(function Nav({
   children,
@@ -49,6 +53,7 @@ export function Component({
 }) {
   const [state, setState] = React.useState(false)
   const { values, handleSubmit } = useContext(FormContext)
+  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-and-network' })
   const theme = useContext(ThemeContext)
 
 
@@ -95,9 +100,6 @@ export function Component({
       )
     }
 
-
-
-
     return (
       <Fragment>
         {authState.user.userType === 'security_guard' ? (
@@ -113,13 +115,21 @@ export function Component({
               src={avatarUrl({ user: authState.user })}
             />
           )}
-        <NotificationsNoneOutlinedIcon
-          className={`${css(
-            authState.user.userType === 'security_guard'
-              ? styles.rightSideIconGuard
-              : styles.rightSideIconAdmin
+
+        <Badge
+          badgeContent={data?.myTasksCount}
+          color="secondary"
+              className={`${css(
+                  authState.user.userType === 'security_guard'
+                    ? styles.rightSideIconGuard
+                    : styles.rightSideIconAdmin
           )}`}
-        />
+           onClick={() => history.push('/my_tasks')}
+        >
+          {
+            data?.myTasksCount ? <NotificationsIcon /> :<NotificationsNoneOutlinedIcon />
+          }
+        </Badge>
       </Fragment>
     )
   }
@@ -223,7 +233,7 @@ const styles = StyleSheet.create({
     'font-size': '1.5em'
   },
   navBar: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     minHeight: '50px'
   },
   buttonLeft: {

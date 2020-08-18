@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment } from './fragments'
+import { UserFragment, EntryRequestFragment, NotesFragment } from './fragments'
 
 export const UserQuery = gql`
   query User($id: ID!) {
@@ -130,28 +130,12 @@ export const allNotes = gql`
   }
 `
 export const flaggedNotes = gql`
-  query GetTodos($offset: Int, $limit: Int) {
-    flaggedNotes(offset: $offset, limit: $limit) {
-      body
-      createdAt
-      id
-      completed
-      dueDate
-      user {
-        id
-        name
-      }
-      author {
-        id
-        name
-      }
-      assignees {
-        id
-        name
-        imageUrl
-      }
+  query GetTodos($offset: Int, $limit: Int, $query: String) {
+    flaggedNotes(offset: $offset, limit: $limit, query: $query) {
+      ...NoteFields
     }
   }
+  ${NotesFragment.note}
 `
 
 export const allFeedback = gql`
@@ -363,6 +347,10 @@ export const Campaign = gql`
         totalSent
         totalClicked
       }
+      labels{
+        id
+        shortDesc
+      }
     }
   }
 `
@@ -387,6 +375,7 @@ export const DiscussionCommentsQuery = gql`
       content
       createdAt
       id
+      imageUrl
       user {
         id
         name
@@ -494,5 +483,11 @@ export const LabelsQuery = gql`
       id
       shortDesc
     }
+  }
+`
+
+export const MyTaskCountQuery = gql`
+  {
+    myTasksCount
   }
 `

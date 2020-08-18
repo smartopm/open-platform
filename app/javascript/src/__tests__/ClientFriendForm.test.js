@@ -4,6 +4,7 @@ import {
 } from '@testing-library/react'
 import ClientRequestForm from '../containers/ClientRequestForm'
 import { MemoryRouter } from 'react-router-dom'
+import { MockedProvider } from '@apollo/react-testing'
 import '@testing-library/jest-dom/extend-expect'
 
 
@@ -12,14 +13,13 @@ describe('Mounts page with no errors',()=>{
 
     
     it('it should render',()=>{
-
-        const {getByTestId} = render(
-            <MemoryRouter>
-                <ClientRequestForm />
-            </MemoryRouter>
-
+        const { getByTestId } = render(
+            <MockedProvider mocks={[]}>
+                <MemoryRouter>
+                    <ClientRequestForm />
+                </MemoryRouter>
+            </MockedProvider>
         )
-
         expect(getByTestId('iframe')).toBeTruthy()
     })
 })

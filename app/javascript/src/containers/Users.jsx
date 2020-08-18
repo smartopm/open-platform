@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
+import { UserLabelCreate } from '../graphql/mutations'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -20,6 +21,7 @@ import {
   FormControl,
   InputLabel,
   Input,
+  CircularProgress,
   Chip
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
@@ -28,10 +30,13 @@ import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import TelegramIcon from '@material-ui/icons/Telegram'
-import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+import CreateLabel from '../components/CreateLabel'
+import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
+import FilterComponent from '../components/FilterComponent'
 
 
 const limit = 50
+
 export default function UsersList() {
   const classes = useStyles()
   const theme = useContext(ThemeContext)
@@ -44,6 +49,8 @@ export default function UsersList() {
   const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
+  const [labelError, setError] = useState('')
+  const [labelLoading, setLabelLoading] = useState(false)
   const [searchType, setSearchType] = useState('type')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
@@ -65,9 +72,13 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  
- //TODO: @dennis, add pop up for notes 
+  let userList
+  if (data) {
+    userList = data.users.map(user => user.id)
+  }
 
+  //TODO: @dennis, add pop up for notes 
+  const [userLabelCreate] = useMutation(UserLabelCreate)
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
 
   function joinSearchQuery(query, type) {
@@ -119,6 +130,25 @@ export default function UsersList() {
   function handleInputChange(event) {
     setType(event.target.value)
     setSearchType('type')
+  }
+  function handleLabelSelect(lastLabel) {
+    const { id, shortDesc } = lastLabel
+    setLabelLoading(true)
+    if (userList) {
+      userLabelCreate({
+        variables: { userId: userList.toString(), labelId: id }
+      }).then(() => {
+        refetch()
+        setLabels([...labels, shortDesc])
+        setLabelLoading(false)
+      }).catch(error => {
+        setLabelLoading(false)
+        setError(error.message)
+
+      })
+
+    }
+
   }
 
   function handleLabelChange(event) {
@@ -245,7 +275,7 @@ export default function UsersList() {
             </IconButton>
           </Fragment>
         </div>
-        <Grid container>
+        <Grid container alignItems="center">
           <Grid item xs={'auto'}>
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
@@ -271,47 +301,35 @@ export default function UsersList() {
                 ))}
               </Select>
               {Boolean(type.length) && (
-                <Button onClick={() => setType([])}>Clear Filter</Button>
+                <Button size="small" onClick={() => setType([])}>Clear Filter</Button>
               )}
             </FormControl>
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-mutiple-chip-label">Filter by Labels</InputLabel>
-              <Select
-                labelId="select-by-label"
-                id="role-chip"
-                multiple
-                value={labels}
-                onChange={handleLabelChange}
-                input={<Input id="select-by-label" />}
-                renderValue={selected => (
-                  <div>
-                    {selected.map((value, i) => (
-                      <Chip key={i} label={value} />
-                    ))}
-                  </div>
-                )}
-              >
-                {labelsData.labels.map(label => (
-                  <MenuItem key={label.id} value={label.shortDesc}>
-                    {label.shortDesc}
-                  </MenuItem>
-                ))}
-              </Select>
-              {Boolean(labels.length) && (
-                <Button onClick={() => setLabels([])}>Clear Filter</Button>
-              )}
-            </FormControl>
+            <FilterComponent
+              stateList={labels}
+              list={labelsData.labels}
+              handleInputChange={handleLabelChange}
+              classes={classes}
+              resetFilter={() => setLabels([])}
+              type="labels"
+            />
           </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5}}>
+              <CreateLabel handleLabelSelect={handleLabelSelect} />
+          </Grid>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            {labelLoading ? <CircularProgress size={25} /> : ''}
+          </Grid>
+
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-              style={{backgroundColor: theme.primaryColor}}
+              style={{ backgroundColor: theme.primaryColor }}
               endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
             {Boolean(phoneNumbers.length) && (
-              <Button onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
+              <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
 
@@ -324,12 +342,18 @@ export default function UsersList() {
           </Grid>
 
         </Grid>
+
+        <br />
+        <div className="d-flex justify-content-center row">
+          <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span>
+        </div>
+
         <br />
         <br />
 
- 
+
         <UserListCard userData={data} handleNoteModal={handleNoteModal} />
-      
+
         <Grid container direction="row" justify="center" alignItems="center">
           <Paginate
             count={data.users.length}
@@ -380,7 +404,7 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   },
   filterButton: {
-    
+
     textTransform: 'none'
   }
 }))

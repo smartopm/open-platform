@@ -497,12 +497,12 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   },
   commentBox: {
-    borderLeft: '2px solid #25c0b0',
+    borderLeft: '2px solid #69ABA4',
     padding: '0.5%',
     color: 'gray'
   },
   logButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF'
   },
   callButton: {
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
     float: 'right',
     cursor: 'pointer',
     ':hover': {
-      color: '#25c0b0'
+      color: '#69ABA4'
     },
     marginRight: 12
   },

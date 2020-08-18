@@ -58,5 +58,8 @@ module Types
     field :label_create, mutation: Mutations::Label::LabelCreate
     field :user_label_create, mutation: Mutations::Label::UserLabelCreate
     field :user_label_update, mutation: Mutations::Label::UserLabelUpdate
+
+    # notifications
+    field :notification_preference, mutation: Mutations::Settings::NotificationPreference
   end
 end
