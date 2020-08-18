@@ -14,11 +14,12 @@ export function dateToString(date) {
   return dateutil.dateToString(new Date(lDate))
 }
 
-export function dateAndTimeToString(date) {
-  const d = new Date(date)
-  const curr_date = d.getDate()
-  const curr_month = d.getMonth() + 1
-  const curr_year = d.getFullYear()
+export function dateAndTimeToString(days) {
+  const date = new Date()
+  const dueIn10 = new Date(date.setDate(date.getDate() + days))
+  const curr_date = new Date(dueIn10).getDate()
+  const curr_month = new Date(dueIn10).getMonth() + 1
+  const curr_year = new Date(dueIn10).getFullYear()
   return `${curr_year}-${curr_month}-${curr_date} ${dateTimeToString(new Date(date))}`
 }
 

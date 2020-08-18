@@ -50,16 +50,12 @@ export default function TodoList({
   const [assignee, setAssignee] = useState([])
   const [query, setQuery] = useState('')
 
-  const date = new Date()
-  const dueIn10 = new Date(date.setDate(date.getDate() + 10))
-  const dueIn30 = new Date(date.setDate(date.getDate() + 30))
-
   const taskQuery = {
     completedTasks: 'completed: true',
-    tasksDueIn10Days: `due_date <= '${dateAndTimeToString(dueIn10)}' AND completed: false`,
-    tasksDueIn30Days: `due_date <= '${dateAndTimeToString(dueIn30)}' AND completed: false`,
+    tasksDueIn10Days: `due_date <= '${dateAndTimeToString(10)}' AND completed: false`,
+    tasksDueIn30Days: `due_date <= '${dateAndTimeToString(30)}' AND completed: false`,
     tasksOpen: 'completed: false',
-    tasksOpenAndOverdue: `due_date <= '${dateAndTimeToString(new Date())}' AND completed: false`,
+    tasksOpenAndOverdue: `due_date <= '${dateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
     totalCallsOpen: 'category: calls AND completed: false'
