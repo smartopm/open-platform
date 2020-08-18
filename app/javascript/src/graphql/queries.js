@@ -491,3 +491,19 @@ export const MyTaskCountQuery = gql`
     myTasksCount
   }
 `
+
+export const TaskStatsQuery = gql`
+  {
+    taskStats {
+      completedTasks
+      tasksDueIn10Days
+      tasksDueIn30Days
+      tasksOpen
+      tasksOpenAndOverdue
+      overdueTasks
+      tasksWithNoDueDate
+      myOpenTasks
+      totalCallsOpen
+    }
+  }
+`

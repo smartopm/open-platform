@@ -14,6 +14,21 @@ export function dateToString(date) {
   return dateutil.dateToString(new Date(lDate))
 }
 
+/**
+ * 
+ * @param {Number} days 
+ * @returns Date
+ * @description returns a date in the future based on the days given, yyyy-mm-dd hh:mm
+ */
+export function futureDateAndTimeToString(days) {
+  const date = new Date()
+  const dueIn10 = new Date(date.setDate(date.getDate() + days))
+  const curr_date = new Date(dueIn10).getDate()
+  const curr_month = new Date(dueIn10).getMonth() + 1
+  const curr_year = new Date(dueIn10).getFullYear()
+  return `${curr_year}-${curr_month}-${curr_date} ${dateTimeToString(new Date(date))}`
+}
+
 export default function DateContainer({ date }) {
   return (
     <span>

@@ -5,11 +5,10 @@
 */
 
 export const Colors = {
-
     //Nkwashi main green
     primary: '#69ABA4',
     //Nkwashi light green
-    secordary: '#b7d4d9',
+    secondary: '#b7d4d9',
     //Nkwashi alternate color
     alternate: '#ecdebf'
 }

@@ -5,7 +5,8 @@ import {
   Fab,
   Dialog,
   DialogTitle,
-  DialogContent
+  DialogContent,
+  Grid
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
@@ -24,6 +25,8 @@ import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
 import FilterComponent from '../FilterComponent'
 import Task from './Task'
+import TaskDashboard from './TaskDashboard'
+import { futureDateAndTimeToString } from '../DateContainer'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -41,9 +44,21 @@ export default function TodoList({
   const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
   const [open, setModalOpen] = useState(false)
+  const [loadingMutation, setMutationLoading] = useState(false)
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
+  const [query, setQuery] = useState('')
 
+  const taskQuery = {
+    completedTasks: 'completed: true',
+    tasksDueIn10Days: `due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
+    tasksDueIn30Days: `due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
+    tasksOpen: 'completed: false',
+    tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
+    tasksWithNoDueDate: 'due_date:nil',
+    myOpenTasks: `assignees: ${currentUser} AND completed: false`,
+    totalCallsOpen: 'category: calls AND completed: false'
+  }
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
@@ -52,16 +67,16 @@ export default function TodoList({
     errorPolicy: 'all'
   })
 
+  // TODO: simplify this: @olivier
+  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+
   const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query:
-          location === 'my_tasks'
-            ? currentUser
-            : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+        query: `${!qr.length ? 'completed: false': qr}`
       }
     }
   )
@@ -85,11 +100,13 @@ export default function TodoList({
   }
 
   function handleCompleteNote(noteId, completed) {
+    setMutationLoading(true)
     todoAction(noteId, completed)
     // allow the mutation above to finish running before refetching
     setTimeout(() => {
       refetch()
-    }, 100)
+      setMutationLoading(false)
+    }, 200)
   }
 
   function paginate(action) {
@@ -107,6 +124,10 @@ export default function TodoList({
     setAssignee(event.target.value)
   }
 
+  function handleTaskFilter(_evt, key) {
+    if (key === 'tasksWithNoDueDate') return
+    setQuery(taskQuery[key])
+  }
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
@@ -173,11 +194,14 @@ export default function TodoList({
             </CenteredContent>
           )}
           <br />
+          <Grid
+              container
+              spacing={3}
+          > 
+            <TaskDashboard filterTasks={handleTaskFilter} />
+          </Grid>
           <ul className={css(styles.list)}>
-            {data.flaggedNotes.length ? (
-              data.flaggedNotes
-                .filter(note => note.completed === false)
-                .map(note => (
+            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
                   <Task
                     key={note.id}
                     note={note}
@@ -189,9 +213,10 @@ export default function TodoList({
                     handleDelete={handleDelete}
                     handleModal={handleModal}
                     loading={loading}
+                    loadingMutation={loadingMutation}
                     classes={classes.listItem}
                   />
-                ))
+                )
             ) : (
               <CenteredContent>There are no tasks</CenteredContent>
             )}

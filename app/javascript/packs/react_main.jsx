@@ -80,6 +80,18 @@ import Businesses from '../src/containers/Businesses/Businesses'
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
 import GeoMap from '../src/containers/GeoMap'
 import Notifications from '../src/containers/Preferences/Notifications'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+
+const theme = createMuiTheme({
+  palette: {
+    secondary: {
+      main: '#b7d4d9'
+    },
+    primary: {
+      main: '#69ABA4'
+    }
+  }
+})
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -178,6 +190,7 @@ const App = () => {
       }}
     >
       <ApolloProvider>
+      <MuiThemeProvider theme={theme}>
         <Router history={history}>
           <AuthStateProvider>
             <ThemeProvider>
@@ -341,7 +354,8 @@ const App = () => {
               </Analytics>
             </ThemeProvider>
           </AuthStateProvider>
-        </Router>
+          </Router>
+          </MuiThemeProvider>
       </ApolloProvider>
     </Suspense>
   )
