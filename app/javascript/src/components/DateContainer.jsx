@@ -14,7 +14,13 @@ export function dateToString(date) {
   return dateutil.dateToString(new Date(lDate))
 }
 
-export function dateAndTimeToString(days) {
+/**
+ * 
+ * @param {Number} days 
+ * @returns Date
+ * @description returns a date in the future based on the days given, yyyy-mm-dd hh:mm
+ */
+export function futureDateAndTimeToString(days) {
   const date = new Date()
   const dueIn10 = new Date(date.setDate(date.getDate() + days))
   const curr_date = new Date(dueIn10).getDate()

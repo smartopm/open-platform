@@ -26,9 +26,7 @@ import CenteredContent from '../CenteredContent'
 import FilterComponent from '../FilterComponent'
 import Task from './Task'
 import TaskDashboard from './TaskDashboard'
-import { dateAndTimeToString, dateToString } from '../DateContainer'
-
-
+import { futureDateAndTimeToString } from '../DateContainer'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -52,10 +50,10 @@ export default function TodoList({
 
   const taskQuery = {
     completedTasks: 'completed: true',
-    tasksDueIn10Days: `due_date <= '${dateAndTimeToString(10)}' AND completed: false`,
-    tasksDueIn30Days: `due_date <= '${dateAndTimeToString(30)}' AND completed: false`,
+    tasksDueIn10Days: `due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
+    tasksDueIn30Days: `due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
     tasksOpen: 'completed: false',
-    tasksOpenAndOverdue: `due_date <= '${dateAndTimeToString(0)}' AND completed: false`,
+    tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
     totalCallsOpen: 'category: calls AND completed: false'
