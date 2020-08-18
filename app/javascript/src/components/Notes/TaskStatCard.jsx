@@ -11,7 +11,7 @@ import { StyleSheet, css } from 'aphrodite'
 export default function AnalyticsCard({ count, title, filterTasks }) {
   const isNotClickable = title === 'Tasks with no due date'
   return (
-    <Card className={css(styles.root)} onClick={filterTasks}
+    <Card data-testid="task-stat-card" className={css(styles.root)} onClick={filterTasks}
       style={{
         backgroundColor: isNotClickable && '#b7d4d9',
         cursor: isNotClickable ? 'not-allowed' : 'pointer',
@@ -20,10 +20,10 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
       <CardContent>
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
-            <Typography align="center" color="textSecondary" gutterBottom variant="h6">
+            <Typography data-testid="task-stat-title" align="center" color="textSecondary" gutterBottom variant="h6">
               {title}
             </Typography>
-            <Typography align="center" color="textPrimary" variant="h3">
+            <Typography data-testid="task-stat-count" align="center" color="textPrimary" variant="h3">
               {count}
             </Typography>
           </Grid>
