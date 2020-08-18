@@ -569,4 +569,14 @@ export const NotificationPreference = gql`
   }
 }
 `
+export const CampaignCreateThroughUsers = gql `
+  mutation campaignCreateThroughUsers($filters: String!, $userIdList: String!){
+    campaignCreateThroughUsers(filters: $filters, userIdList: $userIdList){
+      campaign{
+        id
+      }
+    }
+  }
+
+`
 

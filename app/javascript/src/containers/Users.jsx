@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
-import { UserLabelCreate } from '../graphql/mutations'
+import { UserLabelCreate, CampaignCreateThroughUsers } from '../graphql/mutations'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -57,6 +57,7 @@ export default function UsersList() {
 
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
+  const [campaignCreate, { data: campaignId }] = useMutation(CampaignCreateThroughUsers)
 
   const search = {
     type,
@@ -131,6 +132,7 @@ export default function UsersList() {
     setType(event.target.value)
     setSearchType('type')
   }
+
   function handleLabelSelect(lastLabel) {
     const { id, shortDesc } = lastLabel
     setLabelLoading(true)
@@ -145,6 +147,31 @@ export default function UsersList() {
         setLabelLoading(false)
         setError(error.message)
 
+      })
+
+    }
+
+  }
+
+  function handleCampaignCreate() {
+    const filters = type.concat(labels)
+    if (userList) {
+      campaignCreate({
+        variables: { filters: filters.join() , userIdList: userList.join() }
+      }).then(() => {
+        setLabelLoading(false)
+        return (
+          <Redirect
+            push
+            to={{
+              pathname: `/campaign/${labelsData.campaign.id}`,
+              state: { from: '/users' }
+            }}
+          />
+        )
+      }).catch(error => {
+        setLabelLoading(false)
+        setError(error.message)
       })
 
     }
@@ -315,8 +342,8 @@ export default function UsersList() {
               type="labels"
             />
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5}}>
-              <CreateLabel handleLabelSelect={handleLabelSelect} />
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
+            <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             {labelLoading ? <CircularProgress size={25} /> : ''}
@@ -337,8 +364,8 @@ export default function UsersList() {
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-              style={{backgroundColor: theme.primaryColor}}
-              endIcon={<TelegramIcon />} >Create Campaign</Button>
+              style={{ backgroundColor: theme.primaryColor }}
+              endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
           </Grid>
 
         </Grid>
