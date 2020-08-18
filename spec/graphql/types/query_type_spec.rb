@@ -283,7 +283,7 @@ RSpec.describe Types::QueryType do
 
     let(:tasks_stats_query) do
       %(query {
-          taskStasts {
+          taskStats {
             completedTasks
             tasksOpenAndOverdue
             overdueTasks
@@ -327,11 +327,11 @@ RSpec.describe Types::QueryType do
                                          site_community: admin.community,
                                        }).as_json
 
-      expect(result.dig('data', 'taskStasts')).not_to be_nil
-      expect(result.dig('data', 'taskStasts', 'completedTasks')).to eql 1
-      expect(result.dig('data', 'taskStasts', 'tasksOpenAndOverdue')).to eql 1
-      expect(result.dig('data', 'taskStasts', 'overdueTasks')).to eql 1
-      expect(result.dig('data', 'taskStasts', 'tasksWithNoDueDate')).to eql 0
+      expect(result.dig('data', 'taskStats')).not_to be_nil
+      expect(result.dig('data', 'taskStats', 'completedTasks')).to eql 1
+      expect(result.dig('data', 'taskStats', 'tasksOpenAndOverdue')).to eql 1
+      expect(result.dig('data', 'taskStats', 'overdueTasks')).to eql 1
+      expect(result.dig('data', 'taskStats', 'tasksWithNoDueDate')).to eql 0
     end
   end
 end
