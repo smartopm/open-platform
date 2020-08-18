@@ -14,6 +14,14 @@ export function dateToString(date) {
   return dateutil.dateToString(new Date(lDate))
 }
 
+export function dateAndTimeToString(date) {
+  const d = new Date(date)
+  const curr_date = d.getDate()
+  const curr_month = d.getMonth() + 1
+  const curr_year = d.getFullYear()
+  return `${curr_year}-${curr_month}-${curr_date} ${dateTimeToString(new Date(date))}`
+}
+
 export default function DateContainer({ date }) {
   return (
     <span>

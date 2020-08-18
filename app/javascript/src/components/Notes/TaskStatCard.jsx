@@ -9,8 +9,14 @@ import {
 import { StyleSheet, css } from 'aphrodite'
 
 export default function AnalyticsCard({ count, title, filterTasks }) {
+  const isNotClickable = title === 'Tasks with no due date'
   return (
-    <Card className={css(styles.root)} onClick={filterTasks}>
+    <Card className={css(styles.root)} onClick={filterTasks}
+      style={{
+        backgroundColor: isNotClickable && '#b7d4d9',
+        cursor: isNotClickable ? 'not-allowed' : 'pointer',
+      }}
+    >
       <CardContent>
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
@@ -28,23 +34,20 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
 }
 
 const styles = StyleSheet.create({
-    root: {
-    height: '100%',
-    ":hover": {
-        cursor: 'pointer'
-      }
-      },
-      avatar: {
-        backgroundColor: colors.red[600],
-        height: 56,
-        width: 56
-      },
-      differenceIcon: {
-        color: colors.red[900]
-      },
-      differenceValue: {
-        color: colors.red[900],
-        marginRight: 1
-      }
-  })
+  root: {
+    height: '100%'
+  },
+  avatar: {
+    backgroundColor: colors.red[600],
+    height: 56,
+    width: 56
+  },
+  differenceIcon: {
+    color: colors.red[900]
+  },
+  differenceValue: {
+    color: colors.red[900],
+    marginRight: 1
+  }
+})
   

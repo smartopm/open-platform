@@ -72,9 +72,9 @@ module Types::Queries::Note
 
     {
       tasks_open: tasks.by_completion(false).count,
-      tasks_due_in_10_days: tasks.by_due_date(10.days.from_now).count,
-      tasks_due_in_30_days: tasks.by_due_date(30.days.from_now).count,
-      overdue_tasks: tasks.by_due_date(Time.zone.now).count,
+      tasks_due_in_10_days: tasks.by_completion(false).by_due_date(10.days.from_now).count,
+      tasks_due_in_30_days: tasks.by_completion(false).by_due_date(30.days.from_now).count,
+      overdue_tasks: tasks.by_completion(false).by_due_date(Time.zone.now).count,
       completed_tasks: tasks.by_completion(true).count,
       total_calls_open: tasks.by_completion(false).by_category('call').count,
       tasks_open_and_overdue: tasks.by_completion(false).by_due_date(Time.zone.now).count,
