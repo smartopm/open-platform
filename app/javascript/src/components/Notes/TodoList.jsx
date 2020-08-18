@@ -44,6 +44,7 @@ export default function TodoList({
   const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
   const [open, setModalOpen] = useState(false)
+  const [loadingMutation, setMutationLoading] = useState(false)
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
   const [query, setQuery] = useState('')
@@ -99,11 +100,13 @@ export default function TodoList({
   }
 
   function handleCompleteNote(noteId, completed) {
+    setMutationLoading(true)
     todoAction(noteId, completed)
     // allow the mutation above to finish running before refetching
     setTimeout(() => {
       refetch()
-    }, 100)
+      setMutationLoading(false)
+    }, 200)
   }
 
   function paginate(action) {
@@ -210,6 +213,7 @@ export default function TodoList({
                     handleDelete={handleDelete}
                     handleModal={handleModal}
                     loading={loading}
+                    loadingMutation={loadingMutation}
                     classes={classes.listItem}
                   />
                 )
