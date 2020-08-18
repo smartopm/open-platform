@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
-import { UserLabelCreate } from '../graphql/mutations'
+import { UserLabelCreate, CampaignCreateThroughUsers } from '../graphql/mutations'
 import { CreateNote } from '../graphql/mutations'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -29,6 +29,7 @@ import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
+import TelegramIcon from '@material-ui/icons/Telegram'
 import CreateLabel from '../components/CreateLabel'
 import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
@@ -53,8 +54,10 @@ export default function UsersList() {
   const [searchType, setSearchType] = useState('type')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
+
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
+  const [campaignCreate, { data: campaignId }] = useMutation(CampaignCreateThroughUsers)
 
   const search = {
     type,
@@ -129,6 +132,7 @@ export default function UsersList() {
     setType(event.target.value)
     setSearchType('type')
   }
+
   function handleLabelSelect(lastLabel) {
     const { id, shortDesc } = lastLabel
     setLabelLoading(true)
@@ -143,6 +147,25 @@ export default function UsersList() {
         setLabelLoading(false)
         setError(error.message)
 
+      })
+
+    }
+
+  }
+
+  function handleCampaignCreate() {
+    const filters = type.concat(labels)
+    //setRedirect('/campaign/786de039-5499-45db-a157-3ed722469b9d')
+ 
+    if (userList) {
+      campaignCreate({
+        variables: { filters: filters.join() , userIdList: userList.join() }
+      }).then(() => {
+        setLabelLoading(false)
+        setRedirect(`/campaign/${campaignId.campaign.id}`)
+      }).catch(error => {
+        setLabelLoading(false)
+        setError(error.message)
       })
 
     }
@@ -313,8 +336,8 @@ export default function UsersList() {
               type="labels"
             />
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5}}>
-              <CreateLabel handleLabelSelect={handleLabelSelect} />
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
+            <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             {labelLoading ? <CircularProgress size={25} /> : ''}
@@ -329,6 +352,14 @@ export default function UsersList() {
             {Boolean(phoneNumbers.length) && (
               <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
+          </Grid>
+
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
+            <Button variant="contained"
+              color="primary"
+              className={classes.filterButton}
+              style={{ backgroundColor: theme.primaryColor }}
+              endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
           </Grid>
 
         </Grid>
