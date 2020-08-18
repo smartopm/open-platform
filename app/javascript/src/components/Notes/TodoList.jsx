@@ -34,7 +34,8 @@ export const taskQuery = {
   tasksOpen: 'completed: false',
   tasksOpenAndOverdue: '',
   tasksWithNoDueDate: '',
-  myOpenTasks: ''
+  myOpenTasks: '',
+  totalCallsOpen: 'category: calls'
 }
 
 // component needs a redesign both implementation and UI

@@ -11,7 +11,8 @@ const tiles = {
   tasksOpen: 'Tasks Open',
   tasksOpenAndOverdue: 'Overdue Tasks',
   tasksWithNoDueDate: 'Tasks with no due date',
-  myOpenTasks: 'My Tasks'
+  myOpenTasks: 'My Tasks',
+  totalCallsOpen: 'Total Calls Open'
 }
 
 // data.taskStasts
