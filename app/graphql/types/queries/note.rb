@@ -29,7 +29,7 @@ module Types::Queries::Note
       description 'count of all tasks assigned to me'
     end
 
-    field :task_stasts, Types::TaskStatType, null: false do
+    field :task_stats, Types::TaskStatType, null: false do
       description 'return stats related to tasks'
     end
   end
@@ -65,7 +65,7 @@ module Types::Queries::Note
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def task_stasts
+  def task_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     tasks = context[:site_community].notes.where(flagged: true)
