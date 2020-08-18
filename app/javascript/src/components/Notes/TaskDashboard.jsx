@@ -33,7 +33,7 @@ export default function TaskDashboard({ filterTasks }) {
   }
   return Object.entries(tiles).map(([key, val]) => (
     <Grid item lg={3} sm={4} xl={3} xs={6} key={key}>
-      <TaskStatCard filterTasks={evt => filterTasks(evt, key)} title={val} count={data?.taskStasts[key]} />
+      <TaskStatCard filterTasks={evt => filterTasks(evt, key)} title={val} count={data?.taskStats[key]} />
     </Grid>
   ))
 }

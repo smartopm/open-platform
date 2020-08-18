@@ -29,13 +29,6 @@ describe('date container component', () => {
      dateToString(oldDate)
    )
  })
-  
- it('should get the proper future date', () => {
-   const date = new Date()
-   const futureDate = date.setDate(date.getDate() + 2)
-   expect(futureDateAndTimeToString(2)).toContain(dateToString(futureDate))
- })
-
   it('should return the correct last day of the month', () => {
     expect(lastDayOfTheMonth.toString()).toContain('26') // 26 as last day of the month
   })
