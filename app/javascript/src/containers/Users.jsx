@@ -313,6 +313,14 @@ export default function UsersList() {
             )}
           </Grid>
 
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <Button variant="contained"
+              color="primary"
+              className={classes.filterButton}
+              style={{backgroundColor: theme.primaryColor}}
+              endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Create Campaign</Button>
+          </Grid>
+
         </Grid>
         <br />
         <br />
