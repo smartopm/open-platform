@@ -494,7 +494,7 @@ export const MyTaskCountQuery = gql`
 
 export const TaskStatsQuery = gql`
   {
-    taskStasts {
+    taskStats {
       completedTasks
       tasksDueIn10Days
       tasksDueIn30Days
