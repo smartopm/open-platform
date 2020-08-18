@@ -156,27 +156,16 @@ export default function Task({
               justify="flex-end"
               alignItems="flex-end"
             >
-              {note.completed ? (
                 <Button
-                  variant="contained"
-                  style={{ marginBottom: 3, color: '#FFF' }}
+                  variant="outlined"
+                  color='primary'
+                    style={{ 
+                      marginBottom: 3, 
+                    }}
                   onClick={() => handleCompleteNote(note.id, note.completed)}
                 >
-                  Complete
+                  {note.completed ? 'Complete' : 'Mark as complete'}
                 </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: theme.primaryColor,
-                    marginBottom: 3,
-                    color: '#FFF'
-                  }}
-                  onClick={() => handleCompleteNote(note.id, note.completed)}
-                >
-                  Mark as complete
-                </Button>
-              )}
             </Grid>
           </Grid>
         </Grid>
