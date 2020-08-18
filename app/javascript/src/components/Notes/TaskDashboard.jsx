@@ -10,27 +10,14 @@ const tiles = {
   tasksDueIn30Days: 'Tasks due in 30 days',
   tasksOpen: 'Tasks Open',
   tasksOpenAndOverdue: 'Overdue Tasks',
-  tasksWithNoDueDate: 'Tasks With no due date',
+  tasksWithNoDueDate: 'Tasks with no due date',
   myOpenTasks: 'My Tasks'
 }
 
-// const taskQuery = {
-//   completedTasks: 'completed: true',
-//   tasksDueIn10Days: 'Tasks due in 10 days',
-//   tasksDueIn30Days: 'Tasks due in 30 days',
-//   tasksOpen: 'completed: false',
-//   tasksOpenAndOverdue: 'Overdue Tasks',
-//   tasksWithNoDueDate: 'Tasks With No Due Date',
-//   myOpenTasks: 'My Tasks'
-// }
-
 // data.taskStasts
 export default function TaskDashboard({ filterTasks }) {
-  const { loading, data, error } = useQuery(TaskStatsQuery, {
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all',
-    pollInterval: 5000
-  })
+  const { loading, data, error } = useQuery(TaskStatsQuery)
+
   if (loading || error) {
     return (
       <Typography
@@ -39,7 +26,7 @@ export default function TaskDashboard({ filterTasks }) {
         gutterBottom
         variant="h6"
       >
-        {'Something went, try and reload the page'}
+        Loading
       </Typography>
     )
   }

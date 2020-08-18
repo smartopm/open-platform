@@ -27,6 +27,16 @@ import FilterComponent from '../FilterComponent'
 import Task from './Task'
 import TaskDashboard from './TaskDashboard'
 
+export const taskQuery = {
+  completedTasks: 'completed: true',
+  tasksDueIn10Days: '',
+  tasksDueIn30Days: '',
+  tasksOpen: 'completed: false',
+  tasksOpenAndOverdue: '',
+  tasksWithNoDueDate: '',
+  myOpenTasks: ''
+}
+
 // component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
@@ -45,6 +55,7 @@ export default function TodoList({
   const [open, setModalOpen] = useState(false)
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
+  const [query, setQuery] = useState('')
 
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
@@ -60,10 +71,11 @@ export default function TodoList({
       variables: {
         offset,
         limit,
-        query:
-          location === 'my_tasks'
-            ? currentUser
-            : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+        query: query.length
+          ? query
+          : location === 'my_tasks'
+          ? currentUser
+          : assignee.map(query => `assignees = "${query}"`).join(' OR ')
       }
     }
   )
@@ -109,8 +121,8 @@ export default function TodoList({
     setAssignee(event.target.value)
   }
 
-  function handleTaskFilter(evt, key) {
-    console.log(key)
+  function handleTaskFilter(_evt, key) {
+    setQuery(taskQuery[key])
   }
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />

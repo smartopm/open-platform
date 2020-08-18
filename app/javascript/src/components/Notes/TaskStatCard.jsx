@@ -29,7 +29,10 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
 
 const styles = StyleSheet.create({
     root: {
-        height: '100%'
+    height: '100%',
+    ":hover": {
+        cursor: 'pointer'
+      }
       },
       avatar: {
         backgroundColor: colors.red[600],
