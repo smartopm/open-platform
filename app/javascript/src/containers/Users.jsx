@@ -27,6 +27,7 @@ import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
+import TelegramIcon from '@material-ui/icons/Telegram'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 
 
@@ -46,6 +47,7 @@ export default function UsersList() {
   const [searchType, setSearchType] = useState('type')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
+
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
 
@@ -313,12 +315,12 @@ export default function UsersList() {
             )}
           </Grid>
 
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
               style={{backgroundColor: theme.primaryColor}}
-              endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Create Campaign</Button>
+              endIcon={<TelegramIcon />} >Create Campaign</Button>
           </Grid>
 
         </Grid>
