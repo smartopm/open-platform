@@ -155,20 +155,14 @@ export default function UsersList() {
 
   function handleCampaignCreate() {
     const filters = type.concat(labels)
+    //setRedirect('/campaign/786de039-5499-45db-a157-3ed722469b9d')
+ 
     if (userList) {
       campaignCreate({
         variables: { filters: filters.join() , userIdList: userList.join() }
       }).then(() => {
         setLabelLoading(false)
-        return (
-          <Redirect
-            push
-            to={{
-              pathname: `/campaign/${labelsData.campaign.id}`,
-              state: { from: '/users' }
-            }}
-          />
-        )
+        setRedirect(`/campaign/${labelsData.campaign.id}`)
       }).catch(error => {
         setLabelLoading(false)
         setError(error.message)
