@@ -25,7 +25,8 @@ export default function Task({
   handleDelete,
   handleModal,
   loading,
-  classes
+  classes,
+  loadingMutation
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
@@ -157,6 +158,7 @@ export default function Task({
                 <Button
                   variant="outlined"
                   color='primary'
+                  disabled={note.id && loadingMutation}
                     style={{ 
                       marginBottom: 3, 
                     }}
