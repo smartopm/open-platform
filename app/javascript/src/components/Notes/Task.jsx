@@ -1,4 +1,4 @@
-import React, { useState, useContext} from 'react'
+import React, { useState } from 'react'
 import { dateToString } from '../DateContainer'
 import { UserChip } from '../UserChip'
 import {
@@ -14,7 +14,6 @@ import EditIcon from '@material-ui/icons/Edit'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { Spinner } from '../Loading'
-import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
 export default function Task({
   note,
@@ -30,7 +29,6 @@ export default function Task({
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
-  const theme = useContext(ThemeContext)
 
   function handleOpenAutoComplete(_event, noteId) {
     setOpen(!autoCompleteOpen)
