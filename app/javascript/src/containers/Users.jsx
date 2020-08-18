@@ -162,7 +162,7 @@ export default function UsersList() {
         variables: { filters: filters.join() , userIdList: userList.join() }
       }).then(() => {
         setLabelLoading(false)
-        setRedirect(`/campaign/${labelsData.campaign.id}`)
+        setRedirect(`/campaign/${campaignId.campaign.id}`)
       }).catch(error => {
         setLabelLoading(false)
         setError(error.message)
