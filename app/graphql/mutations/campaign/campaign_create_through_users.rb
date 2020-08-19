@@ -15,6 +15,7 @@ module Mutations
         campaign = context[:current_user].community.campaigns.new
         campaign.name = vals[:filters].tr(',', '_')
         campaign.user_id_list = vals[:user_id_list]
+        campaign.message = I18n.t('campaign.default_message')
         campaign.batch_time = 10.years.from_now
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
