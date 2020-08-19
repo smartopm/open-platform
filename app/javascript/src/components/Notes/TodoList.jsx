@@ -214,7 +214,6 @@ export default function TodoList({
                     handleModal={handleModal}
                     loading={loading}
                     loadingMutation={loadingMutation}
-                    classes={classes.listItem}
                   />
                 )
             ) : (
@@ -255,11 +254,6 @@ const useStyles = makeStyles({
     minWidth: 160,
     maxWidth: 300
   },
-  // listItem: {
-  //   position: 'relative',
-  //   listStyle: 'none',
-  //   padding: 15
-  // }
 })
 
 // this should be in one place, basically just one theme

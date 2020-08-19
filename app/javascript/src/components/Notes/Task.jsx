@@ -27,7 +27,6 @@ export default function Task({
   handleDelete,
   handleModal,
   loading,
-  classes,
   loadingMutation
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
