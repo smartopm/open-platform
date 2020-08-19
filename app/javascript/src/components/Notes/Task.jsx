@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { dateToString } from '../DateContainer'
+import DateContainer, { dateToString } from '../DateContainer'
 import { UserChip } from '../UserChip'
 import {
   Chip,
@@ -14,6 +14,8 @@ import EditIcon from '@material-ui/icons/Edit'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { Spinner } from '../Loading'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import CenteredContent from '../CenteredContent'
 
 export default function Task({
   note,
@@ -37,140 +39,119 @@ export default function Task({
   }
 
   return (
-    <li key={note.id} className={classes}>
-      <Grid container spacing={3}>
+    // <li key={note.id} className={classes}>
+    <>
+      <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="baseline"
-          >
-            <Grid
-              container
-              direction="row"
-              justify="flex-end"
-              alignItems="baseline"
-            >
-              <EditIcon
-                style={{
-                  float: 'right',
-                  cursor: 'pointer'
-                }}
-                fontSize="small"
-                color="inherit"
-                onClick={() => handleModal(note.id)}
-              />
-              <label style={{ fontSize: 17 }}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Due at:
-                  {note.dueDate ? `  ${dateToString(note.dueDate)}` : ' Never'}
-                </Typography>
-              </label>
-            </Grid>
-            <Typography variant="subtitle1" gutterBottom>
-              Title:&nbsp;<i>{note.body}</i>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              Associated with:&nbsp;<i>{note.user.name}</i>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="center"
-          >
-            {note.assignees.map(user => (
-              <UserChip
-                key={user.id}
-                user={user}
-                size="medium"
-                onDelete={() => handleDelete(user.id, note.id)}
-              />
-            ))}
+          <Typography variant="subtitle1" gutterBottom>
+            {note.body}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="caption" gutterBottom>
+            <Link style={{ textDecoration: 'none' }}  to={`/user/${note.author.id}`}>
+             {note.author.name}{' '}
+            </Link>
+            created a note for{' '} 
+            <Link style={{ textDecoration: 'none' }} to={`/user/${note.user.id}`}>
+              {note.user.name} {' '}
+            </Link>
+            on{' '}
+            <i style={{ color: 'grey' }}>
+              <DateContainer date={note.createdAt} />
+            </i>
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          {note.assignees.map(user => (
+            <UserChip
+              key={user.id}
+              user={user}
+              size="medium"
+              onDelete={() => handleDelete(user.id, note.id)}
+            />
+          ))}
 
-            {/* loader */}
-            {loaded && id === note.id ? (
-              <Spinner />
-            ) : (
-              <Chip
-                key={note.id}
-                variant="outlined"
-                label={
-                  autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee'
+          {/* loader */}
+          {loaded && id === note.id ? (
+            <Spinner />
+          ) : (
+            <Chip
+              key={note.id}
+              variant="outlined"
+              label={
+                autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee'
+              }
+              size="medium"
+              icon={
+                autoCompleteOpen && id === note.id ? (
+                  <CancelIcon />
+                ) : (
+                  <AddCircleIcon />
+                )
+              }
+              onClick={event => handleOpenAutoComplete(event, note.id)}
+            />
+          )}
+          {/* error message */}
+          <br />
+          {Boolean(message.length) && <span>{message}</span>}
+          {/* autocomplete for assignees */}
+          {// avoid opening autocomplete box for other notes
+          autoCompleteOpen && id === note.id && (
+            <Autocomplete
+              clearOnEscape
+              clearOnBlur
+              loading={loading}
+              id={note.id}
+              options={users}
+              getOptionLabel={option => option.name}
+              style={{ width: 300 }}
+              onChange={(_evt, value) => {
+                // if nothing selected, ignore and move on
+                if (!value) {
+                  return
                 }
-                size="medium"
-                icon={
-                  autoCompleteOpen && id === note.id ? (
-                    <CancelIcon />
-                  ) : (
-                    <AddCircleIcon />
-                  )
-                }
-                onClick={event => handleOpenAutoComplete(event, note.id)}
-              />
-            )}
-            {/* error message */}
-            <br />
-            {Boolean(message.length) && <span>{message}</span>}
-            {/* autocomplete for assignees */}
-            {// avoid opening autocomplete box for other notes
-            autoCompleteOpen && id === note.id && (
-              <Autocomplete
-                clearOnEscape
-                clearOnBlur
-                loading={loading}
-                id={note.id}
-                options={users}
-                getOptionLabel={option => option.name}
-                style={{ width: 300 }}
-                onChange={(_evt, value) => {
-                  // if nothing selected, ignore and move on
-                  if (!value) {
-                    return
-                  }
-                  // assign or unassign the user here
-                  assignUnassignUser(note.id, value.id)
-                }}
-                renderInput={params => (
-                  <TextField {...params} placeholder="Name of assignee" />
-                )}
-              />
-            )}
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="flex-end"
-          >
-            <Typography variant="caption" display="block" gutterBottom>
-              Created By:&nbsp;<i>{note.author.name}</i>&nbsp; On:&nbsp;
-              <i>{dateToString(note.createdAt)}</i>
-            </Typography>
-            <Grid
-              container
-              direction="row"
-              justify="flex-end"
-              alignItems="flex-end"
+                // assign or unassign the user here
+                assignUnassignUser(note.id, value.id)
+              }}
+              renderInput={params => (
+                <TextField {...params} placeholder="Name of assignee" />
+              )}
+            />
+          )}
+        </Grid>
+        <Grid item>
+          <CenteredContent>
+          <EditIcon
+            style={{
+              float: 'right',
+              cursor: 'pointer',
+              marginBottom: 8
+            }}
+            fontSize="small"
+            color="inherit"
+            onClick={() => handleModal(note.id)}
+          />
+          <Typography variant="subtitle1" gutterBottom>
+            Due at: {note.dueDate ? `  ${dateToString(note.dueDate)}` : ' Never'}
+          </Typography>
+            <Button
+              variant="outlined"
+              color='primary'
+              disabled={note.id && loadingMutation}
+              style={{ 
+                marginBottom: 3,
+                marginLeft: 12
+              }}
+              onClick={() => handleCompleteNote(note.id, note.completed)}
             >
-                <Button
-                  variant="outlined"
-                  color='primary'
-                  disabled={note.id && loadingMutation}
-                    style={{ 
-                      marginBottom: 3, 
-                    }}
-                  onClick={() => handleCompleteNote(note.id, note.completed)}
-                >
-                  {note.completed ? 'Complete' : 'Mark as complete'}
-                </Button>
-            </Grid>
-          </Grid>
+              {note.completed ? 'Completed' : 'Mark as complete'}
+            </Button>
+          </CenteredContent>    
         </Grid>
       </Grid>
       <Divider />
-    </li>
+    </>
   )
 }

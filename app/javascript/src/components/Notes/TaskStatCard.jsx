@@ -4,7 +4,6 @@ import {
   CardContent,
   Grid,
   Typography,
-  colors
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 
@@ -18,16 +17,12 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
       }}
     >
       <CardContent>
-        <Grid container justify="space-between">
-          <Grid item>
-            <Typography align="center" color="textSecondary" gutterBottom variant="h6">
+            <Typography align="center" color="textSecondary" gutterBottom variant="body1">
               {title}
             </Typography>
-            <Typography align="center" color="textPrimary" variant="h3">
+            <Typography align="center" color="textPrimary" variant="h5">
               {count}
             </Typography>
-          </Grid>
-        </Grid>
       </CardContent>
     </Card>
   )
@@ -35,20 +30,8 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
 
 const styles = StyleSheet.create({
   root: {
-    // height: '22vh',
-    // width: '17.5vw'
+    // height: '120px',
+    // width: '120px'
   },
-  avatar: {
-    backgroundColor: colors.red[600],
-    height: 56,
-    width: 56
-  },
-  differenceIcon: {
-    color: colors.red[900]
-  },
-  differenceValue: {
-    color: colors.red[900],
-    marginRight: 1
-  }
 })
   
