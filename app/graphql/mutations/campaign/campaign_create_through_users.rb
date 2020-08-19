@@ -12,13 +12,19 @@ module Mutations
       field :campaign, Types::CampaignType, null: true
 
       def resolve(vals)
-        campaign = context[:current_user].community.campaigns.new
+        campaign = campaign_object
         campaign.name = vals[:filters].tr(',', '_')
         campaign.user_id_list = vals[:user_id_list]
-        campaign.batch_time = 10.years.from_now
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
         { campaign: campaign }
+      end
+
+      def campaign_object
+        campaign = context[:current_user].community.campaigns.new
+        campaign.message = I18n.t('campaign.default_message')
+        campaign.batch_time = 10.years.from_now
+        campaign
       end
 
       def authorized?(_vals)
