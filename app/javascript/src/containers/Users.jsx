@@ -57,7 +57,7 @@ export default function UsersList() {
 
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const [campaignCreate, { data: campaignId }] = useMutation(CampaignCreateThroughUsers)
+  const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
 
   const search = {
     type,
@@ -155,16 +155,13 @@ export default function UsersList() {
 
   function handleCampaignCreate() {
     const filters = type.concat(labels)
-    //setRedirect('/campaign/786de039-5499-45db-a157-3ed722469b9d')
- 
     if (userList) {
       campaignCreate({
-        variables: { filters: filters.join() , userIdList: userList.join() }
-      }).then(() => {
-        setLabelLoading(false)
-        setRedirect(`/campaign/${campaignId.campaign.id}`)
+        variables: { filters: filters.join(), userIdList: userList.join() }
+      }).then(res => {
+        const { data } = res
+        setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
       }).catch(error => {
-        setLabelLoading(false)
         setError(error.message)
       })
 
@@ -366,7 +363,9 @@ export default function UsersList() {
 
         <br />
         <div className="d-flex justify-content-center row">
-          <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span>
+          {/* <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span> */}
+
+          <span>{labelError}</span>
         </div>
 
         <br />
