@@ -18,7 +18,7 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
       }}
     >
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justify="space-between">
           <Grid item>
             <Typography align="center" color="textSecondary" gutterBottom variant="h6">
               {title}
@@ -35,7 +35,8 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
 
 const styles = StyleSheet.create({
   root: {
-    height: '100%'
+    // height: '22vh',
+    // width: '17.5vw'
   },
   avatar: {
     backgroundColor: colors.red[600],

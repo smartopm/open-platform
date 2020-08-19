@@ -57,7 +57,7 @@ export default function TodoList({
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
-    totalCallsOpen: 'category: calls AND completed: false'
+    totalCallsOpen: 'category: call AND completed: false'
   }
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
