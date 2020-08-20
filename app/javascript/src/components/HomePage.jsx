@@ -150,7 +150,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 11,
       title: 'Permits and Request Forms',
-      path: `/`,
+      path: `/forms`,
       id: 'crfl',
       icon: <ListAltIcon fontSize="large" />,
       access: ['admin', 'resident', 'client'],
