@@ -121,6 +121,7 @@ export default function UsersList() {
     setFilterType(event.target.value)
   }
   function handleDateChangeFrom(date) {
+    console.log(date)
     setSelectDateTo("")
     setSelectDateOn("")
     setSelectDateFrom(date)

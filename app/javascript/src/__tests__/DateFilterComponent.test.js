@@ -12,8 +12,8 @@ describe('filter users for campaign component', () => {
       handleDateChangeFrom: jest.fn(),
       handleDateChangeTo: jest.fn(),
       handleDateChangeOn: jest.fn(),
-      selectDateFrom: "2020-08-16",
-      selectDateTo: "",
+      selectDateFrom: "",
+      selectDateTo: "2020-08-16",
       selectDateOn: "",
       resetFilter: jest.fn()
     }
@@ -29,9 +29,9 @@ describe('filter users for campaign component', () => {
       handleDateChangeFrom: jest.fn(),
       handleDateChangeTo: jest.fn(),
       handleDateChangeOn: jest.fn(),
-      selectDateFrom: "2020-08-16",
+      selectDateFrom: "",
       selectDateTo: "",
-      selectDateOn: "",
+      selectDateOn: "2020-08-16",
       resetFilter: jest.fn()
     }
     const container = render(<DateFilterComponent {...props} />)
