@@ -16,7 +16,7 @@ module Mutations
       field :campaign, Types::CampaignType, null: true
 
       def resolve(id:, **vals)
-        campaign = ::Campaign.find(id)
+        campaign = context[:site_community].campaigns.find(id)
         return if campaign.nil?
 
         update_campaign_label(campaign, vals.delete(:labels)&.split(','))

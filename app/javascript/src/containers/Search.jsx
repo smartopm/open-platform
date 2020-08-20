@@ -199,8 +199,8 @@ const styles = StyleSheet.create({
     width: '50px'
   },
   statusBadgePending: {
-    border: '1px dashed #25c0b0',
-    color: '#25c0b0',
+    border: '1px dashed #69ABA4',
+    color: '#69ABA4',
     borderRadius: '10px'
   },
   inputGroup: {
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   requestButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF'
   },
   requestLink: {

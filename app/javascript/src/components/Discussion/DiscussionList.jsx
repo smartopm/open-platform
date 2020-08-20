@@ -11,14 +11,14 @@ export default function DiscussionList({ data }) {
         <div className={css(styles.discussionList)}>
             <List >
                 {data.length ? data.map(discussion => (
-                    <Link key={discussion.id} to={`/discussions/${discussion.id}`} style={{ color: '#fff' }} className={`card-link`}>
+                    <Link key={discussion.id} to={`/discussions/${discussion.id}`} className={`card-link`}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar style={{ marginRight: 20 }}>
                                 <Avatar user={discussion.user} />
                             </ListItemAvatar>
                             <ListItemText
                                 primary={
-                                    <Typography variant="h6" color='textPrimary' data-testid="disc_title">
+                                    <Typography variant="h6" color='textSecondary' data-testid="disc_title">
                                         {discussion.title}
                                     </Typography>
                                 }

@@ -30,6 +30,7 @@ export const UserFragment = {
         flagged
         user {
           name
+          id
         }
         completed
         createdAt

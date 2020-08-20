@@ -23,16 +23,12 @@ import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
-import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
-
-
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
 export default function PostPage() {
-  const theme = useContext(ThemeContext)
   const limit = 20
   const { id } = useParams()
   const authState = useContext(AuthStateContext)
@@ -109,12 +105,13 @@ export default function PostPage() {
           }}
         />
         
-        <Fab variant="extended"
+        <Fab
+          variant="extended"
           onClick={handleCommentsView}
-            className={`btn ${css(styles.getStartedButton)} `}
-            style={{backgroundColor: theme.primaryColor}}
+          className={`btn ${css(styles.getStartedButton)} `}
+          color="primary"
           >
-            Share comments&nbsp;<Avatar>{data.postComments.length}</Avatar>
+            View comments&nbsp;<Avatar>{data ? data.postComments.length : 0}</Avatar>
             
         </Fab>
       </div>
@@ -144,10 +141,11 @@ export default function PostPage() {
                 discussionId={queryResponse.data.postDiscussion.id}
               />
               {
-                data.postComments.length >= limit && (
+                data?.postComments.length >= limit && (
                   <CenteredContent>
                     <Button
                       variant="outlined"
+                      color="primary"
                       onClick={fetchMoreComments}>
                       {isLoading ? <Spinner /> : 'Load more comments'}
                     </Button>
@@ -162,6 +160,7 @@ export default function PostPage() {
                   authState.loggedIn && authState.user.userType === 'admin' ? (
                     <Button
                       variant="outlined"
+                      color="primary"
                       onClick={() => createDiscussion(response?.title, response?.ID)}
                       disabled={isLoading}
                     >

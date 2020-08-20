@@ -5,6 +5,8 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 
+
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Campaign page', () => {
   afterEach(cleanup)
   const authState = {
@@ -82,7 +84,7 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const nameInput = container.queryByLabelText('campaign_name')
+    const nameInput = container.queryByTestId('campaign_name')
     fireEvent.change(nameInput, { target: { value: 'Marketing' } })
     expect(nameInput.value).toBe('Marketing')
 
@@ -96,8 +98,12 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const messageInput = container.queryByLabelText('campaign_message')
+    const messageInput = container.queryByTestId('campaign_message')
     const idsInput = container.queryByTestId('campaign_ids')
+    const nameInput = container.queryByTestId('campaign_name')
+
+    fireEvent.change(nameInput, { target: { value: 'new campaign' } })
+    expect(nameInput.value).toBe('new campaign')
 
     fireEvent.change(messageInput, { target: { value: 'This is a campaign message from the input field' } })
     expect(messageInput.value).toBe('This is a campaign message from the input field')

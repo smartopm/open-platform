@@ -5,6 +5,7 @@ class Note < ApplicationRecord
   include SearchCop
 
   search_scope :search do
+    attributes :created_at, :completed, :due_date, :flagged, :category
     attributes assignees: ['assignees.name']
   end
 
@@ -15,6 +16,9 @@ class Note < ApplicationRecord
   has_many :assignees, through: :assignee_notes, source: :user
 
   default_scope { order(created_at: :desc) }
+  scope :by_due_date, ->(date) { where('due_date <= ?', date) }
+  scope :by_completion, ->(is_complete) { where(completed: is_complete) }
+  scope :by_category, ->(category) { where(category: category) }
   VALID_CATEGORY = %w[call email text message to_do other].freeze
   validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
 

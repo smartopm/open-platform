@@ -232,11 +232,23 @@ RSpec.describe Types::QueryType do
     let!(:admin) { create(:user_with_community, user_type: 'admin') }
     let!(:current_user) { create(:user_with_community) }
     let!(:notes) do
-      admin.notes.create(
+      admin.community.notes.create!(
         body: 'This is a note',
         user_id: current_user.id,
-        community_id: admin.community_id,
+        author_id: admin.id,
         flagged: true,
+        due_date: 10.days.from_now,
+        completed: true,
+      )
+    end
+    let!(:other_notes) do
+      admin.community.notes.create!(
+        body: 'This is a note',
+        user_id: current_user.id,
+        author_id: admin.id,
+        flagged: true,
+        due_date: -10.days.from_now,
+        completed: false,
       )
     end
 
@@ -269,6 +281,19 @@ RSpec.describe Types::QueryType do
         })
     end
 
+    let(:tasks_stats_query) do
+      %(query {
+          taskStats {
+            completedTasks
+            tasksOpenAndOverdue
+            overdueTasks
+            tasksWithNoDueDate
+            myOpenTasks
+          }
+        }
+      )
+    end
+
     it 'should query all to-dos' do
       result = DoubleGdpSchema.execute(flagged_query, context: {
                                          current_user: admin,
@@ -294,6 +319,19 @@ RSpec.describe Types::QueryType do
                                        }).as_json
 
       expect(result.dig('data', 'userNotes')).not_to be_nil
+    end
+
+    it 'should query tasks stats' do
+      result = DoubleGdpSchema.execute(tasks_stats_query, context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'taskStats')).not_to be_nil
+      expect(result.dig('data', 'taskStats', 'completedTasks')).to eql 1
+      expect(result.dig('data', 'taskStats', 'tasksOpenAndOverdue')).to eql 1
+      expect(result.dig('data', 'taskStats', 'overdueTasks')).to eql 1
+      expect(result.dig('data', 'taskStats', 'tasksWithNoDueDate')).to eql 0
     end
   end
 end

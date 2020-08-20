@@ -29,7 +29,6 @@ describe('date container component', () => {
      dateToString(oldDate)
    )
  })
-
   it('should return the correct last day of the month', () => {
     expect(lastDayOfTheMonth.toString()).toContain('26') // 26 as last day of the month
   })

@@ -1,4 +1,4 @@
-import React, { Fragment,useContext } from 'react'
+import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
@@ -11,12 +11,9 @@ import { dateTimeToString, dateToString } from '../components/DateContainer'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
-
 
 export default function CampaignList() {
   const history = useHistory()
-  const theme = useContext(ThemeContext)
   const { data, error, loading } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
@@ -119,18 +116,16 @@ export default function CampaignList() {
       ))}
       <Fab
         variant="extended"
+        color="primary"
         style={{
           position: 'fixed',
           bottom: 24,
           right: 57,
           color: 'white',
-          backgroundColor: theme.primaryColor
         }}
-        
         onClick={() => {
           routeToCreateCampaign()
         }}
-        color="inherit"
       >
         <AddIcon /> Create
       </Fab>
@@ -145,15 +140,9 @@ const style = StyleSheet.create({
     fontWeight: 700
   },
   subTitle: {
-    color: '#818188',
+    color: 'black',
     fontSize: 14,
     letterSpacing: 0.17,
     fontWeight: 400
   },
-  access: {
-    color: '#1f2026',
-    fontSize: 14,
-    letterSpacing: 0.17,
-    fontWeight: 400
-  }
 })

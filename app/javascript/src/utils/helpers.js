@@ -1,5 +1,16 @@
+import dompurify from 'dompurify';
 
 // keep string methods [helpers]
+
+/**
+ * 
+ * @param {String} url
+ * @returns a purifed link
+ * @description receives a url and returns a purified url
+ */
+export function sanitizeLink(url) {
+  return dompurify.sanitize(url)
+}
 
 /**
  * 
@@ -15,7 +26,7 @@ export function findLinkAndReplace(msg) {
     if (emailRegex.test(url)) {
       return `<a href="mailto:${url}">${url}</a>`
     }
-    return `<a href="${url}">${url}</a>`
+    return `<a href="${url}" >${url}</a>`
   })
 }
 
@@ -71,7 +82,7 @@ export function saniteError(requiredFields, errorMessage) {
   return `${cleanFields.join(" or ")} value is blank`;
 }
 
-export function DelimitorFormator(params) {
+export function delimitorFormator(params) {
   return params.split('\n').join(',').split(',')
 }
 

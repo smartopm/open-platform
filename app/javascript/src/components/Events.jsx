@@ -38,7 +38,7 @@ export default function Events({
       <div>
         <div
           style={{
-            backgroundColor: "#25c0b0"
+            backgroundColor: "#69ABA4"
           }}
         >
         </div>
