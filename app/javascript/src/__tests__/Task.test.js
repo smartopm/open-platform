@@ -2,6 +2,7 @@ import React from 'react'
 import Task from '../components/Notes/Task'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import { BrowserRouter } from 'react-router-dom/'
 
 describe('component that centers divs', () => {
   it('should not render with wrong props', () => {
@@ -28,7 +29,11 @@ describe('component that centers divs', () => {
       handleDelete: jest.fn(),
       handleModal: jest.fn()
     }
-    const container = render(<Task {...props} />)
+    const container = render(
+      <BrowserRouter>
+        <Task {...props} />
+      </BrowserRouter>
+      )
     expect(container.queryByText('Note example')).toBeInTheDocument()
     expect(container.queryByText('Johnsc')).toBeInTheDocument()
     expect(container.queryByText('somebody')).toBeInTheDocument()
