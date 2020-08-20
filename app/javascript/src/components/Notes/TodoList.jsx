@@ -125,6 +125,7 @@ export default function TodoList({
   }
 
   function handleTaskFilter(_evt, key) {
+    console.log(key)
     if (key === 'tasksWithNoDueDate') return
     setQuery(taskQuery[key])
   }

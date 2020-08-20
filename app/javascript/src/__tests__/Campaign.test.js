@@ -84,7 +84,7 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const nameInput = container.queryByLabelText('campaign_name')
+    const nameInput = container.queryByTestId('campaign_name')
     fireEvent.change(nameInput, { target: { value: 'Marketing' } })
     expect(nameInput.value).toBe('Marketing')
 
