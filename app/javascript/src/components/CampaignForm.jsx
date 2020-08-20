@@ -127,6 +127,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           className="form-control"
           value={formData.name}
           onChange={handleInputChange}
+          aria-label="campaign_name"
+          inputProps={{ "data-testid": "campaign_name" }}
           />
         <TextField
           label="Message"
@@ -137,6 +139,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           className="form-control"
           value={formData.message || ''}
           onChange={handleInputChange}
+          aria-label="campaign_message"
+          inputProps={{ "data-testid": "campaign_message" }}
           />
           <TextField
             label="User ID List"

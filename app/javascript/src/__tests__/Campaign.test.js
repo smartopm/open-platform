@@ -100,6 +100,10 @@ describe('Campaign page', () => {
     )
     const messageInput = container.queryByLabelText('campaign_message')
     const idsInput = container.queryByTestId('campaign_ids')
+    const nameInput = container.queryByTestId('campaign_name')
+
+    fireEvent.change(nameInput, { target: { value: 'new campaign' } })
+    expect(nameInput.value).toBe('new cammpaign')
 
     fireEvent.change(messageInput, { target: { value: 'This is a campaign message from the input field' } })
     expect(messageInput.value).toBe('This is a campaign message from the input field')
