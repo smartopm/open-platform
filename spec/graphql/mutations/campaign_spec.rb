@@ -166,10 +166,10 @@ RSpec.describe Mutations::Campaign do
       }
 
       other_result = DoubleGdpSchema.execute(label_remove_query, variables: other_variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
+                                                                 context: {
+                                                                   current_user: current_user,
+                                                                   site_community: current_user.community,
+                                                                 }).as_json
       expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
