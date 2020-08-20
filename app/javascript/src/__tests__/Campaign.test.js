@@ -98,7 +98,7 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const messageInput = container.queryByLabelText('campaign_message')
+    const messageInput = container.queryByTestId('campaign_message')
     const idsInput = container.queryByTestId('campaign_ids')
     const nameInput = container.queryByTestId('campaign_name')
 
