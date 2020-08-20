@@ -40,16 +40,16 @@ export default function DateFilterComponent({
         </Select>
         {filterType === 'log_from' && (
           <Fragment>
-            from: <DatePicker handleDateChange={handleDateChangeFrom} selectedDate={selectDateFrom} />
+            <DatePicker handleDateChange={handleDateChangeFrom} selectedDate={selectDateFrom} label="from:"/>
           </Fragment>)}
           {filterType === "log_to" && (
             <Fragment>
-            to: <DatePicker handleDateChange={handleDateChangeTo} selectedDate={selectDateTo} />
+              <DatePicker handleDateChange={handleDateChangeTo} selectedDate={selectDateTo} label="to:"/>
             </Fragment>
           )}
           {filterType === "log_on" && (
             <Fragment>
-            on: <DatePicker handleDateChange={handleDateChangeOn} selectedDate={selectDateOn} />
+              <DatePicker handleDateChange={handleDateChangeOn} selectedDate={selectDateOn} label="on:"/>
             </Fragment>
           )}
 
