@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { Typography, withStyles, Tab, Button, Box, ListItem, List } from '@material-ui/core'
 import { StyledTabs, TabPanel } from '../../components/Tabs'
 import Status from '../../components/StatusBadge'
-import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider.js'
 import { useHistory } from 'react-router-dom'
 import Avatar from '../Avatar'
@@ -20,7 +19,6 @@ export default function BusinessProfile({ profileData }) {
     const [tabValue, setValue] = useState('Profile')
     const history = useHistory()
     const authState = useContext(AuthStateContext)
-    const theme = useContext(ThemeContext)
     const CSMNumber = '260974624243'
 
     function handleButtonClick() {
@@ -119,7 +117,7 @@ export default function BusinessProfile({ profileData }) {
                 </TabPanel>
 
                 <div className='container d-flex justify-content-center'>
-                    <Button onClick={handleButtonClick} style={{ backgroundColor: theme.primaryColor, color: 'white' }}>Ask about business</Button>
+                    <Button onClick={handleButtonClick} color="primary" >Ask about business</Button>
                 </div>
             </div>
         </div>
