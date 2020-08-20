@@ -438,7 +438,7 @@ export const CampaignCreate = gql`
     }
   }
 `
-export const CampaignUpdate = gql`
+export const CampaignUpdateMutation = gql`
   mutation campaignUpdate(
     $id: ID!
     $name: String
@@ -577,6 +577,14 @@ export const CampaignCreateThroughUsers = gql `
       }
     }
   }
-
+`
+export const CampaignLabelRemoveMutation = gql`
+mutation labelRemove($campaignId: ID!, $labelId: ID!) {
+  campaignLabelRemove(campaignId: $campaignId, labelId: $labelId){
+    campaign {
+      id
+    }
+  }
+}
 `
 

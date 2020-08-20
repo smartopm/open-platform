@@ -7,7 +7,7 @@ export default function CampaignCreate(){
     const authState = useContext(AuthStateContext)
     return(
         <>
-        <Nav navName="Campaign" menuButton="back" backTo="/" />
+        <Nav navName="Campaign" menuButton="back" backTo="/campaigns" />
         <CampaignForm authState={authState}/>
         </>
     )
