@@ -12,7 +12,6 @@ export default function Card({
   clientName,
   clientNumber,
   children,
-  handleClick,
   id,
   access,
   authState
@@ -25,7 +24,7 @@ export default function Card({
   return (
     <div
       className={`${css(styles.cardSize)} card align-self-center text-center`}
-      onClick={handleClick}
+      
     >
       <span>{children}</span>
       <Link

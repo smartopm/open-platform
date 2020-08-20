@@ -154,51 +154,6 @@ export default function Homepage({ authState }) {
       id: 'crfl',
       icon: <ListAltIcon fontSize="large" />,
       access: ['admin', 'resident', 'client'],
-      // menu: (
-      //   <Menu
-      //     id="fade-menu"
-      //     anchorEl={anchorEl}
-      //     keepMounted
-      //     open={open}
-      //     onClose={() => setAnchorEl(null)}
-      //     anchorOrigin={{
-      //       vertical: 'bottom',
-      //       horizontal: 'center'
-      //     }}
-      //     transformOrigin={{
-      //       vertical: 'top',
-      //       horizontal: 'left'
-      //     }}
-      //   >
-      //     <MenuItem
-      //       onClick={() => {
-      //         window.open(
-      //           `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
-      //             /\s+/g,
-      //             '+'
-      //           )}&entry.1055458143=${
-      //             authState.user.phoneNumber ? authState.user.phoneNumber : ''
-      //           }`,
-      //           '_blank'
-      //         )
-      //         location.reload()
-      //       }}
-      //     >
-      //       Client Request Form
-      //     </MenuItem>
-      //     <MenuItem
-      //       onClick={() => {
-      //         window.open(
-      //           'https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform?usp=sf_link',
-      //           '_blank'
-      //         )
-      //         location.reload()
-      //       }}
-      //     >
-      //       Building Permit Application Form
-      //     </MenuItem>
-      //   </Menu>
-      // )
     },
     {
       card_id: 12,
