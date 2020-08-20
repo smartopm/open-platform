@@ -7,7 +7,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:user_labels) }
     it { is_expected.to have_many(:labels) }
     it { is_expected.to have_many(:contact_infos) }
-    it { is_expected.to have_many(:acting_event_log) }
   end
 
   describe 'Creating a user from a oauth authentication callback' do
