@@ -92,6 +92,7 @@ export default function Discuss({ update }) {
                     <Button
                         variant="contained"
                         type="submit"
+                        color="primary"
                         disabled={loading}
                         aria-label="discussion_submit"
                         className={`btn ${css(discussStyles.submitBtn)}`}
@@ -109,8 +110,6 @@ export default function Discuss({ update }) {
 }
 export const discussStyles = StyleSheet.create({
     submitBtn: {
-        backgroundColor: '#69ABA4',
-        color: '#FFF',
         width: '30%',
         height: 51,
         boxShadow: 'none',

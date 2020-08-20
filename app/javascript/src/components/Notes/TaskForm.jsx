@@ -217,6 +217,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         <Button
           variant="contained"
           type="submit"
+          color="primary"
           disabled={loading}
           aria-label="task_submit"
           className={`btn ${css(discussStyles.submitBtn)}`}

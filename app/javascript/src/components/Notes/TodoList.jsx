@@ -9,11 +9,6 @@ import {
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
-} from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
@@ -26,6 +21,7 @@ import FilterComponent from '../FilterComponent'
 import Task from './Task'
 import TaskDashboard from './TaskDashboard'
 import { futureDateAndTimeToString } from '../DateContainer'
+import DatePickerDialog from '../DatePickerDialog'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -139,20 +135,11 @@ export default function TodoList({
           handleConfirm={saveDate}
           action='save'
         >
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
-                id="date-picker-inline"
-                label="Pick due date for this todo"
-                value={selectedDate}
-                onChange={handleDateChange}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date'
-                }}
-              />
-            </MuiPickersUtilsProvider>
+            <DatePickerDialog
+              selectedDate={selectedDate}
+              handleDateChange={handleDateChange}
+              label="Pick due date for this todo"
+            />
         </ModalDialog>
 
         <Dialog
@@ -195,6 +182,7 @@ export default function TodoList({
           <Grid container spacing={3}> 
             <TaskDashboard filterTasks={handleTaskFilter} />
           </Grid>
+          <br />
             {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
                   <Task
                     key={note.id}
@@ -244,6 +232,11 @@ const useStyles = makeStyles({
     width: '100%',
     overflowX: 'auto'
   },
+  formControl: {
+    minWidth: 160,
+    maxWidth: 300
+  },
+
 })
 
 const styles = StyleSheet.create({
