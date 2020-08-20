@@ -162,7 +162,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
                   />
                 ))
               }
-              {Boolean(formData.labels.length) && formData.labels.map((labl, i) => (
+              {Boolean(formData.labels.length) && formData.labels.map(labl => (
                   <Chip
                     data-testid="campaignChip-label"
                     key={labl.id}
