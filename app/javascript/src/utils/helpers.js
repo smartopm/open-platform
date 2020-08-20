@@ -126,7 +126,3 @@ export function forceLinkHttps(imageLink) {
   const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink
   return link
 }
-
-export function generateId() {
-  return  Math.random().toString(16).substr(-10)
-}
