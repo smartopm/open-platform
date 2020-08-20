@@ -22,61 +22,6 @@ export default function CampaignUpdate({ match }) {
   if (loading) return <Loading />
   if (error) return <ErrorPage />
 
-<<<<<<< HEAD
-  if (!formData.loaded && data) {
-    setFormData({ ...data.campaign, loaded: true })
-  }
-
-  function handleInputChange(e) {
-    const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value
-    })
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault()
-
-    setTimeout(() => {
-      window.location.reload(false)
-    }, 3000)
-   
- 
-    const campaignData = {
-      id: formData.id,
-      name: formData.name,
-      message: formData.message,
-      batchTime,
-      userIdList: formData.userIdList,
-      labels: label.toString()
-    }
-
-    campaign({ variables: campaignData })
-      .then(() => {
-        setIsSubmitted(true)
-      })
-      .catch(err => {
-        setErrorMsg(err.message)
-      })
-  }
-
-  function handleLabelSelect(lastLabel) {
-    const { id } = lastLabel
-    setLabel([...label, id])
-  }
-
-  function handleUserIDList(_event, value) {
-    let userIds = DelimiterFormatter(value)
-    setFormData({
-      ...formData,
-      userIdList: userIds.toString()
-    })
-  }
-  console.log("new date"+batchTime);
-  console.log("db data"+formData.batchTime);
-=======
->>>>>>> e22c9daca0e17da58a3c422d4a34e059e35d73af
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />

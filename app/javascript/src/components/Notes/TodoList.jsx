@@ -1,12 +1,11 @@
-import React, { useState, Fragment,useEffect } from 'react'
+import React, { useState, Fragment } from 'react'
 import { ModalDialog } from '../Dialog'
 import {
   Fab,
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid,
-  CardActionArea
+  Grid
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
@@ -14,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
-import { inDays } from '../../utils/helpers'
 import TaskForm from './TaskForm'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
@@ -44,10 +42,6 @@ export default function TodoList({
   const [loadingMutation, setMutationLoading] = useState(false)
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
-<<<<<<< HEAD
-  const [metric, setMetric] = useState()
-
-=======
   const [query, setQuery] = useState('')
 
   const taskQuery = {
@@ -60,7 +54,6 @@ export default function TodoList({
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
     totalCallsOpen: 'category: call AND completed: false'
   }
->>>>>>> e22c9daca0e17da58a3c422d4a34e059e35d73af
   const { loading, data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
@@ -83,11 +76,7 @@ export default function TodoList({
       fetchPolicy: "network-only"
     }
   )
-  useEffect(() => {
-    if(data){
-      setMetric(data.flaggedNotes)
-    }
-  },[]);
+
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -97,10 +86,6 @@ export default function TodoList({
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
-  }
-
-  function filterCompleted() {
-  return  setMetric(data.flaggedNotes.filter(note => note.completed === true))
   }
 
   function assignUnassignUser(noteId, userId) {
@@ -141,62 +126,9 @@ export default function TodoList({
   }
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
-  console.log(data.flaggedNotes)
-  console.log(metric)
-  let activeTask = data.flaggedNotes.filter(note => note.completed === false)
-    .length
-  let dueInTen = data.flaggedNotes.filter(
-    note =>
-      note.completed === false &&
-      inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 10 &&
-      inDays(new Date(note.createdAt), new Date(note.dueDate)) >= 0
-  ).length
-  let dueInThirty = data.flaggedNotes.filter(
-    note =>
-      note.completed === false &&
-      inDays(new Date(note.createdAt), new Date(note.dueDate)) >= 10 &&
-      inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 30
-  ).length
-  let Overdue = data.flaggedNotes.filter(
-    note =>
-      note.completed === false &&
-      inDays(new Date(note.createdAt), new Date(note.dueDate)) <= 0
-  ).length
 
-  let completed = data.flaggedNotes.filter(note => note.completed === true)
-    .length
-  console.log(dueInTen)
   return (
     <Fragment>
-      <br />
-      <div className="container-fluid">
-        <Grid container spacing={3}>
-          <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <CardActionArea onClick={() => filterCompleted()}>
-              <Cards title={'Active Tasks'} number={activeTask} />
-            </CardActionArea>
-          </Grid>
-          <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'Due in 10 days'} number={dueInTen} />
-          </Grid>
-          <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'Due in 30 days'} number={dueInThirty} />
-          </Grid>
-          <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'Overdue Tasks'} number={Overdue} />
-          </Grid>
-          <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards title={'My Tasks'} number={1} />
-          </Grid>
-          <Grid item lg={2} sm={4} xl={2} xs={6}>
-            <Cards
-              title={'Completed Tasks'}
-              number={completed}
-              onClick={() => console.log('bums')}
-            />
-          </Grid>
-        </Grid>
-      </div>
       <div className="container" data-testid="todo-container">
         <ModalDialog
           open={isDialogOpen}
@@ -247,20 +179,12 @@ export default function TodoList({
               />
             </CenteredContent>
           )}
-<<<<<<< HEAD
-          <ul className={css(styles.list)}>
-            {data.flaggedNotes.length ? (
-              data.flaggedNotes
-                .filter(note => note.completed === false)
-                .map(note => (
-=======
           <br />
           <Grid container spacing={3}> 
             <TaskDashboard filterTasks={handleTaskFilter} />
           </Grid>
           <br />
             {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
->>>>>>> e22c9daca0e17da58a3c422d4a34e059e35d73af
                   <Task
                     key={note.id}
                     note={note}
