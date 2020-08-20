@@ -33,6 +33,8 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import CreateLabel from '../components/CreateLabel'
 import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
+import DateFilterComponent from '../components/DateFilterComponent'
+import { convertDateStr } from '../utils/dateutil'
 
 
 const limit = 50
@@ -58,15 +60,40 @@ export default function UsersList() {
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
+  const [filterType, setFilterType] = useState('')
+  const [selectDateFrom, setSelectDateFrom] = useState('')
+  const [selectDateTo, setSelectDateTo] = useState('')
+  const [selectDateOn, setSelectDateOn] = useState('')
 
   const search = {
     type,
     phone: phoneNumbers,
     label: labels
   }
+  function joinSearchQuery(query, type) {
+    const types = {
+      phone: 'phone_number',
+      label: 'labels',
+      type: 'user_type'
+    }
+    const filterType = types[type]
+    return query.map(query => `${filterType} = "${query}"`).join(' OR ')
+  }
+  function specifyUserQuery() {
+    if (selectDateFrom !== '') {
+      return `date_filter > ${convertDateStr(selectDateFrom)}`
+    }
+    if (selectDateTo !== '') {
+      return `date_filter < ${convertDateStr(selectDateTo)}`
+    }
+    if (selectDateOn !== '') {
+      return `date_filter = ${convertDateStr(selectDateOn)}`
+    }
+    return joinSearchQuery(search[searchType], searchType)
+  }
   const { loading, error, data, refetch } = useQuery(UsersQuery, {
     variables: {
-      query: joinSearchQuery(search[searchType], searchType),
+      query: specifyUserQuery(),
       limit,
       offset
     },
@@ -81,16 +108,6 @@ export default function UsersList() {
   //TODO: @dennis, add pop up for notes 
   const [userLabelCreate] = useMutation(UserLabelCreate)
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
-
-  function joinSearchQuery(query, type) {
-    const types = {
-      phone: 'phone_number',
-      label: 'labels',
-      type: 'user_type'
-    }
-    const filterType = types[type]
-    return query.map(query => `${filterType} = "${query}"`).join(' OR ')
-  }
   function handleFilterModal() {
     setOpen(!open)
     setSearchType('phone')
@@ -98,6 +115,31 @@ export default function UsersList() {
   function handleBatchFilter() {
     setPhoneNumbers(searchValue.split('\n').join(',').split(','))
     setOpen(!open)
+  }
+  function handleFilterInputChange(event) {
+    setFilterType("")
+    setFilterType(event.target.value)
+  }
+  function handleDateChangeFrom(date) {
+    setSelectDateTo("")
+    setSelectDateOn("")
+    setSelectDateFrom(date)
+  }
+  function handleDateChangeTo(date) {
+    setSelectDateFrom("")
+    setSelectDateOn("")
+    setSelectDateTo(date)
+  }
+  function handleDateChangeOn(date) {
+    setSelectDateFrom("")
+    setSelectDateTo("")
+    setSelectDateOn(date)
+  }
+  function dateFilter() {
+    setSelectDateFrom("")
+    setSelectDateTo("")
+    setSelectDateOn("")
+    setFilterType("")
   }
   function handleSaveNote() {
     let noteType = ''
@@ -146,11 +188,8 @@ export default function UsersList() {
       }).catch(error => {
         setLabelLoading(false)
         setError(error.message)
-
       })
-
     }
-
   }
 
   function handleCampaignCreate() {
@@ -312,6 +351,7 @@ export default function UsersList() {
                   </div>
                 )}
               >
+
                 {Object.entries(userType).map(([key, val]) => (
                   <MenuItem key={key} value={key}>
                     {val}
@@ -350,7 +390,18 @@ export default function UsersList() {
               <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
           </Grid>
-
+          <DateFilterComponent
+            classes={classes}
+            handleFilterInputChange={handleFilterInputChange}
+            filterType={filterType}
+            handleDateChangeFrom={handleDateChangeFrom}
+            handleDateChangeTo={handleDateChangeTo}
+            selectDateFrom={selectDateFrom}
+            selectDateTo={selectDateTo}
+            selectDateOn={selectDateOn}
+            handleDateChangeOn={handleDateChangeOn}
+            resetFilter={dateFilter}
+          />
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
             <Button variant="contained"
               color="primary"
@@ -358,7 +409,7 @@ export default function UsersList() {
               style={{ backgroundColor: theme.primaryColor }}
               endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
           </Grid>
-
+          
         </Grid>
 
         <br />

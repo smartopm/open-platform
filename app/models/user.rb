@@ -17,6 +17,7 @@ class User < ApplicationRecord
   search_scope :search do
     attributes :name, :phone_number, :user_type
     attributes labels: ['labels.short_desc']
+    attributes date_filter: ['acting_event_log.created_at']
   end
 
   scope :allowed_users, lambda { |current_user|
@@ -48,6 +49,7 @@ class User < ApplicationRecord
   has_many :contact_infos, dependent: :destroy
   has_many :labels, through: :user_labels
   has_many :assignee_notes, dependent: :destroy
+  has_many :acting_event_log, class_name: 'EventLog', foreign_key: :acting_user_id, dependent: :destroy
   has_many :tasks, through: :assignee_notes, source: :note
 
   has_one_attached :avatar

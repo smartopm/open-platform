@@ -1,5 +1,12 @@
 // values that can be reused across the codebase
 
+export const filterUserByLoggedin = {
+  log_from: 'Logged in from',
+  log_to: 'Logged in to',
+  log_on: 'Logged in on',
+  log_between: 'Logged in beween'
+}
+
 export const wordpressEndpoint =
   'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com'
 export const reasons = [
