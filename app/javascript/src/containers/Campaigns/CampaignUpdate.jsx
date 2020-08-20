@@ -10,7 +10,7 @@ import CampaignForm from '../../components/CampaignForm'
 
 export default function CampaignUpdate({ match }) {
   const authState = useContext(AuthStateContext)
-  const { data, error, loading } = useQuery(Campaign, {
+  const { data, error, loading, refetch } = useQuery(Campaign, {
     variables: { id: match.params.id },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -25,7 +25,7 @@ export default function CampaignUpdate({ match }) {
   return (
     <>
       <Nav navName="Campaign Update" menuButton="back" backTo="/campaigns" />
-      <CampaignForm authState={authState} data={data?.campaign} />
+      <CampaignForm authState={authState} data={data?.campaign} refetch={refetch} />
     </>
   )
 }

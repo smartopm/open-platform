@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'
-import { Button, TextField, Chip } from '@material-ui/core'
+import { Button, TextField, Chip, Snackbar } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
-import { CampaignCreate, CampaignUpdateMutation } from '../graphql/mutations'
+import { CampaignCreate, CampaignUpdateMutation, CampaignLabelRemoveMutation } from '../graphql/mutations'
 import { delimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels.jsx'
@@ -20,35 +20,43 @@ const initData = {
   loaded: false,
   labels: []
 }
-export default function CampaignForm({ authState, data, loading }) {
+export default function CampaignForm({ authState, data, loading, refetch }) {
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [batchTime, setBatchTime] = useState(new Date())
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [mutationLoading, setLoading] = useState(false)
   const [campaignCreate] = useMutation(CampaignCreate)
   const [campaignUpdate] = useMutation(CampaignUpdateMutation)
+  const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
   const { id } = useParams() // will only exist on campaign update
 
   const [formData, setFormData] = useState(initData)
 
   async function createCampaignOnSubmit(data) {
+    setLoading(true)
     try {
       await campaignCreate({ variables: data })
       setIsSubmitted(true)
       setFormData(initData)
+      setLoading(false)
     }
     catch (err) {
       setErrorMsg(err.message)
+      setLoading(false)
     }
   }
 
   async function campaignUpdateOnSubmit(data) {
+    setLoading(true)
     try {
       await campaignUpdate({ variables: data })
       setIsSubmitted(true)
+      setLoading(false)
     }
     catch (err) {
       setErrorMsg(err.message)
+      setLoading(false)
     }
   }
 
@@ -56,7 +64,7 @@ export default function CampaignForm({ authState, data, loading }) {
     e.preventDefault()
     // if creating a campaign don't spread
     const labels = id ? [...label, ...getJustLabels(formData.labels)] : label
-
+    
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -83,6 +91,15 @@ export default function CampaignForm({ authState, data, loading }) {
     })
   }
 
+  function handleLabelDelete(labelId) {
+    // need campaign id and labelId
+    campaignLabelRemove({
+      variables: { campaignId: id, labelId }
+    })
+      .then(() => refetch())
+      .catch(err => setErrorMsg(err.message))
+  }
+
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
   }
@@ -92,6 +109,13 @@ export default function CampaignForm({ authState, data, loading }) {
 
   return (
     <div className="container">
+      <Snackbar
+          open={isSubmitted} autoHideDuration={3000}
+          onClose={() => setIsSubmitted(!isSubmitted)}
+          color="primary"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
+      />
       <form
         onSubmit={handleSubmit}
         aria-label="campaign-form"
@@ -141,8 +165,9 @@ export default function CampaignForm({ authState, data, loading }) {
               {Boolean(formData.labels.length) && formData.labels.map((labl, i) => (
                   <Chip
                     data-testid="campaignChip-label"
-                    key={i}
+                    key={labl.id}
                     size="medium"
+                    onDelete={() => handleLabelDelete(labl.id)}
                     label={labl.shortDesc}
                   />
                 ))
@@ -165,6 +190,7 @@ export default function CampaignForm({ authState, data, loading }) {
           <Button
             variant="contained"
             type="submit"
+            disabled={mutationLoading}
             aria-label="campaign_submit"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
           >
@@ -176,7 +202,6 @@ export default function CampaignForm({ authState, data, loading }) {
           {Boolean(errorMsg.length) && (
             <p className="text-danger text-center">{saniteError([], errorMsg)}</p>
           )}
-          {isSubmitted && <p>Campaign has been {id ? 'updated' : 'created'}</p>}
         </div>
       </form>
     </div>
