@@ -438,7 +438,7 @@ export const CampaignCreate = gql`
     }
   }
 `
-export const CampaignUpdate = gql`
+export const CampaignUpdateMutation = gql`
   mutation campaignUpdate(
     $id: ID!
     $name: String
@@ -566,6 +566,24 @@ export const NotificationPreference = gql`
   mutation notificationPreference($preferences: String){
     notificationPreference(preferences: $preferences){
         __typename
+  }
+}
+`
+export const CampaignCreateThroughUsers = gql `
+  mutation campaignCreateThroughUsers($filters: String!, $userIdList: String!){
+    campaignCreateThroughUsers(filters: $filters, userIdList: $userIdList){
+      campaign{
+        id
+      }
+    }
+  }
+`
+export const CampaignLabelRemoveMutation = gql`
+mutation labelRemove($campaignId: ID!, $labelId: ID!) {
+  campaignLabelRemove(campaignId: $campaignId, labelId: $labelId){
+    campaign {
+      id
+    }
   }
 }
 `

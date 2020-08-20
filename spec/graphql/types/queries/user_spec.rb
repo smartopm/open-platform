@@ -211,7 +211,7 @@ RSpec.describe Types::Queries::User do
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'user', 'phoneNumber')).to eql current_user.phone_number
-      expect(result.dig('data', 'user', 'notes')).to be_nil
+      expect(result.dig('data', 'user', 'notes')).to eql []
 
       # Visible to the owner
       result = DoubleGdpSchema.execute(priviledged_query, context: {

@@ -121,7 +121,20 @@ RSpec.describe Mutations::Campaign do
               message
               labels {
                 shortDesc
+                id
               }
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:label_remove_query) do
+      <<~GQL
+        mutation labelRemove($campaignId: ID!, $labelId: ID!) {
+          campaignLabelRemove(campaignId: $campaignId, labelId: $labelId){
+            campaign {
+              id
             }
           }
         }
@@ -145,6 +158,19 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'message')).to eql 'Visiting Update'
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc')).to eql 'label 3'
       expect(result.dig('errors')).to be_nil
+
+      other_variables = {
+        campaignId: campaign.id,
+        labelId: result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'id'),
+      }
+
+      other_result = DoubleGdpSchema.execute(label_remove_query, variables: other_variables,
+                                                                 context: {
+                                                                   current_user: current_user,
+                                                                   site_community: current_user.community,
+                                                                 }).as_json
+      expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
+      expect(other_result.dig('errors')).to be_nil
     end
   end
 end
