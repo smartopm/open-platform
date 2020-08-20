@@ -135,7 +135,7 @@ export default function UsersList() {
     setSelectDateTo("")
     setSelectDateOn(date)
   }
-  function dateFilter() {
+  function resetDateFilter() {
     setSelectDateFrom("")
     setSelectDateTo("")
     setSelectDateOn("")
@@ -400,7 +400,7 @@ export default function UsersList() {
             selectDateTo={selectDateTo}
             selectDateOn={selectDateOn}
             handleDateChangeOn={handleDateChangeOn}
-            resetFilter={dateFilter}
+            resetFilter={resetDateFilter}
           />
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
             <Button variant="contained"
