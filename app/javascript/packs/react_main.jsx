@@ -81,6 +81,7 @@ import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
 import GeoMap from '../src/containers/GeoMap'
 import Notifications from '../src/containers/Preferences/Notifications'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
+import FormLinks from '../src/containers/FormLinks'
 
 const theme = createMuiTheme({
   palette: {
@@ -190,172 +191,174 @@ const App = () => {
       }}
     >
       <ApolloProvider>
-      <MuiThemeProvider theme={theme}>
-        <Router history={history}>
-          <AuthStateProvider>
-            <ThemeProvider>
-              <Analytics>
-                {/* onboarding */}
-                <Switch>
-                  <Route path="/welcome" component={WelcomePage} />
-                  <Route path="/login" component={LoginScreen} />
-                  <Route path="/code/:id" component={ConfirmCodeScreen} />
-                  <Route path="/l/:id/:code" component={OneTimeLoginCode} />
-                  <Route path="/logout" component={Logout} />
-                  <Route path="/google/:token" component={MainAuthCallback} />
-                  <Route path="/facebook/:token" component={MainAuthCallback} />
+        <MuiThemeProvider theme={theme}>
+          <Router history={history}>
+            <AuthStateProvider>
+              <ThemeProvider>
+                <Analytics>
+                  {/* onboarding */}
+                  <Switch>
+                    <Route path="/welcome" component={WelcomePage} />
+                    <Route path="/login" component={LoginScreen} />
+                    <Route path="/code/:id" component={ConfirmCodeScreen} />
+                    <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+                    <Route path="/logout" component={Logout} />
+                    <Route path="/google/:token" component={MainAuthCallback} />
+                    <Route path="/facebook/:token" component={MainAuthCallback} />
 
-                  {/* Spike page */}
-                  <Route path="/news/post/:id" exact component={PostPage} />
+                    {/* Spike page */}
+                    <Route path="/news/post/:id" exact component={PostPage} />
 
-                  <LoggedInOnly>
-                    <Switch>
-                      <Route path="/" exact component={Home} />
-                      <Route path="/scan" component={Scan} />
-                      <Route path="/search" component={Search} />
-                      <Route path="/id/:id" component={IDCard} />
-                      <Route path="/print/:id" component={IDPrint} />
-                      <Route path="/entry_logs/:userId" component={EntryLogs} />
-                      <Route path="/entry_logs" component={EntryLogs} />
-                      <Route path="/user" exact component={UserEdit} />
-                      <Route path="/map" component={Map} />
-                      <Route path="/myplot" component={GeoMap} />
-                      <Route path="/mobile_money" component={MobileMoney} />
-                      <Route path="/contact" component={Support} />
-                      <Route path="/settings" component={Notifications} />
-                      <Route path="/otp_sent" component={OTPFeedbackScreen} />
-                      <Route path="/referral" component={UserEdit} />
-                      <Route path="/myaccount/:id" component={UserShow} />
-                      {/* new routes => guards */}
-                      <Route path="/guard_home" component={GuardHome} />
-                      {/* requests */}
-                      <Route path="/entry_request" component={EntryRequest} />
-                      <Route path="/request/:id" component={RequestUpdate} />
-                      <Route
-                        path="/request_hos/:id/"
-                        component={RequestConfirm}
-                      />
-                      <Route path="/request_wait/:id" component={WaitScreen} />
-                      <Route
-                        path="/request_status/:id/edit"
-                        component={RequestApproval}
-                      />
-                      <Route
-                        path="/request_status/:id"
-                        component={RequestApproval}
-                      />
-                      {/* Showroom kiosk routes */}
-                      <Route path="/showroom_kiosk" component={ShowRoom} />
-                      <Route
-                        path="/sh_reason"
-                        component={VisitingReasonScreen}
-                      />
-                      <Route path="/sh_entry" component={VisitingClientForm} />
-                      <Route path="/sh_complete" component={CheckInComplete} />
-                      <Route path="/sh_soon" component={ComingSoon} />
-                      {/* activity */}
-                      
-                      <Route path="/feedback" component={Feedback} />
-                      <Route
-                        path="/feedback_success"
-                        component={FeedbackSuccess}
-                      />
-                      <Route path="/message/:id" component={UserMessages} />
-                      <Route
-                        path="/campaign-create"
-                        component={CampaignCreate}
-                      />
-                      <Route path="/campaigns" component={Campaigns} />
-                      <Route path="/campaign/:id" component={CampaignUpdate} />
-                      {/* users */}
-                      {/*Nkwashi account management*/}
-                      <Route
-                        path="/account"
-                        component={NkwashiAccountManagement}
-                      />
-                      <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
-                      {/* Still admin route */}
-                      <Route
-                        path="/user/:id/logs"
-                        exact
-                        component={UserLogs}
-                      />{' '}
-                      {/* Still admin route */}
-                      <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
-                      <Route
-                        path="/timesheet"
-                        exact
-                        component={CustodianLogs}
-                      />
-                      <Route
-                        path="/timesheet/:id"
-                        exact
-                        component={EmployeeLogs}
-                      />
-                      <Route
-                        path="/client_request_from"
-                        exact
-                        component={ClientRequestForm}
-                      />
-                      <Route path="/news" exact component={NewsPage} />
-                      <Route path="/news/:slug" exact component={Posts} />
-                      <Route
-                        path="/discussions"
-                        exact
-                        component={Discussions}
-                      />
-                      <Route
-                        path="/discussions/:id"
-                        exact
-                        component={DiscussonPage}
-                      />
-                      <Route path="/business" exact component={Businesses} />
-                      <Route
-                        path="/business/:id"
-                        exact
-                        component={BusinessProfile}
-                      />
-                      <AdminRoutes>
-                        <Switch>
-                          <Route
-                            path="/client_request_from"
-                            exact
-                            component={ClientRequestForm}
-                          />
-                          <Route path="/users" component={UsersList} />
-                          <Route path="/messages" component={AllMessages} />
-                          <Route
-                            path="/showroom_logs"
-                            component={ShowroomLogs}
-                          />
-                          <Route path="/notes" component={AllNotes} />
-                          <Route path="/todo" component={Todo} />
-                          <Route path="/my_tasks" component={Todo} />
-                          <Route path="/feedbacks" component={FeedbackPage} />
-                          <Route path="/event_logs" component={EventLogs} />
+                    <LoggedInOnly>
+                      <Switch>
+                        <Route path="/" exact component={Home} />
+                        <Route path="/scan" component={Scan} />
+                        <Route path="/search" component={Search} />
+                        <Route path="/id/:id" component={IDCard} />
+                        <Route path="/print/:id" component={IDPrint} />
+                        <Route path="/entry_logs/:userId" component={EntryLogs} />
+                        <Route path="/entry_logs" component={EntryLogs} />
+                        <Route path="/user" exact component={UserEdit} />
+                        <Route path="/map" component={Map} />
+                        <Route path="/myplot" component={GeoMap} />
+                        <Route path="/mobile_money" component={MobileMoney} />
+                        <Route path="/contact" component={Support} />
+                        <Route path="/settings" component={Notifications} />
+                        <Route path="/otp_sent" component={OTPFeedbackScreen} />
+                        <Route path="/referral" component={UserEdit} />
+                        <Route path="/myaccount/:id" component={UserShow} />
+                        {/* new routes => guards */}
+                        <Route path="/guard_home" component={GuardHome} />
+                        {/* requests */}
+                        <Route path="/entry_request" component={EntryRequest} />
+                        <Route path="/request/:id" component={RequestUpdate} />
+                        <Route
+                          path="/request_hos/:id/"
+                          component={RequestConfirm}
+                        />
+                        <Route path="/request_wait/:id" component={WaitScreen} />
+                        <Route
+                          path="/request_status/:id/edit"
+                          component={RequestApproval}
+                        />
+                        <Route
+                          path="/request_status/:id"
+                          component={RequestApproval}
+                        />
+                        {/* Showroom kiosk routes */}
+                        <Route path="/showroom_kiosk" component={ShowRoom} />
+                        <Route
+                          path="/sh_reason"
+                          component={VisitingReasonScreen}
+                        />
+                        <Route path="/sh_entry" component={VisitingClientForm} />
+                        <Route path="/sh_complete" component={CheckInComplete} />
+                        <Route path="/sh_soon" component={ComingSoon} />
+                        {/* activity */}
 
-                          <Route path="/new/user" exact component={UserEdit} />
-                          <Route
-                            path="/pending"
-                            exact
-                            component={PendingUsers}
-                          />
-                        </Switch>
-                      </AdminRoutes>
-                      <Route
-                        path="*"
-                        render={() => (
-                          <ErrorPage title="Sorry Page not Found" />
-                        )}
-                      />
-                    </Switch>
-                  </LoggedInOnly>
-                </Switch>
-              </Analytics>
-            </ThemeProvider>
-          </AuthStateProvider>
+                        <Route path="/feedback" component={Feedback} />
+                        <Route
+                          path="/feedback_success"
+                          component={FeedbackSuccess}
+                        />
+                        <Route path="/message/:id" component={UserMessages} />
+                        <Route
+                          path="/campaign-create"
+                          component={CampaignCreate}
+                        />
+                        <Route path="/campaigns" component={Campaigns} />
+                        <Route path="/campaign/:id" component={CampaignUpdate} />
+                        {/* users */}
+                        {/*Nkwashi account management*/}
+                        <Route
+                          path="/account"
+                          component={NkwashiAccountManagement}
+                        />
+                        <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
+                        {/* Still admin route */}
+                        <Route
+                          path="/user/:id/logs"
+                          exact
+                          component={UserLogs}
+                        />{' '}
+                        {/* Still admin route */}
+                        <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                        <Route
+                          path="/timesheet"
+                          exact
+                          component={CustodianLogs}
+                        />
+                        <Route
+                          path="/timesheet/:id"
+                          exact
+                          component={EmployeeLogs}
+                        />
+                        <Route
+                          path="/client_request_from"
+                          exact
+                          component={ClientRequestForm}
+                        />
+                        <Route path="/news" exact component={NewsPage} />
+                        <Route path="/news/:slug" exact component={Posts} />
+                        <Route
+                          path="/discussions"
+                          exact
+                          component={Discussions}
+                        />
+                        <Route
+                          path="/discussions/:id"
+                          exact
+                          component={DiscussonPage}
+                        />
+                        <Route path="/business" exact component={Businesses} />
+                        <Route
+                          path="/business/:id"
+                          exact
+                          component={BusinessProfile}
+                        />
+
+                        <Route path="/forms" component={FormLinks} />
+                        <AdminRoutes>
+                          <Switch>
+                            <Route
+                              path="/client_request_from"
+                              exact
+                              component={ClientRequestForm}
+                            />
+                            <Route path="/users" component={UsersList} />
+                            <Route path="/messages" component={AllMessages} />
+                            <Route
+                              path="/showroom_logs"
+                              component={ShowroomLogs}
+                            />
+                            <Route path="/notes" component={AllNotes} />
+                            <Route path="/todo" component={Todo} />
+                            <Route path="/my_tasks" component={Todo} />
+                            <Route path="/feedbacks" component={FeedbackPage} />
+                            <Route path="/event_logs" component={EventLogs} />
+
+                            <Route path="/new/user" exact component={UserEdit} />
+                            <Route
+                              path="/pending"
+                              exact
+                              component={PendingUsers}
+                            />
+                          </Switch>
+                        </AdminRoutes>
+                        <Route
+                          path="*"
+                          render={() => (
+                            <ErrorPage title="Sorry Page not Found" />
+                          )}
+                        />
+                      </Switch>
+                    </LoggedInOnly>
+                  </Switch>
+                </Analytics>
+              </ThemeProvider>
+            </AuthStateProvider>
           </Router>
-          </MuiThemeProvider>
+        </MuiThemeProvider>
       </ApolloProvider>
     </Suspense>
   )
