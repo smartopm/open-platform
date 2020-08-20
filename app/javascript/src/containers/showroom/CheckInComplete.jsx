@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginLeft: "9vw"
   },
   getStartedButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#69ABA4",
     color: "#FFF",
     width: "85%",
     height: 51,

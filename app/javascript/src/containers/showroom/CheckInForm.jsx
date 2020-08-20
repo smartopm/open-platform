@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     transform: " translate(-50%, -50%)"
   },
   logButton: {
-    backgroundColor: "#25c0b0",
+    backgroundColor: "#69ABA4",
     color: "#FFF",
     width: "75%",
     boxShadow: "none",

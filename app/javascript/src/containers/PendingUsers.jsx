@@ -99,7 +99,7 @@ export default () => {
     <div>
       <div
         style={{
-          backgroundColor: '#25c0b0'
+          backgroundColor: '#69ABA4'
         }}
       >
         <Nav navName="Requests" menuButton="back" boxShadow={'none'} backTo="/" />
@@ -163,14 +163,14 @@ const styles = StyleSheet.create({
     width: '50px'
   },
   statusBadgePending: {
-    border: '1px dashed #25c0b0',
-    color: '#25c0b0',
+    border: '1px dashed #69ABA4',
+    color: '#69ABA4',
     borderRadius: '10px'
   },
   fabButton: {
     position: 'absolute',
     bottom: 8,
     right: 16,
-    backgroundColor: '#25c0b0'
+    backgroundColor: '#69ABA4'
   }
 })

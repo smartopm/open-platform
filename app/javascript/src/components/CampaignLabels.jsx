@@ -5,20 +5,16 @@ import { useQuery } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
 
 export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
-
     const { data } = useQuery(LabelsQuery)
     const [chipData, setChipData] = useState([])
 
-
     function handleChipDelete(chipId) {
-
         setChipData(chipData.filter(e => e.id !== chipId))
     }
 
     return (
         <div>
             <Fragment>
-
                 {data && (<Autocomplete
                     data-testid="campaignLabel-creator"
                     style={{ width: "100%", marginTop: 20 }}
@@ -27,17 +23,8 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                     id="tags-filled"
                     options={data.labels}
                     getOptionLabel={option => option.shortDesc}
-                    onChange={(event, newValue) => {
-                        // 2 things are happening here, there is a new value and an autocompleted value
-                        // if it is a new value then it is a string otherwise it is an array
-                        setChipData(newValue)
-                        if (!newValue) {
-                            // if it is an array then it is wise to get the last item of the array
-                            return
-                        }
-                        const [lastLabel] = newValue.slice(-1)
-                        handleLabelSelect(lastLabel)
-
+                    onChange={(_event, newValue) => {
+                        return handleLabelSelect(newValue.shortDesc || newValue)
                     }}
                     renderTags={(value, getTagProps) => {
                         return chipData.map((option, index) => (
@@ -50,9 +37,7 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                                     handleDelete(option.id)
                                     handleChipDelete(option.id)
                                 }}
-
                             />
-
                         ))
                     }
                     }
@@ -61,7 +46,6 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                             {...params}
                             label="Assign Label"
                             style={{ width: "100%" }}
-
                         />
                     )}
                 />)}

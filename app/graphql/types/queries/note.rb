@@ -28,6 +28,10 @@ module Types::Queries::Note
     field :my_tasks_count, Integer, null: false do
       description 'count of all tasks assigned to me'
     end
+
+    field :task_stats, Types::TaskStatType, null: false do
+      description 'return stats related to tasks'
+    end
   end
 
   def all_notes(offset: 0, limit: 50)
@@ -56,6 +60,32 @@ module Types::Queries::Note
   def my_tasks_count
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:current_user].tasks.where(completed: false).count
+    my_task
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def task_stats
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    tasks = context[:site_community].notes.where(flagged: true)
+
+    {
+      tasks_open: tasks.by_completion(false).count,
+      tasks_due_in_10_days: tasks.by_completion(false).by_due_date(10.days.from_now).count,
+      tasks_due_in_30_days: tasks.by_completion(false).by_due_date(30.days.from_now).count,
+      overdue_tasks: tasks.by_completion(false).by_due_date(Time.zone.now).count,
+      completed_tasks: tasks.by_completion(true).count,
+      total_calls_open: tasks.by_completion(false).by_category('call').count,
+      tasks_open_and_overdue: tasks.by_completion(false).by_due_date(Time.zone.now).count,
+      tasks_with_no_due_date: tasks.where(due_date: nil).count,
+      my_open_tasks: my_task,
+    }
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+
+  def my_task
+    context[:current_user].tasks.by_completion(false).count
   end
 end

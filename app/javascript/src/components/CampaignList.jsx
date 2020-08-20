@@ -145,7 +145,7 @@ const style = StyleSheet.create({
     fontWeight: 700
   },
   subTitle: {
-    color: '#818188',
+    color: 'black',
     fontSize: 14,
     letterSpacing: 0.17,
     fontWeight: 400

@@ -1,4 +1,4 @@
-import React, { useState, useContext} from 'react'
+import React, { useState } from 'react'
 import { dateToString } from '../DateContainer'
 import { UserChip } from '../UserChip'
 import {
@@ -14,7 +14,6 @@ import EditIcon from '@material-ui/icons/Edit'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { Spinner } from '../Loading'
-import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
 export default function Task({
   note,
@@ -26,11 +25,11 @@ export default function Task({
   handleDelete,
   handleModal,
   loading,
-  classes
+  classes,
+  loadingMutation
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
-  const theme = useContext(ThemeContext)
 
   function handleOpenAutoComplete(_event, noteId) {
     setOpen(!autoCompleteOpen)
@@ -156,27 +155,17 @@ export default function Task({
               justify="flex-end"
               alignItems="flex-end"
             >
-              {note.completed ? (
                 <Button
-                  variant="contained"
-                  style={{ marginBottom: 3, color: '#FFF' }}
+                  variant="outlined"
+                  color='primary'
+                  disabled={note.id && loadingMutation}
+                    style={{ 
+                      marginBottom: 3, 
+                    }}
                   onClick={() => handleCompleteNote(note.id, note.completed)}
                 >
-                  Complete
+                  {note.completed ? 'Complete' : 'Mark as complete'}
                 </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: theme.primaryColor,
-                    marginBottom: 3,
-                    color: '#FFF'
-                  }}
-                  onClick={() => handleCompleteNote(note.id, note.completed)}
-                >
-                  Mark as complete
-                </Button>
-              )}
             </Grid>
           </Grid>
         </Grid>

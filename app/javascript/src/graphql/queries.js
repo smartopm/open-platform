@@ -375,6 +375,7 @@ export const DiscussionCommentsQuery = gql`
       content
       createdAt
       id
+      imageUrl
       user {
         id
         name
@@ -488,5 +489,21 @@ export const LabelsQuery = gql`
 export const MyTaskCountQuery = gql`
   {
     myTasksCount
+  }
+`
+
+export const TaskStatsQuery = gql`
+  {
+    taskStats {
+      completedTasks
+      tasksDueIn10Days
+      tasksDueIn30Days
+      tasksOpen
+      tasksOpenAndOverdue
+      overdueTasks
+      tasksWithNoDueDate
+      myOpenTasks
+      totalCallsOpen
+    }
   }
 `

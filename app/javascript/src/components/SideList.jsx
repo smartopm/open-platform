@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import PeopleIcon from '@material-ui/icons/People'
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import CropFreeIcon from '@material-ui/icons/CropFree'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import HelpIcon from '@material-ui/icons/Help'
@@ -34,46 +35,59 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
         {
           ['admin', 'custodian'].includes(authState.user.userType) && (
             <>
-              <ListItem button>
-                <ListItemIcon>
-                  <CropFreeIcon />
-                </ListItemIcon>
-                <Link to="/scan" className={`${css(styles.link)}`}>
+              <Link to="/scan" className={`${css(styles.link)}`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <CropFreeIcon />
+                  </ListItemIcon>
                   <ListItemText primary="Scanner" />
-                </Link>
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <PeopleIcon />
-                </ListItemIcon>
-                <Link
-                  to={{
-                    pathname: 'search',
-                    state: { from: '/' }
-                  }} className={`${css(styles.link)}`}>
+                </ListItem>
+              </Link>
+              <Link
+                to={{
+                  pathname: 'search',
+                  state: { from: '/' }
+                }} className={`${css(styles.link)}`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
                   <ListItemText primary="Search People" />
-                </Link>
-              </ListItem>  
+                </ListItem>
+              </Link>
             </>
-         )
+          )
         }
+        <Link to="/contact" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <HelpIcon />
+            </ListItemIcon>
 
-        <ListItem button>
-          <ListItemIcon>
-            <HelpIcon />
-          </ListItemIcon>
-          <Link to="/contact" className={`${css(styles.link)}`}>
             <ListItemText primary="Contact" />
-          </Link>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <MeetingRoomIcon />
-          </ListItemIcon>
-          <a href="/logout" className={`${css(styles.link)}`}>
+
+          </ListItem>
+        </Link>
+        <a href="/logout" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <MeetingRoomIcon />
+            </ListItemIcon>
+
             <ListItemText primary="Logout" />
-          </a>
-        </ListItem>
+
+          </ListItem>
+        </a>
+        <a href="/settings" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <NotificationsActiveIcon />
+            </ListItemIcon>
+
+            <ListItemText primary="Preferences" />
+
+          </ListItem>
+        </a>
       </List>
       <Footer position="36vh" />
       <PrivacyPolicy />

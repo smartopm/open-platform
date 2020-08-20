@@ -19,7 +19,7 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
-        user = ::User.find(vals.delete(:id))
+        user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
         attach_avatars(user, vals)

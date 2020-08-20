@@ -84,7 +84,7 @@ export default function FormContainer({ match, history, location }) {
     const values = {
       ...data,
       name: data.name.trim(),
-      phoneNumber: data.phoneNumber.replace(/ /g, '',),
+      phoneNumber: data.phoneNumber?.replace(/ /g, '',),
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
     }

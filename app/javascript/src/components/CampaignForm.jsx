@@ -1,122 +1,156 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'
-import { Button, TextField } from '@material-ui/core'
+import { Button, TextField, Chip } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
-import { CampaignCreate } from '../graphql/mutations'
-import { DelimitorFormator } from '../utils/helpers'
+import { CampaignCreate, CampaignUpdateMutation } from '../graphql/mutations'
+import { delimitorFormator } from '../utils/helpers'
 import { saniteError } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels.jsx'
+import { getJustLabels } from '../containers/Campaigns/CampaignUpdate'
+import { useParams } from 'react-router-dom'
 
-export default function CampaignForm({ authState }) {
-  const [name, setName] = useState('')
-  const [message, setMessage] = useState('')
-  const [userIdList, setUserIdList] = useState('')
+const initData = {
+  id: '',
+  name: '',
+  message: '',
+  batchTime: '',
+  userIdList: '',
+  loaded: false,
+  labels: []
+}
+export default function CampaignForm({ authState, data, loading }) {
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [batchTime, setBatchTime] = useState(new Date())
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [campaign] = useMutation(CampaignCreate)
+  const [campaignCreate] = useMutation(CampaignCreate)
+  const [campaignUpdate] = useMutation(CampaignUpdateMutation)
+  const { id } = useParams() // will only exist on campaign update
+
+  const [formData, setFormData] = useState(initData)
+
+  async function createCampaignOnSubmit(data) {
+    try {
+      await campaignCreate({ variables: data })
+      setIsSubmitted(true)
+      setFormData(initData)
+    }
+    catch (err) {
+      setErrorMsg(err.message)
+    }
+  }
+
+  async function campaignUpdateOnSubmit(data) {
+    try {
+      await campaignUpdate({ variables: data })
+      setIsSubmitted(true)
+    }
+    catch (err) {
+      setErrorMsg(err.message)
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
+    // if creating a campaign don't spread
+    const labels = id ? [...label, ...getJustLabels(formData.labels)] : label
+
     const campaignData = {
-      name,
-      message,
+      id: formData.id,
+      name: formData.name,
+      message: formData.message,
       batchTime,
-      userIdList,
-      labels: label.toString()
+      userIdList: delimitorFormator(formData.userIdList).toString(),
+      labels: labels.toString()
     }
-
-    console.log(campaignData)
-
-      setTimeout(() => {
-        window.location.reload(false)
-      }, 3000)
-
-      campaign({ variables: campaignData })
-        .then(() =>
-          setIsSubmitted(true)
-        )
-        .catch(err => {
-          setErrorMsg(err.message)
-        })
-    
+    if (id) {
+      return campaignUpdateOnSubmit(campaignData)
+    }
+   return createCampaignOnSubmit(campaignData)
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id, shortDesc } = lastLabel
-    console.log(shortDesc)
-    setLabel([...label, id])
-
+  function handleLabelSelect(label) {
+    setLabel([...getJustLabels(label)])
   }
 
-  function handleDelete(labelId) {
-
-    setLabel(label.filter(e=> e !== labelId))
-
+  function handleInputChange(e) {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value
+    })
   }
-  function handleUserIDList(_event, value) {
-    let userIds = DelimitorFormator(value)
-    setUserIdList(userIds.toString())
-  }
+
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
+  }
+  if (!loading && !formData.loaded && data) {
+    setFormData({ ...data, loaded: true, }) 
   }
 
   return (
     <div className="container">
       <form
-        onSubmit={e => {
-          handleSubmit(e)
-        }}
+        onSubmit={handleSubmit}
         aria-label="campaign-form"
       >
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">
-            Campaign Name
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            onChange={e => setName(e.target.value)}
-            value={name}
-            name="name"
-            aria-label="campaign_name"
-            required
+        <TextField
+          label="Campaign Name"
+          name="name"
+          required
+          className="form-control"
+          value={formData.name}
+          onChange={handleInputChange}
           />
-        </div>
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">
-            Message
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            onChange={e => setMessage(e.target.value)}
-            value={message}
-            name="name"
-            aria-label="campaign_message"
-            required
+        <TextField
+          label="Message"
+          name="message"
+          rows={2}
+          multiline
+          required
+          className="form-control"
+          value={formData.message || ''}
+          onChange={handleInputChange}
           />
-        </div>
-        <div>
           <TextField
             label="User ID List"
             rows={5}
             multiline
             required
             className="form-control"
-            value={userIdList}
             aria-label="campaign_ids"
             inputProps={{ "data-testid": "campaign_ids" }}
-            onChange={e => handleUserIDList(e, e.target.value)}
-          />
-        </div>
+            name="userIdList"
+            value={formData.userIdList || ''}
+            onChange={handleInputChange}
+        />
+            <br />
+            <br />
+            <div className=" row d-flex justify-content-start align-items-center">
+              {label.map((labl, i) => (
+                  <Chip
+                    data-testid="campaignChip-label"
+                    key={i}
+                    size="medium"
+                    label={labl?.shortDesc || labl}
+                  />
+                ))
+              }
+              {Boolean(formData.labels.length) && formData.labels.map((labl, i) => (
+                  <Chip
+                    data-testid="campaignChip-label"
+                    key={i}
+                    size="medium"
+                    label={labl.shortDesc}
+                  />
+                ))
+              }
+            </div>
 
-        <div>
-          <CampaignLabels handleLabelSelect={handleLabelSelect} handleDelete={handleDelete} />
+        <div >
+          <CampaignLabels handleLabelSelect={handleLabelSelect} />
         </div>
         <br />
         <div>
@@ -134,15 +168,15 @@ export default function CampaignForm({ authState }) {
             aria-label="campaign_submit"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
           >
-            <span>Submit</span>
+            <span>{id ? 'Update Campaign' : 'Create Campaign'}</span>
           </Button>
         </div>
         <br />
         <div className="d-flex row justify-content-center">
           {Boolean(errorMsg.length) && (
-            <p className="text-danger text-center">{saniteError(errorMsg)}</p>
+            <p className="text-danger text-center">{saniteError([], errorMsg)}</p>
           )}
-          {isSubmitted && <p>Campaign has been submitted</p>}
+          {isSubmitted && <p>Campaign has been {id ? 'updated' : 'created'}</p>}
         </div>
       </form>
     </div>
@@ -150,7 +184,7 @@ export default function CampaignForm({ authState }) {
 }
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#25c0b0',
+    backgroundColor: '#69ABA4',
     color: '#FFF',
     width: '30%',
     height: 51,
