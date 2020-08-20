@@ -352,7 +352,6 @@ export default function UsersList() {
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-              style={{ backgroundColor: theme.primaryColor }}
               endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
           </Grid>
 

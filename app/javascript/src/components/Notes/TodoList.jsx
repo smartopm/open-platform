@@ -72,7 +72,8 @@ export default function TodoList({
         offset,
         limit,
         query: `${!qr.length ? 'completed: false': qr}`
-      }
+      },
+      fetchPolicy: "network-only"
     }
   )
 
