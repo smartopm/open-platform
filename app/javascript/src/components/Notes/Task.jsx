@@ -38,7 +38,6 @@ export default function Task({
   }
 
   return (
-    // <li key={note.id} className={classes}>
     <>
       <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
@@ -51,7 +50,7 @@ export default function Task({
             <Link style={{ textDecoration: 'none' }}  to={`/user/${note.author.id}`}>
              {note.author.name}{' '}
             </Link>
-            created a note for{' '} 
+            created this note for{' '} 
             <Link style={{ textDecoration: 'none' }} to={`/user/${note.user.id}`}>
               {note.user.name} {' '}
             </Link>
@@ -121,33 +120,33 @@ export default function Task({
           )}
         </Grid>
         <Grid item>
-          <CenteredContent>
+          <div style={{
+            display: 'inline-flex',
+            margin: '5px 0 10px 0'
+          }}>
           <EditIcon
             style={{
-              float: 'right',
               cursor: 'pointer',
-              marginBottom: 8
+              margin: '5px 4px 0 0',
+              fontSize: 18,
             }}
-            fontSize="small"
             color="inherit"
             onClick={() => handleModal(note.id)}
           />
           <Typography variant="subtitle1" gutterBottom>
             Due at: {note.dueDate ? `  ${dateToString(note.dueDate)}` : ' Never'}
           </Typography>
+          </div>
             <Button
-              variant="outlined"
               color='primary'
               disabled={note.id && loadingMutation}
               style={{ 
-                marginBottom: 3,
-                marginLeft: 12
+                float: 'right'
               }}
               onClick={() => handleCompleteNote(note.id, note.completed)}
             >
               {note.completed ? 'Completed' : 'Mark as complete'}
             </Button>
-          </CenteredContent>    
         </Grid>
       </Grid>
       <Divider />

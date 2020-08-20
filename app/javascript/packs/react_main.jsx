@@ -90,6 +90,29 @@ const theme = createMuiTheme({
     primary: {
       main: '#69ABA4'
     }
+  },
+  overrides: {
+    MuiPickersToolbar: {
+      toolbar: {
+        backgroundColor: '#69ABA4'
+      }
+    },
+    MuiPickersDay: {
+      day: {
+        color: '#69ABA4'
+      },
+      daySelected: {
+        backgroundColor: '#69ABA4'
+      },
+      current: {
+        color: '#69ABA4'
+      }
+    },
+    MuiPickersModal: {
+      dialogAction: {
+        color: '#69ABA4'
+      }
+    }
   }
 })
 
