@@ -14,7 +14,6 @@ export default function Card({
   children,
   handleClick,
   id,
-  menu,
   access,
   authState
 }) {
@@ -42,8 +41,7 @@ export default function Card({
         id={id}
         className={`card-link`}
       >
-        {menu}
-
+       
         <div className="card-body">
           <h5 className="card-title">
             <span style={{ color: theme.primaryColor }} >
