@@ -35,9 +35,12 @@ describe('Shows the google form links', () => {
             <FormLinkList />
         )
         const buildPermit = container.queryByTestId('forms-link-building-permit')
+        const clientForm = container.queryByTestId('forms-link-crf')
         fireEvent.click(buildPermit)
         expect(window.open).toBeCalledWith('https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform',
         '_blank')
+        fireEvent.click(clientForm)
+        expect(window.open).toBeCalledWith('https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform','_blank')
         
 
     });
