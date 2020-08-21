@@ -35,8 +35,6 @@ import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { dateToString } from '../utils/dateutil'
-
-
 const limit = 50
 
 export default function UsersList() {
