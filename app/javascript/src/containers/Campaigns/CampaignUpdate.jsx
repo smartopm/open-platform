@@ -31,7 +31,7 @@ export default function CampaignUpdate({ match }) {
 }
 
 export function getJustLabels(labels) {
-  if(!labels.length) return
+  if(!labels.length) return []
   let str = []
   for (let index = 0; index < labels.length; index++) {
     const element = labels[index]
