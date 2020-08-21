@@ -8,7 +8,7 @@ export default function FormLinkList() {
     const authState = useContext(AuthStateContext)
     return (
         <div>
-            <List style={{ cursor: 'pointer' }}>
+            <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
 
                 <ListItem data-testid="forms-link-building-permit" onClick={() => {
                     window.open(
@@ -16,7 +16,7 @@ export default function FormLinkList() {
                         '_blank'
                     )
                 }}>
-                    <ListItemAvatar>
+                    <ListItemAvatar data-testid="forms-link-building-icon">
                         <Avatar>
                             <AssignmentIcon />
                         </Avatar>
@@ -37,7 +37,7 @@ export default function FormLinkList() {
                 </ListItem>
 
                 <Divider variant="middle" />
-                <ListItem onClick={() => {
+                <ListItem data-testid="forms-link-crf" onClick={() => {
                     window.open(
                         `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
                             /\s+/g,
@@ -48,7 +48,7 @@ export default function FormLinkList() {
                         '_blank'
                     )
                 }}>
-                    <ListItemAvatar>
+                    <ListItemAvatar data-testid="forms-link-crf-icon">
                         <Avatar>
                             <AssignmentIcon />
                         </Avatar>

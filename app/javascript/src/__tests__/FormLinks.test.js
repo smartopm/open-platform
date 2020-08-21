@@ -14,6 +14,10 @@ describe('Shows the google form links', () => {
         expect(container.queryByTestId('forms-crf')).toBeInTheDocument()
         expect(container.queryByTestId('forms-building-permit')).toBeInTheDocument() 
         expect(container.queryByTestId('forms-link-building-permit')).toBeInTheDocument()
+        expect(container.queryByTestId('forms-link-holder')).toBeInTheDocument()
+        expect(container.queryByTestId('forms-link-crf')).toBeInTheDocument()
+        expect(container.queryByTestId('forms-link-crf-icon')).toBeInTheDocument()
+        expect(container.queryByTestId('forms-link-building-icon')).toBeInTheDocument()
     });    
     
 });
