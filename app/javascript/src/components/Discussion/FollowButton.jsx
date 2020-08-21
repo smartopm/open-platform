@@ -57,7 +57,6 @@ export default function FollowButtion({ discussionId }) {
 
   return (
     <>
-      {console.log(email)}
       {subscribe ? (
         <Chip
           label="unfollow"
@@ -87,19 +86,28 @@ export default function FollowButtion({ discussionId }) {
             <DialogContentText id="alert-dialog-description">
               Thank you for following this discussion! You will receive daily
               email alerts for new messages posted by other community members on
-              this board to {email}. To stop receiving the alerts, please unfollow this
-              board. If this email is incorrect, please contact our <a href="https://app.doublegdp.com/contact">support</a> team 
+              this board to <b>{email}</b>. To stop receiving the alerts, please unfollow this
+              board. If this email is incorrect, please <a href="https://app.doublegdp.com/contact">contact our support team</a>
             </DialogContentText>
-          ) :
-            (
-              <DialogContentText id="alert-dialog-description">
-                You have unfollowed this discussion. You will no longer receive
-                alerts for new messages posted by other community members on this
-                board. Please provide us feedback on your discussion experience by
-                sending us a message. We look forward to you participating in
-                future discussions with the Nkwashi community!
-              </DialogContentText>
-            )}
+          ) : !subscribe && !email ?
+              (
+                <DialogContentText id="alert-dialog-description">
+                  Thank you for following the discussion! <a href="https://app.doublegdp.com/contact">
+                    Please share an email for your account</a> to receive daily email alert for 
+                    new messages posted by other community members
+                    on this board. To stop receiving the alerts, please unfollow this board.
+                </DialogContentText>
+              ) :
+              (
+                <DialogContentText id="alert-dialog-description">
+                  You have unfollowed this discussion. You will no longer receive
+                  alerts for new messages posted by other community members on this
+                  board. Please provide us feedback on your discussion experience by
+                  sending us a message. We look forward to you participating in
+                  future discussions with the Nkwashi community!
+                </DialogContentText>
+              )
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
