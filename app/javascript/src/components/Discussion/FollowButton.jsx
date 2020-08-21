@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
   Chip,
@@ -11,8 +11,11 @@ import {
 import { discussionUserQuery } from '../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionSubscription } from '../../graphql/mutations'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 
 export default function FollowButtion({ discussionId }) {
+  const authState = useContext(AuthStateContext)
+  const { user: { email } } = authState
   const id = discussionId
   const [open, setOpen] = useState(false)
   const [subscribe, setSubscribe] = useState(null)
@@ -54,6 +57,7 @@ export default function FollowButtion({ discussionId }) {
 
   return (
     <>
+      {console.log(email)}
       {subscribe ? (
         <Chip
           label="unfollow"
@@ -62,13 +66,13 @@ export default function FollowButtion({ discussionId }) {
           color="secondary"
         />
       ) : (
-        <Chip
-          label="follow"
-          clickable
-          onClick={handleClickOpen}
-          color="primary"
-        />
-      )}
+          <Chip
+            label="follow"
+            clickable
+            onClick={handleClickOpen}
+            color="primary"
+          />
+        )}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -79,22 +83,23 @@ export default function FollowButtion({ discussionId }) {
           {'Subscribe to Discussion'}
         </DialogTitle>
         <DialogContent>
-          {subscribe ? (
-            <DialogContentText id="alert-dialog-description">
-              You have unfollowed this discussion. You will no longer receive
-              alerts for new messages posted by other community members on this
-              board. Please provide us feedback on your discussion experience by
-              sending us a message. We look forward to you participating in
-              future discussions with the Nkwashi community!
-            </DialogContentText>
-          ) : (
+          {!subscribe && email ? (
             <DialogContentText id="alert-dialog-description">
               Thank you for following this discussion! You will receive daily
               email alerts for new messages posted by other community members on
-              this board. To stop receiving the alerts, please unfollow this
-              board
+              this board to {email}. To stop receiving the alerts, please unfollow this
+              board. If this email is incorrect, please contact our <a href="https://app.doublegdp.com/contact">support</a> team 
             </DialogContentText>
-          )}
+          ) :
+            (
+              <DialogContentText id="alert-dialog-description">
+                You have unfollowed this discussion. You will no longer receive
+                alerts for new messages posted by other community members on this
+                board. Please provide us feedback on your discussion experience by
+                sending us a message. We look forward to you participating in
+                future discussions with the Nkwashi community!
+              </DialogContentText>
+            )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
