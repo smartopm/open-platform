@@ -12,7 +12,7 @@ export default function FormLinkList() {
 
                 <ListItem data-testid="forms-link-building-permit" onClick={() => {
                     window.open(
-                        'https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform?usp=sf_link',
+                        'https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform',
                         '_blank'
                     )
                 }}>

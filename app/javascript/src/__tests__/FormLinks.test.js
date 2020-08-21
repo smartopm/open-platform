@@ -1,5 +1,5 @@
-import React from 'react' 
-import { render } from '@testing-library/react'
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import FormLinkList from '../components/FormLinkList';
 
@@ -12,12 +12,36 @@ describe('Shows the google form links', () => {
         )
 
         expect(container.queryByTestId('forms-crf')).toBeInTheDocument()
-        expect(container.queryByTestId('forms-building-permit')).toBeInTheDocument() 
+        expect(container.queryByTestId('forms-building-permit')).toBeInTheDocument()
         expect(container.queryByTestId('forms-link-building-permit')).toBeInTheDocument()
+    });
+
+    it('It should render containers with no errors', () => {
+
+        const container = render(
+            <FormLinkList />
+        )
         expect(container.queryByTestId('forms-link-holder')).toBeInTheDocument()
         expect(container.queryByTestId('forms-link-crf')).toBeInTheDocument()
         expect(container.queryByTestId('forms-link-crf-icon')).toBeInTheDocument()
         expect(container.queryByTestId('forms-link-building-icon')).toBeInTheDocument()
-    });    
-    
+
+    });
+
+    it('It should click link and open new tab', () => {
+        const name= "Test Name"
+        const number = "09878982392"
+        window.open = jest.fn();
+        const container = render(
+            <FormLinkList />
+        )
+        const buildPermit = container.queryByTestId('forms-link-building-permit')
+        fireEvent.click(buildPermit)
+        expect(window.open).toBeCalledWith('https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform',
+        '_blank')
+        
+
+    });
+
+
 });
