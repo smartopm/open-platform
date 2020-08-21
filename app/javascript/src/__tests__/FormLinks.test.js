@@ -29,8 +29,7 @@ describe('Shows the google form links', () => {
     });
 
     it('It should click link and open new tab', () => {
-        const name= "Test Name"
-        const number = "09878982392"
+    
         window.open = jest.fn();
         const container = render(
             <FormLinkList />
