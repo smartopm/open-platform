@@ -21,7 +21,7 @@ function isExpired(date) {
   return now > new Date(date)
 }
 
-function dateToString(date) {
+export function dateToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }
@@ -116,13 +116,6 @@ export function differenceInHours(startDate, endDate) {
     return `${hours} ${hours === 1 ? 'hr' : 'hrs'}`
   }
   return `${minutes} minutes`
-}
-
-export function convertDateStr(str) {
-    let date = new Date(str),
-    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-    day = ("0" + date.getDate()).slice(-2);
-  return [date.getFullYear(), mnth, day].join("-");
 }
 
 export default {

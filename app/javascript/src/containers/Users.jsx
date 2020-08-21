@@ -34,7 +34,7 @@ import CreateLabel from '../components/CreateLabel'
 import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
 import DateFilterComponent from '../components/DateFilterComponent'
-import { convertDateStr } from '../utils/dateutil'
+import { dateToString } from '../utils/dateutil'
 
 
 const limit = 50
@@ -81,13 +81,13 @@ export default function UsersList() {
   }
   function specifyUserQuery() {
     if (selectDateFrom !== '') {
-      return `date_filter > ${convertDateStr(selectDateFrom)}`
+      return `date_filter > ${dateToString(selectDateFrom)}`
     }
     if (selectDateTo !== '') {
-      return `date_filter < ${convertDateStr(selectDateTo)}`
+      return `date_filter < ${dateToString(selectDateTo)}`
     }
     if (selectDateOn !== '') {
-      return `date_filter = ${convertDateStr(selectDateOn)}`
+      return `date_filter = ${dateToString(selectDateOn)}`
     }
     return joinSearchQuery(search[searchType], searchType)
   }
