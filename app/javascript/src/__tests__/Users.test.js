@@ -1,14 +1,14 @@
 import React from 'react'
-import { shallow } from 'enzyme'
-import { createClient } from '../utils/apollo'
-import { ApolloProvider } from 'react-apollo'
-import { MemoryRouter } from 'react-router-dom'
 import Users from '../containers/Users'
+import { render } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import { BrowserRouter } from 'react-router-dom/'
+import { MockedProvider } from '@apollo/react-testing'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
-describe('home component', () => {
-  const authState = {
+describe("UserPage Component ",() => {
+  const adminAuthState = {
     loaded: true,
     loggedIn: true,
     setToken: jest.fn(),
@@ -20,21 +20,19 @@ describe('home component', () => {
       id: '11cdad78',
       imageUrl: null,
       name: 'John Doctor',
-      phoneNumber: '260971500748',
-      userType: 'security_guard'
+      phoneNumber: '260971500000',
+      userType: 'admin'
     }
   }
-  const wrapper = shallow(
-    <MemoryRouter>
-      <ApolloProvider client={createClient}>
-        <Users authState={authState} />
-      </ApolloProvider>
-    </MemoryRouter>
-  )
+  it('should render without error and have all cards for admins',()=> {
+     const container =  render(
+          <MockedProvider >
+            <BrowserRouter>
+              <Users authState={adminAuthState} />
+          </BrowserRouter>
+          </MockedProvider>
+     )
 
-  it('renders a search input', () => {
-    expect(wrapper.find('input')).toBeTruthy()
-    expect(wrapper.find('label')).toBeTruthy()
+    expect(container.getByTestId('loader')).toBeInTheDocument()
   })
-
 })
