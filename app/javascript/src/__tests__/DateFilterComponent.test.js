@@ -51,13 +51,7 @@ describe('filter users for campaign component', () => {
       handleFilterInputChange: jest.fn(),
       classes: {},
       filterType: "log_from",
-      handleDateChangeFrom: jest.fn(),
-      handleDateChangeTo: jest.fn(),
-      handleDateChangeOn: jest.fn(),
-      selectDateFrom: "2020-08-16",
-      selectDateTo: "",
-      selectDateOn: "",
-      resetFilter: jest.fn()
+      handleDateChangeFrom: jest.fn()
     }
     const container = render(<DateFilterComponent {...props} />)
     const input = container.getByLabelText("from:")
@@ -68,46 +62,5 @@ describe('filter users for campaign component', () => {
     expect(container.queryByText('Logged in from')).toBeInTheDocument()
     expect(container.queryByText('Clear Filter')).toBeInTheDocument()
     expect(container.queryByText('Clear Filter')).not.toBeDisabled()
-  })
-
-  it('should reset the filter input', () => {
-    const props = {
-      handleFilterInputChange: jest.fn(),
-      classes: {},
-      filterType: "log_from",
-      handleDateChangeFrom: jest.fn(),
-      handleDateChangeTo: jest.fn(),
-      handleDateChangeOn: jest.fn(),
-      selectDateFrom: "2020-08-16",
-      selectDateTo: "",
-      selectDateOn: "",
-      resetFilter: jest.fn()
-    }
-    const container = render(<DateFilterComponent {...props} />)
-    const click = { button: 0 }
-    const input = container.getByText('Clear Filter')
-    fireEvent.click(input, click)
-
-    expect(container.queryByText('Filter for Campaign')).toBeInTheDocument()
-  })
-
-  it('should select filter type from the select list', () => {
-    const props = {
-      handleFilterInputChange: jest.fn(),
-      classes: {},
-      filterType: "",
-      handleDateChangeFrom: jest.fn(),
-      handleDateChangeTo: jest.fn(),
-      handleDateChangeOn: jest.fn(),
-      selectDateFrom: "",
-      selectDateTo: "",
-      selectDateOn: "",
-      resetFilter: jest.fn()
-    }
-    const container = render(<DateFilterComponent {...props} />)
-    const click = { button: 0 }
-    fireEvent.click(container.getByText('Filter for Campaign'), click)
-
-    expect(container.queryByText('Filter for Campaign')).toBeInTheDocument()
   })
 })
