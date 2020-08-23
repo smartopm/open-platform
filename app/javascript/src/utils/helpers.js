@@ -128,15 +128,20 @@ export function forceLinkHttps(imageLink) {
 }
 
 /**
- * 
- * @param {Date} d1 
- * @param {Date} d2 
- * @description checks for the difference in the number of days between date one and two
- * @returns {Int}
+ * @description so you have an array with objects and plains strings [{name: "joe"}, "danop"]
+  and you want to merge names from the objects and strings
+ * @param {[string]} labels - an array of all labels to merge, usually from server and local state
+ * @returns [string]
  */
- export function inDays(d1, d2) {
-  var t2 = d2.getTime();
-  var t1 = d1.getTime();
-
-  return parseInt((t2-t1)/(24*3600*1000));
+export function getJustLabels(labels) {
+  if(!labels.length) return []
+  let str = []
+  for (let index = 0; index < labels.length; index++) {
+    const element = labels[index]
+    if (typeof element === 'object') {
+      str.push(element.shortDesc)
+    }
+    str.push(element)
+  }
+  return str.filter(el => typeof el === 'string')
 }

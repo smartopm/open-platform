@@ -1,4 +1,4 @@
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -87,5 +87,16 @@ describe('array methods', () => {
     const httpsLink = 'https://doubglegdp.com/some_https_image_link.jpg'
     expect(forceLinkHttps(link)).toBe('https://doubglegdp.com/some_image_link.jpg')
     expect(forceLinkHttps(httpsLink)).toBe(httpsLink)
+  })
+  // merge items 
+  it('should just pick label description despite some being in an object', () => {
+    const labels = [
+      { shortDesc: 'blue', id: '23'},
+      'red',
+      { shortDesc: 'green', id: '33' },
+      'white'
+    ]
+    expect(getJustLabels(labels)).toStrictEqual(['blue', 'red', 'green', 'white'])
+    expect(getJustLabels([])).toStrictEqual([])
   })
 })

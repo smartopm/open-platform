@@ -53,7 +53,6 @@ describe('Task Component', () => {
     fireEvent.click(assigneeBtn)
     expect(container.queryByText(/Add Assignee/i)).not.toBeInTheDocument()
     expect(container.queryByText(/created this note/i)).toBeInTheDocument()
-    expect(container.queryByText(/2020-08-01/i)).toBeInTheDocument()
     expect(container.queryByText(/Tester/i)).toBeInTheDocument()
   })
 })

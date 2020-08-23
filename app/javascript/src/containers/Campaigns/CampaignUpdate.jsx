@@ -30,15 +30,4 @@ export default function CampaignUpdate({ match }) {
   )
 }
 
-export function getJustLabels(labels) {
-  if(!labels.length) return []
-  let str = []
-  for (let index = 0; index < labels.length; index++) {
-    const element = labels[index]
-    if (typeof element === 'object') {
-      str.push(element.shortDesc)
-    }
-    str.push(element)
-  }
-  return str.filter(el => typeof el === 'string')
-}
+
