@@ -20,7 +20,7 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
         >
           {title}
         </Typography>
-        <Typography align="center" color="textPrimary" variant="h5">
+        <Typography align="center" color="textPrimary" variant="h5" data-testid="task_count">
           {count}
         </Typography>
       </CardContent>

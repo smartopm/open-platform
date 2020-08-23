@@ -151,7 +151,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
             fullWidth
             margin="normal"
             inputProps={{
-              'aria-label': 'task user'
+              'aria-label': 'task_user'
             }}
             InputLabelProps={{
               shrink: true
