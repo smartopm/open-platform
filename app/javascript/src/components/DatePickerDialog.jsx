@@ -16,7 +16,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
                     margin="normal"
                     id="date-picker-dialog"
                     label={label}
-                    format="yyyy/MM/dd"
+                    format="yyyy-MM-dd"
                     placeholder="YYYY-MM-DD"
                     value={selectedDate}
                     onChange={date => handleDateChange(date)}
