@@ -6,7 +6,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  TextField
 } from '@material-ui/core'
 import { discussionUserQuery } from '../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
@@ -15,9 +16,11 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 
 export default function FollowButtion({ discussionId }) {
   const authState = useContext(AuthStateContext)
-  const { user: { email } } = authState
+  const { user: { email, name } } = authState
   const id = discussionId
   const [open, setOpen] = useState(false)
+  const [updateEmail, setUpdateEmail] = useState(false)
+  const [textValue, setTextValue] = useState('')
   const [subscribe, setSubscribe] = useState(null)
   const [follow] = useMutation(DiscussionSubscription)
   const { loading: isLoadings, data: followData } = useQuery(
@@ -41,6 +44,26 @@ export default function FollowButtion({ discussionId }) {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleEmailOpen = () => {
+    setUpdateEmail(true)
+  }
+
+  const handleEmailClose = () => {
+    setUpdateEmail(false)
+  }
+
+  const emailBody = `Hi, my name is ${name}. Please update my email address. My correct email is: ${textValue}`
+
+  const handleSendEmail = () => {
+    window.open(`mailto:toluola7@gmail.com?subject=Update Email&body=${emailBody}`);
+    setUpdateEmail(false)
+  }
+
+  const textFieldOnChange = event => {
+    event.preventDefault()
+    setTextValue(event.target.value)
   }
 
   let handlefollow = () => {
@@ -92,7 +115,7 @@ export default function FollowButtion({ discussionId }) {
           ) : !subscribe && !email ?
               (
                 <DialogContentText id="alert-dialog-description">
-                  Thank you for following the discussion! <a href="https://app.doublegdp.com/contact">
+                  Thank you for following the discussion! <a href="#" onClick={handleEmailOpen}>
                     Please share an email for your account</a> to receive daily email alert for 
                     new messages posted by other community members
                     on this board. To stop receiving the alerts, please unfollow this board.
@@ -118,6 +141,33 @@ export default function FollowButtion({ discussionId }) {
           </Button>
         </DialogActions>
       </Dialog>
+      {updateEmail && (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Update Email</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To update your email, please enter your email in the field below and our customer support will reach out to you.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            onChange={textFieldOnChange}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEmailClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSendEmail} color="primary">
+            Send
+          </Button>
+        </DialogActions>
+      </Dialog>
+      )}
     </>
   )
 }
