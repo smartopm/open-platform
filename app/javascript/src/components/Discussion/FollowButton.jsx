@@ -57,7 +57,7 @@ export default function FollowButtion({ discussionId }) {
   const emailBody = `Hi, my name is ${name}. Please update my email address. My correct email is: ${textValue}`
 
   const handleSendEmail = () => {
-    window.open(`mailto:toluola7@gmail.com?subject=Update Email&body=${emailBody}`);
+    window.open(`mailto:support@doublegdp.com?subject=Update Email&body=${emailBody}`);
     setUpdateEmail(false)
   }
 
@@ -116,7 +116,7 @@ export default function FollowButtion({ discussionId }) {
               (
                 <DialogContentText id="alert-dialog-description">
                   Thank you for following the discussion! <a href="#" onClick={handleEmailOpen}>
-                    Please share an email for your account</a> to receive daily email alert for 
+                    Please share an email for your account</a> to receive daily email alert for
                     new messages posted by other community members
                     on this board. To stop receiving the alerts, please unfollow this board.
                 </DialogContentText>
@@ -143,30 +143,30 @@ export default function FollowButtion({ discussionId }) {
       </Dialog>
       {updateEmail && (
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Update Email</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To update your email, please enter your email in the field below and our customer support will reach out to you.
+          <DialogTitle id="form-dialog-title">Update Email</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To update your email, please enter your email in the field below and our customer support will reach out to you.
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            onChange={textFieldOnChange}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleEmailClose} color="primary">
-            Cancel
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              onChange={textFieldOnChange}
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEmailClose} color="primary">
+              Cancel
           </Button>
-          <Button onClick={handleSendEmail} color="primary">
-            Send
+            <Button onClick={handleSendEmail} color="primary">
+              Send
           </Button>
-        </DialogActions>
-      </Dialog>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   )
