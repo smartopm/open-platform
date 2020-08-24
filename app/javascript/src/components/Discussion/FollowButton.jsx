@@ -7,7 +7,7 @@ import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionSubscription } from '../../graphql/mutations'
 import FollowDialogueBox from './FollowDialogueBox'
 
-export default function FollowButtion({ discussionId, authState }) {
+export default function FollowButton({ discussionId, authState }) {
   const { user: { name } } = authState
   const id = discussionId
   const [open, setOpen] = useState(false)
