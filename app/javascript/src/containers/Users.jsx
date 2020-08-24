@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import Nav from '../components/Nav'
 import { Redirect } from 'react-router-dom'
@@ -31,7 +31,6 @@ import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import CreateLabel from '../components/CreateLabel'
-import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import FilterComponent from '../components/FilterComponent'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { dateToString } from '../utils/dateutil'
@@ -39,7 +38,6 @@ const limit = 50
 
 export default function UsersList() {
   const classes = useStyles()
-  const theme = useContext(ThemeContext)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
@@ -382,7 +380,6 @@ export default function UsersList() {
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-              style={{ backgroundColor: theme.primaryColor }}
               endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
             {Boolean(phoneNumbers.length) && (
               <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
@@ -404,7 +401,6 @@ export default function UsersList() {
             <Button variant="contained"
               color="primary"
               className={classes.filterButton}
-              style={{ backgroundColor: theme.primaryColor }}
               endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
           </Grid>
           

@@ -6,9 +6,8 @@ import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
 import { CampaignCreate, CampaignUpdateMutation, CampaignLabelRemoveMutation } from '../graphql/mutations'
 import { delimitorFormator } from '../utils/helpers'
-import { saniteError } from '../utils/helpers'
+import { saniteError, getJustLabels } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels.jsx'
-import { getJustLabels } from '../containers/Campaigns/CampaignUpdate'
 import { useParams } from 'react-router-dom'
 
 const initData = {

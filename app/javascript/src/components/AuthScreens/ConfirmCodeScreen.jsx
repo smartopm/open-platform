@@ -104,7 +104,7 @@ export default function ConfirmCodeScreen({ match }) {
             styles.welcomeContainer
           )}`}
         >
-          <p className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+          <p data-testid="welcome" className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
         </div>
         <br />
         <br />
@@ -125,6 +125,7 @@ export default function ConfirmCodeScreen({ match }) {
               }
               // hide the seventh input for the next ref to work [6]
               hidden={item === 7 && true}
+              data-testid="code-input"
             />
           ))}
         </div>

@@ -168,8 +168,8 @@ export function LoginScreen() {
         >
           <Button
             variant="contained"
+            color="primary"
             className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-            style={{backgroundColor: theme.primaryColor}}
             onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >

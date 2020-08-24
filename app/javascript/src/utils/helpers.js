@@ -128,7 +128,25 @@ export function forceLinkHttps(imageLink) {
 }
 
 /**
- * 
+ * @description so you have an array with objects and plains strings [{name: "joe"}, "danop"]
+  and you want to merge names from the objects and strings
+ * @param {[string]} labels - an array of all labels to merge, usually from server and local state
+ * @returns [string]
+ */
+export function getJustLabels(labels) {
+  if(!labels.length) return []
+  let str = []
+  for (let index = 0; index < labels.length; index++) {
+    const element = labels[index]
+    if (typeof element === 'object') {
+      str.push(element.shortDesc)
+    }
+    str.push(element)
+  }
+  return str.filter(el => typeof el === 'string')
+}
+
+ /** 
  * @param {string} email 
  * @description check if email is valid
  * @returns {boolean} true or false
