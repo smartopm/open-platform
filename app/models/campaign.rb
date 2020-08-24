@@ -9,6 +9,8 @@ class Campaign < ApplicationRecord
 
   EXPIRATION_DAYS = 7
 
+  validates :campaign_type, inclusion: { in: %w[sms email] }
+
   default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids

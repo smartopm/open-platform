@@ -8,10 +8,14 @@ module Mutations
 
       argument :id, ID, required: true
       argument :name, String, required: false
+      argument :campaign_type, String, required: true
       argument :message, String, required: false
       argument :batch_time, String, required: false
       argument :user_id_list, String, required: false
       argument :labels, String, required: false
+      argument :subject, String, required: false
+      argument :pre_header, String, required: false
+      argument :template_style, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 
@@ -20,7 +24,7 @@ module Mutations
         return if campaign.nil?
 
         update_campaign_label(campaign, vals.delete(:labels)&.split(','))
-        campaign.update!(vals)
+        campaign.update!(vals) if valid?(vals)
 
         return { campaign: campaign } if campaign.persisted?
 
@@ -50,6 +54,22 @@ module Mutations
         return false if campaign_labels.empty?
 
         campaign_labels.pluck(:short_desc).include?(label_text)
+      end
+
+      def valid?(vals)
+        return true if (sms_attributes_present?(vals) || email_attributes_present?(vals))
+
+        raise GraphQL::ExecutionError, 'Invalid Attributes'
+      end
+
+      def email_attributes_present?(vals)
+        vals[:campaign_type].eql?('email') && vals[:subject].present? &&
+          vals[:pre_header].present? && vals[:template_style].present?
+      end
+
+      def sms_attributes_present?(vals)
+        vals[:campaign_type].eql?('sms') && vals[:subject].nil? &&
+          vals[:pre_header].nil? && vals[:template_style].nil?
       end
 
       def authorized?(_vals)
