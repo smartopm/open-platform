@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import {
   Divider,
   Typography,
@@ -15,11 +15,13 @@ import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../CenteredContent'
 import { useState } from 'react'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import FollowBution from './FollowButton'
 
 export default function Discussion({ discussionData }) {
   const limit = 20
   const { id } = discussionData
+  const authState = useContext(AuthStateContext)
   const [isLoading, setLoading] = useState(false)
   const { loading, error, data, refetch, fetchMore } = useQuery(
     DiscussionCommentsQuery,
@@ -75,7 +77,7 @@ export default function Discussion({ discussionData }) {
             <Divider />
           </Grid>
           <Grid item xs={6}>
-          <FollowBution discussionId={id}/>
+          <FollowBution discussionId={id} authState={authState}/>
           </Grid>
           <br />
           <Grid item xs={12}>
