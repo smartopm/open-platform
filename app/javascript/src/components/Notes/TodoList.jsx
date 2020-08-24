@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { ModalDialog } from '../Dialog'
 import {
   Fab,
@@ -10,7 +10,7 @@ import {
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
@@ -54,7 +54,7 @@ export default function TodoList({
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
     totalCallsOpen: 'category: call AND completed: false'
   }
-  const { loading, data: liteData } = useQuery(UsersLiteQuery, {
+  const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
     },
@@ -65,7 +65,7 @@ export default function TodoList({
   // TODO: simplify this: @olivier
   const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
 
-  const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
+  const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
     {
       variables: {
@@ -82,6 +82,13 @@ export default function TodoList({
   function openModal() {
     setModalOpen(!open)
   }
+
+  useEffect(() => {
+    // only fetch admins when the  modal is opened
+    if (open) {
+      loadAssignees()
+    }
+  }, [open, loadAssignees])
 
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
@@ -123,7 +130,10 @@ export default function TodoList({
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return
     setQuery(taskQuery[key])
+    // show tasks when a filter has been applied, we might have to move this to useEffect
+    loadTasks()
   }
+
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
@@ -184,7 +194,7 @@ export default function TodoList({
             <TaskDashboard filterTasks={handleTaskFilter} />
           </Grid>
           <br />
-            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
+            {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (
                   <Task
                     key={note.id}
                     note={note}
@@ -200,7 +210,7 @@ export default function TodoList({
                   />
                 )
             ) : (
-              <CenteredContent>There are no tasks</CenteredContent>
+              <CenteredContent>Click a card above to filter</CenteredContent>
             )}
         </div>
         <br />
