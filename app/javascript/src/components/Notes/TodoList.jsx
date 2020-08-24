@@ -54,7 +54,7 @@ export default function TodoList({
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
     totalCallsOpen: 'category: call AND completed: false'
   }
-  const [loadAssignees, { loaded: usersLoaded, loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
+  const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
     },
@@ -84,9 +84,9 @@ export default function TodoList({
   }
 
   useEffect(() => {
-    if(open){
+    if (open) {
       loadAssignees()
-      }
+    }
   }, [open, loadAssignees])
 
   // unassign the user if already assigned
