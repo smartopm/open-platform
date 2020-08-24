@@ -16,7 +16,7 @@ import ErrorPage from '../../components/Error'
 import CenteredContent from '../CenteredContent'
 import { useState } from 'react'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import FollowBution from './FollowButton'
+import FollowButton from './FollowButton'
 
 export default function Discussion({ discussionData }) {
   const limit = 20
@@ -77,7 +77,7 @@ export default function Discussion({ discussionData }) {
             <Divider />
           </Grid>
           <Grid item xs={6}>
-          <FollowBution discussionId={id} authState={authState}/>
+          <FollowButton discussionId={id} authState={authState}/>
           </Grid>
           <br />
           <Grid item xs={12}>

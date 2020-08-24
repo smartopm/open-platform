@@ -126,3 +126,14 @@ export function forceLinkHttps(imageLink) {
   const link = !lkReg.test(imageLink) ? imageLink.replace('http', 'https') : imageLink
   return link
 }
+
+/**
+ * 
+ * @param {string} email 
+ * @description check if email is valid
+ * @returns {boolean} true or false
+ */
+export function validateEmail(email) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}

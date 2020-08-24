@@ -8,6 +8,7 @@ import {
   DialogTitle,
   TextField
 } from '@material-ui/core'
+import { ErrorMessage } from 'react-hook-form'
 
 export default function FollowDialogueBox({
   authState: { email },
@@ -18,7 +19,8 @@ export default function FollowDialogueBox({
   textFieldOnChange,
   handleSendEmail,
   handleEmailUpdate,
-  updateEmail
+  updateEmail,
+  error
 }) {
   return (
     <>
@@ -77,6 +79,7 @@ export default function FollowDialogueBox({
                 To update your email, please enter your email in the field below and our customer support will reach out to you.
           </DialogContentText>
               <TextField
+                error={error}
                 autoFocus
                 margin="dense"
                 id="name"
@@ -84,6 +87,7 @@ export default function FollowDialogueBox({
                 type="email"
                 onChange={textFieldOnChange}
                 fullWidth
+                helperText="Invalid email."
               />
             </DialogContent>
             <DialogActions>

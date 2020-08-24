@@ -6,11 +6,13 @@ import { discussionUserQuery } from '../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionSubscription } from '../../graphql/mutations'
 import FollowDialogueBox from './FollowDialogueBox'
+import { validateEmail } from "../../utils/helpers"
 
 export default function FollowButton({ discussionId, authState }) {
   const { user: { name } } = authState
   const id = discussionId
   const [open, setOpen] = useState(false)
+  const [emailError, setEmailError] = useState(false)
   const [updateEmail, setUpdateEmail] = useState(false)
   const [textValue, setTextValue] = useState('')
   const [subscribe, setSubscribe] = useState(null)
@@ -42,8 +44,15 @@ export default function FollowButton({ discussionId, authState }) {
   const emailBody = `Hi, my name is ${name}. Please update my email address. My correct email is: ${textValue}`
 
   const handleSendEmail = () => {
-    window.open(`mailto:support@doublegdp.com?subject=Update Email&body=${emailBody}`);
-    setUpdateEmail(false)
+    const validate = validateEmail(textValue)
+    if (validate) {
+      setEmailError(false)
+      window.open(`mailto:support@doublegdp.com?subject=Update Email&body=${emailBody}`);
+      setUpdateEmail(false)
+    } else {
+      setEmailError(true)
+    }
+    
   }
 
   const textFieldOnChange = event => {
@@ -81,6 +90,7 @@ export default function FollowButton({ discussionId, authState }) {
         )}
       <FollowDialogueBox 
         authState={authState}
+        error={emailError}
         open={open}
         handleClose={handleClick}
         subscribe={subscribe}
