@@ -8,7 +8,6 @@ import {
   DialogTitle,
   TextField
 } from '@material-ui/core'
-import { ErrorMessage } from 'react-hook-form'
 
 export default function FollowDialogueBox({
   authState: { email },
