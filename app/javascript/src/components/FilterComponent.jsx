@@ -41,7 +41,7 @@ export default function FilterComponent({
           </div>
         )}
       >
-        {list.map(item => (
+        {Boolean(list.length) && list.map(item => (
           // change the below line depending on the usage
           <MenuItem key={item.id} value={item.name || item.shortDesc}>
             {item.name || item.shortDesc}
@@ -53,6 +53,11 @@ export default function FilterComponent({
       )}
     </FormControl>
   )
+}
+
+
+FilterComponent.defaultProps = {
+  list: []
 }
 
 FilterComponent.propTypes = {
