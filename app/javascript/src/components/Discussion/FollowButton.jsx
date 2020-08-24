@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
+  Chip
 } from '@material-ui/core'
 import { discussionUserQuery } from '../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionSubscription } from '../../graphql/mutations'
+import FollowDialogueBox from './FollowDialogueBox'
+import { validateEmail } from "../../utils/helpers"
 
-export default function FollowButtion({ discussionId }) {
+export default function FollowButton({ discussionId, authState }) {
+  const { user: { name } } = authState
   const id = discussionId
   const [open, setOpen] = useState(false)
+  const [emailError, setEmailError] = useState(false)
+  const [updateEmail, setUpdateEmail] = useState(false)
+  const [textValue, setTextValue] = useState('')
   const [subscribe, setSubscribe] = useState(null)
   const [follow] = useMutation(DiscussionSubscription)
   const { loading: isLoadings, data: followData } = useQuery(
@@ -32,15 +32,34 @@ export default function FollowButtion({ discussionId }) {
     }
   }, [isLoadings, followData])
 
-  const handleClickOpen = () => {
-    setOpen(true)
+  const handleClick = () => {
+    setOpen(!open)
   }
 
-  const handleClose = () => {
-    setOpen(false)
+  const handleEmailUpdate = () => {
+    setUpdateEmail(!updateEmail)
+ }
+ 
+
+  const emailBody = `Hi, my name is ${name}. Please update my email address. My correct email is: ${textValue}`
+
+  const handleSendEmail = () => {
+    const validate = validateEmail(textValue)
+    if (validate) {
+      setEmailError(false)
+      window.open(`mailto:support@doublegdp.com?subject=Update Email&body=${emailBody}`);
+      setUpdateEmail(false)
+    } else {
+      setEmailError(true)
+    }
+    
   }
 
-  let handlefollow = () => {
+  const textFieldOnChange = event => {
+    setTextValue(event.target.value)
+  }
+
+  const handleFollow = () => {
     setOpen(false)
     follow({ variables: { discussionId: id } }).then(() => {
       if (subscribe) {
@@ -58,53 +77,29 @@ export default function FollowButtion({ discussionId }) {
         <Chip
           label="unfollow"
           clickable
-          onClick={handleClickOpen}
+          onClick={handleClick}
           color="secondary"
         />
       ) : (
-        <Chip
-          label="follow"
-          clickable
-          onClick={handleClickOpen}
-          color="primary"
-        />
-      )}
-      <Dialog
+          <Chip
+            label="follow"
+            clickable
+            onClick={handleClick}
+            color="primary"
+          />
+        )}
+      <FollowDialogueBox 
+        authState={authState}
+        error={emailError}
         open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {'Subscribe to Discussion'}
-        </DialogTitle>
-        <DialogContent>
-          {subscribe ? (
-            <DialogContentText id="alert-dialog-description">
-              You have unfollowed this discussion. You will no longer receive
-              alerts for new messages posted by other community members on this
-              board. Please provide us feedback on your discussion experience by
-              sending us a message. We look forward to you participating in
-              future discussions with the Nkwashi community!
-            </DialogContentText>
-          ) : (
-            <DialogContentText id="alert-dialog-description">
-              Thank you for following this discussion! You will receive daily
-              email alerts for new messages posted by other community members on
-              this board. To stop receiving the alerts, please unfollow this
-              board
-            </DialogContentText>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Disagree
-          </Button>
-          <Button onClick={handlefollow} color="primary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleClose={handleClick}
+        subscribe={subscribe}
+        handleFollow={handleFollow}
+        textFieldOnChange={textFieldOnChange}
+        handleSendEmail={handleSendEmail}
+        handleEmailUpdate={handleEmailUpdate}
+        updateEmail={updateEmail}
+      />
     </>
   )
 }
