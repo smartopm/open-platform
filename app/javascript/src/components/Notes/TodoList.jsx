@@ -84,6 +84,7 @@ export default function TodoList({
   }
 
   useEffect(() => {
+    // only fetch admins when the  modal is opened
     if (open) {
       loadAssignees()
     }
@@ -129,8 +130,10 @@ export default function TodoList({
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return
     setQuery(taskQuery[key])
+    // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks()
   }
+
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
