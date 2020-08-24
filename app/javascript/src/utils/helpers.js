@@ -145,3 +145,13 @@ export function getJustLabels(labels) {
   }
   return str.filter(el => typeof el === 'string')
 }
+
+ /** 
+ * @param {string} email 
+ * @description check if email is valid
+ * @returns {boolean} true or false
+ */
+export function validateEmail(email) {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(String(email).toLowerCase());
+}
