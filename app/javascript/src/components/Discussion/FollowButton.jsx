@@ -47,7 +47,6 @@ export default function FollowButtion({ discussionId, authState }) {
   }
 
   const textFieldOnChange = event => {
-    event.preventDefault()
     setTextValue(event.target.value)
   }
 
