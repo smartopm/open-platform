@@ -3,6 +3,7 @@ import TaskStatCard from './TaskStatCard'
 import { useQuery } from 'react-apollo'
 import { TaskStatsQuery } from '../../graphql/queries'
 import { Grid, Typography } from '@material-ui/core'
+import CenteredContent from '../CenteredContent'
 
 const tiles = {
   myOpenTasks: 'My Tasks',
@@ -21,14 +22,16 @@ export default function TaskDashboard({ filterTasks }) {
 
   if (loading || error) {
     return (
-      <Typography
-        align="center"
-        color="textSecondary"
-        gutterBottom
-        variant="h6"
-      >
-        Loading
-      </Typography>
+      <CenteredContent>
+        <Typography
+          align="center"
+          color="textSecondary"
+          gutterBottom
+          variant="h6"
+        >
+          Loading
+        </Typography>
+      </CenteredContent>
     )
   }
 // use extra white space
