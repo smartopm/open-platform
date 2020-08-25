@@ -1,27 +1,13 @@
 import React from 'react';
-import { ThemeProvider } from '@material-ui/core/styles'
 import DateFnsUtils from '@date-io/date-fns'
-import { createMuiTheme } from '@material-ui/core'
 import {
     KeyboardDatePicker,
     MuiPickersUtilsProvider,
     KeyboardDateTimePicker
 } from '@material-ui/pickers'
 
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#69ABA4'
-        }
-      },
-});
-
-
-
 export default function DatePickerDialog({ selectedDate, handleDateChange, label }) {
     return (
-        <ThemeProvider theme={theme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                     data-testid='date-picker'
@@ -30,7 +16,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
                     margin="normal"
                     id="date-picker-dialog"
                     label={label}
-                    format="yyyy/MM/dd"
+                    format="yyyy-MM-dd"
                     placeholder="YYYY-MM-DD"
                     value={selectedDate}
                     onChange={date => handleDateChange(date)}
@@ -38,18 +24,13 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
                         'aria-label': 'change date',
                     }}
                 />
-
             </MuiPickersUtilsProvider>
-        </ThemeProvider>
-
     );
 
 }
 
 export function DateAndTimePickers({ selectedDateTime, handleDateChange, label}) {
-
     return (
-        <ThemeProvider theme={theme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
                 label={label}
@@ -61,6 +42,5 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label})
                 clearable
             />
         </MuiPickersUtilsProvider>
-        </ThemeProvider>
     );
   }

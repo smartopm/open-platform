@@ -68,16 +68,6 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
 
           </ListItem>
         </Link>
-        <a href="/logout" className={`${css(styles.link)}`}>
-          <ListItem button>
-            <ListItemIcon>
-              <MeetingRoomIcon />
-            </ListItemIcon>
-
-            <ListItemText primary="Logout" />
-
-          </ListItem>
-        </a>
         <a href="/settings" className={`${css(styles.link)}`}>
           <ListItem button>
             <ListItemIcon>
@@ -88,6 +78,17 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
 
           </ListItem>
         </a>
+        <a href="/logout" className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <MeetingRoomIcon />
+            </ListItemIcon>
+
+            <ListItemText primary="Logout" />
+
+          </ListItem>
+        </a>
+
       </List>
       <Footer position="36vh" />
       <PrivacyPolicy />

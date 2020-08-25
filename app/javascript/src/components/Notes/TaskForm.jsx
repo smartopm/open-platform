@@ -151,7 +151,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
             fullWidth
             margin="normal"
             inputProps={{
-              'aria-label': 'task user'
+              'aria-label': 'task_user'
             }}
             InputLabelProps={{
               shrink: true
@@ -217,6 +217,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         <Button
           variant="contained"
           type="submit"
+          color="primary"
           disabled={loading}
           aria-label="task_submit"
           className={`btn ${css(discussStyles.submitBtn)}`}

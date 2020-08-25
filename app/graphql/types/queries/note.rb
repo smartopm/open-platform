@@ -49,8 +49,8 @@ module Types::Queries::Note
   def flagged_notes(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:assignees, :author)
-                            .eager_load(:assignee_notes, :assignees)
+    context[:site_community].notes.includes(:assignees, :author, :user)
+                            .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .search(query)
                             .order(completed: :desc, created_at: :desc)

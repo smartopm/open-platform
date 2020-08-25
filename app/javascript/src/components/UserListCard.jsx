@@ -13,7 +13,6 @@ import {
     ListItem,
     List,
     ListItemAvatar,
-    
     Divider,
     Grid
 } from "@material-ui/core";
@@ -22,22 +21,22 @@ export default function UserListCard({
     userData,
     handleNoteModal
 }) {
- 
+
     const classes = useStyles()
     return (
-       
-            <List>
-            
-                {userData.users.map(user => (
-                    <Fragment key={user.id}>
-                    <ListItem style={{margin: 10}}>
+
+        <List>
+
+            {userData.users.map(user => (
+                <Fragment key={user.id}>
+                    <ListItem style={{ margin: 10 }}>
                         <Grid container alignItems="center" spacing={3}>
                             <Grid item xs={12} sm={6}>
                                 <Box className={classes.detailsRow} >
                                     <ListItemAvatar>
                                         <Avatar imageUrl={user.imageUrl} style={"medium"} />
                                     </ListItemAvatar>
-                                    <Box style={{margin: 5}}>
+                                    <Box style={{ margin: 5 }}>
                                         <Box
                                             style={{
                                                 display: "flex",
@@ -45,12 +44,12 @@ export default function UserListCard({
                                                 justifyContent: "space-around",
                                             }}
                                         >
-                                        <Link style={{color: 'black'}} to={`/user/${user.id}`} key={user.id}>
-                                            <Typography  component="span" variant="subtitle1">
-                                               <strong> {user.name} </strong>
-                                            </Typography>
-                                        </Link>
-                                           
+                                            <Link style={{ color: 'black' }} to={`/user/${user.id}`} key={user.id}>
+                                                <Typography component="span" variant="subtitle1">
+                                                    <strong> {user.name} </strong>
+                                                </Typography>
+                                            </Link>
+
                                             <Typography component="span" variant="body2">{user.roleName}</Typography>
                                         </Box>
                                         <Box
@@ -62,9 +61,9 @@ export default function UserListCard({
                                             }}
                                         >
                                             <Typography variant="body2" color="textSecondary">
-                                                {user.phoneNumber }
+                                                {user.phoneNumber}
                                             </Typography>
-                                           
+
                                             <Typography variant="body2" color="textSecondary">
                                                 {user.email}
                                             </Typography>
@@ -78,14 +77,14 @@ export default function UserListCard({
                                                 marginTop: 5,
                                             }}
                                         >
-                                        {user.labels.map(label =>(
+                                            {user.labels.map(label => (
 
-                                         <Chip key={label.id}
-                                                label={label.shortDesc}
-                                                style={{ height: 25, margin: 5 }}
-                                            />
-                                             ))
-                                          
+                                                <Chip key={label.id}
+                                                    label={label.shortDesc}
+                                                    style={{ height: 25, margin: 5 }}
+                                                />
+                                            ))
+
                                             }
                                         </Box>
                                     </Box>
@@ -93,7 +92,7 @@ export default function UserListCard({
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Box className={classes.root}>
-                                    <Box style={{justifyContent: 'center', alignItems: 'center'}}>
+                                    <Box style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <Typography variant="body2">
                                             {user.notes && user.notes[0] ? user.notes[0].body : ''}
                                         </Typography>
@@ -107,13 +106,13 @@ export default function UserListCard({
                                             marginRight: 30
                                         }}
                                     >
-                                        <IconButton onClick={() => handleNoteModal(user.id, user.name,'Note')} >
+                                        <IconButton onClick={() => handleNoteModal(user.id, user.name, 'Note')} >
                                             <AddIcon />
                                         </IconButton>
-                                        <IconButton onClick={()=>handleNoteModal(user.id, user.name,'Answered')}>
+                                        <IconButton onClick={() => handleNoteModal(user.id, user.name, 'Answered')}>
                                             <PhoneInTalkIcon />
                                         </IconButton >
-                                        <IconButton onClick={() => handleNoteModal(user.id, user.name,'Missed')}>
+                                        <IconButton onClick={() => handleNoteModal(user.id, user.name, 'Missed')}>
                                             <PhoneMissedIcon />
                                         </IconButton>
                                     </Box>
@@ -121,12 +120,12 @@ export default function UserListCard({
                             </Grid>
                         </Grid>
                     </ListItem>
-                    <Divider  ariant="middle"   />
-                    </Fragment>   
-                ))
-                }
-            </List>
-            
+                    <Divider ariant="middle" />
+                </Fragment>
+            ))
+            }
+        </List>
+
     )
 }
 

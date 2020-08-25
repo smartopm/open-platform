@@ -21,7 +21,7 @@ function isExpired(date) {
   return now > new Date(date)
 }
 
-function dateToString(date) {
+export function dateToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
   }

@@ -5,14 +5,14 @@ import { TaskStatsQuery } from '../../graphql/queries'
 import { Grid, Typography } from '@material-ui/core'
 
 const tiles = {
-  completedTasks: 'Tasks Completed',
+  myOpenTasks: 'My Tasks',
   tasksDueIn10Days: 'Tasks due in 10 days',
   tasksDueIn30Days: 'Tasks due in 30 days',
-  tasksOpen: 'Tasks Open',
   tasksOpenAndOverdue: 'Overdue Tasks',
   tasksWithNoDueDate: 'Tasks with no due date',
-  myOpenTasks: 'My Tasks',
-  totalCallsOpen: 'Total Calls Open'
+  totalCallsOpen: 'Total Calls Open',
+  tasksOpen: 'Tasks Open',
+  completedTasks: 'Tasks Completed',
 }
 
 // data.taskStasts
@@ -31,8 +31,9 @@ export default function TaskDashboard({ filterTasks }) {
       </Typography>
     )
   }
+
   return Object.entries(tiles).map(([key, val]) => (
-    <Grid item lg={3} sm={4} xl={3} xs={6} key={key}>
+    <Grid item xs={6} sm={4} lg={3} key={key}>
       <TaskStatCard filterTasks={evt => filterTasks(evt, key)} title={val} count={data?.taskStats[key]} />
     </Grid>
   ))

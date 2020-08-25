@@ -1,7 +1,6 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { ModalDialog } from '../Dialog'
 import {
-  createMuiTheme,
   Fab,
   Dialog,
   DialogTitle,
@@ -10,13 +9,8 @@ import {
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
-} from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo'
+import { makeStyles } from '@material-ui/core/styles'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
@@ -27,6 +21,7 @@ import FilterComponent from '../FilterComponent'
 import Task from './Task'
 import TaskDashboard from './TaskDashboard'
 import { futureDateAndTimeToString } from '../DateContainer'
+import DatePickerDialog from '../DatePickerDialog'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -57,9 +52,9 @@ export default function TodoList({
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
-    totalCallsOpen: 'category: calls AND completed: false'
+    totalCallsOpen: 'category: call AND completed: false'
   }
-  const { loading, data: liteData } = useQuery(UsersLiteQuery, {
+  const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: {
       query: "user_type='admin'"
     },
@@ -70,14 +65,15 @@ export default function TodoList({
   // TODO: simplify this: @olivier
   const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
 
-  const { loading: isLoading, error: tasksError, data, refetch } = useQuery(
+  const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
         query: `${!qr.length ? 'completed: false': qr}`
-      }
+      },
+      fetchPolicy: "network-only"
     }
   )
 
@@ -86,6 +82,13 @@ export default function TodoList({
   function openModal() {
     setModalOpen(!open)
   }
+
+  useEffect(() => {
+    // only fetch admins when the  modal is opened
+    if (open) {
+      loadAssignees()
+    }
+  }, [open, loadAssignees])
 
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
@@ -127,7 +130,10 @@ export default function TodoList({
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return
     setQuery(taskQuery[key])
+    // show tasks when a filter has been applied, we might have to move this to useEffect
+    loadTasks()
   }
+
   if (isLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
@@ -138,27 +144,17 @@ export default function TodoList({
           open={isDialogOpen}
           handleClose={handleModal}
           handleConfirm={saveDate}
+          action='save'
         >
-          <ThemeProvider theme={theme}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
-                id="date-picker-inline"
-                label="Pick due date for this todo"
-                value={selectedDate}
-                onChange={handleDateChange}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date'
-                }}
-              />
-            </MuiPickersUtilsProvider>
-          </ThemeProvider>
+            <DatePickerDialog
+              selectedDate={selectedDate}
+              handleDateChange={handleDateChange}
+              label="Pick due date for this todo"
+            />
         </ModalDialog>
 
         <Dialog
-          // fullScreen={fullScreen}
+          fullScreen
           open={open}
           fullWidth={true}
           maxWidth={'lg'}
@@ -185,7 +181,7 @@ export default function TodoList({
             <CenteredContent>
               <FilterComponent
                 stateList={assignee}
-                list={liteData?.users}
+                list={liteData?.users || []}
                 handleInputChange={handleAssigneeInputChange}
                 classes={classes}
                 resetFilter={() => setAssignee([])}
@@ -194,14 +190,11 @@ export default function TodoList({
             </CenteredContent>
           )}
           <br />
-          <Grid
-              container
-              spacing={3}
-          > 
+          <Grid container spacing={3}> 
             <TaskDashboard filterTasks={handleTaskFilter} />
           </Grid>
-          <ul className={css(styles.list)}>
-            {data.flaggedNotes.length ? data.flaggedNotes.map(note => (
+          <br />
+            {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (
                   <Task
                     key={note.id}
                     note={note}
@@ -214,13 +207,11 @@ export default function TodoList({
                     handleModal={handleModal}
                     loading={loading}
                     loadingMutation={loadingMutation}
-                    classes={classes.listItem}
                   />
                 )
             ) : (
-              <CenteredContent>There are no tasks</CenteredContent>
+              <CenteredContent>Click a card above to filter</CenteredContent>
             )}
-          </ul>
         </div>
         <br />
         <CenteredContent>
@@ -234,7 +225,8 @@ export default function TodoList({
         <Fab
           variant="extended"
           onClick={openModal}
-          className={`btn ${css(styles.getStartedButton)} `}
+          color="primary"
+          className={`btn ${css(styles.taskButton)} `}
         >
           Create task
         </Fab>
@@ -255,53 +247,17 @@ const useStyles = makeStyles({
     minWidth: 160,
     maxWidth: 300
   },
-  listItem: {
-    position: 'relative',
-    listStyle: 'none',
-    padding: 15
-  }
-})
 
-// this should be in one place, basically just one theme
-const theme = createMuiTheme({
-  overrides: {
-    MuiPickersToolbar: {
-      toolbar: {
-        backgroundColor: '#69ABA4'
-      }
-    },
-    MuiPickersDay: {
-      day: {
-        color: '#69ABA4'
-      },
-      daySelected: {
-        backgroundColor: '#69ABA4'
-      },
-      current: {
-        color: '#69ABA4'
-      }
-    },
-    MuiPickersModal: {
-      dialogAction: {
-        color: '#69ABA4'
-      }
-    }
-  }
 })
 
 const styles = StyleSheet.create({
-  list: {
-    margin: 0,
-    padding: 0
-  },
-  getStartedButton: {
-    color: '#FFF',
-    backgroundColor: '#69ABA4',
+  taskButton: {
     height: 51,
     boxShadow: 'none',
     position: 'fixed',
     bottom: 20,
     right: 57,
-    marginLeft: '30%'
+    marginLeft: '30%',
+    color: '#FFFFFF'
   }
 })

@@ -1,11 +1,9 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Box, Grid, Typography, Button, Divider, Checkbox, FormControl, FormGroup, FormControlLabel } from '@material-ui/core'
-import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
 import CenteredContent from './CenteredContent';
 
 export default function NotificationPage({ handleChange, checkedState, handleSave, loading}) {
     const { smsChecked, emailChecked } = checkedState
-    const theme = useContext(ThemeContext)
     return (
         <Box style={{ height: 100, margin: 10 }}>
             <Box style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', margin: 10 }}>
@@ -32,7 +30,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                                 control={<Checkbox
                                 checked={smsChecked}
                                 name="smsChecked"
-                                style={{color: theme.primaryColor}}
+                                color="primary"
                                 onChange={handleChange}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />}
@@ -44,7 +42,7 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
                                 control={<Checkbox
                                 checked={emailChecked}
                                 name="emailChecked"
-                                style={{color: theme.primaryColor}}
+                                color="primary"
                                 onChange={handleChange}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />}
@@ -57,8 +55,9 @@ export default function NotificationPage({ handleChange, checkedState, handleSav
             <br/>
             <CenteredContent>
                 <Button
-                data-testid="preferences-save-button"
-                    style={{ backgroundColor: theme.primaryColor, color: 'white' }}
+                    data-testid="preferences-save-button"
+                    color="primary"
+                    variant="contained"
                     onClick={handleSave}
                 >
                  {loading ? 'Saving...' : 'Save'}

@@ -15,7 +15,8 @@ export default ({ history }) => {
   const authState = useContext(AuthStateContext)
   const { loading, error, data, refetch } = useQuery(UserQuery, {
     variables: { id },
-    errorPolicy: 'all'
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
   })
   //GA-event Digital scanning
   ReactGA.event({
