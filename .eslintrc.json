@@ -5,10 +5,10 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "extends": "standard"
+    "extends": "airbnb"
   },
   "plugins": ["react", "react-hooks"],
-  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier", "plugin:react-hooks/recommended"],
+  "extends": ["airbnb","eslint:recommended", "plugin:react/recommended", "prettier", "plugin:react-hooks/recommended"],
   "rules": {
     "comma-dangle": 0,
     "react/prop-types": 0
