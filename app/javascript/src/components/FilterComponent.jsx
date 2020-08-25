@@ -33,7 +33,7 @@ export default function FilterComponent({
         id={`${type}-chip`}
         multiple
         value={stateList}
-        open={type === 'assignee' ? filterOpen : false}
+        open={filterOpen}
         onOpen={handleOpenSelect}
         onClose={handleOpenSelect}
         onChange={handleInputChange}
