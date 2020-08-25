@@ -5,7 +5,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid, Button
+  Grid
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
@@ -66,7 +66,6 @@ export default function TodoList({
 
   // TODO: simplify this: @olivier
   const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
-
   const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
     {
@@ -91,6 +90,7 @@ export default function TodoList({
       loadAssignees()
     }
   }, [open, loadAssignees, filterOpen, isAssignTaskOpen])
+
 
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
@@ -127,6 +127,8 @@ export default function TodoList({
 
   function handleAssigneeInputChange(event) {
     setAssignee(event.target.value)
+    loadTasks()
+    setOpenFilter(!filterOpen)
   }
 
   function handleTaskFilter(_evt, key) {
