@@ -89,7 +89,12 @@ export default function TodoList({
     if (open || filterOpen || isAssignTaskOpen) {
       loadAssignees()
     }
-  }, [open, loadAssignees, filterOpen, isAssignTaskOpen])
+    // load tasks on runtime when we are on my task page from notification 
+    if (location !== 'todo') {
+      loadTasks()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location])
 
 
   // unassign the user if already assigned
