@@ -39,6 +39,8 @@ export default function TodoList({
   const [offset, setOffset] = useState(0)
   const [loaded, setLoadingAssignee] = useState(false)
   const [open, setModalOpen] = useState(false)
+  const [filterOpen, setOpenFilter] = useState(false)
+  const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false)
   const [loadingMutation, setMutationLoading] = useState(false)
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
@@ -64,7 +66,6 @@ export default function TodoList({
 
   // TODO: simplify this: @olivier
   const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
-
   const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
     {
@@ -84,11 +85,17 @@ export default function TodoList({
   }
 
   useEffect(() => {
-    // only fetch admins when the  modal is opened
-    if (open) {
+    // only fetch admins when the  modal is opened or when the select is triggered
+    if (open || filterOpen || isAssignTaskOpen) {
       loadAssignees()
     }
-  }, [open, loadAssignees])
+    // load tasks on runtime when we are on my task page from notification 
+    if (location !== 'todo') {
+      loadTasks()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location])
+
 
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
@@ -125,6 +132,8 @@ export default function TodoList({
 
   function handleAssigneeInputChange(event) {
     setAssignee(event.target.value)
+    loadTasks()
+    setOpenFilter(!filterOpen)
   }
 
   function handleTaskFilter(_evt, key) {
@@ -132,6 +141,10 @@ export default function TodoList({
     setQuery(taskQuery[key])
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks()
+  }
+
+  function handleSelect() {
+    setOpenFilter(!filterOpen)
   }
 
   if (isLoading) return <Loading />
@@ -186,6 +199,8 @@ export default function TodoList({
                 classes={classes}
                 resetFilter={() => setAssignee([])}
                 type="assignee"
+                filterOpen={filterOpen}
+                handleOpenSelect={handleSelect}
               />
             </CenteredContent>
           )}
@@ -199,7 +214,7 @@ export default function TodoList({
                     key={note.id}
                     note={note}
                     message={message}
-                    users={liteData?.users}
+                    users={liteData?.users || []}
                     handleCompleteNote={handleCompleteNote}
                     assignUnassignUser={assignUnassignUser}
                     loaded={loaded}
@@ -207,6 +222,8 @@ export default function TodoList({
                     handleModal={handleModal}
                     loading={loading}
                     loadingMutation={loadingMutation}
+                    handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+                    isAssignTaskOpen={isAssignTaskOpen}
                   />
                 )
             ) : (

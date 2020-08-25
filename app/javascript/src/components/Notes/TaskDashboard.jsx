@@ -3,6 +3,7 @@ import TaskStatCard from './TaskStatCard'
 import { useQuery } from 'react-apollo'
 import { TaskStatsQuery } from '../../graphql/queries'
 import { Grid, Typography } from '@material-ui/core'
+import CenteredContent from '../CenteredContent'
 
 const tiles = {
   myOpenTasks: 'My Tasks',
@@ -21,17 +22,19 @@ export default function TaskDashboard({ filterTasks }) {
 
   if (loading || error) {
     return (
-      <Typography
-        align="center"
-        color="textSecondary"
-        gutterBottom
-        variant="h6"
-      >
-        Loading
-      </Typography>
+      <CenteredContent>
+        <Typography
+          align="center"
+          color="textSecondary"
+          gutterBottom
+          variant="h6"
+        >
+          Loading
+        </Typography>
+      </CenteredContent>
     )
   }
-
+// use extra white space
   return Object.entries(tiles).map(([key, val]) => (
     <Grid item xs={6} sm={4} lg={3} key={key}>
       <TaskStatCard filterTasks={evt => filterTasks(evt, key)} title={val} count={data?.taskStats[key]} />

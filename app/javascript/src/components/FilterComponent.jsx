@@ -21,7 +21,9 @@ export default function FilterComponent({
   stateList,
   classes,
   resetFilter,
-  type
+  type,
+  filterOpen,
+  handleOpenSelect
 }) {
   return (
     <FormControl className={classes.formControl}>
@@ -31,6 +33,9 @@ export default function FilterComponent({
         id={`${type}-chip`}
         multiple
         value={stateList}
+        open={filterOpen}
+        onOpen={handleOpenSelect}
+        onClose={handleOpenSelect}
         onChange={handleInputChange}
         input={<Input id={`select-by-${type}`} />}
         renderValue={selected => (
@@ -41,12 +46,16 @@ export default function FilterComponent({
           </div>
         )}
       >
-        {Boolean(list.length) && list.map(item => (
+        {filterOpen && list.length ? list.map(item => (
           // change the below line depending on the usage
           <MenuItem key={item.id} value={item.name || item.shortDesc}>
             {item.name || item.shortDesc}
           </MenuItem>
-        ))}
+        )) : (
+          <MenuItem value="loading">
+             Loading
+          </MenuItem>
+        )}
       </Select>
       {Boolean(stateList.length) && (
         <Button size="small" onClick={resetFilter}>Clear Filter</Button>
