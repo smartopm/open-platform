@@ -104,28 +104,6 @@ export default function SupportCard({ handleSendMessage, user }) {
 
         <Grid container direction="row" className={classes.root}>
           <Button
-            data-testid="crf"
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              window.open(
-                `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${user.name.replace(
-                  /\s+/g,
-                  '+'
-                )}&${user.phoneNumber}?entry.1055458143=${
-                  user.phoneNumber
-                }:entry.1055458143=""`,
-                '_blank'
-              )
-            }
-            className={`${css(styles.chatButton)}`}
-          >
-            Client Request Form
-          </Button>
-        </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Button
             data-testid="pwmm"
             variant="contained"
             color="primary"

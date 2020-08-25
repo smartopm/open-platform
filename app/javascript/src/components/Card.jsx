@@ -12,9 +12,7 @@ export default function Card({
   clientName,
   clientNumber,
   children,
-  handleClick,
   id,
-  menu,
   access,
   authState
 }) {
@@ -26,7 +24,7 @@ export default function Card({
   return (
     <div
       className={`${css(styles.cardSize)} card align-self-center text-center`}
-      onClick={handleClick}
+      
     >
       <span>{children}</span>
       <Link
@@ -42,8 +40,7 @@ export default function Card({
         id={id}
         className={`card-link`}
       >
-        {menu}
-
+       
         <div className="card-body">
           <h5 className="card-title">
             <span style={{ color: theme.primaryColor }} >
