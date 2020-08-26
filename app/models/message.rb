@@ -6,6 +6,8 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   has_one :campaign, dependent: :restrict_with_exception
 
+  after_create :create_message_task
+
   default_scope { order(created_at: :asc) }
 
   class Unauthorized < StandardError; end
@@ -36,6 +38,31 @@ class Message < ApplicationRecord
     new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
     new_message += "#{message} \n\n#{text} \n#{link}"
     Sms.send(receiver, new_message)
+  end
+
+  def create_message_task
+    msg_obj = {
+      body: "Reply to message from: #{user.name}",
+      category: "message",
+      flagged: true,
+      completed: false,
+      due_date: 5.days.from_now
+    }
+    note_id = user.generate_note(msg_obj).id
+    assign_message_task(note_id)
+  end
+
+  def find_user_id(email, name)
+    EmailMsg.find_user(email, name).id
+  end
+
+  def get_community_name
+    user.community.name
+  end
+
+  def assign_message_task(note_id) 
+    community_list = { "Nkwashi" => "#{find_user_id("mutale@doublegdp.com", "Nkwashi")}" }
+    user.community.notes.find(note_id).assign_or_unassign_user(community_list["#{get_community_name}"])
   end
 
   def self.campaign_query(filter)
