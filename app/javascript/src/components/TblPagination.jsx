@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";

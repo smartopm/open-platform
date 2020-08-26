@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, Fragment, useEffect } from 'react'
 import { ModalDialog } from '../Dialog'
 import {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react'
 import { Map, GeoJSON, TileLayer, Marker, Popup } from 'react-leaflet'
 import GeoData from '../data/nkwashi_geo.json'

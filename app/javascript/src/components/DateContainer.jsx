@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React from 'react'
 import { isYesterday, isToday } from 'date-fns'
 import { PropTypes } from 'prop-types'

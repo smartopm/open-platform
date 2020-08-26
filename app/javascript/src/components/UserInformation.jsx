@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React, { Fragment, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'

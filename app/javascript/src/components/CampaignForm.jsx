@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'

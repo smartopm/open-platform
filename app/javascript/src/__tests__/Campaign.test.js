@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Campaign from '../components/CampaignForm'
 import { render, fireEvent, cleanup } from '@testing-library/react'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import TaskStatCard from './TaskStatCard'
 import { useQuery } from 'react-apollo'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { isWeekend, isSaturday } from 'date-fns'
 
 const date = new Date()

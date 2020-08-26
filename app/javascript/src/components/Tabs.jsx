@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React from 'react'
 import { withStyles, Box, Tabs, Tab, Typography } from '@material-ui/core'
 

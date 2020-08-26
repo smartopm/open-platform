@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import Support from '../components/SupportCard'
 import { render } from '@testing-library/react'

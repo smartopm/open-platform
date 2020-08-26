@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Users from '../containers/Users'
 import { render } from '@testing-library/react'

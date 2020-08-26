@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { calculateHoursAndDays } from '../components/TimeTracker/EmployeeTimeSheetLog'
 
 // / multiple short shifts in day

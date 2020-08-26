@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Map, GeoJSON, TileLayer } from 'react-leaflet'
 import { StyleSheet, css } from "aphrodite";

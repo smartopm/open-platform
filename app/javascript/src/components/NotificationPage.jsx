@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React from 'react'
 import { Box, Grid, Typography, Button, Divider, Checkbox, FormControl, FormGroup, FormControlLabel } from '@material-ui/core'
 import CenteredContent from './CenteredContent';

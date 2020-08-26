@@ -1,4 +1,4 @@
-eslint-disable
+/* eslint-disable */
 import React, { useState } from 'react'
 import List from '@material-ui/core/List'
 import UserMessageItem from '../components/Messaging/UserMessageItem'

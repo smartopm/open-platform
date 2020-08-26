@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import SupportCard from '../components/SupportCard'
 import { cleanup, fireEvent, render } from '@testing-library/react'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Nav from '../../components/Nav'
 import { useParams } from 'react-router-dom'
