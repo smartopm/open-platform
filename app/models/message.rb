@@ -6,8 +6,6 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   has_one :campaign, dependent: :restrict_with_exception
 
-  after_create :create_message_task
-
   default_scope { order(created_at: :asc) }
 
   class Unauthorized < StandardError; end
@@ -52,18 +50,14 @@ class Message < ApplicationRecord
     assign_message_task(note_id)
   end
 
-  # def find_user_id(email)
-  #   User.find_by(email: email).id
-  # end
-
   def get_community_name
     user.community.name
   end
 
   def assign_message_task(note_id) 
-    # f = User.find_by(email: email).id
-    community_list = { "Nkwashi" => "#{User.find_by(email: "mutale@doublegdp.com").id}" }
-    user.community.notes.find(note_id).assign_or_unassign_user(community_list["#{get_community_name}"])
+    community_list = { "Nkwashi" => "#{user.find_userid_by_email("mutale@doublegdp.com")}" }
+    assign = user.community.notes.find(note_id).assign_or_unassign_user(community_list["#{get_community_name}"])
+    return assign unless assign.nil?
   end
 
   def self.campaign_query(filter)

@@ -14,6 +14,7 @@ module Mutations
         message = context[:current_user].construct_message(vals)
         message.save
         message.send_sms
+        message.create_message_task
         return { message: message } if message.persisted?
 
         raise GraphQL::ExecutionError, message.errors.full_messages

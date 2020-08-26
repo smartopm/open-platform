@@ -212,6 +212,12 @@ class User < ApplicationRecord
     )
   end
 
+  def find_userid_by_email(email)
+    a_user = community.users.find_by(email: email)
+    return a_user.id unless a_user.nil?
+  end
+
+
   # rubocop:disable MethodLength
   def manage_shift(target_user_id, event_tag)
     user = find_a_user(target_user_id)
