@@ -1,5 +1,5 @@
 
-/** *
+/**  *
  * This file will container the color palette for the app.
  * Dont alter this file unless agreed upon
 */
