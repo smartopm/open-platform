@@ -5,7 +5,7 @@ FactoryBot.define do
     "oauth_uid_#{n}"
   end
   sequence :email do |n|
-    "#{n}@doublegdp.com"
+    "email_#{n}@doublegdp.com"
   end
 
   sequence :phone_number do |n|
