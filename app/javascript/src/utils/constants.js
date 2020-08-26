@@ -1,9 +1,9 @@
 // values that can be reused across the codebase
 
 export const filterUserByLoggedin = {
-  log_from: 'Logged in from',
-  log_to: 'Logged in to',
-  log_on: 'Logged in on'
+  log_from: 'login after',
+  log_to: 'login before',
+  log_on: 'logged in on'
 }
 
 export const wordpressEndpoint =
