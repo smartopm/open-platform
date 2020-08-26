@@ -61,19 +61,19 @@ export default function TodoList({
   })
 
   // TODO: simplify this: @olivier
-  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+  const assignees = assignee.map(query => `assignees = "${query}"`).join(' OR ')
+  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignees
   const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query: `${!qr.length ? 'completed: false': qr}`
+        query: `${qr} ${assignees.length ? `AND ${assignees}`: ''}`
       },
       fetchPolicy: "network-only"
     }
   )
-
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {

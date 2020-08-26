@@ -43,7 +43,7 @@ module Types::Queries::User
     end
 
     # Get a list of admins assignable to tasks
-    field :admin_users, [Types::UserLiteType], null: true do
+    field :admin_users, [Types::UserType], null: true do
       description 'Get a list of admins for a community'
     end
   end
