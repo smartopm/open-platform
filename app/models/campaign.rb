@@ -55,20 +55,29 @@ class Campaign < ApplicationRecord
     true
   end
 
+  def send_email(user_email)
+    EmailMsg.send_campaign_mail(user_email, name, community.name, subject,
+                                pre_header, message, template_style)
+  end
+
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def run_campaign
     admin_user = campaign_admin_user
     update(start_time: Time.current)
     users = target_list_user
     CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
     users.each do |acc|
-      if acc.phone_number.present?
+      if campaign_type.eql?('email')
+        return false unless send_email(acc.email)
+      elsif acc.phone_number.present?
         return false unless send_messages(admin_user, acc)
       end
     end
     update(end_time: Time.current)
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def label_users
     labels.map(&:users)

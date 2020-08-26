@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 const initData = {
   id: '',
   name: '',
-  campaignType: '',
+  campaignType: 'sms',
   message: '',
   batchTime: '',
   userIdList: '',
