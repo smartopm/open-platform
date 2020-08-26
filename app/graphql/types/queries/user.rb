@@ -106,7 +106,8 @@ module Types::Queries::User
   end
 
   def admin_users
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+    adm = context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
     User.allowed_users(context[:current_user]).where(
       community_id: context[:current_user].community_id,
