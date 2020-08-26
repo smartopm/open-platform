@@ -52,16 +52,17 @@ class Message < ApplicationRecord
     assign_message_task(note_id)
   end
 
-  def find_user_id(email, name)
-    EmailMsg.find_user(email, name).id
-  end
+  # def find_user_id(email)
+  #   User.find_by(email: email).id
+  # end
 
   def get_community_name
     user.community.name
   end
 
   def assign_message_task(note_id) 
-    community_list = { "Nkwashi" => "#{find_user_id("mutale@doublegdp.com", "Nkwashi")}" }
+    # f = User.find_by(email: email).id
+    community_list = { "Nkwashi" => "#{User.find_by(email: "mutale@doublegdp.com").id}" }
     user.community.notes.find(note_id).assign_or_unassign_user(community_list["#{get_community_name}"])
   end
 

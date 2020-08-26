@@ -6,6 +6,7 @@ RSpec.describe Mutations::Message do
   describe 'creating a message record' do
     let!(:non_admin) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: non_admin.community_id) }
+    let!(:admin_user) { create(:user_with_community, email: "mutale@doublegdp.com") }
 
     let(:query) do
       <<~GQL
