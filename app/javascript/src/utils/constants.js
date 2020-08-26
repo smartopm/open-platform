@@ -3,7 +3,7 @@
 export const filterUserByLoggedin = {
   log_from: 'login after',
   log_to: 'login before',
-  log_on: 'Logged in on'
+  log_on: 'logged in on'
 }
 
 export const wordpressEndpoint =
