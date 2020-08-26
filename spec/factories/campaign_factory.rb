@@ -10,5 +10,6 @@ FactoryBot.define do
     message { 'Visiting' }
     batch_time { Time.zone.now }
     user_id_list { '23fsafsafa1147,2609adf61sfsdfs871fd147' }
+    campaign_type { 'sms' }
   end
 end

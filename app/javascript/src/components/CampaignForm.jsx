@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'
-import { Button, TextField, Chip, Snackbar } from '@material-ui/core'
+import { Button, TextField, Chip, Snackbar, Select, MenuItem } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
 import { CampaignCreate, CampaignUpdateMutation, CampaignLabelRemoveMutation } from '../graphql/mutations'
@@ -13,9 +13,13 @@ import { useParams } from 'react-router-dom'
 const initData = {
   id: '',
   name: '',
+  campaignType: '',
   message: '',
   batchTime: '',
   userIdList: '',
+  subject: '',
+  preHeader: '',
+  templateStyle: '',
   loaded: false,
   labels: []
 }
@@ -67,10 +71,14 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
     const campaignData = {
       id: formData.id,
       name: formData.name,
+      campaignType: formData.campaignType,
       message: formData.message,
       batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
-      labels: labels.toString()
+      labels: labels.toString(),
+      subject: formData.subject,
+      preHeader: formData.preHeader,
+      templateStyle: formData.templateStyle
     }
     if (id) {
       return campaignUpdateOnSubmit(campaignData)
@@ -120,6 +128,20 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         aria-label="campaign-form"
       >
         <TextField
+          label="Campaign Type"
+          name="campaignType"
+          required
+          className="form-control"
+          value={formData.campaignType}
+          onChange={handleInputChange}
+          aria-label="campaign_type"
+          inputProps={{ "data-testid": "campaign_type" }}
+          select
+          >
+          <MenuItem value="sms">SMS</MenuItem>
+          <MenuItem value="email">Email</MenuItem>
+        </TextField>
+        <TextField
           label="Campaign Name"
           name="name"
           required
@@ -141,18 +163,51 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           aria-label="campaign_message"
           inputProps={{ "data-testid": "campaign_message" }}
           />
-          <TextField
-            label="User ID List"
-            rows={5}
-            multiline
-            required
-            className="form-control"
-            aria-label="campaign_ids"
-            inputProps={{ "data-testid": "campaign_ids" }}
-            name="userIdList"
-            value={formData.userIdList || ''}
-            onChange={handleInputChange}
-        />
+        <TextField
+          label="Subject"
+          name="subject"
+          rows={1}
+          multiline
+          className="form-control"
+          value={formData.subject || ''}
+          onChange={handleInputChange}
+          aria-label="campaign_subject"
+          inputProps={{ "data-testid": "campaign_subject" }}
+          />
+        <TextField
+          label="Pre Header"
+          name="preHeader"
+          rows={1}
+          multiline
+          className="form-control"
+          value={formData.preHeader || ''}
+          onChange={handleInputChange}
+          aria-label="campaign_pre_header"
+          inputProps={{ "data-testid": "campaign_pre_header" }}
+          />
+        <TextField
+          label="Template Style"
+          rows={1}
+          multiline
+          className="form-control"
+          aria-label="campaign_template_style"
+          inputProps={{ "data-testid": "campaign_template_style" }}
+          name="templateStyle"
+          value={formData.templateStyle || ''}
+          onChange={handleInputChange}
+          />
+        <TextField
+          label="User ID List"
+          rows={5}
+          multiline
+          required
+          className="form-control"
+          aria-label="campaign_ids"
+          inputProps={{ "data-testid": "campaign_ids" }}
+          name="userIdList"
+          value={formData.userIdList || ''}
+          onChange={handleInputChange}
+          />
             <br />
             <br />
             <div className=" row d-flex justify-content-start align-items-center">

@@ -11,6 +11,7 @@ RSpec.describe Mutations::Campaign do
         mutation campaignCreate(
           $name: String!
           $message: String!
+          $campaignType: String!
           $batchTime: String!
           $userIdList: String!
           $labels: String!
@@ -18,6 +19,7 @@ RSpec.describe Mutations::Campaign do
           campaignCreate(
             name: $name
             message: $message
+            campaignType: $campaignType
             batchTime: $batchTime
             userIdList: $userIdList
             labels: $labels
@@ -38,6 +40,7 @@ RSpec.describe Mutations::Campaign do
       variables = {
         name: 'This is a Campaign',
         message: 'Visiting',
+        campaignType: 'sms',
         batchTime: '17/06/2020 03:49',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
         labels: 'label 1,label 2',
@@ -97,6 +100,7 @@ RSpec.describe Mutations::Campaign do
     let!(:campaign) do
       current_user.community.campaigns.create(name: 'Test Campaign',
                                               message: 'Visiting',
+                                              campaign_type: 'sms',
                                               batch_time: '17/06/2020 03:49',
                                               user_id_list: '2saf60afsfdad9618af7114sfda7')
     end

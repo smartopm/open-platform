@@ -21,14 +21,8 @@ module Mutations
       # TODO: Rollback if Label fails to save - Saurabh
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        campaign = context[:current_user].community.campaigns.new(
-          name: vals[:name],
-          campaign_type: vals[:campaign_type],
-          message: vals[:message],
-          user_id_list: vals[:user_id_list],
-          batch_time: vals[:batch_time]
-        )
-        campaign = add_email_attributes(campaign, vals) if vals[:campaign_type].eql?('email')
+        campaign = context[:current_user].community.campaigns.new
+        campaign = add_attributes(campaign, vals)
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
         labels = Array(vals[:labels]&.split(',')).map(&:downcase)
@@ -37,9 +31,16 @@ module Mutations
       end
       # rubocop:enable Metrics/AbcSize
 
+      def add_attributes(campaign, vals)
+        %w[name campaign_type template_style].each do |attr|
+          campaign.send("#{attr}=", vals[attr.to_sym])
+        end
+        add_email_attributes(campaign, vals)
+      end
+
       def add_email_attributes(campaign, vals)
-        %w[subject pre_header template_style].each do |attr|
-          raise GraphQL::ExecutionError, "#{attr} Required" if vals[attr.to_sym].blank?
+        %w[subject pre_header message user_id_list batch_time].each do |attr|
+          next if vals[attr.to_sym].blank?
 
           campaign.send("#{attr}=", vals[attr.to_sym])
         end

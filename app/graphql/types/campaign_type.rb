@@ -6,8 +6,12 @@ module Types
     field :id, ID, null: false
     field :community_id, ID, null: false
     field :name, String, null: false
+    field :campaign_type, String, null: false
     field :message, String, null: false
     field :user_id_list, String, null: false
+    field :subject, String, null: false
+    field :pre_header, String, null: false
+    field :template_style, String, null: false
     field :labels, [Types::LabelType], null: true
     field :start_time, GraphQL::Types::ISO8601DateTime, null: true
     field :end_time, GraphQL::Types::ISO8601DateTime, null: true
