@@ -3,6 +3,7 @@
 # Queries module for breaking out queries
 module Types::Queries::User
   extend ActiveSupport::Concern
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get a member's information
     field :user, Types::UserType, null: true do
@@ -40,7 +41,13 @@ module Types::Queries::User
     field :security_guards, [Types::UserType], null: true do
       description 'Get a list of security guards for a community'
     end
+
+    # Get a list of admins assignable to tasks
+    field :admin_users, [Types::UserLiteType], null: true do
+      description 'Get a list of admins for a community'
+    end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def user(id:)
     authorized = context[:current_user].present? &&
@@ -96,6 +103,15 @@ module Types::Queries::User
           community_id: context[:current_user].community_id,
           user_type: 'security_guard',
         ).order(name: :asc).with_attached_avatar
+  end
+
+  def admin_users
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
+    User.allowed_users(context[:current_user]).where(
+      community_id: context[:current_user].community_id,
+      user_type: 'admin',
+    ).order(name: :asc).with_attached_avatar
   end
 
   def find_community_user(id)

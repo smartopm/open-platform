@@ -65,13 +65,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     setTaskUser(event.target.value)
   
     setTimeout(() => {
-      loadUsers({
-        variables: {
-          query: taskUser,
-          errorPolicy: 'all',
-          fetchPolicy: 'cache-and-network',
-        },
-      })
+      loadUsers()
     }, 1000)
   }
   return (

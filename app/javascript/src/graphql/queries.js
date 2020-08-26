@@ -165,8 +165,8 @@ export const UsersQuery = gql`
 `
 
 export const UsersLiteQuery = gql`
-  query users($limit: Int, $offset: Int, $query: String) {
-    users(limit: $limit, offset: $offset, query: $query) {
+  {
+    adminUsers {
       id
       name
       imageUrl
