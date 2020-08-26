@@ -57,6 +57,7 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false'
   }
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
+    variables: { query: 'user_type: admin' },
     errorPolicy: 'all'
   })
 
@@ -179,7 +180,7 @@ export default function TodoList({
               refetch={refetch}
               close={() => setModalOpen(!open)}
               assignUser={assignUnassignUser}
-              users={liteData?.adminUsers}
+              users={liteData?.usersLite}
             />
           </DialogContent>
         </Dialog>
@@ -189,7 +190,7 @@ export default function TodoList({
             <CenteredContent>
               <FilterComponent
                 stateList={assignee}
-                list={liteData?.adminUsers || []}
+                list={liteData?.usersLite || []}
                 handleInputChange={handleAssigneeInputChange}
                 classes={classes}
                 resetFilter={() => setAssignee([])}
@@ -209,7 +210,7 @@ export default function TodoList({
                     key={note.id}
                     note={note}
                     message={message}
-                    users={liteData?.adminUsers || []}
+                    users={liteData?.usersLite || []}
                     handleCompleteNote={handleCompleteNote}
                     assignUnassignUser={assignUnassignUser}
                     loaded={loaded}

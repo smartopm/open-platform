@@ -43,8 +43,9 @@ module Types::Queries::User
     end
 
     # Get a list of admins assignable to tasks
-    field :admin_users, [Types::UserType], null: true do
+    field :users_lite, [Types::UserType], null: true do
       description 'Get a list of admins for a community'
+      argument :query, String, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -105,14 +106,14 @@ module Types::Queries::User
         ).order(name: :asc).with_attached_avatar
   end
 
-  def admin_users
+  def users_lite(offset: 0, limit: 100, query: nil)
     adm = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
-    User.allowed_users(context[:current_user]).where(
-      community_id: context[:current_user].community_id,
-      user_type: 'admin',
-    ).order(name: :asc).with_attached_avatar
+    User.allowed_users(context[:current_user])
+        .search(query)
+        .limit(limit)
+        .offset(offset).with_attached_avatar
   end
 
   def find_community_user(id)

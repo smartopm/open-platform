@@ -91,12 +91,12 @@ RSpec.describe Types::Queries::User do
 
     let(:admins_query) do
       %(
-        {
-          adminUsers {
-            name
+        query usersLite($query: String!){
+          usersLite(query: $query) {
             id
+            name
           }
-        })
+      })
     end
 
     it 'returns all items' do
@@ -106,10 +106,14 @@ RSpec.describe Types::Queries::User do
     end
 
     it 'returns list of admins' do
-      result = DoubleGdpSchema.execute(admins_query, context: { current_user: admin }).as_json
-      expect(result.dig('data', 'adminUsers', 0, 'id')).to_not be_nil
-      expect(result.dig('data', 'adminUsers', 0, 'name')).to_not be_nil
-      expect(result.dig('data', 'adminUsers').length).to eql 1 # only one admin
+      variables = {
+        query: 'user_type: admin',
+      }
+      result = DoubleGdpSchema.execute(admins_query, variables: variables,
+                                                     context: { current_user: admin }).as_json
+      expect(result.dig('data', 'usersLite', 0, 'id')).to_not be_nil
+      expect(result.dig('data', 'usersLite', 0, 'name')).to_not be_nil
+      expect(result.dig('data', 'usersLite').length).to eql 1 # only one admin
     end
 
     it 'checking individual permissions' do

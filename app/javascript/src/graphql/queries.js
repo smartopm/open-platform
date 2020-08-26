@@ -165,13 +165,13 @@ export const UsersQuery = gql`
 `
 
 export const UsersLiteQuery = gql`
-  {
-    adminUsers {
-      id
-      name
-      imageUrl
-      avatarUrl
-    }
+  query usersLite($query: String!){
+      usersLite(query: $query) {
+        id
+        name
+        imageUrl
+        avatarUrl
+      }
   }
 `
 
