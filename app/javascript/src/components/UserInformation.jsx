@@ -53,6 +53,7 @@ export default function UserInformation({
   const [noteUpdate] = useMutation(UpdateNote)
   const { handleSubmit, register } = useForm()
   let location = useLocation()
+
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
     noteCreate({
@@ -104,9 +105,38 @@ export default function UserInformation({
     })
   }
 
+  function OpenMergeDialog() {
+    // close the menu
+    setAnchorEl(null)
+  }
+
+  function sendOTP() {
+      sendOneTimePasscode({
+        variables: { userId }
+      })
+        .then(_data => {
+          router.push('/otp_sent', {
+            url: _data.data.oneTimeLogin.url,
+            user: data.user.name,
+            success: true
+          })
+        })
+        .catch(() => {
+          // alert('Make sure the user has a phone number')
+          router.push('/otp_sent', {
+            url: 'The user has no Phone number added',
+            user: data.user.name,
+            success: false
+          })
+        })
+  }
+
   return (
     <div>
       <Fragment>
+
+
+
         <div className="container">
           <div className="row d-flex justify-content-between">
             <div className="col-4 ">
@@ -126,134 +156,18 @@ export default function UserInformation({
                   <MoreVertIcon />
                 </IconButton>
               )}
-              <Menu
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    width: 200
-                  }
-                }}
-              >
-                {/* {['admin', 'resident', 'client'].includes(userType) ? ( */}
-                  <div>
-                    {['admin'].includes(userType) && (
-                      <>
-                        <MenuItem
-                          id="edit_button"
-                          key={'edit_user'}
-                          onClick={() =>
-                            router.push(`/user/${data.user.id}/edit`)
-                          }
-                        >
-                          Edit
-                        </MenuItem>
-                        <MenuItem
-                          key={'merge'}
-                          onClick={() =>
-                            router.push(`/user/${data.user.id}/edit`)
-                          }
-                        >
-                          Merge User
-                        </MenuItem>
-                        <MenuItem key={'send_sms'}>
-                          <Link
-                            to={{
-                              pathname: `/message/${data.user.id}`,
-                              state: {
-                                clientNumber: data.user.phoneNumber,
-                                clientName: data.user.name,
-                                from: 'user_profile'
-                              }
-                            }}
-                            className={css(styles.linkItem)}
-                          >
-                            Send SMS to {data.user.name}
-                          </Link>
-                        </MenuItem>
-
-                        {data.user.phoneNumber ? (
-                          <MenuItem key={'call_user'}>
-                            <a
-                              className={css(styles.linkItem)}
-                              href={`tel:+${data.user.phoneNumber}`}
-                            >
-                              Call {data.user.name}
-                            </a>
-                          </MenuItem>
-                        ) : null}
-                        <MenuItem key={'user_logs'}>
-                          <Link
-                            to={`/user/${data.user.id}/logs`}
-                            className={css(styles.linkItem)}
-                          >
-                            User Logs
-                          </Link>
-                        </MenuItem>
-                      </>
-                    )}
-                    {['admin', 'client', 'resident'].includes(userType) && (
-                      <>
-                        <MenuItem key={'message_support'}>
-                          <Link
-                            to={{
-                              pathname: `/message/${data.user.id}`,
-                              state: {
-                                clientName: 'Contact Support',
-                                clientNumber: CSMNumber,
-                                from: 'user_profile'
-                              }
-                            }}
-                            className={css(styles.linkItem)}
-                          >
-                            Message Support
-                          </Link>
-                        </MenuItem>
-                        <MenuItem key={'print'}>
-                          <Link
-                            to={`/print/${data.user.id}`}
-                            className={css(styles.linkItem)}
-                          >
-                            Print
-                          </Link>
-                        </MenuItem>
-                        <MenuItem key={'send_code'}>
-                          <a
-                            onClick={() => {
-                              setLoading(true)
-                              sendOneTimePasscode({
-                                variables: { userId }
-                              })
-                                .then(_data => {
-                                  setLoading(false)
-                                  router.push('/otp_sent', {
-                                    url: _data.data.oneTimeLogin.url,
-                                    user: data.user.name,
-                                    success: true
-                                  })
-                                })
-                                .catch(() => {
-                                  // alert('Make sure the user has a phone number')
-                                  router.push('/otp_sent', {
-                                    url: 'The user has no Phone number added',
-                                    user: data.user.name,
-                                    success: false
-                                  })
-                                })
-                            }}
-                            className={css(styles.linkItem)}
-                          >
-                            Send One Time Passcode
-                          </a>
-                        </MenuItem>
-                      </>
-                    )}
-                  </div>
-                {/* // ) : null} */}
-              </Menu>
+              {/* Menu */}
+              <UserActionMenu 
+                    data={data} 
+                    router={router} 
+                    anchorEl={anchorEl} 
+                    handleClose={handleClose} 
+                    userType={userType} 
+                    sendOTP={sendOTP}
+                    CSMNumber={CSMNumber}
+                    open={open}
+                    OpenMergeDialog={OpenMergeDialog}
+              />
             </div>
           </div>
           {/*  <ShiftButtons userId={userId} /> */}
@@ -264,22 +178,7 @@ export default function UserInformation({
             )}
         </div>
           {/* tabValue, handleChange, userType, data  */}
-        <StyledTabs
-          value={tabValue}
-          onChange={handleChange}
-          aria-label="request tabs"
-          centered
-        >
-          <StyledTab label="Contact" value={'Contacts'} />
-          {['admin'].includes(userType) && (
-            <StyledTab label="Notes" value={'Notes'} />
-          )}
-          {['admin'].includes(userType) && (
-            <StyledTab label="Communication" value={'Communication'} />
-          )}
-          <StyledTab label="Plots" value={'Plots'} />
-          <StyledTab label="Payments" value={'Payments'} />
-        </StyledTabs>
+        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} userType />
 
         <TabPanel value={tabValue} index={'Contacts'}>
           {/* userinfo */}
@@ -374,6 +273,120 @@ export default function UserInformation({
   )
 }
 
+export function UserActionMenu({
+  data,
+  router,
+  anchorEl,
+  handleClose,
+  userType,
+  sendOTP,
+  CSMNumber,
+  open,
+  OpenMergeDialog
+}) {
+  return (
+    <Menu
+      id="long-menu"
+      anchorEl={anchorEl}
+      keepMounted
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          width: 200
+        }
+      }}
+    >
+      <div>
+        {['admin'].includes(userType) && (
+          <>
+            <MenuItem
+              id="edit_button"
+              key={'edit_user'}
+              onClick={() => router.push(`/user/${data.user.id}/edit`)}
+            >
+              Edit
+            </MenuItem>
+            <MenuItem
+              key={'merge'}
+              onClick={OpenMergeDialog}
+            >
+              Merge User
+            </MenuItem>
+            <MenuItem key={'send_sms'}>
+              <Link
+                to={{
+                  pathname: `/message/${data.user.id}`,
+                  state: {
+                    clientNumber: data.user.phoneNumber,
+                    clientName: data.user.name,
+                    from: 'user_profile'
+                  }
+                }}
+                className={css(styles.linkItem)}
+              >
+                Send SMS to {data.user.name}
+              </Link>
+            </MenuItem>
+
+            {data.user.phoneNumber ? (
+              <MenuItem key={'call_user'}>
+                <a
+                  className={css(styles.linkItem)}
+                  href={`tel:+${data.user.phoneNumber}`}
+                >
+                  Call {data.user.name}
+                </a>
+              </MenuItem>
+            ) : null}
+            <MenuItem key={'user_logs'}>
+              <Link
+                to={`/user/${data.user.id}/logs`}
+                className={css(styles.linkItem)}
+              >
+                User Logs
+              </Link>
+            </MenuItem>
+          </>
+        )}
+        {['admin', 'client', 'resident'].includes(userType) && (
+          <>
+            <MenuItem key={'message_support'}>
+              <Link
+                to={{
+                  pathname: `/message/${data.user.id}`,
+                  state: {
+                    clientName: 'Contact Support',
+                    clientNumber: CSMNumber,
+                    from: 'user_profile'
+                  }
+                }}
+                className={css(styles.linkItem)}
+              >
+                Message Support
+              </Link>
+            </MenuItem>
+            <MenuItem key={'print'}>
+              <Link
+                to={`/print/${data.user.id}`}
+                className={css(styles.linkItem)}
+              >
+                Print
+              </Link>
+            </MenuItem>
+            <MenuItem key={'send_code'}>
+              <a onClick={sendOTP} className={css(styles.linkItem)}>
+                Send One Time Passcode
+              </a>
+            </MenuItem>
+          </>
+        )}
+      </div>
+    </Menu>
+  )
+}
+
+
 export function UserNote({ note, handleOnComplete, handleFlagNote }) {
   return (
     <Fragment key={note.id}>
@@ -419,6 +432,27 @@ export function UserNote({ note, handleOnComplete, handleFlagNote }) {
     )}
     <br />
   </Fragment>
+  )
+}
+
+export function UserStyledTabs({ tabValue, handleChange, userType }) {
+  return (
+    <StyledTabs
+      value={tabValue}
+      onChange={handleChange}
+      aria-label="request tabs"
+      centered
+    >
+      <StyledTab label="Contact" value={'Contacts'} />
+      {['admin'].includes(userType) && (
+        <StyledTab label="Notes" value={'Notes'} />
+      )}
+      {['admin'].includes(userType) && (
+        <StyledTab label="Communication" value={'Communication'} />
+      )}
+      <StyledTab label="Plots" value={'Plots'} />
+      <StyledTab label="Payments" value={'Payments'} />
+    </StyledTabs>
   )
 }
 
