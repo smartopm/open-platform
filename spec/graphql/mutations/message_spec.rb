@@ -43,6 +43,30 @@ RSpec.describe Mutations::Message do
     end
 
     it 'client sends a message to an admin' do
+      community = FactoryBot.create(:community)
+      user = FactoryBot.create(:user, community: community)
+      community.default_users = [user.id]
+      community.save
+      variables = {
+        receiver: '260971500748',
+        message: 'Hello You, hope you are well',
+        userId: user.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
+      expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
+      expect(result.dig('data', 'messageCreate', 'message',
+                        'message')).to eql variables[:message]
+      expect(result.dig('errors')).to be_nil
+      message_in_db = Message.first
+      expect(Message.all.count).to eql 1
+      expect(message_in_db[:receiver]).to eql '260971500748'
+      expect(message_in_db[:message]).to eql 'Hello You, hope you are well'
+    end
+
+    it 'client sends a message to an admin' do
       variables = {
         receiver: '260971500748',
         message: 'Hello You, hope you are well',
