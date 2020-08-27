@@ -41,22 +41,18 @@ class Message < ApplicationRecord
   def create_message_task
     msg_obj = {
       body: "Reply to message from: #{user.name}",
-      category: "message",
+      category: 'message',
       flagged: true,
       completed: false,
-      due_date: 5.days.from_now
+      due_date: 5.days.from_now,
     }
     note_id = user.generate_note(msg_obj).id
     assign_message_task(note_id)
   end
 
-  def get_community_name
-    user.community.name
-  end
-
-  def assign_message_task(note_id) 
-    community_list = { "Nkwashi" => "#{user.find_userid_by_email("mutale@doublegdp.com")}" }
-    assign = user.community.notes.find(note_id).assign_or_unassign_user(community_list["#{get_community_name}"])
+  def assign_message_task(note_id)
+    assign = user.community.notes.find(note_id)
+                 .assign_or_unassign_user(user.community.default_community_users[0].id)
     return assign unless assign.nil?
   end
 

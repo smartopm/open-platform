@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Mutations::Message do
   describe 'creating a message record' do
     let!(:non_admin) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: non_admin.community_id, email: "mutale@doublegdp.com") }
+    let!(:admin) { create(:admin_user, community_id: non_admin.community_id) }
 
     let(:query) do
       <<~GQL
@@ -28,7 +28,7 @@ RSpec.describe Mutations::Message do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: admin
+                                                current_user: admin,
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
