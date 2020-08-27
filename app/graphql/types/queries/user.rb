@@ -112,6 +112,7 @@ module Types::Queries::User
 
     User.allowed_users(context[:current_user])
         .search(query)
+        .order(name: :asc)
         .limit(limit)
         .offset(offset).with_attached_avatar
   end
