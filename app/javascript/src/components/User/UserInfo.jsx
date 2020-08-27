@@ -13,6 +13,7 @@ export default function UserInfo({ data, userType }) {
           type="text"
           defaultValue={data.user.name}
           name="name"
+          aria-label="user_name"
           disabled
         />
       </div>
@@ -25,6 +26,7 @@ export default function UserInfo({ data, userType }) {
           type="text"
           defaultValue={data.user.name}
           name="accounts"
+          aria-label="user_account"
           disabled
         />
       </div>
@@ -37,6 +39,7 @@ export default function UserInfo({ data, userType }) {
           type="text"
           defaultValue={data.user.phoneNumber}
           name="phoneNumber"
+          aria-label="user_number"
           disabled
         />
       </div>
@@ -49,6 +52,7 @@ export default function UserInfo({ data, userType }) {
           type="email"
           defaultValue={data.user.email}
           name="email"
+          aria-label="user_email"
           disabled
         />
       </div>
