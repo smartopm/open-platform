@@ -113,34 +113,7 @@ export default function UserInformation({
               <Avatar user={data.user} style="small" />
             </div>
 
-            <div className="col-4">
-              <h5>{data.user.name}</h5>
-              <div className="expires">
-                Expiration:{' '}
-                {DateUtil.isExpired(data.user.expiresAt) ? (
-                  <span className="text-danger">Already Expired</span>
-                ) : (
-                  DateUtil.formatDate(data.user.expiresAt)
-                )}
-              </div>
-              <div className="expires">
-                Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
-              </div>
-              {['admin'].includes(userType) && (
-                <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
-              )}
-              <br />
-              {DateUtil.isExpired(data.user.expiresAt) ? (
-                <p className={css(styles.badge, styles.statusBadgeBanned)}>
-                  Expired
-                </p>
-              ) : (
-                  ['admin'].includes(userType) && (
-                    <Status label={data.user.state} />
-                  )
-                )}
-              {['admin'].includes(userType) && (<UserLabels userId={data.user.id} />)}
-            </div>
+            <UserDetail data={data} userType={userType} />
 
             <div className="col-2 ml-auto">
               {Boolean(authState.user.userType !== 'security_guard') && (
@@ -165,7 +138,7 @@ export default function UserInformation({
                   }
                 }}
               >
-                {['admin', 'resident', 'client'].includes(userType) ? (
+                {/* {['admin', 'resident', 'client'].includes(userType) ? ( */}
                   <div>
                     {['admin'].includes(userType) && (
                       <>
@@ -177,6 +150,14 @@ export default function UserInformation({
                           }
                         >
                           Edit
+                        </MenuItem>
+                        <MenuItem
+                          key={'merge'}
+                          onClick={() =>
+                            router.push(`/user/${data.user.id}/edit`)
+                          }
+                        >
+                          Merge User
                         </MenuItem>
                         <MenuItem key={'send_sms'}>
                           <Link
@@ -271,7 +252,7 @@ export default function UserInformation({
                       </>
                     )}
                   </div>
-                ) : null}
+                {/* // ) : null} */}
               </Menu>
             </div>
           </div>
@@ -282,7 +263,7 @@ export default function UserInformation({
               <ShiftButtons userId={userId} />
             )}
         </div>
-
+          {/* tabValue, handleChange, userType, data  */}
         <StyledTabs
           value={tabValue}
           onChange={handleChange}
@@ -301,67 +282,8 @@ export default function UserInformation({
         </StyledTabs>
 
         <TabPanel value={tabValue} index={'Contacts'}>
-          <div className="container">
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="name">
-                Name
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={data.user.name}
-                name="name"
-                disabled
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="Accounts">
-                Accounts
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={data.user.name}
-                name="accounts"
-                disabled
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="phoneNumber">
-                Phone Number
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                defaultValue={data.user.phoneNumber}
-                name="phoneNumber"
-                disabled
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                defaultValue={data.user.email}
-                name="email"
-                disabled
-              />
-            </div>
-            <br />
-            {authState.user.userType === 'security_guard' && (
-              <div className="container row d-flex justify-content-between">
-                <span>Social: </span> <br />
-                <CaptureTemp
-                  refId={data.user.id}
-                  refName={data.user.name}
-                  refType="User"
-                />
-              </div>
-            )}
-          </div>
+          {/* userinfo */}
+          <UserInfo data={data} userType={authState.user.userType} />
         </TabPanel>
         {['admin'].includes(userType) && (
           <>
@@ -396,51 +318,12 @@ export default function UserInformation({
                 {isLoading ? (
                   <Loading />
                 ) : data.user.notes ? (
-                  data.user.notes.map(note => (
-
-                    <Fragment key={note.id}>
-                      <div className={css(styles.commentBox)}>
-                        <p className="comment">{note.body}</p>
-                        <i>created at: {DateUtil.formatDate(note.createdAt)}</i>
-                      </div>
-
-                      {note.completed ? (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() =>
-                            handleOnComplete(note.id, note.completed)
-                          }
-                        >
-                          <Tooltip title="Mark this note as incomplete">
-                            <CheckBoxIcon />
-                          </Tooltip>
-                        </span>
-                      ) : !note.flagged ? (
-                        <span />
-                      ) : (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() =>
-                            handleOnComplete(note.id, note.completed)
-                          }
-                        >
-                          <Tooltip title="Mark this note complete">
-                            <CheckBoxOutlineBlankIcon />
-                          </Tooltip>
-                        </span>
-                      )}
-                      {!note.flagged && (
-                        <span
-                          className={css(styles.actionIcon)}
-                          onClick={() => handleFlagNote(note.id)}
-                        >
-                          <Tooltip title="Flag this note as a todo ">
-                            <AddBoxIcon />
-                          </Tooltip>
-                        </span>
-                      )}
-                      <br />
-                    </Fragment>
+                    data.user.notes.map(note => (
+                    <UserNote 
+                        key={note.id}
+                        note={note}
+                        handleFlagNote={handleFlagNote}
+                        handleOnComplete={handleOnComplete} />
                   ))
                 ) : (
                   'No Notes Yet'
@@ -488,6 +371,154 @@ export default function UserInformation({
         </div>
       </Fragment>
     </div>
+  )
+}
+
+export function UserNote({ note, handleOnComplete, handleFlagNote }) {
+  return (
+    <Fragment key={note.id}>
+    <div className={css(styles.commentBox)}>
+      <p className="comment">{note.body}</p>
+      <i>created at: {DateUtil.formatDate(note.createdAt)}</i>
+    </div>
+
+    {note.completed ? (
+      <span
+        className={css(styles.actionIcon)}
+        onClick={() =>
+          handleOnComplete(note.id, note.completed)
+        }
+      >
+        <Tooltip title="Mark this note as incomplete">
+          <CheckBoxIcon />
+        </Tooltip>
+      </span>
+    ) : !note.flagged ? (
+      <span />
+    ) : (
+      <span
+        className={css(styles.actionIcon)}
+        onClick={() =>
+          handleOnComplete(note.id, note.completed)
+        }
+      >
+        <Tooltip title="Mark this note complete">
+          <CheckBoxOutlineBlankIcon />
+        </Tooltip>
+      </span>
+    )}
+    {!note.flagged && (
+      <span
+        className={css(styles.actionIcon)}
+        onClick={() => handleFlagNote(note.id)}
+      >
+        <Tooltip title="Flag this note as a todo ">
+          <AddBoxIcon />
+        </Tooltip>
+      </span>
+    )}
+    <br />
+  </Fragment>
+  )
+}
+
+
+export function UserInfo({ data, userType }) {
+  return (
+    <div className="container">
+      <div className="form-group">
+        <label className="bmd-label-static" htmlFor="name">
+          Name
+        </label>
+        <input
+          className="form-control"
+          type="text"
+          defaultValue={data.user.name}
+          name="name"
+          disabled
+        />
+      </div>
+      <div className="form-group">
+        <label className="bmd-label-static" htmlFor="Accounts">
+          Accounts
+        </label>
+        <input
+          className="form-control"
+          type="text"
+          defaultValue={data.user.name}
+          name="accounts"
+          disabled
+        />
+      </div>
+      <div className="form-group">
+        <label className="bmd-label-static" htmlFor="phoneNumber">
+          Phone Number
+        </label>
+        <input
+          className="form-control"
+          type="text"
+          defaultValue={data.user.phoneNumber}
+          name="phoneNumber"
+          disabled
+        />
+      </div>
+      <div className="form-group">
+        <label className="bmd-label-static" htmlFor="email">
+          Email
+        </label>
+        <input
+          className="form-control"
+          type="email"
+          defaultValue={data.user.email}
+          name="email"
+          disabled
+        />
+      </div>
+      <br />
+      {userType === 'security_guard' && (
+        <div className="container row d-flex justify-content-between">
+          <span>Social: </span> <br />
+          <CaptureTemp
+            refId={data.user.id}
+            refName={data.user.name}
+            refType="User"
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function UserDetail({ data, userType }) {
+  return (
+    <div className="col-4">
+    <h5>{data.user.name}</h5>
+    <div className="expires">
+      Expiration:{' '}
+      {DateUtil.isExpired(data.user.expiresAt) ? (
+        <span className="text-danger">Already Expired</span>
+      ) : (
+        DateUtil.formatDate(data.user.expiresAt)
+      )}
+    </div>
+    <div className="expires">
+      Last accessed: {DateUtil.formatDate(data.user.lastActivityAt)}
+    </div>
+    {['admin'].includes(userType) && (
+      <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
+    )}
+    <br />
+    {DateUtil.isExpired(data.user.expiresAt) ? (
+      <p className={css(styles.badge, styles.statusBadgeBanned)}>
+        Expired
+      </p>
+    ) : (
+        ['admin'].includes(userType) && (
+          <Status label={data.user.state} />
+        )
+      )}
+    {['admin'].includes(userType) && (<UserLabels userId={data.user.id} />)}
+  </div>
   )
 }
 

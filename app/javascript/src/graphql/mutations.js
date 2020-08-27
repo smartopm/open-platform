@@ -587,4 +587,10 @@ mutation labelRemove($campaignId: ID!, $labelId: ID!) {
   }
 }
 `
-
+export const MergeUsersMutation = gql`
+mutation mergeUsers($id: ID!, $duplicateId: ID!){
+  userMerge(id: $id, duplicateId: $duplicateId){
+    success
+  }
+}
+`
