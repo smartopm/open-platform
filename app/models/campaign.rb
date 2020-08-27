@@ -53,17 +53,11 @@ class Campaign < ApplicationRecord
     true
   end
 
-  def check_users_without_sms_label(users)
-    users.select do |usr|
-      User.find(usr.id).labels.find_by(short_desc: "com_news_sms").present?
-    end
-  end
-
   # rubocop:disable Metrics/AbcSize
   def run_campaign
     admin_user = campaign_admin_user
     update(start_time: Time.current)
-    users = check_users_without_sms_label(target_list_user)
+    users = target_list_user
     CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
     users.each do |acc|
       if acc.phone_number.present?
