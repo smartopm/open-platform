@@ -27,6 +27,8 @@ import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
 import UserLabels from './UserLabels'
+import { ModalDialog } from './Dialog'
+import UserMerge from './User/UserMerge'
 
 
 export const StyledTab = withStyles({
@@ -49,6 +51,8 @@ export default function UserInformation({
   const [tabValue, setValue] = useState('Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
   const [isLoading, setLoading] = useState(false)
+  const [isDialogOpen, setDialogOpen] = useState(false)
+
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const [noteUpdate] = useMutation(UpdateNote)
   const { handleSubmit, register } = useForm()
@@ -105,9 +109,14 @@ export default function UserInformation({
     })
   }
 
-  function OpenMergeDialog() {
+  function handleMergeDialog() {
     // close the menu
     setAnchorEl(null)
+    setDialogOpen(!isDialogOpen)
+  }
+
+  function saveDate() {
+    
   }
 
   function sendOTP() {
@@ -135,7 +144,15 @@ export default function UserInformation({
     <div>
       <Fragment>
 
-
+      <ModalDialog
+          open={isDialogOpen}
+          handleClose={handleMergeDialog}
+          handleConfirm={saveDate}
+          action='Merge'
+        >
+          <UserMerge />
+          {/* Dialog content goes here */}
+        </ModalDialog>
 
         <div className="container">
           <div className="row d-flex justify-content-between">
@@ -166,7 +183,7 @@ export default function UserInformation({
                     sendOTP={sendOTP}
                     CSMNumber={CSMNumber}
                     open={open}
-                    OpenMergeDialog={OpenMergeDialog}
+                    OpenMergeDialog={handleMergeDialog}
               />
             </div>
           </div>
