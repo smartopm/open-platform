@@ -11,7 +11,7 @@ const initialData = {
   user: '',
   userId: ''
 }
-export default function UserMerge({ userId }) {
+export default function UserMerge({ userId, close }) {
   const [data, setData] = useState(initialData)
   const [merge] = useMutation(MergeUsersMutation)
   const [loading, setLoading] = useState(false)
@@ -39,7 +39,7 @@ export default function UserMerge({ userId }) {
     <>
       <ModalDialog
         open={open}
-        handleClose={close}
+        handleClose={() => setConfirmOpen(!open)}
         handleConfirm={handleMerge}
         action="proceed"
       >
