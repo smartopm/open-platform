@@ -17,6 +17,11 @@ import Tooltip from '@material-ui/core/Tooltip'
 import CaptureTemp from './CaptureTemp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import ShiftButtons from './TimeTracker/ShiftButtons'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from '@material-ui/core'
 import { ponisoNumber } from '../utils/constants.js'
 import { StyledTabs, TabPanel } from './Tabs'
 import { css, StyleSheet } from 'aphrodite'
@@ -27,8 +32,8 @@ import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
 import UserLabels from './UserLabels'
-import { ModalDialog } from './Dialog'
 import UserMerge from './User/UserMerge'
+import CenteredContent from './CenteredContent'
 
 
 export const StyledTab = withStyles({
@@ -115,7 +120,7 @@ export default function UserInformation({
     setDialogOpen(!isDialogOpen)
   }
 
-  function saveDate() {
+  function handleMerge() {
     
   }
 
@@ -144,15 +149,23 @@ export default function UserInformation({
     <div>
       <Fragment>
 
-      <ModalDialog
+        <Dialog
           open={isDialogOpen}
-          handleClose={handleMergeDialog}
-          handleConfirm={saveDate}
-          action='Merge'
+          fullWidth={true}
+          maxWidth={'md'}
+          scroll={'paper'}
+          onClose={handleMergeDialog}
+          aria-labelledby="user_merge"
         >
-          <UserMerge />
-          {/* Dialog content goes here */}
-        </ModalDialog>
+          <DialogTitle id="user_merge">
+            <CenteredContent>
+              <span>Merge Users</span>
+            </CenteredContent>
+          </DialogTitle>
+          <DialogContent>
+            <UserMerge close={handleMergeDialog} name={data.user.name} userId={userId}/>
+          </DialogContent>
+        </Dialog>
 
         <div className="container">
           <div className="row d-flex justify-content-between">

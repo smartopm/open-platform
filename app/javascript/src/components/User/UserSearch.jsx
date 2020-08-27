@@ -36,7 +36,7 @@ export default function UserSearch({ userData, update }) {
       {!isLoading && !queryErrors ? (
         <TextField
           name="task user"
-          label="Task User"
+          label="Find a User"
           placeholder="Type the user name here"
           style={{ width: '100%' }}
           onChange={handleSearchUser}
