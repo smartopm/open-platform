@@ -57,27 +57,24 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false'
   }
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: {
-      query: "user_type='admin'"
-    },
-    fetchPolicy: 'cache-and-network',
+    variables: { query: 'user_type: admin' },
     errorPolicy: 'all'
   })
 
   // TODO: simplify this: @olivier
-  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignee.map(query => `assignees = "${query}"`).join(' OR ')
+  const assignees = assignee.map(query => `assignees = "${query}"`).join(' OR ')
+  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignees
   const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query: `${!qr.length ? 'completed: false': qr}`
+        query: `${qr} ${assignees.length ? `AND ${assignees}`: ''}`
       },
       fetchPolicy: "network-only"
     }
   )
-
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -101,7 +98,6 @@ export default function TodoList({
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
   }
-
   function assignUnassignUser(noteId, userId) {
     setLoadingAssignee(true)
     assignUserToNote({ variables: { noteId, userId } })
@@ -184,7 +180,7 @@ export default function TodoList({
               refetch={refetch}
               close={() => setModalOpen(!open)}
               assignUser={assignUnassignUser}
-              users={liteData?.users}
+              users={liteData?.usersLite}
             />
           </DialogContent>
         </Dialog>
@@ -194,7 +190,7 @@ export default function TodoList({
             <CenteredContent>
               <FilterComponent
                 stateList={assignee}
-                list={liteData?.users || []}
+                list={liteData?.usersLite || []}
                 handleInputChange={handleAssigneeInputChange}
                 classes={classes}
                 resetFilter={() => setAssignee([])}
@@ -214,7 +210,7 @@ export default function TodoList({
                     key={note.id}
                     note={note}
                     message={message}
-                    users={liteData?.users || []}
+                    users={liteData?.usersLite || []}
                     handleCompleteNote={handleCompleteNote}
                     assignUnassignUser={assignUnassignUser}
                     loaded={loaded}
