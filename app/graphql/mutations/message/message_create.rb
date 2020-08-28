@@ -14,7 +14,8 @@ module Mutations
         message = context[:current_user].construct_message(vals)
         message.save
         message.send_sms
-        message.create_message_task unless check_default_user_empty?
+        message.create_message_task unless check_default_user_empty? ||
+                                           check_ids(message[:sender_id], vals[:user_id])
         return { message: message } if message.persisted?
 
         raise GraphQL::ExecutionError, message.errors.full_messages
@@ -22,6 +23,10 @@ module Mutations
 
       def check_default_user_empty?
         context[:current_user].community[:default_users].empty?
+      end
+
+      def check_ids(sender_id, user_id)
+        sender_id != user_id
       end
 
       # TODO: Better auth here
