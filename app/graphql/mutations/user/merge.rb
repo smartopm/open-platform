@@ -19,7 +19,6 @@ module Mutations
         rescue StandardError
           raise GraphQL::ExecutionError, 'Duplicate Entry'
         end
-        raise GraphQL::ExecutionError, user.errors.full_messages
       end
 
       def authorized?(vals)

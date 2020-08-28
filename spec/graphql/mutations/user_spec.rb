@@ -301,19 +301,50 @@ RSpec.describe Mutations::User do
       expect(result.dig('errors')).to_not be nil
     end
 
+    it 'should merge the 2 given users' do
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      # remove all labels from user we are about to merge
+      pending_user.user_labels.delete_all
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: admin.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to eql true
+      expect(result.dig('errors')).to be_nil
+    end
+
     it 'should not merge the 2 new given users' do
       # because of initial labels given to users, there will be duplicates
       variables = {
         id: security_guard.id,
         duplicateId: pending_user.id,
       }
+
       result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
                                                          context: {
                                                            current_user: admin,
                                                            site_community: admin.community,
                                                          }).as_json
-      expect(result.dig('errors', 0, 'message')).to eql 'Duplicate Entry'
       expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to eql 'Duplicate Entry'
+    end
+
+    it 'should not merge the 2 new given users' do
+      # because of initial labels given to users, there will be duplicates
+      variables = {
+        id: security_guard.id
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: admin.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'type ID! was provided invalid value'
     end
   end
 
