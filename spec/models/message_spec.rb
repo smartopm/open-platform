@@ -28,13 +28,13 @@ RSpec.describe Message, type: :model do
       community.default_users = [user.id]
       community.save
       message = Message.create(
-                  receiver: '260971500748',
-                  message: 'Testing out message',
-                  user_id: user.id,
-                  sender_id: user.id,
-                )
+        receiver: '260971500748',
+        message: 'Testing out message',
+        user_id: user.id,
+        sender_id: user.id,
+      )
       message.create_message_task
-      
+
       allow(message).to receive(:create_message_task)
     end
 
