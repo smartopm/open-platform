@@ -336,7 +336,7 @@ RSpec.describe Mutations::User do
     it 'should not merge the 2 new given users' do
       # because of initial labels given to users, there will be duplicates
       variables = {
-        id: security_guard.id
+        id: security_guard.id,
       }
       result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
                                                          context: {
