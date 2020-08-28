@@ -33,8 +33,9 @@ RSpec.describe Message, type: :model do
         user_id: user.id,
         sender_id: user.id,
       )
-      message.create_message_task
+      create_task = message.create_message_task
 
+      expect(create_task[:user_id]).to eql user.id
       allow(message).to receive(:create_message_task)
     end
 
