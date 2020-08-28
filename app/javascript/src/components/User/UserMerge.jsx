@@ -25,7 +25,10 @@ export default function UserMerge({ userId, close }) {
       variables: { id: userId, duplicateId: data.userId }
     })
       .then(() => (close(), setLoading(false)))
-      .catch(err => console.log(err.message))
+      .catch(err => {
+        setMessage(err.message)
+        setLoading(false)
+      })
   }
 
   function handleConfirmMerge() {

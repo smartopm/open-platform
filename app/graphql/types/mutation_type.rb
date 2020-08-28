@@ -10,7 +10,7 @@ module Types
     field :one_time_login, mutation: Mutations::User::OneTimeLogin
     field :user_merge, mutation: Mutations::User::Merge
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
-    
+
     # Entry Requests
     field :entry_request_create, mutation: Mutations::EntryRequest::EntryRequestCreate
     field :entry_request_update, mutation: Mutations::EntryRequest::EntryRequestUpdate

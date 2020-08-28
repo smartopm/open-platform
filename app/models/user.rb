@@ -385,10 +385,7 @@ class User < ApplicationRecord
 
   # catch exceptions in here to be caught in the mutation
   def merge_user(dup_id)
-      MergeUsers.merge(self[:id], dup_id)
-    # rescue StandardError
-    #   Rails.logger.info 'Update failed'
-    #  raise 'Update failed'
+    MergeUsers.merge(self[:id], dup_id)
   end
 
   private
