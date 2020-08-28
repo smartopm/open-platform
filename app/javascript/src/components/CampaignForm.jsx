@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect } from 'react-router-dom'
-import { Button, TextField, Chip, Snackbar, Select, MenuItem } from '@material-ui/core'
+import { Button, TextField, Chip, Snackbar, MenuItem } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import { useMutation } from 'react-apollo'
 import { CampaignCreate, CampaignUpdateMutation, CampaignLabelRemoveMutation } from '../graphql/mutations'

@@ -113,10 +113,11 @@ ActiveRecord::Schema.define(version: 2020_08_26_201218) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_sent"
     t.integer "total_clicked"
-    t.string "campaign_type"
+    t.string "campaign_type", default: "sms", null: false
     t.string "subject"
     t.string "pre_header"
     t.string "template_style"
+    t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 

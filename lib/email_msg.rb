@@ -35,7 +35,7 @@ class EmailMsg
     return if Rails.env.test?
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
 
-    client = SendGrid::API.new(api_key: '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').client
+    client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
     mail = SendGrid::Mail.new
     mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
     personalization = Personalization.new
@@ -45,10 +45,11 @@ class EmailMsg
       "name": name,
       "subject": subject,
       "pre_header": pre_header,
+      "message": message,
+      # "url": 'https://double-gdp-staging.herokuapp.com/' # Pass any url for usage in template
     )
     mail.add_personalization(personalization)
     mail.template_id = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
-    mail.add_content(Content.new(type: 'text/plain', value: message))
     client.mail._('send').post(request_body: mail.to_json)
   end
   # rubocop:enable Metrics/ParameterLists

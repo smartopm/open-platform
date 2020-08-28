@@ -11,7 +11,7 @@ module Types
     field :user_id_list, String, null: false
     field :subject, String, null: false
     field :pre_header, String, null: false
-    field :template_style, String, null: false
+    field :template_style, String, null: true
     field :labels, [Types::LabelType], null: true
     field :start_time, GraphQL::Types::ISO8601DateTime, null: true
     field :end_time, GraphQL::Types::ISO8601DateTime, null: true
