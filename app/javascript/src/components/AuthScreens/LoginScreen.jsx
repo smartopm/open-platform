@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
   TextField,
-  InputAdornment,
   CircularProgress,
   Select,
   Typography,
@@ -17,11 +16,12 @@ import { useMutation } from 'react-apollo'
 import { loginPhone } from '../../graphql/mutations'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
-import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/material.css'
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -33,7 +33,6 @@ export function LoginScreen() {
   const [Interest, setInterest] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [countryCode, setCountryCode] = useState(260)
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
@@ -44,7 +43,7 @@ export function LoginScreen() {
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
       loginPhoneStart({
-        variables: { phoneNumber: `${countryCode}${phoneNumber.trim()}` }
+         variables: { phoneNumber: phoneNumber.trim() }
       })
         .then(({ data }) => {
           setIsLoading(false)
@@ -54,7 +53,7 @@ export function LoginScreen() {
           history.push({
             pathname: '/code/' + data.loginPhoneStart.user.id,
             state: {
-              phoneNumber: `${countryCode}${phoneNumber}`,
+              phoneNumber: phoneNumber,
               from: `${!state ? '/' : state.from.pathname}`
             }
           })
@@ -125,41 +124,18 @@ export function LoginScreen() {
             styles.phoneNumberInput
           )} row justify-content-center align-items-center`}
         >
-          <TextField
-            id="phone"
-            placeholder="Enter Phone Number"
-            type="tel"
-            maxLength={10}
-            autoFocus
-            style={{
-              width: '65%'
-            }}
-            value={phoneNumber}
-            onChange={e => setPhoneNumber(e.target.value)}
-            onKeyDown={loginWithPhone}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Select
-                    native
-                    value={countryCode}
-                    style={{
-                      width: 85
-                    }}
-                    onChange={e => setCountryCode(e.target.value)}
-                  >
-                    {Object.entries(areaCode).map(([key, val]) => (
-                      <option key={key} value={key}>
-                        {val}
-                      </option>
-                    ))}
-                  </Select>
-                </InputAdornment>
-              )
-            }}
+
+        <PhoneInput
+          value={phoneNumber}
+          containerClass="a css class"
+          containerStyle={{ width: "55%" }}
+          inputClass="a input class"
+          inputStyle={{width: "100%"}}
+          country={'zm'}
+          onChange={phone => setPhoneNumber(phone)}
           />
         </div>
-        <br />
+     
         {error && <p className=" text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
@@ -393,5 +369,9 @@ const styles = StyleSheet.create({
   formControl: {
     minWidth: 120,
     width: '100%'
-  }
+  },
+   loginInput: {
+     width: '55%',
+     marginLeft: 100
+   }
 })
