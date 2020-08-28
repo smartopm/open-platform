@@ -259,6 +259,16 @@ RSpec.describe Mutations::User do
       GQL
     end
 
+    let(:user_merge_query) do
+      <<~GQL
+        mutation mergeUsers($id: ID!, $duplicateId: ID!){
+          userMerge(id: $id, duplicateId: $duplicateId){
+            success
+          }
+        }
+      GQL
+    end
+
     it 'should update the user' do
       variables = {
         id: pending_user.id,
@@ -289,6 +299,21 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result.dig('errors')).to_not be nil
+    end
+
+    it 'should not merge the 2 new given users' do
+      # because of initial labels given to users, there will be duplicates
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: admin.community,
+                                                         }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Duplicate Entry'
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
     end
   end
 

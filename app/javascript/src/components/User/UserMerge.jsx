@@ -46,7 +46,7 @@ export default function UserMerge({ userId, close }) {
         handleConfirm={handleMerge}
         action="proceed"
       >
-        <Typography variant="body2">
+        <Typography variant="body1">
           Merging this user will keep this account and merge data from the
           selected account into this account. The account being merged will no
           longer exist. Do you want to proceed?
