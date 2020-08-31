@@ -233,6 +233,7 @@ RSpec.describe Mutations::User do
 
   describe 'updating a user' do
     let!(:admin) { create(:admin_user) }
+    let!(:user) { create(:user_with_community) }
     let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
 
@@ -345,6 +346,34 @@ RSpec.describe Mutations::User do
                                                          }).as_json
       expect(result.dig('data', 'userMerge', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'type ID! was provided invalid value'
+    end
+
+    it 'should not merge when current user is not admin' do
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: security_guard,
+                                                           site_community: security_guard.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should not merge when user is from a different community' do
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: user,
+                                                           site_community: user.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'User not found'
     end
   end
 
