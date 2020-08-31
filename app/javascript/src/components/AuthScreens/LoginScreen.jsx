@@ -19,9 +19,8 @@ import { ModalDialog } from '../Dialog'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import FacebookIcon from '@material-ui/icons/Facebook'
-import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
+import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/material.css'
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -38,12 +37,12 @@ export function LoginScreen() {
   const theme = useContext(ThemeContext)
 
   function loginWithPhone(event, type = 'input') {
-    
+
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
       loginPhoneStart({
-         variables: { phoneNumber: phoneNumber.trim() }
+        variables: { phoneNumber: phoneNumber.trim() }
       })
         .then(({ data }) => {
           setIsLoading(false)
@@ -97,7 +96,7 @@ export function LoginScreen() {
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/welcome'} style={{color: theme.primaryColor}}>
+        <Link to={'/welcome'} style={{ color: theme.primaryColor }}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -125,17 +124,19 @@ export function LoginScreen() {
           )} row justify-content-center align-items-center`}
         >
 
-        <PhoneInput
-          value={phoneNumber}
-          containerClass="a css class"
-          containerStyle={{ width: "55%" }}
-          inputClass="a input class"
-          inputStyle={{width: "100%"}}
-          country={'zm'}
-          onChange={phone => setPhoneNumber(phone)}
+          <PhoneInput
+            value={phoneNumber}
+            containerClass="a css class"
+            containerStyle={{ width: "55%" }}
+            inputClass="a input class"
+            inputStyle={{ width: "100%", height: 51 }}
+            country={'zm'}
+            enableSearch={true}
+            placeholder="Enter Number"
+            onChange={phone => setPhoneNumber(phone)}
           />
         </div>
-     
+
         {error && <p className=" text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
@@ -152,8 +153,8 @@ export function LoginScreen() {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-              <span>Next</span>
-            )}
+                <span>Next</span>
+              )}
           </Button>
         </div>
 
@@ -370,8 +371,8 @@ const styles = StyleSheet.create({
     minWidth: 120,
     width: '100%'
   },
-   loginInput: {
-     width: '55%',
-     marginLeft: 100
-   }
+  loginInput: {
+    width: '55%',
+    marginLeft: 100
+  }
 })
