@@ -27,6 +27,10 @@ class Community < ApplicationRecord
     DOMAINS_COMMUNITY_MAP[name.to_sym].include?(domain)
   end
 
+  def default_community_users
+    users.find(self[:default_users].split(','))
+  end
+
   def notify_slack(message)
     return unless self[:slack_webhook_url]
 

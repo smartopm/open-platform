@@ -22,6 +22,23 @@ RSpec.describe Message, type: :model do
       expect(result[:receiver]).to eql '260971500748'
     end
 
+    it 'should create a message record with a default community records', skip_before: true do
+      community = FactoryBot.create(:community)
+      user = FactoryBot.create(:user, community: community)
+      community.default_users = [user.id]
+      community.save
+      message = Message.create(
+        receiver: '260971500748',
+        message: 'Testing out message',
+        user_id: user.id,
+        sender_id: user.id,
+      )
+      create_task = message.create_message_task
+
+      expect(create_task[:user_id]).to eql user.id
+      allow(message).to receive(:create_message_task)
+    end
+
     it 'admin sends a message' do
       message = @admin.construct_message(
         receiver: '260971500748',
