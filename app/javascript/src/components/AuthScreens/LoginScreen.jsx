@@ -131,6 +131,8 @@ export function LoginScreen() {
             inputClass="a input class"
             inputStyle={{ width: "100%", height: 51 }}
             country={'zm'}
+            enableSearch={true}
+            placeholder="Enter Number"
             onChange={phone => setPhoneNumber(phone)}
           />
         </div>
