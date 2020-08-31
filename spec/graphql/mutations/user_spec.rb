@@ -233,6 +233,7 @@ RSpec.describe Mutations::User do
 
   describe 'updating a user' do
     let!(:admin) { create(:admin_user) }
+    let!(:user) { create(:user_with_community) }
     let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
 
@@ -254,6 +255,16 @@ RSpec.describe Mutations::User do
               roleName
               vehicle
             }
+          }
+        }
+      GQL
+    end
+
+    let(:user_merge_query) do
+      <<~GQL
+        mutation mergeUsers($id: ID!, $duplicateId: ID!){
+          userMerge(id: $id, duplicateId: $duplicateId){
+            success
           }
         }
       GQL
@@ -289,6 +300,80 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result.dig('errors')).to_not be nil
+    end
+
+    it 'should merge the 2 given users' do
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      # remove all labels from user we are about to merge
+      pending_user.user_labels.delete_all
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: admin.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to eql true
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'should not merge the 2 new given users' do
+      # because of initial labels given to users, there will be duplicates
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: admin.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to eql 'Duplicate Entry'
+    end
+
+    it 'should not merge the 2 new given users' do
+      # because of initial labels given to users, there will be duplicates
+      variables = {
+        id: security_guard.id,
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: admin.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'type ID! was provided invalid value'
+    end
+
+    it 'should not merge when current user is not admin' do
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: security_guard,
+                                                           site_community: security_guard.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should not merge when user is from a different community' do
+      variables = {
+        id: security_guard.id,
+        duplicateId: pending_user.id,
+      }
+      result = DoubleGdpSchema.execute(user_merge_query, variables: variables,
+                                                         context: {
+                                                           current_user: user,
+                                                           site_community: user.community,
+                                                         }).as_json
+      expect(result.dig('data', 'userMerge', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'User not found'
     end
   end
 
