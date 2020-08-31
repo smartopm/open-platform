@@ -24,8 +24,8 @@ module Mutations
       def authorized?(vals)
         user_record = context[:site_community].users.find(vals[:id])
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless user_record.community_id ==
-                                                             current_user.community_id
+        comm_user = user_record.community_id == current_user.community_id
+        raise GraphQL::ExecutionError, 'Unauthorized' unless comm_user && current_user&.admin?
 
         true
       end
