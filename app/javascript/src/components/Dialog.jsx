@@ -32,7 +32,7 @@ export function ModalDialog({
           autoFocus
           onClick={handleConfirm}
           color={
-            new RegExp(action).test(/grant|acknowledge|save/)
+            new RegExp(action).test(/grant|acknowledge|save|proceed/)
               ? 'primary'
               : 'secondary'
           }

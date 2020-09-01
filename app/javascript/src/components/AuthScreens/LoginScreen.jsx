@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
   TextField,
-  InputAdornment,
   CircularProgress,
   Select,
   Typography,
@@ -18,11 +17,11 @@ import { useMutation } from 'react-apollo'
 import { loginPhone } from '../../graphql/mutations'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
-import { areaCode } from '../../utils/constants'
 import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import FacebookIcon from '@material-ui/icons/Facebook'
-import {Context as ThemeContext} from '../../../Themes/Nkwashi/ThemeProvider'
+import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
+import PhoneInput from 'react-phone-input-2'
 
 export function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -34,18 +33,17 @@ export function LoginScreen() {
   const [Interest, setInterest] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [countryCode, setCountryCode] = useState(260)
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
 
   function loginWithPhone(event, type = 'input') {
-    
+
     // submit on both click and Enter Key pressed
     if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
       loginPhoneStart({
-        variables: { phoneNumber: `${countryCode}${phoneNumber.trim()}` }
+        variables: { phoneNumber: phoneNumber.trim() }
       })
         .then(({ data }) => {
           setIsLoading(false)
@@ -55,7 +53,7 @@ export function LoginScreen() {
           history.push({
             pathname: '/code/' + data.loginPhoneStart.user.id,
             state: {
-              phoneNumber: `${countryCode}${phoneNumber}`,
+              phoneNumber: phoneNumber,
               from: `${!state ? '/' : state.from.pathname}`
             }
           })
@@ -99,7 +97,7 @@ export function LoginScreen() {
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/welcome'} style={{color: theme.primaryColor}}>
+        <Link to={'/welcome'} style={{ color: theme.primaryColor }}>
           <i className={`material-icons`}>arrow_back</i>
         </Link>
       </nav>
@@ -126,41 +124,20 @@ export function LoginScreen() {
             styles.phoneNumberInput
           )} row justify-content-center align-items-center`}
         >
-          <TextField
-            id="phone"
-            placeholder="Enter Phone Number"
-            type="tel"
-            maxLength={10}
-            autoFocus
-            style={{
-              width: '65%'
-            }}
+
+          <PhoneInput
             value={phoneNumber}
-            onChange={e => setPhoneNumber(e.target.value)}
-            onKeyDown={loginWithPhone}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Select
-                    native
-                    value={countryCode}
-                    style={{
-                      width: 85
-                    }}
-                    onChange={e => setCountryCode(e.target.value)}
-                  >
-                    {Object.entries(areaCode).map(([key, val]) => (
-                      <option key={key} value={key}>
-                        {val}
-                      </option>
-                    ))}
-                  </Select>
-                </InputAdornment>
-              )
-            }}
+            containerClass="a css class"
+            containerStyle={{ width: "55%" }}
+            inputClass="a input class"
+            inputStyle={{ width: "100%", height: 51 }}
+            country={'zm'}
+            enableSearch={true}
+            placeholder="Enter Number"
+            onChange={phone => setPhoneNumber(phone)}
           />
         </div>
-        <br />
+
         {error && <p className=" text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
@@ -177,8 +154,8 @@ export function LoginScreen() {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-              <span>Next</span>
-            )}
+                <span>Next</span>
+              )}
           </Button>
         </div>
 
@@ -394,5 +371,9 @@ const styles = StyleSheet.create({
   formControl: {
     minWidth: 120,
     width: '100%'
+  },
+  loginInput: {
+    width: '55%',
+    marginLeft: 100
   }
 })

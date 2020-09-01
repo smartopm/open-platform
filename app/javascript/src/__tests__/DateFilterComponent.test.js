@@ -23,7 +23,7 @@ describe('filter users for campaign component', () => {
     fireEvent.change(input, { target: { value: '2020-08-16' } })
 
     expect(input.value).toBe('2020-08-16')
-    expect(container.queryByText('Logged in to')).toBeInTheDocument()
+    expect(container.queryByText('login before')).toBeInTheDocument()
   })
 
   it('should display logged in on option', () => {
@@ -44,7 +44,7 @@ describe('filter users for campaign component', () => {
     fireEvent.change(input, { target: { value: '2020-08-16' } })
 
     expect(input.value).toBe('2020-08-16')
-    expect(container.queryByText('Logged in on')).toBeInTheDocument()
+    expect(container.queryByText('logged in on')).toBeInTheDocument()
   })
 
   it('should render with correct props', () => {
@@ -60,7 +60,7 @@ describe('filter users for campaign component', () => {
 
     expect(input.value).toBe('2020-08-16')
     expect(container.queryByText('Filter for Campaign')).toBeInTheDocument()
-    expect(container.queryByText('Logged in from')).toBeInTheDocument()
+    expect(container.queryByText('login after')).toBeInTheDocument()
     expect(container.queryByText('Clear Filter')).toBeInTheDocument()
     expect(container.queryByText('Clear Filter')).not.toBeDisabled()
   })

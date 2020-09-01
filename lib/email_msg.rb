@@ -2,6 +2,8 @@
 
 require 'sendgrid-ruby'
 require 'erb'
+require 'uri'
+require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
 class EmailMsg
@@ -27,6 +29,30 @@ class EmailMsg
     mail.template_id = 'd-bec0f1bd39f240d98a146faa4d7c5235'
     client.mail._('send').post(request_body: mail.to_json)
   end
+
+  # rubocop:disable Metrics/ParameterLists
+  def self.send_campaign_mail(user_email, name, community, subject, pre_header, message, _template)
+    return if Rails.env.test?
+    raise EmailMsgError, 'Email must be provided' if user_email.blank?
+
+    client = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_api_key]).client
+    mail = SendGrid::Mail.new
+    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
+    personalization = Personalization.new
+    personalization.add_to(SendGrid::Email.new(email: user_email))
+    personalization.add_dynamic_template_data(
+      "community": community,
+      "name": name,
+      "subject": subject,
+      "pre_header": pre_header,
+      "message": message,
+      # "url": 'https://double-gdp-staging.herokuapp.com/' # Pass any url for usage in template
+    )
+    mail.add_personalization(personalization)
+    mail.template_id = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
+    client.mail._('send').post(request_body: mail.to_json)
+  end
+  # rubocop:enable Metrics/ParameterLists
 
   def self.messages_from_sendgrid(date_from)
     return if Rails.env.test?

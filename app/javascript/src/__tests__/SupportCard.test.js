@@ -25,15 +25,7 @@ describe("Support card loads component", () => {
     )
     expect(getByText('Support Chat')).toBeInTheDocument()
   })
-  
-  it('should include client request form', () => {
-    const container = render(
-      <BrowserRouter>
-        <Support />
-      </BrowserRouter>
-    ) 
-    expect(container.queryByText('Client Request Form')).toBeInTheDocument()
-  });
+ 
   it('should should include support chat', () => {
     const container = render(
       <BrowserRouter>

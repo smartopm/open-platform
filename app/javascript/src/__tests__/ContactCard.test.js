@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import SupportCard from '../components/SupportCard'
-import { cleanup, fireEvent, render } from '@testing-library/react'
+import { cleanup, render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 
@@ -45,23 +45,7 @@ describe('Contact page', () => {
     )
   })
 
-  it('clicks button and opens use window', () => {
-    window.open = jest.fn()
-    const { getByTestId } = render(
-      <BrowserRouter>
-        <SupportCard
-          handleSendMessage={sendMessage}
-          user={authState.user}
-        />
-      </BrowserRouter>
-    )
-    const button = getByTestId('crf')
-    fireEvent.click(button)
-    expect(window.open).toBeCalledWith(
-      'https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=John+Doctor&260971500748?entry.1055458143=260971500748:entry.1055458143=""',
- '_blank'
-    )
-  })
+
 
   it('clicks pay with mobile money then opens use window', () => {
     const { getByTestId } = render(

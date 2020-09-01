@@ -27,7 +27,9 @@ export default function Task({
   handleDelete,
   handleModal,
   loading,
-  loadingMutation
+  loadingMutation,
+  isAssignTaskOpen,
+  handleOpenTaskAssign
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
@@ -100,6 +102,9 @@ export default function Task({
             <Autocomplete
               clearOnEscape
               clearOnBlur
+              open={isAssignTaskOpen}
+              onOpen={handleOpenTaskAssign}
+              onClose={handleOpenTaskAssign}
               loading={loading}
               id={note.id}
               options={users}

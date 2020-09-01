@@ -26,13 +26,9 @@ import Card from '../components/Card'
 import { SVGIcon } from '../components/Card'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />
   }
@@ -155,56 +151,10 @@ export default function Homepage({ authState }) {
     {
       card_id: 11,
       title: 'Permits and Request Forms',
-      path: `/`,
+      path: `/forms`,
       id: 'crfl',
-      handleClick: event => setAnchorEl(event.currentTarget),
       icon: <ListAltIcon fontSize="large" />,
       access: ['admin', 'resident', 'client'],
-      menu: (
-        <Menu
-          id="fade-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={open}
-          onClose={() => setAnchorEl(null)}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
-        >
-          <MenuItem
-            onClick={() => {
-              window.open(
-                `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
-                  /\s+/g,
-                  '+'
-                )}&entry.1055458143=${
-                  authState.user.phoneNumber ? authState.user.phoneNumber : ''
-                }`,
-                '_blank'
-              )
-              location.reload()
-            }}
-          >
-            Client Request Form
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              window.open(
-                'https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform?usp=sf_link',
-                '_blank'
-              )
-              location.reload()
-            }}
-          >
-            Building Permit Application Form
-          </MenuItem>
-        </Menu>
-      )
     },
     {
       card_id: 12,
@@ -312,8 +262,6 @@ export default function Homepage({ authState }) {
                   clientName={card.clientName}
                   clientNumber={card.clientNumber}
                   id={card.id}
-                  handleClick={card.handleClick}
-                  menu={card.menu}
                 >
                   {card.children}
                 </Card>

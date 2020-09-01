@@ -166,13 +166,13 @@ export const UsersQuery = gql`
 `
 
 export const UsersLiteQuery = gql`
-  query users($limit: Int, $offset: Int, $query: String) {
-    users(limit: $limit, offset: $offset, query: $query) {
-      id
-      name
-      imageUrl
-      avatarUrl
-    }
+  query usersLite($query: String!){
+      usersLite(query: $query) {
+        id
+        name
+        imageUrl
+        avatarUrl
+      }
   }
 `
 
@@ -337,9 +337,13 @@ export const Campaign = gql`
       id
       message
       name
+      campaignType
       startTime
       updatedAt
       userIdList
+      subject
+      preHeader
+      templateStyle
       campaignMetrics {
         batchTime
         startTime

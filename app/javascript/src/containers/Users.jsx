@@ -61,6 +61,7 @@ export default function UsersList() {
   const [selectDateFrom, setSelectDateFrom] = useState('')
   const [selectDateTo, setSelectDateTo] = useState('')
   const [selectDateOn, setSelectDateOn] = useState('')
+  const [filterOpen, setOpenFilter] = useState(false)
 
   const search = {
     type,
@@ -225,6 +226,9 @@ export default function UsersList() {
     setOffset(0)
   }, [type])
 
+  function handleSelect() {
+    setOpenFilter(!filterOpen)
+  }
 
 
   if (loading || labelsLoading) return <Loading />
@@ -363,11 +367,13 @@ export default function UsersList() {
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
             <FilterComponent
               stateList={labels}
-              list={labelsData.labels}
+              list={labelsData.labels || []}
               handleInputChange={handleLabelChange}
               classes={classes}
               resetFilter={() => setLabels([])}
               type="labels"
+              filterOpen={filterOpen}
+              handleOpenSelect={handleSelect}
             />
           </Grid>
           <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>

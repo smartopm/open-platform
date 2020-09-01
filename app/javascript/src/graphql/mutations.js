@@ -421,17 +421,25 @@ export const UpdateLogMutation = gql`
 export const CampaignCreate = gql`
   mutation campaignCreate(
     $name: String!
+    $campaignType: String!
     $message: String!
     $batchTime: String!
     $userIdList: String!
     $labels: String
+    $subject: String
+    $preHeader: String
+    $templateStyle: String
   ) {
     campaignCreate(
       name: $name
+      campaignType: $campaignType
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
       labels: $labels
+      subject: $subject
+      preHeader: $preHeader
+      templateStyle: $templateStyle
     ) {
       campaign {
         name
@@ -443,18 +451,26 @@ export const CampaignUpdateMutation = gql`
   mutation campaignUpdate(
     $id: ID!
     $name: String
+    $campaignType: String
     $message: String
     $batchTime: String
     $userIdList: String
     $labels: String
+    $subject: String
+    $preHeader: String
+    $templateStyle: String
   ) {
     campaignUpdate(
       id: $id
       name: $name
+      campaignType: $campaignType
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
       labels: $labels
+      subject: $subject
+      preHeader: $preHeader
+      templateStyle: $templateStyle
     ) {
       campaign {
         batchTime
@@ -464,9 +480,13 @@ export const CampaignUpdateMutation = gql`
         id
         message
         name
+        campaignType
         startTime
         updatedAt
         userIdList
+        subject
+        preHeader
+        templateStyle
         campaignMetrics {
           batchTime
           startTime
@@ -588,4 +608,10 @@ mutation labelRemove($campaignId: ID!, $labelId: ID!) {
   }
 }
 `
-
+export const MergeUsersMutation = gql`
+mutation mergeUsers($id: ID!, $duplicateId: ID!){
+  userMerge(id: $id, duplicateId: $duplicateId){
+    success
+  }
+}
+`

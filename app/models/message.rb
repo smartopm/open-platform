@@ -38,6 +38,24 @@ class Message < ApplicationRecord
     Sms.send(receiver, new_message)
   end
 
+  def create_message_task
+    msg_obj = {
+      body: "Reply to message from: #{user.name}",
+      category: 'message',
+      flagged: true,
+      completed: false,
+      due_date: 5.days.from_now,
+    }
+    note_id = user.generate_note(msg_obj).id
+    assign_message_task(note_id)
+  end
+
+  def assign_message_task(note_id)
+    assign = user.community.notes.find(note_id)
+                 .assign_or_unassign_user(user.community.default_community_users[0].id)
+    return assign unless assign.nil?
+  end
+
   def self.campaign_query(filter)
     return '' if filter.nil?
 

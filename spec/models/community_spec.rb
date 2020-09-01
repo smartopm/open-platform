@@ -16,4 +16,12 @@ RSpec.describe Community, type: :model do
     FactoryBot.create(:user, community: community)
     expect(community.users).to_not be_empty
   end
+
+  it 'should be associated with users' do
+    community = FactoryBot.create(:community)
+    user = FactoryBot.create(:user, community: community)
+    community.default_users = [user.id]
+    community.save
+    expect(community.default_users).to_not be_empty
+  end
 end
