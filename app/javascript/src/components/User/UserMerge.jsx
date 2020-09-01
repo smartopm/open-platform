@@ -38,6 +38,7 @@ export default function UserMerge({ userId, close }) {
     }
     setConfirmOpen(!open)
   }
+  
   return (
     <>
       <ModalDialog
