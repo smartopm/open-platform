@@ -5,6 +5,7 @@ import { useMutation } from 'react-apollo'
 import { MergeUsersMutation } from '../../graphql/mutations'
 import { ModalDialog } from '../Dialog'
 import CenteredContent from '../CenteredContent'
+import { saniteError } from '../../utils/helpers'
 
 // find a user a call the mutation to merge them
 const initialData = {
@@ -60,7 +61,7 @@ export default function UserMerge({ userId, close }) {
 
       {message && (
         <CenteredContent>
-          <Typography variant="body2">{message}</Typography>
+          <Typography variant="body2">{saniteError([], message)}</Typography>
         </CenteredContent>
       )}
 
