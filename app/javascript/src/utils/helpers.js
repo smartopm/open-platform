@@ -30,6 +30,12 @@ export function findLinkAndReplace(msg) {
   })
 }
 
+export function removeHtmlTagsFromStrings(str) {
+  if (str) {
+    return str.replace(/<(.|\n)*?>/g, '')
+  }
+}
+
 /**
  * 
  * @param {String} message 
