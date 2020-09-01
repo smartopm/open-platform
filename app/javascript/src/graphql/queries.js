@@ -336,9 +336,13 @@ export const Campaign = gql`
       id
       message
       name
+      campaignType
       startTime
       updatedAt
       userIdList
+      subject
+      preHeader
+      templateStyle
       campaignMetrics {
         batchTime
         startTime
