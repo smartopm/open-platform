@@ -31,5 +31,10 @@ RSpec.describe Campaign, type: :model do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to have_many(:labels) }
     it { is_expected.to have_many(:campaign_labels) }
+    it { is_expected.to have_many(:messages) }
+  end
+
+  describe 'validations' do
+    it { is_expected.to validate_inclusion_of(:campaign_type).in_array(%w[email sms]) }
   end
 end
