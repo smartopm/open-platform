@@ -117,16 +117,14 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
   return (
     <div className="container">
       <Snackbar
-          open={isSubmitted} autoHideDuration={3000}
-          onClose={() => setIsSubmitted(!isSubmitted)}
-          color="primary"
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
+        open={isSubmitted}
+        autoHideDuration={3000}
+        onClose={() => setIsSubmitted(!isSubmitted)}
+        color="primary"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
       />
-      <form
-        onSubmit={handleSubmit}
-        aria-label="campaign-form"
-      >
+      <form onSubmit={handleSubmit} aria-label="campaign-form">
         <TextField
           label="Campaign Type"
           name="campaignType"
@@ -135,9 +133,9 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           value={formData.campaignType}
           onChange={handleInputChange}
           aria-label="campaign_type"
-          inputProps={{ "data-testid": "campaign_type" }}
+          inputProps={{ 'data-testid': 'campaign_type' }}
           select
-          >
+        >
           <MenuItem value="sms">SMS</MenuItem>
           <MenuItem value="email">Email</MenuItem>
         </TextField>
@@ -149,8 +147,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           value={formData.name}
           onChange={handleInputChange}
           aria-label="campaign_name"
-          inputProps={{ "data-testid": "campaign_name" }}
-          />
+          inputProps={{ 'data-testid': 'campaign_name' }}
+        />
         <TextField
           label="Message"
           name="message"
@@ -161,41 +159,46 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           value={formData.message || ''}
           onChange={handleInputChange}
           aria-label="campaign_message"
-          inputProps={{ "data-testid": "campaign_message" }}
-          />
-        {formData.campaignType === 'email' && (<TextField
-          label="Subject"
-          name="subject"
-          rows={1}
-          multiline
-          className="form-control"
-          value={formData.subject || ''}
-          onChange={handleInputChange}
-          aria-label="campaign_subject"
-          inputProps={{ "data-testid": "campaign_subject" }}
-          />)}
-        {formData.campaignType === 'email' && (<TextField
-          label="Pre Header"
-          name="preHeader"
-          rows={1}
-          multiline
-          className="form-control"
-          value={formData.preHeader || ''}
-          onChange={handleInputChange}
-          aria-label="campaign_pre_header"
-          inputProps={{ "data-testid": "campaign_pre_header" }}
-          />)}
-        {formData.campaignType === 'email' && (<TextField
-          label="Template Style"
-          rows={1}
-          multiline
-          className="form-control"
-          aria-label="campaign_template_style"
-          inputProps={{ "data-testid": "campaign_template_style" }}
-          name="templateStyle"
-          value={formData.templateStyle || ''}
-          onChange={handleInputChange}
-          />)}
+          inputProps={{ 'data-testid': 'campaign_message' }}
+        />
+        {formData.campaignType === 'email' && (
+          <>
+            <TextField
+              label="Subject"
+              name="subject"
+              rows={1}
+              multiline
+              className="form-control"
+              value={formData.subject || ''}
+              onChange={handleInputChange}
+              aria-label="campaign_subject"
+              inputProps={{ 'data-testid': 'campaign_subject' }}
+            />
+            <TextField
+              label="Pre Header"
+              name="preHeader"
+              rows={1}
+              multiline
+              className="form-control"
+              value={formData.preHeader || ''}
+              onChange={handleInputChange}
+              aria-label="campaign_pre_header"
+              inputProps={{ 'data-testid': 'campaign_pre_header' }}
+            />
+            <TextField
+              label="Template Style"
+              rows={1}
+              multiline
+              className="form-control"
+              aria-label="campaign_template_style"
+              inputProps={{ 'data-testid': 'campaign_template_style' }}
+              name="templateStyle"
+              value={formData.templateStyle || ''}
+              onChange={handleInputChange}
+            />
+          </>
+        )}
+
         <TextField
           label="User ID List"
           rows={5}
@@ -203,36 +206,35 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           required
           className="form-control"
           aria-label="campaign_ids"
-          inputProps={{ "data-testid": "campaign_ids" }}
+          inputProps={{ 'data-testid': 'campaign_ids' }}
           name="userIdList"
           value={formData.userIdList || ''}
           onChange={handleInputChange}
-          />
-            <br />
-            <br />
-            <div className=" row d-flex justify-content-start align-items-center">
-              {label.map((labl, i) => (
-                  <Chip
-                    data-testid="campaignChip-label"
-                    key={i}
-                    size="medium"
-                    label={labl?.shortDesc || labl}
-                  />
-                ))
-              }
-              {Boolean(formData.labels.length) && formData.labels.map(labl => (
-                  <Chip
-                    data-testid="campaignChip-label"
-                    key={labl.id}
-                    size="medium"
-                    onDelete={() => handleLabelDelete(labl.id)}
-                    label={labl.shortDesc}
-                  />
-                ))
-              }
-            </div>
+        />
+        <br />
+        <br />
+        <div className=" row d-flex justify-content-start align-items-center">
+          {label.map((labl, i) => (
+            <Chip
+              data-testid="campaignChip-label"
+              key={i}
+              size="medium"
+              label={labl?.shortDesc || labl}
+            />
+          ))}
+          {Boolean(formData.labels.length) &&
+            formData.labels.map(labl => (
+              <Chip
+                data-testid="campaignChip-label"
+                key={labl.id}
+                size="medium"
+                onDelete={() => handleLabelDelete(labl.id)}
+                label={labl.shortDesc}
+              />
+            ))}
+        </div>
 
-        <div >
+        <div>
           <CampaignLabels handleLabelSelect={handleLabelSelect} />
         </div>
         <br />
@@ -258,7 +260,9 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         <br />
         <div className="d-flex row justify-content-center">
           {Boolean(errorMsg.length) && (
-            <p className="text-danger text-center">{saniteError([], errorMsg)}</p>
+            <p className="text-danger text-center">
+              {saniteError([], errorMsg)}
+            </p>
           )}
         </div>
       </form>
