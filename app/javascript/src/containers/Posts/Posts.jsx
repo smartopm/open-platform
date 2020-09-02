@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React from 'react'
+import { Helmet } from "react-helmet";
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import PostItem from '../../components/NewsPage/PostItem'
 import { dateToString } from '../../components/DateContainer'
@@ -13,9 +14,10 @@ import { ShareButton } from '../../components/ShareButton'
 import { Spinner } from '../../components/Loading'
 
 export default function Posts() {
-    const {slug} = useParams()
+    const { slug } = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     const currentUrl = window.location.href
+    const image = "https://i2.wp.com/doublegdp.wpcomstaging.com/wp-content/uploads/2020/08/20200804_162543.jpg?fit=1008%2C756&ssl=1";
 
     if (error) {
         return error.message
@@ -25,7 +27,12 @@ export default function Posts() {
     }
     return (
         <React.Fragment>
-            <Nav  navName="News" menuButton="back" backTo="/news" />
+            <Helmet>
+                <meta property="og:title" content="Post Page" />
+                <meta property="og:image" content={image} />
+                <meta property="og:description" content="Visit the doubleGDP app to see exciting and interesting posts on Nkwashi" />
+            </Helmet>
+            <Nav navName="News" menuButton="back" backTo="/news" />
             <Categories />
             <div>
                 <br />
@@ -38,8 +45,8 @@ export default function Posts() {
                 <br />
                 <Grid container direction="row" justify="center">
                     {response.found ? response.posts.map(post => (
-                        <Grid item  key={post.ID}>
-                            <Box style={{display: 'flex', justifyContent: 'flex-start'}}>
+                        <Grid item key={post.ID}>
+                            <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
                                 <Link key={post.ID} style={{ textDecoration: 'none' }}
                                     to={`/news/post/${post.ID}`}
                                 >

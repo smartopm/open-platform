@@ -2,6 +2,7 @@
 import React, { Fragment, useContext, useState } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
+import { Helmet } from "react-helmet";
 import {
   Button, Fab, Dialog,
   AppBar,
@@ -24,6 +25,7 @@ import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
+import { removeHtmlTagsFromStrings } from '../../utils/helpers'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -44,6 +46,7 @@ export default function PostPage() {
     variables: { postId: id, limit }
   })
   const [discuss] = useMutation(DiscussionMutation)
+  const image = "https://i2.wp.com/doublegdp.wpcomstaging.com/wp-content/uploads/2020/08/20200804_162543.jpg?fit=1008%2C756&ssl=1";
 
   function createDiscussion(title, id) {
     setLoading(true)
@@ -87,6 +90,11 @@ export default function PostPage() {
 
   return (
     <Fragment>
+      <Helmet>
+        <meta property="og:title" content={response.title}/>
+        <meta property="og:image" content={response.featured_image ? response.featured_image : image} />
+        <meta property="og:description" content={removeHtmlTagsFromStrings(response.excerpt)} />
+      </Helmet>
       <Nav
         menuButton="back"
         backTo={authState.loggedIn ? '/news' : '/welcome'}

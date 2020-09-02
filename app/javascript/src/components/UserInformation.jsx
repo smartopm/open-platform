@@ -128,7 +128,7 @@ export default function UserInformation({
           })
         })
   }
-  console.log(data.user.notes)
+  
   return (
     <div>
       <Fragment>

@@ -55,7 +55,7 @@ export default function UserSearch({ userData, update }) {
         <Spinner />
       )}
       {/* associated user */}
-      {data?.users.length ? (
+      {!isLoading && data?.usersLite.length ? (
         <FormControl component="fieldset">
           <FormLabel component="legend">Choose a user</FormLabel>
           <RadioGroup
@@ -64,7 +64,7 @@ export default function UserSearch({ userData, update }) {
             value={userData.userId}
             onChange={e => update({ ...userData, userId: e.target.value })}
           >
-            {data?.users.map(user => (
+            {data?.usersLite.map(user => (
               <FormControlLabel
                 key={user.id}
                 value={user.id}
@@ -80,7 +80,7 @@ export default function UserSearch({ userData, update }) {
         `${userData.user} not found in users`
       )}
       {// separate radios from checkbox only after search
-      data?.users.length && <hr />}
+      data?.usersLite.length && <hr />}
     </>
   )
 }
