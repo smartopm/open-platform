@@ -163,7 +163,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           aria-label="campaign_message"
           inputProps={{ "data-testid": "campaign_message" }}
           />
-        <TextField
+        {formData.campaignType === 'email' && (<TextField
           label="Subject"
           name="subject"
           rows={1}
@@ -173,8 +173,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           onChange={handleInputChange}
           aria-label="campaign_subject"
           inputProps={{ "data-testid": "campaign_subject" }}
-          />
-        <TextField
+          />)}
+        {formData.campaignType === 'email' && (<TextField
           label="Pre Header"
           name="preHeader"
           rows={1}
@@ -184,8 +184,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           onChange={handleInputChange}
           aria-label="campaign_pre_header"
           inputProps={{ "data-testid": "campaign_pre_header" }}
-          />
-        <TextField
+          />)}
+        {formData.campaignType === 'email' && (<TextField
           label="Template Style"
           rows={1}
           multiline
@@ -195,7 +195,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           name="templateStyle"
           value={formData.templateStyle || ''}
           onChange={handleInputChange}
-          />
+          />)}
         <TextField
           label="User ID List"
           rows={5}
