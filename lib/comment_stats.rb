@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # check for new comments everyday, use created_at and compare with today
 # loop through all discussions that have a subscription
 # order it by user_id
 # load discussions that had comments that day
 # keep in mind of the community
-
+# get number of comments on discussions the user follows
 # need number of comments for all discussions that a user commented on
 # {
 #     "count": 4,
@@ -12,36 +14,31 @@
 #     }
 require 'email_msg'
 
-# message: There are [#] new comments on the discussion board you are following on the Nkwashi app
-# template_id: d-a34dedfb684d446e849a02ccf480b985
+# class helper to help send emails to doublegdp users for discussions they follow
 class CommentsAlert
-    def self.updated_discussions
-        # check discussions that were commente.countd on before now
-        discussions = Discussion.joins(:comments).where(["comments.created_at < ?", Time.now])
-        discussion_ids = discussions.map { |disc| disc.id }
-        discussion_ids
-    end
+  def self.updated_discussions(community_name)
+    # check discussions that were commented on today
+    discussions = Community.find_by(name: community_name).discussions.commented_today
+    discussion_ids = discussions.pluck(:id)
+    discussion_ids
+  end
 
-    def self.todays_comments(user_id)
-        comments = Comment.where(created_at: Date.today.all_day, user_id: user_id).count
-    end
+  def self.list_subscribers(community_name)
+    disc_ids = updated_discussions(community_name)
+    # check users subscribed to updated discussions
+    users = User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids })
+    users
+  end
 
-    def self.list_subscribers
-        disc_ids = updated_discussions
-        # check users subscribed to a discussion
-        users = User.joins(:discussion_users).where(discussion_users: {discussion_id: disc_ids})
-        users
+  def self.send_email_alert(community_name)
+    template_id = 'd-a34dedfb684d446e849a02ccf480b985'
+    users = list_subscribers(community_name)
+    users.each do |user|
+      disc_id = Discussion.pluck(:id)
+      count = Comment.where(discussion_id: disc_id, user_id: user).count
+      # Find a way of getting the discussion_id    
+      data = { 'count' => count, 'disc_id' => '' }
+      EmailMsg.send_community_mail(user.email, user.name, community_name, template_id, data)
     end
-
-    def self.send_email_alert
-        # template_id = 'd-a34dedfb684d446e849a02ccf480b985'
-        a_template_id = 'd-bec0f1bd39f240d98a146faa4d7c5235'
-        puts "sending nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        users = list_subscribers
-        users.each do |user|
-            puts "sending to #{user.name}"
-            # puts "sending to #{user.email}"
-            EmailMsg.send_community_mail(user.email, user.name, 'Nkwashi', a_template_id)
-        end
-    end
+  end
 end

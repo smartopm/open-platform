@@ -18,4 +18,8 @@ class Discussion < ApplicationRecord
       DiscussionUser.create!(user_id: user.id, discussion_id: self[:id])
     end
   end
+
+  def self.commented_today
+    joins(:comments).where(['comments.created_at >= ?', Time.zone.now.beginning_of_day])
+  end
 end
