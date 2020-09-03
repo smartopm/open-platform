@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'comment_alert'
-
 # comments
 class Comment < ApplicationRecord
   belongs_to :user
