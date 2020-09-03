@@ -16,7 +16,7 @@ class Comment < ApplicationRecord
     image_blob_id: :image,
   }.freeze
 
-  # testing the email alert on new comment 
+  # testing the email alert on new comment
   def send_alert
     CommentsAlert.send_email_alert(user.community.name)
   end
