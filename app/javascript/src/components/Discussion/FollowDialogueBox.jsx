@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core'
 
 export default function FollowDialogueBox({
-  authState: { email },
+  authState: { user: { email } },
   open,
   handleClose,
   subscribe,
