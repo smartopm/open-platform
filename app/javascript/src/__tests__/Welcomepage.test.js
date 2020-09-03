@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import WelcomePage from '../components/AuthScreens/WelcomePage'
 import { render } from '@testing-library/react'

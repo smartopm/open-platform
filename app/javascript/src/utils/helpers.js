@@ -1,3 +1,4 @@
+/* eslint-disable */
 import dompurify from 'dompurify';
 
 // keep string methods [helpers]

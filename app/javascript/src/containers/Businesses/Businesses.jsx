@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment } from 'react'
 import Nav from '../../components/Nav'
 import Business from '../../components/Business/BusinessList'

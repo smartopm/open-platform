@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import CustodianLogs from '../components/TimeTracker/CustodianTimeSheetLog'
 import { BrowserRouter } from 'react-router-dom/'

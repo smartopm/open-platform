@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import CenteredContent from '../components/CenteredContent'
 import { render } from '@testing-library/react'

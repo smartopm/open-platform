@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, Fragment, useContext,useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'

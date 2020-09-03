@@ -1,3 +1,4 @@
+/* eslint-disable */
 import gql from 'graphql-tag'
 import { UserFragment, EntryRequestFragment, NotesFragment } from './fragments'
 

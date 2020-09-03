@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment, useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { UpdateNote } from '../graphql/mutations'
@@ -7,7 +8,7 @@ import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useLocation } from 'react-router'
 
 export default function Todo({ history }) {
-  // eslint-disable-next-line no-unused-vars
+  // /* eslint-disable */-next-line no-unused-vars
   const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
 

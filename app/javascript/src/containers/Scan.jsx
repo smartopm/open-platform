@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useContext } from 'react'
 import QrReader from 'react-qr-reader'
 import { Redirect } from 'react-router-dom'

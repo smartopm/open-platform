@@ -1,3 +1,4 @@
+/* eslint-disable */
 // client
 import { ApolloClient } from 'apollo-client'
 import 'isomorphic-unfetch'

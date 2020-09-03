@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useMutation } from "react-apollo";
 import { StyleSheet, css } from "aphrodite";
@@ -44,12 +45,12 @@ export default function LogEntry({ history }) {
     if (business.value === "Other") {
       setModal(!isModalOpen);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // /* eslint-disable */-next-line react-hooks/exhaustive-deps
   }, [business.value]);
 
   // Disable this temporarily until it's setup on the server
   function clearSignature() {
-    // eslint-disable-line no-unused-vars
+    // /* eslint-disable */-line no-unused-vars
     signRef.current.clear();
     setClearBtnActive(!isBtnActive);
   }

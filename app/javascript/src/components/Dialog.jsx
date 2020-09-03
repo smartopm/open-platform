@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { DialogContent, DialogActions, Button, Dialog, DialogContentText, DialogTitle } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close';

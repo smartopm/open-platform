@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment } from 'react'
 import { Helmet } from "react-helmet";
 import { wordpressEndpoint } from '../../utils/constants'

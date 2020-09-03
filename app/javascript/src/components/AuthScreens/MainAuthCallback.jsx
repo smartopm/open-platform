@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";

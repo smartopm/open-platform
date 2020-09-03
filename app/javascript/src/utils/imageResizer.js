@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Return back the orientaion byte
 function extractOrientation(readerResult) {
   // Ugly, but the only way at this point

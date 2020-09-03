@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { render, fireEvent } from '@testing-library/react'

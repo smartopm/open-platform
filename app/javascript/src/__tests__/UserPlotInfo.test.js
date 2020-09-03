@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { UserPlotInfo } from '../components/UserPlotInfo'
 import { BrowserRouter } from 'react-router-dom'
