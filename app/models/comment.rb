@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'comment_stats'
+require 'comment_alert'
 
 # comments
 class Comment < ApplicationRecord
