@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React from 'react'
-import { Helmet } from "react-helmet";
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import PostItem from '../../components/NewsPage/PostItem'
 import { dateToString } from '../../components/DateContainer'
@@ -17,7 +16,6 @@ export default function Posts() {
     const { slug } = useParams()
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
     const currentUrl = window.location.href
-    const image = "https://i2.wp.com/doublegdp.wpcomstaging.com/wp-content/uploads/2020/08/20200804_162543.jpg?fit=1008%2C756&ssl=1";
 
     if (error) {
         return error.message
@@ -27,11 +25,6 @@ export default function Posts() {
     }
     return (
         <React.Fragment>
-            <Helmet>
-                <meta property="og:title" content="Post Page" />
-                <meta property="og:image" content={image} />
-                <meta property="og:description" content="Visit the doubleGDP app to see exciting and interesting posts on Nkwashi" />
-            </Helmet>
             <Nav navName="News" menuButton="back" backTo="/news" />
             <Categories />
             <div>
