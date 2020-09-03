@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { render} from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'

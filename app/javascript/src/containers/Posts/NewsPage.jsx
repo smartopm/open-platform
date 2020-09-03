@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment } from 'react'
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch } from '../../utils/customHooks'

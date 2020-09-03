@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import PostItem from '../../components/NewsPage/PostItem'

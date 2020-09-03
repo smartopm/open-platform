@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import UserListCard from '../components/UserListCard'
 import { render } from '@testing-library/react'

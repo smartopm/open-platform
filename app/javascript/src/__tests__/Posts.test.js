@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import {render} from '@testing-library/react'
 import PostItem from '../components/NewsPage/PostItem';

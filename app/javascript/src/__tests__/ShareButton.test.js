@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import {ShareButton} from '../components/ShareButton'
 import { render } from '@testing-library/react'

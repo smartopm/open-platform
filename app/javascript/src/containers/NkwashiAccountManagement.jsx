@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { useWindowDimensions } from '../utils/customHooks'
 import IframeContainer from '../components/IframeContainer'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Task from '../components/Notes/Task'
 import { render, fireEvent } from '@testing-library/react'

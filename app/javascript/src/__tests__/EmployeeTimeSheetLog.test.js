@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import EmployeeLogs from '../components/TimeTracker/EmployeeTimeSheetLog'
 import { BrowserRouter } from 'react-router-dom/'

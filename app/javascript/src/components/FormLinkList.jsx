@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext } from 'react'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import { List, ListItem, ListItemAvatar, Divider, Typography, Box, Avatar } from '@material-ui/core'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import UserLog from '../components/UserLog'
 import { render } from '@testing-library/react'

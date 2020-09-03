@@ -1,4 +1,5 @@
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels } from '../utils/helpers'
+/* eslint-disable */
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, removeHtmlTagsFromStrings } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com

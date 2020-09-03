@@ -32,14 +32,16 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_attributes(campaign, vals)
-        %w[name campaign_type template_style].each do |attr|
+        %w[name campaign_type message user_id_list batch_time].each do |attr|
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
+        return campaign if vals[:campaign_type].eql?('sms')
+
         add_email_attributes(campaign, vals)
       end
 
       def add_email_attributes(campaign, vals)
-        %w[subject pre_header message user_id_list batch_time].each do |attr|
+        %w[subject pre_header template_style].each do |attr|
           next if vals[attr.to_sym].blank?
 
           campaign.send("#{attr}=", vals[attr.to_sym])
