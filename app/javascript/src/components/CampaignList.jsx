@@ -83,13 +83,13 @@ export default function CampaignList() {
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Success: %{String(parseInt(
+                        Success: {String(parseInt(
                         (100 * c.campaignMetrics.totalClicked) /
                           (c.campaignMetrics.totalSent &&
                           c.campaignMetrics.totalSent > 0
                             ? c.campaignMetrics.totalSent
                             : 1))
-                      )}
+                      )}%
                       </Typography>
                     </Grid>
                   </Grid>
