@@ -4,6 +4,7 @@
 # rubocop:disable ClassLength
 
 require 'email_msg'
+require 'merge_users'
 # User should encompass all users of the system
 # Citizens
 # City Administrators
@@ -380,6 +381,11 @@ class User < ApplicationRecord
 
   def send_email_msg
     EmailMsg.send_welcome_msg(self[:email], self[:name], community.name) unless self[:email].nil?
+  end
+
+  # catch exceptions in here to be caught in the mutation
+  def merge_user(dup_id)
+    MergeUsers.merge(self[:id], dup_id)
   end
 
   private

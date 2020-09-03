@@ -8,9 +8,13 @@ module Mutations
 
       argument :name, String, required: true
       argument :message, String, required: true
+      argument :campaign_type, String, required: true
       argument :batch_time, String, required: true
       argument :user_id_list, String, required: true
       argument :labels, String, required: false
+      argument :subject, String, required: false
+      argument :pre_header, String, required: false
+      argument :template_style, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 
@@ -18,10 +22,7 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         campaign = context[:current_user].community.campaigns.new
-        campaign.name = vals[:name]
-        campaign.message = vals[:message]
-        campaign.user_id_list = vals[:user_id_list]
-        campaign.batch_time = vals[:batch_time]
+        campaign = add_attributes(campaign, vals)
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
         labels = Array(vals[:labels]&.split(',')).map(&:downcase)
@@ -29,6 +30,24 @@ module Mutations
         return { campaign: campaign } if campaign.persisted?
       end
       # rubocop:enable Metrics/AbcSize
+
+      def add_attributes(campaign, vals)
+        %w[name campaign_type message user_id_list batch_time].each do |attr|
+          campaign.send("#{attr}=", vals[attr.to_sym])
+        end
+        return campaign if vals[:campaign_type].eql?('sms')
+
+        add_email_attributes(campaign, vals)
+      end
+
+      def add_email_attributes(campaign, vals)
+        %w[subject pre_header template_style].each do |attr|
+          next if vals[attr.to_sym].blank?
+
+          campaign.send("#{attr}=", vals[attr.to_sym])
+        end
+        campaign
+      end
 
       def authorized?(_vals)
         current_user = context[:current_user]

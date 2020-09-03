@@ -9,6 +9,8 @@ class Campaign < ApplicationRecord
 
   EXPIRATION_DAYS = 7
 
+  validates :campaign_type, inclusion: { in: %w[sms email] }
+
   default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids
@@ -20,16 +22,17 @@ class Campaign < ApplicationRecord
   end
 
   def target_list
-    return user_id_list.split(',') - already_sent_user_ids if user_id_list.present?
+    return [] if user_id_list.blank? && labels.empty?
 
-    []
+    user_id_list.split(',') + labels.joins(:users).pluck(:user_id) - already_sent_user_ids
   end
 
   def target_list_user
-    l = target_list
-    return User.where(state: 'valid').where(id: l) if l.present?
+    label = Label.find_by(short_desc: "com_news_#{campaign_type}")
+    user_ids = target_list.uniq
+    return [] if label.nil? || user_ids.empty?
 
-    []
+    label.users.where(state: 'valid', id: user_ids)
   end
 
   def update_campaign(**vals)
@@ -53,20 +56,29 @@ class Campaign < ApplicationRecord
     true
   end
 
+  def send_email(user_email)
+    EmailMsg.send_campaign_mail(user_email, name, community.name, subject,
+                                pre_header, message, template_style)
+  end
+
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def run_campaign
     admin_user = campaign_admin_user
     update(start_time: Time.current)
     users = target_list_user
     CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
     users.each do |acc|
-      if acc.phone_number.present?
+      if campaign_type.eql?('email')
+        return false unless send_email(acc.email)
+      elsif acc.phone_number.present?
         return false unless send_messages(admin_user, acc)
       end
     end
     update(end_time: Time.current)
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def label_users
     labels.map(&:users)
