@@ -23,6 +23,11 @@ module Types::Queries::Business
       description 'Get business by its owner id'
       argument :user_id, GraphQL::Types::ID, required: true
     end
+
+    field :delete_business, Types::BusinessType, null: true do
+      description 'Delete a business by id'
+      argument :id, GraphQL::Types::ID, required: true
+    end
   end
 
   def businesses(offset: 0, limit: 100)
@@ -45,5 +50,12 @@ module Types::Queries::Business
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     context[:site_community].users.find(user_id)&.businesses&.all
+  end
+
+  def delete_business(id:)
+    adm = context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
+
+    context[:site_community].businesses.update_all({:status => 'deleted'}, {:id => id})
   end
 end

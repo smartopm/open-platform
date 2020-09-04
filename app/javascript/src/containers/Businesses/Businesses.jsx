@@ -1,15 +1,17 @@
 /* eslint-disable */
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import Nav from '../../components/Nav'
 import Business from '../../components/Business/BusinessList'
 import Loading from '../../components/Loading'
 import { useQuery } from 'react-apollo'
 import {BusinessesQuery} from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 
 
 export default function Businesses() {
     const { loading, error, data } = useQuery(BusinessesQuery)
+    const authState = useContext(AuthStateContext)
     if (loading) return <Loading />
     if (error) {
         return <ErrorPage title={error.message || error} /> // error could be a string sometimes
@@ -19,7 +21,7 @@ export default function Businesses() {
         <div>
             <Fragment>
                 <Nav navName="Business Directory" menuButton="back" backTo="/" />
-                <Business businessData={data} />
+                <Business businessData={data} authState={authState}/>
             </Fragment>
         </div>
     )

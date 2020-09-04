@@ -473,6 +473,28 @@ export const BusinessByIdQuery = gql`
     }
   }
 `
+
+// export const BusinessByIdQuery = gql`
+//   query businessById($id: ID!) {
+//     business(id: $id) {
+//       category
+//       createdAt
+//       homeUrl
+//       imageUrl
+//       name
+//       userId
+//       id
+//       address
+//       email
+//       description
+//       status
+//       phoneNumber
+//       operationHours
+//       links
+//     }
+//   }
+// `
+
 export const UserLabelsQuery = gql`
   query userLabelsbyId($userId: ID!) {
     userLabels(userId: $userId) {
