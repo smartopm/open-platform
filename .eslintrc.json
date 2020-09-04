@@ -11,8 +11,7 @@
   "extends": ["airbnb","eslint:recommended", "plugin:react/recommended", "prettier", "plugin:react-hooks/recommended"],
   "rules": {
     "comma-dangle": 0,
-    "react/prop-types": 0,
-    "react/jsx-fragments": 0
+    "react/prop-types": 0
   },
   "env": {
     "browser": true,
@@ -23,7 +22,7 @@
   "settings": {
     "react": {
       "pragma": "React",
-      "version": "0.16.7"
+      "version": "16.9"
     }
   }
 }
