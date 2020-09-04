@@ -1,0 +1,70 @@
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import GridListTileBar from '@material-ui/core/GridListTileBar'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useHistory } from 'react-router-dom'
+import { useFetch } from '../../utils/customHooks'
+import { wordpressEndpoint } from '../../utils/constants'
+import { Spinner } from '../Loading'
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper
+  },
+  gridList: {
+    flexWrap: 'nowrap'
+  },
+  title: {
+    color: theme.palette.primary.light
+  }
+}))
+
+export function PostItemGrid({ data }) {
+  const classes = useStyles()
+  const history = useHistory()
+  const matches = useMediaQuery('(max-width:600px)')
+
+  function routeToPost(postId) {
+    history.push(`/news/post/${postId}`)
+  }
+  return (
+    <div className={classes.root}>
+      <GridList
+        className={classes.gridList}
+        cols={matches ? 2 : 4}
+        spacing={15}
+      >
+        {data.length &&
+          data.map(tile => (
+            <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
+              <img src={tile.featured_image} alt={tile.title} />
+              <GridListTileBar
+                title={tile.title}
+                classes={{
+                  title: classes.title
+                }}
+              />
+            </GridListTile>
+          ))}
+      </GridList>
+    </div>
+  )
+}
+
+export default function NewsFeed() {
+  const { response, error } = useFetch(`${wordpressEndpoint}/posts`)
+  if (error) {
+    return error.message
+  }
+  if (!response || !response.posts) {
+    return <Spinner />
+  }
+  const data = response.posts?.slice(0, 5) || []
+  return <PostItemGrid data={data} />
+}
