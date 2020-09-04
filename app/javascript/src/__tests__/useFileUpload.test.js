@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Mock out browser File to prevent errors on import
 global.File = {
   prototype: {

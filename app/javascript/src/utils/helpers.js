@@ -1,3 +1,4 @@
+/* eslint-disable */
 import dompurify from 'dompurify';
 
 // keep string methods [helpers]
@@ -28,12 +29,6 @@ export function findLinkAndReplace(msg) {
     }
     return `<a href="${url}" >${url}</a>`
   })
-}
-
-export function removeHtmlTagsFromStrings(str) {
-  if (str) {
-    return str.replace(/<(.|\n)*?>/g, '')
-  }
 }
 
 /**

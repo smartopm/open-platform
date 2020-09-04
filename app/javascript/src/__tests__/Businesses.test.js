@@ -1,7 +1,11 @@
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-props-no-spreading */
+
 import React from 'react'
 import { render } from '@testing-library/react'
-import Business from '../components/Business/BusinessList';
 import { BrowserRouter } from 'react-router-dom/'
+import Business from '../components/Business/BusinessList';
+
 describe('It tests the business directory list', () => {
 
     const props = {
@@ -23,17 +27,17 @@ describe('It tests the business directory list', () => {
   
     it('It should render business name', () => {
         const container = render(
-            <BrowserRouter>
-                <Business {...props} />
-            </BrowserRouter>)
+          <BrowserRouter>
+            <Business {...props} />
+          </BrowserRouter>)
         expect(container.queryByTestId('business-name')).toBeTruthy()
     });
 
     it('It should render business category', () => {
         const container = render(
-            <BrowserRouter>
-                <Business {...props} />
-            </BrowserRouter>)
+          <BrowserRouter>
+            <Business {...props} />
+          </BrowserRouter>)
         expect(container.queryByTestId('business-category').textContent).toBeTruthy()
     });
 

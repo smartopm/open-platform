@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { NewRequestButton, Results } from '../containers/Search'
 import { render } from '@testing-library/react'

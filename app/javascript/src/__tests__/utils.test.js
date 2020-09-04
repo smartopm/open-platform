@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, removeHtmlTagsFromStrings } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
@@ -16,18 +17,6 @@ const duplicateError = "GraphQL error: Duplicate Email"
 
 const fieldError = "GraphQL error: userType of type String! was provided invalid value"
 const requiredKeys = ["userType", "phoneNumber", "name", "email"];
-const strWithHtmlTag = "<p>Hello, I am a string</p>"
-
-describe('remove html tags from strings', () => {
-  it('should remove tags from string', () => {
-    expect(removeHtmlTagsFromStrings(strWithHtmlTag)).toBe(
-      'Hello, I am a string'
-    )
-  })
-  it('should return undefined when no params is given', () => {
-    expect(removeHtmlTagsFromStrings()).toBe(undefined)
-  })
-})
 
 describe('find links and replace with anchor tag', () => {
   // find link in a text and replace

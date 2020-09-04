@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Campaign from '../components/CampaignList'
 import { render, waitFor } from '@testing-library/react'

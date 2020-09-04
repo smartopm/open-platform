@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { SideList } from '../components/SideList'
 import { BrowserRouter } from 'react-router-dom/'

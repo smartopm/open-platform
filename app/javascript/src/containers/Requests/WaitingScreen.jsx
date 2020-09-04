@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-apollo";
@@ -16,7 +17,7 @@ export default function HoldScreen({ match }) {
     return function cleanup() {
       stopPolling();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // /* eslint-disable */-next-line react-hooks/exhaustive-deps
   }, []);
   if (loading) {
     return <WaitScreen />;

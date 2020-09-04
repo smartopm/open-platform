@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Typography, Container } from '@material-ui/core'
 import PropTypes from 'prop-types'

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { CommentBox, CommentSection } from '../components/Discussion/Comment'
 import { render, fireEvent } from '@testing-library/react'

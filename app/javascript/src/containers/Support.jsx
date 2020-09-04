@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment, useContext } from 'react'
 import Nav from '../components/Nav'
 import { useHistory } from 'react-router-dom'

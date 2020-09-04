@@ -1,3 +1,4 @@
+/* eslint-disable */
 // One Time Passcode Screen
 import React, { Fragment, useState } from 'react'
 import Nav from '../components/Nav'

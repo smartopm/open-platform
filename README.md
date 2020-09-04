@@ -113,6 +113,16 @@ To autofix
 
 `docker-compose run --rm rails eslint app/javascript/src
 
+#### You can also add aliases
+if you are on a UNIX based OS, edit ~/.bashrc file and add these lines
+
+`alias rlint='docker-compose run --rm rails rake lint:fix'`  
+`alias rtest='docker-compose run --rm rails rake'`  
+`alias ytest='docker-compose run --rm webpacker yarn run test'`  
+`alias ylint='docker-compose run --rm webpacker yarn run lint'`  
+
+You can customize aliases according to your liking
+
 #### Before a merge/pull request
 
 Before you submit a merge or pull request, please ensure that both

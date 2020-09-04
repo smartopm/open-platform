@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import {
   Button,
@@ -10,7 +11,7 @@ import {
 } from '@material-ui/core'
 
 export default function FollowDialogueBox({
-  authState: { email },
+  authState: { user: { email } },
   open,
   handleClose,
   subscribe,

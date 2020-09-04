@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { withStyles, Tab } from '@material-ui/core'
 import { StyledTabs } from './../Tabs'

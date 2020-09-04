@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'

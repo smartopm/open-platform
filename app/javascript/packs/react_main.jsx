@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
@@ -167,7 +168,7 @@ const Analytics = props => {
         ReactGA.pageview(location.pathname)
       }
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // /* eslint-disable */-next-line react-hooks/exhaustive-deps
   }, [authState.user, history])
 
   return props.children

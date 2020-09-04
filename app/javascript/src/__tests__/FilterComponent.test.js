@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import FilterComponent from '../components/FilterComponent'
 import { render } from '@testing-library/react'

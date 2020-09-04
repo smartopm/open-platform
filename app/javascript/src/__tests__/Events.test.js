@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Events from '../components/Events'
 import { render,} from '@testing-library/react'

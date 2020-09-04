@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import UserInformation from '../components/UserInformation'
 import { render,} from '@testing-library/react'

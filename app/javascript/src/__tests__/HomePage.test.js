@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Homepage from '../components/HomePage'
 import { render } from '@testing-library/react'

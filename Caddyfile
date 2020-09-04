@@ -46,22 +46,6 @@ https://olivier.dgdp.site {
   }
 }
 
-https://dennis.dgdp.site {
-  tls /root/certs/dennis.dgdp.site/cert.pem /root/certs/dennis.dgdp.site/privkey.pem
-  log stdout
-  errors stdout
-  proxy /packs webpacker:3035 {
-    transparent
-  }
-  proxy /sockjs-node webpacker:3035 {
-    transparent
-    websocket
-  }
-  proxy / rails:3000 {
-    transparent
-  }
-}
-
 https://saurabh.dgdp.site {
   tls /root/certs/saurabh.dgdp.site/cert.pem /root/certs/saurabh.dgdp.site/privkey.pem
   log stdout
@@ -80,38 +64,6 @@ https://saurabh.dgdp.site {
 
 https://nick.dgdp.site {
   tls /root/certs/nick.dgdp.site/cert.pem /root/certs/nick.dgdp.site/privkey.pem
-  log stdout
-  errors stdout
-  proxy /packs webpacker:3035 {
-    transparent
-  }
-  proxy /sockjs-node webpacker:3035 {
-    transparent
-    websocket
-  }
-  proxy / rails:3000 {
-    transparent
-  }
-}
-
-https://yoram.dgdp.site {
-  tls /root/certs/yoram.dgdp.site/cert.pem /root/certs/yoram.dgdp.site/privkey.pem
-  log stdout
-  errors stdout
-  proxy /packs webpacker:3035 {
-    transparent
-  }
-  proxy /sockjs-node webpacker:3035 {
-    transparent
-    websocket
-  }
-  proxy / rails:3000 {
-    transparent
-  }
-}
-
-https://kamran.dgdp.site {
-  tls /root/certs/kamran.dgdp.site/cert.pem /root/certs/kamran.dgdp.site/privkey.pem
   log stdout
   errors stdout
   proxy /packs webpacker:3035 {

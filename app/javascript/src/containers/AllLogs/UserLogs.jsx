@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
