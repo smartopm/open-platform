@@ -21,6 +21,7 @@ describe('Details page for news post content', () => {
   it('it should include the post details ', () => {
     const container = render(<PostItemGrid data={response} />)
     expect(container.queryByText('Test title')).toBeInTheDocument()
+    expect(container.queryByText('Latest News')).toBeInTheDocument()
     expect(container.queryByText('Test Another title')).toBeInTheDocument()
     expect(container.queryAllByTestId('tile_image')[0]).toHaveAttribute('src', 'https://placeholder.com')
     expect(container.queryAllByTestId('tile_image')[1]).toHaveAttribute('src', 'https://placeholder.com/2342')

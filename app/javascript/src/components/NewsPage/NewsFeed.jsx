@@ -37,6 +37,14 @@ export function PostItemGrid({ data }) {
   }
   return (
     <div className={classes.root}>
+      <Typography
+        align="center"
+        color="textSecondary"
+        gutterBottom
+        variant="h6"
+      >
+        Latest News
+      </Typography>
       <GridList
         className={classes.gridList}
         cols={matches ? 2 : 3}
