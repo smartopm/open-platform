@@ -37,13 +37,13 @@ export function PostItemGrid({ data }) {
     <div className={classes.root}>
       <GridList
         className={classes.gridList}
-        cols={matches ? 2 : 4}
+        cols={matches ? 2 : 3}
         spacing={15}
       >
         {data.length &&
           data.map(tile => (
             <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
-              <img src={tile.featured_image} alt={tile.title} />
+              <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
               <GridListTileBar
                 title={tile.title}
                 classes={{
