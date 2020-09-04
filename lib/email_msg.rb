@@ -6,6 +6,7 @@ require 'uri'
 require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
+# rubocop:disable Metrics/ClassLength
 class EmailMsg
   include SendGrid
 
@@ -35,9 +36,6 @@ class EmailMsg
     return if Rails.env.test?
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
 
-    client = SendGrid::API.new(
-      api_key: Rails.application.credentials[:sendgrid_updated_api_key],
-    ).client
     mail = SendGrid::Mail.new
     mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
     personalization = Personalization.new
@@ -77,6 +75,20 @@ class EmailMsg
     response.read_body
     emails = JSON.parse(response.read_body)
     emails['messages']
+  end
+
+  def self.send_task_notification(user_email, _task_id)
+    return if Rails.env.test?
+    raise EmailMsgError, 'Email must be provided' if user_email.blank?
+
+    mail = SendGrid::Mail.new
+    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
+    personalization = Personalization.new
+    personalization.add_to(SendGrid::Email.new(email: user_email))
+    personalization.add_dynamic_template_data("url": "#{ENV['HOST']}/todo")
+    mail.add_personalization(personalization)
+    mail.template_id = 'd-1fe3bcf8035c4c1c9737e147c4eb31c6'
+    client.mail._('send').post(request_body: mail.to_json)
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -150,5 +162,10 @@ class EmailMsg
     end
   end
   # rubocop:enable Metrics/MethodLength
+
+  def self.client
+    SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_updated_api_key]).client
+  end
 end
+# rubocop:enable Metrics/ClassLength
 # rubocop:enable Metrics/AbcSize
