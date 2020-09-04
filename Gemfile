@@ -71,6 +71,9 @@ gem 'search_cop'
 # for reading and xls and xlsx files
 gem "roo", "~> 2.8.0"
 
+# To get visual metrics of heroku deployment
+gem "barnes"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
