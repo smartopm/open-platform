@@ -5,9 +5,11 @@ import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useHistory } from 'react-router-dom'
+import { Typography } from '@material-ui/core'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
 import { Spinner } from '../Loading'
+import CenteredContent from '../CenteredContent'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -60,7 +62,18 @@ export function PostItemGrid({ data }) {
 export default function NewsFeed() {
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`)
   if (error) {
-    return error.message
+    return (
+      <CenteredContent>
+        <Typography
+          align="center"
+          color="textSecondary"
+          gutterBottom
+          variant="h6"
+        >
+          {error.message}
+        </Typography>
+      </CenteredContent>
+    )
   }
   if (!response || !response.posts) {
     return <Spinner />
