@@ -57,6 +57,7 @@ RSpec.configure do |config|
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Shoulda::Callback::Matchers::ActiveModel
 
   config.include ControllerSpecHelper, type: :controller
 

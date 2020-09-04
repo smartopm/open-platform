@@ -5,8 +5,8 @@ class AssigneeNote < ApplicationRecord
   belongs_to :user
   belongs_to :note
 
-  before_create :notify_user
-  before_update :notify_user, if: proc { changed_attributes.include?(:user_id) }
+  after_create :notify_user
+  after_update :notify_user, if: proc { saved_change_to_user_id? }
 
   private
 
