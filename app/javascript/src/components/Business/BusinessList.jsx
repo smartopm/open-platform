@@ -7,7 +7,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Avatar from '../Avatar'
 import BusinessActionMenu from './BusinessActionMenu'
 
-export default function BusinessList({ businessData, authState }) {
+export default function BusinessList({ businessData, authState, refetch }) {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
 
@@ -61,11 +61,12 @@ export default function BusinessList({ businessData, authState }) {
                             </IconButton>
                             <BusinessActionMenu
                                 authState={authState}
-                                data={businessData}
+                                data={business}
                                 anchorEl={anchorEl}
                                 handleClose={handleClose}
                                 open={open}
                                 linkStyles={css(styles.linkItem)}
+                                refetch={refetch}
                             />
                         </ListItem>
                     ))

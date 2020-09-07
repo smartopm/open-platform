@@ -10,7 +10,7 @@ import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 
 
 export default function Businesses() {
-    const { loading, error, data } = useQuery(BusinessesQuery)
+    const { loading, error, data, refetch } = useQuery(BusinessesQuery)
     const authState = useContext(AuthStateContext)
     if (loading) return <Loading />
     if (error) {
@@ -21,7 +21,7 @@ export default function Businesses() {
         <div>
             <Fragment>
                 <Nav navName="Business Directory" menuButton="back" backTo="/" />
-                <Business businessData={data} authState={authState}/>
+                <Business businessData={data} authState={authState} refetch={refetch}/>
             </Fragment>
         </div>
     )

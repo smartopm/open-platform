@@ -8,7 +8,7 @@ module Mutations
       def resolve(id:)
         business_delete = context[:site_community].businesses.find(id)&.update(status: "deleted")
   
-        return { business_delete: business_delete } if business_delete.persisted?
+        return { business_delete: business_delete } if business_delete
   
         raise GraphQL::ExecutionError, business_delete.errors.full_message
       end
