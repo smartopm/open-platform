@@ -9,7 +9,8 @@
 # {
 #     "count": 4,
 #     "community": "Nkwashi",
-#     "disc_id": "1ea0e106-6eba-49f2-9b92-4abbd982bf83"
+#     "disc_id": "1ea0e106-6eba-49f2-9b92-4abbd982bf83",
+#     "data": [array of discussions]
 #     }
 require 'email_msg'
 
@@ -29,13 +30,9 @@ class CommentsAlert
     disc_ids = updated_discussions(community_name)
     users = Discussion.by_subscribers(disc_ids)
     users.each do |user|
-      # i was hoping to query where user_id matches the discussion_id but am not sure it can work
-      # disc_ids.each do |disc_id|
-      #   discussion_id = user.discussion_user.find_by(discussion_id: disc_id)
-      # end
       count = Comment.created_today.by_discussion(disc_ids, user).count
-      # Find a way of getting the discussion_id, temporarily using the last discussion_id
-      data = { 'count' => count, 'disc_id' => disc_ids[0] }
+      discussions = user.discussions.where(id: disc_ids)
+      data = { 'count' => count, 'discussions' => discussions }
       EmailMsg.send_community_mail(user.email, user.name, community_name, template_id, data)
     end
   end

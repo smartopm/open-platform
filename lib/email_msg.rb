@@ -39,7 +39,7 @@ class EmailMsg
       "community": community,
       "name": name,
       "count": data['count'],
-      "disc_id": data['disc_id'],
+      "discussions": data['discussions'],
     )
     mail.add_personalization(personalization)
     mail.template_id = template_id
