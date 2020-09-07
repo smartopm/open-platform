@@ -10,7 +10,7 @@ class Discussion < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   scope :by_subscribers, lambda { |disc_ids|
-    User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids })
+    User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids }).distinct
   }
   scope :by_commented_today, lambda {
     joins(:comments).where(['comments.created_at >= ?', Time.zone.now.beginning_of_day])
