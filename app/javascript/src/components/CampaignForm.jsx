@@ -1,15 +1,13 @@
-/* eslint-disable */
+/* eslint-disable no-use-before-define */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
+import { useMutation } from 'react-apollo'
 import { Button, TextField, Chip, Snackbar, MenuItem } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
-import { useMutation } from 'react-apollo'
 import { CampaignCreate, CampaignUpdateMutation, CampaignLabelRemoveMutation } from '../graphql/mutations'
-import { delimitorFormator } from '../utils/helpers'
-import { saniteError, getJustLabels } from '../utils/helpers'
-import CampaignLabels from './CampaignLabels.jsx'
-import { useParams } from 'react-router-dom'
+import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
+import CampaignLabels from './CampaignLabels'
 
 const initData = {
   id: '',
@@ -27,20 +25,18 @@ const initData = {
 export default function CampaignForm({ authState, data, loading, refetch }) {
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
-  const [batchTime, setBatchTime] = useState(new Date())
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [mutationLoading, setLoading] = useState(false)
   const [campaignCreate] = useMutation(CampaignCreate)
   const [campaignUpdate] = useMutation(CampaignUpdateMutation)
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
   const { id } = useParams() // will only exist on campaign update
-
   const [formData, setFormData] = useState(initData)
 
-  async function createCampaignOnSubmit(data) {
+  async function createCampaignOnSubmit(campData) {
     setLoading(true)
     try {
-      await campaignCreate({ variables: data })
+      await campaignCreate({ variables: campData })
       setIsSubmitted(true)
       setFormData(initData)
       setLoading(false)
@@ -50,11 +46,10 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       setLoading(false)
     }
   }
-
-  async function campaignUpdateOnSubmit(data) {
+  async function campaignUpdateOnSubmit(campData) {
     setLoading(true)
     try {
-      await campaignUpdate({ variables: data })
+      await campaignUpdate({ variables: campData })
       setIsSubmitted(true)
       setLoading(false)
     }
@@ -63,7 +58,6 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       setLoading(false)
     }
   }
-
   function handleSubmit(e) {
     e.preventDefault()
     // if creating a campaign don't spread
@@ -74,7 +68,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       name: formData.name,
       campaignType: formData.campaignType,
       message: formData.message,
-      batchTime,
+      batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
       labels: labels.toString(),
       subject: formData.subject,
@@ -86,11 +80,9 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
     }
    return createCampaignOnSubmit(campaignData)
   }
-
-  function handleLabelSelect(label) {
-    setLabel([...getJustLabels(label)])
+  function handleLabelSelect(value) {
+    setLabel([...getJustLabels(value)])
   }
-
   function handleInputChange(e) {
     const { name, value } = e.target
     setFormData({
@@ -98,7 +90,12 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       [name]: value
     })
   }
-
+  function handleDateChange(date) {
+    setFormData({
+      ...formData,
+      batchTime: date
+    })
+  }
   function handleLabelDelete(labelId) {
     // need campaign id and labelId
     campaignLabelRemove({
@@ -107,14 +104,12 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       .then(() => refetch())
       .catch(err => setErrorMsg(err.message))
   }
-
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
   }
   if (!loading && !formData.loaded && data) {
     setFormData({ ...data, loaded: true, }) 
   }
-
   return (
     <div className="container">
       <Snackbar
@@ -199,7 +194,6 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
             />
           </>
         )}
-
         <TextField
           label="User ID List"
           rows={5}
@@ -218,6 +212,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           {label.map((labl, i) => (
             <Chip
               data-testid="campaignChip-label"
+              // eslint-disable-next-line react/no-array-index-key
               key={i}
               size="medium"
               label={labl?.shortDesc || labl}
@@ -234,7 +229,6 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
               />
             ))}
         </div>
-
         <div>
           <CampaignLabels handleLabelSelect={handleLabelSelect} />
         </div>
@@ -243,8 +237,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           <DateAndTimePickers
             label="Batch Time"
             required
-            selectedDateTime={batchTime}
-            handleDateChange={setBatchTime}
+            selectedDateTime={formData.batchTime}
+            handleDateChange={handleDateChange}
           />
         </div>
         <div className="d-flex row justify-content-center">
