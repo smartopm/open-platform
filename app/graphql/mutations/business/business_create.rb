@@ -3,6 +3,7 @@ module Mutations
     module Business
       # BusinessCreate
       class BusinessCreate < BaseMutation
+        argument :user_id, ID, required: true
         argument :name, String, required: true
         argument :email, String, required: true
         argument :phone_number, String, required: true
@@ -33,4 +34,5 @@ module Mutations
         end
     end
   end
+end
   

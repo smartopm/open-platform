@@ -63,5 +63,8 @@ module Types
 
     # notifications
     field :notification_preference, mutation: Mutations::Settings::NotificationPreference
+
+    # businesses
+    field :business_create, mutation: Mutations::Business::BusinessCreate
   end
 end
