@@ -23,6 +23,7 @@ class CommentsAlert
     discussion_ids
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.send_email_alert(community_name)
     return if Rails.env.test?
 
@@ -33,12 +34,13 @@ class CommentsAlert
       count = Comment.created_today.by_discussion(disc_ids, user).count
       discussions = user.discussions.where(id: disc_ids)
       data = {
-        :count => count,
-        :discussions => discussions,
-        :community => community_name,
-        :name => user.name,
+        count: count,
+        discussions: discussions,
+        community: community_name,
+        name: user.name,
       }
       EmailMsg.send_mail(user.email, template_id, data)
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end

@@ -19,9 +19,6 @@ class EmailMsg
     return if Rails.env.test?
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
 
-    puts "============================"
-    puts template_data
-
     mail = SendGrid::Mail.new
     mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
     personalization = Personalization.new

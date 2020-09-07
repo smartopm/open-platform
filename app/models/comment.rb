@@ -7,7 +7,6 @@ class Comment < ApplicationRecord
   belongs_to :discussion
 
   has_one_attached :image
-  after_create :send_alert
 
   default_scope { order(created_at: :desc) }
   scope :created_today, -> { where(['created_at >= ?', Time.zone.now.beginning_of_day]) }
@@ -16,9 +15,4 @@ class Comment < ApplicationRecord
   IMAGE_ATTACHMENTS = {
     image_blob_id: :image,
   }.freeze
-
-  # add a test method, remove before pushing
-  def send_alert
-    CommentsAlert.send_email_alert('Nkwashi')
-  end
 end
