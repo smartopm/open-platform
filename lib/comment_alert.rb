@@ -32,8 +32,13 @@ class CommentsAlert
     users.each do |user|
       count = Comment.created_today.by_discussion(disc_ids, user).count
       discussions = user.discussions.where(id: disc_ids)
-      data = { 'count' => count, 'discussions' => discussions }
-      EmailMsg.send_community_mail(user.email, user.name, community_name, template_id, data)
+      data = {
+        :count => count,
+        :discussions => discussions,
+        :community => community_name,
+        :name => user.name,
+      }
+      EmailMsg.send_mail(user.email, template_id, data)
     end
   end
 end

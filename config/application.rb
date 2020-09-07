@@ -28,6 +28,7 @@ module DoubleGDP
     end
 
     config.active_job.queue_adapter = :sidekiq
+    config.eager_load_paths += ["#{Rails.root}/lib"]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

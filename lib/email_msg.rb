@@ -6,7 +6,6 @@ require 'uri'
 require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
-# rubocop:disable Metrics/ClassLength
 class EmailMsg
   include SendGrid
 
@@ -16,61 +15,22 @@ class EmailMsg
   # disabling rubocop till I find a better to lighten this method
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def self.send_welcome_msg(user_email, name, community)
+  def self.send_mail(user_email, template_id, template_data)
     return if Rails.env.test?
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
 
-    welc_template_id = 'd-bec0f1bd39f240d98a146faa4d7c5235'
-    send_community_mail(user_email, name, community, welc_template_id)
-  end
+    puts "============================"
+    puts template_data
 
-  def self.send_community_mail(user_email, name, community, template_id, data = nil)
-    return if Rails.env.test?
-    raise EmailMsgError, 'Email must be provided' if user_email.blank?
-
-    client = SendGrid::API.new(
-      api_key: Rails.application.credentials[:sendgrid_updated_api_key],
-    ).client
     mail = SendGrid::Mail.new
     mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
     personalization = Personalization.new
     personalization.add_to(SendGrid::Email.new(email: user_email))
-    personalization.add_dynamic_template_data(
-      "community": community,
-      "name": name,
-      "count": data['count'],
-      "discussions": data['discussions'],
-    )
+    personalization.add_dynamic_template_data(template_data)
     mail.add_personalization(personalization)
     mail.template_id = template_id
     client.mail._('send').post(request_body: mail.to_json)
   end
-
-  # rubocop:disable Metrics/ParameterLists
-  def self.send_campaign_mail(user_email, name, community, subject, pre_header, message, _template)
-    return if Rails.env.test?
-    raise EmailMsgError, 'Email must be provided' if user_email.blank?
-
-    client = SendGrid::API.new(
-      api_key: Rails.application.credentials[:sendgrid_updated_api_key],
-    ).client
-    mail = SendGrid::Mail.new
-    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
-    personalization = Personalization.new
-    personalization.add_to(SendGrid::Email.new(email: user_email))
-    personalization.add_dynamic_template_data(
-      "community": community,
-      "name": name,
-      "subject": subject,
-      "pre_header": pre_header,
-      "message": message,
-      # "url": 'https://double-gdp-staging.herokuapp.com/' # Pass any url for usage in template
-    )
-    mail.add_personalization(personalization)
-    mail.template_id = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
-    client.mail._('send').post(request_body: mail.to_json)
-  end
-  # rubocop:enable Metrics/ParameterLists
 
   def self.messages_from_sendgrid(date_from)
     return if Rails.env.test?
@@ -94,7 +54,6 @@ class EmailMsg
     emails = JSON.parse(response.read_body)
     emails['messages']
   end
-  # rubocop:enable Metrics/MethodLength
 
   # other stuff ==> message body
   # is_open ==> is_read
@@ -138,9 +97,14 @@ class EmailMsg
     )
   end
 
+  def self.client
+    @client ||= SendGrid::API.new(
+      api_key: Rails.application.credentials[:sendgrid_updated_api_key],
+    ).client
+  end
+
   # call this method from message model with the community_id
   # We can also add this to the scheduler as well if we have community_id
-  # rubocop:disable Metrics/MethodLength
   def self.save_sendgrid_messages(community_name, emails, sender_email)
     # replace this with Mutale's email
     # add more validation to make sure users exist before saving that user.
@@ -168,4 +132,3 @@ class EmailMsg
   # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/ClassLength

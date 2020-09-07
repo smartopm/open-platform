@@ -78,6 +78,8 @@ class User < ApplicationRecord
 
   PHONE_TOKEN_LEN = 6
   PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
+  WELCOME_TEMPLATE_ID = 'd-bec0f1bd39f240d98a146faa4d7c5235'
+
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
@@ -380,7 +382,16 @@ class User < ApplicationRecord
   end
 
   def send_email_msg
-    EmailMsg.send_welcome_msg(self[:email], self[:name], community.name) unless self[:email].nil?
+    return if self[:email].nil?
+
+    EmailMsg.send_mail(self[:email], WELCOME_TEMPLATE_ID, welcome_mail_data)
+  end
+
+  def welcome_mail_data
+    {
+      "community": community,
+      "name": name,
+    }
   end
 
   # catch exceptions in here to be caught in the mutation
