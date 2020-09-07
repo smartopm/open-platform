@@ -25,13 +25,4 @@ RSpec.describe User, type: :model do
     expect(discussions).not_to be_nil
     expect(discussions.length).to eql 1
   end
-
-  it 'should find list of discussion subscribers ' do
-    # subscribe to a discussion
-    user_discussion.follow_or_unfollow_discussion(another, user_discussion.id)
-    user_discussion.follow_or_unfollow_discussion(admin, user_discussion.id)
-    users = CommentsAlert.list_subscribers('Nkwashi')
-    expect(users).not_to be_nil
-    expect(users.length).to eql 2
-  end
 end
