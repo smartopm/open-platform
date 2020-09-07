@@ -1,7 +1,9 @@
 /* eslint-disable */
 import React from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+// import { useMutation } from 'react-apollo'
+// import { Link } from 'react-router-dom'
+// import { DeleteBusiness } from '../../graphql/mutations'
 
 
 export default function BusinessActionMenu({
@@ -12,6 +14,12 @@ export default function BusinessActionMenu({
   open,
   linkStyles
 }) {
+  // const [deleteBusiness] = useMutation(DeleteBusiness)
+  // function handleDelete() {
+  //   deleteBusiness({
+  //       variables: { id: data.id }
+  //     })
+  //   }
   return (
     <Menu
       id="long-menu"
