@@ -9,6 +9,13 @@ class Discussion < ApplicationRecord
   has_many :users, through: :discussion_users
   default_scope { order(created_at: :desc) }
 
+  scope :by_subscribers, ->(disc_ids) { 
+    User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids }) 
+  }
+  scope :by_commented_today, ->{ 
+    joins(:comments).where(['comments.created_at >= ?', Time.zone.now.beginning_of_day]) 
+  }
+
   def follow_or_unfollow_discussion(user, discussion_id)
     a_discussion = DiscussionUser.find_by(user_id: user.id, discussion_id: discussion_id)
 
@@ -17,9 +24,5 @@ class Discussion < ApplicationRecord
     else
       DiscussionUser.create!(user_id: user.id, discussion_id: self[:id])
     end
-  end
-
-  def self.commented_today
-    joins(:comments).where(['comments.created_at >= ?', Time.zone.now.beginning_of_day])
   end
 end

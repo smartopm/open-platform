@@ -17,28 +17,25 @@ require 'email_msg'
 class CommentsAlert
   def self.updated_discussions(community_name)
     # check discussions that were commented on today
-    discussions = Community.find_by(name: community_name).discussions.commented_today
+    discussions = Community.find_by(name: community_name).discussions.by_commented_today
     discussion_ids = discussions.pluck(:id)
     discussion_ids
-  end
-
-  def self.list_subscribers(community_name)
-    disc_ids = updated_discussions(community_name)
-    # check users subscribed to updated discussions
-    users = User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids })
-    users
   end
 
   def self.send_email_alert(community_name)
     return if Rails.env.test?
 
     template_id = 'd-a34dedfb684d446e849a02ccf480b985'
-    users = list_subscribers(community_name)
+    disc_ids = updated_discussions(community_name)
+    users = Discussion.by_subscribers(disc_ids)
     users.each do |user|
-      disc_id = Discussion.pluck(:id)
-      count = Comment.where(discussion_id: disc_id, user_id: user).count
+      # here i was hoping to query where user_id matches the discussion_id but am not sure it can work
+      # disc_ids.each do |disc_id|
+      #   discussion_id = user.discussion_user.find_by(discussion_id: disc_id)
+      # end
+      count = Comment.by_discussion(disc_ids, user).count
       # Find a way of getting the discussion_id
-      data = { 'count' => count, 'disc_id' => '' }
+      data = { 'count' => count, 'disc_id' => disc_ids[0] }
       EmailMsg.send_community_mail(user.email, user.name, community_name, template_id, data)
     end
   end
