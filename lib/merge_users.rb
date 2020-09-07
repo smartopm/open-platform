@@ -135,7 +135,11 @@ class MergeUsers
     # Update user in UserLabel
     user_labels = UserLabel.where(user_id: user_id)
     user_labels.each do |user_label|
-      user_label.update(user_id: duplicate_id)
+      if UserLabel.exists?(user_id: duplicate_id)
+        user_label.destroy
+      else
+        user_label.update(user_id: duplicate_id)
+      end
     end
 
     # Update user in ActivityLog
@@ -156,7 +160,8 @@ class MergeUsers
 
     # rubocop:enable Metrics/LineLength
 
-    %w[Note Message Feedback EntryRequest Account TimeSheet UserLabel].each do |table_name|
+    %w[Note AssigneeNote Business Comment ContactInfo Discussion
+       Message Feedback EntryRequest Account TimeSheet UserLabel].each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
       raise StandardError, 'Update Failed'
