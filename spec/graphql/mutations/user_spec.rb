@@ -330,8 +330,8 @@ RSpec.describe Mutations::User do
                                                            current_user: admin,
                                                            site_community: admin.community,
                                                          }).as_json
-      expect(result.dig('data', 'userMerge', 'success')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to eql 'Duplicate Entry'
+      expect(result.dig('data', 'userMerge', 'success')).to eql true
+      expect(result.dig('errors', 0, 'message')).to be_nil
     end
 
     it 'should not merge the 2 new given users' do
