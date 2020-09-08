@@ -9,7 +9,7 @@ import ErrorPage from '../../components/Error'
 
 
 export default function Businesses() {
-    const { loading, error, data } = useQuery(BusinessesQuery)
+    const { loading, error, data, refetch } = useQuery(BusinessesQuery)
     if (loading) return <Loading />
     if (error) {
         return <ErrorPage title={error.message || error} /> // error could be a string sometimes
@@ -19,7 +19,7 @@ export default function Businesses() {
         <div>
             <Fragment>
                 <Nav navName="Business Directory" menuButton="back" backTo="/" />
-                <Business businessData={data} />
+                <Business businessData={data} refetch={refetch}/>
             </Fragment>
         </div>
     )

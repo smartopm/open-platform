@@ -17,16 +17,16 @@ import Avatar from '../Avatar'
 import CenteredContent from '../CenteredContent'
 import BusinessForm from './BusinessForm'
 
-export default function BusinessList({ businessData }) {
+export default function BusinessList({ businessData, refetch }) {
   const [open, setModalOpen] = useState(false)
 
   function openModal() {
     setModalOpen(!open)
+    refetch()
   }
   return (
     <div className="container">
       <Dialog
-        // fullScreen
         open={open}
         fullWidth
         maxWidth="lg"

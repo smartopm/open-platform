@@ -2,7 +2,7 @@
 // Image Upload, Email, Phone Number, Address Operating Hours
 
 import React, { useState } from 'react'
-import { TextField, Container, Button  } from '@material-ui/core'
+import { TextField, Container, Button, Typography  } from '@material-ui/core'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import CenteredContent from '../CenteredContent'
@@ -31,6 +31,8 @@ const initialUserData = {
 export default function BusinessForm({ close }){
     const [data, setData] = useState(initialData)
     const [userData, setUserData] = useState(initialUserData)
+    const [error, setError] = useState(null)
+
     const [createBusiness] = useMutation(BusinessCreateMutation)
 
     function handleInputChange(event) {
@@ -43,7 +45,6 @@ export default function BusinessForm({ close }){
     
       function handleCreateBusiness(event){
         event.preventDefault()
-        console.log(data)
         const { name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, } = data
         createBusiness({
           variables: { 
@@ -51,9 +52,7 @@ export default function BusinessForm({ close }){
            }
         }).then(() => {
           close()
-        }).catch(err => {
-          console.log(err.message)
-        })
+        }).catch(err => setError(err.message))
       }
     return (
       <Container maxWidth="md">
@@ -138,6 +137,18 @@ export default function BusinessForm({ close }){
             inputProps={{ 'data-testid': 'business_operating_hours' }}
             margin="normal"
           />
+          <br />
+          {error && (
+          <Typography
+            align="center"
+            color="textSecondary"
+            gutterBottom
+            variant="h6"
+          >
+            {error}
+          </Typography>
+          )}
+          <br />
           <br />
           <CenteredContent>
             <Button
