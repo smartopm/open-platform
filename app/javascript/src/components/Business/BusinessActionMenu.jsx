@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
