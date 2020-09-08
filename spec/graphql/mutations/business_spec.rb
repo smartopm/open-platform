@@ -6,22 +6,22 @@ RSpec.describe Mutations::Business do
   describe 'creating a business' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
     let!(:non_admin) { create(:user_with_community, user_type: 'resident') }
-    # using a few fields to test since there is a lot 
+    # using a few fields to test since there is a lot
     let(:query) do
       <<~GQL
-      mutation businessCreate($name: String!, $email: String!, $phoneNumber: String!, $status: String,
-       $userId: ID!, $imageUrl: String, $operationHours: String, $description: String, $links: String, 
-       $homeUrl: String, $category: String, $address: String) {
-        businessCreate(name: $name, email: $email, phoneNumber: $phoneNumber, status: $status, userId: 
-        $userId, imageUrl: $imageUrl, links: $links, category: $category, operationHours: $operationHours, 
-        description: $description, homeUrl: $homeUrl, address: $address) {
-          business {
-            id
-            userId
-            name
+        mutation businessCreate($name: String!, $email: String!, $phoneNumber: String!, $status: String,
+         $userId: ID!, $imageUrl: String, $operationHours: String, $description: String, $links: String,
+         $homeUrl: String, $category: String, $address: String) {
+          businessCreate(name: $name, email: $email, phoneNumber: $phoneNumber, status: $status, userId:
+          $userId, imageUrl: $imageUrl, links: $links, category: $category, operationHours: $operationHours,
+          description: $description, homeUrl: $homeUrl, address: $address) {
+            business {
+              id
+              userId
+              name
+            }
           }
         }
-      }
       GQL
     end
 
@@ -30,7 +30,7 @@ RSpec.describe Mutations::Business do
         name: 'Named 21',
         email: 'user@nkwashi.com',
         phoneNumber: '3754937492',
-        userId: non_admin.id
+        userId: non_admin.id,
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -49,7 +49,7 @@ RSpec.describe Mutations::Business do
         name: 'Named 22',
         email: 'user@nkwashi.coma',
         phoneNumber: '3754937492',
-        userId: current_user.id
+        userId: current_user.id,
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
