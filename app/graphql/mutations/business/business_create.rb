@@ -20,8 +20,6 @@ module Mutations
         field :business, Types::BusinessType, null: true
   
         def resolve(vals)
-          puts "=================================================="
-          puts vals
           business = context[:site_community].businesses.new(vals)
           business.save!
 
