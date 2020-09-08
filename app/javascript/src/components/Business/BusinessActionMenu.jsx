@@ -41,11 +41,11 @@ export default function BusinessActionMenu({
           <>
             <MenuItem
               id="delete_button"
-              key={'delete_user'}
+              key="delete_user"
               onClick={() => handleDelete()}
             >
               Delete
-              </MenuItem>
+            </MenuItem>
             <MenuItem>
               <Link
                 to={`/business/${data.id}`}
