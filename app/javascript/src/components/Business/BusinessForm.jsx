@@ -4,24 +4,34 @@
 import React, { useState } from 'react'
 import { TextField, Container, Button  } from '@material-ui/core'
 import { css } from 'aphrodite'
+import { useMutation } from 'react-apollo'
 import CenteredContent from '../CenteredContent'
 import { discussStyles } from '../Discussion/Discuss'
+import { BusinessCreateMutation } from '../../graphql/mutations'
+import UserSearch from '../User/UserSearch'
 
 const initialData = {
     name: '',
     email: '',
-    phone_number: '',
+    phoneNumber: '',
     status: '',
-    link: '',
+    homeUrl: '',
     category: '',
     description: '',
-    image: '',
+    imageUrl: '',
     address: '',
-    operating_hours: ''
+    operatingHours: ''
 }
 
-export default function BusinessForm(){
+const initialUserData = {
+  user: '',
+  userId: ''
+}
+
+export default function BusinessForm({ close }){
     const [data, setData] = useState(initialData)
+    const [userData, setUserData] = useState(initialUserData)
+    const [createBusiness] = useMutation(BusinessCreateMutation)
 
     function handleInputChange(event) {
         const { name, value } = event.target
@@ -30,9 +40,24 @@ export default function BusinessForm(){
           [name]: value
         })
       }
+    
+      function handleCreateBusiness(event){
+        event.preventDefault()
+        console.log(data)
+        const { name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, } = data
+        createBusiness({
+          variables: { 
+                name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
+           }
+        }).then(() => {
+          close()
+        }).catch(err => {
+          console.log(err.message)
+        })
+      }
     return (
       <Container maxWidth="md">
-        <form>
+        <form onSubmit={handleCreateBusiness}>
           <TextField
             label="Business Name"
             name="name"
@@ -44,6 +69,10 @@ export default function BusinessForm(){
             required
             margin="normal"
           />
+
+          <br />
+          <UserSearch userData={userData} update={setUserData} /> 
+          <br />
 
           <TextField
             label="Business Email"
@@ -58,9 +87,9 @@ export default function BusinessForm(){
           />
           <TextField
             label="Business Phone Number"
-            name="phone_number"
+            name="phoneNumber"
             className="form-control"
-            value={data.phone_number}
+            value={data.phoneNumber}
             onChange={handleInputChange}
             aria-label="business_phone_number"
             inputProps={{ 'data-testid': 'business_phone_number' }}
@@ -70,7 +99,7 @@ export default function BusinessForm(){
             label="Business Link"
             name="link"
             className="form-control"
-            value={data.link}
+            value={data.homeUrl}
             onChange={handleInputChange}
             aria-label="business_link"
             inputProps={{ 'data-testid': 'business_link' }}
@@ -101,9 +130,9 @@ export default function BusinessForm(){
 
           <TextField
             label="Business Operating Hours"
-            name="operating_hours"
+            name="operatingHours"
             className="form-control"
-            value={data.operating_hours}
+            value={data.operatingHours}
             onChange={handleInputChange}
             aria-label="business_operating_hours"
             inputProps={{ 'data-testid': 'business_operating_hours' }}
@@ -116,6 +145,7 @@ export default function BusinessForm(){
               aria-label="business_cancel"
               color="secondary"
               className={`${css(discussStyles.cancelBtn)}`}
+              onClick={close}
             >
               Cancel
             </Button>

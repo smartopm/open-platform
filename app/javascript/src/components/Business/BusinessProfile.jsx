@@ -73,7 +73,7 @@ export default function BusinessProfile({ profileData }) {
                 {profileData.homeUrl}
               </span>
             </Typography>
-            <Box style={{ width: '50%', marginTop: 5 }}><Status label={profileData.status} /></Box>
+            <Box style={{ width: '50%', marginTop: 5 }}><Status label={profileData.status || ''} /></Box>
           </div>
         </div>
 

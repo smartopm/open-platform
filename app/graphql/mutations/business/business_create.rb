@@ -14,10 +14,14 @@ module Mutations
         argument :image_url, String, required: false
         argument :description, String, required: false
         argument :links, String, required: false
+        argument :operation_hours, String, required: false
+
   
         field :business, Types::BusinessType, null: true
   
         def resolve(vals)
+          puts "=================================================="
+          puts vals
           business = context[:site_community].businesses.new(vals)
           business.save!
 

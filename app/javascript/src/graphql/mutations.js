@@ -615,3 +615,12 @@ mutation mergeUsers($id: ID!, $duplicateId: ID!){
   }
 }
 `
+export const BusinessCreateMutation = gql`
+mutation businessCreate($name: String!, $email: String!, $phoneNumber: String!, $status: String, $userId: ID!, $imageUrl: String, $operationHours: String, $description: String, $links: String, $homeUrl: String, $category: String, $address: String) {
+  businessCreate(name: $name, email: $email, phoneNumber: $phoneNumber, status: $status, userId: $userId, imageUrl: $imageUrl, links: $links, category: $category, operationHours: $operationHours, description: $description, homeUrl: $homeUrl, address: $address) {
+    business {
+      id
+    }
+  }
+}
+`

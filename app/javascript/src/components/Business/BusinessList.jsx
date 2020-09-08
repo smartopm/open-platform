@@ -39,7 +39,7 @@ export default function BusinessList({ businessData }) {
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
-          <BusinessForm />
+          <BusinessForm close={openModal} />
         </DialogContent>
       </Dialog>
       <List>
