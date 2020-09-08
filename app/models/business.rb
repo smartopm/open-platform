@@ -8,5 +8,5 @@ class Business < ApplicationRecord
   validates :name, presence: true
   validates :community_id, presence: true
 
-  default_scope { where('status != ?', "deleted") }
+  default_scope { where('status != ?', 'deleted') }
 end
