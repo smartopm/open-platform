@@ -17,7 +17,7 @@ import Avatar from '../Avatar'
 import CenteredContent from '../CenteredContent'
 import BusinessForm from './BusinessForm'
 
-export default function BusinessList({ businessData, refetch }) {
+export default function BusinessList({ businessData, refetch, userType }) {
   const [open, setModalOpen] = useState(false)
 
   function openModal() {
@@ -77,15 +77,21 @@ export default function BusinessList({ businessData, refetch }) {
           </Link>
         ))}
       </List>
-      <Fab
-        variant="extended"
-        onClick={openModal}
-        color="primary"
-        // eslint-disable-next-line no-use-before-define
-        className={`btn ${css(styles.taskButton)} `}
-      >
-        Create a Business
-      </Fab>
+      {/* only show this for admins */}
+      {
+        userType === 'admin' && (
+          <Fab
+            variant="extended"
+            onClick={openModal}
+            color="primary"
+            // eslint-disable-next-line no-use-before-define
+            className={`btn ${css(styles.taskButton)} `}
+          >
+            Create a Business
+          </Fab>
+
+        )
+      }
     </div>
   )
 }

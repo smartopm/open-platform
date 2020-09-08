@@ -47,7 +47,7 @@ export default function BusinessProfile({ profileData }) {
           <div className="col-4 d-flex justify-content-end align-items-center">
             {            
                 // eslint-disable-next-line
-                }<Avatar imageUrl={profileData.imageUrl} style="big" />
+                }<Avatar imageUrl={profileData.imageUrl} style={profileData.imageUrl ? 'big' : 'medium'} />
           </div>
           <div className="col-8 justify-content-around" data-testid="details-holder">
             <Typography variant="h6" arial-label='pf-company-name'>
