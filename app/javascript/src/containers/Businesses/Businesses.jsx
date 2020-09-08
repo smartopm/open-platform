@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Fragment, useContext } from 'react'
 import Nav from '../../components/Nav'
 import Business from '../../components/Business/BusinessList'
