@@ -36,8 +36,8 @@ RSpec.describe Label, type: :model do
     expect(label.users.length).to eql 2
     expect(label.users.find(current_user1.id)).to eql current_user1
     expect(label.users.find(current_user2.id)).to eql current_user2
-    expect(current_user1.labels[0].id).to eql label.id
-    expect(current_user2.labels[0].id).to eql label.id
+    expect(current_user1.labels.pluck(:id)).to include(label.id)
+    expect(current_user2.labels.pluck(:id)).to include(label.id)
     expect(current_user1.labels.length).to eql 3
     expect(current_user2.labels.length).to eql 3
   end
