@@ -3,7 +3,7 @@ import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'
 import Business from '../../components/Business/BusinessList'
 import Loading from '../../components/Loading'
-import {BusinessesQuery} from '../../graphql/queries'
+import { BusinessesQuery } from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
 import { Context } from '../Provider/AuthStateProvider'
 

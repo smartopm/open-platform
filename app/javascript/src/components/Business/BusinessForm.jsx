@@ -2,13 +2,14 @@
 // Image Upload, Email, Phone Number, Address Operating Hours
 
 import React, { useState } from 'react'
-import { TextField, Container, Button, Typography  } from '@material-ui/core'
+import { TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem  } from '@material-ui/core'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import CenteredContent from '../CenteredContent'
 import { discussStyles } from '../Discussion/Discuss'
 import { BusinessCreateMutation } from '../../graphql/mutations'
 import UserSearch from '../User/UserSearch'
+import { businessCategories } from '../../utils/constants'
 
 const initialData = {
     name: '',
@@ -126,6 +127,24 @@ export default function BusinessForm({ close }){
             inputProps={{ 'data-testid': 'business_address' }}
             margin="normal"
           />
+
+          <FormControl fullWidth>
+            <InputLabel id="type">Business Category</InputLabel>
+            <Select
+              id="type"
+              value={data.category}
+              onChange={handleInputChange}
+              name="category"
+              inputProps={{ 'data-testid': 'business_category' }}
+              fullWidth
+            >
+              {Object.entries(businessCategories).map(([key, val]) => (
+                <MenuItem key={key} value={key}>
+                  {val}
+                </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
 
           <TextField
             label="Business Operating Hours"

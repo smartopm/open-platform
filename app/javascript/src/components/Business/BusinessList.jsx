@@ -16,6 +16,7 @@ import { StyleSheet, css } from 'aphrodite'
 import Avatar from '../Avatar'
 import CenteredContent from '../CenteredContent'
 import BusinessForm from './BusinessForm'
+import { businessCategories } from '../../utils/constants'
 
 export default function BusinessList({ businessData, refetch, userType }) {
   const [open, setModalOpen] = useState(false)
@@ -69,7 +70,7 @@ export default function BusinessList({ businessData, refetch, userType }) {
                   {business.name}
                 </Typography>
                 <Typography variant="caption" data-testid="business-category">
-                  {business.category}
+                  {businessCategories[business.category]}
                 </Typography>
               </Box>
               <Divider variant="middle" />
@@ -89,7 +90,6 @@ export default function BusinessList({ businessData, refetch, userType }) {
           >
             Create a Business
           </Fab>
-
         )
       }
     </div>
