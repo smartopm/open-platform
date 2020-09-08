@@ -19,6 +19,7 @@ describe('Business  form', () => {
     const businessDesc = container.queryByTestId('business_description')
     const businessAddress = container.queryByTestId('business_address')
     const businessHours = container.queryByTestId('business_operating_hours')
+    const businessImage = container.queryByTestId('business_image')
 
     fireEvent.change(businessName, { target: { value: 'new campaign' } })
     expect(businessName.value).toBe('new campaign')
@@ -41,6 +42,9 @@ describe('Business  form', () => {
 
     fireEvent.change(businessHours, { target: { value: '6-7' } })
     expect(businessHours.value).toBe('6-7')
+
+    fireEvent.change(businessImage, { target: { value: 'https:image.jepg' } })
+    expect(businessImage.value).toBe('https:image.jepg')
 
     fireEvent.change(businessDesc, { target: { value: 'described as following bring change to startups' } })
     expect(businessDesc.value).toBe('described as following bring change to startups')

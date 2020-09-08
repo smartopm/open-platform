@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React from 'react'
@@ -12,7 +11,7 @@ describe('It tests the business directory list', () => {
         businessData: {
             businesses: [
                 {
-                    category: 'construction',
+                    category: 'health',
                     createdAt: "2020-06-30T15:54:34Z",
                     homeUrl: null,
                     name: "Artist",
@@ -22,23 +21,17 @@ describe('It tests the business directory list', () => {
                     status: 'verified'
                 }
             ]
-        }
+        },
+        userType: 'resident'
     }
-  
-    it('It should render business name', () => {
-        const container = render(
-          <BrowserRouter>
-            <Business {...props} />
-          </BrowserRouter>)
-        expect(container.queryByTestId('business-name')).toBeTruthy()
-    });
-
     it('It should render business category', () => {
         const container = render(
           <BrowserRouter>
             <Business {...props} />
           </BrowserRouter>)
-        expect(container.queryByTestId('business-category').textContent).toBeTruthy()
+        expect(container.queryByTestId('business-category').textContent).toContain('Health Service')
+        expect(container.queryByTestId('business-name').textContent).toContain('Artist')
+        expect(container.queryByText('Create a Business')).toBeNull()
     });
 
 });

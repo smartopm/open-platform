@@ -59,7 +59,7 @@ export default function BusinessForm({ close }){
       <Container maxWidth="md">
         <form onSubmit={handleCreateBusiness}>
           <TextField
-            label="Business Name"
+            label="Name"
             name="name"
             className="form-control"
             value={data.name}
@@ -75,7 +75,7 @@ export default function BusinessForm({ close }){
           <br />
 
           <TextField
-            label="Business Email"
+            label="Email"
             name="email"
             className="form-control"
             value={data.email}
@@ -86,7 +86,7 @@ export default function BusinessForm({ close }){
             required
           />
           <TextField
-            label="Business Phone Number"
+            label="Phone Number"
             name="phoneNumber"
             className="form-control"
             value={data.phoneNumber}
@@ -96,7 +96,7 @@ export default function BusinessForm({ close }){
             required
           />
           <TextField
-            label="Business Link"
+            label="Link (Home Url)"
             name="link"
             className="form-control"
             value={data.homeUrl}
@@ -105,8 +105,19 @@ export default function BusinessForm({ close }){
             inputProps={{ 'data-testid': 'business_link' }}
             margin="normal"
           />
+
           <TextField
-            label="Business Description"
+            label="Logo Url"
+            name="imageUrl"
+            className="form-control"
+            value={data.imageUrl}
+            onChange={handleInputChange}
+            aria-label="business_link"
+            inputProps={{ 'data-testid': 'business_image' }}
+            margin="normal"
+          />
+          <TextField
+            label="Description"
             name="description"
             className="form-control"
             value={data.description}
@@ -118,7 +129,7 @@ export default function BusinessForm({ close }){
             margin="normal"
           />
           <TextField
-            label="Business Address"
+            label="Address"
             name="address"
             className="form-control"
             value={data.address}
@@ -129,7 +140,7 @@ export default function BusinessForm({ close }){
           />
 
           <FormControl fullWidth>
-            <InputLabel id="type">Business Category</InputLabel>
+            <InputLabel id="type">Category</InputLabel>
             <Select
               id="type"
               value={data.category}
@@ -147,7 +158,7 @@ export default function BusinessForm({ close }){
           </FormControl>
 
           <TextField
-            label="Business Operating Hours"
+            label="Operating Hours"
             name="operatingHours"
             className="form-control"
             value={data.operatingHours}
@@ -167,7 +178,6 @@ export default function BusinessForm({ close }){
             {error}
           </Typography>
           )}
-          <br />
           <br />
           <CenteredContent>
             <Button
