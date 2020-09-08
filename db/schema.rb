@@ -117,7 +117,7 @@ ActiveRecord::Schema.define(version: 2020_09_08_090526) do
     t.string "subject"
     t.string "pre_header"
     t.string "template_style"
-    t.string "status", default: "draft"
+    t.integer "status", default: 0
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
