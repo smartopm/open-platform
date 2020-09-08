@@ -35,7 +35,7 @@ export default function BusinessList({ businessData }) {
       >
         <DialogTitle id="task_modal">
           <CenteredContent>
-            <span>Create a task</span>
+            <span>Create a Business</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>

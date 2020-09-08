@@ -2,7 +2,10 @@
 // Image Upload, Email, Phone Number, Address Operating Hours
 
 import React, { useState } from 'react'
-import { TextField, Container  } from '@material-ui/core'
+import { TextField, Container, Button  } from '@material-ui/core'
+import { css } from 'aphrodite'
+import CenteredContent from '../CenteredContent'
+import { discussStyles } from '../Discussion/Discuss'
 
 const initialData = {
     name: '',
@@ -106,6 +109,26 @@ export default function BusinessForm(){
             inputProps={{ 'data-testid': 'business_operating_hours' }}
             margin="normal"
           />
+          <br />
+          <CenteredContent>
+            <Button
+              variant="contained"
+              aria-label="business_cancel"
+              color="secondary"
+              className={`${css(discussStyles.cancelBtn)}`}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              aria-label="business_submit"
+              color="primary"
+              className={`btn ${css(discussStyles.submitBtn)}`}
+            >
+              Create a Business
+            </Button>
+          </CenteredContent>
         </form>
       </Container>
     )
