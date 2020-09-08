@@ -13,6 +13,7 @@ class Campaign < ApplicationRecord
 
   validates :campaign_type, inclusion: { in: %w[sms email] }
 
+  scope :existing, -> { where('status != ?', 3) }
   default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids
