@@ -8,6 +8,8 @@ class Campaign < ApplicationRecord
   has_many :labels, through: :campaign_labels
 
   EXPIRATION_DAYS = 7
+  
+  enum status: %i[draft scheduled in_progress deleted done]
 
   validates :campaign_type, inclusion: { in: %w[sms email] }
 
