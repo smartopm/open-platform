@@ -11,7 +11,7 @@ class AssigneeNote < ApplicationRecord
   def community_template
     templates = user.community.templates
     return {} if templates.nil?
-    
+
     templates['notification_template_id']
   end
 
