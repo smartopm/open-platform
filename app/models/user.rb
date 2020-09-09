@@ -78,7 +78,6 @@ class User < ApplicationRecord
 
   PHONE_TOKEN_LEN = 6
   PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
-  WELCOME_TEMPLATE_ID = 'd-bec0f1bd39f240d98a146faa4d7c5235'
 
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
