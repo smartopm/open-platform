@@ -383,8 +383,8 @@ class User < ApplicationRecord
 
   def send_email_msg
     return if self[:email].nil?
-
-    EmailMsg.send_mail(self[:email], WELCOME_TEMPLATE_ID, welcome_mail_data)
+    template = community.templates 
+    EmailMsg.send_mail(self[:email], template['welcome_template_id'], welcome_mail_data)
   end
 
   def welcome_mail_data
