@@ -11,5 +11,6 @@ FactoryBot.define do
     batch_time { Time.zone.now }
     user_id_list { '23fsafsafa1147,2609adf61sfsdfs871fd147' }
     campaign_type { %w[sms email].sample }
+    status { 'draft' }
   end
 end
