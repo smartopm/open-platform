@@ -6,7 +6,8 @@ RSpec.describe Mutations::Business do
 
   # create a business for the user
   let!(:user_business) do
-    create(:business, user_id: current_user.id, community_id: current_user.community_id)
+    create(:business, user_id: current_user.id, community_id: current_user.community_id,
+                      status: 'verified')
   end
 
   let(:query) do
@@ -33,6 +34,8 @@ RSpec.describe Mutations::Business do
                                               current_user: current_user,
                                               site_community: current_user.community,
                                             }).as_json
-    expect(result.dig('errors')).to_not be_nil
+
+    expect(result.dig('data', 'businessDelete', 'businessDelete')).to eql true
+    expect(result.dig('errors')).to be_nil
   end
 end
