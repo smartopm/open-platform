@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import { DeleteBusiness } from '../../graphql/mutations'
+import BusinessDeleteDialogue from './BusinessDeleteDialogue'
 
 
 export default function BusinessActionMenu({
@@ -14,7 +15,12 @@ export default function BusinessActionMenu({
   linkStyles,
   refetch
 }) {
+  const [openModal, setOpenModal] = useState(false)
   const [deleteBusiness] = useMutation(DeleteBusiness)
+  function handleDeleteClick() {
+    handleClose()
+    setOpenModal(!openModal)
+  }
   function handleDelete() {
     deleteBusiness({
       variables: { id: data.id }
@@ -42,7 +48,7 @@ export default function BusinessActionMenu({
             <MenuItem
               id="delete_button"
               key="delete_user"
-              onClick={() => handleDelete()}
+              onClick={() => handleDeleteClick()}
             >
               Delete
             </MenuItem>
@@ -54,6 +60,12 @@ export default function BusinessActionMenu({
                 View Details
               </Link>
             </MenuItem>
+            
+            <BusinessDeleteDialogue
+              open={openModal}
+              handleClose={handleDeleteClick}
+              handleDelete={handleDelete}
+            />
           </>
         )}
       </div>
