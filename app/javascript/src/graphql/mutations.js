@@ -178,6 +178,14 @@ export const SendOneTimePasscode = gql`
   }
 `
 
+export const DeleteBusiness = gql`
+  mutation DeleteBusiness($id: ID!) {
+    businessDelete(id: $id) {
+      businessDelete
+    }
+  }
+`
+
 export const EntryRequestCreate = gql`
   mutation EntryRequestCreateMutation(
     $name: String!
