@@ -9,6 +9,7 @@ import BusinessActionMenu from './BusinessActionMenu'
 export default function BusinessList({ businessData, authState, refetch }) {
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
+    const { user: { userType } } = authState
 
     const styles = StyleSheet.create({
       linkItem: {
@@ -66,14 +67,16 @@ export default function BusinessList({ businessData, authState, refetch }) {
                           </Box>
                           <Divider variant="middle" />
                         </Link>
-                        <IconButton
-                          aria-label="more"
-                          aria-controls="long-menu"
-                          aria-haspopup="true"
-                          onClick={handleOpenMenu}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
+                        {userType === 'admin' && (
+                          <IconButton
+                            aria-label="more"
+                            aria-controls="long-menu"
+                            aria-haspopup="true"
+                            onClick={handleOpenMenu}
+                          >
+                            <MoreVertIcon />
+                          </IconButton>
+                        )}
                         <BusinessActionMenu
                           authState={authState}
                           data={business}
