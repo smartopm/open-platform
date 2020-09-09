@@ -8,8 +8,8 @@ class Campaign < ApplicationRecord
   has_many :labels, through: :campaign_labels
 
   EXPIRATION_DAYS = 7
-  
-  enum status: %i[draft scheduled in_progress deleted done]
+
+  enum status: { draft: 0, scheduled: 1, in_progress: 2, deleted: 3, done: 4 }
 
   validates :campaign_type, inclusion: { in: %w[sms email] }
 
@@ -68,7 +68,7 @@ class Campaign < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def run_campaign
     admin_user = campaign_admin_user
-    update(start_time: Time.current)
+    update(start_time: Time.current, status: 'in_progress')
     users = target_list_user
     CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
     users.each do |acc|

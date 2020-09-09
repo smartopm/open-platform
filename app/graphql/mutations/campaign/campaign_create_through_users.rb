@@ -23,6 +23,7 @@ module Mutations
       def campaign_object
         campaign = context[:current_user].community.campaigns.new
         campaign.campaign_type = 'sms'
+        campaign.status = 'draft'
         campaign.message = I18n.t('campaign.default_message')
         campaign.batch_time = 10.years.from_now
         campaign

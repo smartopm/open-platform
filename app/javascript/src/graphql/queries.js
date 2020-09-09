@@ -307,6 +307,7 @@ export const allCampaigns = gql`
     campaigns {
       id
       batchTime
+      status
       communityId
       createdAt
       endTime
@@ -337,6 +338,7 @@ export const Campaign = gql`
       message
       name
       campaignType
+      status
       startTime
       updatedAt
       userIdList
