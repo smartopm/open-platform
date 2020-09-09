@@ -11,6 +11,7 @@ RSpec.describe Mutations::Campaign do
         mutation campaignCreate(
           $name: String!
           $message: String!
+          $status: String!
           $campaignType: String!
           $batchTime: String!
           $userIdList: String!
@@ -19,6 +20,7 @@ RSpec.describe Mutations::Campaign do
           campaignCreate(
             name: $name
             message: $message
+            status: $status
             campaignType: $campaignType
             batchTime: $batchTime
             userIdList: $userIdList
@@ -41,6 +43,7 @@ RSpec.describe Mutations::Campaign do
         name: 'This is a Campaign',
         message: 'Visiting',
         campaignType: %w[sms email].sample,
+        status: %w[draft scheduled].sample,
         batchTime: '17/06/2020 03:49',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
         labels: 'label 1,label 2',
@@ -228,10 +231,10 @@ RSpec.describe Mutations::Campaign do
     it 'returns an Campaign' do
       variables = { id: campaign_for_delete.id }
       result = DoubleGdpSchema.execute(delete_query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
+                                                     context: {
+                                                       current_user: current_user,
+                                                       site_community: current_user.community,
+                                                     }).as_json
       expect(result.dig('data', 'campaignDelete', 'campaign', 'id')).to eql campaign_for_delete.id
       expect(result.dig('data', 'campaignDelete', 'campaign', 'status')).to eql 'deleted'
       expect(result.dig('errors')).to be_nil

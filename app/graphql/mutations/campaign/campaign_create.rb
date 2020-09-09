@@ -9,6 +9,7 @@ module Mutations
       argument :name, String, required: true
       argument :message, String, required: true
       argument :campaign_type, String, required: true
+      argument :status, String, required: true
       argument :batch_time, String, required: true
       argument :user_id_list, String, required: true
       argument :labels, String, required: false
@@ -32,7 +33,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_attributes(campaign, vals)
-        %w[name campaign_type message user_id_list batch_time].each do |attr|
+        %w[name campaign_type message user_id_list batch_time status].each do |attr|
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
         return campaign if vals[:campaign_type].eql?('sms')
