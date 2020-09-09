@@ -8,14 +8,17 @@ class AssigneeNote < ApplicationRecord
   after_create :notify_user
   after_update :notify_user, if: proc { saved_change_to_user_id? }
 
+  def community_template
+    templates = user.community.templates
+    return {} if templates.nil?
+    
+    templates['notification_template_id']
+  end
+
   private
 
   def notify_user
     EmailMsg.send_mail(user.email, community_template, mail_data)
-  end
-
-  def community_template
-    user.community.templates['notification_template_id']
   end
 
   def mail_data

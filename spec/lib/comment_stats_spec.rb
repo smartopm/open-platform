@@ -20,9 +20,9 @@ RSpec.describe User, type: :model do
   # Test list_subscribers
 
   it 'should find list of discussions that were commented on today' do
-    # this returns ids
+    # this returns a hash with templates and discussion ids
     discussions = CommentsAlert.updated_discussions('Nkwashi')
-    expect(discussions).not_to be_nil
-    expect(discussions.length).to eql 1
+    expect(discussions[:discussion_ids]).not_to be_nil
+    expect(discussions[:discussion_ids].length).to eql 1
   end
 end
