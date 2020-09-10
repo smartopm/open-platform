@@ -1,34 +1,52 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { css, StyleSheet } from 'aphrodite'
 import {
   List,
   ListItem,
   ListItemAvatar,
   Divider,
+  Fab,
   Typography,
   Box,
-  Fab,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent
 } from '@material-ui/core'
-import { StyleSheet, css } from 'aphrodite'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Avatar from '../Avatar'
+import BusinessActionMenu from './BusinessActionMenu'
+import { businessCategories } from '../../utils/constants'
 import CenteredContent from '../CenteredContent'
 import BusinessForm from './BusinessForm'
-import { businessCategories } from '../../utils/constants'
 
-export default function BusinessList({ businessData, refetch, userType }) {
-  const [open, setModalOpen] = useState(false)
+export default function BusinessList({ businessData, userType, refetch }) {
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const open = Boolean(anchorEl)
+
+  const avatarStyle = {
+    style: 'medium'
+  }
+
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
 
   function openModal() {
-    setModalOpen(!open)
+    setModalOpen(!modalOpen)
     refetch()
+  }
+
+  function handleClose() {
+    setAnchorEl(null)
   }
   return (
     <div className="container">
       <Dialog
-        open={open}
+        open={modalOpen}
         fullWidth
         maxWidth="lg"
         onClose={openModal}
@@ -45,17 +63,23 @@ export default function BusinessList({ businessData, refetch, userType }) {
       </Dialog>
       <List>
         {businessData.businesses.map(business => (
-          <Link
-            key={business.id}
-            to={`/business/${business.id}`}
-            className="card-link"
-          >
-            <ListItem key={business.id}>
+          <ListItem key={business.id}>
+            <Link
+              key={business.id}
+              to={`/business/${business.id}`}
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                textDecoration: 'none'
+              }}
+            >
               <ListItemAvatar>
-                <Avatar 
-                  imageUrl={business.imageUrl} 
-                    // eslint-disable-next-line
-                  style="medium" />
+                <Avatar
+                  imageUrl={business.imageUrl}
+                  style={avatarStyle.style}
+                />
               </ListItemAvatar>
               <Box
                 style={{
@@ -74,37 +98,58 @@ export default function BusinessList({ businessData, refetch, userType }) {
                 </Typography>
               </Box>
               <Divider variant="middle" />
-            </ListItem>
-          </Link>
+            </Link>
+            {userType === 'admin' && (
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleOpenMenu}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            )}
+            <BusinessActionMenu
+              userType={userType}
+              data={business}
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+              open={open}
+              // eslint-disable-next-line no-use-before-define
+              linkStyles={css(styles.linkItem)}
+              refetch={refetch}
+            />
+          </ListItem>
         ))}
       </List>
-      {/* only show this for admins */}
-      {
-        userType === 'admin' && (
-          <Fab
-            variant="extended"
-            onClick={openModal}
-            color="primary"
-            // eslint-disable-next-line no-use-before-define
-            className={`btn ${css(styles.taskButton)} `}
-          >
-            Create a Business
-          </Fab>
-        )
-      }
+
+      {userType === 'admin' && (
+        <Fab
+          variant="extended"
+          onClick={openModal}
+          color="primary"
+          // eslint-disable-next-line no-use-before-define
+          className={`btn ${css(styles.taskButton)} `}
+        >
+          Create a Business
+        </Fab>
+      )}
     </div>
   )
 }
 
 const styles = StyleSheet.create({
-    taskButton: {
-      height: 51,
-      boxShadow: 'none',
-      position: 'fixed',
-      bottom: 20,
-      right: 57,
-      marginLeft: '30%',
-      color: '#FFFFFF'
-    }
-  })
-  
+  taskButton: {
+    height: 51,
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    color: '#FFFFFF'
+  },
+  linkItem: {
+    color: '#000000',
+    textDecoration: 'none'
+  }
+})

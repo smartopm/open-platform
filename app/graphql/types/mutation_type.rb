@@ -66,5 +66,7 @@ module Types
 
     # businesses
     field :business_create, mutation: Mutations::Business::BusinessCreate
+    # Businesses
+    field :business_delete, mutation: Mutations::Business::BusinessDelete
   end
 end

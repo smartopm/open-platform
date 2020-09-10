@@ -9,10 +9,11 @@ RSpec.describe Types::Queries::Business do
 
     # create a business for the user
     let!(:user_business) do
-      create(:business, user_id: current_user.id, community_id: current_user.community_id)
+      create(:business, user_id: current_user.id, community_id: current_user.community_id,
+                        status: 'verified')
     end
     let!(:other_business) do
-      create(:business, user_id: user2.id, community_id: user2.community_id)
+      create(:business, user_id: user2.id, community_id: user2.community_id, status: 'verified')
     end
 
     let(:businesses_query) do

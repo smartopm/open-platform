@@ -71,4 +71,9 @@ export const businessCategories = {
  supermarket: 'Supermarket'
 }
 
+export const businessStatus = {
+  verified: 'Verified',
+  pending: 'Pending',
+}
+
 export const ponisoNumber = '+260976064298'

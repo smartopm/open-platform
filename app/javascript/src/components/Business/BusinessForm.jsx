@@ -9,7 +9,7 @@ import CenteredContent from '../CenteredContent'
 import { discussStyles } from '../Discussion/Discuss'
 import { BusinessCreateMutation } from '../../graphql/mutations'
 import UserSearch from '../User/UserSearch'
-import { businessCategories } from '../../utils/constants'
+import { businessCategories, businessStatus } from '../../utils/constants'
 
 const initialData = {
     name: '',
@@ -97,7 +97,7 @@ export default function BusinessForm({ close }){
           />
           <TextField
             label="Link (Home Url)"
-            name="link"
+            name="homeUrl"
             className="form-control"
             value={data.homeUrl}
             onChange={handleInputChange}
@@ -138,6 +138,25 @@ export default function BusinessForm({ close }){
             inputProps={{ 'data-testid': 'business_address' }}
             margin="normal"
           />
+
+          <FormControl fullWidth>
+            <InputLabel id="type">Status</InputLabel>
+            <Select
+              id="type"
+              value={data.status}
+              onChange={handleInputChange}
+              name="status"
+              inputProps={{ 'data-testid': 'business_status' }}
+              fullWidth
+              required
+            >
+              {Object.entries(businessStatus).map(([key, val]) => (
+                <MenuItem key={key} value={key}>
+                  {val}
+                </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
 
           <FormControl fullWidth>
             <InputLabel id="type">Category</InputLabel>

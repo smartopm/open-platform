@@ -473,6 +473,7 @@ export const BusinessByIdQuery = gql`
     }
   }
 `
+
 export const UserLabelsQuery = gql`
   query userLabelsbyId($userId: ID!) {
     userLabels(userId: $userId) {
