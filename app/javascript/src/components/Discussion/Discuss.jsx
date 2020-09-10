@@ -106,6 +106,7 @@ export default function Discuss({ update }) {
                     {Boolean(msg.length) && msg}
                 </p>
             </form>
+            br
         </div>
     )
 }
@@ -115,7 +116,10 @@ export const discussStyles = StyleSheet.create({
         height: 51,
         boxShadow: 'none',
         marginTop: 50,
-        alignItems: 'center'
+        alignItems: 'center',
+        ':hover': {
+            color: '#FFFFFF'
+        }
     },
     cancelBtn: {
         width: '30%',

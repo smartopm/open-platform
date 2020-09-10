@@ -1,16 +1,16 @@
-import React, {  useContext } from 'react'
+import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
 import Nav from '../../components/Nav'
 import Business from '../../components/Business/BusinessList'
 import Loading from '../../components/Loading'
-import {BusinessesQuery} from '../../graphql/queries'
+import { BusinessesQuery } from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
-
+import { Context } from '../Provider/AuthStateProvider'
 
 export default function Businesses() {
     const { loading, error, data, refetch } = useQuery(BusinessesQuery)
-    const authState = useContext(AuthStateContext)
+    const authState = useContext(Context)
+
     if (loading) return <Loading />
     if (error) {
         return <ErrorPage title={error.message || error} /> // error could be a string sometimes
@@ -20,7 +20,7 @@ export default function Businesses() {
       <div>
         <>
           <Nav navName="Business Directory" menuButton="back" backTo="/" />
-          <Business businessData={data} authState={authState} refetch={refetch} />
+          <Business businessData={data} refetch={refetch} userType={authState.user.userType} />
         </>
       </div>
     )

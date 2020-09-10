@@ -10,7 +10,7 @@ export default function BusinessActionMenu({
   data,
   anchorEl,
   handleClose,
-  authState: { user: { userType } },
+  userType,
   open,
   linkStyles,
   refetch
