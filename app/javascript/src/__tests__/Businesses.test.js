@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
+import { MockedProvider } from '@apollo/react-testing'
 import Business from '../components/Business/BusinessList';
 
 describe('It tests the business directory list', () => {
@@ -27,7 +27,9 @@ describe('It tests the business directory list', () => {
     it('It should render business category', () => {
         const container = render(
           <BrowserRouter>
-            <Business {...props} />
+            <MockedProvider mocks={[]}>
+              <Business {...props} />
+            </MockedProvider>
           </BrowserRouter>)
         expect(container.queryByTestId('business-category').textContent).toContain('Health Service')
         expect(container.queryByTestId('business-name').textContent).toContain('Artist')

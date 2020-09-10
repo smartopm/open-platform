@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
@@ -12,7 +11,7 @@ describe('business action menu component', () => {
       data: {
         id: "6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3"
       },
-      authState: { user: { userType: "admin" } }
+      userType: "admin"
     }
     const container = render(
       <MockedProvider>
@@ -21,9 +20,9 @@ describe('business action menu component', () => {
             data={props.data}
             anchorEl={null}
             handleClose={jest.fn()}
-            authState={props.authState}
+            userType={props.userType}
             refetch={jest.fn()}
-            open={true}
+            open
           />
         </BrowserRouter>
       </MockedProvider>
