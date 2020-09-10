@@ -1,3 +1,4 @@
+/* eslint-disable */
 import gql from 'graphql-tag'
 import { UserFragment, EntryRequestFragment } from '../graphql/fragments'
 
@@ -173,6 +174,14 @@ export const SendOneTimePasscode = gql`
     oneTimeLogin(userId: $userId) {
       success
       url
+    }
+  }
+`
+
+export const DeleteBusiness = gql`
+  mutation DeleteBusiness($id: ID!) {
+    businessDelete(id: $id) {
+      businessDelete
     }
   }
 `

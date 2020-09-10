@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Error from '../components/Error'
 import { BrowserRouter } from 'react-router-dom'

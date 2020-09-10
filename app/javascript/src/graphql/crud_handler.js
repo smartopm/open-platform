@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Handle basic CRUD for a record and form
 export default ({
   createMutation,

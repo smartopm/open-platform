@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React,{useContext} from 'react'
 import Nav from "../../components/Nav";
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'

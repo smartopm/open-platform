@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'

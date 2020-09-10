@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* eslint-disable */
 import React, { useContext, useState } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
@@ -6,6 +8,7 @@ import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading.jsx'
 import Homepage from '../components/HomePage'
+import NewsFeed from '../components/NewsPage/NewsFeed'
 
 export default function Home() {
   const [redirect, setRedirect] = useState(false)
@@ -51,6 +54,9 @@ export default function Home() {
           </div>
         )}
       </Nav>
+      <br/>
+      <br/>
+      <NewsFeed />
       <Homepage authState={authState} />
     </>
   )

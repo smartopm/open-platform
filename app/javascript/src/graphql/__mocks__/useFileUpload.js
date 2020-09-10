@@ -1,3 +1,4 @@
+/* eslint-disable */
 const useFileUpload = () => {
   return {
     onChange: null,

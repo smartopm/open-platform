@@ -1,3 +1,4 @@
+/* eslint-disable */
 import gql from 'graphql-tag'
 import { UserFragment, EntryRequestFragment, NotesFragment } from './fragments'
 
@@ -474,6 +475,7 @@ export const BusinessByIdQuery = gql`
     }
   }
 `
+
 export const UserLabelsQuery = gql`
   query userLabelsbyId($userId: ID!) {
     userLabels(userId: $userId) {

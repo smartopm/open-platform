@@ -1,23 +1,24 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable radix */
 import React, { Fragment, useState, useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import { useHistory } from 'react-router-dom'
-import { allCampaigns } from '../graphql/queries'
-import Loading from '../components/Loading'
-import ErrorPage from '../components/Error'
-import { dateTimeToString, dateToString } from '../components/DateContainer'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link'
 import { IconButton } from '@material-ui/core'
-import CampaignActionMenu from './Campaign/CampaignActionMenu'
-import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
+import CampaignActionMenu from './Campaign/CampaignActionMenu'
+import { dateTimeToString, dateToString } from "./DateContainer"
+import ErrorPage from "./Error"
+import Loading from "./Loading"
+import { allCampaigns } from '../graphql/queries'
 
 export default function CampaignList() {
   const authState = useContext(AuthStateContext)
@@ -35,9 +36,7 @@ export default function CampaignList() {
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
-  function routeToAction(_event, id) {
-    return history.push(`/campaign/${id}`)
-  }
+
   function routeToCreateCampaign() {
     return history.push('/campaign-create')
   }
@@ -58,74 +57,81 @@ export default function CampaignList() {
       <List>
         {data.campaigns.map(campaign => (
           <Fragment key={campaign.id}>
-          <ListItem >
-            <Grid container spacing={2}>
-              <Grid item container direction="column" spacing={2}>
-                <Grid item>
-                  <Typography
-                    className={css(style.logTitle)}
-                    gutterBottom
-                    variant="subtitle1"
-                    data-testid="c_name"
-                  >
-                    {campaign.name}
-                  </Typography>
-                  <Typography
-                    className={css(style.subTitle)}
-                    variant="body2"
-                    data-testid="c_message"
-                    color="textSecondary"
-                  >
-                    {campaign.message}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography
-                    className={css(style.subTitle)}
-                    variant="body2"
-                    gutterBottom
-                  >
-                    <strong>Scheduled Date: </strong>
-                    {dateToString(campaign.batchTime)}{' '}
-                    <strong>Scheduled Time: </strong>
-                    {dateTimeToString(new Date(campaign.batchTime))}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Grid item container direction="row" spacing={2}>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Total Scheduled: {campaign.campaignMetrics.totalScheduled}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Total Sent: {campaign.campaignMetrics.totalSent}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Total Clicked: {campaign.campaignMetrics.totalClicked}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Success: %
-                        {String(
-                          parseInt(
-                            (100 * campaign.campaignMetrics.totalClicked) /
-                              (campaign.campaignMetrics.totalSent &&
-                              campaign.campaignMetrics.totalSent > 0
-                                ? campaign.campaignMetrics.totalSent
-                                : 1)
-                          )
-                        )}
-                      </Typography>
+            <ListItem>
+              <Grid container spacing={2}>
+                <Grid item container direction="column" spacing={2}>
+                  <Grid item>
+                    <Typography
+                      className={css(style.logTitle)}
+                      gutterBottom
+                      variant="subtitle1"
+                      data-testid="c_name"
+                    >
+                      {campaign.name}
+                    </Typography>
+                    <Typography
+                      className={css(style.subTitle)}
+                      variant="body2"
+                      data-testid="c_message"
+                      color="textSecondary"
+                    >
+                      {campaign.message}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      className={css(style.subTitle)}
+                      variant="body2"
+                      gutterBottom
+                    >
+                      <strong>Scheduled Date: </strong>
+                      {dateToString(campaign.batchTime)}
+                      {' '}
+                      <strong>Scheduled Time: </strong>
+                      {dateTimeToString(new Date(campaign.batchTime))}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Grid item container direction="row" spacing={2}>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Total Scheduled: 
+                          {' '}
+                          {campaign.campaignMetrics.totalScheduled}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Total Sent: 
+                          {' '}
+                          {campaign.campaignMetrics.totalSent}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Total Clicked: 
+                          {' '}
+                          {campaign.campaignMetrics.totalClicked}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Success: 
+                          {' '}
+                          {String(parseInt(
+                        (100 * campaign.campaignMetrics.totalClicked) /
+                          (campaign.campaignMetrics.totalSent &&
+                            campaign.campaignMetrics.totalSent > 0
+                            ? campaign.campaignMetrics.totalSent
+                            : 1))
+                      )}
+                          %
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
               <CampaignActionMenu
                 userType={authState.user.userType}
                 data={campaign}
@@ -135,18 +141,18 @@ export default function CampaignList() {
                 linkStyles={css(styles.linkItem)}
                 refetch={refetch}
               />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={handleOpenMenu}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <div className="border-top my-3" />
-        </Fragment>
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={handleOpenMenu}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <div className="border-top my-3" />
+          </Fragment>
         ))}
       </List>
       <Fab
@@ -162,7 +168,9 @@ export default function CampaignList() {
           routeToCreateCampaign()
         }}
       >
-        <AddIcon /> Create
+        <AddIcon />
+        {' '}
+        Create
       </Fab>
     </div>
   )

@@ -1,3 +1,4 @@
+/* eslint-disable */
 // * global jest, module, require */
 
 const L = require('leaflet')

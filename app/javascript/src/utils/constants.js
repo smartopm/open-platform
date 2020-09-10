@@ -1,3 +1,4 @@
+/* eslint-disable */
 // values that can be reused across the codebase
 
 export const filterUserByLoggedin = {
