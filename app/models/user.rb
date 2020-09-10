@@ -44,7 +44,7 @@ class User < ApplicationRecord
   has_many :accounts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :discussion_users, dependent: :destroy
-  has_many :discussions, through: :discussions_users
+  has_many :discussions, through: :discussion_users
   has_many :businesses, dependent: :destroy
   has_many :user_labels, dependent: :destroy
   has_many :contact_infos, dependent: :destroy
@@ -78,6 +78,7 @@ class User < ApplicationRecord
 
   PHONE_TOKEN_LEN = 6
   PHONE_TOKEN_EXPIRATION_MINUTES = 2880 # Valid for 48 hours
+
   class PhoneTokenResultInvalid < StandardError; end
   class PhoneTokenResultExpired < StandardError; end
 
@@ -380,7 +381,17 @@ class User < ApplicationRecord
   end
 
   def send_email_msg
-    EmailMsg.send_welcome_msg(self[:email], self[:name], community.name) unless self[:email].nil?
+    return if self[:email].nil?
+
+    template = community.templates || {}
+    EmailMsg.send_mail(self[:email], template['welcome_template_id'], welcome_mail_data)
+  end
+
+  def welcome_mail_data
+    {
+      "community": community,
+      "name": name,
+    }
   end
 
   # catch exceptions in here to be caught in the mutation

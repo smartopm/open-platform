@@ -111,6 +111,7 @@ group :test do
   gem 'factory_bot'
   gem 'simplecov'
   gem 'shoulda-matchers'
+  gem 'shoulda-callback-matchers', '~> 1.1.1'
 end
 
 
