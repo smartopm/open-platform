@@ -49,6 +49,7 @@ module Types
     field :campaign_delete, mutation: Mutations::Campaign::CampaignDelete
     field :campaign_create_through_users, mutation: Mutations::Campaign::CampaignCreateThroughUsers
     field :campaign_label_remove, mutation: Mutations::Campaign::CampaignLabelRemove
+    field :campaign_draft_create, mutation: Mutations::Campaign::CampaignDraftCreate
 
     # comments
     field :comment_create, mutation: Mutations::Comment::CommentCreate

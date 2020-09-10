@@ -457,6 +457,37 @@ export const CampaignCreate = gql`
     }
   }
 `
+
+export const CampaignDraftCreate = gql`
+  mutation campaignDraftCreate(
+    $name: String!
+    $campaignType: String!
+    $message: String
+    $batchTime: String
+    $userIdList: String
+    $labels: String
+    $subject: String
+    $preHeader: String
+    $templateStyle: String
+  ) {
+    campaignDraftCreate(
+      name: $name
+      campaignType: $campaignType
+      message: $message
+      batchTime: $batchTime
+      userIdList: $userIdList
+      labels: $labels
+      subject: $subject
+      preHeader: $preHeader
+      templateStyle: $templateStyle
+    ) {
+      campaign {
+        name
+      }
+    }
+  }
+`
+
 export const CampaignUpdateMutation = gql`
   mutation campaignUpdate(
     $id: ID!

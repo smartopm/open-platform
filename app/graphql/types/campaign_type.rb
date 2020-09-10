@@ -10,6 +10,7 @@ module Types
     field :message, String, null: false
     field :user_id_list, String, null: false
     field :subject, String, null: true
+    field :status, String, null: true
     field :pre_header, String, null: true
     field :template_style, String, null: true
     field :status, String, null: false

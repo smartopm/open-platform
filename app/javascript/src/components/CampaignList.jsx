@@ -14,6 +14,7 @@ import Loading from "./Loading"
 import ErrorPage from "./Error"
 import { dateTimeToString, dateToString } from "./DateContainer"
 import CampaignDeleteAction from "./Campaign/CampaignDeleteAction"
+import CampaignDraftList from './CampaignDraftList'
 
 export default function CampaignList() {
   const history = useHistory()
@@ -31,102 +32,105 @@ export default function CampaignList() {
 
   return (
     <div className="container">
-      {data.campaigns.map(camp => (
+      {data.campaigns.map(camp => ( 
         <Fragment key={camp.id}>
-          <div>
-            <Grid container spacing={2}>
-              <Grid item container direction="column" spacing={2}>
-                <Grid item>
-                  <Typography
-                    className={css(style.logTitle)}
-                    gutterBottom
-                    variant="subtitle1"
-                    data-testid="c_name"
-                  >
-                    {camp.name}
-                  </Typography>
-                  <Typography
-                    className={css(style.subTitle)}
-                    variant="body2"
-                    data-testid="c_message"
-                    color="textSecondary"
-                  >
-                    {camp.message}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography
-                    className={css(style.subTitle)}
-                    variant="body2"
-                    gutterBottom
-                  >
-                    <strong>Scheduled Date: </strong>
-                    {dateToString(camp.batchTime)}
-                    {' '}
-                    <strong>Scheduled Time: </strong>
-                    {dateTimeToString(new Date(camp.batchTime))}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Grid item container direction="row" spacing={2}>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Total Scheduled: 
-                        {' '}
-                        {camp.campaignMetrics.totalScheduled}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Total Sent: 
-                        {' '}
-                        {camp.campaignMetrics.totalSent}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Total Clicked: 
-                        {' '}
-                        {camp.campaignMetrics.totalClicked}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        Success: 
-                        {' '}
-                        {String(parseInt(
+          {camp.status === "DRAFT" ? (<CampaignDraftList data={camp} style={style} routeToAction={routeToAction} />) : (
+            <div>
+              <Grid container spacing={2}>
+                <Grid item container direction="column" spacing={2}>
+                  <Grid item>
+                    <Typography
+                      className={css(style.logTitle)}
+                      gutterBottom
+                      variant="subtitle1"
+                      data-testid="c_name"
+                    >
+                      {camp.name}
+                    </Typography>
+                    <Typography
+                      className={css(style.subTitle)}
+                      variant="body2"
+                      data-testid="c_message"
+                      color="textSecondary"
+                    >
+                      {camp.message}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      className={css(style.subTitle)}
+                      variant="body2"
+                      gutterBottom
+                    >
+                      <strong>Scheduled Date: </strong>
+                      {dateToString(camp.batchTime)}
+                      {' '}
+                      <strong>Scheduled Time: </strong>
+                      {dateTimeToString(new Date(camp.batchTime))}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Grid item container direction="row" spacing={2}>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Total Scheduled: 
+                          {' '}
+                          {camp.campaignMetrics.totalScheduled}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Total Sent: 
+                          {' '}
+                          {camp.campaignMetrics.totalSent}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Total Clicked: 
+                          {' '}
+                          {camp.campaignMetrics.totalClicked}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          Success: 
+                          {' '}
+                          {String(parseInt(
                         (100 * camp.campaignMetrics.totalClicked) /
                           (camp.campaignMetrics.totalSent &&
                             camp.campaignMetrics.totalSent > 0
                             ? camp.campaignMetrics.totalSent
                             : 1), 10)
                       )}
-                        %
-                      </Typography>
+                          %
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item container direction="row">
-                  <Typography
-                    variant="body1"
-                    style={{ cursor: 'pointer', color: '#009688', marginTop: "11px" }}
-                  >
-                    <Link
-                      data-testid="more_details_btn"
-                      href="#"
-                      style={{ cursor: 'pointer', color: '#69ABA4' }}
-                      onClick={event => routeToAction(event, camp.id)}
+                  <Grid item container direction="row">
+                    <Typography
+                      variant="body1"
+                      style={{ cursor: 'pointer', color: '#009688', marginTop: "11px" }}
                     >
-                      More Details
-                    </Link>
-                  </Typography>
-                  {(camp.status === "draft" || camp.status === "scheduled") && (
+                      <Link
+                        data-testid="more_details_btn"
+                        href="#"
+                        style={{ cursor: 'pointer', color: '#69ABA4' }}
+                        onClick={event => routeToAction(event, camp.id)}
+                      >
+                        More Details
+                      </Link>
+                    </Typography>
+                    {(camp.status === "draft" || camp.status === "scheduled") && (
                     <CampaignDeleteAction data={camp} refetch={refetch} />
                   )}
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </div>
+            </div>
+          )}
+          
           <div className="border-top my-3" />
         </Fragment>
       ))}
