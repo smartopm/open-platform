@@ -10,7 +10,6 @@ import ErrorPage from '../components/Error'
 import { dateTimeToString, dateToString } from '../components/DateContainer'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link'
 import { IconButton } from '@material-ui/core'
 import CampaignActionMenu from './Campaign/CampaignActionMenu'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
@@ -35,9 +34,7 @@ export default function CampaignList() {
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
-  function routeToAction(_event, id) {
-    return history.push(`/campaign/${id}`)
-  }
+
   function routeToCreateCampaign() {
     return history.push('/campaign-create')
   }
