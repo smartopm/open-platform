@@ -12,7 +12,7 @@ import { StyleSheet, css } from 'aphrodite'
 import Loading from '../Loading'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useLazyQuery } from 'react-apollo'
-import { UsersLiteQuery, flaggedNotes } from '../../graphql/queries'
+import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
 import ErrorPage from '../Error'
@@ -23,6 +23,7 @@ import Task from './Task'
 import TaskDashboard from './TaskDashboard'
 import { futureDateAndTimeToString } from '../DateContainer'
 import DatePickerDialog from '../DatePickerDialog'
+import { useParams } from 'react-router'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -46,6 +47,8 @@ export default function TodoList({
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
   const [query, setQuery] = useState('')
+  const [tasks, setTaskData] = useState([])
+  const { taskId } = useParams()
 
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -76,6 +79,17 @@ export default function TodoList({
       fetchPolicy: "network-only"
     }
   )
+
+  const [loadTask, { loading: taskLoading, error: taskError, data: taskData }] = useLazyQuery(
+    TaskQuery,
+    {
+      variables: {
+        taskId,
+      },
+      fetchPolicy: "network-only"
+    }
+  )
+
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -94,7 +108,23 @@ export default function TodoList({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location])
 
+  useEffect(() => {
+    console.log(taskId)
+    if (taskId) {
+      loadTask()
+    }
+    mergeTask()
+  }, [])
 
+  function mergeTask(){
+    if (taskId) {
+      setTaskData(taskData)
+      return
+    }
+    setTaskData(data)
+  }
+
+  console.log(tasks)
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
