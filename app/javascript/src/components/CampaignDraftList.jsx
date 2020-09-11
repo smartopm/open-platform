@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
-export default function CampaignDraftList({ style, routeToAction, data: { id, name, message, status } }) {
+export default function CampaignDraftList({ style, routeToAction, data: { id, name, message } }) {
   return (
     <div>
       <Grid container spacing={2}>
@@ -34,7 +34,7 @@ export default function CampaignDraftList({ style, routeToAction, data: { id, na
                 <Typography className={css(style.subTitle)}>
                   Status: 
                   {' '}
-                  {status}
+                  Draft
                 </Typography>
               </Grid>
             </Grid>

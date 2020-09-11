@@ -35,7 +35,6 @@ module Mutations
           next if vals[attr.to_sym].blank?
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
-        campaign.status = 'DRAFT'
         return campaign if vals[:campaign_type].eql?('sms')
 
         add_email_attributes(campaign, vals)
