@@ -1,4 +1,3 @@
-/* eslint-disable */
 // values that can be reused across the codebase
 
 export const filterUserByLoggedin = {
@@ -53,15 +52,6 @@ export const infoSource = [
   'Other'
 ]
 
-export const areaCode = {
-  260: '🇿🇲 +260',
-  1: '🇺🇸 +1',
-  27: '🇿🇦 +27',
-  44: '🇬🇧 +44',
-  64: '🇳🇿 +64',
-  971: '🇦🇪 +971'
-}
-
 export const NotesCategories = {
   call:  'Call',
   message:  'Message',
@@ -69,5 +59,21 @@ export const NotesCategories = {
   to_do:  'To-Do',
 }
 
+export const businessCategories = {
+ agriculture: 'Agriculture and Farming',
+ real_estate: 'Real Estate',
+ art: 'Arts and Culture',
+ transportation: 'Transportation',
+ construction: 'Construction',
+ health: 'Health Service',
+ restaurant: 'Restaurant',
+ beauty_salon: 'Beauty Salon',
+ supermarket: 'Supermarket'
+}
+
+export const businessStatus = {
+  verified: 'Verified',
+  pending: 'Pending',
+}
 
 export const ponisoNumber = '+260976064298'
