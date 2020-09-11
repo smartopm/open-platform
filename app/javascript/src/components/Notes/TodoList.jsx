@@ -1,17 +1,17 @@
-/* eslint-disable */
-import React, { useState, Fragment, useEffect } from 'react'
-import { ModalDialog } from '../Dialog'
+/* eslint-disable no-use-before-define */
+import React, { useState, useEffect } from 'react'
 import {
   Fab,
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid
+  Grid,
+  Button
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
-import Loading from '../Loading'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useLazyQuery } from 'react-apollo'
+import { useParams, useHistory } from 'react-router'
 import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
@@ -23,7 +23,8 @@ import Task from './Task'
 import TaskDashboard from './TaskDashboard'
 import { futureDateAndTimeToString } from '../DateContainer'
 import DatePickerDialog from '../DatePickerDialog'
-import { useParams } from 'react-router'
+import Loading from '../Loading'
+import { ModalDialog } from '../Dialog'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -47,8 +48,8 @@ export default function TodoList({
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
   const [query, setQuery] = useState('')
-  const [tasks, setTaskData] = useState([])
   const { taskId } = useParams()
+  const history = useHistory()
 
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -65,8 +66,15 @@ export default function TodoList({
     errorPolicy: 'all'
   })
 
+  const [loadTask, { loading: taskLoading, data: taskData }] = useLazyQuery(TaskQuery, {
+    variables: { taskId },
+    errorPolicy: 'all',
+    // fetchPolicy: 'cache-and-network'
+  })
+
   // TODO: simplify this: @olivier
-  const assignees = assignee.map(query => `assignees = "${query}"`).join(' OR ')
+  const assignees = assignee.map(q => `assignees = "${q}"`).join(' OR ')
+  // eslint-disable-next-line no-nested-ternary
   const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignees
   const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
     flaggedNotes,
@@ -79,17 +87,6 @@ export default function TodoList({
       fetchPolicy: "network-only"
     }
   )
-
-  const [loadTask, { loading: taskLoading, error: taskError, data: taskData }] = useLazyQuery(
-    TaskQuery,
-    {
-      variables: {
-        taskId,
-      },
-      fetchPolicy: "network-only"
-    }
-  )
-
   const [assignUserToNote] = useMutation(AssignUser)
 
   function openModal() {
@@ -108,23 +105,15 @@ export default function TodoList({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location])
 
+
   useEffect(() => {
-    console.log(taskId)
     if (taskId) {
       loadTask()
+      setModalOpen(true)
     }
-    mergeTask()
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadTask])
 
-  function mergeTask(){
-    if (taskId) {
-      setTaskData(taskData)
-      return
-    }
-    setTaskData(data)
-  }
-
-  console.log(tasks)
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
@@ -132,7 +121,10 @@ export default function TodoList({
   function assignUnassignUser(noteId, userId) {
     setLoadingAssignee(true)
     assignUserToNote({ variables: { noteId, userId } })
-      .then(() => (refetch(), setLoadingAssignee(false)))
+      .then(() => {
+        refetch()
+        setLoadingAssignee(false)
+      })
       .catch(err => setErrorMessage(err.message))
   }
 
@@ -174,11 +166,16 @@ export default function TodoList({
     setOpenFilter(!filterOpen)
   }
 
-  if (isLoading) return <Loading />
+  function closeAndExit(){
+    setModalOpen(false)
+    history.replace('/todo')
+  }
+
+  if (isLoading || taskLoading) return <Loading />
   if (tasksError) return <ErrorPage error={tasksError.message} />
 
   return (
-    <Fragment>
+    <>
       <div className="container" data-testid="todo-container">
         <ModalDialog
           open={isDialogOpen}
@@ -186,33 +183,70 @@ export default function TodoList({
           handleConfirm={saveDate}
           action='save'
         >
-            <DatePickerDialog
-              selectedDate={selectedDate}
-              handleDateChange={handleDateChange}
-              label="Pick due date for this todo"
-            />
+          <DatePickerDialog
+            selectedDate={selectedDate}
+            handleDateChange={handleDateChange}
+            label="Pick due date for this todo"
+          />
         </ModalDialog>
 
         <Dialog
           fullScreen
           open={open}
-          fullWidth={true}
-          maxWidth={'lg'}
+          fullWidth
+          maxWidth="lg"
           onClose={openModal}
           aria-labelledby="task_modal"
         >
+          {/* show task details when on task page load */}
           <DialogTitle id="task_modal">
             <CenteredContent>
-              <span>Create a task</span>
+              <span>{taskId ? 'Task Detail Page' : 'Create a task'}</span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
-            <TaskForm
-              refetch={refetch}
-              close={() => setModalOpen(!open)}
-              assignUser={assignUnassignUser}
-              users={liteData?.usersLite}
-            />
+            {
+              // eslint-disable-next-line no-nested-ternary
+              !taskId ? (
+                <TaskForm
+                  refetch={refetch}
+                  close={() => setModalOpen(!open)}
+                  assignUser={assignUnassignUser}
+                  users={liteData?.usersLite}
+                />
+              // eslint-disable-next-line no-nested-ternary
+              )
+              : !taskData ? 'No Task found' : (
+                <>
+                  <Task
+                    key={taskData.task.id}
+                    note={taskData.task}
+                    message={message}
+                    users={liteData?.usersLite || []}
+                    handleCompleteNote={handleCompleteNote}
+                    assignUnassignUser={assignUnassignUser}
+                    loaded={loaded}
+                    handleDelete={handleDelete}
+                    handleModal={handleModal}
+                    loading={loading}
+                    loadingMutation={loadingMutation}
+                    handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+                    isAssignTaskOpen={isAssignTaskOpen}
+                  />
+                  <CenteredContent>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      aria-label="task_submit"
+                      onClick={closeAndExit}
+                    >
+                      Close
+                    </Button>
+                  </CenteredContent>
+
+                </>
+              )
+            }
           </DialogContent>
         </Dialog>
 
@@ -236,22 +270,22 @@ export default function TodoList({
             <TaskDashboard filterTasks={handleTaskFilter} />
           </Grid>
           <br />
-            {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (
-                  <Task
-                    key={note.id}
-                    note={note}
-                    message={message}
-                    users={liteData?.usersLite || []}
-                    handleCompleteNote={handleCompleteNote}
-                    assignUnassignUser={assignUnassignUser}
-                    loaded={loaded}
-                    handleDelete={handleDelete}
-                    handleModal={handleModal}
-                    loading={loading}
-                    loadingMutation={loadingMutation}
-                    handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-                    isAssignTaskOpen={isAssignTaskOpen}
-                  />
+          {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (
+            <Task
+              key={note.id}
+              note={note}
+              message={message}
+              users={liteData?.usersLite || []}
+              handleCompleteNote={handleCompleteNote}
+              assignUnassignUser={assignUnassignUser}
+              loaded={loaded}
+              handleDelete={handleDelete}
+              handleModal={handleModal}
+              loading={loading}
+              loadingMutation={loadingMutation}
+              handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+              isAssignTaskOpen={isAssignTaskOpen}
+            />
                 )
             ) : (
               <CenteredContent>Click a card above to filter</CenteredContent>
@@ -262,7 +296,7 @@ export default function TodoList({
           <Paginate
             offSet={offset}
             limit={limit}
-            active={true}
+            active
             handlePageChange={paginate}
           />
         </CenteredContent>
@@ -275,7 +309,7 @@ export default function TodoList({
           Create task
         </Fab>
       </div>
-    </Fragment>
+    </>
   )
 }
 

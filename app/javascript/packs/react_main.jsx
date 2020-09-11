@@ -323,7 +323,7 @@ const App = () => {
                               component={ShowroomLogs}
                             />
                             <Route path="/notes" component={AllNotes} />
-                            <Route path="/todo/:taskId" component={Todo} />
+                            <Route path="/todo/:taskId?" component={Todo} />
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />

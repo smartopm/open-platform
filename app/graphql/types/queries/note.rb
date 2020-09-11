@@ -34,7 +34,7 @@ module Types::Queries::Note
       description 'return stats related to tasks'
     end
 
-    field :task, [Types::NoteType], null: false do
+    field :task, Types::NoteType, null: false do
       description 'return details for one task'
       argument :task_id, GraphQL::Types::ID, required: true
     end
@@ -68,7 +68,8 @@ module Types::Queries::Note
 
     context[:site_community].notes.includes(:assignees, :author, :user)
                             .eager_load(:assignee_notes, :assignees, :user)
-                            .where(flagged: true, id: task_id)
+                            .where(flagged: true)
+                            .find(task_id)
   end
 
   def my_tasks_count

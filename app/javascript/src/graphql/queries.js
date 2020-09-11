@@ -517,9 +517,8 @@ export const TaskStatsQuery = gql`
 export const TaskQuery  = gql`
 query taskDetail($taskId: ID!){
   task(taskId: $taskId){
-   body
-   dueDate
-   id
+   ...NoteFields
    }
  }
+ ${NotesFragment.note}
 `
