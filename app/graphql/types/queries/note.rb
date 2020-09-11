@@ -23,7 +23,6 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :query, String, required: false
-      
     end
 
     field :my_tasks_count, Integer, null: false do
@@ -52,7 +51,7 @@ module Types::Queries::Note
     context[:site_community].notes.where(user_id: id)
   end
 
-  def flagged_notes(offset: 0, limit: 50, query: nil, note_id: nil)
+  def flagged_notes(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     context[:site_community].notes.includes(:assignees, :author, :user)
