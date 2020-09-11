@@ -230,7 +230,7 @@ RSpec.describe Types::QueryType do
 
   describe 'To-dos and notes in general' do
     let!(:admin) { create(:user_with_community, user_type: 'admin') }
-    let!(:current_user) { create(:user_with_community) }
+    let!(:current_user) { create(:user, community_id: admin.community_id) }
     let!(:notes) do
       admin.community.notes.create!(
         body: 'This is a note',
@@ -294,6 +294,15 @@ RSpec.describe Types::QueryType do
       )
     end
 
+    let(:task_query) do
+      %(query {
+        task(taskId: "#{other_notes.id}") {
+          id
+        }
+      }
+    )
+    end
+
     it 'should query all to-dos' do
       result = DoubleGdpSchema.execute(flagged_query, context: {
                                          current_user: admin,
@@ -301,15 +310,17 @@ RSpec.describe Types::QueryType do
                                        }).as_json
 
       expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+      expect(result.dig('data', 'flaggedNotes').length).to eql 2
     end
 
-    it 'should query all to-dos' do
+    it 'should query all notes' do
       result = DoubleGdpSchema.execute(notes_query, context: {
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'allNotes')).not_to be_nil
+      expect(result.dig('data', 'allNotes').length).to eql 2
     end
 
     it 'should query all to-dos' do
@@ -332,6 +343,18 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'taskStats', 'tasksOpenAndOverdue')).to eql 1
       expect(result.dig('data', 'taskStats', 'overdueTasks')).to eql 1
       expect(result.dig('data', 'taskStats', 'tasksWithNoDueDate')).to eql 0
+    end
+
+    it 'query individual task' do
+      # task_query
+      result = DoubleGdpSchema.execute(task_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+
+      expect(result.dig('errors')).to be_nil
+      expect(result.dig('data', 'task')).not_to be_nil
+      expect(result.dig('data', 'task', 'id')).to eql other_notes.id
     end
   end
 end

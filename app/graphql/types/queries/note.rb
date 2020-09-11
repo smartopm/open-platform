@@ -32,6 +32,11 @@ module Types::Queries::Note
     field :task_stats, Types::TaskStatType, null: false do
       description 'return stats related to tasks'
     end
+
+    field :task, Types::NoteType, null: false do
+      description 'return details for one task'
+      argument :task_id, GraphQL::Types::ID, required: true
+    end
   end
 
   def all_notes(offset: 0, limit: 50)
@@ -55,6 +60,15 @@ module Types::Queries::Note
                             .search(query)
                             .order(completed: :desc, created_at: :desc)
                             .limit(limit).offset(offset)
+  end
+
+  def task(task_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:site_community].notes.includes(:assignees, :author, :user)
+                            .eager_load(:assignee_notes, :assignees, :user)
+                            .where(flagged: true)
+                            .find(task_id)
   end
 
   def my_tasks_count
