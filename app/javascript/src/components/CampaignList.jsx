@@ -13,12 +13,26 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
-import CampaignActionMenu from './Campaign/CampaignActionMenu'
-import { dateTimeToString, dateToString } from "./DateContainer"
-import ErrorPage from "./Error"
-import Loading from "./Loading"
 import { allCampaigns } from '../graphql/queries'
+import Loading from './Loading'
+import ErrorPage from './Error'
+import { dateTimeToString, dateToString } from './DateContainer'
+import CampaignActionMenu from './Campaign/CampaignActionMenu'
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
+
+const style = StyleSheet.create({
+  logTitle: {
+    color: '#1f2026',
+    fontSize: 16,
+    fontWeight: 700
+  },
+  subTitle: {
+    color: 'black',
+    fontSize: 14,
+    letterSpacing: 0.17,
+    fontWeight: 400
+  }
+})
 
 export default function CampaignList() {
   const authState = useContext(AuthStateContext)
@@ -98,7 +112,7 @@ export default function CampaignList() {
                           Total Scheduled: 
                           {' '}
                           {campaign.campaignMetrics.totalScheduled}
-                        </Typography>
+                          </Typography>
                       </Grid>
                       <Grid item>
                         <Typography className={css(style.subTitle)}>
@@ -112,6 +126,7 @@ export default function CampaignList() {
                           Total Clicked: 
                           {' '}
                           {campaign.campaignMetrics.totalClicked}
+                          Total Clicked: {campaign.campaignMetrics.totalClicked}
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -175,17 +190,3 @@ export default function CampaignList() {
     </div>
   )
 }
-
-const style = StyleSheet.create({
-  logTitle: {
-    color: '#1f2026',
-    fontSize: 16,
-    fontWeight: 700
-  },
-  subTitle: {
-    color: 'black',
-    fontSize: 14,
-    letterSpacing: 0.17,
-    fontWeight: 400
-  }
-})

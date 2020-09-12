@@ -39,15 +39,17 @@ export default function CampaignActionMenu({
       onClose={handleClose}
     >
       <div>
-        { userType == 'admin' && (
+        { userType === 'admin' && (
         <>
-          { (data.status === 'draft' || data.status === 'scheduled') && (<MenuItem
-            id="delete_button"
-            key="delete_user"
-            onClick={() => handleDeleteClick()}
-          >
-            Delete
-          </MenuItem>)}
+          { (data.status === 'draft' || data.status === 'scheduled') && (
+            <MenuItem
+              id="delete_button"
+              key="delete_user"
+              onClick={() => handleDeleteClick()}
+            >
+              Delete
+            </MenuItem>
+          )}
           <MenuItem>
             <Link to={`/campaign/${data.id}`} className={linkStyles}>
               View Details
