@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
@@ -25,7 +24,6 @@ import BusinessForm from './BusinessForm'
 export default function BusinessList({ businessData, userType, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
-  // const [moreOpen, setMoreOpen] = useState(false)
 
   const open = Boolean(anchorEl)
 
@@ -35,7 +33,6 @@ export default function BusinessList({ businessData, userType, refetch }) {
 
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
-    console.log(event.currentTarget)
   }
 
   function openModal() {
@@ -104,10 +101,11 @@ export default function BusinessList({ businessData, userType, refetch }) {
             </Link>
             {userType === 'admin' && (
               <IconButton
-                aria-label={`more-${business.id}`}
+                aria-label={`more-${business.name}`}
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
+                dataid={business.id}
               >
                 <MoreVertIcon />
               </IconButton>
@@ -117,7 +115,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
               data={business}
               anchorEl={anchorEl}
               handleClose={handleClose}
-              open={open}
+              open={open && anchorEl.getAttribute('dataid') === business.id}
               // eslint-disable-next-line no-use-before-define
               linkStyles={css(styles.linkItem)}
               refetch={refetch}

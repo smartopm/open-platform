@@ -18,7 +18,6 @@ export default function BusinessActionMenu({
   const [openModal, setOpenModal] = useState(false)
   const [deleteBusiness] = useMutation(DeleteBusiness)
   function handleDeleteClick() {
-    handleClose()
     setOpenModal(!openModal)
   }
   function handleDelete() {
@@ -31,10 +30,10 @@ export default function BusinessActionMenu({
   }
   return (
     <Menu
-      id="long-menu"
+      id={`long-menu-${data.id}`}
       anchorEl={anchorEl}
-      keepMounted
       open={open}
+      keepMounted
       onClose={handleClose}
       PaperProps={{
         style: {
