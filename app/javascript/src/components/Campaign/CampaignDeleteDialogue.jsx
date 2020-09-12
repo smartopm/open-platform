@@ -8,9 +8,9 @@ import {
 } from '@material-ui/core'
 
 export default function DeleteDialogueBox({
-  open,
   handleClose,
-  handleDelete
+  handleDelete,
+  open
 }) {
   return (
     <>

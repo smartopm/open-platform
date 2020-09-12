@@ -1,175 +1,136 @@
 /* eslint-disable no-use-before-define */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable radix */
-import React, { Fragment, useState, useContext } from 'react'
+import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import { useHistory } from 'react-router-dom'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import { IconButton } from '@material-ui/core'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import { allCampaigns } from '../graphql/queries'
-import Loading from './Loading'
-import ErrorPage from './Error'
-import { dateTimeToString, dateToString } from './DateContainer'
-import CampaignActionMenu from './Campaign/CampaignActionMenu'
-import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
-
-const style = StyleSheet.create({
-  logTitle: {
-    color: '#1f2026',
-    fontSize: 16,
-    fontWeight: 700
-  },
-  subTitle: {
-    color: 'black',
-    fontSize: 14,
-    letterSpacing: 0.17,
-    fontWeight: 400
-  }
-})
+import Loading from "./Loading"
+import ErrorPage from "./Error"
+import { dateTimeToString, dateToString } from "./DateContainer"
+import CampaignDeleteAction from "./Campaign/CampaignDeleteAction"
 
 export default function CampaignList() {
-  const authState = useContext(AuthStateContext)
   const history = useHistory()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
-
-  const styles = StyleSheet.create({
-    linkItem: {
-      color: '#000000',
-      textDecoration: 'none'
-    }
-  })
-
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
-
+  function routeToAction(_event, id) {
+    return history.push(`/campaign/${id}`)
+  }
   function routeToCreateCampaign() {
     return history.push('/campaign-create')
   }
-
-  function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
-  }
-
-  function handleClose() {
-    setAnchorEl(null)
-  }
-
   if (loading) return <Loading />
   if (error) return <ErrorPage />
 
   return (
     <div className="container">
-      <List>
-        {data.campaigns.map(campaign => (
-          <Fragment key={campaign.id}>
-            <ListItem>
-              <Grid container spacing={2}>
-                <Grid item container direction="column" spacing={2}>
-                  <Grid item>
-                    <Typography
-                      className={css(style.logTitle)}
-                      gutterBottom
-                      variant="subtitle1"
-                      data-testid="c_name"
-                    >
-                      {campaign.name}
-                    </Typography>
-                    <Typography
-                      className={css(style.subTitle)}
-                      variant="body2"
-                      data-testid="c_message"
-                      color="textSecondary"
-                    >
-                      {campaign.message}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography
-                      className={css(style.subTitle)}
-                      variant="body2"
-                      gutterBottom
-                    >
-                      <strong>Scheduled Date: </strong>
-                      {dateToString(campaign.batchTime)}
-                      {' '}
-                      <strong>Scheduled Time: </strong>
-                      {dateTimeToString(new Date(campaign.batchTime))}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Grid item container direction="row" spacing={2}>
-                      <Grid item>
-                        <Typography className={css(style.subTitle)}>
-                          Total Scheduled: 
-                          {' '}
-                          {campaign.campaignMetrics.totalScheduled}
-                          </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography className={css(style.subTitle)}>
-                          Total Sent: 
-                          {' '}
-                          {campaign.campaignMetrics.totalSent}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography className={css(style.subTitle)}>
-                          Total Clicked: 
-                          {' '}
-                          {campaign.campaignMetrics.totalClicked}
-                          Total Clicked: {campaign.campaignMetrics.totalClicked}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography className={css(style.subTitle)}>
-                          Success: 
-                          {' '}
-                          {String(parseInt(
-                        (100 * campaign.campaignMetrics.totalClicked) /
-                          (campaign.campaignMetrics.totalSent &&
-                            campaign.campaignMetrics.totalSent > 0
-                            ? campaign.campaignMetrics.totalSent
+      {data.campaigns.map(camp => (
+        <Fragment key={camp.id}>
+          <div>
+            <Grid container spacing={2}>
+              <Grid item container direction="column" spacing={2}>
+                <Grid item>
+                  <Typography
+                    className={css(style.logTitle)}
+                    gutterBottom
+                    variant="subtitle1"
+                    data-testid="c_name"
+                  >
+                    {camp.name}
+                  </Typography>
+                  <Typography
+                    className={css(style.subTitle)}
+                    variant="body2"
+                    data-testid="c_message"
+                    color="textSecondary"
+                  >
+                    {camp.message}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    className={css(style.subTitle)}
+                    variant="body2"
+                    gutterBottom
+                  >
+                    <strong>Scheduled Date: </strong>
+                    {dateToString(camp.batchTime)}
+                    {' '}
+                    <strong>Scheduled Time: </strong>
+                    {dateTimeToString(new Date(camp.batchTime))}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid item container direction="row" spacing={2}>
+                    <Grid item>
+                      <Typography className={css(style.subTitle)}>
+                        Total Scheduled: 
+                        {' '}
+                        {camp.campaignMetrics.totalScheduled}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={css(style.subTitle)}>
+                        Total Sent: 
+                        {' '}
+                        {camp.campaignMetrics.totalSent}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={css(style.subTitle)}>
+                        Total Clicked: 
+                        {' '}
+                        {camp.campaignMetrics.totalClicked}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={css(style.subTitle)}>
+                        Success: 
+                        {' '}
+                        {String(parseInt(
+                        (100 * camp.campaignMetrics.totalClicked) /
+                          (camp.campaignMetrics.totalSent &&
+                            camp.campaignMetrics.totalSent > 0
+                            ? camp.campaignMetrics.totalSent
                             : 1))
                       )}
-                          %
-                        </Typography>
-                      </Grid>
+                        %
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
+                <Grid item container direction="row">
+                  <Typography
+                    variant="body1"
+                    style={{ cursor: 'pointer', color: '#009688', marginTop: "11px" }}
+                  >
+                    <Link
+                      data-testid="more_details_btn"
+                      href="#"
+                      style={{ cursor: 'pointer', color: '#69ABA4' }}
+                      onClick={event => routeToAction(event, camp.id)}
+                    >
+                      More Details
+                    </Link>
+                  </Typography>
+                  {(camp.status === "draft" || camp.status === "scheduled") && (
+                    <CampaignDeleteAction data={camp} refetch={refetch} />
+                  )}
+                </Grid>
               </Grid>
-              <CampaignActionMenu
-                userType={authState.user.userType}
-                data={campaign}
-                anchorEl={anchorEl}
-                handleClose={handleClose}
-                open={open}
-                linkStyles={css(styles.linkItem)}
-                refetch={refetch}
-              />
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={handleOpenMenu}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <div className="border-top my-3" />
-          </Fragment>
-        ))}
-      </List>
+            </Grid>
+          </div>
+          <div className="border-top my-3" />
+        </Fragment>
+      ))}
       <Fab
         variant="extended"
         color="primary"
@@ -177,7 +138,7 @@ export default function CampaignList() {
           position: 'fixed',
           bottom: 24,
           right: 57,
-          color: 'white'
+          color: 'white',
         }}
         onClick={() => {
           routeToCreateCampaign()
@@ -190,3 +151,17 @@ export default function CampaignList() {
     </div>
   )
 }
+
+const style = StyleSheet.create({
+  logTitle: {
+    color: '#1f2026',
+    fontSize: 16,
+    fontWeight: 700
+  },
+  subTitle: {
+    color: 'black',
+    fontSize: 14,
+    letterSpacing: 0.17,
+    fontWeight: 400
+  },
+})

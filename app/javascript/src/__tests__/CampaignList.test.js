@@ -29,6 +29,7 @@ describe('Campaign List page', () => {
               startTime: '2020-06-24T11:58:22.573Z',
               updatedAt: '2020-06-25T11:58:22.573Z',
               userIdList: 'bsufsbdf343, 53094549035, 09u4093',
+              status: 'draft',
               campaignMetrics: {
                 batchTime: "2020-05-20T05:35:03Z",
                 startTime: "2020-05-20T05:36:35Z",
