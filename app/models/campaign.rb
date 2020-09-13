@@ -11,8 +11,14 @@ class Campaign < ApplicationRecord
   CAMPAIGN_MAIL_TEMPLATE = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
 
   validates :campaign_type, inclusion: { in: %w[sms email] }
-
+  before_save :clean_message
   default_scope { order(created_at: :desc) }
+
+  def clean_message
+    self.message = message.gsub(/[\u2019\u201c\u201d]/, '\'') if campaign_type == 'sms' &&
+                                                                 message.present?
+    true
+  end
 
   def already_sent_user_ids
     messages.collect(&:user_id)
