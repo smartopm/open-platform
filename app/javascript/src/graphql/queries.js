@@ -235,8 +235,8 @@ export const MessagesQuery = gql`
 `
 
 export const UserMessageQuery = gql`
-  query userMessages($id: ID!) {
-    userMessages(id: $id) {
+  query userMessages($id: ID!, $limit: Int, $offset: Int) {
+    userMessages(id: $id, limit: $limit, offset: $offset) {
       id
       message
       createdAt
@@ -514,4 +514,13 @@ export const TaskStatsQuery = gql`
       totalCallsOpen
     }
   }
+`
+
+export const TaskQuery  = gql`
+query taskDetail($taskId: ID!){
+  task(taskId: $taskId){
+   ...NoteFields
+   }
+ }
+ ${NotesFragment.note}
 `

@@ -2,6 +2,7 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
+// TODO: refactor this
 export default function StatusBadge({ label }) {
   switch (label.toLowerCase()) {
     case 'pending':

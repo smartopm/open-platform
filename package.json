@@ -83,8 +83,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "NODE_ENV=test jest"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {

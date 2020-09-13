@@ -20,12 +20,14 @@ import CenteredContent from '../../components/CenteredContent'
 
 export default function UserMessages() {
   const { id } = useParams()
-  const { loading, error, data, refetch } = useQuery(UserMessageQuery, {
-    variables: { id }
+  const limit = 50
+  const { loading, error, data, refetch, fetchMore } = useQuery(UserMessageQuery, {
+    variables: { id, limit }
   })
   const [messageCreate] = useMutation(MessageCreate)
   const [message, setMessage] = useState('')
   const [isMsgLoading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [errmsg, setError] = useState('')
   const authState = useContext(AuthStateContext)
   const { state } = useLocation()
@@ -41,6 +43,23 @@ export default function UserMessages() {
       setMessage('')
       refetch()
       setLoading(false)
+    })
+  }
+
+  function fetchMoreMessages() {
+    setIsLoading(true)
+    fetchMore({
+      variables: { id, offset: data.userMessages.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+        setIsLoading(false)
+        return Object.assign({}, prev, {
+          userMessages: [
+            ...prev.userMessages,
+            ...fetchMoreResult.userMessages
+          ]
+        })
+      }
     })
   }
 
@@ -60,7 +79,8 @@ export default function UserMessages() {
       <div className={css(styles.messageSection)}>
         <List>
           { loading ? <CenteredContent > <Spinner /> </CenteredContent> : data.userMessages.length ? (
-            data.userMessages.map(message => (
+            <>
+            {data.userMessages.map(message => (
               <UserMessageItem
                 key={message.id}
                 id={message.sender.id}
@@ -75,7 +95,15 @@ export default function UserMessages() {
                 isRead={message.isRead}
                 isAdmin={authState.user.userType === 'admin'}
               />
-            ))
+            ))}
+            {data?.userMessages.length >= limit && (
+              <CenteredContent>
+                <Button variant="outlined" onClick={fetchMoreMessages}>
+                  {isLoading ? <Spinner /> : 'Load more messages'}
+                </Button>
+              </CenteredContent>
+            )}
+            </>
           ) : (
             <p className="text-center">
               <span>
@@ -86,6 +114,7 @@ export default function UserMessages() {
             </p>
           )}
         </List>
+
       </div>
 
       <ListItem alignItems="flex-start">
