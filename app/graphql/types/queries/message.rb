@@ -19,6 +19,8 @@ module Types::Queries::Message
     field :user_messages, [Types::MessageType], null: true do
       description 'Get a list of messages for one user'
       argument :id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
     end
   end
 
@@ -36,7 +38,7 @@ module Types::Queries::Message
     ).unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
   end
 
-  def user_messages(id:)
+  def user_messages(id:, offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_self(id)
 
     com_id = context[:current_user].community_id
@@ -44,7 +46,7 @@ module Types::Queries::Message
       Message.joins(:user, :sender).includes(:user, :sender)
              .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
              .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
-             .order('messages.created_at ASC').limit(50)
+             .order('messages.created_at ASC').limit(limit).offset(offset)
 
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages

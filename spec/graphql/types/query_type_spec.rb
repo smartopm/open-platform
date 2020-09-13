@@ -236,17 +236,26 @@ RSpec.describe Types::QueryType do
         body: 'This is a note',
         user_id: current_user.id,
         author_id: admin.id,
-        flagged: true,
-        due_date: 10.days.from_now,
-        completed: true,
+        flagged: false,
       )
     end
     let!(:other_notes) do
-      admin.community.notes.create!(
+      current_user.community.notes.create!(
         body: 'This is a note',
         user_id: current_user.id,
         author_id: admin.id,
         flagged: true,
+        due_date: -10.days.from_now,
+        completed: false,
+      )
+    end
+    let!(:admin_tasks) do
+      admin.tasks.create!(
+        body: 'This is another note',
+        user_id: current_user.id,
+        author_id: admin.id,
+        flagged: true,
+        community_id: admin.community_id,
         due_date: -10.days.from_now,
         completed: false,
       )
@@ -273,7 +282,7 @@ RSpec.describe Types::QueryType do
 
     let(:user_notes_query) do
       %(query {
-            userNotes(id: "#{admin.id}") {
+            userNotes(id: "#{current_user.id}") {
               body
               createdAt
               id
@@ -303,6 +312,12 @@ RSpec.describe Types::QueryType do
     )
     end
 
+    let(:admin_task) do
+      %(query{
+          myTasksCount
+      })
+    end
+
     it 'should query all to-dos' do
       result = DoubleGdpSchema.execute(flagged_query, context: {
                                          current_user: admin,
@@ -320,7 +335,7 @@ RSpec.describe Types::QueryType do
                                        }).as_json
 
       expect(result.dig('data', 'allNotes')).not_to be_nil
-      expect(result.dig('data', 'allNotes').length).to eql 2
+      expect(result.dig('data', 'allNotes').length).to eql 3
     end
 
     it 'should query all to-dos' do
@@ -330,6 +345,7 @@ RSpec.describe Types::QueryType do
                                        }).as_json
 
       expect(result.dig('data', 'userNotes')).not_to be_nil
+      expect(result.dig('data', 'userNotes').length).to eql 3
     end
 
     it 'should query tasks stats' do
@@ -339,9 +355,9 @@ RSpec.describe Types::QueryType do
                                        }).as_json
 
       expect(result.dig('data', 'taskStats')).not_to be_nil
-      expect(result.dig('data', 'taskStats', 'completedTasks')).to eql 1
-      expect(result.dig('data', 'taskStats', 'tasksOpenAndOverdue')).to eql 1
-      expect(result.dig('data', 'taskStats', 'overdueTasks')).to eql 1
+      expect(result.dig('data', 'taskStats', 'completedTasks')).to eql 0
+      expect(result.dig('data', 'taskStats', 'tasksOpenAndOverdue')).to eql 2
+      expect(result.dig('data', 'taskStats', 'overdueTasks')).to eql 2
       expect(result.dig('data', 'taskStats', 'tasksWithNoDueDate')).to eql 0
     end
 
@@ -355,6 +371,17 @@ RSpec.describe Types::QueryType do
       expect(result.dig('errors')).to be_nil
       expect(result.dig('data', 'task')).not_to be_nil
       expect(result.dig('data', 'task', 'id')).to eql other_notes.id
+    end
+
+    it 'query admin tasks' do
+      result = DoubleGdpSchema.execute(admin_task, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+
+      expect(result.dig('errors')).to be_nil
+      expect(result.dig('data', 'myTasksCount')).not_to be_nil
+      expect(result.dig('data', 'myTasksCount')).to eql 1
     end
   end
 end
