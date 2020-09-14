@@ -54,12 +54,14 @@ module Types
 
     field :campaigns, [Types::CampaignType], null: true do
       description 'Get a list of all Campaigns'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
-    def campaigns
+    def campaigns(offset: 0, limit: 10)
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      campaign = context[:site_community].campaigns.existing.offset(0).limit(100)
+      campaign = context[:site_community].campaigns.offset(offset).limit(limit)
       campaign
     end
 

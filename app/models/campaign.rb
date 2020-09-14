@@ -109,7 +109,7 @@ class Campaign < ApplicationRecord
       start_time: start_time,
       end_time: end_time,
       total_scheduled: user_id_list.split(',').count,
-      total_sent: messages.count,
+      total_sent: message_count,
       total_clicked: total_clicked || 0,
     }
   end
