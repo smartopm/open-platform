@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import {
     render
@@ -9,7 +8,7 @@ import DeleteDialogue from "../components/Campaign/CampaignDeleteDialogue"
 describe('It should render the dialog box for delete', () => {
   const container = render(
     <DeleteDialogue
-      open={true}
+      open
       handleClose={jest.fn()}
       handleDelete={jest.fn()}
     />
