@@ -13,9 +13,15 @@ class Campaign < ApplicationRecord
   enum status: { draft: 0, scheduled: 1, in_progress: 2, deleted: 3, done: 4 }
 
   validates :campaign_type, inclusion: { in: %w[sms email] }
+  before_save :clean_message
 
   scope :existing, -> { where('status != ?', 3) }
   default_scope { order(created_at: :desc) }
+
+  def clean_message
+    self.message = message.gsub(/[\u2019\u201c\u201d]/, '\'') if campaign_type == 'sms' &&
+                                                                 message.present?
+  end
 
   def already_sent_user_ids
     messages.collect(&:user_id)

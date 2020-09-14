@@ -26,7 +26,16 @@ RSpec.describe Campaign, type: :model do
       expect(community.campaigns[0].pre_header).to eql 'This is pre header'
       expect(community.campaigns[0].template_style).to eql 'This is template style'
     end
+
+    it 'should replace strange double “ and single quotes ’ with single quotes' do
+      campaign = FactoryBot.create(:campaign, community_id: community.id, campaign_type: 'sms')
+      campaign.message = 'should replace strange double “ and single quotes ’ with single quotes'
+      campaign.save
+      expect(campaign.message).not_to include '’'
+      expect(campaign.message).not_to include '“'
+    end
   end
+
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to have_many(:labels) }
