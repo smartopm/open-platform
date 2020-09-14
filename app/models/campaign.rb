@@ -10,8 +10,11 @@ class Campaign < ApplicationRecord
   EXPIRATION_DAYS = 7
   CAMPAIGN_MAIL_TEMPLATE = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
 
+  enum status: { draft: 0, scheduled: 1, in_progress: 2, deleted: 3, done: 4 }
+
   validates :campaign_type, inclusion: { in: %w[sms email] }
 
+  scope :existing, -> { where('status != ?', 3) }
   default_scope { order(created_at: :desc) }
 
   def already_sent_user_ids
@@ -75,7 +78,7 @@ class Campaign < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def run_campaign
     admin_user = campaign_admin_user
-    update(start_time: Time.current)
+    update(start_time: Time.current, status: 'in_progress')
     users = target_list_user
     CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
     users.each do |acc|

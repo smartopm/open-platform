@@ -13,6 +13,7 @@ const initData = {
   id: '',
   name: '',
   campaignType: 'sms',
+  status: 'draft',
   message: '',
   batchTime: '',
   userIdList: '',
@@ -67,6 +68,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       id: formData.id,
       name: formData.name,
       campaignType: formData.campaignType,
+      status: formData.status,
       message: formData.message,
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
@@ -134,6 +136,23 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         >
           <MenuItem value="sms">SMS</MenuItem>
           <MenuItem value="email">Email</MenuItem>
+        </TextField>
+        <TextField
+          label="Status"
+          name="status"
+          required
+          className="form-control"
+          value={formData.status}
+          onChange={handleInputChange}
+          aria-label="status"
+          inputProps={{ 'data-testid': 'status' }}
+          select
+        >
+          <MenuItem value="draft">Draft</MenuItem>
+          <MenuItem value="scheduled">Scheduled</MenuItem>
+          <MenuItem value="in_progress">In Progress</MenuItem>
+          <MenuItem value="deleted">Deleted</MenuItem>
+          <MenuItem value="done">Done</MenuItem>
         </TextField>
         <TextField
           label="Campaign Name"

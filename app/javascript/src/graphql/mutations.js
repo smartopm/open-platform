@@ -430,6 +430,7 @@ export const CampaignCreate = gql`
   mutation campaignCreate(
     $name: String!
     $campaignType: String!
+    $status: String!
     $message: String!
     $batchTime: String!
     $userIdList: String!
@@ -441,6 +442,7 @@ export const CampaignCreate = gql`
     campaignCreate(
       name: $name
       campaignType: $campaignType
+      status: $status
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
@@ -460,6 +462,7 @@ export const CampaignUpdateMutation = gql`
     $id: ID!
     $name: String
     $campaignType: String
+    $status: String
     $message: String
     $batchTime: String
     $userIdList: String
@@ -472,6 +475,7 @@ export const CampaignUpdateMutation = gql`
       id: $id
       name: $name
       campaignType: $campaignType
+      status: $status
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
@@ -489,6 +493,7 @@ export const CampaignUpdateMutation = gql`
         message
         name
         campaignType
+        status
         startTime
         updatedAt
         userIdList
@@ -503,6 +508,17 @@ export const CampaignUpdateMutation = gql`
           totalSent
           totalClicked
         }
+      }
+    }
+  }
+`
+
+export const DeleteCampaign = gql`
+  mutation campaignDelete($id: ID!){
+    campaignDelete(id: $id){
+      campaign {
+        id
+        status
       }
     }
   }
