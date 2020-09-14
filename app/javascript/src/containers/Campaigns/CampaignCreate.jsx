@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import Nav from "../../components/Nav";
-// eslint-disable-next-line import/extensions
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import CampaignForm from '../../components/CampaignForm'
 import CampaignToggle from '../../components/Campaign/ToggleButton'
 
