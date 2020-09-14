@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable radix */
 import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
@@ -100,7 +99,7 @@ export default function CampaignList() {
                           (camp.campaignMetrics.totalSent &&
                             camp.campaignMetrics.totalSent > 0
                             ? camp.campaignMetrics.totalSent
-                            : 1))
+                            : 1), 10)
                       )}
                         %
                       </Typography>
