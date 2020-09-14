@@ -8,8 +8,7 @@ import { DateAndTimePickers } from './DatePickerDialog'
 import { 
     CampaignCreate, 
     CampaignUpdateMutation, 
-    CampaignLabelRemoveMutation, 
-    CampaignDraftCreate 
+    CampaignLabelRemoveMutation 
   } from '../graphql/mutations'
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
@@ -34,7 +33,6 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [mutationLoading, setLoading] = useState(false)
   const [campaignCreate] = useMutation(CampaignCreate)
-  const [campaignDraftCreate] = useMutation(CampaignDraftCreate)
   const [campaignUpdate] = useMutation(CampaignUpdateMutation)
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
   const { id } = useParams() // will only exist on campaign update
@@ -43,11 +41,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
   async function createCampaignOnSubmit(campData) {
     setLoading(true)
     try {
-      if (campaignCreateType === "schedule") {
-        await campaignCreate({ variables: campData })
-      } else {
-        await campaignDraftCreate({ variables: campData })
-      }
+      await campaignCreate({ variables: campData })
       setIsSubmitted(true)
       setFormData(initData)
       setLoading(false)
@@ -78,7 +72,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
       id: formData.id,
       name: formData.name,
       campaignType: formData.campaignType,
-      status: formData.status,
+      status: campaignCreateType === "schedule" ? 'scheduled' : 'draft',
       message: formData.message,
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),

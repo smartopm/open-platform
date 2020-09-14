@@ -7,11 +7,11 @@ module Mutations
       include Helpers::Campaign
 
       argument :name, String, required: true
-      argument :message, String, required: true
+      argument :message, String, required: false
       argument :campaign_type, String, required: true
       argument :status, String, required: true
-      argument :batch_time, String, required: true
-      argument :user_id_list, String, required: true
+      argument :batch_time, String, required: false
+      argument :user_id_list, String, required: false
       argument :labels, String, required: false
       argument :subject, String, required: false
       argument :pre_header, String, required: false
@@ -34,9 +34,11 @@ module Mutations
 
       def add_attributes(campaign, vals)
         %w[name campaign_type message user_id_list batch_time status].each do |attr|
+          next if vals[attr.to_sym].blank?
+
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
-        campaign.status = 1
+
         return campaign if vals[:campaign_type].eql?('sms')
 
         add_email_attributes(campaign, vals)
