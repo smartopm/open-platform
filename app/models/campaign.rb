@@ -17,7 +17,6 @@ class Campaign < ApplicationRecord
   def clean_message
     self.message = message.gsub(/[\u2019\u201c\u201d]/, '\'') if campaign_type == 'sms' &&
                                                                  message.present?
-    true
   end
 
   def already_sent_user_ids
