@@ -150,9 +150,6 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         >
           <MenuItem value="draft">Draft</MenuItem>
           <MenuItem value="scheduled">Scheduled</MenuItem>
-          <MenuItem value="in_progress">In Progress</MenuItem>
-          <MenuItem value="deleted">Deleted</MenuItem>
-          <MenuItem value="done">Done</MenuItem>
         </TextField>
         <TextField
           label="Campaign Name"
