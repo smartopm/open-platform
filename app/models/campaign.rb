@@ -8,6 +8,7 @@ class Campaign < ApplicationRecord
   has_many :labels, through: :campaign_labels
 
   EXPIRATION_DAYS = 7
+  CAMPAIGN_MAIL_TEMPLATE = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
 
   enum status: { draft: 0, scheduled: 1, in_progress: 2, deleted: 3, done: 4 }
 
@@ -60,8 +61,17 @@ class Campaign < ApplicationRecord
   end
 
   def send_email(user_email)
-    EmailMsg.send_campaign_mail(user_email, name, community.name, subject,
-                                pre_header, message, template_style)
+    EmailMsg.send_mail(user_email, CAMPAIGN_MAIL_TEMPLATE, campaign_mail_data)
+  end
+
+  def campaign_mail_data
+    {
+      "community": community,
+      "name": name,
+      "subject": subject,
+      "pre_header": pre_header,
+      "message": message,
+    }
   end
 
   # rubocop:disable Metrics/AbcSize
