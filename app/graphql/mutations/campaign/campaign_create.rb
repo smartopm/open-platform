@@ -22,6 +22,7 @@ module Mutations
       # TODO: Rollback if Label fails to save - Saurabh
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
+        check_missing_args(vals) if vals[:status] == 'scheduled'
         campaign = context[:current_user].community.campaigns.new
         campaign = add_attributes(campaign, vals)
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
@@ -51,6 +52,14 @@ module Mutations
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
         campaign
+      end
+
+      def check_missing_args(vals)
+        %w[name campaign_type message user_id_list batch_time status].each do |attr|
+          if vals[attr.to_sym].blank?
+            raise GraphQL::ExecutionError, "Missing Parameter: Please Supply #{attr} parameter"
+          end
+        end
       end
 
       def authorized?(_vals)
