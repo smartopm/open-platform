@@ -1,17 +1,14 @@
-/* eslint-disable */
 import React from 'react'
-import Campaign from '../components/CampaignForm'
-import CampaignContainer from '../containers/Campaigns/CampaignCreate'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import Campaign from '../components/CampaignForm'
 
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Campaign page', () => {
   afterEach(cleanup)
-  const campaignType = 'draft'
   const authState = {
     loaded: true,
     loggedIn: true,
@@ -51,7 +48,7 @@ describe('Campaign page', () => {
     expect(getByText('User ID List')).toBeInTheDocument()
   })
   it('should not render form when user is not admin', () => {
-    const authState = {
+    const residentAuthState = {
       loaded: true,
       loggedIn: true,
       setToken: jest.fn(),
@@ -70,7 +67,7 @@ describe('Campaign page', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <Campaign authState={authState} />
+          <Campaign authState={residentAuthState} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -113,16 +110,5 @@ describe('Campaign page', () => {
 
     fireEvent.change(idsInput, { target: { value: '6353472323, 734923479324723, 209423423' } })
     expect(idsInput.value).toBe('6353472323, 734923479324723, 209423423')
-  })
-
-  it('should render campaign container', () => {
-    const { getByText } = render(
-      <MockedProvider>
-        <BrowserRouter>
-          <CampaignContainer authState={authState} campaignCreateType={campaignType}/>
-        </BrowserRouter>
-      </MockedProvider>
-    )
-    expect(getByText('Draft')).toBeInTheDocument()
   })
 })
