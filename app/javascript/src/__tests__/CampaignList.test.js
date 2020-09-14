@@ -1,10 +1,9 @@
-/* eslint-disable */
 import React from 'react'
-import Campaign from '../components/CampaignList'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import Campaign from '../components/CampaignList'
 import { allCampaigns } from '../graphql/queries'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
@@ -29,6 +28,7 @@ describe('Campaign List page', () => {
               startTime: '2020-06-24T11:58:22.573Z',
               updatedAt: '2020-06-25T11:58:22.573Z',
               userIdList: 'bsufsbdf343, 53094549035, 09u4093',
+              status: 'draft',
               campaignMetrics: {
                 batchTime: "2020-05-20T05:35:03Z",
                 startTime: "2020-05-20T05:36:35Z",

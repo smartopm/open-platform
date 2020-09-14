@@ -11,6 +11,7 @@ RSpec.describe Mutations::Campaign do
         mutation campaignCreate(
           $name: String!
           $message: String!
+          $status: String!
           $campaignType: String!
           $batchTime: String!
           $userIdList: String!
@@ -19,6 +20,7 @@ RSpec.describe Mutations::Campaign do
           campaignCreate(
             name: $name
             message: $message
+            status: $status
             campaignType: $campaignType
             batchTime: $batchTime
             userIdList: $userIdList
@@ -41,6 +43,7 @@ RSpec.describe Mutations::Campaign do
         name: 'This is a Campaign',
         message: 'Visiting',
         campaignType: %w[sms email].sample,
+        status: %w[draft scheduled].sample,
         batchTime: '17/06/2020 03:49',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
         labels: 'label 1,label 2',
@@ -195,6 +198,46 @@ RSpec.describe Mutations::Campaign do
                                                                  }).as_json
       expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
       expect(other_result.dig('errors')).to be_nil
+    end
+  end
+
+  describe 'deleting a Campaign' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:campaign_for_delete) do
+      current_user.community.campaigns.create(name: 'Campaign For Delete',
+                                              message: 'Mark Deleted',
+                                              campaign_type: 'email',
+                                              batch_time: '17/06/2020 03:49',
+                                              user_id_list: '2saf60afsfdad9618af7114sfda7')
+    end
+
+    let(:delete_query) do
+      <<~GQL
+        mutation campaignDelete(
+          $id: ID!
+        ) {
+          campaignDelete(
+            id: $id
+          ) {
+            campaign {
+              id
+              status
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'returns an Campaign' do
+      variables = { id: campaign_for_delete.id }
+      result = DoubleGdpSchema.execute(delete_query, variables: variables,
+                                                     context: {
+                                                       current_user: current_user,
+                                                       site_community: current_user.community,
+                                                     }).as_json
+      expect(result.dig('data', 'campaignDelete', 'campaign', 'id')).to eql campaign_for_delete.id
+      expect(result.dig('data', 'campaignDelete', 'campaign', 'status')).to eql 'deleted'
+      expect(result.dig('errors')).to be_nil
     end
   end
 end
