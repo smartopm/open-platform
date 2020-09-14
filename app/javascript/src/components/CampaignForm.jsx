@@ -248,7 +248,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
         <div>
           <DateAndTimePickers
             label="Batch Time"
-            required={campaignCreateType === "schedule" ? "required" : ""}
+            required={campaignCreateType === "schedule"}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
           />
