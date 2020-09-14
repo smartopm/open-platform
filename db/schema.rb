@@ -343,6 +343,8 @@ ActiveRecord::Schema.define(version: 2020_09_14_122111) do
     t.uuid "owner_id"
     t.string "id_number"
     t.datetime "followup_at"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
   create_table "versions", force: :cascade do |t|
