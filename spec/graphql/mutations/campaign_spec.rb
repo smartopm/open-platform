@@ -240,5 +240,81 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('errors')).to be_nil
     end
   end
+
+  describe 'creating a Draft Campaign' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let(:query) do
+      <<~GQL
+        mutation campaignDraftCreate(
+          $name: String!
+          $message: String
+          $campaignType: String!
+          $batchTime: String
+          $userIdList: String
+          $labels: String
+        ) {
+          campaignDraftCreate(
+            name: $name
+            message: $message
+            campaignType: $campaignType
+            batchTime: $batchTime
+            userIdList: $userIdList
+            labels: $labels
+            ){
+              campaign{
+                name
+                id
+                labels {
+                  shortDesc
+                }
+              }
+            }
+          }
+      GQL
+    end
+
+    it 'returns a created Campaign' do
+      variables = {
+        name: 'This is a Campaign',
+        message: 'Visiting',
+        campaignType: %w[sms email].sample,
+        status: %w[draft scheduled].sample,
+        batchTime: '17/06/2020 03:49',
+        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: 'label 1,label 2',
+        subject: 'subject',
+        preHeader: 'Pre header',
+        templateStyle: 'Template Style',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+
+      expect(result.dig('data', 'campaignDraftCreate', 'campaign', 'name')).not_to be_nil
+      expect(result.dig('data', 'campaignDraftCreate', 'campaign', 'labels', 0)).not_to be_nil
+      expect(result.dig('data', 'campaignDraftCreate', 'campaign', 'labels', 0, 'shortDesc')).to eql 'label 1'
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'fails to create campaign without campaign type' do
+      variables = {
+        name: 'This is a Campaign',
+        message: 'Visiting',
+        batchTime: '17/06/2020 03:49',
+        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: 'label 1,label 2',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+    end
+  end
 end
 # rubocop:enable Metrics/LineLength

@@ -33,6 +33,7 @@ module Mutations
       def add_attributes(campaign, vals)
         %w[name campaign_type message user_id_list batch_time].each do |attr|
           next if vals[attr.to_sym].blank?
+
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
         return campaign if vals[:campaign_type].eql?('sms')

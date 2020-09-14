@@ -148,23 +148,6 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           <MenuItem value="email">Email</MenuItem>
         </TextField>
         <TextField
-          label="Status"
-          name="status"
-          required
-          className="form-control"
-          value={formData.status}
-          onChange={handleInputChange}
-          aria-label="status"
-          inputProps={{ 'data-testid': 'status' }}
-          select
-        >
-          <MenuItem value="draft">Draft</MenuItem>
-          <MenuItem value="scheduled">Scheduled</MenuItem>
-          <MenuItem value="in_progress">In Progress</MenuItem>
-          <MenuItem value="deleted">Deleted</MenuItem>
-          <MenuItem value="done">Done</MenuItem>
-        </TextField>
-        <TextField
           label="Campaign Name"
           name="name"
           required
@@ -179,7 +162,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           name="message"
           rows={2}
           multiline
-          required={campaignCreateType === "schedule" ? "required" : ""}
+          required={campaignCreateType === "schedule"}
           className="form-control"
           value={formData.message || ''}
           onChange={handleInputChange}
@@ -227,7 +210,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           label="User ID List"
           rows={5}
           multiline
-          required={campaignCreateType === "schedule" ? "required" : ""}
+          required={campaignCreateType === "schedule"}
           className="form-control"
           aria-label="campaign_ids"
           inputProps={{ 'data-testid': 'campaign_ids' }}
