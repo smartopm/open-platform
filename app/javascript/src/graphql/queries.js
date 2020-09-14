@@ -235,8 +235,8 @@ export const MessagesQuery = gql`
 `
 
 export const UserMessageQuery = gql`
-  query userMessages($id: ID!) {
-    userMessages(id: $id) {
+  query userMessages($id: ID!, $limit: Int, $offset: Int) {
+    userMessages(id: $id, limit: $limit, offset: $offset) {
       id
       message
       createdAt
@@ -308,6 +308,7 @@ export const allCampaigns = gql`
     campaigns {
       id
       batchTime
+      status
       communityId
       createdAt
       endTime
@@ -338,6 +339,7 @@ export const Campaign = gql`
       message
       name
       campaignType
+      status
       startTime
       updatedAt
       userIdList

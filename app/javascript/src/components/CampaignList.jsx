@@ -1,21 +1,23 @@
-/* eslint-disable */
+/* eslint-disable no-use-before-define */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import { useHistory } from 'react-router-dom'
-import { allCampaigns } from '../graphql/queries'
-import Loading from '../components/Loading'
-import ErrorPage from '../components/Error'
-import { dateTimeToString, dateToString } from '../components/DateContainer'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import { allCampaigns } from '../graphql/queries'
+import Loading from "./Loading"
+import ErrorPage from "./Error"
+import { dateTimeToString, dateToString } from "./DateContainer"
+import CampaignDeleteAction from "./Campaign/CampaignDeleteAction"
 
 export default function CampaignList() {
   const history = useHistory()
-  const { data, error, loading } = useQuery(allCampaigns, {
+  const { data, error, loading, refetch } = useQuery(allCampaigns, {
     fetchPolicy: 'cache-and-network'
   })
   function routeToAction(_event, id) {
@@ -29,8 +31,8 @@ export default function CampaignList() {
 
   return (
     <div className="container">
-      {data.campaigns.map(c => (
-        <Fragment key={c.id}>
+      {data.campaigns.map(camp => (
+        <Fragment key={camp.id}>
           <div>
             <Grid container spacing={2}>
               <Grid item container direction="column" spacing={2}>
@@ -41,7 +43,7 @@ export default function CampaignList() {
                     variant="subtitle1"
                     data-testid="c_name"
                   >
-                    {c.name}
+                    {camp.name}
                   </Typography>
                   <Typography
                     className={css(style.subTitle)}
@@ -49,7 +51,7 @@ export default function CampaignList() {
                     data-testid="c_message"
                     color="textSecondary"
                   >
-                    {c.message}
+                    {camp.message}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -59,55 +61,68 @@ export default function CampaignList() {
                     gutterBottom
                   >
                     <strong>Scheduled Date: </strong>
-                    {dateToString(c.batchTime)}{' '}
+                    {dateToString(camp.batchTime)}
+                    {' '}
                     <strong>Scheduled Time: </strong>
-                    {dateTimeToString(new Date(c.batchTime))}
+                    {dateTimeToString(new Date(camp.batchTime))}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Grid item container direction="row" spacing={2}>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Scheduled: {c.campaignMetrics.totalScheduled}
+                        Total Scheduled: 
+                        {' '}
+                        {camp.campaignMetrics.totalScheduled}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Sent: {c.campaignMetrics.totalSent}
+                        Total Sent: 
+                        {' '}
+                        {camp.campaignMetrics.totalSent}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Clicked: {c.campaignMetrics.totalClicked}
+                        Total Clicked: 
+                        {' '}
+                        {camp.campaignMetrics.totalClicked}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Success: {String(parseInt(
-                        (100 * c.campaignMetrics.totalClicked) /
-                          (c.campaignMetrics.totalSent &&
-                          c.campaignMetrics.totalSent > 0
-                            ? c.campaignMetrics.totalSent
-                            : 1))
-                      )}%
+                        Success: 
+                        {' '}
+                        {String(parseInt(
+                        (100 * camp.campaignMetrics.totalClicked) /
+                          (camp.campaignMetrics.totalSent &&
+                            camp.campaignMetrics.totalSent > 0
+                            ? camp.campaignMetrics.totalSent
+                            : 1), 10)
+                      )}
+                        %
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item>
+                <Grid item container direction="row">
                   <Typography
                     variant="body1"
-                    style={{ cursor: 'pointer', color: '#009688' }}
+                    style={{ cursor: 'pointer', color: '#009688', marginTop: "11px" }}
                   >
                     <Link
                       data-testid="more_details_btn"
                       href="#"
                       style={{ cursor: 'pointer', color: '#69ABA4' }}
-                      onClick={event => routeToAction(event, c.id)}
+                      onClick={event => routeToAction(event, camp.id)}
                     >
                       More Details
                     </Link>
                   </Typography>
+                  {(camp.status === "draft" || camp.status === "scheduled") && (
+                    <CampaignDeleteAction data={camp} refetch={refetch} />
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -128,7 +143,9 @@ export default function CampaignList() {
           routeToCreateCampaign()
         }}
       >
-        <AddIcon /> Create
+        <AddIcon />
+        {' '}
+        Create
       </Fab>
     </div>
   )

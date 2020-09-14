@@ -101,10 +101,11 @@ export default function BusinessList({ businessData, userType, refetch }) {
             </Link>
             {userType === 'admin' && (
               <IconButton
-                aria-label="more"
+                aria-label={`more-${business.name}`}
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
+                dataid={business.id}
               >
                 <MoreVertIcon />
               </IconButton>
@@ -114,7 +115,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
               data={business}
               anchorEl={anchorEl}
               handleClose={handleClose}
-              open={open}
+              open={open && anchorEl.getAttribute('dataid') === business.id}
               // eslint-disable-next-line no-use-before-define
               linkStyles={css(styles.linkItem)}
               refetch={refetch}

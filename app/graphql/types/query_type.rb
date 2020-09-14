@@ -59,7 +59,7 @@ module Types
     def campaigns
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      campaign = context[:site_community].campaigns.offset(0).limit(100)
+      campaign = context[:site_community].campaigns.existing.offset(0).limit(100)
       campaign
     end
 
