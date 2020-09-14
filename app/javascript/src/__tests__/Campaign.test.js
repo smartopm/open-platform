@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import Campaign from '../components/CampaignForm'
+import CampaignContainer from '../containers/Campaigns/CampaignCreate'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
@@ -10,6 +11,7 @@ import { MockedProvider } from '@apollo/react-testing'
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Campaign page', () => {
   afterEach(cleanup)
+  const campaignType = 'draft'
   const authState = {
     loaded: true,
     loggedIn: true,
@@ -111,5 +113,16 @@ describe('Campaign page', () => {
 
     fireEvent.change(idsInput, { target: { value: '6353472323, 734923479324723, 209423423' } })
     expect(idsInput.value).toBe('6353472323, 734923479324723, 209423423')
+  })
+
+  it('should render campaign container', () => {
+    const { getByText } = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <CampaignContainer authState={authState} campaignCreateType={campaignType}/>
+        </BrowserRouter>
+      </MockedProvider>
+    )
+    expect(getByText('Draft')).toBeInTheDocument()
   })
 })
