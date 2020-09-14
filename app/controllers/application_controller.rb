@@ -12,14 +12,17 @@ class ApplicationController < ActionController::Base
 
   def current_community
     community_list = { 'app.doublegdp.com' => 'Nkwashi',
-                       'double-gdp-staging.herokuapp.com' => 'Nkwashi' }
+                       'double-gdp-staging.herokuapp.com' => 'Nkwashi',
+                       'femoza.doublegdp.com' => 'Nkwanzi',
+                       'dev.dgdp.site' => 'Nkwanzi'
+                      }
 
-    if request.domain == 'dgdp.site'
-      @site_community = Community.find_by(name: 'Nkwashi')
-    else
-      dom = "#{request.subdomain}.#{request.domain}"
-      @site_community = Community.find_by(name: community_list[dom])
-    end
+    # if request.domain == 'dgdp.site'
+    #   @site_community = Community.find_by(name: 'Nkwashi')
+    # else
+    # end
+    dom = "#{request.subdomain}.#{request.domain}"
+    @site_community = Community.find_by(name: community_list[dom])
     @site_community
   end
 
