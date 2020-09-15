@@ -10,11 +10,14 @@ class ApplicationController < ActionController::Base
     user_google_oauth2_omniauth_authorize_path
   end
 
+  # rubocop:disable Metrics/MethodLength
   def current_community
     community_list = { 'app.doublegdp.com' => 'Nkwashi',
-                       'double-gdp-staging.herokuapp.com' => 'Nkwashi' }
+                       'double-gdp-staging.herokuapp.com' => 'Nkwashi',
+                       'femoza.doublegdp.com' => 'Femoza',
+                       'femoza-staging.doublegdp.com' => 'Femoza', 'dev.dgdp.site' => 'Femoza' }
 
-    if request.domain == 'dgdp.site'
+    if request.domain == 'dgdp.site' && request.subdomain != 'dev'
       @site_community = Community.find_by(name: 'Nkwashi')
     else
       dom = "#{request.subdomain}.#{request.domain}"
@@ -22,6 +25,7 @@ class ApplicationController < ActionController::Base
     end
     @site_community
   end
+  # rubocop:enable Metrics/MethodLength
 
   # For now we can assume that each user is just a member of one community
   def authenticate_member!
