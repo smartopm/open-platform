@@ -44,7 +44,7 @@ class EmailMsg
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Get.new(url)
-    request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_api_key]}"
+    request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_updated_api_key]}"
     request.body = '{}'
     response = http.request(request)
     response.read_body
