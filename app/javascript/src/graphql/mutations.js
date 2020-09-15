@@ -431,9 +431,9 @@ export const CampaignCreate = gql`
     $name: String!
     $campaignType: String!
     $status: String!
-    $message: String!
-    $batchTime: String!
-    $userIdList: String!
+    $message: String
+    $batchTime: String
+    $userIdList: String
     $labels: String
     $subject: String
     $preHeader: String
@@ -457,6 +457,7 @@ export const CampaignCreate = gql`
     }
   }
 `
+
 export const CampaignUpdateMutation = gql`
   mutation campaignUpdate(
     $id: ID!

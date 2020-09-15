@@ -10,7 +10,7 @@ module Mutations
       field :auth_token, String, null: true
 
       def resolve(vals)
-        user = ::User.find(vals[:id])
+        user = context[:site_community].users.find(vals[:id])
         auth_token = user.auth_token if user.verify_phone_token!(vals[:token])
 
         log(user)

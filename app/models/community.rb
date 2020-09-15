@@ -14,6 +14,7 @@ class Community < ApplicationRecord
 
   DOMAINS_COMMUNITY_MAP = {
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
+    'Femoza': ['doublegdp.com', 'femoza.com'],
   }.freeze
 
   def label_exists?(label_name)

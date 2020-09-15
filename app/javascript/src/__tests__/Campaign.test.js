@@ -1,10 +1,9 @@
-/* eslint-disable */
 import React from 'react'
-import Campaign from '../components/CampaignForm'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import Campaign from '../components/CampaignForm'
 
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -49,7 +48,7 @@ describe('Campaign page', () => {
     expect(getByText('User ID List')).toBeInTheDocument()
   })
   it('should not render form when user is not admin', () => {
-    const authState = {
+    const residentAuthState = {
       loaded: true,
       loggedIn: true,
       setToken: jest.fn(),
@@ -68,7 +67,7 @@ describe('Campaign page', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <Campaign authState={authState} />
+          <Campaign authState={residentAuthState} />
         </BrowserRouter>
       </MockedProvider>
     )

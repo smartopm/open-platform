@@ -28,7 +28,7 @@ class GraphqlController < ApplicationController
 
   def auth_context(request)
     token = bearer_token(request)
-    return nil unless token
+    return { site_community: @site_community } unless token
 
     user = @site_community.users.find_via_auth_token(token, @site_community)
 

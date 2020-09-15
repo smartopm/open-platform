@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(vals)
         ensure_logged_in
-        user = ::User.find(vals[:id])
+        user = context[:site_community].users.find(vals[:id])
 
         unless context[:current_user].can_become?(user)
           raise GraphQL::ExecutionError, 'Unauthorized'
