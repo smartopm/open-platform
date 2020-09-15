@@ -15,7 +15,7 @@ const initData = {
   campaignType: 'sms',
   status: 'draft',
   message: '',
-  batchTime: '',
+  batchTime: new Date(),
   userIdList: '',
   subject: '',
   preHeader: '',

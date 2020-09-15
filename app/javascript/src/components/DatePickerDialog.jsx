@@ -36,7 +36,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label})
           label={label}
           style={{width: '100%'}}
           value={selectedDateTime}
-          format="yyyy/MM/dd hh:mm a"
+          format="yyyy/MM/dd hh:mm"
           placeholder="YYYY-MM-DD hh:mm a"
           onChange={handleDateChange}
           clearable
