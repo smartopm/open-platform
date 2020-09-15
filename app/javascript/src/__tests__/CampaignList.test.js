@@ -10,40 +10,40 @@ import ErrorPage from '../components/Error'
 
 describe('Campaign List page', () => {
   it('should render without error', async () => {
-    const mocks = [
-      {
-        request: {
-          query: allCampaigns,
-        },
-        result: {
-          data: {
-            campaigns: [{
-              id: '54343432432',
-              batchTime: '2020-06-24T11:58:22.573Z',
-              communityId: '34324234',
-              createdAt: '2020-06-24T11:58:22.573Z',
-              endTime: '2020-07-24T11:58:22.573Z',
-              message: 'This is a campaign message',
-              name: 'Important',
-              startTime: '2020-06-24T11:58:22.573Z',
-              updatedAt: '2020-06-25T11:58:22.573Z',
-              userIdList: 'bsufsbdf343, 53094549035, 09u4093',
-              status: 'draft',
-              campaignMetrics: {
-                batchTime: "2020-05-20T05:35:03Z",
-                startTime: "2020-05-20T05:36:35Z",
-                endTime: "2020-05-20T05:36:36Z",
-                totalScheduled: "1",
-                totalSent: "1",
-                totalClicked: "0"
-              }
-            }],
-          },
+    const mocks = {
+      request: {
+        query: allCampaigns,
+        variables: { limit: 50, offset: 0 }
+      },
+      result: {
+        data: {
+          campaigns: [{
+            id: '54343432432',
+            batchTime: '2020-06-24T11:58:22.573Z',
+            status: 'draft',
+            communityId: '34324234',
+            createdAt: '2020-06-24T11:58:22.573Z',
+            endTime: '2020-07-24T11:58:22.573Z',
+            message: 'This is a campaign message',
+            name: 'Important',
+            startTime: '2020-06-24T11:58:22.573Z',
+            updatedAt: '2020-06-25T11:58:22.573Z',
+            userIdList: 'bsufsbdf343, 53094549035, 09u4093',
+            campaignMetrics: {
+              batchTime: "2020-05-20T05:35:03Z",
+              startTime: "2020-05-20T05:36:35Z",
+              endTime: "2020-05-20T05:36:36Z",
+              totalScheduled: "1",
+              totalSent: "1",
+              totalClicked: "0"
+            },
+            __typename: "Campaign",
+          }],
         },
       },
-    ]
+    }
     const container = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <Campaign />
         </BrowserRouter>

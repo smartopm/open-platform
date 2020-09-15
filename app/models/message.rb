@@ -7,6 +7,8 @@ class Message < ApplicationRecord
   has_one :campaign, dependent: :restrict_with_exception
 
   default_scope { order(created_at: :asc) }
+  after_create :update_campaign_message_count, if: :campaign_id?
+  after_update :update_campaign_message_count, if: proc { saved_change_to_campaign_id? }
 
   class Unauthorized < StandardError; end
 
@@ -61,5 +63,12 @@ class Message < ApplicationRecord
 
     null_check = filter.eql?('campaign') ? 'NOT NULL' : 'NULL'
     "AND messages.campaign_id IS #{null_check}"
+  end
+
+  def update_campaign_message_count
+    count = Message.where(campaign_id: campaign_id).count
+    return if Campaign.find(campaign_id)&.update(message_count: count)
+
+    raise StandardError, 'Campaign message count update failed'
   end
 end

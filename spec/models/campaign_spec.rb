@@ -25,6 +25,12 @@ RSpec.describe Campaign, type: :model do
       expect(community.campaigns[0].subject).to eql 'This is subject'
       expect(community.campaigns[0].pre_header).to eql 'This is pre header'
       expect(community.campaigns[0].template_style).to eql 'This is template style'
+      expect(community.campaigns[0].campaign_metrics[:batch_time]).to be_truthy
+      expect(community.campaigns[0].campaign_metrics[:start_time]).to be_nil
+      expect(community.campaigns[0].campaign_metrics[:end_time]).to be_nil
+      expect(community.campaigns[0].campaign_metrics[:total_scheduled]).to eql 3
+      expect(community.campaigns[0].campaign_metrics[:total_sent]).to eql 0
+      expect(community.campaigns[0].campaign_metrics[:total_clicked]).to eql 0
     end
 
     it 'should replace strange double “ and single quotes ’ with single quotes' do

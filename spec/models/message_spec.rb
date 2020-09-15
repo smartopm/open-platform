@@ -69,4 +69,9 @@ RSpec.describe Message, type: :model do
       result
     end
   end
+
+  describe 'callbacks' do
+    it { is_expected.to callback(:update_campaign_message_count).after(:create) }
+    it { is_expected.to callback(:update_campaign_message_count).after(:update) }
+  end
 end
