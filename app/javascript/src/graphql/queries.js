@@ -314,6 +314,7 @@ export const allCampaigns = gql`
       endTime
       message
       name
+      status
       startTime
       updatedAt
       userIdList

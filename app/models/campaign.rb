@@ -108,7 +108,7 @@ class Campaign < ApplicationRecord
       batch_time: batch_time,
       start_time: start_time,
       end_time: end_time,
-      total_scheduled: user_id_list.split(',').count,
+      total_scheduled: user_id_list ? user_id_list.split(',').count : 0,
       total_sent: messages.count,
       total_clicked: total_clicked || 0,
     }

@@ -31,7 +31,7 @@ export default function CampaignList() {
 
   return (
     <div className="container">
-      {data.campaigns.map(camp => (
+      {data.campaigns.map(camp => ( 
         <Fragment key={camp.id}>
           <div>
             <Grid container spacing={2}>
@@ -54,7 +54,21 @@ export default function CampaignList() {
                     {camp.message}
                   </Typography>
                 </Grid>
+                {camp.status === 'draft' && (
+                  <Grid item>
+                    <Grid item container direction="row">
+                      <Grid item>
+                        <Typography className={css(style.subTitle)}>
+                          <strong>Status: </strong>
+                          {' '}
+                          Draft
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
                 <Grid item>
+                  {camp.batchTime && (
                   <Typography
                     className={css(style.subTitle)}
                     variant="body2"
@@ -66,6 +80,8 @@ export default function CampaignList() {
                     <strong>Scheduled Time: </strong>
                     {dateTimeToString(new Date(camp.batchTime))}
                   </Typography>
+                    )}
+                    
                 </Grid>
                 <Grid item>
                   <Grid item container direction="row" spacing={2}>
@@ -127,6 +143,7 @@ export default function CampaignList() {
               </Grid>
             </Grid>
           </div>
+          
           <div className="border-top my-3" />
         </Fragment>
       ))}

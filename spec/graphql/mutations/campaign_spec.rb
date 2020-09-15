@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
-# rubocop:disable Metrics/LineLength
 RSpec.describe Mutations::Campaign do
   describe 'creating a Campaign' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
@@ -59,7 +57,8 @@ RSpec.describe Mutations::Campaign do
                                               }).as_json
       expect(result.dig('data', 'campaignCreate', 'campaign', 'name')).not_to be_nil
       expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0)).not_to be_nil
-      expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc')).to eql 'label 1'
+      expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc'))
+        .to eql 'label 1'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -69,6 +68,22 @@ RSpec.describe Mutations::Campaign do
         message: 'Visiting',
         batchTime: '17/06/2020 03:49',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: 'label 1,label 2',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+    end
+
+    it 'fails to create campaign with incomplete field' do
+      variables = {
+        name: 'This is a Campaign',
+        message: 'Visiting',
+        status: 'scheduled',
         labels: 'label 1,label 2',
       }
 
@@ -113,7 +128,8 @@ RSpec.describe Mutations::Campaign do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
-      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name')).to eql 'admin_client_security_guard'
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
+        .to eql 'admin_client_security_guard'
       expect(result.dig('errors')).to be_nil
     end
   end
@@ -181,9 +197,11 @@ RSpec.describe Mutations::Campaign do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'id')).not_to be_nil
-      expect(result.dig('data', 'campaignUpdate', 'campaign', 'name')).to eql 'This is a Campaign Update'
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'name'))
+        .to eql 'This is a Campaign Update'
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'message')).to eql 'Visiting Update'
-      expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc')).to eql 'label 3'
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc'))
+        .to eql 'label 3'
       expect(result.dig('errors')).to be_nil
 
       other_variables = {
@@ -194,7 +212,8 @@ RSpec.describe Mutations::Campaign do
       other_result = DoubleGdpSchema.execute(label_remove_query, variables: other_variables,
                                                                  context: {
                                                                    current_user: current_user,
-                                                                   site_community: current_user.community,
+                                                                   site_community:
+                                                                   current_user.community,
                                                                  }).as_json
       expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
       expect(other_result.dig('errors')).to be_nil
@@ -241,4 +260,3 @@ RSpec.describe Mutations::Campaign do
     end
   end
 end
-# rubocop:enable Metrics/LineLength

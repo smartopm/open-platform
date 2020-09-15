@@ -5,7 +5,11 @@ import { Redirect, useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import { Button, TextField, Chip, Snackbar, MenuItem } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
-import { CampaignCreate, CampaignUpdateMutation, CampaignLabelRemoveMutation } from '../graphql/mutations'
+import { 
+    CampaignCreate, 
+    CampaignUpdateMutation, 
+    CampaignLabelRemoveMutation 
+  } from '../graphql/mutations'
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
 
@@ -23,7 +27,7 @@ const initData = {
   loaded: false,
   labels: []
 }
-export default function CampaignForm({ authState, data, loading, refetch }) {
+export default function CampaignForm({ authState, data, loading, refetch, campaignCreateType }) {
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -68,7 +72,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       id: formData.id,
       name: formData.name,
       campaignType: formData.campaignType,
-      status: formData.status,
+      status: campaignCreateType === "schedule" ? 'scheduled' : 'draft',
       message: formData.message,
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
@@ -138,23 +142,6 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           <MenuItem value="email">Email</MenuItem>
         </TextField>
         <TextField
-          label="Status"
-          name="status"
-          required
-          className="form-control"
-          value={formData.status}
-          onChange={handleInputChange}
-          aria-label="status"
-          inputProps={{ 'data-testid': 'status' }}
-          select
-        >
-          <MenuItem value="draft">Draft</MenuItem>
-          <MenuItem value="scheduled">Scheduled</MenuItem>
-          <MenuItem value="in_progress">In Progress</MenuItem>
-          <MenuItem value="deleted">Deleted</MenuItem>
-          <MenuItem value="done">Done</MenuItem>
-        </TextField>
-        <TextField
           label="Campaign Name"
           name="name"
           required
@@ -169,7 +156,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           name="message"
           rows={2}
           multiline
-          required
+          required={campaignCreateType === "schedule"}
           className="form-control"
           value={formData.message || ''}
           onChange={handleInputChange}
@@ -217,7 +204,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           label="User ID List"
           rows={5}
           multiline
-          required
+          required={campaignCreateType === "schedule"}
           className="form-control"
           aria-label="campaign_ids"
           inputProps={{ 'data-testid': 'campaign_ids' }}
@@ -255,7 +242,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         <div>
           <DateAndTimePickers
             label="Batch Time"
-            required
+            required={campaignCreateType === "schedule"}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
           />
