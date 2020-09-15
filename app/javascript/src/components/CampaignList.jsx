@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
@@ -14,10 +14,15 @@ import Loading from "./Loading"
 import ErrorPage from "./Error"
 import { dateTimeToString, dateToString } from "./DateContainer"
 import CampaignDeleteAction from "./Campaign/CampaignDeleteAction"
+import CenteredContent from './CenteredContent'
+import Paginate from './Paginate'
 
 export default function CampaignList() {
   const history = useHistory()
+  const limit = 50
+  const [offset, setOffset] = useState(0)
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
+    variables: { offset, limit },
     fetchPolicy: 'cache-and-network'
   })
   function routeToAction(_event, id) {
@@ -26,6 +31,18 @@ export default function CampaignList() {
   function routeToCreateCampaign() {
     return history.push('/campaign-create')
   }
+
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) {
+        return
+      }
+      setOffset(offset - limit)
+    } else if (action === 'next') {
+      setOffset(offset + limit)
+    }
+  }
+
   if (loading) return <Loading />
   if (error) return <ErrorPage />
 
@@ -130,6 +147,16 @@ export default function CampaignList() {
           <div className="border-top my-3" />
         </Fragment>
       ))}
+
+      <br />
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={paginate}
+        />
+      </CenteredContent>
       <Fab
         variant="extended"
         color="primary"

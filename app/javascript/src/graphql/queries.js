@@ -304,8 +304,8 @@ export const lastUserTimeSheet = gql`
   }
 `
 export const allCampaigns = gql`
-  {
-    campaigns {
+  query allCampaigns($limit: Int, $offset: Int){
+    campaigns(limit: $limit, offset: $offset) {
       id
       batchTime
       status
