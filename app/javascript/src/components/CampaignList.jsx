@@ -22,7 +22,7 @@ export default function CampaignList() {
   const limit = 50
   const [offset, setOffset] = useState(0)
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
-    variables: { offset, limit },
+    variables: { limit, offset },
     fetchPolicy: 'cache-and-network'
   })
   function routeToAction(_event, id) {
@@ -45,7 +45,6 @@ export default function CampaignList() {
 
   if (loading) return <Loading />
   if (error) return <ErrorPage />
-
   return (
     <div className="container">
       {data.campaigns.map(camp => (
