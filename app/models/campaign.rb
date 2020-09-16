@@ -19,6 +19,7 @@ class Campaign < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   def clean_message
+    self.user_id_list = '' if user_id_list.blank?
     self.message = message.gsub(/[\u2019\u201c\u201d]/, '\'') if campaign_type == 'sms' &&
                                                                  message.present?
   end
