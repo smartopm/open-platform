@@ -142,20 +142,6 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           <MenuItem value="email">Email</MenuItem>
         </TextField>
         <TextField
-          label="Status"
-          name="status"
-          required
-          className="form-control"
-          value={formData.status}
-          onChange={handleInputChange}
-          aria-label="status"
-          inputProps={{ 'data-testid': 'status' }}
-          select
-        >
-          <MenuItem value="draft">Draft</MenuItem>
-          <MenuItem value="scheduled">Scheduled</MenuItem>
-        </TextField>
-        <TextField
           label="Campaign Name"
           name="name"
           required
