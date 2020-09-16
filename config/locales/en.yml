@@ -37,3 +37,4 @@ en:
 
   campaign:
     default_message: "Default Campaign Message"
+    default_name: "Default Campaign Name"

@@ -201,9 +201,7 @@ export default function UsersList() {
       }).catch(error => {
         setError(error.message)
       })
-
     }
-
   }
 
   function handleLabelChange(event) {
