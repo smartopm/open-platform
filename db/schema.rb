@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_14_122111) do
+ActiveRecord::Schema.define(version: 2020_09_14_122741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -113,13 +113,12 @@ ActiveRecord::Schema.define(version: 2020_09_14_122111) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_sent"
     t.integer "total_clicked"
-    t.string "campaign_type", default: "sms", null: false
+    t.string "campaign_type"
     t.string "subject"
     t.string "pre_header"
     t.string "template_style"
     t.integer "status", default: 0
     t.integer "message_count", default: 0
-    t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
@@ -268,9 +267,9 @@ ActiveRecord::Schema.define(version: 2020_09_14_122111) do
     t.uuid "user_id"
     t.uuid "author_id"
     t.text "body"
-    t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "flagged"
+    t.datetime "created_at"
     t.boolean "completed"
     t.datetime "due_date"
     t.string "category"
@@ -347,6 +346,15 @@ ActiveRecord::Schema.define(version: 2020_09_14_122111) do
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
   end
 
+  create_table "version_associations", force: :cascade do |t|
+    t.integer "version_id"
+    t.string "foreign_key_name", null: false
+    t.uuid "foreign_key_id"
+    t.string "foreign_type"
+    t.index ["foreign_key_name", "foreign_key_id", "foreign_type"], name: "index_version_associations_on_foreign_key"
+    t.index ["version_id"], name: "index_version_associations_on_version_id"
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.uuid "item_id", null: false
@@ -354,7 +362,9 @@ ActiveRecord::Schema.define(version: 2020_09_14_122111) do
     t.string "whodunnit"
     t.text "object"
     t.datetime "created_at"
+    t.integer "transaction_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["transaction_id"], name: "index_versions_on_transaction_id"
   end
 
   add_foreign_key "accounts", "communities"
