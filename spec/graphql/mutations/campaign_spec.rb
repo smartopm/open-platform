@@ -101,7 +101,7 @@ RSpec.describe Mutations::Campaign do
     let(:query) do
       <<~GQL
         mutation campaignCreateThroughUsers(
-          $filters: String!
+          $filters: String
           $userIdList: String!
         ) {
           campaignCreateThroughUsers(
@@ -117,7 +117,7 @@ RSpec.describe Mutations::Campaign do
       GQL
     end
 
-    it 'returns an Campaign' do
+    it 'returns a campaign with filter' do
       variables = {
         filters: 'admin,client,security_guard',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
@@ -130,6 +130,19 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
         .to eql 'admin_client_security_guard'
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'returns a campaign without filter' do
+      variables = {
+        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
       expect(result.dig('errors')).to be_nil
     end
   end
