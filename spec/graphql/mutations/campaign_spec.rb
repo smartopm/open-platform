@@ -96,7 +96,7 @@ RSpec.describe Mutations::Campaign do
     end
   end
 
-  describe 'create Campaign through users' do
+  describe 'create campaign through users' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
     let(:query) do
       <<~GQL
