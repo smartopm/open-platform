@@ -11,11 +11,12 @@ export default function CampaignCreate({ campaignType, handleCampaignType }) {
         exclusive
         onChange={handleCampaignType}
         aria-label="text alignment"
+        style={{ marginBottom: '10px' }}
       >
         <ToggleButton value="draft" aria-label="campaign draft">
           Draft
         </ToggleButton>
-        <ToggleButton value="schedule" aria-label="campaign schedule">
+        <ToggleButton value="scheduled" aria-label="campaign schedule">
           Schedule
         </ToggleButton>
       </ToggleButtonGroup>

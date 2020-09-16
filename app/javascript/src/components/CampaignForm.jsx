@@ -12,6 +12,7 @@ import {
   } from '../graphql/mutations'
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
+import CampaignToggle from "./Campaign/ToggleButton"
 
 const initData = {
   id: '',
@@ -27,7 +28,7 @@ const initData = {
   loaded: false,
   labels: []
 }
-export default function CampaignForm({ authState, data, loading, refetch, campaignCreateType }) {
+export default function CampaignForm({ authState, data, loading, refetch }) {
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -37,6 +38,10 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
   const { id } = useParams() // will only exist on campaign update
   const [formData, setFormData] = useState(initData)
+  const [campaignType, setCampaignType] = useState("draft")
+    const handleCampaignType = (event, newCampaignType) => {
+        setCampaignType(newCampaignType);
+    };
 
   async function createCampaignOnSubmit(campData) {
     setLoading(true)
@@ -72,7 +77,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
       id: formData.id,
       name: formData.name,
       campaignType: formData.campaignType,
-      status: campaignCreateType === "schedule" ? 'scheduled' : 'draft',
+      status: campaignType,
       message: formData.message,
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
@@ -118,6 +123,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
   }
   return (
     <div className="container">
+      <CampaignToggle campaignType={campaignType} handleCampaignType={handleCampaignType} />
       <Snackbar
         open={isSubmitted}
         autoHideDuration={3000}
@@ -142,20 +148,6 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           <MenuItem value="email">Email</MenuItem>
         </TextField>
         <TextField
-          label="Status"
-          name="status"
-          required
-          className="form-control"
-          value={formData.status}
-          onChange={handleInputChange}
-          aria-label="status"
-          inputProps={{ 'data-testid': 'status' }}
-          select
-        >
-          <MenuItem value="draft">Draft</MenuItem>
-          <MenuItem value="scheduled">Scheduled</MenuItem>
-        </TextField>
-        <TextField
           label="Campaign Name"
           name="name"
           required
@@ -170,7 +162,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           name="message"
           rows={2}
           multiline
-          required={campaignCreateType === "schedule"}
+          required={campaignType === "scheduled"}
           className="form-control"
           value={formData.message || ''}
           onChange={handleInputChange}
@@ -218,7 +210,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
           label="User ID List"
           rows={5}
           multiline
-          required={campaignCreateType === "schedule"}
+          required={campaignType === "scheduled"}
           className="form-control"
           aria-label="campaign_ids"
           inputProps={{ 'data-testid': 'campaign_ids' }}
@@ -256,7 +248,7 @@ export default function CampaignForm({ authState, data, loading, refetch, campai
         <div>
           <DateAndTimePickers
             label="Batch Time"
-            required={campaignCreateType === "schedule"}
+            required={campaignType === "schedule"}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
           />
