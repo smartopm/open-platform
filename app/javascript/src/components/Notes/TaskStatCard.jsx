@@ -2,13 +2,16 @@
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
 
-export default function AnalyticsCard({ count, title, filterTasks }) {
+export default function AnalyticsCard({ count, title, filterTasks, isCurrent }) {
   const isNotClickable = title === 'Tasks with no due date'
+  let backgroundColor = isNotClickable && '#f0f0f0'
+  if (isCurrent) { backgroundColor = '#b7d4d9' }
+
   return (
     <Card
       onClick={filterTasks}
       style={{
-        backgroundColor: isNotClickable && '#f0f0f0',
+        backgroundColor,
         cursor: isNotClickable ? 'not-allowed' : 'pointer'
       }}
     >
