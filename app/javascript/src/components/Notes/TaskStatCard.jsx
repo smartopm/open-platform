@@ -1,14 +1,19 @@
 /* eslint-disable */
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
+import colors from '../../themes/nkwashi/colors'
 
-export default function AnalyticsCard({ count, title, filterTasks }) {
+export default function AnalyticsCard({ count, title, filterTasks, isCurrent }) {
+  const { lightGray, jungleMist } = colors
   const isNotClickable = title === 'Tasks with no due date'
+  let backgroundColor = isNotClickable && lightGray
+  if (isCurrent) { backgroundColor = jungleMist }
+
   return (
     <Card
       onClick={filterTasks}
       style={{
-        backgroundColor: isNotClickable && '#b7d4d9',
+        backgroundColor,
         cursor: isNotClickable ? 'not-allowed' : 'pointer'
       }}
     >
@@ -28,4 +33,3 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
     </Card>
   )
 }
-  

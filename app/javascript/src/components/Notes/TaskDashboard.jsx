@@ -18,7 +18,7 @@ const tiles = {
 }
 
 // data.taskStasts
-export default function TaskDashboard({ filterTasks }) {
+export default function TaskDashboard({ filterTasks, currentTile }) {
   const { loading, data, error } = useQuery(TaskStatsQuery)
 
   if (loading || error) {
@@ -38,7 +38,12 @@ export default function TaskDashboard({ filterTasks }) {
 // use extra white space
   return Object.entries(tiles).map(([key, val]) => (
     <Grid item xs={6} sm={4} lg={3} key={key}>
-      <TaskStatCard filterTasks={evt => filterTasks(evt, key)} title={val} count={data?.taskStats[key]} />
+      <TaskStatCard
+        filterTasks={evt => filterTasks(evt, key)}
+        title={val}
+        count={data?.taskStats[key]}
+        isCurrent={key === currentTile}
+      />
     </Grid>
   ))
 }
