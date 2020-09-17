@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import { Fab, useMediaQuery, Dialog, DialogTitle, DialogContent, Button } from '@material-ui/core'
 import Nav from '../../components/Nav'
 import DiscussionList from '../../components/Discussion/DiscussionList'
@@ -12,7 +12,7 @@ import { styles } from '../../components/ShareButton'
 import Discuss from '../../components/Discussion/Discuss'
 import { useTheme } from '@material-ui/core/styles';
 import CenteredContent from '../../components/CenteredContent'
-import { useState } from 'react'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 
 export default function Discussions() {
     const limit = 20
@@ -23,6 +23,8 @@ export default function Discussions() {
     const [isLoading, setLoading] = useState(false)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+    const authState = useContext(AuthStateContext)
+    const { user: { userType } } = authState
     
     function openModal() {
         setOpen(!open)
@@ -84,13 +86,14 @@ export default function Discussions() {
                         </CenteredContent>
                     )
                 }
-
-                <Fab variant="extended"
+                {userType === 'admin' && (
+                    <Fab variant="extended"
                     onClick={openModal}
                     className={`btn ${css(styles.getStartedButton)} `}
                 >
                     Create discussion topic
                 </Fab>
+                )}
             </Fragment>
         </div>
     )
