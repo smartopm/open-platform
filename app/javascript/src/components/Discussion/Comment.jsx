@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react'
-import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid } from '@material-ui/core'
+import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, ListItemSecondaryAction, IconButton } from '@material-ui/core'
 import { useMutation, useApolloClient } from 'react-apollo'
 import { useParams, useLocation } from 'react-router'
 import PropTypes from 'prop-types'
@@ -15,6 +15,7 @@ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { useFileUpload } from '../../graphql/useFileUpload'
 import { findLinkAndReplace, sanitizeLink } from '../../utils/helpers'
 import { Link } from 'react-router-dom'
+import { DeleteOutlineOutlined } from '@material-ui/icons'
 
 
 
@@ -104,9 +105,7 @@ export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin }) 
                         >
                           {user.name}
                         </Link>
-                            <span className={css(styles.timeStamp)}>
-                                <DateContainer date={createdAt} />
-                            </span>
+                            
                         </span>
                     </React.Fragment>
                 }
@@ -122,9 +121,17 @@ export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin }) 
                           <br />
                           {imageUrl && <img src={imageUrl} className='img-responsive img-thumbnail' alt={`image for ${comment}`} /> }
                         </span>
-                    </React.Fragment>
+                        </React.Fragment>
                 }
         />
+        <ListItemSecondaryAction>
+            <span>
+            <DateContainer date={createdAt} />    
+                <IconButton edge="end" aria-label="delete">
+                  <DeleteOutlineOutlined />
+                </IconButton>
+            </span>
+            </ListItemSecondaryAction>
        
         </ListItem>
     )
