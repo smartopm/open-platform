@@ -6,11 +6,14 @@ import {
   DialogContent,
   DialogTitle
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import { capitalize } from '../../utils/helpers'
 
 export default function DeleteDialogueBox({
   open,
   handleClose,
-  handleDelete
+  handleDelete,
+  title
 }) {
   return (
     <>
@@ -21,10 +24,10 @@ export default function DeleteDialogueBox({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Delete Business
+          {`Delete ${capitalize(title)}`} 
         </DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this business?
+          { `Are you sure you want to delete this ${title} ?` }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
@@ -37,4 +40,11 @@ export default function DeleteDialogueBox({
       </Dialog>
     </>
   )
+}
+
+DeleteDialogueBox.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired
 }

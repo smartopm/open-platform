@@ -156,3 +156,13 @@ export function validateEmail(email) {
   const re = /\S+@\S+\.\S+/;
   return re.test(String(email).toLowerCase());
 }
+
+
+/**
+ * 
+ * @param {String} word 
+ * @returns {String}
+ */
+export function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
