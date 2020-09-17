@@ -45,7 +45,7 @@ RSpec.describe Types::Queries::User do
              user_type: 'visitor',
              community_id: current_user.community_id)
     end
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, email: "ab@dc.ef") }
 
     let(:query) do
       %(query {
@@ -245,6 +245,18 @@ RSpec.describe Types::Queries::User do
     it 'should return users with provided usertype' do
       variables = {
         query: 'admin',
+      }
+      result = DoubleGdpSchema.execute(users_query, variables: variables,
+                                                    context: {
+                                                      current_user: admin,
+                                                    }).as_json
+      expect(result.dig('errors')).to be_nil
+      expect(result.dig('data', 'users').length).to eql 1
+    end
+
+    it 'should search by email of a user' do
+      variables = {
+        query: 'ab@dc.ef',
       }
       result = DoubleGdpSchema.execute(users_query, variables: variables,
                                                     context: {
