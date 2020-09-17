@@ -63,7 +63,7 @@ RSpec.describe Mutations::Discussion do
       expect(result.dig('data', 'discussionCreate', 'discussion', 'userId')).to be_nil
       expect(result.dig('data', 'discussionCreate', 'discussion', 'postId')).to be_nil
       expect(result.dig('errors')).not_to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Not authorized'
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
 
     it 'returns error when not supplied properly' do
