@@ -45,7 +45,7 @@ RSpec.describe Types::Queries::User do
              user_type: 'visitor',
              community_id: current_user.community_id)
     end
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id, email: "ab@dc.ef") }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, email: 'ab@dc.ef') }
 
     let(:query) do
       %(query {
