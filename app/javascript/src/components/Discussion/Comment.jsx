@@ -13,6 +13,7 @@ import { useFileUpload } from '../../graphql/useFileUpload'
 import { findLinkAndReplace, sanitizeLink } from '../../utils/helpers'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
+import DeleteDialogueBox from '../Business/DeleteDialogue'
 
 
 export default function Comments({ comments, refetch, discussionId }) {
@@ -24,26 +25,30 @@ export default function Comments({ comments, refetch, discussionId }) {
     const authState = useContext(Context)
     const { id } = useParams()
     const [_data, setData] = useState(init)
-  const [createComment] = useMutation(CommentMutation)
-  const [updateComment] = useMutation(UpdateCommentMutation)
+    const [openModal, setOpenModal] = useState(false)
+    const [commentId, setCommentId] = useState("")
+    const [error, setError] = useState(null)
+    const [createComment] = useMutation(CommentMutation)
+    const [updateComment] = useMutation(UpdateCommentMutation)
+  
+    function handleDeleteClick(cid = commentId) {
+      setOpenModal(!openModal)
+      setCommentId(cid)
+    }
 
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
 
-  function handleDeleteComment(commentId){
+  function handleDeleteComment(){
     updateComment({ 
       variables: { commentId, discussionId }
      })
      .then(() => {
-       // eslint-disable-next-line no-console
-       console.log('updated')
        refetch()
+       setOpenModal(!openModal)
      } )
-     .catch(err => {
-        // eslint-disable-next-line no-console
-        console.log(err.message)
-     })
+     .catch(err => setError(err.message))
   }
 
   function handleCommentChange(event) {
@@ -86,19 +91,26 @@ export default function Comments({ comments, refetch, discussionId }) {
           upload={uploadData}
           sendComment={sendComment}
         />
+        { error && <p>{error}</p> }
         {
-                comments.length >= 1 ? comments.map(comment => (
-                  <CommentSection
-                    key={comment.id}
-                    user={comment.user}
-                    createdAt={comment.createdAt}
-                    comment={comment.content}
-                    imageUrl={comment.imageUrl}
-                    isAdmin={authState.user.userType === 'admin'}
-                    handleDeleteComment={() => handleDeleteComment(comment.id)}
-                  />
-                )) : <p className="text-center">Be the first to comment on this post</p>
-            }
+          comments.length >= 1 ? comments.map(comment => (
+            <CommentSection
+              key={comment.id}
+              user={comment.user}
+              createdAt={comment.createdAt}
+              comment={comment.content}
+              imageUrl={comment.imageUrl}
+              isAdmin={authState.user.userType === 'admin'}
+              handleDeleteComment={() => handleDeleteClick(comment.id)}
+            />
+          )) : <p className="text-center">Be the first to comment on this post</p>
+        }
+        <DeleteDialogueBox 
+          open={openModal}
+          handleClose={handleDeleteClick}
+          handleDelete={handleDeleteComment}
+          title="comment"
+        />
       </List>
     )
 }
