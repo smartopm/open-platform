@@ -1,22 +1,18 @@
-/* eslint-disable */
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, ListItemSecondaryAction, IconButton } from '@material-ui/core'
 import { useMutation, useApolloClient } from 'react-apollo'
 import { useParams, useLocation } from 'react-router'
 import PropTypes from 'prop-types'
-import Avatar from '../Avatar'
-import DateContainer from '../DateContainer'
 import { StyleSheet, css } from 'aphrodite'
-import { useState } from 'react'
-import { useContext } from 'react'
-import { Context } from '../../containers/Provider/AuthStateProvider'
-import { CommentMutation } from '../../graphql/mutations'
+import { Link } from 'react-router-dom'
+import DeleteIcon from '@material-ui/icons/Delete'
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import { Context } from '../../containers/Provider/AuthStateProvider'
+import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import { findLinkAndReplace, sanitizeLink } from '../../utils/helpers'
-import { Link } from 'react-router-dom'
-import { DeleteOutlineOutlined } from '@material-ui/icons'
-
+import Avatar from '../Avatar'
+import DateContainer from '../DateContainer'
 
 
 export default function Comments({ comments, refetch, discussionId }) {
@@ -29,11 +25,28 @@ export default function Comments({ comments, refetch, discussionId }) {
     const { id } = useParams()
     const [_data, setData] = useState(init)
   const [createComment] = useMutation(CommentMutation)
+  const [updateComment] = useMutation(UpdateCommentMutation)
+
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
 
-  function handleCommentChange() {
+  function handleDeleteComment(commentId){
+    updateComment({ 
+      variables: { commentId, discussionId }
+     })
+     .then(() => {
+       // eslint-disable-next-line no-console
+       console.log('updated')
+       refetch()
+     } )
+     .catch(err => {
+        // eslint-disable-next-line no-console
+        console.log(err.message)
+     })
+  }
+
+  function handleCommentChange(event) {
         setData({ ..._data, message: event.target.value })
     }
 
@@ -65,75 +78,78 @@ export default function Comments({ comments, refetch, discussionId }) {
       url
     }
     return (
-        <List>
+      <List>
         <CommentBox
           authState={authState}
           data={_data}
           handleCommentChange={handleCommentChange}
           upload={uploadData}
-          sendComment={sendComment} />
-            {
+          sendComment={sendComment}
+        />
+        {
                 comments.length >= 1 ? comments.map(comment => (
-                    <CommentSection
-                        key={comment.id}
-                        user={comment.user}
-                        createdAt={comment.createdAt}
-                        comment={comment.content}
-                        imageUrl={comment.imageUrl}
-                        isAdmin={authState.user.userType === 'admin'}
+                  <CommentSection
+                    key={comment.id}
+                    user={comment.user}
+                    createdAt={comment.createdAt}
+                    comment={comment.content}
+                    imageUrl={comment.imageUrl}
+                    isAdmin={authState.user.userType === 'admin'}
+                    handleDeleteComment={() => handleDeleteComment(comment.id)}
                   />
                 )) : <p className="text-center">Be the first to comment on this post</p>
             }
-        </List>
+      </List>
     )
 }
 
 
-export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin }) {
+export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin, handleDeleteComment }) {
     return (
-        <ListItem alignItems="flex-start" >
-            <ListItemAvatar style={{ marginRight: 8 }}>
-                <Avatar user={user} />
-            </ListItemAvatar>
-            <ListItemText
-                primary={
-                    <React.Fragment>
-                        <span >
-                        <Link
-                          style={{ cursor: 'pointer', textDecoration: 'none' }}
-                          to={isAdmin ? `/user/${user.id}` : '#'}
-                        >
-                          {user.name}
-                        </Link>
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar style={{ marginRight: 8 }}>
+          <Avatar user={user} />
+        </ListItemAvatar>
+        <ListItemText
+          primary={(
+            <>
+              <span>
+                <Link
+                  style={{ cursor: 'pointer', textDecoration: 'none' }}
+                  to={isAdmin ? `/user/${user.id}` : '#'}
+                >
+                  {user.name}
+                </Link>
                             
-                        </span>
-                    </React.Fragment>
-                }
-                secondary={
-                    <React.Fragment>
-                        <span data-testid="comment" >
-                          <span
-                            dangerouslySetInnerHTML={{
+              </span>
+            </>
+                  )}
+          secondary={(
+            <>
+              <span data-testid="comment">
+                <span
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
                               __html: sanitizeLink(findLinkAndReplace(comment))
                             }}
-                          />
-                          <br />
-                          <br />
-                          {imageUrl && <img src={imageUrl} className='img-responsive img-thumbnail' alt={`image for ${comment}`} /> }
-                        </span>
-                        </React.Fragment>
-                }
+                />
+                <br />
+                <br />
+                {imageUrl && <img src={imageUrl} className='img-responsive img-thumbnail' alt={`${comment}`} /> }
+              </span>
+            </>
+                  )}
         />
         <ListItemSecondaryAction>
-            <span>
+          <span>
             <DateContainer date={createdAt} />    
-                <IconButton edge="end" aria-label="delete">
-                  <DeleteOutlineOutlined />
-                </IconButton>
-            </span>
-            </ListItemSecondaryAction>
+            <IconButton edge="end" aria-label="delete">
+              <DeleteIcon onClick={handleDeleteComment} />
+            </IconButton>
+          </span>
+        </ListItemSecondaryAction>
        
-        </ListItem>
+      </ListItem>
     )
 }
 
@@ -168,6 +184,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           direction="row"
           justify="flex-end"
           alignItems="flex-start"
+          // eslint-disable-next-line no-use-before-define
           className={css(styles.actionBtns)}
         >
           {upload.status === 'DONE' && (
@@ -188,7 +205,11 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
                   onChange={upload.handleFileUpload}
                   style={{ display: 'none' }}
                 />
-                <AddPhotoAlternateIcon color="primary" className={css(styles.uploadIcon)} />
+                <AddPhotoAlternateIcon 
+                  color="primary" 
+                  // eslint-disable-next-line no-use-before-define
+                  className={css(styles.uploadIcon)}
+                />
               </label>
             )}
           </Grid>

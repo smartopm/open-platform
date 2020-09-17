@@ -649,3 +649,11 @@ mutation businessCreate($name: String!, $email: String!, $phoneNumber: String!, 
   }
 }
 `
+
+export const UpdateCommentMutation = gql`
+mutation updateComment($commentId: ID!, $discussionId: ID!){
+  commentUpdate(commentId: $commentId, discussionId: $discussionId){
+    success
+  }
+}
+`
