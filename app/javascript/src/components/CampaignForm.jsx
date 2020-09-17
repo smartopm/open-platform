@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect, useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
@@ -42,6 +42,12 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
     const handleCampaignType = (event, newCampaignType) => {
         setCampaignType(newCampaignType);
     };
+
+    useEffect(() => {
+      if (id) {
+        setCampaignType(data.status)
+      }
+    }, [data, id])
 
   async function createCampaignOnSubmit(campData) {
     setLoading(true)
@@ -123,7 +129,6 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
   }
   return (
     <div className="container">
-      <CampaignToggle campaignType={campaignType} handleCampaignType={handleCampaignType} />
       <Snackbar
         open={isSubmitted}
         autoHideDuration={3000}
@@ -133,6 +138,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
       />
       <form onSubmit={handleSubmit} aria-label="campaign-form">
+        <CampaignToggle campaignType={campaignType} handleCampaignType={handleCampaignType} />
         <TextField
           label="Campaign Type"
           name="campaignType"
@@ -248,7 +254,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         <div>
           <DateAndTimePickers
             label="Batch Time"
-            required={campaignType === "schedule"}
+            required={campaignType === "scheduled"}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
           />
