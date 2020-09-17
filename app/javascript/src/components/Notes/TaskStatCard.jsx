@@ -8,7 +8,7 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
     <Card
       onClick={filterTasks}
       style={{
-        backgroundColor: isNotClickable && '#b7d4d9',
+        backgroundColor: isNotClickable && '#f0f0f0',
         cursor: isNotClickable ? 'not-allowed' : 'pointer'
       }}
     >
@@ -28,4 +28,3 @@ export default function AnalyticsCard({ count, title, filterTasks }) {
     </Card>
   )
 }
-  
