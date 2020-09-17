@@ -1,11 +1,12 @@
 /* eslint-disable */
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
+import { lightGray, jungleMist } from '../../colors'
 
 export default function AnalyticsCard({ count, title, filterTasks, isCurrent }) {
   const isNotClickable = title === 'Tasks with no due date'
-  let backgroundColor = isNotClickable && '#f0f0f0'
-  if (isCurrent) { backgroundColor = '#b7d4d9' }
+  let backgroundColor = isNotClickable && lightGray
+  if (isCurrent) { backgroundColor = jungleMist }
 
   return (
     <Card
