@@ -1,9 +1,10 @@
 /* eslint-disable */
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
-import { lightGray, jungleMist } from '../../colors'
+import colors from '../../themes/nkwashi/colors'
 
 export default function AnalyticsCard({ count, title, filterTasks, isCurrent }) {
+  const { lightGray, jungleMist } = colors
   const isNotClickable = title === 'Tasks with no due date'
   let backgroundColor = isNotClickable && lightGray
   if (isCurrent) { backgroundColor = jungleMist }
