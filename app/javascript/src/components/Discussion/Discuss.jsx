@@ -106,7 +106,6 @@ export default function Discuss({ update }) {
                     {Boolean(msg.length) && msg}
                 </p>
             </form>
-            br
         </div>
     )
 }
