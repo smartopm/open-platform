@@ -13,7 +13,7 @@ import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation } from '../../graphql/mutations'
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { useFileUpload } from '../../graphql/useFileUpload'
-import { findLinkAndReplace, sanitizeLink } from '../../utils/helpers'
+import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
 import { Link } from 'react-router-dom'
 
 
@@ -115,7 +115,7 @@ export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin }) 
                         <span data-testid="comment" >
                           <span
                             dangerouslySetInnerHTML={{
-                              __html: sanitizeLink(findLinkAndReplace(comment))
+                              __html: sanitizeText(findLinkAndReplace(comment))
                             }}
                           />
                           <br />

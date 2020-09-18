@@ -10,6 +10,7 @@ import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
 import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
+import { sanitizeText } from '../../utils/helpers'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +56,13 @@ export function PostItemGrid({ data }) {
             <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
               <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
               <GridListTileBar
-                title={tile.title}
+                title={(
+                  // eslint-disable-next-line react/no-danger
+                  <span dangerouslySetInnerHTML={{
+                  __html: sanitizeText(tile.title)
+                }}
+                  />
+                  )}
                 classes={{
                   title: classes.title
                 }}
