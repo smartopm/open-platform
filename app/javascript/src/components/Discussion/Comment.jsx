@@ -1,5 +1,6 @@
+/* eslint-disable no-use-before-define */
 import React, { useContext, useState } from 'react'
-import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, ListItemSecondaryAction, IconButton } from '@material-ui/core'
+import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton } from '@material-ui/core'
 import { useMutation, useApolloClient } from 'react-apollo'
 import { useParams, useLocation } from 'react-router'
 import PropTypes from 'prop-types'
@@ -96,11 +97,13 @@ export default function Comments({ comments, refetch, discussionId }) {
           comments.length >= 1 ? comments.map(comment => (
             <CommentSection
               key={comment.id}
-              user={comment.user}
-              createdAt={comment.createdAt}
-              comment={comment.content}
-              imageUrl={comment.imageUrl}
-              isAdmin={authState.user.userType === 'admin'}
+              data={{
+                isAdmin: authState.user.userType === 'admin',
+                createdAt: comment.createdAt,
+                comment: comment.content,
+                imageUrl: comment.imageUrl,
+                user: comment.user
+              }}
               handleDeleteComment={() => handleDeleteClick(comment.id)}
             />
           )) : <p className="text-center">Be the first to comment on this post</p>
@@ -116,11 +119,11 @@ export default function Comments({ comments, refetch, discussionId }) {
 }
 
 
-export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin, handleDeleteComment }) {
+export function CommentSection({ data, handleDeleteComment }) {
     return (
       <ListItem alignItems="flex-start">
         <ListItemAvatar style={{ marginRight: 8 }}>
-          <Avatar user={user} />
+          <Avatar user={data.user} />
         </ListItemAvatar>
         <ListItemText
           primary={(
@@ -128,11 +131,10 @@ export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin, ha
               <span>
                 <Link
                   style={{ cursor: 'pointer', textDecoration: 'none' }}
-                  to={isAdmin ? `/user/${user.id}` : '#'}
+                  to={data.isAdmin ? `/user/${data.user.id}` : '#'}
                 >
-                  {user.name}
+                  {data.user.name}
                 </Link>
-                            
               </span>
             </>
                   )}
@@ -142,24 +144,28 @@ export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin, ha
                 <span
                   // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{
-                              __html: sanitizeLink(findLinkAndReplace(comment))
+                              __html: sanitizeLink(findLinkAndReplace(data.comment))
                             }}
                 />
                 <br />
-                <br />
-                {imageUrl && <img src={imageUrl} className='img-responsive img-thumbnail' alt={`${comment}`} /> }
+                {data.imageUrl && <img src={data.imageUrl} className='img-responsive img-thumbnail' alt={`${data.comment}`} /> }
+              </span>
+              <span 
+                data-testid="delete_icon" 
+                className={css(styles.itemAction)}
+              >
+                <DateContainer date={data.createdAt} />    
+                {
+                 data.isAdmin && (
+                 <IconButton edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
+                   <DeleteIcon onClick={handleDeleteComment} />
+                 </IconButton>
+                 )
+               }
               </span>
             </>
                   )}
         />
-        <ListItemSecondaryAction>
-          <span data-testid="delete_icon">
-            <DateContainer date={createdAt} />    
-            <IconButton edge="end" aria-label="delete">
-              <DeleteIcon onClick={handleDeleteComment} />
-            </IconButton>
-          </span>
-        </ListItemSecondaryAction>
       </ListItem>
     )
 }
@@ -256,10 +262,16 @@ CommentBox.propType = {
 }
 
 CommentSection.propType = {
-    user: PropTypes.object.isRequired,
+  data: PropTypes.shape({
+    user: PropTypes.shape({ 
+      name: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired
+     }),
     createdAt: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool
+  }),
+  handleDeleteComment: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -275,5 +287,11 @@ const styles = StyleSheet.create({
       uploadIcon: {
         cursor: 'pointer',
         // color: '#b4b8b7'
+      },
+      itemAction: {
+        float: 'right'
+      },
+      deleteBtn: {
+        marginBottom: 5
       }
 })

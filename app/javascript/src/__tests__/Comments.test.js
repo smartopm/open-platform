@@ -42,14 +42,15 @@ describe('CommentBox', () => {
 
 describe('CommentSection', () => {
   const commentsProps = {
-    user: { name: 'someimagesource' },
-    comment: 'This is another comment',
-    imageUrl: 'https://dev.dgdp.site/activestorage',
-    isAdmin: true,
+    data: {
+        user: { name: 'someimagesource' },
+        comment: 'This is another comment',
+        imageUrl: 'https://dev.dgdp.site/activestorage',
+        isAdmin: true,
+        createdAt: "2020-08-08"
+    },
     handleDeleteComment: jest.fn(),
-    createdAt: "2020-08-08"
-  }
-
+}
   it('should render with wrong props', () => {
     const container = render(
       <BrowserRouter>
@@ -63,6 +64,5 @@ describe('CommentSection', () => {
     ).toBeInTheDocument()
     expect(container.queryByTestId('delete_icon')).toBeInTheDocument()
     expect(container.queryByTestId('delete_icon').textContent).toContain('2020-08-08')
-
   })
 })
