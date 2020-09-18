@@ -15,11 +15,11 @@ RSpec.describe Types::Queries::Comment do
     end
     let!(:user_comments) do
       current_user.comments.create(content: 'This is an awesome comment',
-                                   discussion_id: user_discussion.id, status: "valid")
+                                   discussion_id: user_discussion.id, status: 'valid')
     end
     let!(:other_comments) do
       current_user.comments.create(content: 'This is an awesome but deleted comment',
-                                   discussion_id: user_discussion.id, status: "deleted")
+                                   discussion_id: user_discussion.id, status: 'deleted')
     end
 
     let(:comments_query) do

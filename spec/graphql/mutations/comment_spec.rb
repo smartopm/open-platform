@@ -5,8 +5,12 @@ require 'rails_helper'
 RSpec.describe Mutations::Comment do
   describe 'creating a Comment' do
     let!(:user) { create(:user_with_community) }
-    let!(:user_discussion) do
-      create(:discussion, user_id: user.id, community_id: user.community_id)
+    let!(:admin) { create(:admin_user, community_id: user.community.id) }
+    let!(:another_admin) { create(:user_with_community, user_type: 'admin') }
+    let!(:u_discussion) { create(:discussion, user_id: user.id, community_id: user.community_id) }
+    let!(:user_comments) do
+      user.comments.create(content: 'This is an awesome comment',
+                           discussion_id: u_discussion.id, status: 'valid')
     end
 
     let(:query) do
@@ -29,9 +33,19 @@ RSpec.describe Mutations::Comment do
       GQL
     end
 
+    let(:update_comment) do
+      <<~GQL
+        mutation updateComment($commentId: ID!, $discussionId: ID!){
+          commentUpdate(commentId: $commentId, discussionId: $discussionId){
+            success
+          }
+        }
+      GQL
+    end
+
     it 'returns a created Comment' do
       variables = {
-        discussionId: user_discussion.id,
+        discussionId: u_discussion.id,
         content: 'This is your first and last comment',
       }
 
@@ -43,7 +57,7 @@ RSpec.describe Mutations::Comment do
       expect(result.dig('data', 'commentCreate', 'comment', 'content')).to include 'last comment'
       expect(result.dig('data', 'commentCreate', 'comment', 'userId')).to eql user.id
       expect(result.dig('data', 'commentCreate', 'comment', 'discussionId'))
-        .to eql user_discussion.id
+        .to eql u_discussion.id
       expect(result.dig('errors')).to be_nil
     end
 
@@ -55,7 +69,7 @@ RSpec.describe Mutations::Comment do
         content_type: 'image/jpg',
       )
       variables = {
-        discussionId: user_discussion.id,
+        discussionId: u_discussion.id,
         content: 'This is your last comment',
         imageBlobId: image_blob.signed_id,
       }
@@ -73,17 +87,81 @@ RSpec.describe Mutations::Comment do
 
     it 'returns error when not supplied properly' do
       variables = {
-        discussion_id: user_discussion.id,
+        discussion_id: u_discussion.id,
         content: 'This is your first and last comment',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('errors')).not_to be_nil
-      expect(result.dig('data', 'result', 'commentCreate', 'comment', 'id')).to be_nil
+      expect(result.dig('data', 'commentCreate', 'comment', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'invalid value'
+    end
+
+    it 'does not allow non admin to delete comments' do
+      variables = {
+        discussionId: u_discussion.id,
+        commentId: user_comments.id,
+      }
+
+      result = DoubleGdpSchema.execute(update_comment, variables: variables,
+                                                       context: {
+                                                         current_user: user,
+                                                         site_community: admin.community,
+                                                       }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('data', 'commentUpdate', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'allows admins to delete comments' do
+      variables = {
+        discussionId: u_discussion.id,
+        commentId: user_comments.id,
+      }
+
+      result = DoubleGdpSchema.execute(update_comment, variables: variables,
+                                                       context: {
+                                                         current_user: admin,
+                                                         site_community: admin.community,
+                                                       }).as_json
+      expect(result.dig('errors')).to be_nil
+      expect(result.dig('data', 'commentUpdate', 'success')).to include 'updated'
+    end
+
+    it 'allows admins to delete comments' do
+      variables = {
+        discussion_Id: u_discussion.id,
+        comment_Id: user_comments.id,
+      }
+
+      result = DoubleGdpSchema.execute(update_comment, variables: variables,
+                                                       context: {
+                                                         current_user: admin,
+                                                         site_community: admin.community,
+                                                       }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('data', 'commentUpdate', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'invalid value'
+    end
+
+    it 'does not allow admins from other community to delete comments' do
+      variables = {
+        discussionId: u_discussion.id,
+        commentId: user_comments.id,
+      }
+
+      result = DoubleGdpSchema.execute(update_comment, variables: variables,
+                                                       context: {
+                                                         current_user: another_admin,
+                                                         site_community: admin.community,
+                                                       }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('data', 'commentUpdate', 'success')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end

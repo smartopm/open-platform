@@ -21,9 +21,12 @@ module Mutations
         raise GraphQL::ExecutionError, comment.errors.full_messages
       end
 
-      def authorized?(_vals)
+      def authorized?(vals)
+        disc = context[:site_community].discussions.find(vals[:discussion_id])
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        # make sure the discussion is in same community as the admin updating it
+        check_community = disc.community_id == current_user.community_id
+        raise GraphQL::ExecutionError, 'Unauthorized' unless check_community && current_user&.admin?
 
         true
       end
