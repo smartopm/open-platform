@@ -22,7 +22,7 @@ export default function Categories() {
       <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
         <Grid>
           <Grid item xs>
-            {cats.filter(cat => cat.name !== "news").map(category => (
+            {cats.filter(cat => cat.name !== "news" && cat.name !== "Uncategorized").map(category => (
               <Button key={category.ID}>
                 <Link stytle={{color: theme.primaryColor}} to={`/news/${category.slug}`}>
                   {category.name}
