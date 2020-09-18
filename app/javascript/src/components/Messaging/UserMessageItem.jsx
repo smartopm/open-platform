@@ -9,7 +9,7 @@ import Avatar from '../Avatar'
 import { useHistory, useLocation } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
-import { truncateString, findLinkAndReplace, sanitizeLink } from '../../utils/helpers'
+import { truncateString, findLinkAndReplace, sanitizeText } from '../../utils/helpers'
 import { userType } from '../../utils/constants'
 
 export default function UserMessageItem({
@@ -84,7 +84,7 @@ export default function UserMessageItem({
               ) : (
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: sanitizeLink(findLinkAndReplace(message))
+                      __html: sanitizeText(findLinkAndReplace(message))
                     }}
                   />
                 )}

@@ -11,7 +11,7 @@ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
 import { useFileUpload } from '../../graphql/useFileUpload'
-import { findLinkAndReplace, sanitizeLink } from '../../utils/helpers'
+import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import DeleteDialogueBox from '../Business/DeleteDialogue'
@@ -144,7 +144,7 @@ export function CommentSection({ data, handleDeleteComment }) {
                 <span
                   // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{
-                              __html: sanitizeLink(findLinkAndReplace(data.comment))
+                              __html: sanitizeText(findLinkAndReplace(data.comment))
                             }}
                 />
                 <br />

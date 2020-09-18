@@ -5,12 +5,12 @@ import dompurify from 'dompurify';
 
 /**
  * 
- * @param {String} url
+ * @param {String} text
  * @returns a purifed link
  * @description receives a url and returns a purified url
  */
-export function sanitizeLink(url) {
-  return dompurify.sanitize(url)
+export function sanitizeText(text) {
+  return dompurify.sanitize(text)
 }
 
 /**
