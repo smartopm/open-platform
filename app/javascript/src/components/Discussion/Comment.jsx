@@ -157,14 +157,14 @@ export function CommentSection({ data, handleDeleteComment }) {
                 <DateContainer date={data.createdAt} />    
                 {
                  data.isAdmin && (
-                 <IconButton edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
-                   <DeleteIcon onClick={handleDeleteComment} />
+                 <IconButton onClick={handleDeleteComment} edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
+                   <DeleteIcon  />
                  </IconButton>
                  )
                }
               </span>
             </>
-                  )}
+            )}
         />
       </ListItem>
     )
