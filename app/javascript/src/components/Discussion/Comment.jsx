@@ -201,7 +201,6 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           direction="row"
           justify="flex-end"
           alignItems="flex-start"
-          // eslint-disable-next-line no-use-before-define
           className={css(styles.actionBtns)}
         >
           {upload.status === 'DONE' && (
@@ -224,7 +223,6 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
                 />
                 <AddPhotoAlternateIcon 
                   color="primary" 
-                  // eslint-disable-next-line no-use-before-define
                   className={css(styles.uploadIcon)}
                 />
               </label>
@@ -286,7 +284,6 @@ const styles = StyleSheet.create({
       },
       uploadIcon: {
         cursor: 'pointer',
-        // color: '#b4b8b7'
       },
       itemAction: {
         float: 'right'
