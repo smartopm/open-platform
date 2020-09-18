@@ -71,6 +71,7 @@ export const NotesFragment = {
       createdAt
       id
       completed
+      category
       dueDate
       user {
         id

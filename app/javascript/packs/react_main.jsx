@@ -53,6 +53,7 @@ import VisitingClientForm from '../src/containers/showroom/CheckInForm'
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
 import CheckInComplete from '../src/containers/showroom/CheckInComplete'
 import Todo from '../src/containers/Todo'
+import TaskUpdate from '../src/containers/Task/TaskUpdate'
 import OTPFeedbackScreen from '../src/containers/OTPScreen'
 import Feedback from '../src/containers/Activity/Feedback'
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
@@ -323,7 +324,8 @@ const App = () => {
                               component={ShowroomLogs}
                             />
                             <Route path="/notes" component={AllNotes} />
-                            <Route path="/todo/:taskId?" component={Todo} />
+                            <Route path="/todo/:taskId" exact component={TaskUpdate} />
+                            <Route path="/todo" component={Todo} />
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />

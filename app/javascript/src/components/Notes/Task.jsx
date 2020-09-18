@@ -16,6 +16,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { Spinner } from '../Loading'
 import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 export default function Task({
   note,
@@ -34,9 +35,15 @@ export default function Task({
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
 
+  const history = useHistory()
+
   function handleOpenAutoComplete(_event, noteId) {
     setOpen(!autoCompleteOpen)
     setNoteId(noteId)
+  }
+
+  function routeToAction(_event, id) {
+    return history.push(`/todo/${id}`)
   }
 
   return (
@@ -139,7 +146,15 @@ export default function Task({
             onClick={() => handleModal(note.id)}
           />
           <Typography variant="subtitle1" gutterBottom>
-            Due at: {note.dueDate ? `  ${dateToString(note.dueDate)}` : ' Never'}
+            Due at: {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
+            <Link
+              href="#"
+              data-testid="more_details_btn"
+              style={{ cursor: 'pointer', color: '#69ABA4' }}
+              onClick={event => routeToAction(event, note.id)}
+            >
+              More Details
+            </Link>
           </Typography>
           </div>
             <Button
