@@ -1,15 +1,14 @@
-/* eslint-disable */
 import React from 'react'
-import { shallow } from 'enzyme'
-import Disclaimer from '../components/Disclaimer.jsx'
+import { render } from '@testing-library/react'
+import Disclaimer from '../components/Disclaimer'
+import '@testing-library/jest-dom/extend-expect'
 
 describe('Disclaimer component', function() {
-  it("should render 'Disclaimer' text", function() {
+  it("should render 'Disclaimer' and body text", function() {
     const disclaimerBody = 'Here is the disclaimer body'
-    const rendered = shallow(<Disclaimer body={disclaimerBody} />)
-    const textContent = rendered.find('.disclaimer').text()
+    const rendered = render(<Disclaimer body={disclaimerBody} />)
 
-    expect(textContent).toContain('Disclaimer')
-    expect(textContent).toContain(disclaimerBody)
+    expect(rendered.queryByText('Disclaimer')).toBeInTheDocument()
+    expect(rendered.queryByText(disclaimerBody)).toBeInTheDocument()
   })
 })
