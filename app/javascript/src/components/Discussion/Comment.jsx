@@ -153,14 +153,13 @@ export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin, ha
                   )}
         />
         <ListItemSecondaryAction>
-          <span>
+          <span data-testid="delete_icon">
             <DateContainer date={createdAt} />    
             <IconButton edge="end" aria-label="delete">
               <DeleteIcon onClick={handleDeleteComment} />
             </IconButton>
           </span>
         </ListItemSecondaryAction>
-       
       </ListItem>
     )
 }

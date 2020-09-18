@@ -15,7 +15,11 @@ RSpec.describe Types::Queries::Comment do
     end
     let!(:user_comments) do
       current_user.comments.create(content: 'This is an awesome comment',
-                                   discussion_id: user_discussion.id)
+                                   discussion_id: user_discussion.id, status: "valid")
+    end
+    let!(:other_comments) do
+      current_user.comments.create(content: 'This is an awesome but deleted comment',
+                                   discussion_id: user_discussion.id, status: "deleted")
     end
 
     let(:comments_query) do
@@ -68,7 +72,7 @@ RSpec.describe Types::Queries::Comment do
         })
     end
 
-    it 'should retrieve list of comments' do
+    it 'should retrieve list of comments without deleted comments' do
       result = DoubleGdpSchema.execute(comments_query,
                                        context: {
                                          current_user: current_user,

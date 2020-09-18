@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, removeHtmlTagsFromStrings } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, removeHtmlTagsFromStrings, capitalize } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -98,5 +98,8 @@ describe('array methods', () => {
     ]
     expect(getJustLabels(labels)).toStrictEqual(['blue', 'red', 'green', 'white'])
     expect(getJustLabels([])).toStrictEqual([])
+  })
+  it('capitalizes the first letter of the word', () => {
+    expect(capitalize('testing')).toBe('Testing')
   })
 })
