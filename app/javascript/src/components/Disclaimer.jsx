@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 
 export default function Disclaimer({ body }) {
@@ -8,4 +9,8 @@ export default function Disclaimer({ body }) {
       <Typography variant="body2">{body}</Typography>
     </div>
   )
+}
+
+Disclaimer.propTypes = {
+  body: PropTypes.string.isRequired
 }
