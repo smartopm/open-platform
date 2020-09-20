@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import {
@@ -52,8 +52,9 @@ export default function PostPage() {
         variables: { postId: id }
       })
     }
-  }, [id])
+  }, [authState.loggedIn, logReadPost, id])
 
+  // eslint-disable-next-line no-shadow
   function createDiscussion(title, discId) {
     setLoading(true)
     discuss({
