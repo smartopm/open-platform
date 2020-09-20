@@ -24,15 +24,15 @@ export default function Posts() {
     }
     return (
       <>
-        <Nav navName="News" menuButton="back" backTo="/" />
+        <Nav navName="Nkwashi News" menuButton="back" backTo="/" />
+        <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
+          <Typography variant='h4' color='textSecondary'>
+            {titleCase(slug.replace(/-/g, " ") || 'Posts')}
+          </Typography>
+        </Box>
         <Categories />
         <div>
           <br />
-          <Box style={{ display: 'flex', justifyContent: 'center' }}>
-            <Typography variant='h3' color='textSecondary'>
-              {titleCase(slug || 'Posts')}
-            </Typography>
-          </Box>
           <Divider light variant="middle" />
           <br />
           <Grid container direction="row" justify="center">

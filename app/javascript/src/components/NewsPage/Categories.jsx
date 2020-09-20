@@ -1,5 +1,7 @@
+/* eslint-disable no-use-before-define */
 import React, {useContext} from 'react'
 import { Grid, Box, Button } from '@material-ui/core'
+import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
@@ -23,15 +25,30 @@ export default function Categories() {
         <Grid>
           <Grid item xs>
             {cats.map(category => (
-              <Button key={category.ID}>
-                <Link stytle={{color: theme.primaryColor}} to={`/news/${category.slug}`}>
+              <Link to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`} key={category.ID}>
+                <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`}>
                   {category.name}
-                </Link>
-              </Button>
-                    ))}
+                </Button>
+              </Link>
+                  ))}
           </Grid>
         </Grid>
       </Box>
-
     )
 }
+
+const styles = StyleSheet.create({
+  categoryLink: {
+    ':hover': {
+      textDecoration: 'none',
+      backgroundColor: '#69ABA4',
+      padding: '5px',
+      borderRadius: '5px'
+    }
+  },
+  categoryButton: {
+    ':hover': {
+      color: 'rgba(0, 0, 0, 0.54)'
+    }
+  }
+})
