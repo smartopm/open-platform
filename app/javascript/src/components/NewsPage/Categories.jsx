@@ -25,12 +25,12 @@ export default function Categories() {
         <Grid>
           <Grid item xs>
             {cats.map(category => (
-              <Link to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`} key={category.ID}>
-                <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`}>
+              <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`} key={category.ID}>
+                <Link to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`}>
                   {category.name}
-                </Button>
-              </Link>
-                  ))}
+                </Link>
+              </Button>
+                ))}
           </Grid>
         </Grid>
       </Box>
@@ -43,11 +43,7 @@ const styles = StyleSheet.create({
       textDecoration: 'none',
       backgroundColor: '#69ABA4',
       padding: '5px',
-      borderRadius: '5px'
-    }
-  },
-  categoryButton: {
-    ':hover': {
+      borderRadius: '5px',
       color: 'rgba(0, 0, 0, 0.54)'
     }
   }
