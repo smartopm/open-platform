@@ -30,7 +30,7 @@ class SendgridController < ApplicationController
   private
 
   def valid_webhook_token?
-    params[:token] == ENV['SENDGRID_WEBHOOK_TOKEN']
+    params[:token] == Rails.application.credentials[:sendgrid_webhook_token]
   end
 
   def generate_msg(user, body)
@@ -40,6 +40,9 @@ class SendgridController < ApplicationController
       message: body,
       category: 'email'
     )
+
+    puts mess
+    puts "messssssss"
     # assign the task
     mess.create_message_task(body)
   end
