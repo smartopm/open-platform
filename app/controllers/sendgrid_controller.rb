@@ -6,21 +6,14 @@ class SendgridController < ApplicationController
 
     def webhook
         begin
-        puts "==========================response========================="
-        puts params["to"]
-        puts params["text"]
-        puts params["from"]
-        puts params["subject"]
         # email comes like this user <user@gdp.com> get the value in angle brackets
         email = params["from"].match /\<([^}]+)\>/
         # Find a user 
-        puts email[1]
         sender = @site_community.users.find_by(email: email[1])
         sender.messages.create(
             is_read: false, sender_id: sender.id,
             created_at: Time.zone.now,
-            # message: "#{params['subject']} #{params['text']}", 
-            message: params['subject'] /n params['text'], 
+            message: "#{params['subject']} /n #{params['text']}", 
             category: 'email',
           )
         # get the response for 
