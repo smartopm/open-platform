@@ -51,6 +51,8 @@ export default function PostPage() {
       logReadPost({
         variables: { postId: id }
       })
+      .then(res => res)
+      .catch(err => console.log(err.message))
     }
   }, [authState.loggedIn, logReadPost, id])
 

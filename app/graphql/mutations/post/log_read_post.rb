@@ -11,6 +11,8 @@ module Mutations
       def resolve(post_id:)
         user = context[:current_user]
 
+        return unless user
+
         event_log = unless post_already_read?(user.id, post_id)
                       user.generate_events('post_read', user, post_id: post_id)
                     end
