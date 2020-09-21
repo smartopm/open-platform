@@ -13,10 +13,10 @@ class SendgridController < ApplicationController
         sender = @site_community.users.find_by(email: email[1])
         if sender.nil?
             user = @site_community.users.create!(name: name[0], email: email[1], user_type: "visitor")
-            generate_msg(user, "#{params['subject']} /n #{params['text']}")
+            generate_msg(user, "#{params['subject']} \n \n #{params['text']}")
         end
 
-        generate_msg(sender, "#{params['subject']} /n #{params['text']}")
+        generate_msg(sender, "#{params['subject']} \n \n #{params['text']}")
         rescue Exception => ex
         render :json => {:status => 400, :error => ex} and return
         end
@@ -24,7 +24,7 @@ class SendgridController < ApplicationController
     end
 
     private
-    
+
     def valid_webhook_token?
         params[:token] == ENV["SENDGRID_WEBHOOK_TOKEN"]
     end
