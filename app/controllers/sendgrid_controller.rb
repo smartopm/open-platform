@@ -4,6 +4,8 @@
 class SendgridController < ApplicationController
   skip_before_action :verify_authenticity_token, if: :valid_webhook_token?
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def webhook
     begin
       # email comes like this user <user@gdp.com> get the value in angle brackets
@@ -22,6 +24,8 @@ class SendgridController < ApplicationController
     end
     render json: { status: 200 }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -30,11 +34,13 @@ class SendgridController < ApplicationController
   end
 
   def generate_msg(user, body)
-    user.messages.create(
+    mess = user.messages.create(
       is_read: false, sender_id: user.id,
       created_at: Time.zone.now,
       message: body,
       category: 'email'
     )
+    # assign the task
+    mess.create_message_task(body)
   end
 end
