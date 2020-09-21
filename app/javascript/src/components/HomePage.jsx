@@ -1,31 +1,32 @@
-/* eslint-disable */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-use-before-define */
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
-import NewsIcon from '../../../assets/images/iconfinder.svg'
-import AccountManagement from '../../../assets/images/account_management.svg'
 import PersonIcon from '@material-ui/icons/Person'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import MessageIcon from '@material-ui/icons/Message'
 import NotesIcon from '@material-ui/icons/Notes'
 import ForumIcon from '@material-ui/icons/Forum'
-import { Footer } from '../components/Footer.jsx'
-import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
-import { ponisoNumber } from '../utils/constants.js'
 import CallIcon from '@material-ui/icons/Call'
-import SocialMediaLinks from '../components/SocialMediaLinks.jsx'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import LocalMallIcon from '@material-ui/icons/LocalMall'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
-import Card from '../components/Card'
-import { SVGIcon } from '../components/Card'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
+import Card, { SVGIcon } from "./Card"
+
+import SocialMediaLinks from "./SocialMediaLinks"
+import { ponisoNumber } from '../utils/constants'
+import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
+import { Footer } from "./Footer"
+import AccountManagement from '../../../assets/images/account_management.svg'
+import NewsIcon from '../../../assets/images/iconfinder.svg'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -39,7 +40,7 @@ export default function Homepage({ authState }) {
       title: t('home.scan'),
       path: `/scan`,
       titleStyle: css(styles.CardtextImg),
-      icon: <SVGIcon image={QRIcon} alt={'support icon'} />,
+      icon: <SVGIcon image={QRIcon} alt="support icon" />,
       access: ['custodian']
     },
     {
@@ -78,9 +79,9 @@ export default function Homepage({ authState }) {
     {
       card_id: 18,
       title: `${authState.user.community.name} News`,
-      path: `/news`,
+      path: `/news/post`,
       titleStyle: css(styles.CardtextImg),
-      icon: <SVGIcon image={NewsIcon} alt={' news icons'} />,
+      icon: <SVGIcon image={NewsIcon} alt=" news icons" />,
       access: [
         'admin',
         'client',
@@ -144,7 +145,7 @@ export default function Homepage({ authState }) {
       clientName: authState.user.name,
       from: 'home',
       icon: (
-        <SVGIcon image={AccountManagement} alt={'account management icon'} />
+        <SVGIcon image={AccountManagement} alt="account management icon" />
       ),
       access: ['admin', 'resident', 'client']
     },

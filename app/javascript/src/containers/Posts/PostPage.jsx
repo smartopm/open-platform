@@ -1,5 +1,5 @@
-/* eslint-disable */
-import React, { Fragment, useContext, useState } from 'react'
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useContext, useState } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import {
@@ -17,7 +17,7 @@ import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch, useWindowDimensions } from '../../utils/customHooks'
 import { ShareButton, styles } from '../../components/ShareButton'
 import Nav from '../../components/Nav'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
 import { Spinner } from '../../components/Loading'
 import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
@@ -45,10 +45,10 @@ export default function PostPage() {
   })
   const [discuss] = useMutation(DiscussionMutation)
 
-  function createDiscussion(title, id) {
+  function createDiscussion(title, discId) {
     setLoading(true)
     discuss({
-      variables: { postId: id.toString(), title }
+      variables: { postId: discId.toString(), title }
     })
       .then(() => {
         queryResponse.refetch()
@@ -69,9 +69,7 @@ export default function PostPage() {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev
         setLoading(false)
-        return Object.assign({}, prev, {
-          postComments: [...prev.postComments, ...fetchMoreResult.postComments]
-        })
+        return { ...prev, postComments: [...prev.postComments, ...fetchMoreResult.postComments]}
       }
     })
   }
@@ -86,10 +84,10 @@ export default function PostPage() {
   }
 
   return (
-    <Fragment>
+    <>
       <Nav
         menuButton="back"
-        backTo={authState.loggedIn ? '/news' : '/welcome'}
+        backTo={authState.loggedIn ? '/news/post' : '/welcome'}
       />
       <div className="post_page">
         <IframeContainer
@@ -111,30 +109,35 @@ export default function PostPage() {
           onClick={handleCommentsView}
           className={`btn ${css(styles.getStartedButton)} `}
           color="primary"
-          >
-            View comments&nbsp;<Avatar>{data ? data.postComments.length : 0}</Avatar>
+        >
+          View comments&nbsp;
+          <Avatar>{data ? data.postComments.length : 0}</Avatar>
             
         </Fab>
       </div>
       <div> 
-      <Dialog fullScreen open={open} onClose={handleCommentsView} TransitionComponent={Transition}>
-        <AppBar className={css(styles.appBar)} >
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleCommentsView} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6">
-              Comments
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <br/>
-        <br/>
-        <br/>
-        {queryResponse.data?.postDiscussion ? (
-            <Fragment>
+        <Dialog fullScreen open={open} onClose={handleCommentsView} TransitionComponent={Transition}>
+          <AppBar className={css(styles.appBar)}>
+            <Toolbar>
+              <IconButton edge="start" color="inherit" onClick={handleCommentsView} aria-label="close">
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="h6">
+                Comments
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <br />
+          <br />
+          <br />
+          {queryResponse.data?.postDiscussion ? (
+            <>
               <CenteredContent>
-                <h4>{queryResponse.data.postDiscussion.title} Post Discussion</h4>
+                <h4>
+                  {queryResponse.data.postDiscussion.title}
+                  {' '}
+                  Post Discussion
+                </h4>
               </CenteredContent>
               <Comments
                 comments={data.postComments}
@@ -147,17 +150,18 @@ export default function PostPage() {
                     <Button
                       variant="outlined"
                       color="primary"
-                      onClick={fetchMoreComments}>
+                      onClick={fetchMoreComments}
+                    >
                       {isLoading ? <Spinner /> : 'Load more comments'}
                     </Button>
                   </CenteredContent>
                 )
               }
-          </Fragment>
+            </>
         ) : (
-              <CenteredContent>
-                <br/>
-                {
+          <CenteredContent>
+            <br />
+            {
                   authState.loggedIn && authState.user.userType === 'admin' ? (
                     <Button
                       variant="outlined"
@@ -169,11 +173,11 @@ export default function PostPage() {
                     </Button>
                   ) : 'Discussion has not yet been enabled for this post'
                 }
-         </CenteredContent>
+          </CenteredContent>
         )}
-      </Dialog>
+        </Dialog>
       </div>
-    </Fragment>
+    </>
   )
 }
 
