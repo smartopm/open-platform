@@ -11,28 +11,31 @@ class SendgridController < ApplicationController
         name = params["from"].match /(?<=\s|^)\w+(?=\s)/
         # Find a user 
         sender = @site_community.users.find_by(email: email[1])
-        # user = 
-        # if sender.nil?
-        #     @site_community.users.create!(name: name[0], email: email[1], user_type: "visitor")
-        # end
+        if sender.nil?
+            user = @site_community.users.create!(name: name[0], email: email[1], user_type: "visitor")
+            generate_msg(user, "#{params['subject']} /n #{params['text']}")
+        end
 
-        sender.messages.create(
-            is_read: false, sender_id: sender.id,
-            created_at: Time.zone.now,
-            message: "#{params['subject']} /n #{params['text']}", 
-            category: 'email',
-          )
-        # get the response for 
+        generate_msg(sender, "#{params['subject']} /n #{params['text']}")
         rescue Exception => ex
-        # Find a way of properly channeling this error 
         render :json => {:status => 400, :error => ex} and return
         end
-        # I want to get the received json and save in in Message table
         render :json => {:status => 200}
     end
 
     private
+    
     def valid_webhook_token?
         params[:token] == ENV["SENDGRID_WEBHOOK_TOKEN"]
     end
+
+    def generate_msg(user, body)
+        user.messages.create(
+            is_read: false, sender_id: user.id,
+            created_at: Time.zone.now,
+            message: body,
+            category: 'email',
+          )
+    end
+
 end
