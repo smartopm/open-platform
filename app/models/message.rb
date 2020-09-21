@@ -40,7 +40,7 @@ class Message < ApplicationRecord
     Sms.send(receiver, new_message)
   end
 
-  def create_message_task(body=nil)
+  def create_message_task(body = nil)
     msg_obj = {
       body: "Reply to message from: #{user.name} \n #{body}",
       category: 'message',

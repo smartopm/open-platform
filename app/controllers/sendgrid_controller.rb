@@ -10,17 +10,17 @@ class SendgridController < ApplicationController
     begin
       # email comes like this "user <user@gdp.com>" we need email and name separately
       user_email = params['from']
-      email = user_email.match /\<([^}]+)\>/
-      name = user_email.match /(?<=\s|^)\w+(?=\s)/
+      email = user_email.match(/\<([^}]+)\>/)
+      name = user_email.match(/(?<=\s|^)\w+(?=\s)/)
       message_body = "#{params['subject']} \n \n #{params['text']}"
       # Find a user
       sender = @site_community.users.find_by(email: email[1])
       if sender.nil?
         user = @site_community.users.create!(name: name[0], email: email[1], user_type: 'visitor')
-        generate_msg(user, message_body)
+        generate_msg_and_assign(user, message_body)
       end
 
-      generate_msg(sender, message_body)
+      generate_msg_and_assign(sender, message_body)
     rescue StandardError => e
       render(json: { status: 400, error: e }) && (return)
     end
@@ -35,13 +35,13 @@ class SendgridController < ApplicationController
     params[:token] == Rails.application.credentials[:sendgrid_webhook_token]
   end
 
-  def generate_msg(user, body)
-    message = user.messages.create(
-      is_read: false, sender_id: user.id,
-      created_at: Time.zone.now,
+  def generate_msg_and_assign(user, body)
+    options = {
+      user_id: user.id,
+      category: 'email',
       message: body,
-      category: 'email'
-    )
+    }
+    message = user.construct_message(options)
     message.create_message_task(body)
   end
 end
