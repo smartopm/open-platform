@@ -15,7 +15,7 @@ module Mutations
         message.save
         message.send_sms
         if check_ids(message[:sender_id], vals[:user_id])
-          message.create_message_task if check_default_user_empty?
+          message.create_message_task unless check_default_user_empty?
         end
 
         return { message: message } if message.persisted?
