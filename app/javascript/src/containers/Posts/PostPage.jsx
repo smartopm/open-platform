@@ -54,7 +54,6 @@ export default function PostPage() {
     }
   }, [authState.loggedIn, logReadPost, id])
 
-  // eslint-disable-next-line no-shadow
   function createDiscussion(title, discId) {
     setLoading(true)
     discuss({
