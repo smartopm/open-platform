@@ -6,15 +6,16 @@ module Mutations
     class CommentUpdate < BaseMutation
       argument :comment_id, ID, required: true
       argument :discussion_id, ID, required: true
+      argument :status, String, required: true
 
       field :success, String, null: false
 
-      def resolve(comment_id:, discussion_id:)
+      def resolve(comment_id:, discussion_id:, status:)
         comment = ::Comment.find_by(id: comment_id, discussion_id: discussion_id)
 
         raise GraphQL::ExecutionError, 'NotFound' unless comment
 
-        response = comment.update!(status: 'deleted')
+        response = comment.update!(status: status)
 
         return { success: 'updated' } if response
 

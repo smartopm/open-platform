@@ -35,8 +35,8 @@ RSpec.describe Mutations::Comment do
 
     let(:update_comment) do
       <<~GQL
-        mutation updateComment($commentId: ID!, $discussionId: ID!){
-          commentUpdate(commentId: $commentId, discussionId: $discussionId){
+        mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
+          commentUpdate(commentId: $commentId, discussionId: $discussionId, status: $status){
             success
           }
         }
@@ -89,6 +89,7 @@ RSpec.describe Mutations::Comment do
       variables = {
         discussion_id: u_discussion.id,
         content: 'This is your first and last comment',
+        status: 'deleted',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -105,6 +106,7 @@ RSpec.describe Mutations::Comment do
       variables = {
         discussionId: u_discussion.id,
         commentId: user_comments.id,
+        status: 'deleted',
       }
 
       result = DoubleGdpSchema.execute(update_comment, variables: variables,
@@ -121,6 +123,7 @@ RSpec.describe Mutations::Comment do
       variables = {
         discussionId: u_discussion.id,
         commentId: user_comments.id,
+        status: 'deleted',
       }
 
       result = DoubleGdpSchema.execute(update_comment, variables: variables,
@@ -136,6 +139,7 @@ RSpec.describe Mutations::Comment do
       variables = {
         discussion_Id: u_discussion.id,
         comment_Id: user_comments.id,
+        status: 'deleted',
       }
 
       result = DoubleGdpSchema.execute(update_comment, variables: variables,
@@ -152,6 +156,7 @@ RSpec.describe Mutations::Comment do
       variables = {
         discussionId: u_discussion.id,
         commentId: user_comments.id,
+        status: 'deleted',
       }
 
       result = DoubleGdpSchema.execute(update_comment, variables: variables,

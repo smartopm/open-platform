@@ -15,6 +15,7 @@ import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import DeleteDialogueBox from '../Business/DeleteDialogue'
+import { commentStatusAction } from '../../utils/constants'
 
 
 export default function Comments({ comments, refetch, discussionId }) {
@@ -43,7 +44,7 @@ export default function Comments({ comments, refetch, discussionId }) {
 
   function handleDeleteComment(){
     updateComment({ 
-      variables: { commentId, discussionId }
+      variables: { commentId, discussionId, status: commentStatusAction.delete }
      })
      .then(() => {
        refetch()

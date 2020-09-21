@@ -76,4 +76,9 @@ export const businessStatus = {
   pending: 'Pending',
 }
 
+export const commentStatusAction = {
+  delete: 'deleted',
+  validate: 'valid'
+}
+
 export const ponisoNumber = '+260976064298'
