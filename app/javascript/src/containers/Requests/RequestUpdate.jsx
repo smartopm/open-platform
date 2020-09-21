@@ -167,7 +167,7 @@ export default function RequestUpdate({ match, history, location }) {
             : 'Approve Request'
         }
         menuButton="cancel"
-        backTo="/entry_request"
+        backTo="/entry_logs"
       />
 
       <ModalDialog
