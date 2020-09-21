@@ -8,8 +8,14 @@ class SendgridController < ApplicationController
         begin
         # email comes like this user <user@gdp.com> get the value in angle brackets
         email = params["from"].match /\<([^}]+)\>/
+        name = params["from"].match /(?<=\s|^)\w+(?=\s)/
         # Find a user 
         sender = @site_community.users.find_by(email: email[1])
+        # user = 
+        # if sender.nil?
+        #     @site_community.users.create!(name: name[0], email: email[1], user_type: "visitor")
+        # end
+
         sender.messages.create(
             is_read: false, sender_id: sender.id,
             created_at: Time.zone.now,
