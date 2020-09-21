@@ -18,6 +18,7 @@ import CenteredContent from '../CenteredContent'
 import { useState } from 'react'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import FollowButton from './FollowButton'
+import Disclaimer from '../Disclaimer'
 
 export default function Discussion({ discussionData }) {
   const limit = 20
@@ -30,6 +31,10 @@ export default function Discussion({ discussionData }) {
       variables: { id, limit }
     }
   )
+  const discussionBoardDisclaimer =
+    `Comments and discussion boards are provided as a free service for logged in community members.
+    Users must keep comments constructive, informative, positive, and free of profanity and obscenity.
+    We reserve the right to remove posts or boards that veer from these principles.`
 
 
   function fetchMoreComments() {
@@ -81,6 +86,9 @@ export default function Discussion({ discussionData }) {
           <FollowButton discussionId={id} authState={authState}/>
           </Grid>
           <br />
+          <Grid item xs={6}>
+            <Disclaimer body={discussionBoardDisclaimer} />
+          </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1">Comments</Typography>
           </Grid>

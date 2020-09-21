@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable no-use-before-define */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Button, TextField, Snackbar } from '@material-ui/core'
@@ -33,81 +33,81 @@ export default function Discuss({ update }) {
     }
 
     return (
-        <div className="container">
-            <Snackbar
-                color={"success"}
-                open={open} autoHideDuration={6000}
-                onClose={() => setOpen(!open)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                message="Discussion topic successfully created"
-            />
-            <form
-                onSubmit={handleSubmit}
-                aria-label="discuss-form"
-            >
-                    <TextField
-                        name="title"
-                        label="Discussion Title"
-                        style={{ width: '63vw' }}
-                        placeholder="Type a comment here"
-                        onChange={e => setTitle(e.target.value)}
-                        value={title}
-                        margin="normal"
-                        inputProps={{
+      <div className="container">
+        <Snackbar
+          color="success"
+          open={open}
+          autoHideDuration={6000}
+          onClose={() => setOpen(!open)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          message="Discussion topic successfully created"
+        />
+        <form
+          onSubmit={handleSubmit}
+          aria-label="discuss-form"
+        >
+          <TextField
+            name="title"
+            label="Discussion Title"
+            style={{ width: '63vw' }}
+            placeholder="Type a comment here"
+            onChange={e => setTitle(e.target.value)}
+            value={title}
+            margin="normal"
+            inputProps={{
                             "aria-label":"discuss_title"
                         }}
-                        InputLabelProps={{
+            InputLabelProps={{
                             shrink: true
                         }}
-                        required
-                    />
-                    <TextField
-                        name="description"
-                        label="Discussion Description"
-                        style={{ width: '63vw'}}
-                        placeholder="Type a comment here"
-                        onChange={e => setDescription(e.target.value)}
-                        value={description}
-                        multiline
-                        rows={3}
-                        margin="normal"
-                        inputProps={{
+            required
+          />
+          <TextField
+            name="description"
+            label="Discussion Description"
+            style={{ width: '63vw'}}
+            placeholder="Type a comment here"
+            onChange={e => setDescription(e.target.value)}
+            value={description}
+            multiline
+            rows={3}
+            margin="normal"
+            inputProps={{
                             "aria-label": "discuss_description"
                         }}
-                        InputLabelProps={{
+            InputLabelProps={{
                             shrink: true
                         }}
-                        required
-                    />
-                <br />
-                <div className="d-flex row justify-content-center">
-                    <Button
-                        variant="contained"
-                        aria-label="discussion_cancel"
-                        color="secondary"
-                        onClick={update}
-                        className={`btn ${css(discussStyles.cancelBtn)}`}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        type="submit"
-                        color="primary"
-                        disabled={loading}
-                        aria-label="discussion_submit"
-                        className={`btn ${css(discussStyles.submitBtn)}`}
-                    >
-                        {loading ? 'Submitting ...' : 'Submit'}
-                    </Button>
-                </div>
-                <br />
-                <p className="text-center">
-                    {Boolean(msg.length) && msg}
-                </p>
-            </form>
-            br
-        </div>
+            required
+          />
+          <br />
+          <div className="d-flex row justify-content-center">
+            <Button
+              variant="contained"
+              aria-label="discussion_cancel"
+              color="secondary"
+              onClick={update}
+              className={`btn ${css(discussStyles.cancelBtn)}`}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              disabled={loading}
+              aria-label="discussion_submit"
+              className={`btn ${css(discussStyles.submitBtn)}`}
+            >
+              {loading ? 'Submitting ...' : 'Submit'}
+            </Button>
+          </div>
+          <br />
+          <p className="text-center">
+            {Boolean(msg.length) && msg}
+          </p>
+        </form>
+      </div>
     )
 }
 export const discussStyles = StyleSheet.create({
