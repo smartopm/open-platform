@@ -2,7 +2,7 @@
 
 # Method responsbile for handling sendgrid inbound emails
 class SendgridController < ApplicationController
-    skip_before_action :verify_authenticity_token #remove this afterwards
+    skip_before_action :verify_authenticity_token, if: :valid_webhook_token?
 
     def webhook
         begin
@@ -29,5 +29,10 @@ class SendgridController < ApplicationController
         end
         # I want to get the received json and save in in Message table
         render :json => {:status => 200}
+    end
+
+    private
+    def valid_webhook_token?
+        params[:token] == ENV["SENDGRID_WEBHOOK_TOKEN"]
     end
 end

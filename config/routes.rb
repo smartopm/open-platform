@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   end
   post "/graphql", to: "graphql#execute"
   get "/csv_export/event_logs", to: "csv_export#event_logs"
-  post "/sendgrid/webhook", to: "sendgrid#webhook"
+  post "/sendgrid/webhook/:token", to: "sendgrid#webhook"
 
   # Oauth routes
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
