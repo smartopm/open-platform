@@ -8,17 +8,19 @@ class SendgridController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def webhook
     begin
-      # email comes like this user <user@gdp.com> get the value in angle brackets
-      email = params['from'].match /\<([^}]+)\>/
-      name = params['from'].match /(?<=\s|^)\w+(?=\s)/
+      # email comes like this "user <user@gdp.com>" we need email and name separately
+      user_email = params['from']
+      email = user_email.match /\<([^}]+)\>/
+      name = user_email.match /(?<=\s|^)\w+(?=\s)/
+      message_body = "#{params['subject']} \n \n #{params['text']}"
       # Find a user
       sender = @site_community.users.find_by(email: email[1])
       if sender.nil?
         user = @site_community.users.create!(name: name[0], email: email[1], user_type: 'visitor')
-        generate_msg(user, "#{params['subject']} \n \n #{params['text']}")
+        generate_msg(user, message_body)
       end
 
-      generate_msg(sender, "#{params['subject']} \n \n #{params['text']}")
+      generate_msg(sender, message_body)
     rescue StandardError => e
       render(json: { status: 400, error: e }) && (return)
     end
@@ -34,16 +36,12 @@ class SendgridController < ApplicationController
   end
 
   def generate_msg(user, body)
-    mess = user.messages.create(
+    message = user.messages.create(
       is_read: false, sender_id: user.id,
       created_at: Time.zone.now,
       message: body,
       category: 'email'
     )
-
-    puts mess
-    puts "messssssss"
-    # assign the task
-    mess.create_message_task(body)
+    message.create_message_task(body)
   end
 end
