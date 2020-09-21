@@ -51,5 +51,17 @@ RSpec.describe Mutations::Post::LogReadPost do
                                      }).as_json
       expect(EventLog.count).to eql(prev_log_count)
     end
+
+    it "raises 'Unauthorized' error if user is not logged in" do
+      variables = {
+        postId: '112',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: nil,
+                                              }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
+    end
   end
 end
