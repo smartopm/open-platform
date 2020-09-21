@@ -1,21 +1,22 @@
-/* eslint-disable */
-import React, { Fragment, useState, useEffect } from "react";
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-use-before-define */
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo";
-import Nav from "../../components/Nav";
 import { TextField, MenuItem, Button } from "@material-ui/core";
+import { StyleSheet, css } from "aphrodite";
+import Nav from "../../components/Nav";
 
-import { EntryRequestQuery } from "../../graphql/queries.js";
+import { EntryRequestQuery } from "../../graphql/queries";
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
   CreateUserMutation,
   UpdateLogMutation
-} from "../../graphql/mutations.js";
+} from "../../graphql/mutations";
 import Loading from "../../components/Loading";
-import { StyleSheet, css } from "aphrodite";
 import { isTimeValid, getWeekDay } from "../../utils/dateutil";
-import { ponisoNumber, userState, userType } from "../../utils/constants.js"
+import { ponisoNumber, userState, userType } from "../../utils/constants"
 import { ModalDialog } from '../../components/Dialog'
 import CaptureTemp from "../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../components/DateContainer";
@@ -54,7 +55,7 @@ export default function RequestUpdate({ match, history, location }) {
 
 
   useEffect(() => {
-    var timerID = setInterval(() => tick(), 1000);
+    const timerID = setInterval(() => tick(), 1000);
 
     return function cleanup() {
       clearInterval(timerID);
@@ -126,7 +127,7 @@ export default function RequestUpdate({ match, history, location }) {
         vehicle: formData.vehiclePlate
       }
     })
-      .then(({ data }) => {
+      .then(({ userData }) => {
         updateLog({
           variables: {
             refId: match.params.id
@@ -134,7 +135,7 @@ export default function RequestUpdate({ match, history, location }) {
         }).then(() => {
           setLoading(false)
           setMessage('User was successfully enrolled')
-          history.push(`/user/${data.result.user.id}`)
+          history.push(`/user/${userData.result.user.id}`)
         })
       })
       .catch(err => {
@@ -156,7 +157,7 @@ export default function RequestUpdate({ match, history, location }) {
 
 
   return (
-    <Fragment>
+    <>
       <Nav
         // navname should be enroll user if coming from entry_logs
         navName={
@@ -180,8 +181,17 @@ export default function RequestUpdate({ match, history, location }) {
         {modalAction === 'grant' && !isTimeValid(date) && (
           <div>
             <p>
-              Today is {`${getWeekDay(date)} ${dateToString(date)}`} at{' '}
-              <b> {dateTimeToString(new Date(date))} </b>
+              Today is 
+              {' '}
+              {`${getWeekDay(date)} ${dateToString(date)}`}
+              {' '}
+              at
+              {' '}
+              <b> 
+                {' '}
+                {dateTimeToString(new Date(date))}
+                {' '}
+              </b>
             </p>
             <p>
               The current time is outside of normal visiting hours. Are you sure
@@ -208,7 +218,7 @@ export default function RequestUpdate({ match, history, location }) {
                       )}`
                     : ''
                 }
-                disabled={true}
+                disabled
                 name="date"
                 required
               />
@@ -222,7 +232,7 @@ export default function RequestUpdate({ match, history, location }) {
               className="form-control"
               type="text"
               value={formData.guard ? formData.guard.name : ''}
-              disabled={true}
+              disabled
               name="name"
               required
             />
@@ -366,7 +376,7 @@ export default function RequestUpdate({ match, history, location }) {
           <br />
           <br />
           {previousRoute === 'enroll' ? (
-            <Fragment>
+            <>
               <div className="row justify-content-center align-items-center">
                 <Button
                   variant="contained"
@@ -386,7 +396,7 @@ export default function RequestUpdate({ match, history, location }) {
                   <span />
                 )}
               </div>
-            </Fragment>
+            </>
           ) : !/logs|enroll/.test(previousRoute) ? (
             <div className="row justify-content-center align-items-center">
               <div className="col">
@@ -423,7 +433,7 @@ export default function RequestUpdate({ match, history, location }) {
           )}
         </form>
       </div>
-    </Fragment>
+    </>
   )
 }
 
