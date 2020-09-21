@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from "react";
@@ -151,7 +152,11 @@ export default function RequestUpdate({ match, history, location }) {
       setModalAction('deny')
     }
     setModal(!isModalOpen)
-    !isModalOpen ? setIsClicked(!isClicked) : setIsClicked(isClicked)
+    if (!isModalOpen) {
+      setIsClicked(!isClicked)
+    } else {
+      setIsClicked(isClicked)
+    }
   }
 
 
