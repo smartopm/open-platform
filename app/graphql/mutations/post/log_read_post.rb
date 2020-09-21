@@ -2,6 +2,7 @@
 
 module Mutations
   module Post
+    # Add a log for a post read by a user
     class LogReadPost < BaseMutation
       argument :post_id, String, required: true
 
@@ -11,8 +12,8 @@ module Mutations
         user = context[:current_user]
 
         event_log = unless post_already_read?(user.id, post_id)
-          user.generate_events("post_read", user, { post_id: post_id })
-        end
+                      user.generate_events('post_read', user, post_id: post_id)
+                    end
 
         return unless event_log
 
@@ -22,7 +23,9 @@ module Mutations
       end
 
       def post_already_read?(user_id, post_id)
-        ::EventLog.post_read_by_acting_user(user_id).where("data ->> 'post_id' = '#{post_id}'").exists?
+        ::EventLog.post_read_by_acting_user(user_id)
+                  .where("data ->> 'post_id' = '#{post_id}'")
+                  .exists?
       end
 
       def authorized?(_vals)
