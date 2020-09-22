@@ -14,6 +14,7 @@ class Note < ApplicationRecord
   belongs_to :author, class_name: 'User'
   has_many :assignee_notes, dependent: :destroy
   has_many :assignees, through: :assignee_notes, source: :user
+  has_many :comments
 
   default_scope { order(created_at: :desc) }
   scope :by_due_date, ->(date) { where('due_date <= ?', date) }
