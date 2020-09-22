@@ -6,14 +6,19 @@ import { dateToString } from '../../components/DateContainer'
 import { useFetch } from '../../utils/customHooks'
 import Categories from '../../components/NewsPage/Categories'
 import { wordpressEndpoint } from '../../utils/constants'
-import { titleCase } from '../../utils/helpers'
 import Nav from '../../components/Nav'
 import { ShareButton } from '../../components/ShareButton'
 import { Spinner } from '../../components/Loading'
 
 export default function Posts() {
     const { slug } = useParams()
-    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug || ''}`)
+    const slugs = {
+      posts: "Post",
+      policy: "Policies",
+      promos: "Promos",
+      resources: "Resources"
+    }
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=${slug === "posts" ? 'post' : slug || ''}`)
     const currentUrl = window.location.href
 
     if (error) {
@@ -27,7 +32,9 @@ export default function Posts() {
         <Nav navName="Nkwashi News" menuButton="back" backTo="/" />
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
           <Typography variant='h4' color='textSecondary'>
-            {titleCase(slug?.replace(/-/g, " ") || 'Posts')}
+            {slugs[slug] === "Post" && "Posts" || slug === "artists-in-residence" 
+            && "Artist in Residence" 
+            || slugs[slug] || "Posts"}
           </Typography>
         </Box>
         <Categories />
