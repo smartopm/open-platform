@@ -6,14 +6,14 @@ module Mutations
     class CampaignCreateThroughUsers < BaseMutation
       include Helpers::Campaign
 
-      argument :filters, String, required: true
+      argument :filters, String, required: false
       argument :user_id_list, String, required: true
 
       field :campaign, Types::CampaignType, null: true
 
       def resolve(vals)
         campaign = campaign_object
-        campaign.name = vals[:filters].tr(',', '_')
+        campaign.name = campaign_name(vals[:filters])
         campaign.user_id_list = vals[:user_id_list]
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
@@ -27,6 +27,10 @@ module Mutations
         campaign.message = I18n.t('campaign.default_message')
         campaign.batch_time = 10.years.from_now
         campaign
+      end
+
+      def campaign_name(filters)
+        filters ? filters.tr(',', '_') : I18n.t('campaign.default_name')
       end
 
       def authorized?(_vals)

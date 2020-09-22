@@ -12,5 +12,7 @@ export default {
         // Nkwashi alternate color
         alternate: '#ecdebf',
         contrastText: '#263238',
-        textColor: '#ffffff'
+        textColor: '#ffffff',
+        lightGray: '#f0f0f0',
+        jungleMist: '#b7d4d9'
 }

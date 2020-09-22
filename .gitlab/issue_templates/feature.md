@@ -11,5 +11,13 @@
 
 
 ### Requirements (checklist preferred)
+Engineer checklist:
 - [ ] example 1
 - [ ] example 2
+
+
+Stakeholder checklist (same list as Engineer checklist):
+- [ ] example 1
+- [ ] example 2
+
+Stakeholder checklist is used for signoff on the issue.

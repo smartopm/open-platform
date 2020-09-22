@@ -1,9 +1,10 @@
-/* eslint-disable */
+/* eslint-disable no-use-before-define */
 import React, {useContext} from 'react'
 import { Grid, Box, Button } from '@material-ui/core'
+import { StyleSheet, css } from 'aphrodite'
+import { Link } from 'react-router-dom'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
-import { Link } from 'react-router-dom'
 import { Spinner } from '../Loading'
 import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
@@ -17,22 +18,37 @@ export default function Categories() {
     if (!response || !response.found) {
         return <Spinner />
     }
-    const cats = response.categories.filter(cat => cat.slug !== 'private')
+    const cats = response.categories.filter(cat => cat.slug !== 'private' && cat.name !== "Uncategorized" && cat.name !== "news")
     
     return (
-        <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
-            <Grid >
-                <Grid item xs >
-                    {cats.map(category => (
-                        <Button key={category.ID}>
-                            <Link stytle={{color: theme.primaryColor}} to={`/news/${category.slug}`}>
-                                {category.name}
-                            </Link>
-                        </Button>
-                    ))}
-                </Grid>
-            </Grid>
-        </Box>
-
+      <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
+        <Grid>
+          <Grid item xs>
+            {cats.map(category => (
+              <Link to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`} key={category.ID}>
+                <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`}>
+                  {category.name}
+                </Button>
+              </Link>
+                  ))}
+          </Grid>
+        </Grid>
+      </Box>
     )
 }
+
+const styles = StyleSheet.create({
+  categoryLink: {
+    ':hover': {
+      textDecoration: 'none',
+      backgroundColor: '#69ABA4',
+      padding: '5px',
+      borderRadius: '5px'
+    }
+  },
+  categoryButton: {
+    ':hover': {
+      color: 'rgba(0, 0, 0, 0.54)'
+    }
+  }
+})

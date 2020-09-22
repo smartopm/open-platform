@@ -16,7 +16,7 @@ class User < ApplicationRecord
   include SearchCop
 
   search_scope :search do
-    attributes :name, :phone_number, :user_type
+    attributes :name, :phone_number, :user_type, :email
     attributes labels: ['labels.short_desc']
     attributes date_filter: ['acting_event_log.created_at']
   end

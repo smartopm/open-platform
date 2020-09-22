@@ -48,6 +48,7 @@ export default function TodoList({
   const [message, setErrorMessage] = useState('')
   const [assignee, setAssignee] = useState([])
   const [query, setQuery] = useState('')
+  const [currentTile, setCurrentTile] = useState('')
   const { taskId } = useParams()
   const history = useHistory()
 
@@ -98,7 +99,7 @@ export default function TodoList({
     if (open || filterOpen || isAssignTaskOpen) {
       loadAssignees()
     }
-    // load tasks on runtime when we are on my task page from notification 
+    // load tasks on runtime when we are on my task page from notification
     if (location !== 'todo') {
       loadTasks()
     }
@@ -157,6 +158,7 @@ export default function TodoList({
 
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return
+    setCurrentTile(key)
     setQuery(taskQuery[key])
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks()
@@ -266,8 +268,11 @@ export default function TodoList({
             </CenteredContent>
           )}
           <br />
-          <Grid container spacing={3}> 
-            <TaskDashboard filterTasks={handleTaskFilter} />
+          <Grid container spacing={3}>
+            <TaskDashboard
+              filterTasks={handleTaskFilter}
+              currentTile={currentTile}
+            />
           </Grid>
           <br />
           {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (
