@@ -44,7 +44,6 @@ export default function SupportCard({ handleSendMessage, user }) {
   const classes = useStyles()
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
-  // const CSMNumber = '260974624243'
   const history = useHistory()
   
   return (
@@ -72,7 +71,9 @@ export default function SupportCard({ handleSendMessage, user }) {
       <div className="justify-content-center align-items-center container">
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            {/* sales support */}
+            <Typography variant='h6' align="center" color='textSecondary'>
+              Sales Support
+            </Typography>
             {
               salesSupport.map(support => {
                 return (
@@ -82,7 +83,10 @@ export default function SupportCard({ handleSendMessage, user }) {
             }
           </Grid>
           <Grid item xs={12} sm={6}>
-            {/* customer care */}
+            <Typography variant='h6' align="center" color='textSecondary'>
+              Customer Care
+            </Typography>
+
             {
               customerCare.map(support => {
                 return (
@@ -92,62 +96,6 @@ export default function SupportCard({ handleSendMessage, user }) {
             }
           </Grid>
         </Grid>
-        {/* <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <MailOutlineIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography
-              className={classes.pos}
-              color="textSecondary"
-              gutterBottom
-            >
-              <a href="mailto:support@doublegdp.com">support@doublegdp.com</a>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <PhoneIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography className={classes.pos} color="textSecondary">
-              <a href="tel:+260976261199">+260 976 261199</a>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <PhoneIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography className={classes.pos} color="textSecondary">
-              <a href={`tel:+${CSMNumber}`}>+260 974 624243</a>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <WhatsAppIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography className={classes.pos} color="textSecondary">
-              <a href={`https://api.whatsapp.com/send?phone=${CSMNumber}`}>
-                {' '}
-                +260 974 624243
-              </a>
-            </Typography>
-          </Grid>
-        </Grid>
-       
-        */}
        
         <Grid container direction="row" className={classes.root}>
           <Button
