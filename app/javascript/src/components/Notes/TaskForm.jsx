@@ -1,6 +1,7 @@
 /* eslint-disable */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
+import { useParams } from 'react-router-dom'
 import {
   Button,
   FormControlLabel,
@@ -26,7 +27,8 @@ const initialData = {
   userId: ''
 }
 
-export default function TaskForm({ close, refetch, users, assignUser}) {
+export default function TaskForm({ close, refetch, users, data, assignUser }) {
+  const { taskId } = useParams()
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
   const [assignees, setAssignees] = useState([])
@@ -36,6 +38,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
   const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
+  const { body, category, completed, assignees: assign, dueDate } = data
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -60,8 +63,24 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     .catch(err => setErrorMessage(err.message))
   }
 
+  function setDefaultData() {
+    setTitle(body)
+    setTaskType(category)
+    setAssignees(assign)
+    setTaskStatus(completed)
+    setDate(dueDate)
+  }
+
+  useEffect(() => {
+    if (taskId) {
+      setDefaultData()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId])
+
   return (
     <form onSubmit={handleSubmit}>
+      {console.log(data)}
       <TextField
         name="task_description"
         label="Task Description"

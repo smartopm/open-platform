@@ -1,10 +1,8 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect, useParams } from 'react-router-dom'
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo'
-import { UserChip } from '../UserChip'
-import { discussStyles } from '../Discussion/Discuss'
 import {
   Button,
   FormControl,
@@ -17,6 +15,8 @@ import {
   InputLabel,
   Select
 } from '@material-ui/core'
+import { UserChip } from '../UserChip'
+import { discussStyles } from '../Discussion/Discuss'
 import { UsersLiteQuery } from '../../graphql/queries'
 import { NotesCategories } from '../../utils/constants'
 import DatePickerDialog from '../DatePickerDialog'
@@ -114,10 +114,10 @@ export default function TaskDetailForm({ authState, data, loading, refetch }) {
   if (!loading && !formData.loaded && data) {
     setFormData({ ...data, loaded: true, }) 
   }
-  debugger
 
   return (
     <div className="container">
+      {console.log(data)}
       <Snackbar
         open={isSubmitted}
         autoHideDuration={3000}
@@ -146,54 +146,54 @@ export default function TaskDetailForm({ authState, data, loading, refetch }) {
           }}
           required
         />
-        <br/>
-        <FormControl fullWidth >
+        <br />
+        <FormControl fullWidth>
           <InputLabel id="taskType">Task Type</InputLabel>
           <Select
-              id="taskType"
-              value={formData.category}
-              onChange={event => handleInputChange(event)}
-              name="category"
-              fullWidth
+            id="taskType"
+            value={formData.category}
+            onChange={event => handleInputChange(event)}
+            name="category"
+            fullWidth
           >
-              {Object.entries(NotesCategories).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
-                  {val}
-                </MenuItem>
+            {Object.entries(NotesCategories).map(([key, val]) => (
+              <MenuItem key={key} value={key}>
+                {val}
+              </MenuItem>
               ))}
           </Select>
         </FormControl>
         <br />
-        <FormControl fullWidth >
+        <FormControl fullWidth>
           <InputLabel id="assignees">Assign this task to users</InputLabel>
           <Select
-              id="assignees"
-              value={formData.assignees}
-              onChange={event => setAssignees(event.target.value)}
-              name="assignees"
-              fullWidth
-              multiple
-              renderValue={selected => (
-                <div>
-                  {selected.map((value, i) => (
-                    <UserChip user={value} key={i} label={value.name} />
+            id="assignees"
+            value={assignees}
+            onChange={event => setAssignees(event.target.value)}
+            name="assignees"
+            fullWidth
+            multiple
+            renderValue={selected => (
+              <div>
+                {selected.map((value, i) => (
+                  <UserChip user={value} key={i} label={value.name} />
                   ))}
-                </div>
+              </div>
               )}
           >
-                {Boolean(liteData?.usersLite.length) && liteData?.usersLite.map((user) => (
-                  <MenuItem key={user.id} value={user}>
-                    {user.name}
-                  </MenuItem>
+            {Boolean(liteData?.usersLite.length) && liteData?.usersLite.map((user) => (
+              <MenuItem key={user.id} value={user}>
+                {user.name}
+              </MenuItem>
                 ))}
           </Select>
         </FormControl>
         <br />
-          <UserSearch userData={userData} update={setData}/> 
+        <UserSearch userData={userData} update={setData} /> 
         <br />
         <FormControlLabel
           value="end"
-          control={
+          control={(
             <Checkbox
               aria-label="task_status"
               data-testid="task_status"
@@ -202,7 +202,7 @@ export default function TaskDetailForm({ authState, data, loading, refetch }) {
               onChange={(e) => handleCheckboxChange(e)}
               color="primary"
             />
-          }
+          )}
           label="Task Status"
           labelPlacement="end"
         />
@@ -229,7 +229,7 @@ export default function TaskDetailForm({ authState, data, loading, refetch }) {
           </Button>
         </div>
         <p className="text-center">
-            {Boolean(errorMsg.length) && errorMsg}
+          {Boolean(errorMsg.length) && errorMsg}
         </p>
       </form>
     </div>

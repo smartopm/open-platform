@@ -1,19 +1,25 @@
 /* eslint-disable */
 import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
-import { useQuery } from 'react-apollo'
+import { useQuery, useLazyQuery } from 'react-apollo'
 import { TaskQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
-import TaskDetailForm from '../../components/Notes/TaskDetailForm'
+import TaskForm from '../../components/Notes/TaskForm'
+import { UsersLiteQuery } from '../../graphql/queries'
 
 export default function TaskUpdate({ match }) {
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId: match.params.taskId },
     fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  })
+
+  const  { data: liteData } = useQuery(UsersLiteQuery, {
+    variables: { query: 'user_type: admin' },
     errorPolicy: 'all'
   })
 
@@ -26,7 +32,9 @@ export default function TaskUpdate({ match }) {
   return (
     <>
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
-      <TaskDetailForm authState={authState} data={data?.task} refetch={refetch} />
+      <div className="container">
+        <TaskForm data={data?.task} refetch={refetch} users={liteData?.usersLite} />
+      </div>
     </>
   )
 }
