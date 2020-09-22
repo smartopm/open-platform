@@ -38,7 +38,7 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
   const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
-  const { body, category, completed, assignees: assign, dueDate } = data
+  const { body, category, completed, assignees: assign, dueDate, user } = data
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -69,6 +69,10 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
     setAssignees(assign)
     setTaskStatus(completed)
     setDate(dueDate)
+    setData({
+      user: user.name,
+      userId: user.id
+    })
   }
 
   useEffect(() => {
