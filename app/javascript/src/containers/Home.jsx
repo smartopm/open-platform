@@ -9,15 +9,23 @@ import Nav from '../components/Nav'
 import Loading from '../components/Loading.jsx'
 import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
+import UserPoints from '../components/UserPoints'
 
 export default function Home() {
   const [redirect, setRedirect] = useState(false)
   const authState = useContext(AuthStateContext)
+  const userPoints = {
+    total: '15',
+    articles: '2',
+    comments: '2',
+    logins: '1',
+    referrals: '10'
+  }
   function inputToSearch() {
     setRedirect('/search')
   }
 
-  
+
   if (redirect) {
     return (
       <Redirect
@@ -57,6 +65,8 @@ export default function Home() {
       <br/>
       <br/>
       <NewsFeed />
+      <br />
+      <UserPoints userPoints={userPoints} />
       <Homepage authState={authState} />
     </>
   )
