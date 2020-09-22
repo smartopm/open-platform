@@ -34,7 +34,7 @@ RSpec.describe Mutations::Post::LogReadPost do
       expect(EventLog.count).to eql(prev_log_count + 1)
     end
 
-    it 'ignores if already logged an event for the same post by the same user' do
+    it 'ignores if a post has already been read by a user in the same community' do
       create(:event_log, acting_user: user, community: user.community,
                          subject: 'post_read',
                          data: {

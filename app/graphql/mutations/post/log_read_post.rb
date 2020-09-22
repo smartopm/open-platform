@@ -13,7 +13,7 @@ module Mutations
 
         return unless user
 
-        event_log = unless post_already_read?(user.id, post_id)
+        event_log = unless post_already_read?(user, post_id)
                       user.generate_events('post_read', user, post_id: post_id)
                     end
 
@@ -24,8 +24,8 @@ module Mutations
         { event_log: event_log }
       end
 
-      def post_already_read?(user_id, post_id)
-        ::EventLog.post_read_by_acting_user(user_id)
+      def post_already_read?(user, post_id)
+        ::EventLog.post_read_by_acting_user(user)
                   .where("data ->> 'post_id' = '#{post_id}'")
                   .exists?
       end

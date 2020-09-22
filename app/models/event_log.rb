@@ -14,8 +14,8 @@ class EventLog < ApplicationRecord
   scope :since_date, ->(date) { where('created_at > ?', date) }
   scope :by_user_activity, -> { where(subject: %w[user_login user_active]) }
   scope :with_acting_user_id, ->(user_ids) { where(acting_user_id: user_ids) }
-  scope :post_read_by_acting_user, lambda { |user_id|
-    where(acting_user_id: user_id, subject: 'post_read')
+  scope :post_read_by_acting_user, lambda { |user|
+    where(acting_user: user, community: user.community, subject: 'post_read')
   }
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled

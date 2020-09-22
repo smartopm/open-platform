@@ -46,7 +46,7 @@ RSpec.describe EventLog, type: :model do
       log2 = create(:event_log, acting_user: user, community: community, subject: 'user_login')
       log3 = create(:event_log, acting_user: user, community: community, subject: 'post_read')
 
-      results = EventLog.post_read_by_acting_user(user.id)
+      results = EventLog.post_read_by_acting_user(user)
 
       expect(results).to include(log1, log3)
       expect(results).not_to include(log2)
