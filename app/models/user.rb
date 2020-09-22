@@ -400,7 +400,30 @@ class User < ApplicationRecord
     MergeUsers.merge(self[:id], dup_id)
   end
 
+  def activity_point_for_current_week
+    last_monday = if current_time_in_timezone.monday?
+      current_time_in_timezone.beginning_of_day
+    else
+      current_time_in_timezone.prev_occurring(:monday).beginning_of_day
+    end
+
+    activity_points.where("created_at >= ?", last_monday).first
+  end
+
+  def first_login_today?
+    user_logins_today = EventLog.where(
+      "acting_user_id = ? AND subject = ? AND created_at >= ?",
+      id, "user_login", current_time_in_timezone.beginning_of_day
+    )
+    user_logins_today.length == 1
+  end
+
   private
+
+  def current_time_in_timezone
+    # Should we get timezone from user's community instead?
+    Time.now.in_time_zone('Africa/Lusaka')
+  end
 
   def phone_number_valid?
     return nil if self[:phone_number].nil? || self[:phone_number].blank?
