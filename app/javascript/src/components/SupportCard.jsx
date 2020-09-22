@@ -6,15 +6,47 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { salesSupport, customerCare } from '../utils/constants'
 
+const icons = {
+  mail: <MailOutlineIcon />,
+  phone: <PhoneIcon />,
+  whatsapp: <WhatsAppIcon />
+}
+
+const linkType = {
+  phone: "tel",
+  mail: "mailto",
+}
+
+export function SupportContact({ classes, support }){
+  const number = support.contact.replace(/\s/g, '')
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${number}`
+  const link = `${support.type === 'whatsapp' ? whatsappLink : `${linkType[support.type]}:${number}`}`
+
+  return (
+    <Grid container direction="row" className={classes.root}>
+      <Grid item>
+        {icons[support.type]}
+      </Grid>
+
+      <Grid item>
+        <Typography className={classes.pos} color="textSecondary">
+          <a href={link}>{support.contact}</a>
+        </Typography>
+      </Grid>
+    </Grid>
+  )
+}
 
 export default function SupportCard({ handleSendMessage, user }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
-  const CSMNumber = '260974624243'
+  // const CSMNumber = '260974624243'
   const history = useHistory()
+  
   return (
     <>
       <div className="justify-content-center align-items-center container">
@@ -38,7 +70,29 @@ export default function SupportCard({ handleSendMessage, user }) {
         </Typography>
       </div>
       <div className="justify-content-center align-items-center container">
-        <Grid container direction="row" className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            {/* sales support */}
+            {
+              salesSupport.map(support => {
+                return (
+                  <SupportContact key={support.contact} classes={classes} support={support} />
+                )
+              })
+            }
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            {/* customer care */}
+            {
+              customerCare.map(support => {
+                return (
+                  <SupportContact key={support.contact} classes={classes} support={support} />
+                )
+              })
+            }
+          </Grid>
+        </Grid>
+        {/* <Grid container direction="row" className={classes.root}>
           <Grid item>
             <MailOutlineIcon />
           </Grid>
@@ -92,6 +146,9 @@ export default function SupportCard({ handleSendMessage, user }) {
             </Typography>
           </Grid>
         </Grid>
+       
+        */}
+       
         <Grid container direction="row" className={classes.root}>
           <Button
             variant="contained"
