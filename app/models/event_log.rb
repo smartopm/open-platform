@@ -14,10 +14,13 @@ class EventLog < ApplicationRecord
   scope :since_date, ->(date) { where('created_at > ?', date) }
   scope :by_user_activity, -> { where(subject: %w[user_login user_active]) }
   scope :with_acting_user_id, ->(user_ids) { where(acting_user_id: user_ids) }
+  scope :post_read_by_acting_user, lambda { |user|
+    where(acting_user: user, community: user.community, subject: 'post_read')
+  }
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update user_temp
-                      shift_start shift_end user_referred].freeze
+                      shift_start shift_end user_referred post_read].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them

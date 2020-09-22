@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import {
@@ -9,7 +9,7 @@ import {
   IconButton,
   Typography,
   Slide,
-  Avatar 
+  Avatar
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
@@ -22,7 +22,7 @@ import { Spinner } from '../../components/Loading'
 import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
-import { DiscussionMutation } from '../../graphql/mutations'
+import { DiscussionMutation, LogReadPost } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -44,6 +44,17 @@ export default function PostPage() {
     variables: { postId: id, limit }
   })
   const [discuss] = useMutation(DiscussionMutation)
+  const [logReadPost] = useMutation(LogReadPost)
+
+  useEffect(() => {
+    if (authState.loggedIn) {
+      logReadPost({
+        variables: { postId: id }
+      })
+      .then(res => res)
+      .catch(err => console.log(err.message))
+    }
+  }, [authState.loggedIn, logReadPost, id])
 
   function createDiscussion(title, discId) {
     setLoading(true)
@@ -103,7 +114,7 @@ export default function PostPage() {
             right: 57
           }}
         />
-        
+
         <Fab
           variant="extended"
           onClick={handleCommentsView}
@@ -112,10 +123,10 @@ export default function PostPage() {
         >
           View comments&nbsp;
           <Avatar>{data ? data.postComments.length : 0}</Avatar>
-            
+
         </Fab>
       </div>
-      <div> 
+      <div>
         <Dialog fullScreen open={open} onClose={handleCommentsView} TransitionComponent={Transition}>
           <AppBar className={css(styles.appBar)}>
             <Toolbar>

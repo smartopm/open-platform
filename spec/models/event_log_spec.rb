@@ -36,4 +36,20 @@ RSpec.describe EventLog, type: :model do
       ).count).to eql 1
     end
   end
+
+  describe '.post_read_by_acting_user' do
+    it 'returns post-read logs by a user' do
+      user = FactoryBot.create(:user_with_community)
+      community = user.community
+
+      log1 = create(:event_log, acting_user: user, community: community, subject: 'post_read')
+      log2 = create(:event_log, acting_user: user, community: community, subject: 'user_login')
+      log3 = create(:event_log, acting_user: user, community: community, subject: 'post_read')
+
+      results = EventLog.post_read_by_acting_user(user)
+
+      expect(results).to include(log1, log3)
+      expect(results).not_to include(log2)
+    end
+  end
 end
