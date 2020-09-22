@@ -80,11 +80,11 @@ export const businessStatus = {
 export const ponisoNumber = '+260976064298'
 export const salesSupport = [
   {
-    contact: "260 966 194383",
+    contact: "+260 966 194383",
     type: "phone"
   },
   {
-    contact: "260 760 635024",
+    contact: "+260 760 635024",
     type: "phone"
   },
   {
@@ -94,15 +94,15 @@ export const salesSupport = [
 ]
 export const customerCare = [
   {
-    contact: "260 976 261199",
+    contact: "+260 976 261199",
     type: "phone"
   },
   {
-    contact: "260 974 624243",
+    contact: "+260 974 624243",
     type: "phone"
   },
   {
-    contact: "260 974 624243",
+    contact: "+260 974 624243",
     type: "whatsapp"
   },
   {
