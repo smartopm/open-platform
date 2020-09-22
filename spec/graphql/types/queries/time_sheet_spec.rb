@@ -70,6 +70,26 @@ RSpec.describe Types::Queries::TimeSheet do
       })
     end
 
+    let(:single_non_user) do
+      %(query {
+        userTimeSheetLogs(userId: "9284jhds",
+          dateTo: "#{time_plus_5days}",
+          dateFrom: "#{time_minus_2days}") {
+          startedAt
+          endedAt
+          id
+        }
+      })
+    end
+
+    let(:user_last_shift) do
+      %(query {
+        userLastShift(userId:"#{user1.id}"){
+          id
+        }
+      })
+    end
+
     it 'list contains all employees' do
       expect(TimeSheet.all.length).to eql 3
       result = DoubleGdpSchema.execute(query, context: { current_user: custodian }).as_json
@@ -92,6 +112,41 @@ RSpec.describe Types::Queries::TimeSheet do
       expect(result.dig('data', 'userTimeSheetLogs').length).to eql 2
       expect(result.dig('data', 'userTimeSheetLogs', 0, 'id')).to eql time_log2_user1.id
       expect(result.dig('data', 'userTimeSheetLogs', 1, 'id')).to eql time_log1_user1.id
+    end
+
+    it 'doesnt get timesheet logs for other user when not admin/custodian' do
+      result = DoubleGdpSchema.execute(single_user, context: {
+                                         current_user: user2,
+                                         site_community: custodian.community,
+                                       }).as_json
+      expect(result.dig('data', 'userTimeSheetLogs')).to be_nil
+    end
+
+    it 'gets timesheet logs for current user' do
+      result = DoubleGdpSchema.execute(single_user, context: {
+                                         current_user: user1,
+                                         site_community: custodian.community,
+                                       }).as_json
+      expect(result.dig('data', 'userTimeSheetLogs')).not_to be_nil
+      expect(result.dig('data', 'userTimeSheetLogs').length).to eql 2
+      expect(result.dig('data', 'userTimeSheetLogs', 0, 'id')).to eql time_log2_user1.id
+    end
+
+    it 'can retrieve timesheet per employee' do
+      result = DoubleGdpSchema.execute(single_non_user, context: {
+                                         current_user: custodian,
+                                         site_community: custodian.community,
+                                       }).as_json
+      expect(result.dig('data', 'userTimeSheetLogs')).to be_nil
+    end
+
+    it 'can retrieve last timesheet log for an employee' do
+      result = DoubleGdpSchema.execute(user_last_shift, context: {
+                                         current_user: custodian,
+                                         site_community: custodian.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to be_nil
+      expect(result.dig('data', 'userLastShift')).not_to be_nil
     end
   end
 end
