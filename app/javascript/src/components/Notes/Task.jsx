@@ -43,8 +43,8 @@ export default function Task({
     <>
       <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
-          <Typography variant="subtitle1" gutterBottom>
-            {note.body}
+          <Typography variant="subtitle1" gutterBottom >
+            <span style={{ whiteSpace: 'pre-line' }}>{note.body}</span>
           </Typography>
         </Grid>
         <Grid item xs={12}>

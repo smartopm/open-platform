@@ -1,20 +1,47 @@
 # frozen_string_literal: true
 
-# Method responsbile for handling sendgrid inbound emails
+# Method responsible for handling sendgrid inbound emails
 class SendgridController < ApplicationController
-    # authenticate user here
-    # before_action :ensure_admin
+  skip_before_action :verify_authenticity_token, if: :valid_webhook_token?
 
-    def webhook
-        begin
-        request_load = JSON.parse(request.body)
-        puts request_load
-        puts "================================"
-        rescue Exception => ex
-        # Find a way of properly channeling this error 
-        render :json => {:status => 400, :error => "Webhook failed"} and return
-        end
-        # I want to get the received json and save in in Message table
-        render :json => {:status => 200}
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def webhook
+    begin
+      # email comes like this "user <user@gdp.com>" we need email and name separately
+      user_email = params['from']
+      email = user_email.match(/\<([^}]+)\>/)
+      name = user_email.match(/(?<=\s|^)\w+(?=\s)/)
+      message_body = "#{params['subject']} \n \n #{params['text']}"
+      # Find a user
+      sender = @site_community.users.find_by(email: email[1])
+      if sender.nil?
+        user = @site_community.users.create!(name: name[0], email: email[1], user_type: 'visitor')
+        generate_msg_and_assign(user, message_body)
+      end
+
+      generate_msg_and_assign(sender, message_body)
+    rescue StandardError => e
+      render(json: { status: 400, error: e }) && (return)
     end
+    render json: { status: 200 }
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+
+  private
+
+  def valid_webhook_token?
+    params[:token] == Rails.application.credentials[:sendgrid_webhook_token]
+  end
+
+  def generate_msg_and_assign(user, body)
+    options = {
+      user_id: user.id,
+      category: 'email',
+      message: body,
+    }
+    message = user.construct_message(options)
+    message.create_message_task(body)
+  end
 end
