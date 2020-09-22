@@ -10,13 +10,12 @@ class SendgridController < ApplicationController
     begin
       # email comes like this "user <user@gdp.com>" we need email and name separately
       user_email = params['from']
-      email = user_email.match(/\<([^}]+)\>/)
-      name = user_email.split('<')
+      name, email = user_email.split(%r{\s*<|>})
       message_body = "#{params['subject']} \n \n #{params['text']}"
       # Find a user
-      sender = @site_community.users.find_by(email: email[1])
+      sender = @site_community.users.find_by(email: email)
       if sender.nil?
-        user = @site_community.users.create!(name: name[0], email: email[1], user_type: 'visitor')
+        user = @site_community.users.create!(name: name, email: email, user_type: 'visitor')
         generate_msg_and_assign(user, message_body)
       end
 
