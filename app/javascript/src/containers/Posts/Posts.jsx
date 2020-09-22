@@ -27,7 +27,7 @@ export default function Posts() {
         <Nav navName="Nkwashi News" menuButton="back" backTo="/" />
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
           <Typography variant='h4' color='textSecondary'>
-            {titleCase(slug.replace(/-/g, " ") || 'Posts')}
+            {titleCase(slug?.replace(/-/g, " ") || 'Posts')}
           </Typography>
         </Box>
         <Categories />
