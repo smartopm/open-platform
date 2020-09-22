@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import Support from '../components/SupportCard'
+import Support, {  SupportContact } from '../components/SupportCard'
 
 describe("Support card loads component", () => {
   const user = {
@@ -21,6 +21,17 @@ describe("Support card loads component", () => {
     expect(container.queryByText('Support Chat')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).not.toBeDisabled()
+  })
+})
+
+describe("Support contact component", () => {
+  const customerCare = {
+    contact: "+260 900000000",
+    type: "phone"
+  }
+  it('should render support card', () => {
+    const container = render(<SupportContact support={customerCare} classes={{}} />)
+    expect(container.queryByText('+260 900000000')).toBeInTheDocument()
   })
 })
 

@@ -159,6 +159,19 @@ SupportCard.propTypes = {
   }).isRequired
 }
 
+SupportContact.propTypes = {
+  support: PropTypes.shape({
+    contact: PropTypes.string,
+    type: PropTypes.string,
+  }).isRequired,
+  classes: PropTypes.objectOf(PropTypes.object).isRequired
+}
+SupportCard.propTypes = {
+  user: PropTypes.shape({
+    userType: PropTypes.string
+  }).isRequired
+}
+
 const useStyles = makeStyles({
   root: {
     width: '100%',
