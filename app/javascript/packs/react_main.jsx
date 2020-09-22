@@ -72,7 +72,6 @@ import Scan from '../src/containers/Scan.jsx'
 import WelcomePage from '../src/components/AuthScreens/WelcomePage'
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate'
 import Posts from '../src/containers/Posts/Posts'
-import NewsPage from '../src/containers/Posts/NewsPage'
 import PostPage from '../src/containers/Posts/PostPage'
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider'
 import Discussions from '../src/containers/Discussions/Discussions'
@@ -289,7 +288,7 @@ const App = () => {
                           exact
                           component={ClientRequestForm}
                         />
-                        <Route path="/news" exact component={NewsPage} />
+                        <Route path="/news" exact component={Posts} />
                         <Route path="/news/:slug" exact component={Posts} />
                         <Route
                           path="/discussions"
