@@ -11,7 +11,7 @@ class SendgridController < ApplicationController
       # email comes like this "user <user@gdp.com>" we need email and name separately
       user_email = params['from']
       email = user_email.match(/\<([^}]+)\>/)
-      name = user_email.match(/(?<=\s|^)\w+(?=\s)/)
+      name = user_email.split('<')
       message_body = "#{params['subject']} \n \n #{params['text']}"
       # Find a user
       sender = @site_community.users.find_by(email: email[1])
