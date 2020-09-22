@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2020_09_17_111540) do
     t.integer "status", default: 0
     t.integer "message_count", default: 0
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
-    t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status", unique: true
+    t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
   end
 
