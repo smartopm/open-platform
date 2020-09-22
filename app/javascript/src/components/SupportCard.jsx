@@ -71,7 +71,7 @@ export default function SupportCard({ handleSendMessage, user }) {
       <div className="justify-content-center align-items-center container">
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Typography variant='h6' align="center" color='textSecondary'>
+            <Typography variant='h6' align="center" gutterBottom color='textSecondary'>
               Sales Support
             </Typography>
             {
@@ -83,7 +83,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             }
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant='h6' align="center" color='textSecondary'>
+            <Typography variant='h6' align="center" gutterBottom color='textSecondary'>
               Customer Care
             </Typography>
 
