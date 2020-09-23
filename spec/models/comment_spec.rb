@@ -27,7 +27,8 @@ RSpec.describe Comment, type: :model do
     end
   end
   describe 'associations' do
-    it { is_expected.to belong_to(:discussion) }
+    it { is_expected.to belong_to(:note).optional }
+    it { is_expected.to belong_to(:discussion).optional }
     it { is_expected.to belong_to(:user) }
   end
 end

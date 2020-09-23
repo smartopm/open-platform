@@ -24,10 +24,24 @@ RSpec.describe Note, type: :model do
     end
   end
 
+  describe 'schema' do
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:author_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:assigned_to).of_type(:uuid) }
+    it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:category).of_type(:string) }
+    it { is_expected.to have_db_column(:description).of_type(:text) }
+    it { is_expected.to have_db_column(:body).of_type(:text) }
+    it { is_expected.to have_db_column(:flagged).of_type(:boolean) }
+    it { is_expected.to have_db_column(:completed).of_type(:boolean) }
+    it { is_expected.to have_db_column(:due_date).of_type(:datetime) }
+  end
+
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:assignee_notes) }
     it { is_expected.to have_many(:assignees) }
+    it { is_expected.to have_many(:comments) }
   end
 end

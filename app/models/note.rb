@@ -3,6 +3,7 @@
 # Notes for the CRM portion of the app, attached to a user
 class Note < ApplicationRecord
   include SearchCop
+  include NoteHistoryRecordable
 
   search_scope :search do
     attributes :created_at, :completed, :due_date, :flagged, :category
@@ -15,6 +16,8 @@ class Note < ApplicationRecord
   has_many :assignee_notes, dependent: :destroy
   has_many :assignees, through: :assignee_notes, source: :user
   has_many :comments
+  has_many :note_comments, dependent: :destroy
+  has_many :note_histories, dependent: :destroy
 
   default_scope { order(created_at: :desc) }
   scope :by_due_date, ->(date) { where('due_date <= ?', date) }
