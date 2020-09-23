@@ -107,6 +107,10 @@ class EventLog < ApplicationRecord
     "User #{ref_user_name} was referred by #{acting_user_name}"
   end
 
+  def post_read_to_sentence
+    "Post #{data['post_id']} was read by #{acting_user_name}"
+  end
+
   def user_enrolled_to_sentence
     new_user = User.order('created_at').last
     "#{new_user[:name]} was enrolled"
