@@ -83,6 +83,9 @@ export default function UserMessageItem({
                 truncateString(message, count)
               ) : (
                   <span
+                    style={{
+                       whiteSpace: 'pre-line'
+                     }}
                     dangerouslySetInnerHTML={{
                       __html: sanitizeText(findLinkAndReplace(message))
                     }}
