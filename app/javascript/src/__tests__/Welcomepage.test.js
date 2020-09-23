@@ -19,6 +19,8 @@ describe('component that centers divs', () => {
         expect(container.queryByText('Become a client')).toBeInTheDocument()
         expect(container.queryByTestId('contact').textContent).toContain('260 966 194383')
         expect(container.queryByTestId('contact-email').textContent).toContain('hello@thebe-im.com')
+        expect(container.queryByTestId('login_btn').textContent).toContain('Login')
+        expect(container.queryByTestId('nk_client').textContent).toContain('Already an Nkwashi client')
     })
 
     it('should have main centered text', () => {
@@ -61,5 +63,7 @@ describe('component that centers divs', () => {
         const container = render(<Welcome />)
         expect(container.queryByTestId('ld_follow')).toHaveAttribute('href', 'https://www.linkedin.com/company/10478892')
         expect(container.queryByTestId('fb_like')).toHaveAttribute('href', 'https://www.facebook.com/nkwashi.soar/')
+        expect(container.queryByTestId('ld_follow').textContent).toContain('Follow us')
+        expect(container.queryByTestId('fb_like').textContent).toContain('Like')
     })
 })

@@ -51,13 +51,14 @@ export default function WelcomePage() {
             as well as hundreds of acres of green areas and parks, 9 schools including an International School
             and an American University with a Teaching Hospital.
           </p>
-          <p className={css(styles.mainText)}>
+          <p className={css(styles.mainText)} data-testid="nk_client">
             Already an Nkwashi client? Start your Nkwashi experience today.
           </p>
           <Button
             variant="contained"
             className={`btn ${css(styles.getStartedButton)}`}
             onClick={() => history.push("/login")}
+            data-testid="login_btn"
           >
             Login
           </Button>
