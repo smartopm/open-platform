@@ -323,4 +323,44 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'userSearch')).to be_nil
     end
   end
+
+  describe 'user_activity_point' do
+    before :each do
+      @user = create(:user_with_community)
+      @activity_point = create(:activity_point, user: @user, article: 2, referral: 10)
+      @query =
+        %(query userActivityPoint {
+          userActivityPoint {
+            userId
+            total
+            article
+            comment
+            login
+            referral
+          }
+        })
+    end
+
+    it "returns user's current activity point" do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @user,
+                                       }).as_json
+
+      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
+      expect(result.dig('data', 'userActivityPoint', 'total')).to eq(12)
+      expect(result.dig('data', 'userActivityPoint', 'article')).to eq(2)
+      expect(result.dig('data', 'userActivityPoint', 'comment')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'login')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'referral')).to eq(10)
+    end
+
+    it "returns 'unauthorized' if user is not logged in" do
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: nil,
+                                       }).as_json
+
+      expect(result.dig('errors')).to_not be_nil
+      expect(result.dig('errors')[0]['message']).to eq('Unauthorized')
+    end
+  end
 end
