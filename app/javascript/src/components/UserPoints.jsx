@@ -12,20 +12,21 @@ export default function UserPoints({ userPoints }) {
 
   const squareSubtitles = {
     total: 'Total number of points',
-    articles: 'Points for articles read',
-    comments: 'Points for comments made',
-    logins: 'Points for logging in',
-    referrals: 'Points for referrals',
+    article: 'Points for articles read',
+    comment: 'Points for comments made',
+    login: 'Points for logging in',
+    referral: 'Points for referrals',
   }
+  const subjects = Object.keys(userPoints).filter(subject => subject !== "__typename")
 
   return (
     <div className={css(styles(width).root)}>
       {
-        Object.keys(userPoints).map((subject, index) => (
+        subjects.map((subject, index) => (
           <Square
             // eslint-disable-next-line react/no-array-index-key
             key={index}
-            title={userPoints[subject]}
+            title={userPoints[subject].toString()}
             subtitle={squareSubtitles[subject]}
             squareStyle={{
               backgroundColor: subject === 'total' ? primary : lightGreen,
@@ -41,11 +42,11 @@ export default function UserPoints({ userPoints }) {
 
 UserPoints.propTypes = {
   userPoints: PropTypes.shape({
-    total: PropTypes.string.isRequired,
-    articles: PropTypes.string.isRequired,
-    comments: PropTypes.string.isRequired,
-    logins: PropTypes.string.isRequired,
-    referrals: PropTypes.string.isRequired
+    total: PropTypes.number.isRequired,
+    article: PropTypes.number.isRequired,
+    comment: PropTypes.number.isRequired,
+    login: PropTypes.number.isRequired,
+    referral: PropTypes.number.isRequired
   }).isRequired
 }
 

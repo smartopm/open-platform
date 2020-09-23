@@ -10,22 +10,20 @@ import Loading from '../components/Loading.jsx'
 import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
 import UserPoints from '../components/UserPoints'
+import { useQuery } from 'react-apollo'
+import { UserPointQuery } from '../graphql/queries'
 
 export default function Home() {
   const [redirect, setRedirect] = useState(false)
+  const { data, error } = useQuery(UserPointQuery)
   const authState = useContext(AuthStateContext)
-  const userPoints = {
-    total: '15',
-    articles: '2',
-    comments: '2',
-    logins: '1',
-    referrals: '10'
-  }
+  const userPoints = data?.userActivityPoint
+
   function inputToSearch() {
     setRedirect('/search')
   }
 
-
+  if (error) console.log(error.message)
   if (redirect) {
     return (
       <Redirect
@@ -66,7 +64,10 @@ export default function Home() {
       <br/>
       <NewsFeed />
       <br />
-      <UserPoints userPoints={userPoints} />
+        {
+          userPoints &&
+          (<UserPoints userPoints={userPoints} />)
+        }
       <Homepage authState={authState} />
     </>
   )

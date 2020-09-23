@@ -525,3 +525,15 @@ query taskDetail($taskId: ID!){
  }
  ${NotesFragment.note}
 `
+
+export const UserPointQuery = gql`
+  query userActivityPoint{
+    userActivityPoint{
+      total
+      article
+      comment
+      login
+      referral
+    }
+  }
+`
