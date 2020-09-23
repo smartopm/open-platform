@@ -253,7 +253,8 @@ RSpec.describe User, type: :model do
   describe '#first_login_today?' do
     it "returns true if a logged-in user has a 'user_login' event created today" do
       current_user = create(:user_with_community)
-      create(:event_log, acting_user: current_user, subject: "user_login", community: current_user.community)
+      create(:event_log, acting_user: current_user, subject: 'user_login',
+                         community: current_user.community)
 
       expect(current_user.first_login_today?).to eq(true)
     end
@@ -261,7 +262,8 @@ RSpec.describe User, type: :model do
     it "returns false if a logged-in user has multiple 'user_login' events created today" do
       current_user = create(:user_with_community)
       2.times do
-        create(:event_log, acting_user: current_user, subject: "user_login", community: current_user.community)
+        create(:event_log, acting_user: current_user, subject: 'user_login',
+                           community: current_user.community)
       end
 
       expect(current_user.first_login_today?).to eq(false)

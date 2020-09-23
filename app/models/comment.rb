@@ -26,6 +26,6 @@ class Comment < ApplicationRecord
   private
 
   def populate_activity_points
-    ActivityPointsJob.perform_now(user.id, "user_comment")
+    ActivityPointsJob.perform_now(user.id, 'user_comment')
   end
 end

@@ -9,7 +9,7 @@ RSpec.describe ActivityPointsJob, type: :job do
     it "should enqueue a job to populate user's activity points" do
       ActiveJob::Base.queue_adapter = :test
       expect do
-        ActivityPointsJob.perform_later(user.id, "user_referred")
+        ActivityPointsJob.perform_later(user.id, 'user_referred')
       end.to have_enqueued_job
     end
   end

@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :event_log do
-    subject { "user_referred" }
+    subject { 'user_referred' }
   end
 end
