@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import { useQuery } from 'react-apollo'
@@ -14,13 +14,17 @@ import { UserPointQuery } from '../graphql/queries'
 
 export default function Home() {
   const [redirect, setRedirect] = useState(false)
-  const { data, error } = useQuery(UserPointQuery)
+  const { data, error, refetch } = useQuery(UserPointQuery)
   const authState = useContext(AuthStateContext)
   const userPoints = data?.userActivityPoint
 
   function inputToSearch() {
     setRedirect('/search')
   }
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   if (error) console.log(error.message)
   if (redirect) {
