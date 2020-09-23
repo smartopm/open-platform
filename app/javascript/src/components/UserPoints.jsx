@@ -5,17 +5,19 @@ import PropTypes from 'prop-types'
 import Square from "./Square"
 import { useWindowDimensions } from '../utils/customHooks'
 import colors from '../themes/nkwashi/colors'
+import { pluralizeCount } from '../utils/helpers'
 
 export default function UserPoints({ userPoints }) {
   const { width } = useWindowDimensions()
   const { primary, lightGreen, textColor } = colors
+  const { total, article, comment, login, referral } = userPoints
 
   const squareSubtitles = {
-    total: 'Total number of points',
-    article: 'Points for articles read',
-    comment: 'Points for comments made',
-    login: 'Points for logging in',
-    referral: 'Points for referrals',
+    total: `Total number of ${pluralizeCount(total, 'point')}`,
+    article: `${pluralizeCount(article, 'Point')} for articles read`,
+    comment: `${pluralizeCount(comment, 'Point')} for comments made`,
+    login: `${pluralizeCount(login, 'Point')} for logging in`,
+    referral: `${pluralizeCount(referral, 'Point')} for referrals`,
   }
   const subjects = Object.keys(userPoints).filter(subject => subject !== "__typename")
 
