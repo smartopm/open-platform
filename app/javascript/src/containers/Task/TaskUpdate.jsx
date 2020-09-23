@@ -1,7 +1,7 @@
 /* eslint-disable */
-import React, { useContext, useMutation } from 'react'
+import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import { TaskQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../components/Loading'
@@ -44,7 +44,7 @@ export default function TaskUpdate({ match }) {
     <>
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
       <div className="container">
-        <TaskForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser}/>
+        <TaskForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser} />
       </div>
     </>
   )

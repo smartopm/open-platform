@@ -303,7 +303,7 @@ export const UpdateNote = gql`
     $body: String
     $flagged: Boolean
     $category: String
-    $userId: String
+    $userId: ID
     $completed: Boolean
     $dueDate: String
   ) {
