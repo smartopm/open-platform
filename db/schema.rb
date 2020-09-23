@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_17_111540) do
+ActiveRecord::Schema.define(version: 2020_09_22_130138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -61,6 +61,17 @@ ActiveRecord::Schema.define(version: 2020_09_17_111540) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "reporting_user_id"
+  end
+
+  create_table "activity_points", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "article", default: 0
+    t.integer "comment", default: 0
+    t.integer "login", default: 0
+    t.integer "referral", default: 0
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_activity_points_on_user_id"
   end
 
   create_table "assignee_notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -362,6 +373,7 @@ ActiveRecord::Schema.define(version: 2020_09_17_111540) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "activity_points", "users"
   add_foreign_key "assignee_notes", "notes"
   add_foreign_key "assignee_notes", "users"
   add_foreign_key "businesses", "communities"

@@ -53,6 +53,7 @@ class User < ApplicationRecord
   has_many :acting_event_log, class_name: 'EventLog',
                               foreign_key: :acting_user_id, inverse_of: false, dependent: :destroy
   has_many :tasks, through: :assignee_notes, source: :note
+  has_many :activity_points, dependent: :destroy
 
   has_one_attached :avatar
   has_one_attached :document
@@ -399,7 +400,31 @@ class User < ApplicationRecord
     MergeUsers.merge(self[:id], dup_id)
   end
 
+  def activity_point_for_current_week
+    last_monday = if current_time_in_timezone.monday?
+                    current_time_in_timezone.beginning_of_day
+                  else
+                    current_time_in_timezone.prev_occurring(:monday).beginning_of_day
+                  end
+
+    activity_points.find_by('created_at >= ?', last_monday)
+  end
+
+  # has a better meaning when used on a logged-in user
+  def first_login_today?
+    user_logins_today = EventLog.where(
+      'acting_user_id = ? AND subject = ? AND created_at >= ?',
+      id, 'user_login', current_time_in_timezone.beginning_of_day
+    )
+    user_logins_today.length == 1
+  end
+
   private
+
+  def current_time_in_timezone
+    # Should we get timezone from user's community instead?
+    Time.now.in_time_zone('Africa/Lusaka')
+  end
 
   def phone_number_valid?
     return nil if self[:phone_number].nil? || self[:phone_number].blank?

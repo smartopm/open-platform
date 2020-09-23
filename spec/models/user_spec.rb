@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:labels) }
     it { is_expected.to have_many(:contact_infos) }
     it { is_expected.to have_many(:acting_event_log) }
+    it { is_expected.to have_many(:activity_points) }
   end
 
   describe 'Creating a user from a oauth authentication callback' do
@@ -235,6 +236,37 @@ RSpec.describe User, type: :model do
                                                'post').post_id).not_to be_nil
       expect(current_user.find_user_discussion(user_post_discussion.post_id,
                                                'post').post_id).to eql '20'
+    end
+  end
+
+  describe '#activity_point_for_current_week' do
+    it 'returns activity points for the current week' do
+      user = create(:user_with_community)
+      activity_point1 = create(:activity_point, user: user, article: 2, referral: 10)
+      activity_point2 = create(:activity_point, user: user, article: 1, referral: 20)
+
+      activity_point1.update(created_at: 9.days.ago)
+      expect(user.activity_point_for_current_week).to eq(activity_point2)
+    end
+  end
+
+  describe '#first_login_today?' do
+    it "returns true if a logged-in user has a 'user_login' event created today" do
+      current_user = create(:user_with_community)
+      create(:event_log, acting_user: current_user, subject: 'user_login',
+                         community: current_user.community)
+
+      expect(current_user.first_login_today?).to eq(true)
+    end
+
+    it "returns false if a logged-in user has multiple 'user_login' events created today" do
+      current_user = create(:user_with_community)
+      2.times do
+        create(:event_log, acting_user: current_user, subject: 'user_login',
+                           community: current_user.community)
+      end
+
+      expect(current_user.first_login_today?).to eq(false)
     end
   end
 end

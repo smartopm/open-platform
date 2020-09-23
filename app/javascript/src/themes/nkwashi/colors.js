@@ -14,5 +14,6 @@ export default {
         contrastText: '#263238',
         textColor: '#ffffff',
         lightGray: '#f0f0f0',
-        jungleMist: '#b7d4d9'
+        jungleMist: '#b7d4d9',
+        lightGreen: '#F4FFFD',
 }

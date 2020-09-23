@@ -8,6 +8,7 @@ class EventLog < ApplicationRecord
   belongs_to :acting_user, optional: true, class_name: 'User'
 
   after_create :notify_slack
+  after_create :populate_activity_points
   validate :validate_log, :validate_acting_user
 
   default_scope { order(created_at: :desc) }
@@ -106,6 +107,10 @@ class EventLog < ApplicationRecord
     "User #{ref_user_name} was referred by #{acting_user_name}"
   end
 
+  def post_read_to_sentence
+    "Post #{data['post_id']} was read by #{acting_user_name}"
+  end
+
   def user_enrolled_to_sentence
     new_user = User.order('created_at').last
     "#{new_user[:name]} was enrolled"
@@ -165,6 +170,10 @@ class EventLog < ApplicationRecord
 
   def deleted_user?
     return true if acting_user_id && acting_user.nil?
+  end
+
+  def populate_activity_points
+    ActivityPointsJob.perform_now(acting_user.id, subject)
   end
 end
 # rubocop:enable Metrics/ClassLength

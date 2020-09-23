@@ -1,23 +1,32 @@
-/* eslint-disable */
-/* eslint-disable */
-import React, { useContext, useState } from 'react'
+/* eslint-disable no-use-before-define */
+import React, { useContext, useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
+import { useQuery } from 'react-apollo'
 import ScanIcon from '../../../assets/images/shape.svg'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav'
-import Loading from '../components/Loading.jsx'
+import Loading from '../components/Loading'
 import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
+import UserPoints from '../components/UserPoints'
+import { UserPointQuery } from '../graphql/queries'
 
 export default function Home() {
   const [redirect, setRedirect] = useState(false)
+  const { data, error, refetch } = useQuery(UserPointQuery)
   const authState = useContext(AuthStateContext)
+  const userPoints = data?.userActivityPoint
+
   function inputToSearch() {
     setRedirect('/search')
   }
 
-  
+  useEffect(() => {
+    refetch()
+  }, [])
+
+  if (error) console.log(error.message)
   if (redirect) {
     return (
       <Redirect
@@ -54,9 +63,14 @@ export default function Home() {
           </div>
         )}
       </Nav>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <NewsFeed />
+      <br />
+      {
+          userPoints &&
+          (<UserPoints userPoints={userPoints} />)
+        }
       <Homepage authState={authState} />
     </>
   )
