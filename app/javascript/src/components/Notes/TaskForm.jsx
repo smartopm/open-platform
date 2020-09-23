@@ -16,7 +16,7 @@ import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { CreateNote } from '../../graphql/mutations'
+import { CreateNote, UpdateNote } from '../../graphql/mutations'
 import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
@@ -38,29 +38,47 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
   const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
-  const { body, category, completed, assignees: assign, dueDate, user } = data
+  const [taskUpdate] = useMutation(UpdateNote)
+  const { body, category, completed, assignees: assign, dueDate, user, id } = data
 
   function handleSubmit(event) {
     event.preventDefault()
     setLoadingStatus(true)
+    if (taskId) {
+      updateTask()
+    } else {
+      createTask({
+        variables: {
+          body: title,
+          due: selectedDate ? selectedDate.toISOString() : null,
+          completed: taskStatus,
+          category: taskType,
+          flagged: true,
+          userId: userData.userId
+        }
+      })
+        .then(({ data }) => {
+          assignees.map(user => assignUser(data.noteCreate.note.id, user.id))
+          close()
+          refetch()
+          setLoadingStatus(false)
+      })
+      .catch(err => setErrorMessage(err.message))
+    }
+  }
 
-    createTask({
-      variables: {
+  function updateTask() {
+    taskUpdate({ variables: {
+        id,
         body: title,
         due: selectedDate ? selectedDate.toISOString() : null,
         completed: taskStatus,
         category: taskType,
         flagged: true,
         userId: userData.userId
-      }
+    } }).then(({ data }) => {
+      assignees.map(user => assignUser(data.noteCreate.note.id, user.id))
     })
-      .then(({ data }) => {
-        assignees.map(user => assignUser(data.noteCreate.note.id, user.id))
-        close()
-        refetch()
-        setLoadingStatus(false)
-    })
-    .catch(err => setErrorMessage(err.message))
   }
 
   function setDefaultData() {
@@ -191,7 +209,7 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
           aria-label="task_submit"
           className={`btn ${css(discussStyles.submitBtn)}`}
         >
-          {loading ? 'Creating a task ...' : 'Create Task'}
+          {taskId ? (loading ? 'Updating a task ...' : 'Update Task') : (loading ? 'Creating a task ...' : 'Create Task')}
         </Button>
       </div>
       <p className="text-center">
