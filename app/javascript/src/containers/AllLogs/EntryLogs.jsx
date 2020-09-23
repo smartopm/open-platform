@@ -116,7 +116,10 @@ export function IndexComponent({
         state: { from: 'logs' }
       })
     } else if (eventLog.refType === 'User') {
-      return router.push(`/user/${eventLog.refId}`)
+      return router.push({
+        pathname: `/user/${eventLog.refId}`,
+        state: { from: 'logs'}
+      })
     }
   }
 
