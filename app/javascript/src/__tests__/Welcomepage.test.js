@@ -19,7 +19,8 @@ describe('component that centers divs', () => {
   it('should include proper text', () => {
     expect(container.queryByText('Here i am')).toBeNull()
     expect(container.queryByText('Here i am')).not.toBeInTheDocument()
-    expect(container.queryByText('+260-966-194-383')).toBeInTheDocument()
+    expect(container.queryByTestId('contact').textContent).toContain('+260 966 194383')
+    expect(container.queryByTestId('contact-email').textContent).toContain('hello@thebe-im.com')
   })
   it('should have action button texts', () => {
     expect(container.queryByText('Schedule a call')).toBeInTheDocument()

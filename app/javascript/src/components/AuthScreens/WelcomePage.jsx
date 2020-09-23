@@ -76,12 +76,14 @@ export default function WelcomePage() {
             <Grid item xs={12} md={4} sm={6}>
               <CallIcon className={css(styles.icon)} />
               <p className={css(styles.mainText)}>
-                +260-966-194-383, +260-760-635-024
+                <a href="tel:+260966194383" data-testid="contact">+260 966 194383</a>
+                ,
+                <a href="tel:+260760635024">+260760 635024</a>
               </p>
             </Grid>
             <Grid item xs={12} md={4} sm={12}>
               <MailIcon className={css(styles.icon)} />
-              <p className={css(styles.mainText)}>
+              <p className={css(styles.mainText)} data-testid="contact-email">
                 hello@thebe-im.com
               </p>
             </Grid>
