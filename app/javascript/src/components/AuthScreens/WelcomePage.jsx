@@ -78,7 +78,8 @@ export default function WelcomePage() {
               <p className={css(styles.mainText)}>
                 <a href="tel:+260966194383" data-testid="contact">+260 966 194383</a>
                 ,
-                <a href="tel:+260760635024">+260760 635024</a>
+                {' '}
+                <a href="tel:+260760635024">+260 760 635024</a>
               </p>
             </Grid>
             <Grid item xs={12} md={4} sm={12}>
