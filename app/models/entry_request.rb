@@ -9,6 +9,7 @@ class EntryRequest < ApplicationRecord
 
   before_validation :attach_community
   after_create :log_entry
+  after_create :create_entry_task, if: :check_reason?
   validates :name, presence: true
 
   default_scope { order(created_at: :asc) }
@@ -33,6 +34,24 @@ class EntryRequest < ApplicationRecord
       granted_at: Time.zone.now,
     )
     log_decision('denied', last_event_log.id)
+  end
+
+  def create_entry_task()
+    task_obj = {
+      body: "New prospective client #{self[:name]} visited Nkwashi site. Please enroll them in system and setup a followup call",
+      category: 'to_do',
+      flagged: true,
+      completed: false,
+      due_date: 5.days.from_now
+    }
+    note_id = user.generate_note(task_obj).id
+    assign_task(note_id)
+  end
+
+  def assign_task(note_id)
+    assign = user.community.notes.find(note_id)
+                 .assign_or_unassign_user('6ed32d86-627e-4dc1-b9c6-03b823c802d3')
+    return assign unless assign.nil?
   end
 
   def granted?
@@ -93,6 +112,10 @@ class EntryRequest < ApplicationRecord
 
   def attach_community
     self[:community_id] = user.community_id
+  end
+  
+  def check_reason?
+    self[:reason] == "Prospective Client"
   end
 
   def log_entry
