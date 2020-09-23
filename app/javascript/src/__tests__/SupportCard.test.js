@@ -1,49 +1,38 @@
-/* eslint-disable */
 import React from 'react';
-import Support from '../components/SupportCard'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
+import Support, {  SupportContact } from '../components/SupportCard'
 
 describe("Support card loads component", () => {
-
-
+  const user = {
+    userType: "client"
+  }
   it('should render support card', () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <Support />
-      </BrowserRouter>
-    )
-    expect(getByText('support@doublegdp.com')).toBeInTheDocument()
-    expect(getByText('+260 976 261199')).toBeInTheDocument()
-  })
-  it('should render support chart', () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <Support />
-      </BrowserRouter>
-    )
-    expect(getByText('Support Chat')).toBeInTheDocument()
-  })
- 
-  it('should should include support chat', () => {
     const container = render(
       <BrowserRouter>
-        <Support />
+        <Support handleSendMessage={jest.fn()} user={user} />
       </BrowserRouter>
-    ) 
+    )
+    expect(container.queryByText('support@doublegdp.com')).toBeInTheDocument()
+    expect(container.queryByText('Sales Support')).toBeInTheDocument()
+    expect(container.queryByText('Customer Care')).toBeInTheDocument()
+    expect(container.queryByText('+260 976 261199')).toBeInTheDocument()
     expect(container.queryByText('Support Chat')).toBeInTheDocument()
-  });
-  it('should have a pay with mobile money button', () => {
-    const container = render(
-      <BrowserRouter>
-        <Support />
-      </BrowserRouter>
-    ) 
     expect(container.queryByText('Pay With Mobile Money')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).not.toBeDisabled()
-  });
+  })
+})
 
+describe("Support contact component", () => {
+  const customerCare = {
+    contact: "+260 900000000",
+    type: "phone"
+  }
+  it('should render support card', () => {
+    const container = render(<SupportContact support={customerCare} classes={{}} />)
+    expect(container.queryByText('+260 900000000')).toBeInTheDocument()
+  })
 })
 
 
