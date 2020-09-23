@@ -13,6 +13,7 @@ module Types::Queries::Message
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :filter, String, required: false
+      argument :category, String, required: false
     end
 
     # Get messages for one user
@@ -25,14 +26,14 @@ module Types::Queries::Message
   end
 
   # rubocop:disable Metrics/AbcSize
-  def messages(query: '', offset: 0, limit: 100, filter: nil)
+  def messages(query: '', offset: 0, limit: 100, filter: nil, category: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     raise GraphQL::ExecutionError, 'Invalid Argument Value' if filter.present? &&
                                                                VALID_FILTERS.exclude?(filter)
 
     com_id = context[:current_user].community_id
-    iq = Message.users_newest_msgs(query, offset, limit, com_id, filter)
+    iq = Message.users_newest_msgs(query, offset, limit, com_id, filter, category)
     Message.joins(:user, :sender).eager_load(
       user: { notes: {}, avatar_attachment: {}, accounts: { land_parcel_accounts: :land_parcel } },
     ).unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
