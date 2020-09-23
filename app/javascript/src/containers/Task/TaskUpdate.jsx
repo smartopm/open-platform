@@ -1,14 +1,15 @@
 /* eslint-disable */
-import React, { useContext } from 'react'
+import React, { useContext, useMutation } from 'react'
 import { Redirect } from 'react-router-dom'
-import { useQuery, useLazyQuery } from 'react-apollo'
+import { useQuery } from 'react-apollo'
 import { TaskQuery } from '../../graphql/queries'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskForm from '../../components/Notes/TaskForm'
 import { UsersLiteQuery } from '../../graphql/queries'
+import { AssignUser } from '../../graphql/mutations'
 
 export default function TaskUpdate({ match }) {
   const authState = useContext(AuthStateContext)
@@ -18,10 +19,20 @@ export default function TaskUpdate({ match }) {
     errorPolicy: 'all'
   })
 
+  const [assignUserToNote] = useMutation(AssignUser)
+
   const  { data: liteData } = useQuery(UsersLiteQuery, {
     variables: { query: 'user_type: admin' },
     errorPolicy: 'all'
   })
+
+  function assignUnassignUser(noteId, userId) {
+    assignUserToNote({ variables: { noteId, userId } })
+      .then(() => {
+        refetch()
+      })
+      .catch(err => setErrorMessage(err.message))
+  }
 
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
@@ -33,7 +44,7 @@ export default function TaskUpdate({ match }) {
     <>
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
       <div className="container">
-        <TaskForm data={data?.task} refetch={refetch} users={liteData?.usersLite} />
+        <TaskForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser}/>
       </div>
     </>
   )
