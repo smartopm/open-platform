@@ -80,5 +80,38 @@ export const commentStatusAction = {
   delete: 'deleted',
   validate: 'valid'
 }
-
+// Values from here should be managed at the community level
 export const ponisoNumber = '+260976064298'
+export const salesSupport = [
+  {
+    contact: "+260 966 194383",
+    type: "phone"
+  },
+  {
+    contact: "+260 760 635024",
+    type: "phone"
+  },
+  {
+    contact: " nkwashi-sales@doublegdp.com",
+    type: "mail"
+  }
+]
+
+export const customerCare = [
+  {
+    contact: "+260 976 261199",
+    type: "phone"
+  },
+  {
+    contact: "+260 974 624243",
+    type: "phone"
+  },
+  {
+    contact: "+260 974 624243",
+    type: "whatsapp"
+  },
+  {
+    contact: "support@doublegdp.com",
+    type: "mail"
+  }
+]

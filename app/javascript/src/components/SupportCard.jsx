@@ -1,22 +1,53 @@
-/* eslint-disable */
-import React, { Fragment } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, Button, Grid } from '@material-ui/core'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
-import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { salesSupport, customerCare } from '../utils/constants'
+
+const icons = {
+  mail: <MailOutlineIcon />,
+  phone: <PhoneIcon />,
+  whatsapp: <WhatsAppIcon />
+}
+
+const linkType = {
+  phone: "tel",
+  mail: "mailto",
+}
+
+export function SupportContact({ classes, support }){
+  const number = support.contact.replace(/\s/g, '')
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${number}`
+  const link = `${support.type === 'whatsapp' ? whatsappLink : `${linkType[support.type]}:${number}`}`
+
+  return (
+    <Grid container direction="row" className={classes.root}>
+      <Grid item>
+        {icons[support.type]}
+      </Grid>
+
+      <Grid item>
+        <Typography className={classes.pos} color="textSecondary">
+          <a href={link}>{support.contact}</a>
+        </Typography>
+      </Grid>
+    </Grid>
+  )
+}
 
 export default function SupportCard({ handleSendMessage, user }) {
+  // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
-  const CSMNumber = '260974624243'
-  let history = useHistory()
+  const history = useHistory()
+  
   return (
-    <Fragment>
+    <>
       <div className="justify-content-center align-items-center container">
         <Typography paragraph variant="body1" color="textSecondary">
           Nkwashi partners with DoubleGDP on this mobile app to better connect
@@ -38,66 +69,40 @@ export default function SupportCard({ handleSendMessage, user }) {
         </Typography>
       </div>
       <div className="justify-content-center align-items-center container">
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <MailOutlineIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography
-              className={classes.pos}
-              color="textSecondary"
-              gutterBottom
-            >
-              <a href="mailto:support@doublegdp.com">support@doublegdp.com</a>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <Typography variant='h6' align="center" gutterBottom color='textSecondary'>
+              Sales Support
             </Typography>
+            {
+              salesSupport.map(support => {
+                return (
+                  <SupportContact key={support.contact} classes={classes} support={support} />
+                )
+              })
+            }
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant='h6' align="center" gutterBottom color='textSecondary'>
+              Customer Care
+            </Typography>
+
+            {
+              customerCare.map(support => {
+                return (
+                  <SupportContact key={support.contact} classes={classes} support={support} />
+                )
+              })
+            }
           </Grid>
         </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <PhoneIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography className={classes.pos} color="textSecondary">
-              <a href="tel:+260976261199">+260 976 261199</a>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <PhoneIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography className={classes.pos} color="textSecondary">
-              <a href={`tel:+${CSMNumber}`}>+260 974 624243</a>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container direction="row" className={classes.root}>
-          <Grid item>
-            <WhatsAppIcon />
-          </Grid>
-
-          <Grid item>
-            <Typography className={classes.pos} color="textSecondary">
-              <a href={`https://api.whatsapp.com/send?phone=${CSMNumber}`}>
-                {' '}
-                +260 974 624243
-              </a>
-            </Typography>
-          </Grid>
-        </Grid>
+       
         <Grid container direction="row" className={classes.root}>
           <Button
             variant="contained"
             color="primary"
             onClick={handleSendMessage}
-            className={css(styles.chatButton)}
+            className={classes.chatButton}
           >
             Support Chat
           </Button>
@@ -109,7 +114,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             variant="contained"
             color="primary"
             onClick={() => history.push('/mobile_money')}
-            className={`${css(styles.chatButton)}`}
+            className={classes.chatButton}
           >
             Pay With Mobile Money
           </Button>
@@ -121,7 +126,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               variant="contained"
               color="primary"
               onClick={() => history.push('/feedback')}
-              className={`${css(styles.chatButton)}`}
+              className={classes.chatButton}
             >
               Feedback
             </Button>
@@ -136,36 +141,36 @@ export default function SupportCard({ handleSendMessage, user }) {
               variant="contained"
               color="primary"
               onClick={() => history.push('/map')}
-              className={`${css(styles.chatButton)}`}
+              className={classes.chatButton}
             >
               Explore
             </Button>
           </Grid>
         ) : null}
       </div>
-    </Fragment>
+    </>
   )
 }
 
-SupportCard.defaultProps = {
-  user: {
-    userType: "admin"
-  }
-}
 
 SupportCard.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.shape({
+    userType: PropTypes.string
+  }).isRequired
 }
 
-const styles = StyleSheet.create({
-  chatButton: {
-    color: '#FFF',
-    width: '55%',
-    height: 51,
-    boxShadow: 'none',
-    marginTop: 50
-  }
-})
+SupportContact.propTypes = {
+  support: PropTypes.shape({
+    contact: PropTypes.string,
+    type: PropTypes.string,
+  }).isRequired,
+  classes: PropTypes.objectOf(PropTypes.object).isRequired
+}
+SupportCard.propTypes = {
+  user: PropTypes.shape({
+    userType: PropTypes.string
+  }).isRequired
+}
 
 const useStyles = makeStyles({
   root: {
@@ -173,6 +178,13 @@ const useStyles = makeStyles({
     margin: 'auto',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  chatButton: {
+    color: '#FFF',
+    width: '55%',
+    height: 51,
+    boxShadow: 'none',
+    marginTop: 50
   },
   title: {
     fontSize: 14
