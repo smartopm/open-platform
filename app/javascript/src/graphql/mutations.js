@@ -564,7 +564,7 @@ export const DiscussionSubscription = gql`
         userId
         discussionId
         id
-      }      
+      }
     }
   }
 `
@@ -656,4 +656,13 @@ mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
     success
   }
 }
+`
+export const LogReadPost = gql`
+  mutation LogReadPost($postId: String!) {
+    logReadPost(postId: $postId) {
+      eventLog {
+        id
+      }
+    }
+  }
 `
