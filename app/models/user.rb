@@ -410,6 +410,7 @@ class User < ApplicationRecord
     activity_points.where("created_at >= ?", last_monday).first
   end
 
+  # has a better meaning when used on a logged-in user
   def first_login_today?
     user_logins_today = EventLog.where(
       "acting_user_id = ? AND subject = ? AND created_at >= ?",
