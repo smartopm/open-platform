@@ -1,16 +1,15 @@
-/* eslint-disable */
-/* eslint-disable */
+/* eslint-disable no-use-before-define */
 import React, { useContext, useState } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
+import { useQuery } from 'react-apollo'
 import ScanIcon from '../../../assets/images/shape.svg'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav'
-import Loading from '../components/Loading.jsx'
+import Loading from '../components/Loading'
 import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
 import UserPoints from '../components/UserPoints'
-import { useQuery } from 'react-apollo'
 import { UserPointQuery } from '../graphql/queries'
 
 export default function Home() {
@@ -60,11 +59,11 @@ export default function Home() {
           </div>
         )}
       </Nav>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <NewsFeed />
       <br />
-        {
+      {
           userPoints &&
           (<UserPoints userPoints={userPoints} />)
         }
