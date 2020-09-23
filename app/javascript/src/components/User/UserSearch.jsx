@@ -75,7 +75,7 @@ export default function UserSearch({ userData, update }) {
           </RadioGroup>
         </FormControl>
       ) : (
-        Boolean(!userData.userId.length) &&
+        Boolean(userData.user.length) && Boolean(data?.usersLite.length) &&
         !isLoading &&
         `${userData.user} not found in users`
       )}

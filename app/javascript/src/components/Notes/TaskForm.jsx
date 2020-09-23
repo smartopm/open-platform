@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import {
   Button,
   FormControlLabel,
@@ -11,9 +11,10 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Snackbar
 } from '@material-ui/core'
 import DatePickerDialog from '../DatePickerDialog'
-import { css } from 'aphrodite'
+import { css, StyleSheet } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { CreateNote, UpdateNote } from '../../graphql/mutations'
@@ -39,7 +40,7 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
   const [taskUpdate] = useMutation(UpdateNote)
-  const { body, category, completed, assignees: assign, dueDate, user, id } = data
+  const [updated, setUpdated] = useState(false)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -69,27 +70,29 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
 
   function updateTask() {
     taskUpdate({ variables: {
-        id,
+        id: data.id,
         body: title,
-        due: selectedDate ? selectedDate.toISOString() : null,
+        dueDate: selectedDate,
         completed: taskStatus,
         category: taskType,
         flagged: true,
         userId: userData.userId
     } }).then(({ data }) => {
-      assignees.map(user => assignUser(data.noteCreate.note.id, user.id))
+      assignees.map(user => assignUser(data.noteUpdate.note.id, user.id))
+      setLoadingStatus(false)
+      setUpdated(true)
     })
   }
 
   function setDefaultData() {
-    setTitle(body)
-    setTaskType(category)
-    setAssignees(assign)
-    setTaskStatus(completed)
-    setDate(dueDate)
+    setTitle(data.body)
+    setTaskType(data.category)
+    setAssignees(data.assignees)
+    setTaskStatus(data.completed)
+    setDate(data.dueDate)
     setData({
-      user: user.name,
-      userId: user.id
+      user: data.user.name,
+      userId: data.user.id
     })
   }
 
@@ -102,7 +105,14 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {console.log(data)}
+      <Snackbar
+        open={updated}
+        autoHideDuration={3000}
+        onClose={() => setUpdated(!updated)}
+        color="primary"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        message="Task updated successfully"
+      />
       <TextField
         name="task_description"
         label="Task Description"
@@ -192,7 +202,8 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
 
       <br />
       <div className="d-flex row justify-content-center">
-        <Button
+        {!taskId && (
+          <Button
           variant="contained"
           aria-label="task_cancel"
           color="secondary"
@@ -200,7 +211,7 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
           className={`btn ${css(discussStyles.cancelBtn)}`}
         >
           Cancel
-        </Button>
+        </Button>)}
         <Button
           variant="contained"
           type="submit"
@@ -218,6 +229,15 @@ export default function TaskForm({ close, refetch, users, data, assignUser }) {
     </form>
   )
 }
+
+const styles = StyleSheet.create({
+  cancleBotton: {
+      width: '100%',
+      ':hover': {
+          textDecoration: 'none'
+      }
+  }
+})
 
 TaskForm.defaultProps = {
   users: []
