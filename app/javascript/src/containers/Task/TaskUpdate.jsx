@@ -28,10 +28,6 @@ export default function TaskUpdate({ match }) {
 
   function assignUnassignUser(noteId, userId) {
     assignUserToNote({ variables: { noteId, userId } })
-      .then(() => {
-        refetch()
-      })
-      .catch(err => setErrorMessage(err.message))
   }
 
   if (authState.user.userType !== 'admin') {
