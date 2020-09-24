@@ -10,7 +10,8 @@ describe('task form component', () => {
           id: '6v2y3etyu2g3eu2',
           user: {
             name: "tolulope"
-          }
+          },
+          assignees: ["tolulope"]
         }
         const container = render(<MockedProvider><TaskUpadateForm data={data} /></MockedProvider>)
         expect(container.queryByText('Update Task')).toBeInTheDocument()
