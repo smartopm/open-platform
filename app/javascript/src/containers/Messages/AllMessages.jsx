@@ -25,7 +25,7 @@ export default function AllMessages() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchTermCurrent, setSearchTermCurrent] = useState('')
     const dbcSearchTerm = useDebounce(searchTermCurrent, 500);
-    const [category, setCategory] = useState("sms")
+    const [category, setCategory] = useState("")
 
     useEffect(
         () => {
@@ -105,10 +105,10 @@ export default function AllMessages() {
                     value={category}
                     onChange={handleFilter}
                     >
-                    <MenuItem value={'sms'}>SMS</MenuItem>
-                    <MenuItem value={'email'}>Email</MenuItem>
-                    <MenuItem value={'campaign'}>Campaign</MenuItem>
-                    <MenuItem value={'non_campaign'}>Non-Campaign</MenuItem>
+                    <MenuItem value={'sms/'}>SMS</MenuItem>
+                    <MenuItem value={'email/'}>Email</MenuItem>
+                    <MenuItem value={'/campaign'}>Campaign</MenuItem>
+                    <MenuItem value={'/non_campaign'}>Non-Campaign</MenuItem>
                     <MenuItem value={'sms/campaign'}>SMS and Campaign</MenuItem>
                     <MenuItem value={'sms/non_campaign'}>SMS and Non-Campaign</MenuItem>
                     <MenuItem value={'email/campaign'}>Email and Campaign</MenuItem>

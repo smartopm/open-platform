@@ -3,7 +3,7 @@
 # Queries module for breaking out queries
 module Types::Queries::Message
   extend ActiveSupport::Concern
-  VALID_FILTERS = %w[campaign non_campaign sms email sms/campaign email/campaign
+  VALID_FILTERS = %w[/campaign /non_campaign sms/ email/ sms/campaign email/campaign
                      sms/non_campaign email/non_campaign].freeze
 
   included do
@@ -33,7 +33,7 @@ module Types::Queries::Message
                                                                VALID_FILTERS.exclude?(filter)
 
     com_id = context[:current_user].community_id
-    checked_filters = check_filter(filter)
+    checked_filters = check_filter(filter.to_s)
 
     iq = Message.users_newest_msgs(query, offset, limit, com_id, checked_filters)
     Message.joins(:user, :sender).eager_load(
@@ -54,22 +54,13 @@ module Types::Queries::Message
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
   end
+  # rubocop:enable Metrics/AbcSize
 
   def check_filter(params)
-    camp = %w[campaign non_campaign]
     category, flt = params.split('/')
-    if flt.nil? && camp.include?(params)
-      {
-        category: 'sms',
-        filter: params,
-      }
-    else
-      {
-        category: category,
-        filter: flt,
-      }
-    end
+    {
+      category: category.to_s,
+      filter: flt.to_s,
+    }
   end
-
-  # rubocop:enable Metrics/AbcSize
 end
