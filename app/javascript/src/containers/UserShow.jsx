@@ -1,15 +1,14 @@
-/* eslint-disable */
 import React, { useContext } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import UserInformation from '../components/UserInformation'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
-import Nav from '../components/Nav'
-import Loading from '../components/Loading.jsx'
 import ReactGA from 'react-ga'
+import UserInformation from '../components/UserInformation'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
+import Nav from '../components/Nav'
+import Loading from '../components/Loading'
 import { UserQuery } from '../graphql/queries'
 import { AddActivityLog, SendOneTimePasscode } from '../graphql/mutations'
-import ErrorPage from '../components/Error.jsx'
+import ErrorPage from '../components/Error'
 
 export default ({ history }) => {
   const { id, dg, tm } = useParams() // get timestamp and dg
@@ -19,7 +18,7 @@ export default ({ history }) => {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   })
-  //GA-event Digital scanning
+  // GA-event Digital scanning
   ReactGA.event({
     category: 'IDScanning',
     action: 'DigitalScan',
@@ -43,7 +42,8 @@ export default ({ history }) => {
   }
   return (
     <>
-      <Nav navName="Identification" menuButton="cancel" backTo="/" />
+      {history.location.state?.from === 'logs' ?  <Nav navName="Identification" menuButton="cancel" backTo='/entry_logs' /> 
+          : <Nav navName="Identification" menuButton="cancel" backTo='/' />}
       <UserInformation
         data={data}
         authState={authState}
