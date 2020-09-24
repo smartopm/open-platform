@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import {
@@ -13,25 +14,25 @@ import {
   Snackbar,
   Chip
 } from '@material-ui/core'
-import DatePickerDialog from '../DatePickerDialog'
-import { css, StyleSheet } from 'aphrodite'
+import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
+import CancelIcon from '@material-ui/icons/Cancel'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import DatePickerDialog from '../DatePickerDialog'
 import { UpdateNote } from '../../graphql/mutations'
 import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CancelIcon from '@material-ui/icons/Cancel'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 
 const initialData = {
   user: '',
   userId: ''
 }
 
-export default function TaskForm({ refetch, users, data, assignUser }) {
+export default function TaskForm({ users, data, assignUser }) {
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
   const [assignees, setAssignees] = useState([])
@@ -62,6 +63,8 @@ export default function TaskForm({ refetch, users, data, assignUser }) {
       }}).then(() => {
       setLoadingStatus(false)
       setUpdated(true)
+    }).catch((err) => {
+      setErrorMessage(err)
     })
   }
 
@@ -77,7 +80,7 @@ export default function TaskForm({ refetch, users, data, assignUser }) {
     })
   }
 
-  function handleOpenAutoComplete(_event, noteId) {
+  function handleOpenAutoComplete() {
     setOpen(!autoCompleteOpen)
   }
 
@@ -114,52 +117,52 @@ export default function TaskForm({ refetch, users, data, assignUser }) {
         }}
         required
       />
-      <br/>
-      <FormControl fullWidth >
+      <br />
+      <FormControl fullWidth>
         <InputLabel id="taskType">Task Type</InputLabel>
         <Select
-            id="taskType"
-            value={taskType}
-            onChange={event => setTaskType(event.target.value)}
-            name="taskType"
-            fullWidth
+          id="taskType"
+          value={taskType}
+          onChange={event => setTaskType(event.target.value)}
+          name="taskType"
+          fullWidth
         >
-            {Object.entries(NotesCategories).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
+          {Object.entries(NotesCategories).map(([key, val]) => (
+            <MenuItem key={key} value={key}>
+              {val}
+            </MenuItem>
             ))}
         </Select>
       </FormControl>
       <br />
-      <FormControl fullWidth > 
-              <div>
-              {assignees.map(user => (
-                <UserChip
-                  key={user.id}
-                  user={user}
-                  size="medium"
-                  onDelete={() => assignUser(data.id, user.id)}
-                />
+      <FormControl fullWidth> 
+        <div>
+          {assignees.map(user => (
+            <UserChip
+              key={user.id}
+              user={user}
+              size="medium"
+              onDelete={() => assignUser(data.id, user.id)}
+            />
               ))}
-              <Chip
-                key={data.id}
-                variant="outlined"
-                label={
+          <Chip
+            key={data.id}
+            variant="outlined"
+            label={
                   autoCompleteOpen  ? 'Close' : 'Add Assignee'
                 }
-                size="medium"
-                icon={
+            size="medium"
+            icon={
                   autoCompleteOpen  ? (
                     <CancelIcon />
                   ) : (
                     <AddCircleIcon />
                   )
                 }
-                onClick={event => handleOpenAutoComplete(event, data.id)}
-              />
+            onClick={event => handleOpenAutoComplete(event, data.id)}
+          />
 
-              {
+          {
               autoCompleteOpen && (
                 <Autocomplete
                   clearOnEscape
@@ -181,15 +184,16 @@ export default function TaskForm({ refetch, users, data, assignUser }) {
                     <TextField {...params} placeholder="Name of assignee" />
                   )}
                 />
-          )}
-          </div>
+          )
+}
+        </div>
       </FormControl>
       <br />
-        <UserSearch userData={userData} update={setData}/> 
+      <UserSearch userData={userData} update={setData} /> 
       <br />
       <FormControlLabel
         value="end"
-        control={
+        control={(
           <Checkbox
             aria-label="task_status"
             data-testid="task_status"
@@ -197,7 +201,7 @@ export default function TaskForm({ refetch, users, data, assignUser }) {
             onChange={() => setTaskStatus(!taskStatus)}
             color="primary"
           />
-        }
+        )}
         label="Task Status"
         labelPlacement="end"
       />
@@ -224,27 +228,18 @@ export default function TaskForm({ refetch, users, data, assignUser }) {
         </Button>
       </div>
       <p className="text-center">
-          {Boolean(error.length) && error}
+        {Boolean(error.length) && error}
       </p>
     </form>
   )
 }
 
-const styles = StyleSheet.create({
-  cancleBotton: {
-      width: '100%',
-      ':hover': {
-          textDecoration: 'none'
-      }
-  }
-})
-
 TaskForm.defaultProps = {
   users: []
 }
 
-TaskForm.propTypes = {
-  users: PropTypes.array.isRequired,
-  close: PropTypes.func,
-  refetch: PropTypes.func,
-}
+// TaskForm.propTypes = {
+//   users: PropTypes.array,
+//   close: PropTypes.func,
+//   refetch: PropTypes.func,
+// }
