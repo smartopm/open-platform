@@ -12,17 +12,17 @@ class Message < ApplicationRecord
 
   class Unauthorized < StandardError; end
 
-  def self.users_newest_msgs(query, offset, limit, com_id, filter, category)
-     Message.find_by_sql(["SELECT messages.* FROM messages
-      INNER JOIN ( SELECT user_id, max(messages.created_at) as max_date FROM messages
-      INNER JOIN users ON users.id = messages.user_id INNER JOIN users senders_messages
-      ON senders_messages.id = messages.sender_id
-      WHERE ((users.community_id=? AND senders_messages.community_id=?" +
-      campaign_query(filter) + ") AND (users.name ILIKE ? OR users.phone_number ILIKE ?
-      OR users.name ILIKE ? OR users.phone_number ILIKE ? OR messages.message ILIKE ?) AND messages.category=?)
-      GROUP BY messages.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
-      ON messages.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
-      Array.new(2, com_id) + Array.new(5, "%#{query}%") + [category] + [limit, offset])
+  def self.users_newest_msgs(query, offset, limit, com_id, filter)
+    Message.find_by_sql(["SELECT messages.* FROM messages
+     INNER JOIN ( SELECT user_id, max(messages.created_at) as max_date FROM messages
+     INNER JOIN users ON users.id = messages.user_id INNER JOIN users senders_messages
+     ON senders_messages.id = messages.sender_id WHERE ((users.community_id=?
+     AND senders_messages.community_id=?" + campaign_query(filter[:filter]) + ")
+     AND (users.name ILIKE ? OR users.phone_number ILIKE ? OR users.name ILIKE ?
+     OR users.phone_number ILIKE ? OR messages.message ILIKE ?) AND messages.category ILIKE ?)
+     GROUP BY messages.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
+     ON messages.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
+     Array.new(2, com_id) + Array.new(5, "%#{query}%") + [filter[:category]] + [limit, offset])
   end
 
   def mark_as_read

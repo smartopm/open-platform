@@ -25,7 +25,7 @@ export default function AllMessages() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchTermCurrent, setSearchTermCurrent] = useState('')
     const dbcSearchTerm = useDebounce(searchTermCurrent, 500);
-    const [category, setCategory] = useState("")
+    const [category, setCategory] = useState("sms")
 
     useEffect(
         () => {
@@ -68,10 +68,6 @@ export default function AllMessages() {
         setSearchTermCurrent(event.target.value)
     }
 
-    function handleTypeFilter(event){
-        setCategory(event.target.value)
-    }
-
     return (
         <Fragment>
             <Nav navName="Messages" menuButton="back" backTo="/" />
@@ -109,24 +105,17 @@ export default function AllMessages() {
                     value={category}
                     onChange={handleFilter}
                     >
+                    <MenuItem value={'sms'}>SMS</MenuItem>
+                    <MenuItem value={'email'}>Email</MenuItem>
                     <MenuItem value={'campaign'}>Campaign</MenuItem>
                     <MenuItem value={'non_campaign'}>Non-Campaign</MenuItem>
+                    <MenuItem value={'sms/campaign'}>SMS and Campaign</MenuItem>
+                    <MenuItem value={'sms/non_campaign'}>SMS and Non-Campaign</MenuItem>
+                    <MenuItem value={'email/campaign'}>Email and Campaign</MenuItem>
+                    <MenuItem value={'email/non_campaign'}>Email and Non-Campaign</MenuItem>
                     </Select>
                 </FormControl>
-
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="category-filter">Filter by: Type</InputLabel>
-                    <Select
-                        labelId="category-filter"
-                        id="demo-controlled-open-select"
-                        value={category}
-                        onChange={handleTypeFilter}
-                    >
-                        <MenuItem value={'sms'}>SMS</MenuItem>
-                        <MenuItem value={'email'}>Email</MenuItem>
-                    </Select>
-                </FormControl>
-                </CenteredContent>
+            </CenteredContent>
 
             {loading ? <CenteredContent > <Spinner /> </CenteredContent> : 
             data && data.messages ? (

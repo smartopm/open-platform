@@ -3,7 +3,8 @@
 # Queries module for breaking out queries
 module Types::Queries::Message
   extend ActiveSupport::Concern
-  VALID_FILTERS = %w[campaign non_campaign].freeze
+  VALID_FILTERS = %w[campaign non_campaign sms email sms/campaign email/campaign
+                     sms/non_campaign email/non_campaign].freeze
 
   included do
     # Get messages
@@ -13,7 +14,6 @@ module Types::Queries::Message
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :filter, String, required: false
-      argument :category, String, required: false
     end
 
     # Get messages for one user
@@ -26,14 +26,16 @@ module Types::Queries::Message
   end
 
   # rubocop:disable Metrics/AbcSize
-  def messages(query: '', offset: 0, limit: 100, filter: nil, category: nil)
+  def messages(query: '', offset: 0, limit: 100, filter: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     raise GraphQL::ExecutionError, 'Invalid Argument Value' if filter.present? &&
                                                                VALID_FILTERS.exclude?(filter)
 
     com_id = context[:current_user].community_id
-    iq = Message.users_newest_msgs(query, offset, limit, com_id, filter, category)
+    checked_filters = check_filter(filter)
+
+    iq = Message.users_newest_msgs(query, offset, limit, com_id, checked_filters)
     Message.joins(:user, :sender).eager_load(
       user: { notes: {}, avatar_attachment: {}, accounts: { land_parcel_accounts: :land_parcel } },
     ).unscope(:order).order('messages.created_at DESC').find(iq.collect(&:id))
@@ -52,5 +54,22 @@ module Types::Queries::Message
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
   end
+
+  def check_filter(params)
+    camp = %w[campaign non_campaign]
+    category, flt = params.split('/')
+    if flt.nil? && camp.include?(params)
+      {
+        category: 'sms',
+        filter: params,
+      }
+    else
+      {
+        category: category,
+        filter: flt,
+      }
+    end
+  end
+
   # rubocop:enable Metrics/AbcSize
 end
