@@ -26,6 +26,8 @@ import { dateToString, dateTimeToString } from "../../components/DateContainer";
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state && location.state.from
   const isFromLogs = previousRoute === "logs" || false;
+  const { offset } = location.state
+  const { limit } = location.state
 
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
@@ -173,7 +175,7 @@ export default function RequestUpdate({ match, history, location }) {
             : 'Approve Request'
         }
         menuButton="cancel"
-        backTo="/entry_logs"
+        backTo="/entry_logs/"
       />
 
       <ModalDialog
