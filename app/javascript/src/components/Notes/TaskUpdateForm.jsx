@@ -35,7 +35,6 @@ const initialData = {
 export default function TaskForm({ users, data, assignUser }) {
   const [title, setTitle] = useState('')
   const [error, setErrorMessage] = useState('')
-  const [assignees, setAssignees] = useState([])
   const [taskType, setTaskType] = useState('')
   const [selectedDate, setDate] = useState(new Date())
   const [taskStatus, setTaskStatus] = useState(false)
@@ -71,7 +70,6 @@ export default function TaskForm({ users, data, assignUser }) {
   function setDefaultData() {
     setTitle(data.body)
     setTaskType(data.category)
-    setAssignees(data.assignees)
     setTaskStatus(data.completed)
     setDate(data.dueDate)
     setData({
@@ -137,7 +135,7 @@ export default function TaskForm({ users, data, assignUser }) {
       <br />
       <FormControl fullWidth> 
         <div>
-          {assignees.map(user => (
+          {data.assignees.map(user => (
             <UserChip
               key={user.id}
               user={user}
