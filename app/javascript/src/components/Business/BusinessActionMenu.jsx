@@ -3,7 +3,7 @@ import { Menu, MenuItem } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import { DeleteBusiness } from '../../graphql/mutations'
-import BusinessDeleteDialogue from './BusinessDeleteDialogue'
+import BusinessDeleteDialogue from './DeleteDialogue'
 
 
 export default function BusinessActionMenu({
@@ -64,6 +64,7 @@ export default function BusinessActionMenu({
               open={openModal}
               handleClose={handleDeleteClick}
               handleDelete={handleDelete}
+              title="business"
             />
           </>
         )}

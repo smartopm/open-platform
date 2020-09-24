@@ -76,6 +76,10 @@ export const businessStatus = {
   pending: 'Pending',
 }
 
+export const commentStatusAction = {
+  delete: 'deleted',
+  validate: 'valid'
+}
 // Values from here should be managed at the community level
 export const ponisoNumber = '+260976064298'
 export const salesSupport = [
@@ -92,6 +96,7 @@ export const salesSupport = [
     type: "mail"
   }
 ]
+
 export const customerCare = [
   {
     contact: "+260 976 261199",

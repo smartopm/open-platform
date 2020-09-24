@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, removeHtmlTagsFromStrings } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -9,8 +9,8 @@ const simpleMsgEmail = "Please share this email Juiliebosbsd@gmail.com"
 const count = 40
 
 // example errors
-const allFieldsError = `GraphQL error: name of type String! was provided invalid value GraphQL error: 
-                        Variable phoneNumber of type String! was provided invalid value GraphQL error: 
+const allFieldsError = `GraphQL error: name of type String! was provided invalid value GraphQL error:
+                        Variable phoneNumber of type String! was provided invalid value GraphQL error:
                         Variable userType of type String! was provided invalid value`
 
 const duplicateError = "GraphQL error: Duplicate Email"
@@ -88,7 +88,7 @@ describe('array methods', () => {
     expect(forceLinkHttps(link)).toBe('https://doubglegdp.com/some_image_link.jpg')
     expect(forceLinkHttps(httpsLink)).toBe(httpsLink)
   })
-  // merge items 
+  // merge items
   it('should just pick label description despite some being in an object', () => {
     const labels = [
       { shortDesc: 'blue', id: '23'},
@@ -98,5 +98,20 @@ describe('array methods', () => {
     ]
     expect(getJustLabels(labels)).toStrictEqual(['blue', 'red', 'green', 'white'])
     expect(getJustLabels([])).toStrictEqual([])
+  })
+  it('capitalizes the first letter of the word', () => {
+    expect(capitalize('testing')).toBe('Testing')
+  })
+})
+
+describe('pluralizeCount', () => {
+  it("should add 's' if count is > 1", () => {
+    expect(pluralizeCount(5, 'Point')).toBe('Points')
+  })
+  it("should not add 's' if count is not > 1", () => {
+    expect(pluralizeCount(1, 'Point')).toBe('Point')
+  })
+  it("should use the provided suffix if available", () => {
+    expect(pluralizeCount(5, 'Child', 'ren')).toBe('Children')
   })
 })

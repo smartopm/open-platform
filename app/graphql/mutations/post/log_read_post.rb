@@ -14,7 +14,8 @@ module Mutations
         return unless user
 
         event_log = unless post_already_read?(user, post_id)
-                      user.generate_events('post_read', user, post_id: post_id)
+                      user.generate_events('post_read', user, post_id: post_id,
+                                                              type: user.user_type)
                     end
 
         return unless event_log

@@ -47,7 +47,7 @@ module Types::Queries::Comment
     discs = community_discussions(post_id, 'post')
     return [] if discs.nil?
 
-    discs.comments.limit(limit).offset(offset).with_attached_image
+    discs.comments.by_not_deleted.limit(limit).offset(offset).with_attached_image
   end
 
   def discuss_comments(offset: 0, limit: 100, id:)
@@ -56,7 +56,7 @@ module Types::Queries::Comment
     discs = community_discussions(id, 'discuss')
     return [] if discs.nil?
 
-    discs.comments.limit(limit).offset(offset).with_attached_image
+    discs.comments.by_not_deleted.limit(limit).offset(offset).with_attached_image
   end
 
   def discussions(offset: 0, limit: 100)

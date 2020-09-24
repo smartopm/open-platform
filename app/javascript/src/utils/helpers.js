@@ -4,7 +4,7 @@ import dompurify from 'dompurify';
 // keep string methods [helpers]
 
 /**
- * 
+ *
  * @param {String} text
  * @returns a purifed link
  * @description receives a url and returns a purified url
@@ -14,7 +14,7 @@ export function sanitizeText(text) {
 }
 
 /**
- * 
+ *
  * @param {String} msg
  * @returns a stringified link or mailto link
  * @description find email addresses and urls in a message and replace them with links
@@ -32,8 +32,8 @@ export function findLinkAndReplace(msg) {
 }
 
 /**
- * 
- * @param {String} message 
+ *
+ * @param {String} message
  * @param {Number} count
  * @description returns a substring of the given message after the character count passed to the function
  */
@@ -44,7 +44,7 @@ export function truncateString(message, count) {
 }
 
 /**
- * 
+ *
  * @param {string} word string to be uppercased
  * @description makes the first letter of a string to uppercase
  */
@@ -67,7 +67,7 @@ const cleanedFields = {
  *
  */
 export function saniteError(requiredFields, errorMessage) {
-  
+
   if (!errorMessage.length) return;
   const errArr = errorMessage.split(" ");
   const foundFields = requiredFields.filter(field => errArr.includes(field));
@@ -116,8 +116,8 @@ export function invertArray(cords, initial, final) {
 }
 
 /**
- * 
- * @param {string} imageLink 
+ *
+ * @param {string} imageLink
  * @description check if the link is an http if not it replaces it with https(mostly for facebook profile pics)
  * @returns {string} link
  */
@@ -147,12 +147,34 @@ export function getJustLabels(labels) {
   return str.filter(el => typeof el === 'string')
 }
 
- /** 
- * @param {string} email 
+ /**
+ * @param {string} email
  * @description check if email is valid
  * @returns {boolean} true or false
  */
 export function validateEmail(email) {
   const re = /\S+@\S+\.\S+/;
   return re.test(String(email).toLowerCase());
+}
+
+
+/**
+ *
+ * @param {String} word
+ * @returns {String}
+ * @description makes the first letter of the word capital
+ */
+export function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+ /**
+ * @param {Number} count
+ * @param {String} noun
+ * @param {String} [suffix=s]
+ * @description pluralize count message
+ * @returns {String}
+ */
+export function pluralizeCount(count, noun, suffix = 's') {
+  return `${noun}${count > 1 ? suffix : ''}`
 }

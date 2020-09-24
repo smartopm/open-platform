@@ -650,6 +650,13 @@ mutation businessCreate($name: String!, $email: String!, $phoneNumber: String!, 
 }
 `
 
+export const UpdateCommentMutation = gql`
+mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
+  commentUpdate(commentId: $commentId, discussionId: $discussionId, status: $status){
+    success
+  }
+}
+`
 export const LogReadPost = gql`
   mutation LogReadPost($postId: String!) {
     logReadPost(postId: $postId) {

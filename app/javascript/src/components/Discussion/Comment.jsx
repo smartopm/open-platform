@@ -1,21 +1,21 @@
-/* eslint-disable */
-import React from 'react'
-import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid } from '@material-ui/core'
+/* eslint-disable no-use-before-define */
+import React, { useContext, useState } from 'react'
+import { ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton } from '@material-ui/core'
 import { useMutation, useApolloClient } from 'react-apollo'
 import { useParams, useLocation } from 'react-router'
 import PropTypes from 'prop-types'
-import Avatar from '../Avatar'
-import DateContainer from '../DateContainer'
 import { StyleSheet, css } from 'aphrodite'
-import { useState } from 'react'
-import { useContext } from 'react'
-import { Context } from '../../containers/Provider/AuthStateProvider'
-import { CommentMutation } from '../../graphql/mutations'
+import { Link } from 'react-router-dom'
+import DeleteIcon from '@material-ui/icons/Delete'
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import { Context } from '../../containers/Provider/AuthStateProvider'
+import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
-import { Link } from 'react-router-dom'
-
+import Avatar from '../Avatar'
+import DateContainer from '../DateContainer'
+import DeleteDialogueBox from '../Business/DeleteDialogue'
+import { commentStatusAction } from '../../utils/constants'
 
 
 export default function Comments({ comments, refetch, discussionId }) {
@@ -27,12 +27,33 @@ export default function Comments({ comments, refetch, discussionId }) {
     const authState = useContext(Context)
     const { id } = useParams()
     const [_data, setData] = useState(init)
-  const [createComment] = useMutation(CommentMutation)
+    const [openModal, setOpenModal] = useState(false)
+    const [commentId, setCommentId] = useState("")
+    const [error, setError] = useState(null)
+    const [createComment] = useMutation(CommentMutation)
+    const [updateComment] = useMutation(UpdateCommentMutation)
+  
+    function handleDeleteClick(cid = commentId) {
+      setOpenModal(!openModal)
+      setCommentId(cid)
+    }
+
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
 
-  function handleCommentChange() {
+  function handleDeleteComment(){
+    updateComment({ 
+      variables: { commentId, discussionId, status: commentStatusAction.delete }
+     })
+     .then(() => {
+       refetch()
+       setOpenModal(!openModal)
+     } )
+     .catch(err => setError(err.message))
+  }
+
+  function handleCommentChange(event) {
         setData({ ..._data, message: event.target.value })
     }
 
@@ -64,69 +85,89 @@ export default function Comments({ comments, refetch, discussionId }) {
       url
     }
     return (
-        <List>
+      <List>
         <CommentBox
           authState={authState}
           data={_data}
           handleCommentChange={handleCommentChange}
           upload={uploadData}
-          sendComment={sendComment} />
-            {
-                comments.length >= 1 ? comments.map(comment => (
-                    <CommentSection
-                        key={comment.id}
-                        user={comment.user}
-                        createdAt={comment.createdAt}
-                        comment={comment.content}
-                        imageUrl={comment.imageUrl}
-                        isAdmin={authState.user.userType === 'admin'}
-                  />
-                )) : <p className="text-center">Be the first to comment on this post</p>
-            }
-        </List>
+          sendComment={sendComment}
+        />
+        { error && <p>{error}</p> }
+        {
+          comments.length >= 1 ? comments.map(comment => (
+            <CommentSection
+              key={comment.id}
+              data={{
+                isAdmin: authState.user.userType === 'admin',
+                createdAt: comment.createdAt,
+                comment: comment.content,
+                imageUrl: comment.imageUrl,
+                user: comment.user
+              }}
+              handleDeleteComment={() => handleDeleteClick(comment.id)}
+            />
+          )) : <p className="text-center">Be the first to comment on this post</p>
+        }
+        <DeleteDialogueBox 
+          open={openModal}
+          handleClose={handleDeleteClick}
+          handleDelete={handleDeleteComment}
+          title="comment"
+        />
+      </List>
     )
 }
 
 
-export function CommentSection({ user, createdAt, comment, imageUrl, isAdmin }) {
+export function CommentSection({ data, handleDeleteComment }) {
     return (
-        <ListItem alignItems="flex-start" >
-            <ListItemAvatar style={{ marginRight: 8 }}>
-                <Avatar user={user} />
-            </ListItemAvatar>
-            <ListItemText
-                primary={
-                    <React.Fragment>
-                        <span >
-                        <Link
-                          style={{ cursor: 'pointer', textDecoration: 'none' }}
-                          to={isAdmin ? `/user/${user.id}` : '#'}
-                        >
-                          {user.name}
-                        </Link>
-                            <span className={css(styles.timeStamp)}>
-                                <DateContainer date={createdAt} />
-                            </span>
-                        </span>
-                    </React.Fragment>
-                }
-                secondary={
-                    <React.Fragment>
-                        <span data-testid="comment" >
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: sanitizeText(findLinkAndReplace(comment))
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar style={{ marginRight: 8 }}>
+          <Avatar user={data.user} />
+        </ListItemAvatar>
+        <ListItemText
+          primary={(
+            <>
+              <span>
+                <Link
+                  style={{ cursor: 'pointer', textDecoration: 'none' }}
+                  to={data.isAdmin ? `/user/${data.user.id}` : '#'}
+                >
+                  {data.user.name}
+                </Link>
+              </span>
+            </>
+                  )}
+          secondary={(
+            <>
+              <span data-testid="comment">
+                <span
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                              __html: sanitizeText(findLinkAndReplace(data.comment))
                             }}
-                          />
-                          <br />
-                          <br />
-                          {imageUrl && <img src={imageUrl} className='img-responsive img-thumbnail' alt={`image for ${comment}`} /> }
-                        </span>
-                    </React.Fragment>
-                }
+                />
+                <br />
+                {data.imageUrl && <img src={data.imageUrl} className='img-responsive img-thumbnail' alt={`${data.comment}`} /> }
+              </span>
+              <span 
+                data-testid="delete_icon" 
+                className={css(styles.itemAction)}
+              >
+                <DateContainer date={data.createdAt} />    
+                {
+                 data.isAdmin && (
+                 <IconButton onClick={handleDeleteComment} edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
+                   <DeleteIcon  />
+                 </IconButton>
+                 )
+               }
+              </span>
+            </>
+            )}
         />
-       
-        </ListItem>
+      </ListItem>
     )
 }
 
@@ -181,7 +222,10 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
                   onChange={upload.handleFileUpload}
                   style={{ display: 'none' }}
                 />
-                <AddPhotoAlternateIcon color="primary" className={css(styles.uploadIcon)} />
+                <AddPhotoAlternateIcon 
+                  color="primary" 
+                  className={css(styles.uploadIcon)}
+                />
               </label>
             )}
           </Grid>
@@ -217,10 +261,16 @@ CommentBox.propType = {
 }
 
 CommentSection.propType = {
-    user: PropTypes.object.isRequired,
+  data: PropTypes.shape({
+    user: PropTypes.shape({ 
+      name: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired
+     }),
     createdAt: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool
+  }),
+  handleDeleteComment: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -235,6 +285,11 @@ const styles = StyleSheet.create({
       },
       uploadIcon: {
         cursor: 'pointer',
-        // color: '#b4b8b7'
+      },
+      itemAction: {
+        float: 'right'
+      },
+      deleteBtn: {
+        marginBottom: 5
       }
 })

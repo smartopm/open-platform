@@ -1,21 +1,19 @@
-/* eslint-disable */
 import React from 'react'
-import {
-    render
-} from '@testing-library/react'
+import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import DeleteDialogue from "../components/Business/DeleteDialogue"
 
-import DeleteDialogue from "../components/Business/BusinessDeleteDialogue"
 describe('It should render the dialog box for delete', () => {
-    
     const container = render(
-        <DeleteDialogue
-            open={true}
-            handleClose={jest.fn()}
-            handleDelete={jest.fn()}
-        />
+      <DeleteDialogue
+        open
+        handleClose={jest.fn()}
+        handleDelete={jest.fn()}
+        title="business"
+      />
     )
     it('It should render with dialog', () => {
       expect(container.queryByText('Delete Business')).toBeInTheDocument()
+      expect(container.queryByText('Are you sure you want to delete this business ?')).toBeInTheDocument()
     });
 });

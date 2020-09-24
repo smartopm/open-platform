@@ -47,6 +47,11 @@ module Types::Queries::User
       description 'Get a list of admins for a community'
       argument :query, String, required: true
     end
+
+    # Get activity-point of a user for the current week
+    field :user_activity_point, Types::UserPointType, null: true do
+      description 'Get activity-point of a user for the current week'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -122,5 +127,12 @@ module Types::Queries::User
     return user if user.present?
 
     raise GraphQL::ExecutionError, 'User not found'
+  end
+
+  def user_activity_point
+    user = context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless user
+
+    user.activity_point_for_current_week
   end
 end

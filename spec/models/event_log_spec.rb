@@ -52,4 +52,15 @@ RSpec.describe EventLog, type: :model do
       expect(results).not_to include(log2)
     end
   end
+
+  describe '.post_read_to_sentence' do
+    it 'returns a description for post_read event' do
+      user = FactoryBot.create(:user_with_community)
+      community = user.community
+      log = create(:event_log, acting_user: user, community: community,
+                               subject: 'post_read', data: { post_id: 11 })
+
+      expect(log.post_read_to_sentence).to eq("Post 11 was read by #{user.name}")
+    end
+  end
 end
