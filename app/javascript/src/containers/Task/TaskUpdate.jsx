@@ -8,6 +8,7 @@ import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskForm from '../../components/Notes/TaskForm'
+import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
 import { UsersLiteQuery } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 
@@ -26,8 +27,9 @@ export default function TaskUpdate({ match }) {
     errorPolicy: 'all'
   })
 
-  function assignUnassignUser(noteId, userId) {
-    assignUserToNote({ variables: { noteId, userId } })
+  async function assignUnassignUser(noteId, userId) {
+    await assignUserToNote({ variables: { noteId, userId } })
+    refetch()
   }
 
   if (authState.user.userType !== 'admin') {
@@ -40,7 +42,7 @@ export default function TaskUpdate({ match }) {
     <>
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
       <div className="container">
-        <TaskForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser} />
+        <TaskUpdateForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser} />
       </div>
     </>
   )
