@@ -7,7 +7,6 @@ import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
-
 import { AssignUser } from '../../graphql/mutations'
 
 export default function TaskUpdate({ match }) {
@@ -17,7 +16,6 @@ export default function TaskUpdate({ match }) {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
-
   const [assignUserToNote] = useMutation(AssignUser)
 
   const  { data: liteData } = useQuery(UsersLiteQuery, {

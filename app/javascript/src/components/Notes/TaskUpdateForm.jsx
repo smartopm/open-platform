@@ -237,3 +237,4 @@ TaskForm.propTypes = {
   data: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired
 }
+
