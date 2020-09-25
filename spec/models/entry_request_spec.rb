@@ -55,7 +55,7 @@ RSpec.describe EntryRequest, type: :model do
       community.default_users = [user.id]
       community.save
       @entry_request = user.entry_requests.create(reason: 'Prospective Client',
-                                                    name: 'Visitor Joe', nrc: '012345')
+                                                  name: 'Visitor Joe', nrc: '012345')
       create_task = @entry_request.create_entry_task
 
       expect(create_task[:user_id]).to eql user.id

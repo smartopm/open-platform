@@ -45,6 +45,18 @@ export function checkForHtmlTags(str) {
 
 /**
  *
+ * @param {String} str
+ * @returns a string
+ * @description removes new lines and line break from a string
+ */
+export function removeNewLines(str) {
+  if (!str) return
+  const result = str.replace(/(\r\n|\n|\r)/gm, "")
+  return result
+}
+
+/**
+ *
  * @param {String} message
  * @param {Number} count
  * @description returns a substring of the given message after the character count passed to the function

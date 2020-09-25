@@ -36,16 +36,17 @@ class EntryRequest < ApplicationRecord
     log_decision('denied', last_event_log.id)
   end
 
-  def create_entry_task()
+  def create_entry_task
     task_obj = {
-      body: "New prospective client <a href='https://app.doublegdp.com/entry_logs'>#{self[:name]}</a> visited Nkwashi site. Please enroll them in system and setup a followup call",
+      body: "New prospective client
+      <a href='https://app.doublegdp.com/entry_logs'>#{self[:name]}</a>
+      visited Nkwashi site. Please enroll them in system and setup a followup call",
       category: 'to_do',
       flagged: true,
       completed: false,
-      due_date: 5.days.from_now
+      due_date: 5.days.from_now,
     }
-    note_id = user.generate_note(task_obj).id
-    assign_task(note_id)
+    assign_task(user.generate_note(task_obj).id)
   end
 
   def assign_task(note_id)
@@ -113,9 +114,9 @@ class EntryRequest < ApplicationRecord
   def attach_community
     self[:community_id] = user.community_id
   end
-  
+
   def check_reason?
-    self[:reason] == "Prospective Client"
+    self[:reason] == 'Prospective Client'
   end
 
   def log_entry

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount, checkForHtmlTags, removeNewLines } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -17,6 +17,8 @@ const duplicateError = "GraphQL error: Duplicate Email"
 
 const fieldError = "GraphQL error: userType of type String! was provided invalid value"
 const requiredKeys = ["userType", "phoneNumber", "name", "email"];
+const strWithTags = "New prospective client <a>Tolulope</a> visited Nkwashi site"
+const strWitNewLines = "This is a test\nstring"
 
 describe('find links and replace with anchor tag', () => {
   // find link in a text and replace
@@ -45,6 +47,22 @@ describe('truncate messages', () => {
   })
   it('should return undefined when no params is given', () => {
     expect(truncateString()).toBe(undefined)
+  })
+})
+
+describe('Remove new lines', () => {
+  it('should remove new line in a string', () => {
+    expect(removeNewLines(strWitNewLines)).toBe(
+      'This is a teststring'
+    )
+  })
+})
+
+describe('Check HTML tags', () => {
+  it('should return true if html tags are present', () => {
+    expect(checkForHtmlTags(strWithTags)).toBe(
+      true
+    )
   })
 })
 
