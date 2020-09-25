@@ -5,6 +5,7 @@ class DoubleGdpSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)
   use GraphQL::Guard.new(policy_object: GraphqlPolicy)
+  use(GraphQL::Tracing::NewRelicTracing)
 
   rescue_from(User::PhoneTokenResultInvalid,
               User::PhoneTokenResultExpired) do |_err, _obj, _args, _ctx, _field|

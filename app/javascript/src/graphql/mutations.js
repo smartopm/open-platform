@@ -302,6 +302,8 @@ export const UpdateNote = gql`
     $id: ID!
     $body: String
     $flagged: Boolean
+    $category: String
+    $userId: ID
     $completed: Boolean
     $dueDate: String
   ) {
@@ -309,6 +311,8 @@ export const UpdateNote = gql`
       id: $id
       body: $body
       flagged: $flagged
+      category: $category
+      userId: $userId
       completed: $completed
       dueDate: $dueDate
     ) {
