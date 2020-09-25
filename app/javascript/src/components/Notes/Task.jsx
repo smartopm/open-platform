@@ -17,6 +17,7 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { Spinner } from '../Loading'
 import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
+import { checkForHtmlTags, sanitizeText } from '../../utils/helpers'
 
 export default function Task({
   note,
@@ -51,7 +52,9 @@ export default function Task({
       <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom >
-            <span style={{ whiteSpace: 'pre-line' }}>{note.body}</span>
+            {checkForHtmlTags(note.body) ? <span style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: sanitizeText(note.body) }}/>
+              :  <span style={{ whiteSpace: 'pre-line' }}>{note.body}</span> 
+            }
           </Typography>
         </Grid>
         <Grid item xs={12}>

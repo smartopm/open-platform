@@ -33,6 +33,18 @@ export function findLinkAndReplace(msg) {
 
 /**
  *
+ * @param {String} str
+ * @returns a booleen if string has html tags
+ * @description check if a string contains html tags and return a boolean
+ */
+export function checkForHtmlTags(str) {
+  if (!str) return
+  const result = /<\/?[a-z][\s\S]*>/i.test(str)
+  return result
+}
+
+/**
+ *
  * @param {String} message
  * @param {Number} count
  * @description returns a substring of the given message after the character count passed to the function

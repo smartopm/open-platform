@@ -49,6 +49,19 @@ RSpec.describe EntryRequest, type: :model do
       expect(EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
+    it 'should create a task record for prospective client', skip_before: true do
+      community = FactoryBot.create(:community)
+      user = FactoryBot.create(:user, community: community)
+      community.default_users = [user.id]
+      community.save
+      @entry_request = user.entry_requests.create(reason: 'Prospective Client',
+                                                    name: 'Visitor Joe', nrc: '012345')
+      create_task = @entry_request.create_entry_task
+
+      expect(create_task[:user_id]).to eql user.id
+      allow(@entry_request).to receive(:create_entry_task)
+    end
+
     it 'should not throw error when guard grants entries' do
       @entry_request = @guard.entry_requests.create(reason: 'Visiting',
                                                     name: 'Visitor Joe', nrc: '012345')

@@ -38,7 +38,7 @@ class EntryRequest < ApplicationRecord
 
   def create_entry_task()
     task_obj = {
-      body: "New prospective client #{self[:name]} visited Nkwashi site. Please enroll them in system and setup a followup call",
+      body: "New prospective client <a href='https://app.doublegdp.com/entry_logs'>#{self[:name]}</a> visited Nkwashi site. Please enroll them in system and setup a followup call",
       category: 'to_do',
       flagged: true,
       completed: false,
@@ -50,7 +50,7 @@ class EntryRequest < ApplicationRecord
 
   def assign_task(note_id)
     assign = user.community.notes.find(note_id)
-                 .assign_or_unassign_user('6ed32d86-627e-4dc1-b9c6-03b823c802d3')
+                 .assign_or_unassign_user(user.community.default_community_users[0].id)
     return assign unless assign.nil?
   end
 
