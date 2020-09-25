@@ -2,4 +2,4 @@
   points_auto_alert:
     cron: '00 9 * * 4 Africa/Lusaka'
     class: PointsAutoAlertJob
-    description: "This sends email to clients every Thursday to get points"
+    description: "This sends email to clients every Thursday(9am) to get points"
