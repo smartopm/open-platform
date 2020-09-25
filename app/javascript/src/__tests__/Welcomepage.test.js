@@ -17,6 +17,7 @@ describe('component that centers divs', () => {
         expect(container.queryByText('Schedule a call')).toBeInTheDocument()
         expect(container.queryByText('Book a tour')).toBeInTheDocument()
         expect(container.queryByText('Become a client')).toBeInTheDocument()
+        expect(container.queryByText('Apply for Nkwashi Residency')).toBeInTheDocument()
         expect(container.queryByTestId('contact').textContent).toContain('260 966 194383')
         expect(container.queryByTestId('contact-email').textContent).toContain('hello@thebe-im.com')
         expect(container.queryByTestId('login_btn').textContent).toContain('Login')
