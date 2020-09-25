@@ -173,7 +173,7 @@ export default function RequestUpdate({ match, history, location }) {
             : 'Approve Request'
         }
         menuButton="cancel"
-        backTo="/entry_logs"
+        backTo={`/entry_logs/?offset=${location.state?.offset}`}
       />
 
       <ModalDialog
