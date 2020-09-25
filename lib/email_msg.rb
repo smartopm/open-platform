@@ -15,7 +15,7 @@ class EmailMsg
   # disabling rubocop till I find a better to lighten this method
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def self.send_mail(user_email, template_id, template_data)
+  def self.send_mail(user_email, template_id, template_data = {})
     return if Rails.env.test?
     raise EmailMsgError, 'Email must be provided' if user_email.blank?
 

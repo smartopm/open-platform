@@ -1,17 +1,22 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-use-before-define */
 import React, { useState, Fragment, useContext,useEffect } from 'react'
 import { useQuery } from 'react-apollo'
-import Nav from '../../components/Nav'
+import { useLocation } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
-import Loading from '../../components/Loading.jsx'
-import { AllEventLogsQuery } from '../../graphql/queries.js'
+import Nav from '../../components/Nav'
+import Loading from '../../components/Loading'
+import { AllEventLogsQuery } from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import newUserIcon from '../../../../assets/images/new.svg'
 import gateIcon from '../../../../assets/images/bar.svg'
 import {userType} from '../../utils/constants'
 import useDebounce  from '../../utils/useDebounce'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
 import {
   StyledTabs,
   StyledTab,
@@ -43,10 +48,22 @@ const AllEventLogs = (history, match) => {
         [dbcSearchTerm]
       );
 
+      function getQuery() {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        return new URLSearchParams(useLocation().search);
+      }
+
+      const query = getQuery()
+
+      useEffect(() => {
+        const offsetParams = query.get('offset')
+        setOffset(Number(offsetParams))
+      }, [])
+
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
       subject: value === 0 ? subjects : 'user_enrolled',
-      refId: refId,
+      refId,
       refType: null,
       offset,
       limit,
@@ -111,19 +128,22 @@ export function IndexComponent({
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
-      return router.push({
+      router.push({
         pathname: `/request/${eventLog.refId}`,
-        state: { from: 'logs' }
+        state: { from: 'logs', offset }
       })
-    } else if (eventLog.refType === 'User') {
-      return router.push(`/user/${eventLog.refId}`)
+    } if (eventLog.refType === 'User') {
+      router.push({
+        pathname: `/user/${eventLog.refId}`,
+        state: { from: 'logs', offset }
+      })
     }
   }
 
   function enrollUser(id) {
     return router.push({
       pathname: `/request/${id}`,
-      state: { from: 'enroll' }
+      state: { from: 'enroll', offset }
     })
   }
 
@@ -161,7 +181,10 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.access)}>
-                  <strong>{accessStatus} </strong>
+                  <strong>
+                    {accessStatus}
+                    {' '}
+                  </strong>
                 </span>
                 <span className={css(styles.subTitle)}>
                   {dateToString(event.createdAt)}
@@ -188,11 +211,15 @@ export function IndexComponent({
               <div className="col-xs-4">
 
                 {/* Temperature status placeholder */}
-                <span className={css(styles.subTitle)}> {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}</span>
+                <span className={css(styles.subTitle)}> 
+                  {' '}
+                  { /* eslint-disable-next-line no-useless-concat */}
+                  {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}
+                </span>
 
                 <span className={css(styles.subTitle)}>
                   {source !== 'Scan' && authState.user.userType === 'admin' && !enrolled ? (
-                    <Fragment>
+                    <>
                       <span
                         style={{
                           cursor: 'pointer',
@@ -200,16 +227,21 @@ export function IndexComponent({
                         }}
                         onClick={() => enrollUser(event.refId)}
                       >
-                        Enroll user{' '}
+                        Enroll user
+                        {' '}
                       </span>
-                      | {source}
-                    </Fragment>
+                      | 
+                      {' '}
+                      {source}
+                    </>
                   ) : source === 'Scan' && isDigital !== null ? (
                     `${isDigital ? 'Digital' : 'Print'} Scan`
                   ) : (
                         source
-                      )}{' '}
-                  |{' '}
+                      )}
+                  {' '}
+                  |
+                  {' '}
                   <span
                     style={{
                       cursor: 'pointer',
@@ -249,7 +281,7 @@ export function IndexComponent({
           backgroundColor: '#69ABA4'
         }}
       >
-        <Nav menuButton="back" navName="Log Book" boxShadow={'none'} backTo="/" />
+        <Nav menuButton="back" navName="Log Book" boxShadow="none" backTo="/" />
       </div>
       <div className="container">
         <div className="form-group">
@@ -269,14 +301,14 @@ export function IndexComponent({
           aria-label="simple tabs example"
           centered
         >
-          <StyledTab icon={<img src={gateIcon} style={{ height: 30, width: 30 }} />}  {...a11yProps(0)} />
-          <StyledTab icon={<img src={newUserIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(1)} />
+          <StyledTab icon={<img alt="" src={gateIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(0)} />
+          <StyledTab icon={<img alt="" src={newUserIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(1)} />
         </StyledTabs>
         <TabPanel value={tabValue} index={0}>
           <>{logs(filteredEvents)}</>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
-          {/*Todo: Handle the listing of enrolled users here*/}
+          {/* Todo: Handle the listing of enrolled users here */}
 
           {data.result.map(user => {
             return (
@@ -316,6 +348,7 @@ export function IndexComponent({
         <nav aria-label="center Page navigation">
           <ul className="pagination">
             <li className={`page-item ${offset < limit && 'disabled'}`}>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={previousPage} href="#">
                 Previous
               </a>
@@ -324,6 +357,7 @@ export function IndexComponent({
               className={`page-item ${filteredEvents.length < limit &&
                 'disabled'}`}
             >
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={nextPage} href="#">
                 Next
               </a>
@@ -331,7 +365,7 @@ export function IndexComponent({
           </ul>
         </nav>
       </div>
-      <Footer position={'3vh'} />
+      <Footer position="3vh" />
     </div>
   )
 }
