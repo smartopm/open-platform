@@ -16,7 +16,7 @@ import { useHistory, Link } from 'react-router-dom'
 import { Spinner } from '../Loading'
 import { UserChip } from '../UserChip'
 import DateContainer, { dateToString } from '../DateContainer'
-import { checkForHtmlTags, sanitizeText, removeNewLines } from '../../utils/helpers'
+import { sanitizeText, removeNewLines } from '../../utils/helpers'
 
 export default function Task({
   note,
@@ -52,8 +52,7 @@ export default function Task({
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
             { /* eslint-disable-next-line react/no-danger */}
-            {checkForHtmlTags(note.body) ? <span style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: sanitizeText(removeNewLines(note.body)) }} />
-              :  <span style={{ whiteSpace: 'pre-line' }}>{note.body}</span>}
+            <span style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: sanitizeText(removeNewLines(note.body)) }} />
           </Typography>
         </Grid>
         <Grid item xs={12}>
