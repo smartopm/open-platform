@@ -38,7 +38,7 @@ describe('component that centers divs', () => {
     })
     it('should have 3 main buttons', () => {
         const container = render(<Welcome />)
-        expect(container.container.getElementsByTagName('button')).toHaveLength(6)
+        expect(container.container.getElementsByTagName('button')).toHaveLength(7)
     })
     it('should have an image with a proper url', () => {
         const container = render(<Welcome />)
