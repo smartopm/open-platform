@@ -18,7 +18,7 @@ RSpec.describe PointsAutoAlertJob, type: :job do
     end
 
     it 'invokes EmailMsg' do
-      expect(EmailMsg).to receive(:send_mail).with(user.email, 'fgcagv5r2yr67')
+      expect(EmailMsg).to receive(:send_mail).with(user.email, 'fgcagv5r2yr67', 'url': ENV['HOST'])
       perform_enqueued_jobs { described_class.perform_later }
     end
   end
