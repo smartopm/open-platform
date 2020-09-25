@@ -115,3 +115,38 @@ export const customerCare = [
     type: "mail"
   }
 ]
+
+export const messageFilters = [
+  {
+    value: "sms/",
+    title: "SMS",
+  },
+  {
+    value: "email/",
+    title: "Email",
+  },
+  {
+    value: "/campaign",
+    title: "Campaign",
+  },
+  {
+    value: "/non_campaign",
+    title: "Non Campaign",
+  },
+  {
+    value: "sms/campaign",
+    title: "SMS and Campaign",
+  },
+  {
+    value: "sms/non_campaign",
+    title: "SMS and Non-Campaign",
+  },
+  {
+    value: "email/campaign",
+    title: "Email and Campaign",
+  },
+  {
+    value: "email/non_campaign",
+    title: "Email and Non-Campaign",
+  },
+]
