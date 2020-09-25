@@ -42,6 +42,7 @@ RSpec.describe Note, type: :model do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:assignee_notes) }
     it { is_expected.to have_many(:assignees) }
-    it { is_expected.to have_many(:comments) }
+    it { is_expected.to have_many(:note_comments) }
+    it { is_expected.to have_many(:note_histories) }
   end
 end

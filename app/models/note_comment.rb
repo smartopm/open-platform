@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Notes specific Comments
 class NoteComment < ApplicationRecord
   include NoteHistoryRecordable
 

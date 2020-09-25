@@ -2,7 +2,7 @@
 
 module Mutations
   module Note
-
+    # Update Note Comments attributes
     class NoteCommentUpdate < BaseMutation
       argument :id, ID, required: true
       argument :body, String, required: true
@@ -20,7 +20,7 @@ module Mutations
           return { note_comment: comment }
         end
 
-        raise GraphQL::ExecutionError, note.errors.full_messages     
+        raise GraphQL::ExecutionError, note.errors.full_messages
       end
 
       def authorized?(_vals)

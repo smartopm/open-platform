@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Common method for note entities to call and record changes made to them
 module NoteHistoryRecordable
   extend ActiveSupport::Concern
 
@@ -21,7 +24,7 @@ module NoteHistoryRecordable
       history.initial_value = val.first
       history.updated_value = val.last
       next if history.save
-  
+
       raise StandardError, history.errors.full_messages
     end
   end
@@ -29,10 +32,10 @@ module NoteHistoryRecordable
   def note_history(action, user)
     NoteHistory.new(
       action: action,
-      user: user, 
+      user: user,
       note_entity_type: self.class.name,
       note_entity_id: id,
-      note_id: associated_note
+      note_id: associated_note,
     )
   end
 

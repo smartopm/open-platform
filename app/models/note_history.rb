@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
+# Stores all the changes and updates in entities associated to notes
 class NoteHistory < ApplicationRecord
   belongs_to :note
   belongs_to :user
 
-  has_one :note_comment, as: :note_entity
-  has_one :message, as: :note_entity
+  # has_one :note_comment, as: :note_entity
+  # has_one :message, as: :note_entity
 
   # Prefer using this method to get associated entity
   def entity

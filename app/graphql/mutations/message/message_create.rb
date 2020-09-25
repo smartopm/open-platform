@@ -11,6 +11,7 @@ module Mutations
 
       field :message, Types::MessageType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         message = context[:current_user].construct_message(vals)
         message.category = 'sms'
@@ -24,9 +25,10 @@ module Mutations
         record_history(message) if vals[:note_id].present?
         { message: message }
       end
+      # rubocop:enable Metrics/AbcSize
 
       def record_history(message)
-        message.record_note_history(context[:current_user], { id: message.reload.id }) 
+        message.record_note_history(context[:current_user], id: message.reload.id)
       end
 
       def check_default_user_empty?

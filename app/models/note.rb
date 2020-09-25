@@ -15,7 +15,6 @@ class Note < ApplicationRecord
   belongs_to :author, class_name: 'User'
   has_many :assignee_notes, dependent: :destroy
   has_many :assignees, through: :assignee_notes, source: :user
-  has_many :comments
   has_many :note_comments, dependent: :destroy
   has_many :note_histories, dependent: :destroy
 
