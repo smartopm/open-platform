@@ -29,6 +29,26 @@ class EmailMsg
     client.mail._('send').post(request_body: mail.to_json)
   end
 
+  def self.sendgrid_api(api_link)
+    url = URI(api_link)
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(url)
+    request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_updated_api_key]}"
+    request.body = '{}'
+    response = http.request(request)
+    res = JSON.parse(response.read_body)
+    res
+  end
+
+  def self.get_unsubscribes_list
+    return if Rails.env.test?
+
+    response = sendgrid_api('https://api.sendgrid.com/v3/suppression/unsubscribes')
+    response
+  end
+
   def self.messages_from_sendgrid(date_from)
     return if Rails.env.test?
 
