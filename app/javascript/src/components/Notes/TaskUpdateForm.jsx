@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -232,12 +232,8 @@ export default function TaskForm({ users, data, assignUser }) {
   )
 }
 
-TaskForm.defaultProps = {
-  users: []
+TaskForm.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.string).isRequired,
+  data: PropTypes.func.isRequired,
+  assignUser: PropTypes.func.isRequired
 }
-
-// TaskForm.propTypes = {
-//   users: PropTypes.array,
-//   close: PropTypes.func,
-//   refetch: PropTypes.func,
-// }

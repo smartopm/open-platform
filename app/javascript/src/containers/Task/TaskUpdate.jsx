@@ -1,14 +1,13 @@
-/* eslint-disable */
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { TaskQuery } from '../../graphql/queries'
+import { TaskQuery , UsersLiteQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
-import { UsersLiteQuery } from '../../graphql/queries'
+
 import { AssignUser } from '../../graphql/mutations'
 
 export default function TaskUpdate({ match }) {
@@ -18,7 +17,6 @@ export default function TaskUpdate({ match }) {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
-  const [assignees, setAssignees] = useState([])
 
   const [assignUserToNote] = useMutation(AssignUser)
 
