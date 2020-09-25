@@ -3,7 +3,7 @@ module NoteHistoryRecordable
 
   def record_note_history(current_user, saved_changes)
     return add_create_history(current_user) if saved_changes.key?(:id)
-    
+
     add_update_history(current_user, saved_changes)
   end
 
@@ -32,7 +32,11 @@ module NoteHistoryRecordable
       user: user, 
       note_entity_type: self.class.name,
       note_entity_id: id,
-      note_id: note_id
+      note_id: associated_note
     )
+  end
+
+  def associated_note
+    attribute_present?(:note_id) ? note_id : id
   end
 end

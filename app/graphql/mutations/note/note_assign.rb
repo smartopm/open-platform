@@ -10,10 +10,20 @@ module Mutations
       field :assignee_note, String, null: true
 
       def resolve(note_id:, user_id:)
-        note = context[:site_community].notes.find(note_id).assign_or_unassign_user(user_id)
-        return { assignee_note: 'success' } if note.errors.blank?
+        note = context[:site_community].notes.find(note_id)
+        init_user_id = note.user_id
+        note.assign_or_unassign_user(user_id)
+        raise GraphQL::ExecutionError, note.errors.full_messages if note.errors.present?
 
-        raise GraphQL::ExecutionError, note.errors.full_messages
+        record_history(init_user_id, note.reload.user_id)
+      end
+
+      def record_history(init_user_id, updated_user_id)
+        updates_hash = { user_id: [init_user_id, updated_user_id] }
+        return { assignee_note: 'failed' } if updated_user_id.eql?(init_user_id)
+
+        note.record_note_history(context[:current_user], updates_hash)
+        { assignee_note: 'success' }
       end
 
       # TODO: Better auth here
