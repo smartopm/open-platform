@@ -51,6 +51,7 @@ gem 'rqrcode'
 
 # Sidekiq for jobs
 gem 'sidekiq'
+gem "sidekiq-scheduler", "~> 3.0"
 
 gem 'serviceworker-rails'
 
@@ -116,3 +117,4 @@ end
 
 
 gem "request_store", "~> 1.4"
+
