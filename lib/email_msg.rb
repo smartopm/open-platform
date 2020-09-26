@@ -42,34 +42,26 @@ class EmailMsg
     res
   end
 
-  def self.get_unsubscribes_list
+  def self.fetch_unsubscribes_list
     return if Rails.env.test?
 
     response = sendgrid_api('https://api.sendgrid.com/v3/suppression/unsubscribes')
     response
   end
 
-  def self.messages_from_sendgrid(date_from)
+  def self.messages_from_sendgrid(date_from=nil)
     return if Rails.env.test?
 
     past_date = DateTime.now - 3.days
     end_date = ERB::Util.url_encode(past_date.to_s)
-    date_from_e = date_from.blank? ? end_date : ERB::Util.url_encode(date_from)
+    date_from_e = date_from.nil? ? end_date : ERB::Util.url_encode(date_from)
     start_date = ERB::Util.url_encode(DateTime.now.to_s)
 
     # rubocop:disable Metrics/LineLength
     url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
     # rubocop:enable Metrics/LineLength
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    request = Net::HTTP::Get.new(url)
-    request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_updated_api_key]}"
-    request.body = '{}'
-    response = http.request(request)
-    response.read_body
-    emails = JSON.parse(response.read_body)
-    emails['messages']
+    response = sendgrid_api(url)
+    response['messages']
   end
 
   # other stuff ==> message body
