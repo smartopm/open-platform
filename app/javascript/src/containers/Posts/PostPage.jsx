@@ -22,7 +22,7 @@ import { Spinner } from '../../components/Loading'
 import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
-import { DiscussionMutation, LogReadPost } from '../../graphql/mutations'
+import { DiscussionMutation, LogReadPost, LogSharedPost } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -45,6 +45,7 @@ export default function PostPage() {
   })
   const [discuss] = useMutation(DiscussionMutation)
   const [logReadPost] = useMutation(LogReadPost)
+  const [logSharedPost] = useMutation(LogSharedPost)
 
   useEffect(() => {
     if (authState.loggedIn) {
@@ -85,6 +86,13 @@ export default function PostPage() {
     })
   }
 
+  function onPostShare() {
+    logSharedPost({
+      variables: { postId: id }
+    })
+    .then(res => res)
+    .catch(err => console.log(err.message))
+  }
 
   if (!response || queryResponse.loading || loading) {
     return <Spinner />
@@ -113,6 +121,7 @@ export default function PostPage() {
             bottom: 80,
             right: 57
           }}
+          onShare={onPostShare}
         />
 
         <Fab

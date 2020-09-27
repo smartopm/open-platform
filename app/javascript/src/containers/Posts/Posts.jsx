@@ -32,8 +32,8 @@ export default function Posts() {
         <Nav navName="Nkwashi News" menuButton="back" backTo="/" />
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
           <Typography variant='h4' color='textSecondary'>
-            {slugs[slug] === "Post" && "Posts" || slug === "artists-in-residence" 
-            && "Artist in Residence" 
+            {slugs[slug] === "Post" && "Posts" || slug === "artists-in-residence"
+            && "Artist in Residence"
             || slugs[slug] || "Posts"}
           </Typography>
         </Box>

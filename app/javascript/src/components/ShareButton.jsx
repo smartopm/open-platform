@@ -23,12 +23,13 @@ import {
 } from 'react-share'
 import PropTypes from 'prop-types'
 import { StyleSheet } from 'aphrodite';
-export function ShareButton({ url, styles }) {
+export function ShareButton({ url, styles, onShare }) {
     const [openPopper, setOpenPopper] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false)
 
     function onShareClick(linkType) {
+        if (onShare) onShare()
         ReactGA.event({
             category: `ShareTo${linkType}`,
             action: 'NewPageShare',
@@ -41,10 +42,14 @@ export function ShareButton({ url, styles }) {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     }
     function handleCopy(url) {
+        if (onShare) onShare()
         if (copyText(url)) {
             setOpen(!open)
             return
         }
+    }
+    function onEmailClick() {
+        if (onShare) onShare()
     }
 
     return (
@@ -66,7 +71,7 @@ export function ShareButton({ url, styles }) {
                     <WhatsappShareButton url={url} title={document.title} onClick={() => onShareClick('whatsApp')}>
                         <WhatsappIcon size={50} round />
                     </WhatsappShareButton>
-                    <EmailShareButton url={url} subject={document.title} body={"Hi, vist Nkwashi's news page"}>
+                    <EmailShareButton url={url} subject={document.title} body={"Hi, vist Nkwashi's news page"} beforeOnClick={onEmailClick}>
                         <EmailIcon size={50} round />
                     </EmailShareButton>
                     <FacebookShareButton url={url} title={document.title} onClick={() => onShareClick('facebook')}>
