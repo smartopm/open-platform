@@ -121,7 +121,7 @@ export default function PostPage() {
             bottom: 80,
             right: 57
           }}
-          onShare={onPostShare}
+          doOnShare={onPostShare}
         />
 
         <Fab
