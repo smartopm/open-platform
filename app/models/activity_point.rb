@@ -5,6 +5,6 @@ class ActivityPoint < ApplicationRecord
   belongs_to :user
 
   def total
-    [article, comment, login, referral].sum
+    [article_read, article_shared, comment, login, referral].sum
   end
 end

@@ -5,7 +5,8 @@ module Types
   class UserPointType < Types::BaseObject
     field :id, ID, null: false
     field :user_id, ID, null: false
-    field :article, Integer, null: false
+    field :article_read, Integer, null: false
+    field :article_shared, Integer, null: false
     field :comment, Integer, null: false
     field :referral, Integer, null: false
     field :login, Integer, null: false

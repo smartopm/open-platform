@@ -8,7 +8,8 @@ class ActivityPointsJob < ApplicationJob
     user_login: :login,
     user_referred: :referral,
     user_comment: :comment,
-    post_read: :article,
+    post_read: :article_read,
+    post_shared: :article_shared,
   }.freeze
 
   # rubocop:disable Metrics/AbcSize
@@ -36,7 +37,7 @@ class ActivityPointsJob < ApplicationJob
 
   def action_point(action)
     case action
-    when 'user_referred'
+    when 'user_referred', 'post_shared'
       10
     else
       1

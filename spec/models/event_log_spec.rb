@@ -55,12 +55,23 @@ RSpec.describe EventLog, type: :model do
 
   describe '.post_read_to_sentence' do
     it 'returns a description for post_read event' do
-      user = FactoryBot.create(:user_with_community)
+      user = create(:user_with_community)
       community = user.community
       log = create(:event_log, acting_user: user, community: community,
                                subject: 'post_read', data: { post_id: 11 })
 
       expect(log.post_read_to_sentence).to eq("Post 11 was read by #{user.name}")
+    end
+  end
+
+  describe '.post_shared_to_sentence' do
+    it 'returns a description for post_shared event' do
+      user = create(:user_with_community)
+      community = user.community
+      log = create(:event_log, acting_user: user, community: community,
+                               subject: 'post_shared', data: { post_id: 11 })
+
+      expect(log.post_shared_to_sentence).to eq("Post 11 was shared by #{user.name}")
     end
   end
 end

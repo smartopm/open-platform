@@ -242,8 +242,8 @@ RSpec.describe User, type: :model do
   describe '#activity_point_for_current_week' do
     it 'returns activity points for the current week' do
       user = create(:user_with_community)
-      activity_point1 = create(:activity_point, user: user, article: 2, referral: 10)
-      activity_point2 = create(:activity_point, user: user, article: 1, referral: 20)
+      activity_point1 = create(:activity_point, user: user, article_read: 2, referral: 10)
+      activity_point2 = create(:activity_point, user: user, article_read: 1, referral: 20)
 
       activity_point1.update(created_at: 9.days.ago)
       expect(user.activity_point_for_current_week).to eq(activity_point2)

@@ -133,6 +133,7 @@ module Types::Queries::User
     user = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless user
 
-    user.activity_point_for_current_week
+    activity_point = user.activity_point_for_current_week
+    activity_point || ActivityPoint.create!(user: user)
   end
 end

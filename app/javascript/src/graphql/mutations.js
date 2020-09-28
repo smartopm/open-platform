@@ -670,3 +670,13 @@ export const LogReadPost = gql`
     }
   }
 `
+
+export const LogSharedPost = gql`
+  mutation LogSharedPost($postId: String!) {
+    logSharedPost(postId: $postId) {
+      eventLog {
+        id
+      }
+    }
+  }
+`
