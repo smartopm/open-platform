@@ -3,7 +3,7 @@
 require 'email_msg'
 
 # Check users who have unsubscribed from our emails
-class CheckUnsubscribe < ApplicationJob
+class CheckUnsubscribedUsersJob < ApplicationJob
   queue_as :default
 
   def perform(community)

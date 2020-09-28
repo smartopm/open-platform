@@ -5,6 +5,6 @@
     description: "This sends email to clients every Thursday(9am) to get points"
   check_unsubscribed_users:
     cron: '00 0 * * * Africa/Lusaka'
-    class: CheckUnsubscribe
+    class: CheckUnsubscribedUsersJob
     args: ['Nkwashi']
-    description: "This check users who have unsubscribed from email every day"
+    description: "This checks users who have unsubscribed from email every day"
