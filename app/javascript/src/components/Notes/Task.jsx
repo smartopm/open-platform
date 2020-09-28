@@ -12,11 +12,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { useHistory, Link } from 'react-router-dom'
+import { Link , useHistory } from 'react-router-dom'
+
 import { Spinner } from '../Loading'
 import { UserChip } from '../UserChip'
 import DateContainer, { dateToString } from '../DateContainer'
-import { sanitizeText, removeNewLines } from '../../utils/helpers'
+import { removeNewLines, sanitizeText } from '../../utils/helpers'
 
 export default function Task({
   note,
@@ -42,8 +43,8 @@ export default function Task({
     setNoteId(noteId)
   }
 
-  function routeToAction(_event, id) {
-    return history.push(`/todo/${id}`)
+  function routeToAction(_event, taskId) {
+    return history.push(`/todo/${taskId}`)
   }
 
   return (
@@ -166,15 +167,6 @@ export default function Task({
               >
                 More Details
               </Link>
-            </Typography>
-            {/* color="inherit"
-            onClick=
-            {() => handleModal(note.id)}
-            /> */}
-            <Typography variant="subtitle1" gutterBottom>
-              Due at: 
-              {' '}
-              {note.dueDate ? `  ${dateToString(note.dueDate)}` : ' Never'}
             </Typography>
           </div>
           <Button
