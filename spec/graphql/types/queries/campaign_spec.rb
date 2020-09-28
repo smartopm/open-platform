@@ -16,7 +16,8 @@ RSpec.describe Types::QueryType do
 
     let!(:campaign_label) { create(:campaign_label, label_id: label.id, campaign_id: campaigns.id) }
     let!(:sent_message) do
-      create(:message, user_id: current_user.id, sender_id: admin.id, campaign_id: campaigns.id)
+      create(:message, user_id: current_user.id, sender_id: admin.id, campaign_id: campaigns.id,
+                       category: 'sms')
     end
 
     let(:campaigns_query) do

@@ -57,6 +57,7 @@ RSpec.describe User, type: :model do
       message: 'Admin testing out message',
       user_id: current_user.id,
       source_system_id: msg_id,
+      category: 'email',
     )
     message.save!
     mess = EmailMsg.message_exists?(msg_id, current_user.id)
@@ -69,6 +70,7 @@ RSpec.describe User, type: :model do
       message: 'Admin testing out message',
       user_id: current_user.id,
       source_system_id: msg_id,
+      category: 'email',
     )
     message.save!
     mess = EmailMsg.message_update?(users_emails[0])
@@ -81,6 +83,7 @@ RSpec.describe User, type: :model do
       message: 'Admin testing out message',
       user_id: current_user.id,
       source_system_id: SecureRandom.uuid,
+      category: 'email',
     )
     message.save!
     mess = EmailMsg.message_exists?(msg_id, current_user.id)
