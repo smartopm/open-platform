@@ -2,7 +2,7 @@
 
 module Mutations
   module Post
-    # Add a log for a post read by a user
+    # Add a log for a post shared by a user
     class LogSharedPost < BaseMutation
       argument :post_id, String, required: true
 
