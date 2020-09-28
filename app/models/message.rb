@@ -42,7 +42,7 @@ class Message < ApplicationRecord
 
   def create_message_task(body = nil)
     msg_obj = {
-      body: "Reply to message from: #{user.name} \n #{body}",
+      body: "Reply to <a href=\"https://tolu.dgdp.site/message/#{user.id}\">message</a> from: #{user.name} \n #{body}",
       category: 'message',
       flagged: true,
       completed: false,
@@ -54,7 +54,7 @@ class Message < ApplicationRecord
 
   def assign_message_task(note_id)
     assign = user.community.notes.find(note_id)
-                 .assign_or_unassign_user(user.community.default_community_users[0].id)
+                 .assign_or_unassign_user('6ed32d86-627e-4dc1-b9c6-03b823c802d3')
     return assign unless assign.nil?
   end
 
