@@ -11,7 +11,7 @@ class Message < ApplicationRecord
   after_update :update_campaign_message_count, if: proc { saved_change_to_campaign_id? }
 
   VALID_CATEGORY = %w[email sms].freeze
-  validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
+  validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: false }
 
   class Unauthorized < StandardError; end
 
