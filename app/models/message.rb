@@ -19,10 +19,10 @@ class Message < ApplicationRecord
      ON senders_messages.id = messages.sender_id WHERE ((users.community_id=?
      AND senders_messages.community_id=?" + campaign_query(filt[:filter]) + ")
      AND (users.name ILIKE ? OR users.phone_number ILIKE ? OR users.name ILIKE ?
-     OR users.phone_number ILIKE ? OR messages.message ILIKE ?) AND messages.category ILIKE ?)
+     OR users.phone_number ILIKE ? OR messages.message ILIKE ?)" + category_query(filt[:cat]) + ")
      GROUP BY messages.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
      ON messages.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
-     Array.new(2, comid) + Array.new(5, "%#{query}%") + ["%#{filt[:category]}%"] + [lmt, off])
+     Array.new(2, comid) + Array.new(5, "%#{query}%") + [lmt, off])
   end
 
   def mark_as_read
@@ -56,6 +56,12 @@ class Message < ApplicationRecord
     assign = user.community.notes.find(note_id)
                  .assign_or_unassign_user(user.community.default_community_users[0].id)
     return assign unless assign.nil?
+  end
+
+  def self.category_query(filter)
+    return '' if filter.blank?
+
+    " AND messages.category ILIKE '%#{filter}%'"
   end
 
   def self.campaign_query(filter)

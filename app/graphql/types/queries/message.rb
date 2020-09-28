@@ -59,7 +59,7 @@ module Types::Queries::Message
   def check_filter(params)
     category, flt = params.split('/')
     {
-      category: category.to_s,
+      cat: category.to_s,
       filter: flt,
     }
   end
