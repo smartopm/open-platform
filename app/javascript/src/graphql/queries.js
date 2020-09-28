@@ -530,7 +530,8 @@ export const UserPointQuery = gql`
   query userActivityPoint{
     userActivityPoint{
       total
-      article
+      articleRead
+      articleShared
       comment
       login
       referral

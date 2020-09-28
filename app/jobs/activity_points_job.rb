@@ -8,7 +8,7 @@ class ActivityPointsJob < ApplicationJob
     user_login: :login,
     user_referred: :referral,
     user_comment: :comment,
-    post_read: :article,
+    post_read: :article_read,
   }.freeze
 
   # rubocop:disable Metrics/AbcSize
