@@ -59,8 +59,8 @@ module Types::Queries::Message
   def check_filter(params)
     category, flt = params.split('/')
     {
-      category: category.to_s,
-      filter: flt.to_s,
+      category: category.to_s, # email, sms
+      filter: flt, # campaign or not
     }
   end
 end
