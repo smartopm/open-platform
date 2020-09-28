@@ -3,3 +3,8 @@
     cron: '00 9 * * 4 Africa/Lusaka'
     class: PointsAutoAlertJob
     description: "This sends email to clients every Thursday(9am) to get points"
+  check_unsubscribed_users:
+    cron: '00 0 * * * Africa/Lusaka'
+    class: CheckUnsubscribe
+    args: ['Nkwashi']
+    description: "This check users who have unsubscribed from email every day"

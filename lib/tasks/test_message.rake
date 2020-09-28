@@ -10,7 +10,9 @@ task test_message: :environment do
   unsubscribed_users = community.users.where(email: emails)
   label_id = community.labels.find_by(short_desc: 'com_news_email')&.id
   unsubscribed_users.map do |user|
-    # add a check here to make sure the user has that label before attempting
-    user.user_labels.find_by(label_id: label_id).delete
+    label = user.user_labels.find_by(label_id: label_id)
+    if label.present?
+      label.delete
+    end
   end
 end
