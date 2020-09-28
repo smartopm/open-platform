@@ -132,7 +132,7 @@ export function CustomButton({ title, ...props }) {
     call: 'https://forms.gle/4t553oiff7XTFYnW9',
     tour: 'https://forms.gle/9N79ZwKXTPxcrAta9',
     client: 'https://forms.gle/rtSH9oou9usUfJQ98',
-    nkwashi: 'https://forms.gle/AD36GCFfvD6j3t3t9'
+    Nkwashi: 'https://forms.gle/AD36GCFfvD6j3t3t9'
   }
   function getName(name) {
     return name.split(' ')[2]
