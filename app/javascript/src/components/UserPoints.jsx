@@ -47,6 +47,7 @@ UserPoints.propTypes = {
   userPoints: PropTypes.shape({
     total: PropTypes.number.isRequired,
     articleRead: PropTypes.number.isRequired,
+    articleShared: PropTypes.number.isRequired,
     comment: PropTypes.number.isRequired,
     login: PropTypes.number.isRequired,
     referral: PropTypes.number.isRequired
