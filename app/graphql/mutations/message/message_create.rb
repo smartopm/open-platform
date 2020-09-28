@@ -12,6 +12,7 @@ module Mutations
 
       def resolve(vals)
         message = context[:current_user].construct_message(vals)
+        message.category = 'sms'
         message.save
         message.send_sms
         if check_ids(message[:sender_id], vals[:user_id])

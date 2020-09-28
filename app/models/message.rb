@@ -10,6 +10,9 @@ class Message < ApplicationRecord
   after_create :update_campaign_message_count, if: :campaign_id?
   after_update :update_campaign_message_count, if: proc { saved_change_to_campaign_id? }
 
+  VALID_CATEGORY = %w[email sms].freeze
+  validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
+
   class Unauthorized < StandardError; end
 
   def self.users_newest_msgs(query, off, lmt, comid, filt)
