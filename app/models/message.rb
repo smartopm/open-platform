@@ -45,7 +45,8 @@ class Message < ApplicationRecord
 
   def create_message_task(body = nil)
     msg_obj = {
-      body: "Reply to message from: #{user.name} \n #{body}",
+      body: "Reply to <a href=\"https://#{ENV['HOST']}/message/#{user.id}\">message</a>
+      from: #{user.name} \n #{body}",
       category: 'message',
       flagged: true,
       completed: false,
