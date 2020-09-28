@@ -134,6 +134,6 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, 'Unauthorized' unless user
 
     activity_point = user.activity_point_for_current_week
-    activity_point ||= ActivityPoint.create!(user: user)
+    activity_point || ActivityPoint.create!(user: user)
   end
 end
