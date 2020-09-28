@@ -49,7 +49,7 @@ class EmailMsg
     response
   end
 
-  def self.messages_from_sendgrid(date_from=nil)
+  def self.messages_from_sendgrid(date_from = nil)
     return if Rails.env.test?
 
     past_date = DateTime.now - 3.days

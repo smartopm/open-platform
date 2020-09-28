@@ -15,9 +15,7 @@ class CheckUnsubscribedUsersJob < ApplicationJob
     label_id = community.labels.find_by(short_desc: 'com_news_email')&.id
     unsubscribed_users.map do |user|
       label = user.user_labels.find_by(label_id: label_id)
-      if label.present?
-        label.delete
-      end
+      label.delete if label.present?
     end
   end
 end
