@@ -327,13 +327,14 @@ RSpec.describe Types::Queries::User do
   describe 'user_activity_point' do
     before :each do
       @user = create(:user_with_community)
-      @activity_point = create(:activity_point, user: @user, article: 2, referral: 10)
+      @activity_point = create(:activity_point, user: @user, article_read: 2, referral: 10)
       @query =
         %(query userActivityPoint {
           userActivityPoint {
             userId
             total
-            article
+            articleRead
+            articleShared
             comment
             login
             referral
@@ -348,7 +349,8 @@ RSpec.describe Types::Queries::User do
 
       expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
       expect(result.dig('data', 'userActivityPoint', 'total')).to eq(12)
-      expect(result.dig('data', 'userActivityPoint', 'article')).to eq(2)
+      expect(result.dig('data', 'userActivityPoint', 'articleRead')).to eq(2)
+      expect(result.dig('data', 'userActivityPoint', 'articleShared')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'comment')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'login')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'referral')).to eq(10)
@@ -361,6 +363,23 @@ RSpec.describe Types::Queries::User do
 
       expect(result.dig('errors')).to_not be_nil
       expect(result.dig('errors')[0]['message']).to eq('Unauthorized')
+    end
+
+    it "creates a new empty user's activity point if there's no current one" do
+      @activity_point.update!(created_at: 10.days.ago)
+      prev_activtity_point_count = ActivityPoint.count
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @user,
+                                       }).as_json
+
+      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
+      expect(result.dig('data', 'userActivityPoint', 'total')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'articleRead')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'articleShared')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'comment')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'login')).to eq(0)
+      expect(result.dig('data', 'userActivityPoint', 'referral')).to eq(0)
+      expect(ActivityPoint.count).to eql(prev_activtity_point_count + 1)
     end
   end
 end

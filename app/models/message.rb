@@ -10,6 +10,9 @@ class Message < ApplicationRecord
   after_create :update_campaign_message_count, if: :campaign_id?
   after_update :update_campaign_message_count, if: proc { saved_change_to_campaign_id? }
 
+  VALID_CATEGORY = %w[email sms].freeze
+  validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: false }
+
   class Unauthorized < StandardError; end
 
   def self.users_newest_msgs(query, off, lmt, comid, filt)
@@ -17,12 +20,12 @@ class Message < ApplicationRecord
      INNER JOIN ( SELECT user_id, max(messages.created_at) as max_date FROM messages
      INNER JOIN users ON users.id = messages.user_id INNER JOIN users senders_messages
      ON senders_messages.id = messages.sender_id WHERE ((users.community_id=?
-     AND senders_messages.community_id=?" + campaign_query(filt[:filter].to_s) + ")
+     AND senders_messages.community_id=?" + campaign_query(filt[:filter]) + ")
      AND (users.name ILIKE ? OR users.phone_number ILIKE ? OR users.name ILIKE ?
-     OR users.phone_number ILIKE ? OR messages.message ILIKE ?) AND messages.category ILIKE ?)
+     OR users.phone_number ILIKE ? OR messages.message ILIKE ?)" + category_query(filt[:cat]) + ")
      GROUP BY messages.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
      ON messages.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
-     Array.new(2, comid) + Array.new(5, "%#{query}%") + ["%#{filt[:category]}%"] + [lmt, off])
+     Array.new(2, comid) + Array.new(5, "%#{query}%") + [lmt, off])
   end
 
   def mark_as_read
@@ -42,7 +45,8 @@ class Message < ApplicationRecord
 
   def create_message_task(body = nil)
     msg_obj = {
-      body: "Reply to message from: #{user.name} \n #{body}",
+      body: "Reply to <a href=\"https://#{ENV['HOST']}/message/#{user.id}\">message</a>
+      from: #{user.name} \n #{body}",
       category: 'message',
       flagged: true,
       completed: false,
@@ -56,6 +60,12 @@ class Message < ApplicationRecord
     assign = user.community.notes.find(note_id)
                  .assign_or_unassign_user(user.community.default_community_users[0].id)
     return assign unless assign.nil?
+  end
+
+  def self.category_query(filter)
+    return '' if filter.blank?
+
+    " AND messages.category ILIKE '%#{filter}%'"
   end
 
   def self.campaign_query(filter)

@@ -58,7 +58,7 @@ class Campaign < ApplicationRecord
     success_codes = [0, 7, 3, 6, 22, 29, 33]
     smess = campaign_user.construct_message(receiver: acc.phone_number,
                                             message: message,
-                                            user_id: acc.id,
+                                            user_id: acc.id, category: 'sms',
                                             campaign_id: id)
     smess.save
     result = smess.send_sms(add_prefix: false)

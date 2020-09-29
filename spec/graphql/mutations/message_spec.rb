@@ -14,6 +14,7 @@ RSpec.describe Mutations::Message do
                 message {
                     id
                     message
+                    category
                 }
             }
         }
@@ -33,6 +34,7 @@ RSpec.describe Mutations::Message do
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
                         'message')).to eql variables[:message]
+      expect(result.dig('data', 'messageCreate', 'message', 'category')).to eql 'sms'
       expect(result.dig('errors')).to be_nil
       message_in_db = Message.first
       expect(Message.all.count).to eql 1

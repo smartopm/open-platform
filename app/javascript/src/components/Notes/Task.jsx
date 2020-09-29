@@ -1,7 +1,5 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react'
-import DateContainer, { dateToString } from '../DateContainer'
-import { UserChip } from '../UserChip'
 import {
   Chip,
   TextField,
@@ -14,9 +12,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
+import { Link , useHistory } from 'react-router-dom'
+
 import { Spinner } from '../Loading'
-import { Link } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
+import { UserChip } from '../UserChip'
+import DateContainer, { dateToString } from '../DateContainer'
+import { removeNewLines, sanitizeText } from '../../utils/helpers'
 
 export default function Task({
   note,
@@ -42,28 +43,34 @@ export default function Task({
     setNoteId(noteId)
   }
 
-  function routeToAction(_event, id) {
-    return history.push(`/todo/${id}`)
+  function routeToAction(_event, taskId) {
+    return history.push(`/todo/${taskId}`)
   }
 
   return (
     <>
       <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
-          <Typography variant="subtitle1" gutterBottom >
-            <span style={{ whiteSpace: 'pre-line' }}>{note.body}</span>
+          <Typography variant="subtitle1" gutterBottom>
+            { /* eslint-disable-next-line react/no-danger */}
+            <span style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: sanitizeText(removeNewLines(note.body)) }} />
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="caption" gutterBottom>
-            <Link style={{ textDecoration: 'none' }}  to={`/user/${note.author.id}`}>
-             {note.author.name}{' '}
+            <Link style={{ textDecoration: 'none' }} to={`/user/${note.author.id}`}>
+              {note.author.name}
+              {' '}
             </Link>
-            created this note for{' '} 
+            created this note for
+            {' '} 
             <Link style={{ textDecoration: 'none' }} to={`/user/${note.user.id}`}>
-              {note.user.name} {' '}
+              {note.user.name} 
+              {' '}
+              {' '}
             </Link>
-            on{' '}
+            on
+            {' '}
             <i style={{ color: 'grey' }}>
               <DateContainer date={note.createdAt} />
             </i>
@@ -126,51 +133,56 @@ export default function Task({
                 assignUnassignUser(note.id, value.id)
               }}
               renderInput={params => (
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 <TextField {...params} placeholder="Name of assignee" />
               )}
             />
-          )}
+          )
+}
         </Grid>
         <Grid item>
           <div style={{
             display: 'inline-flex',
             margin: '5px 0 10px 0'
-          }}>
-          <EditIcon
-            style={{
+          }}
+          >
+            <EditIcon
+              style={{
               cursor: 'pointer',
               margin: '5px 4px 0 0',
               fontSize: 18,
             }}
-            color="inherit"
-            onClick={() => handleModal(note.id)}
-          />
-          <Typography variant="subtitle1" gutterBottom>
-            Due at: {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
-            <Link
-              href="#"
-              data-testid="more_details_btn"
-              style={{ cursor: 'pointer', color: '#69ABA4' }}
-              onClick={event => routeToAction(event, note.id)}
-            >
-              More Details
-            </Link>
-          </Typography>
+              color="inherit"
+              onClick={() => handleModal(note.id)}
+            />
+            <Typography variant="subtitle1" gutterBottom>
+              Due at: 
+              {' '}
+              {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
+              <Link
+                href="#"
+                data-testid="more_details_btn"
+                style={{ cursor: 'pointer', color: '#69ABA4' }}
+                onClick={event => routeToAction(event, note.id)}
+              >
+                More Details
+              </Link>
+            </Typography>
           </div>
-            <Button
-              color='primary'
-              disabled={note.id && loadingMutation}
-              style={{ 
+          <Button
+            color='primary'
+            disabled={note.id && loadingMutation}
+            style={{ 
                 float: 'right'
               }}
-              onClick={() => handleCompleteNote(note.id, note.completed)}
-            >
-              {note.completed ? 'Completed' : 'Mark as complete'}
-            </Button>
+            onClick={() => handleCompleteNote(note.id, note.completed)}
+          >
+            {note.completed ? 'Completed' : 'Mark as complete'}
+          </Button>
         </Grid>
       </Grid>
       <Divider />
-      <br/>
+      <br />
     </>
   )
 }

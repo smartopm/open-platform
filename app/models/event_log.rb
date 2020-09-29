@@ -21,7 +21,7 @@ class EventLog < ApplicationRecord
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update user_temp
-                      shift_start shift_end user_referred post_read].freeze
+                      shift_start shift_end user_referred post_read post_shared].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -109,6 +109,10 @@ class EventLog < ApplicationRecord
 
   def post_read_to_sentence
     "Post #{data['post_id']} was read by #{acting_user_name}"
+  end
+
+  def post_shared_to_sentence
+    "Post #{data['post_id']} was shared by #{acting_user_name}"
   end
 
   def user_enrolled_to_sentence

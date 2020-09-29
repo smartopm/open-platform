@@ -269,10 +269,7 @@ export default function TodoList({
           )}
           <br />
           <Grid container spacing={3}>
-            <TaskDashboard
-              filterTasks={handleTaskFilter}
-              currentTile={currentTile}
-            />
+            <TaskDashboard filterTasks={handleTaskFilter} currentTile={currentTile} />
           </Grid>
           <br />
           {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (

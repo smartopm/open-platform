@@ -73,5 +73,6 @@ module Types
 
     # posts
     field :log_read_post, mutation: Mutations::Post::LogReadPost
+    field :log_shared_post, mutation: Mutations::Post::LogSharedPost
   end
 end

@@ -16,6 +16,7 @@ RSpec.describe Message, type: :model do
         message: 'Testing out message',
         user_id: @non_admin.id,
         sender_id: @admin.id,
+        category: 'sms',
       )
       result = Message.first
       expect(Message.all.count).to eql 1
@@ -32,6 +33,7 @@ RSpec.describe Message, type: :model do
         message: 'Testing out message',
         user_id: user.id,
         sender_id: user.id,
+        category: 'sms',
       )
       create_task = message.create_message_task
 
@@ -44,6 +46,7 @@ RSpec.describe Message, type: :model do
         receiver: '260971500748',
         message: 'Admin testing out message',
         user_id: @non_admin.id,
+        category: 'sms',
       )
       message.save!
       result = Message.first
@@ -59,6 +62,7 @@ RSpec.describe Message, type: :model do
         receiver: '260971500748',
         message: 'Admin testing out message',
         user_id: @admin.id,
+        category: 'sms',
       )
       message.save!
       result = Message.first
@@ -67,6 +71,17 @@ RSpec.describe Message, type: :model do
       expect(result[:user_id]).to eql @admin.id
       expect(result[:sender_id]).to eql @non_admin.id
       result
+    end
+
+    it 'shouldnt create when category is not valid' do
+      message = @non_admin.construct_message(
+        receiver: '260971500748',
+        message: 'Admin testing out message',
+        user_id: @admin.id,
+        category: 'anything',
+      )
+      expect { message.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect(Message.all.count).to eql 0
     end
   end
 

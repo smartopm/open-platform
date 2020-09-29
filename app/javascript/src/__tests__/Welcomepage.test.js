@@ -17,6 +17,7 @@ describe('component that centers divs', () => {
         expect(container.queryByText('Schedule a call')).toBeInTheDocument()
         expect(container.queryByText('Book a tour')).toBeInTheDocument()
         expect(container.queryByText('Become a client')).toBeInTheDocument()
+        expect(container.queryByText('Apply for Nkwashi Residency')).toBeInTheDocument()
         expect(container.queryByTestId('contact').textContent).toContain('260 966 194383')
         expect(container.queryByTestId('contact-email').textContent).toContain('hello@thebe-im.com')
         expect(container.queryByTestId('login_btn').textContent).toContain('Login')
@@ -35,9 +36,9 @@ describe('component that centers divs', () => {
         const container = render(<Welcome />)
         expect(container.queryByTestId('maintext').textContent).toContain('Nkwashi is a new town that is being developed 36 kilometres east of the City of Lusaka')
     })
-    it('should have 3 main buttons', () => {
+    it('should have 7 main buttons', () => {
         const container = render(<Welcome />)
-        expect(container.container.getElementsByTagName('button')).toHaveLength(6)
+        expect(container.container.getElementsByTagName('button')).toHaveLength(7)
     })
     it('should have an image with a proper url', () => {
         const container = render(<Welcome />)

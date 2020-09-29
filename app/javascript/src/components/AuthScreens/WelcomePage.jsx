@@ -9,6 +9,7 @@ import CallIcon from '@material-ui/icons/Call';
 import MailIcon from '@material-ui/icons/Mail';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import PropTypes from 'prop-types'
 import logo from '../../../../assets/images/logo.png'
 import nkwashiLogoUrl from '../../../../assets/images/logo-footer.png'
 import thebeLogoUrl from '../../../../assets/images/thebe-logo.png'
@@ -38,6 +39,7 @@ export default function WelcomePage() {
             <h2>Its not just a house, its a way of life</h2>
           </div>
           <br />
+          <CustomButton variant="contained" color="primary" title="Apply for Nkwashi Residency" disableElevation />
           <br />
           <CustomButton title="Schedule a call" />
           <CustomButton title="Book a tour" />
@@ -125,11 +127,12 @@ export default function WelcomePage() {
     )
 }
 
-export function CustomButton({ title }) {
+export function CustomButton({ title, ...props }) {
   const route = {
     call: 'https://forms.gle/4t553oiff7XTFYnW9',
     tour: 'https://forms.gle/9N79ZwKXTPxcrAta9',
-    client: 'https://forms.gle/rtSH9oou9usUfJQ98'
+    client: 'https://forms.gle/rtSH9oou9usUfJQ98',
+    Nkwashi: 'https://forms.gle/AD36GCFfvD6j3t3t9'
   }
   function getName(name) {
     return name.split(' ')[2]
@@ -148,10 +151,15 @@ export function CustomButton({ title }) {
       variant="outlined"
       onClick={() => handleClicks(title)}
       className={css(styles.customButton)}
+      {...props}
     >
       {title}
     </Button>
   )
+}
+
+CustomButton.propType = {
+  title: PropTypes.string.isRequired
 }
 
 const styles = StyleSheet.create({
