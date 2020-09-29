@@ -42,10 +42,13 @@ class EmailMsg
     res
   end
 
-  def self.fetch_unsubscribes_list(start_time, end_time)
+  def self.fetch_unsubscribes_list(start_time)
     return if Rails.env.test?
 
+    end_time = Time.zone.now.to_i
+    # rubocop:disable Metrics/LineLength
     response = sendgrid_api("https://api.sendgrid.com/v3/suppression/unsubscribes?start_time=#{start_time}&end_time=#{end_time}")
+    # rubocop:enable Metrics/LineLength
     response
   end
 
