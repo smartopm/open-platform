@@ -8,6 +8,7 @@ module Mutations
 
       argument :labels, String, required: false
       argument :user_type, String, required: false
+      argument :number, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 
@@ -33,16 +34,36 @@ module Mutations
         labels ? labels.tr(',', '_') : I18n.t('campaign.default_name')
       end
 
+      # rubocop:disable Metrics/AbcSize
       def user_id_list(vals)
-        labels = vals[:labels]&.split(',')
-        user_types = vals[:user_type]&.split(',')
-        return ::User.all if labels.nil? && user_types.nil?
-        return ::User.joins(:labels).where('labels.short_desc IN (?)', labels) if user_types.nil?
-        return ::User.where('user_type IN (?)', user_types) if labels.nil?
+        vals.delete_if { |_key, value| value.nil? }
+        return context[:site_community].users.all if vals.empty?
+        return user_by_single_filter(vals) if vals.length.eql? 1
+        return user_by_double_filter(vals) if vals.length.eql? 2
 
-        ::User.joins(:labels).where('labels.short_desc IN (?) AND user_type IN (?)',
-          labels, user_types).pluck(:id).join(',')
+        context[:site_community].users.joins(:labels).by_phone_number(vals[:number])
+                                .by_type(vals[:user_type]).by_labels(vals[:labels])
       end
+
+      def user_by_single_filter(vals)
+        return context[:site_community].users.by_labels(vals[:labels]) if vals.key?(:labels)
+        return context[:site_community].users.by_type(vals[:user_type]) if vals.key?(:user_type)
+
+        context[:site_community].users.by_phone_number(vals[:number]) if vals.key?(:number)
+      end
+
+      def user_by_double_filter(vals)
+        if vals.key?(:user_type) && vals.key?(:labels)
+          return context[:site_community].users.by_type(vals[:user_type]).by_labels(vals[:labels])
+        end
+
+        if vals.key?(:user_type) && vals.key?(:number)
+          return context[:site_community].users.by_type(vals[:user_type])
+                                         .by_phone_number(vals[:number])
+        end
+        context[:site_community].users.by_phone_number(vals[:number]).by_labels(vals[:labels])
+      end
+      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         current_user = context[:current_user]

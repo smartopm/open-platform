@@ -193,7 +193,7 @@ export default function UsersList() {
   function handleCampaignCreate() {
     if (userList) {
       campaignCreate({
-        variables: { labels: labels.join(), userType: type.join() }
+        variables: { labels: labels.join(), userType: type.join(), number: searchValue }
       }).then(res => {
         const { data } = res
         setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)

@@ -32,6 +32,12 @@ class User < ApplicationRecord
 
     return relat.where(user_type: allowed_user_types)
   }
+  scope :by_phone_number, ->(number) { where('phone_number IN (?)', number&.split(',')) }
+  scope :by_type, ->(user_type) { where('user_type IN (?)', user_type&.split(',')) }
+  scope :by_labels, lambda { |label|
+                      joins(:labels).where('labels.short_desc IN (?)',
+                                           label&.split(','))
+                    }
 
   belongs_to :community, dependent: :destroy
   has_many :entry_requests, dependent: :destroy

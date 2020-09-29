@@ -101,12 +101,12 @@ RSpec.describe Mutations::Campaign do
     let(:query) do
       <<~GQL
         mutation campaignCreateThroughUsers(
-          $filters: String
-          $userIdList: String!
+          $labels: String
+          $userType: String
         ) {
           campaignCreateThroughUsers(
-            filters: $filters
-            userIdList: $userIdList
+            labels: $labels
+            userType: $userType
             ){
               campaign{
                 id
@@ -117,10 +117,10 @@ RSpec.describe Mutations::Campaign do
       GQL
     end
 
-    it 'returns a campaign with filter' do
+    it 'create a campaign with filters' do
       variables = {
-        filters: 'admin,client,security_guard',
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: 'admin,client,security_guard',
+        userType: 'admin',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -133,9 +133,10 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('errors')).to be_nil
     end
 
-    it 'returns a campaign without filter' do
+    it 'create a campaign without applying filters' do
       variables = {
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: nil,
+        userType: nil,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

@@ -620,8 +620,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($labels: String, $userType: String){
-    campaignCreateThroughUsers(labels: $labels, userType: $userType){
+  mutation campaignCreateThroughUsers($labels: String, $userType: String, $number: String){
+    campaignCreateThroughUsers(labels: $labels, userType: $userType, number: $number){
       campaign{
         id
       }
