@@ -8,7 +8,9 @@ class CheckUnsubscribedUsersJob < ApplicationJob
 
   def perform(community)
     # get list of users who unsubscribed
-    users = EmailMsg.fetch_unsubscribes_list
+    start_time = Time.zone.now.beginning_of_day
+    end_time = Time.zone.now
+    users = EmailMsg.fetch_unsubscribes_list(start_time, end_time)
     emails = users.pluck('email')
     community = Community.find_by(name: community)
     unsubscribed_users = community.users.where(email: emails)

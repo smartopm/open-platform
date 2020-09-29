@@ -42,10 +42,10 @@ class EmailMsg
     res
   end
 
-  def self.fetch_unsubscribes_list
+  def self.fetch_unsubscribes_list(start_time, end_time)
     return if Rails.env.test?
 
-    response = sendgrid_api('https://api.sendgrid.com/v3/suppression/unsubscribes')
+    response = sendgrid_api("https://api.sendgrid.com/v3/suppression/unsubscribes?start_time=#{start_time}&end_time=#{end_time}")
     response
   end
 
