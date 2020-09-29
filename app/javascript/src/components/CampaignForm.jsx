@@ -1,18 +1,21 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Redirect, useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
-import { Button, TextField, Chip, Snackbar, MenuItem } from '@material-ui/core'
+import {
+  Button, TextField, Chip, Snackbar, MenuItem
+} from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
-import { 
-    CampaignCreate, 
-    CampaignUpdateMutation, 
-    CampaignLabelRemoveMutation 
-  } from '../graphql/mutations'
+import {
+  CampaignCreate,
+  CampaignUpdateMutation,
+  CampaignLabelRemoveMutation
+} from '../graphql/mutations'
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
-import CampaignToggle from "./Campaign/ToggleButton"
+import CampaignToggle from './Campaign/ToggleButton'
 
 const initData = {
   id: '',
@@ -28,7 +31,9 @@ const initData = {
   loaded: false,
   labels: []
 }
-export default function CampaignForm({ authState, data, loading, refetch }) {
+export default function CampaignForm({
+  authState, data, loading, refetch
+}) {
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -38,16 +43,16 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
   const { id } = useParams() // will only exist on campaign update
   const [formData, setFormData] = useState(initData)
-  const [campaignType, setCampaignType] = useState("draft")
-    const handleCampaignType = (event, newCampaignType) => {
-        setCampaignType(newCampaignType);
-    };
+  const [campaignType, setCampaignType] = useState('draft')
+  const handleCampaignType = (event, newCampaignType) => {
+    setCampaignType(newCampaignType);
+  };
 
-    useEffect(() => {
-      if (id) {
-        setCampaignType(data.status)
-      }
-    }, [data, id])
+  useEffect(() => {
+    if (id) {
+      setCampaignType(data.status)
+    }
+  }, [data, id])
 
   async function createCampaignOnSubmit(campData) {
     setLoading(true)
@@ -56,8 +61,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       setIsSubmitted(true)
       setFormData(initData)
       setLoading(false)
-    }
-    catch (err) {
+    } catch (err) {
       setErrorMsg(err.message)
       setLoading(false)
     }
@@ -68,8 +72,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       await campaignUpdate({ variables: campData })
       setIsSubmitted(true)
       setLoading(false)
-    }
-    catch (err) {
+    } catch (err) {
       setErrorMsg(err.message)
       setLoading(false)
     }
@@ -78,7 +81,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
     e.preventDefault()
     // if creating a campaign don't spread
     const labels = id ? [...label, ...getJustLabels(formData.labels)] : label
-    
+
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -95,7 +98,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
     if (id) {
       return campaignUpdateOnSubmit(campaignData)
     }
-   return createCampaignOnSubmit(campaignData)
+    return createCampaignOnSubmit(campaignData)
   }
   function handleLabelSelect(value) {
     setLabel([...getJustLabels(value)])
@@ -119,13 +122,13 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
       variables: { campaignId: id, labelId }
     })
       .then(() => refetch())
-      .catch(err => setErrorMsg(err.message))
+      .catch((err) => setErrorMsg(err.message))
   }
   if (authState.user.userType !== 'admin') {
     return <Redirect push to="/" />
   }
   if (!loading && !formData.loaded && data) {
-    setFormData({ ...data, loaded: true, }) 
+    setFormData({ ...data, loaded: true, })
   }
   return (
     <div className="container">
@@ -168,7 +171,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           name="message"
           rows={2}
           multiline
-          required={campaignType === "scheduled"}
+          required={campaignType === 'scheduled'}
           className="form-control"
           value={formData.message || ''}
           onChange={handleInputChange}
@@ -216,7 +219,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
           label="User ID List"
           rows={5}
           multiline
-          required={campaignType === "scheduled"}
+          required={campaignType === 'scheduled'}
           className="form-control"
           aria-label="campaign_ids"
           inputProps={{ 'data-testid': 'campaign_ids' }}
@@ -236,8 +239,8 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
               label={labl?.shortDesc || labl}
             />
           ))}
-          {Boolean(formData.labels.length) &&
-            formData.labels.map(labl => (
+          {Boolean(formData.labels.length)
+            && formData.labels.map((labl) => (
               <Chip
                 data-testid="campaignChip-label"
                 key={labl.id}
@@ -254,7 +257,7 @@ export default function CampaignForm({ authState, data, loading, refetch }) {
         <div>
           <DateAndTimePickers
             label="Batch Time"
-            required={campaignType === "scheduled"}
+            required={campaignType === 'scheduled'}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
           />

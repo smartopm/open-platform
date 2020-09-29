@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-
 
 export default function CampaignCreate({ campaignType, handleCampaignType }) {
   return (
@@ -21,6 +21,5 @@ export default function CampaignCreate({ campaignType, handleCampaignType }) {
         </ToggleButton>
       </ToggleButtonGroup>
     </>
-    )
+  )
 }
-  

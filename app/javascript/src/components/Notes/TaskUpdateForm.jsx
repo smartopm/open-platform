@@ -51,7 +51,8 @@ export default function TaskForm({ users, data, assignUser }) {
   }
 
   function updateTask() {
-    taskUpdate({ variables: {
+    taskUpdate({
+      variables: {
         id: data.id,
         body: title,
         dueDate: selectedDate,
@@ -59,7 +60,8 @@ export default function TaskForm({ users, data, assignUser }) {
         category: taskType,
         flagged: true,
         userId: userData.userId
-      }}).then(() => {
+      }
+    }).then(() => {
       setLoadingStatus(false)
       setUpdated(true)
     }).catch((err) => {
@@ -83,7 +85,8 @@ export default function TaskForm({ users, data, assignUser }) {
   }
 
   useEffect(() => {
-      setDefaultData()
+    setDefaultData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -101,7 +104,7 @@ export default function TaskForm({ users, data, assignUser }) {
         label="Task Description"
         placeholder="Describe the task here"
         style={{ width: '100%' }}
-        onChange={e => setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
         value={title}
         multiline
         fullWidth
@@ -121,7 +124,7 @@ export default function TaskForm({ users, data, assignUser }) {
         <Select
           id="taskType"
           value={taskType}
-          onChange={event => setTaskType(event.target.value)}
+          onChange={(event) => setTaskType(event.target.value)}
           name="taskType"
           fullWidth
         >
@@ -129,35 +132,35 @@ export default function TaskForm({ users, data, assignUser }) {
             <MenuItem key={key} value={key}>
               {val}
             </MenuItem>
-            ))}
+          ))}
         </Select>
       </FormControl>
       <br />
-      <FormControl fullWidth> 
+      <FormControl fullWidth>
         <div>
-          {data.assignees.map(user => (
+          {data.assignees.map((user) => (
             <UserChip
               key={user.id}
               user={user}
               size="medium"
               onDelete={() => assignUser(data.id, user.id)}
             />
-              ))}
+          ))}
           <Chip
             key={data.id}
             variant="outlined"
             label={
-                  autoCompleteOpen  ? 'Close' : 'Add Assignee'
+                  autoCompleteOpen ? 'Close' : 'Add Assignee'
                 }
             size="medium"
             icon={
-                  autoCompleteOpen  ? (
+                  autoCompleteOpen ? (
                     <CancelIcon />
                   ) : (
                     <AddCircleIcon />
                   )
                 }
-            onClick={event => handleOpenAutoComplete(event, data.id)}
+            onClick={(event) => handleOpenAutoComplete(event, data.id)}
           />
 
           {
@@ -170,7 +173,7 @@ export default function TaskForm({ users, data, assignUser }) {
                   loading={loading}
                   id={data.id}
                   options={users}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   style={{ width: 300 }}
                   onChange={(_evt, value) => {
                     if (!value) {
@@ -178,16 +181,16 @@ export default function TaskForm({ users, data, assignUser }) {
                     }
                     assignUser(data.id, value.id)
                   }}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField {...params} placeholder="Name of assignee" />
                   )}
                 />
-          )
+              )
 }
         </div>
       </FormControl>
       <br />
-      <UserSearch userData={userData} update={setData} /> 
+      <UserSearch userData={userData} update={setData} />
       <br />
       <FormControlLabel
         value="end"
@@ -206,7 +209,7 @@ export default function TaskForm({ users, data, assignUser }) {
       <FormHelperText>Checked for complete</FormHelperText>
       <div>
         <DatePickerDialog
-          handleDateChange={date => setDate(date)}
+          handleDateChange={(date) => setDate(date)}
           selectedDate={selectedDate}
         />
         <FormHelperText>Pick a due date</FormHelperText>
@@ -237,4 +240,3 @@ TaskForm.propTypes = {
   data: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired
 }
-

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
 import {
@@ -74,18 +75,20 @@ export default function TodoList({
   })
 
   // TODO: simplify this: @olivier
-  const assignees = assignee.map(q => `assignees = "${q}"`).join(' OR ')
+  const assignees = assignee.map((q) => `assignees = "${q}"`).join(' OR ')
   // eslint-disable-next-line no-nested-ternary
   const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignees
-  const [loadTasks, { loading: isLoading, error: tasksError, data, refetch }] = useLazyQuery(
+  const [loadTasks, {
+    loading: isLoading, error: tasksError, data, refetch
+  }] = useLazyQuery(
     flaggedNotes,
     {
       variables: {
         offset,
         limit,
-        query: `${qr} ${assignees.length ? `AND ${assignees}`: ''}`
+        query: `${qr} ${assignees.length ? `AND ${assignees}` : ''}`
       },
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     }
   )
   const [assignUserToNote] = useMutation(AssignUser)
@@ -106,7 +109,6 @@ export default function TodoList({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location])
 
-
   useEffect(() => {
     if (taskId) {
       loadTask()
@@ -126,7 +128,7 @@ export default function TodoList({
         refetch()
         setLoadingAssignee(false)
       })
-      .catch(err => setErrorMessage(err.message))
+      .catch((err) => setErrorMessage(err.message))
   }
 
   function handleCompleteNote(noteId, completed) {
@@ -168,7 +170,7 @@ export default function TodoList({
     setOpenFilter(!filterOpen)
   }
 
-  function closeAndExit(){
+  function closeAndExit() {
     setModalOpen(false)
     history.replace('/todo')
   }
@@ -183,7 +185,7 @@ export default function TodoList({
           open={isDialogOpen}
           handleClose={handleModal}
           handleConfirm={saveDate}
-          action='save'
+          action="save"
         >
           <DatePickerDialog
             selectedDate={selectedDate}
@@ -218,36 +220,36 @@ export default function TodoList({
                 />
               // eslint-disable-next-line no-nested-ternary
               )
-              : !taskData ? 'No Task found' : (
-                <>
-                  <Task
-                    key={taskData.task.id}
-                    note={taskData.task}
-                    message={message}
-                    users={liteData?.usersLite || []}
-                    handleCompleteNote={handleCompleteNote}
-                    assignUnassignUser={assignUnassignUser}
-                    loaded={loaded}
-                    handleDelete={handleDelete}
-                    handleModal={handleModal}
-                    loading={loading}
-                    loadingMutation={loadingMutation}
-                    handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-                    isAssignTaskOpen={isAssignTaskOpen}
-                  />
-                  <CenteredContent>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      aria-label="task_submit"
-                      onClick={closeAndExit}
-                    >
-                      Close
-                    </Button>
-                  </CenteredContent>
+                : !taskData ? 'No Task found' : (
+                  <>
+                    <Task
+                      key={taskData.task.id}
+                      note={taskData.task}
+                      message={message}
+                      users={liteData?.usersLite || []}
+                      handleCompleteNote={handleCompleteNote}
+                      assignUnassignUser={assignUnassignUser}
+                      loaded={loaded}
+                      handleDelete={handleDelete}
+                      handleModal={handleModal}
+                      loading={loading}
+                      loadingMutation={loadingMutation}
+                      handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+                      isAssignTaskOpen={isAssignTaskOpen}
+                    />
+                    <CenteredContent>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        aria-label="task_submit"
+                        onClick={closeAndExit}
+                      >
+                        Close
+                      </Button>
+                    </CenteredContent>
 
-                </>
-              )
+                  </>
+                )
             }
           </DialogContent>
         </Dialog>
@@ -272,7 +274,7 @@ export default function TodoList({
             <TaskDashboard filterTasks={handleTaskFilter} currentTile={currentTile} />
           </Grid>
           <br />
-          {data?.flaggedNotes.length ? data?.flaggedNotes.map(note => (
+          {data?.flaggedNotes.length ? data?.flaggedNotes.map((note) => (
             <Task
               key={note.id}
               note={note}
@@ -288,9 +290,8 @@ export default function TodoList({
               handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
               isAssignTaskOpen={isAssignTaskOpen}
             />
-                )
-            ) : (
-              <CenteredContent>Click a card above to filter</CenteredContent>
+          )) : (
+            <CenteredContent>Click a card above to filter</CenteredContent>
             )}
         </div>
         <br />

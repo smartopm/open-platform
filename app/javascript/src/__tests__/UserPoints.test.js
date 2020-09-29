@@ -3,8 +3,8 @@ import { render } from '@testing-library/react'
 import UserPoints from '../components/UserPoints'
 import '@testing-library/jest-dom/extend-expect'
 
-describe('UserPoints component', function() {
-  it("should render necessary activity points", function() {
+describe('UserPoints component', () => {
+  it("should render necessary activity points", () => {
     const userPoints = {
       total: 36,
       articleRead: 2,

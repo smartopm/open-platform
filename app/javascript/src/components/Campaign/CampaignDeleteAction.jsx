@@ -1,10 +1,10 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo'
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { DeleteCampaign } from '../../graphql/mutations'
 import CampaignDeleteDialogue from './CampaignDeleteDialogue'
-
 
 // This looks very similar to changes on master, you can merge and reuse the action menu. 
 export default function CampaignDelete({

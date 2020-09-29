@@ -24,6 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     refetch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (error) console.log(error.message)

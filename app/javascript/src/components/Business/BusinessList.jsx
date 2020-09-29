@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
@@ -62,7 +63,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
         </DialogContent>
       </Dialog>
       <List>
-        {businessData.businesses.map(business => (
+        {businessData.businesses.map((business) => (
           <ListItem key={business.id}>
             <Link
               key={business.id}

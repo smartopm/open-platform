@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Menu, MenuItem } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
-import { Link } from 'react-router-dom'
-import { DeleteBusiness } from '../../graphql/mutations'
-import BusinessDeleteDialogue from './DeleteDialogue'
-
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { Menu, MenuItem } from '@material-ui/core';
+import { useMutation } from 'react-apollo';
+import { Link } from 'react-router-dom';
+import { DeleteBusiness } from '../../graphql/mutations';
+import BusinessDeleteDialogue from './DeleteDialogue';
 
 export default function BusinessActionMenu({
   data,
@@ -15,18 +15,18 @@ export default function BusinessActionMenu({
   linkStyles,
   refetch
 }) {
-  const [openModal, setOpenModal] = useState(false)
-  const [deleteBusiness] = useMutation(DeleteBusiness)
+  const [openModal, setOpenModal] = useState(false);
+  const [deleteBusiness] = useMutation(DeleteBusiness);
   function handleDeleteClick() {
-    setOpenModal(!openModal)
+    setOpenModal(!openModal);
   }
   function handleDelete() {
     deleteBusiness({
       variables: { id: data.id }
-    }).then(() => { 
-      handleClose()
-      refetch() 
-      })
+    }).then(() => {
+      handleClose();
+      refetch();
+    });
   }
   return (
     <Menu
@@ -42,7 +42,7 @@ export default function BusinessActionMenu({
       }}
     >
       <div>
-        {userType === "admin" && (
+        {userType === 'admin' && (
           <>
             <MenuItem
               id="delete_button"
@@ -59,7 +59,7 @@ export default function BusinessActionMenu({
                 View Details
               </Link>
             </MenuItem>
-            
+
             <BusinessDeleteDialogue
               open={openModal}
               handleClose={handleDeleteClick}
@@ -70,5 +70,5 @@ export default function BusinessActionMenu({
         )}
       </div>
     </Menu>
-  )
+  );
 }

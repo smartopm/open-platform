@@ -15,11 +15,11 @@ const icons = {
 }
 
 const linkType = {
-  phone: "tel",
-  mail: "mailto",
+  phone: 'tel',
+  mail: 'mailto',
 }
 
-export function SupportContact({ classes, support }){
+export function SupportContact({ classes, support }) {
   const number = support.contact.replace(/\s/g, '')
   const whatsappLink = `https://api.whatsapp.com/send?phone=${number}`
   const link = `${support.type === 'whatsapp' ? whatsappLink : `${linkType[support.type]}:${number}`}`
@@ -45,7 +45,7 @@ export default function SupportCard({ handleSendMessage, user }) {
   // hard coding CSM number
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
   const history = useHistory()
-  
+
   return (
     <>
       <div className="justify-content-center align-items-center container">
@@ -71,32 +71,28 @@ export default function SupportCard({ handleSendMessage, user }) {
       <div className="justify-content-center align-items-center container">
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Typography variant='h6' align="center" gutterBottom color='textSecondary'>
+            <Typography variant="h6" align="center" gutterBottom color="textSecondary">
               Sales Support
             </Typography>
             {
-              salesSupport.map(support => {
-                return (
-                  <SupportContact key={support.contact} classes={classes} support={support} />
-                )
-              })
+              salesSupport.map((support) => (
+                <SupportContact key={support.contact} classes={classes} support={support} />
+              ))
             }
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant='h6' align="center" gutterBottom color='textSecondary'>
+            <Typography variant="h6" align="center" gutterBottom color="textSecondary">
               Customer Care
             </Typography>
 
             {
-              customerCare.map(support => {
-                return (
-                  <SupportContact key={support.contact} classes={classes} support={support} />
-                )
-              })
+              customerCare.map((support) => (
+                <SupportContact key={support.contact} classes={classes} support={support} />
+              ))
             }
           </Grid>
         </Grid>
-       
+
         <Grid container direction="row" className={classes.root}>
           <Button
             variant="contained"
@@ -146,17 +142,10 @@ export default function SupportCard({ handleSendMessage, user }) {
               Explore
             </Button>
           </Grid>
-        ) : null}
+          ) : null}
       </div>
     </>
   )
-}
-
-
-SupportCard.propTypes = {
-  user: PropTypes.shape({
-    userType: PropTypes.string
-  }).isRequired
 }
 
 SupportContact.propTypes = {
@@ -169,7 +158,8 @@ SupportContact.propTypes = {
 SupportCard.propTypes = {
   user: PropTypes.shape({
     userType: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  handleSendMessage: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles({
