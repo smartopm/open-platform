@@ -42,7 +42,7 @@ module Types::Queries::Note
   def all_notes(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:user).limit(limit).offset(offset)
+    context[:site_community].notes.includes(:user, :note_comments).limit(limit).offset(offset)
   end
 
   def user_notes(id:)
@@ -65,7 +65,7 @@ module Types::Queries::Note
   def task(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:assignees, :author, :user)
+    context[:site_community].notes.includes(:assignees, :author, :user, :note_comments)
                             .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .find(task_id)
