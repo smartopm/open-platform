@@ -298,13 +298,10 @@ export const CreateNote = gql`
   }
 `
 
-export const CreateComment = gql`
-  mutation CreateComment($noteId: ID!, $body: String!) {
-    noteCreate(noteId: $noteId, body: $body) {
-      note {
-        body
-        id
-      }
+export const TaskComment = gql`
+  mutation noteCommentCreate($noteId: ID!, $body: String!) {
+    noteCommentCreate(noteId: $noteId, body: $body) {
+      comment
     }
   }
 `

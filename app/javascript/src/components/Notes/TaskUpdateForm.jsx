@@ -236,7 +236,7 @@ export default function TaskForm({ users, data, assignUser }) {
       </div>
 
       <br />
-      <TaskComment />
+      <TaskComment data={data} />
       <div className="d-flex row justify-content-center">
         <Button
           variant="contained"

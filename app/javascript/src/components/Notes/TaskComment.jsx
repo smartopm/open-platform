@@ -6,7 +6,7 @@ import {
 import ChatIcon from '@material-ui/icons/Chat';
 import CommentTextField from './CommentField'
 
-export default function TaskComment() {
+export default function TaskComment({ data }) {
   const [open, setOpen] = useState(false)
   return (
     <>
@@ -19,7 +19,7 @@ export default function TaskComment() {
             : (<div style={{ display: 'flex' }} onClick={() => setOpen(true)}><ChatIcon />  <span style={{ marginLeft: "5px" }}>Comment</span></div>)}
         </Typography>
       </div>
-      {open && <CommentTextField />}
+      {open && <CommentTextField data={ data }/>}
     </>
   )
 }
