@@ -13,7 +13,7 @@ module Mutations
         comment = context[:current_user].note_comments.new(vals)
         raise GraphQL::ExecutionError, note.errors.full_messages unless comment.save
 
-        comment.record_note_history(context[:current_user], id: comment.reload.id)
+        comment.record_note_history(context[:current_user])
         { note_comment: comment }
       end
 

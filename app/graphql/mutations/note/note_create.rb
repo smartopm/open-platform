@@ -18,7 +18,7 @@ module Mutations
         note = context[:current_user].generate_note(vals)
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.persisted?
 
-        note.record_note_history(context[:current_user], id: note.reload.id)
+        note.record_note_history(context[:current_user])
         { note: note }
       end
 

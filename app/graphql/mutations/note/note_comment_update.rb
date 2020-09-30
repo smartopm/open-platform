@@ -15,12 +15,12 @@ module Mutations
         return { note_comment: comment } if comment.body.eql?(body)
 
         updates_hash = { body: [comment.body, body] }
-        if comment.update!(body: body)
+        if comment.update(body: body)
           comment.record_note_history(context[:current_user], updates_hash)
           return { note_comment: comment }
         end
 
-        raise GraphQL::ExecutionError, note.errors.full_messages
+        raise GraphQL::ExecutionError, comment.errors.full_messages
       end
 
       def authorized?(_vals)
