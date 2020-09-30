@@ -19,4 +19,34 @@ module ApplicationHelper # rubocop:disable Style/Documentation
   def qrcode_element(txt)
     inline_svg_img(qrcode(txt))
   end
+
+  def wordpress_post_info(current_path)
+    id = post_id(current_path)
+    return {} unless id
+
+    @post ||= wordpress_post(id)
+    return {} unless @post
+
+    {
+      title: @post["title"],
+      description: @post["excerpt"],
+      image: @post["featured_image"]
+    }
+  end
+
+  private
+
+  def wordpress_post(post_id)
+    res = Net::HTTP.get_response(URI.parse("https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts/#{post_id}"))
+    JSON.parse(res.body)
+  rescue
+    nil
+  end
+
+  def post_id(current_path)
+    path_info = current_path.split("/").reject(&:blank?)
+    return unless (path_info.first(2) == ["news", "post"] && path_info.length == 3)
+
+    path_info.last
+  end
 end
