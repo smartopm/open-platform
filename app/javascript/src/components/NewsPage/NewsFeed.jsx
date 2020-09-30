@@ -4,7 +4,6 @@ import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useHistory } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
@@ -30,11 +29,10 @@ const useStyles = makeStyles(theme => ({
 
 export function PostItemGrid({ data }) {
   const classes = useStyles()
-  const history = useHistory()
   const matches = useMediaQuery('(max-width:600px)')
 
   function routeToPost(postId) {
-    history.push(`/news/post/${postId}`)
+    window.location.href = `/news/post/${postId}`
   }
   return (
     <div className={classes.root}>
