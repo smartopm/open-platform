@@ -12,6 +12,7 @@ module Mutations
 
       field :campaign, Types::CampaignType, null: true
 
+      # TODO: Move campaign create process to a background job
       def resolve(vals)
         campaign = campaign_object
         campaign.name = campaign_name(vals[:labels])
