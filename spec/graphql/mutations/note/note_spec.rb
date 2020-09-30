@@ -118,6 +118,7 @@ RSpec.describe Mutations::Note do
                                                      }).as_json
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'noteUpdate', 'note', 'body')).to include 'modified'
+      expect(NoteHistory.count).to eql 2
       expect(result.dig('errors')).to be_nil
 
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
@@ -126,6 +127,7 @@ RSpec.describe Mutations::Note do
                                                        site_community: user.community,
                                                      }).as_json
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).to be_nil
+      expect(NoteHistory.count).to eql 2
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
 
@@ -143,6 +145,7 @@ RSpec.describe Mutations::Note do
 
       expect(result.dig('data', 'noteAssign', 'assigneeNote')).not_to be_nil
       expect(result.dig('data', 'noteAssign', 'assigneeNote')).to include 'success'
+      expect(NoteHistory.count).to eql 1
       expect(result.dig('errors')).to be_nil
     end
   end

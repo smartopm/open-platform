@@ -33,7 +33,7 @@ export default function TaskUpdate({ match }) {
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage />
-
+  
   return (
     <>
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />

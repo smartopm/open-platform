@@ -34,6 +34,7 @@ const initialData = {
 
 export default function TaskForm({ users, data, assignUser }) {
   const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
   const [taskType, setTaskType] = useState('')
   const [selectedDate, setDate] = useState(new Date())
@@ -56,6 +57,7 @@ export default function TaskForm({ users, data, assignUser }) {
         body: title,
         dueDate: selectedDate,
         completed: taskStatus,
+        description,
         category: taskType,
         flagged: true,
         userId: userData.userId
@@ -71,6 +73,7 @@ export default function TaskForm({ users, data, assignUser }) {
     setTitle(data.body)
     setTaskType(data.category)
     setTaskStatus(data.completed)
+    setDescription(data.description)
     setDate(data.dueDate)
     setData({
       user: data.user.name,
@@ -97,12 +100,31 @@ export default function TaskForm({ users, data, assignUser }) {
         message="Task updated successfully"
       />
       <TextField
+        name="task_body"
+        label="Task Body"
+        placeholder="Add task body here"
+        style={{ width: '100%' }}
+        onChange={e => setTitle(e.target.value)}
+        value={title}
+        multiline
+        fullWidth
+        rows={2}
+        margin="normal"
+        inputProps={{
+          'aria-label': 'task_body'
+        }}
+        InputLabelProps={{
+          shrink: true
+        }}
+        required
+      />
+      <TextField
         name="task_description"
         label="Task Description"
         placeholder="Describe the task here"
         style={{ width: '100%' }}
-        onChange={e => setTitle(e.target.value)}
-        value={title}
+        onChange={e => setDescription(e.target.value)}
+        value={description}
         multiline
         fullWidth
         rows={2}
@@ -113,7 +135,6 @@ export default function TaskForm({ users, data, assignUser }) {
         InputLabelProps={{
           shrink: true
         }}
-        required
       />
       <br />
       <FormControl fullWidth>
@@ -232,9 +253,14 @@ export default function TaskForm({ users, data, assignUser }) {
   )
 }
 
+TaskForm.defaultProps = {
+ users: [],
+ data: {}
+}
 TaskForm.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.string).isRequired,
-  data: PropTypes.func.isRequired,
+  users: PropTypes.arrayOf(PropTypes.object),
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object,
   assignUser: PropTypes.func.isRequired
 }
 
