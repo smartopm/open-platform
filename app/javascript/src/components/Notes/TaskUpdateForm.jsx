@@ -26,6 +26,7 @@ import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
+import TaskComment from './TaskComment'
 
 const initialData = {
   user: '',
@@ -234,6 +235,7 @@ export default function TaskForm({ users, data, assignUser }) {
       </div>
 
       <br />
+      <TaskComment />
       <div className="d-flex row justify-content-center">
         <Button
           variant="contained"
