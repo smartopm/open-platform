@@ -7,7 +7,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     it 'fetches a wordpress post and returns its info' do
       response_body = {
         title: 'Another title',
-        excerpt: 'Some description here',
+        excerpt: '<p>Some description here</p>',
         featured_image: 'https://encrypted-tbn0.gstatic.com/images?q=',
       }
       allow(Net::HTTP).to receive(:get_response)

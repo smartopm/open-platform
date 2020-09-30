@@ -30,7 +30,7 @@ module ApplicationHelper # rubocop:disable Style/Documentation
 
     {
       title: @post['title'],
-      description: @post['excerpt'],
+      description: strip_tags(@post['excerpt']).truncate(100, separator: ' '),
       image: @post['featured_image'],
     }
   end
