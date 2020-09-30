@@ -101,12 +101,14 @@ RSpec.describe Mutations::Campaign do
     let(:query) do
       <<~GQL
         mutation campaignCreateThroughUsers(
-          $filters: String
-          $userIdList: String!
+          $labels: String
+          $userType: String
+          $number: String
         ) {
           campaignCreateThroughUsers(
-            filters: $filters
-            userIdList: $userIdList
+            labels: $labels
+            userType: $userType
+            number: $number
             ){
               campaign{
                 id
@@ -117,10 +119,11 @@ RSpec.describe Mutations::Campaign do
       GQL
     end
 
-    it 'returns a campaign with filter' do
+    it 'create a campaign with filters' do
       variables = {
-        filters: 'admin,client,security_guard',
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: 'admin,client,security_guard',
+        userType: 'admin',
+        number: '13246579',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -133,9 +136,41 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('errors')).to be_nil
     end
 
-    it 'returns a campaign without filter' do
+    it 'create a campaign with number filter only' do
       variables = {
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+        labels: nil,
+        userType: nil,
+        number: '1324564789',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'create a campaign with number and label filter only' do
+      variables = {
+        labels: 'com_news_sms',
+        userType: nil,
+        number: '1324564789',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'create a campaign without applying filters' do
+      variables = {
+        labels: nil,
+        userType: nil,
+        number: nil,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
