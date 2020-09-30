@@ -18,7 +18,7 @@ export default function CommentTextField({ data }) {
     commentCreate({ variables: {
       noteId: data.id,
       body
-    }}).then((d) => console.log(d))
+    }}).then(({ data: conD }) => console.log(conD.body))
   }
   return(
     <>
@@ -34,7 +34,7 @@ export default function CommentTextField({ data }) {
           <Button variant="contained" color="inherit" type="submit">SHARE</Button>
         </div>
       </form>
-      <CommentCard />
+      <CommentCard data={data} />
     </>
   )
 }

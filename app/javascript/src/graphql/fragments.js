@@ -77,6 +77,7 @@ export const NotesFragment = {
       user {
         id
         name
+        imageUrl
       }
       author {
         id
@@ -86,6 +87,9 @@ export const NotesFragment = {
         id
         name
         imageUrl
+      }
+      noteComments {
+        body
       }
     }
   `

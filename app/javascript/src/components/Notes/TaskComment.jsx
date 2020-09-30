@@ -12,7 +12,7 @@ export default function TaskComment({ data }) {
     <>
       <div style={{ display: 'flex', marginBottom: "10px" }}>
         <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} gutterBottom>
-            11 Comments
+            {data?.noteComments.length} Comments
         </Typography>
         <Typography variant="caption" style={{ cursor: 'pointer', color: '#69ABA4' }} gutterBottom>
           {open ? (<div onClick={() => setOpen(false)}>| <span style={{ marginLeft: "10px" }}>Collapse Comments</span></div>) 
