@@ -142,10 +142,10 @@ ActiveRecord::Schema.define(version: 2020_09_27_144114) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.string "status"
     t.uuid "note_id"
-    t.index ["status"], name: "index_comments_on_status"
+    t.string "status"
     t.index ["note_id"], name: "index_comments_on_note_id"
+    t.index ["status"], name: "index_comments_on_status"
   end
 
   create_table "communities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

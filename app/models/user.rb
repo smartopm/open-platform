@@ -209,6 +209,7 @@ class User < ApplicationRecord
       user_id: vals[:user_id] || self[:id],
       body: vals[:body],
       category: vals[:category],
+      description: vals[:description],
       flagged: vals[:flagged],
       author_id: self[:id],
       completed: vals[:completed],

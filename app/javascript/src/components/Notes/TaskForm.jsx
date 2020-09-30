@@ -28,6 +28,7 @@ const initialData = {
 
 export default function TaskForm({ close, refetch, users, assignUser}) {
   const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
   const [assignees, setAssignees] = useState([])
   const [taskType, setTaskType] = useState('')
@@ -44,6 +45,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     createTask({
       variables: {
         body: title,
+        description: description,
         due: selectedDate ? selectedDate.toISOString() : null,
         completed: taskStatus,
         category: taskType,
@@ -63,12 +65,31 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
   return (
     <form onSubmit={handleSubmit}>
       <TextField
+        name="task_body"
+        label="Task Body"
+        placeholder="Add task body here"
+        style={{ width: '100%' }}
+        onChange={e => setTitle(e.target.value)}
+        value={title}
+        multiline
+        fullWidth
+        rows={2}
+        margin="normal"
+        inputProps={{
+          'aria-label': 'task_body'
+        }}
+        InputLabelProps={{
+          shrink: true
+        }}
+        required
+      />
+      <TextField
         name="task_description"
         label="Task Description"
         placeholder="Describe the task here"
         style={{ width: '100%' }}
-        onChange={e => setTitle(e.target.value)}
-        value={title}
+        onChange={e => setDescription(e.target.value)}
+        value={description}
         multiline
         fullWidth
         rows={2}
@@ -79,7 +100,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         InputLabelProps={{
           shrink: true
         }}
-        required
       />
       <br/>
       <FormControl fullWidth >

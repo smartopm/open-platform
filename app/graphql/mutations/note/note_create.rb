@@ -7,6 +7,7 @@ module Mutations
       argument :user_id, ID, required: false
       argument :body, String, required: true
       argument :category, String, required: false
+      argument :description, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
       argument :due_date, String, required: false

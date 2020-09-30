@@ -288,8 +288,8 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category) {
+  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String, $description: String) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category, description: $description) {
       note {
         body
         id
@@ -303,6 +303,7 @@ export const UpdateNote = gql`
     $body: String
     $flagged: Boolean
     $category: String
+    $description: String
     $userId: ID
     $completed: Boolean
     $dueDate: String
@@ -312,6 +313,7 @@ export const UpdateNote = gql`
       body: $body
       flagged: $flagged
       category: $category
+      description: $description
       userId: $userId
       completed: $completed
       dueDate: $dueDate

@@ -11,6 +11,7 @@ module Types
     field :assignees, [Types::UserType], null: true
     field :body, String, null: true
     field :category, String, null: true
+    field :description, String, null: true
     field :flagged, Boolean, null: true
     field :completed, Boolean, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false

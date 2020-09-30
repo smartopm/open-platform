@@ -8,6 +8,7 @@ module Mutations
       argument :id, ID, required: true
       argument :body, String, required: false
       argument :category, String, required: false
+      argument :description, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
       argument :due_date, String, required: false
