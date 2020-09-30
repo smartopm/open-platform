@@ -57,7 +57,7 @@ export default function TaskForm({ users, data, assignUser }) {
         body: title,
         dueDate: selectedDate,
         completed: taskStatus,
-        description: description,
+        description,
         category: taskType,
         flagged: true,
         userId: userData.userId
@@ -73,6 +73,7 @@ export default function TaskForm({ users, data, assignUser }) {
     setTitle(data.body)
     setTaskType(data.category)
     setTaskStatus(data.completed)
+    setDescription(data.description)
     setDate(data.dueDate)
     setData({
       user: data.user.name,
@@ -252,9 +253,14 @@ export default function TaskForm({ users, data, assignUser }) {
   )
 }
 
+TaskForm.defaultProps = {
+ users: [],
+ data: {}
+}
 TaskForm.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.string).isRequired,
-  data: PropTypes.func.isRequired,
+  users: PropTypes.arrayOf(PropTypes.object),
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object,
   assignUser: PropTypes.func.isRequired
 }
 
