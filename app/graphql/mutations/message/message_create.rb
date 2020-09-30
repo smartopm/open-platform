@@ -28,7 +28,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def record_history(message)
-        message.record_note_history(context[:current_user], id: message.reload.id)
+        message.record_note_history(context[:current_user])
       end
 
       def check_default_user_empty?

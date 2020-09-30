@@ -100,6 +100,8 @@ RSpec.describe Mutations::Message do
                                                         }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(NoteHistory.count).to eql 1
+      expect(NoteHistory.last.note_id).to eql note.id
+      expect(NoteHistory.last.user_id).to eql non_admin.id
       expect(result.dig('errors')).to be_nil
     end
   end

@@ -4,17 +4,15 @@
 module NoteHistoryRecordable
   extend ActiveSupport::Concern
 
-  def record_note_history(current_user, saved_changes)
-    return add_create_history(current_user) if saved_changes.key?(:id)
+  def record_note_history(current_user, saved_changes = nil)
+    return add_create_history(current_user) unless saved_changes
 
     add_update_history(current_user, saved_changes)
   end
 
   def add_create_history(user)
     history = note_history('create', user)
-    return if history.save
-
-    raise StandardError, history.errors.full_messages
+    history.save!
   end
 
   def add_update_history(user, saved_changes)
@@ -23,9 +21,7 @@ module NoteHistoryRecordable
       history.attr_changed = attr.to_s
       history.initial_value = val.first
       history.updated_value = val.last
-      next if history.save
-
-      raise StandardError, history.errors.full_messages
+      history.save!
     end
   end
 
