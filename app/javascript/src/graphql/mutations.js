@@ -297,6 +297,18 @@ export const CreateNote = gql`
     }
   }
 `
+
+export const CreateComment = gql`
+  mutation CreateComment($noteId: ID!, $body: String!) {
+    noteCreate(noteId: $noteId, body: $body) {
+      note {
+        body
+        id
+      }
+    }
+  }
+`
+
 export const UpdateNote = gql`
   mutation noteupdate(
     $id: ID!

@@ -92,6 +92,7 @@ export default function TaskForm({ users, data, assignUser }) {
 
   return (
     <form onSubmit={handleSubmit}>
+      {console.log(data)}
       <Snackbar
         open={updated}
         autoHideDuration={3000}
