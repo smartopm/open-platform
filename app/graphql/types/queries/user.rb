@@ -116,7 +116,7 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
     User.allowed_users(context[:current_user])
-        .search(query)
+        .search_lite(query)
         .order(name: :asc)
         .limit(limit)
         .offset(offset).with_attached_avatar
