@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import { Pagination } from '@material-ui/lab'
 import PostItem from './PostItem'
@@ -35,6 +37,10 @@ export default function PostsList() {
       .catch(err => console.log(err.message))
     }
 
+    function loadPostPage(postId) {
+        window.location.href = `/news/post/${postId}`
+      }
+
     function handlePageChange(_event, value){
       setPageNumber(value)
     }
@@ -64,10 +70,9 @@ export default function PostsList() {
             {totalPosts ? response.posts.map(post => (
               <Grid item key={post.ID}>
                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                  <Link
+                  <div
                     key={post.ID}
-                    style={{ textDecoration: 'none' }}
-                    to={`/news/post/${post.ID}`}
+                    onClick={() => loadPostPage(post.ID)}
                   >
                     <PostItem
                       key={post.ID}
@@ -76,7 +81,7 @@ export default function PostsList() {
                       datePosted={dateToString(post.modified)}
                       subTitle={post.excerpt}
                     />
-                  </Link>
+                  </div>
                 </Box>
               </Grid>
                     )) : <p>No Post Found in this category</p>}
