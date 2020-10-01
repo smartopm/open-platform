@@ -50,5 +50,6 @@ describe("Posts List Component ",() => {
           expect(container.queryAllByTestId('post_title')).toHaveLength(2);
           expect(container.queryByText('Rewards Program')).toBeInTheDocument();
         })
+     expect(container).toMatchSnapshot();
   })
 })

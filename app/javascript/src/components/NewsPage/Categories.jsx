@@ -19,7 +19,6 @@ export default function Categories() {
         return <Spinner />
     }
     const cats = response.categories.filter(cat => cat.slug !== 'private' && cat.name !== "Uncategorized" && cat.name !== "news")
-    console.log(`${wordpressEndpoint}/categories`)
     return (
       <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
         <Grid>

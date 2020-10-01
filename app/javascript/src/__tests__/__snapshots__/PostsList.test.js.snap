@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Categories Component  should render without error and have all Posts 1`] = `
+exports[`Posts List Component  should render without error and have all Posts 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
