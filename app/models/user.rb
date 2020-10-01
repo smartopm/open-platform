@@ -21,6 +21,10 @@ class User < ApplicationRecord
     attributes date_filter: ['acting_event_log.created_at']
   end
 
+  search_scope :search_lite do
+    attributes :name, :phone_number, :user_type, :email
+  end
+
   scope :allowed_users, lambda { |current_user|
     policy = UserPolicy.new(current_user, nil)
     allowed_user_types = policy.roles_user_can_see
