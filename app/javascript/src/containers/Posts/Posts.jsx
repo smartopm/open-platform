@@ -24,7 +24,6 @@ export default function Posts() {
     }
     const [page, setPageNumber] = useState(1)
     const limit = 20
-    // const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=`)
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug === "posts" ? 'post' : slug || ''}`)
     const [logSharedPost] = useMutation(LogSharedPost)
     const currentUrl = window.location.href
@@ -47,7 +46,7 @@ export default function Posts() {
     if (!response) {
         return <Spinner />
     }
-    console.log(response.found)
+    const totalPosts = response.found
     return (
       <>
         <Nav navName="Nkwashi News" menuButton="back" backTo="/" />
@@ -64,7 +63,7 @@ export default function Posts() {
           <Divider light variant="middle" />
           <br />
           <Grid container direction="row" justify="center">
-            {response.found ? response.posts.map(post => (
+            {totalPosts ? response.posts.map(post => (
               <Grid item key={post.ID}>
                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
                   <Link
@@ -84,12 +83,20 @@ export default function Posts() {
               </Grid>
                     )) : <p>No Post Found in this category</p>}
           </Grid>
-          <CenteredContent>
-            <Pagination count={Math.floor(response.found / limit)} page={page} onChange={handlePageChange} />
-          </CenteredContent>
+          {
+            totalPosts > limit && (
+              <CenteredContent>
+                <Pagination 
+                  count={Math.round(totalPosts / limit)} 
+                  page={page} 
+                  onChange={handlePageChange}
+                  color="primary"
+                />
+              </CenteredContent>
+            )
+          }
         </div>
         <ShareButton url={currentUrl} doOnShare={onPostsShare} />
       </>
     )
-
 }
