@@ -26,7 +26,7 @@ module Types::Queries::Label
   def labels
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].labels
+    context[:site_community].labels.eager_load(:users)
   end
 
   def user_labels(user_id:)
