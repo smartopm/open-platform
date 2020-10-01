@@ -202,3 +202,7 @@ export function capitalize(word) {
 export function pluralizeCount(count, noun, suffix = 's') {
   return `${noun}${count > 1 ? suffix : ''}`
 }
+
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
