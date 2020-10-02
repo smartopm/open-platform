@@ -19,7 +19,7 @@ class User < ApplicationRecord
     attributes :name, :phone_number, :user_type, :email
     attributes labels: ['labels.short_desc']
     attributes date_filter: ['acting_event_log.created_at']
-    scope {joins(:acting_event_log).eager_load(:labels)}
+    scope { joins(:acting_event_log).eager_load(:labels) }
   end
 
   search_scope :search_lite do
