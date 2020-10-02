@@ -202,3 +202,15 @@ export function capitalize(word) {
 export function pluralizeCount(count, noun, suffix = 's') {
   return `${noun}${count > 1 ? suffix : ''}`
 }
+
+ /**
+ * @param {String} string
+ * @description just like Ruby titleize
+ * @returns {String}
+ */
+export function titleize(string) {
+  var words = string.split("-")
+  return words.map(function(word) {
+    return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase()
+  }).join(' ')
+}
