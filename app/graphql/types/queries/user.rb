@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Queries module for breaking out queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::User
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -63,27 +64,54 @@ module Types::Queries::User
     find_community_user(id)
   end
 
-  def users(offset: 0, limit: 100, query: nil)
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def users(offset: 0, limit: 50, query: nil)
     adm = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
-    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels)
-        .search(query)
-        .limit(limit)
-        .offset(offset).with_attached_avatar
+    if query.present? && query.include?('date_filter')
+      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+          .eager_load(:notes, :accounts, :labels)
+          .heavy_search(query)
+          .order(name: :asc)
+          .limit(limit)
+          .offset(offset).with_attached_avatar
+    else
+      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+          .eager_load(:notes, :accounts, :labels)
+          .search(query)
+          .order(name: :asc)
+          .limit(limit)
+          .offset(offset).with_attached_avatar
+    end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
-  def user_search(query: nil, offset: 0, limit: 50)
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def user_search(query: '', offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels)
-        .search(query)
-        .order(name: :asc)
-        .limit(limit)
-        .offset(offset).with_attached_avatar
+    if query.present? && query.include?('date_filter')
+      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+          .eager_load(:notes, :accounts, :labels)
+          .heavy_search(query)
+          .order(name: :asc)
+          .limit(limit)
+          .offset(offset).with_attached_avatar
+    else
+      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+          .eager_load(:notes, :accounts, :labels)
+          .search(query)
+          .order(name: :asc)
+          .limit(limit)
+          .offset(offset).with_attached_avatar
+    end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def current_user
     return context[:current_user] if context[:current_user]
@@ -137,3 +165,4 @@ module Types::Queries::User
     activity_point || ActivityPoint.create!(user: user)
   end
 end
+# rubocop:enable Metrics/ModuleLength
