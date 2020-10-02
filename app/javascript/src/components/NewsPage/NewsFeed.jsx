@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
@@ -11,6 +12,7 @@ import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
 import { sanitizeText } from '../../utils/helpers'
 
+const NUMBER_OF_POSTS_TO_DISPLAY = 5
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -91,6 +93,21 @@ export default function NewsFeed() {
   if (!response || !response.posts) {
     return <Spinner />
   }
-  const data = response.posts?.slice(0, 5) || []
-  return <PostItemGrid data={data} />
+
+  return <PostItemGrid data={postsToDisplay(response.posts)} />
+}
+
+function postsToDisplay(posts) {
+  const data = []
+  if (posts && posts.length) {
+    const stickyPosts = posts.filter(post => post.sticky).slice(0, NUMBER_OF_POSTS_TO_DISPLAY)
+    data.push(...stickyPosts)
+    if (stickyPosts.length < NUMBER_OF_POSTS_TO_DISPLAY) {
+      const nonStickyPosts = posts.filter(post => !post.sticky)
+      const moreToDisplay = nonStickyPosts.slice(0, NUMBER_OF_POSTS_TO_DISPLAY - stickyPosts.length)
+      data.push(...moreToDisplay)
+    }
+  }
+
+  return data
 }
