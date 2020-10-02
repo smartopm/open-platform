@@ -19,14 +19,13 @@ export default function Categories() {
         return <Spinner />
     }
     const cats = response.categories.filter(cat => cat.slug !== 'private' && cat.name !== "Uncategorized" && cat.name !== "news")
-    
     return (
       <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
         <Grid>
           <Grid item xs>
             {cats.map(category => (
               <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`} key={category.ID}>
-                <Link to={`/news/${category.slug === 'post' ? 'posts' : category.slug}`} className={`${css(styles.categoryLink)}`}>
+                <Link data-testid="post_cat" to={`/news/${category.slug === 'post' ? 'posts' : category.slug}`} className={`${css(styles.categoryLink)}`}>
                   {category.name}
                 </Link>
               </Button>
