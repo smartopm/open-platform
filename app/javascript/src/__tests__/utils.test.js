@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount, checkForHtmlTags, removeNewLines } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount, checkForHtmlTags, removeNewLines, titleize } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -131,5 +131,17 @@ describe('pluralizeCount', () => {
   })
   it("should use the provided suffix if available", () => {
     expect(pluralizeCount(5, 'Child', 'ren')).toBe('Children')
+  })
+})
+
+describe('titleize', () => {
+  it("Captilize each word and remove hyphens", () => {
+    expect(titleize('artists-in-residence')).toBe('Artists In Residence')
+  })
+  it("should just capitalize if it's a single word", () => {
+    expect(titleize('policy')).toBe('Policy')
+  })
+  it("should return as it is, if already ok", () => {
+    expect(titleize('Posts')).toBe('Posts')
   })
 })
