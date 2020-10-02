@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
 import React from 'react'
 import Dialog from '@material-ui/core/Dialog';
@@ -5,12 +6,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
+import Card from '@material-ui/core/Card';
+import Avatar from '@material-ui/core/Avatar';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import CommentCard from './CommentCard'
 
-export default function TaskDelete({ open, handleClose}) {
+export default function TaskDelete({ open, handleClose, data, handleDelete }) {
   const classes = useStyles();
   return (
     <>
@@ -19,14 +22,26 @@ export default function TaskDelete({ open, handleClose}) {
           Are you sure you want to delete your comment?
         </DialogTitle>
         <DialogContent style={{ margin: '15px' }}>
-          <CommentCard deleteModal />
+          <Card style={{ display: 'flex' }} className={classes.root}>
+            <Avatar src={data.user.imageUrl} alt="avatar-image" style={{ marginTop: '7px' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+              <CardContent>
+                <Typography className={classes.deleteCard} gutterBottom>
+                  {data.user.name}
+                </Typography>
+                <Typography variant="caption" component="h2">
+                  {data.body}
+                </Typography>
+              </CardContent>
+            </div>
+          </Card>
         </DialogContent>
         <Divider />
         <DialogActions style={{ margin: '10px' }}>
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancel
           </Button>
-          <Button autoFocus onClick={handleClose} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }}>
+          <Button autoFocus onClick={handleDelete(data.id)} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }}>
             Save changes
           </Button>
         </DialogActions>
@@ -49,5 +64,9 @@ const useStyles = makeStyles({
     backgroundColor: '#fcefef',
     color: '#dc402b',
     borderBottom: '1px #f1a3a2 solid'
+  },
+  deleteCard: {
+    fontSize: 14,
+    fontWeight: 'bold'
   }
 });

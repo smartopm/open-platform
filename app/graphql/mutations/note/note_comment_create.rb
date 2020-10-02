@@ -11,6 +11,7 @@ module Mutations
 
       def resolve(vals)
         comment = context[:current_user].note_comments.new(vals)
+        comment.status = 'active'
         raise GraphQL::ExecutionError, note.errors.full_messages unless comment.save
 
         comment.record_note_history(context[:current_user])

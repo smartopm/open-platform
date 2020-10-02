@@ -529,9 +529,12 @@ query taskDetail($taskId: ID!){
 export const CommentQuery  = gql`
 query commentDetail($taskId: ID!){
   task(taskId: $taskId){
+    id
     body
     noteComments {
+      id
       body
+      createdAt
       user {
         name
         imageUrl

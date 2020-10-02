@@ -26,7 +26,6 @@ import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
-import TaskComment from './TaskComment'
 
 const initialData = {
   user: '',
@@ -93,7 +92,6 @@ export default function TaskForm({ users, data, assignUser }) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        {console.log(data)}
         <Snackbar
           open={updated}
           autoHideDuration={3000}
@@ -253,7 +251,6 @@ export default function TaskForm({ users, data, assignUser }) {
           {Boolean(error.length) && error}
         </p>
       </form>
-      <TaskComment data={data} />
     </>
   )
 }

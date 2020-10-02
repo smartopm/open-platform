@@ -1,29 +1,48 @@
 /* eslint-disable no-use-before-define */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useMutation } from 'react-apollo'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import { TaskCommentUpdate } from '../../graphql/mutations'
 
-export default function EditField({ handleClose }) {
+export default function EditField({ handleClose, data, refetch }) {
   const classes = useStyles();
+  const [body, setBody] = useState('')
+  const [commentUpdate] = useMutation(TaskCommentUpdate)
+  function handleSubmit(event) {
+    event.preventDefault();
+    commentUpdate({ variables: {
+      id: data.id,
+      body
+    }}).then(() => refetch())
+  }
+
+  useEffect(() => {
+      setBody(data.body)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return(
     <>
       <div style={{ display: 'flex' }}>
-        <Avatar style={{ marginTop: '7px' }} src='https://lh3.googleusercontent.com/a-/AOh14Ghqcs5wKjhN2W7eJx5V3jfGuQno1rSQy4w2krki' alt="avatar-image" />
-        <form className={classes.root} noValidate autoComplete="off">
+        <Avatar style={{ marginTop: '7px' }} src={data.user.imageUrl} alt="avatar-image" />
+        <form className={classes.root} onSubmit={handleSubmit}>
           <Typography className={classes.title} gutterBottom>
-            Tolulope Olaniyan
+            {data.user.name}
           </Typography>
           <div style={{ display: 'flex', flexDirection: 'column', color: '#69ABA4' }}>
             <TextField
+              value={body}
               id="outlined-size-small"
               variant="outlined"
               size="small"
+              onChange={e => setBody(e.target.value)}
             />
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
-              <Button autoFocus onClick={handleClose} variant="contained" color="primary" style={{ marginRight: '5px' }}>
+              <Button autoFocus variant="contained" type="submit" color="primary" style={{ marginRight: '5px' }}>
                 Save changes
               </Button>
               <Button onClick={handleClose} variant="outlined" color="secondary">

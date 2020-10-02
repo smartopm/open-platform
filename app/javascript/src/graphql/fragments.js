@@ -89,7 +89,13 @@ export const NotesFragment = {
         imageUrl
       }
       noteComments {
-        body
+       id
+       body
+       createdAt
+       user {
+         name
+         imageUrl
+       }
       }
     }
   `

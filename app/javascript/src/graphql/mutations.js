@@ -311,6 +311,27 @@ mutation noteCommentCreate($noteId: ID!, $body: String!) {
 }
 `
 
+export const TaskCommentUpdate = gql`
+mutation noteCommentUpdate($id: ID!, $body: String!) {
+  noteCommentUpdate(
+    id: $id,
+    body: $body
+  ) {
+    noteComment {
+      body
+    }
+  }
+}
+`
+
+export const DeleteNoteComment = gql`
+  mutation noteCommentDelete($id: ID!) {
+    noteCommentDelete(commentId: $id) {
+      commentDelete
+    }
+  }
+`
+
 export const UpdateNote = gql`
   mutation noteupdate(
     $id: ID!
