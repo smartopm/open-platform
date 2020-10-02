@@ -25,7 +25,7 @@ export default function Categories() {
           <Grid item xs>
             {cats.map(category => (
               <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`} key={category.ID}>
-                <Link data-testid="post_cat" to={`/news/${category.slug === 'post' ? 'posts' : category.slug}`} className={`${css(styles.categoryLink)}`}>
+                <Link data-testid="post_cat" to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`}>
                   {category.name}
                 </Link>
               </Button>
