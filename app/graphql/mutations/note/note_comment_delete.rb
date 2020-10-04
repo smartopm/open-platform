@@ -11,7 +11,7 @@ module Mutations
       def resolve(id:)
         comment = NoteComment.find(id)
         raise GraphQL::ExecutionError, 'Comment Not Found' unless comment
-        
+
         updates_hash = { status: [comment.status, 'deleted'] }
         if comment.update(status: 'deleted')
           comment.record_note_history(context[:current_user], updates_hash)

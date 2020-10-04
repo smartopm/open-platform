@@ -35,6 +35,7 @@ export default function EditField({ handleClose, data, refetch }) {
           </Typography>
           <div style={{ display: 'flex', flexDirection: 'column', color: '#69ABA4' }}>
             <TextField
+              multiline
               value={body}
               id="outlined-size-small"
               variant="outlined"

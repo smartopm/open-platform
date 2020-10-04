@@ -1,30 +1,23 @@
 /* eslint-disable */
 import React from 'react'
-import CommentCard from '../components/Notes/CommentCard'
+import TaskCommentEdit from '../components/Notes/TaskCommentEdit'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import '@testing-library/jest-dom/extend-expect'
 
-describe('Comment Card Component', () => {
-  const deleteModal = jest.fn
+describe('Comment Edit Field Component', () => {
+  const handleClose = jest.fn
   const data = {
-    noteComments: [
-      {
-      id: 'jwhekw',
-      body: 'whgeukhw',
-      createdAt: "2020-09-30T20:32:17Z",
-      user: {
-        imageUrl: '',
-        name: 'tolulope'
-        }
+    id: 'jwhekw',
+    body: 'whgeukhw',
+    createdAt: "2020-09-30T20:32:17Z",
+    user: {
+      imageUrl: '',
+      name: 'tolulope'
       }
-    ]
   }
   const authState = {
-    loaded: true,
-    loggedIn: true,
-    setToken: jest.fn(),
     user: {
       avatarUrl: null
     }
@@ -34,10 +27,10 @@ describe('Comment Card Component', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
-          <CommentCard
-            deleteModal={deleteModal}
-            authState={authState.user}
+          <TaskCommentEdit
+            authState={authState}
             data={data}
+            handleClose={handleClose}
           />
         </BrowserRouter>
       </MockedProvider>
