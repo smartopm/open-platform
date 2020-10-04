@@ -326,7 +326,7 @@ mutation noteCommentUpdate($id: ID!, $body: String!) {
 
 export const DeleteNoteComment = gql`
   mutation noteCommentDelete($id: ID!) {
-    noteCommentDelete(commentId: $id) {
+    noteCommentDelete(id: $id) {
       commentDelete
     }
   }

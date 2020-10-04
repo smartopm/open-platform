@@ -4,17 +4,21 @@ module Mutations
   module Note
     # Create Note Comments
     class NoteCommentDelete < BaseMutation
-      argument :comment_id, ID, required: true
+      argument :id, ID, required: true
 
       field :comment_delete, GraphQL::Types::Boolean, null: false
 
-      def resolve(vals)
-        comment = context[:current_user].note_comments.update(status: 'deleted')
+      def resolve(id:)
+        comment = NoteComment.find(id)
+        raise GraphQL::ExecutionError, 'Comment Not Found' unless comment
         
-        raise GraphQL::ExecutionError, note.errors.full_messages unless comment.save
+        updates_hash = { status: [comment.status, 'deleted'] }
+        if comment.update(status: 'deleted')
+          comment.record_note_history(context[:current_user], updates_hash)
+          return { comment_delete: comment }
+        end
 
-        comment.record_note_history(context[:current_user])
-        { note_comment: comment }
+        raise GraphQL::ExecutionError, comment.errors.full_messages
       end
 
       def authorized?(_vals)

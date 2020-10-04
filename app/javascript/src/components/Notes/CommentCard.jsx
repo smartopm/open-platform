@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
-import { useMutation } from 'react-apollo'
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -12,24 +11,27 @@ import Button from '@material-ui/core/Button';
 import TaskDelete from './TaskDelete'
 import EditField from './TaskCommentEdit'
 import DateContainer from '../DateContainer'
-import { DeleteNoteComment } from '../../graphql/mutations'
 
 export default function CommentCard({ data, refetch }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false) 
   const [editId, setEditId] = useState(null)
   const [edit, setEdit] = useState(false)
-  const [commentDelete] = useMutation(DeleteNoteComment)
+  const [id, setId] = useState(null)
+  const [imageUrl, setImageUrl] = useState(null)
+  const [name, setName] = useState(null)
+  const [body, setBody] = useState(null)
   function handleClose() {
     setEdit(false)
     setEditId(null)
   }
 
-  function handleDelete(id) {
-    console.log(id)
-    commentDelete({ variables: {
-      commentId: id
-    }}).then(() => refetch())
+  function deleteClick(event) {
+    setId(event.currentTarget.getAttribute('id'))
+    setImageUrl(event.currentTarget.getAttribute('image'))
+    setName(event.currentTarget.getAttribute('name'))
+    setBody(event.currentTarget.getAttribute('body'))
+    setOpen(true)
   }
 
   return(
@@ -67,14 +69,34 @@ export default function CommentCard({ data, refetch }) {
               </Button>
               {' '}
               |
-              <Button size="small" color="inherit" onClick={() => setOpen(true)}>Delete</Button>
+              <Button
+                size="small"
+                color="inherit"
+                id={com.id}
+                name={com.user.name}
+                image={com.user.imageUrl} 
+                body={com.body}
+                onClick={(event) => deleteClick(event)}
+              >
+                Delete
+              </Button>
             </CardActions>
             )}
             {editId === com.id  && <EditField handleClose={handleClose} data={com} refetch={refetch} />}
-            {open && <TaskDelete open={open} handleClose={() => setOpen(false)} data={com} handleDelete={handleDelete} />}
           </div>
         </Card>
       ))}
+      {open && (
+      <TaskDelete
+        open={open}
+        handleClose={() => setOpen(false)} 
+        id={id}
+        name={name}
+        imageUrl={imageUrl} 
+        refetch={refetch}
+        body={body}
+      />
+    )}
     </>
   )
 }
