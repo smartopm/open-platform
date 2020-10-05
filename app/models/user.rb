@@ -18,6 +18,7 @@ class User < ApplicationRecord
   search_scope :search do
     attributes :name, :phone_number, :user_type, :email
     attributes labels: ['labels.short_desc']
+    # attributes plot_number: ['accounts.land_parcels.parcel_number']
   end
 
   search_scope :heavy_search do
