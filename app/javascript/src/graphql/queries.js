@@ -536,6 +536,7 @@ query commentDetail($taskId: ID!){
       body
       createdAt
       user {
+        id
         name
         imageUrl
       }

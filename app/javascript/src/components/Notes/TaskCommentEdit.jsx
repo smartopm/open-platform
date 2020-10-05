@@ -13,6 +13,7 @@ export default function EditField({ handleClose, data, refetch }) {
   const classes = useStyles();
   const [body, setBody] = useState('')
   const [commentUpdate] = useMutation(TaskCommentUpdate)
+  const [error, setErrorMessage] = useState('')
   function handleSubmit(event) {
     event.preventDefault();
     commentUpdate({ variables: {
@@ -21,7 +22,7 @@ export default function EditField({ handleClose, data, refetch }) {
     }}).then(() => {
       handleClose()
       refetch()
-    })
+    }).catch((err) => setErrorMessage(err))
   }
 
   useEffect(() => {
@@ -57,6 +58,9 @@ export default function EditField({ handleClose, data, refetch }) {
           </div>
         </form>
       </div>
+      <p className="text-center">
+        {Boolean(error.length) && error}
+      </p>
     </>
   )
 }
