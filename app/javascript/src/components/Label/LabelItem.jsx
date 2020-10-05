@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // number of users
 // color
 // description
-export default function LabelItem({ label, userType }) {
+export default function LabelItem({ label, userType, userCount }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
 
@@ -30,7 +30,7 @@ export default function LabelItem({ label, userType }) {
         </Grid>
         <Grid item xs={3}>
           <Typography variant="subtitle1" data-testid="label-name">
-            {label.userCount}
+            {userCount}
           </Typography>
         </Grid>
         <Grid item xs={3}>
