@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_27_144114) do
+ActiveRecord::Schema.define(version: 2020_10_02_115828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -276,7 +276,36 @@ ActiveRecord::Schema.define(version: 2020_09_27_144114) do
     t.uuid "campaign_id"
     t.string "source_system_id"
     t.string "category"
+    t.uuid "note_id"
     t.index ["campaign_id"], name: "index_messages_on_campaign_id"
+    t.index ["note_id"], name: "index_messages_on_note_id"
+  end
+
+  create_table "note_comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "body"
+    t.uuid "note_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "status"
+    t.index ["note_id"], name: "index_note_comments_on_note_id"
+    t.index ["user_id"], name: "index_note_comments_on_user_id"
+  end
+
+  create_table "note_histories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "attr_changed"
+    t.string "initial_value"
+    t.string "updated_value"
+    t.string "action"
+    t.string "note_entity_type"
+    t.uuid "note_entity_id"
+    t.uuid "note_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["note_entity_type", "note_entity_id"], name: "index_note_histories_on_note_entity_type_and_note_entity_id"
+    t.index ["note_id"], name: "index_note_histories_on_note_id"
+    t.index ["user_id"], name: "index_note_histories_on_user_id"
   end
 
   create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -291,6 +320,7 @@ ActiveRecord::Schema.define(version: 2020_09_27_144114) do
     t.string "category"
     t.uuid "assigned_to"
     t.uuid "community_id"
+    t.text "description"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -391,6 +421,10 @@ ActiveRecord::Schema.define(version: 2020_09_27_144114) do
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
+  add_foreign_key "note_comments", "notes"
+  add_foreign_key "note_comments", "users"
+  add_foreign_key "note_histories", "notes"
+  add_foreign_key "note_histories", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
 end

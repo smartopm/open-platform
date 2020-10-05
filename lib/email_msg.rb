@@ -29,17 +29,8 @@ class EmailMsg
     client.mail._('send').post(request_body: mail.to_json)
   end
 
-  def self.messages_from_sendgrid(date_from)
-    return if Rails.env.test?
-
-    past_date = DateTime.now - 3.days
-    end_date = ERB::Util.url_encode(past_date.to_s)
-    date_from_e = date_from.blank? ? end_date : ERB::Util.url_encode(date_from)
-    start_date = ERB::Util.url_encode(DateTime.now.to_s)
-
-    # rubocop:disable Metrics/LineLength
-    url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
-    # rubocop:enable Metrics/LineLength
+  def self.sendgrid_api(api_link)
+    url = URI(api_link)
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -47,9 +38,33 @@ class EmailMsg
     request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_updated_api_key]}"
     request.body = '{}'
     response = http.request(request)
-    response.read_body
-    emails = JSON.parse(response.read_body)
-    emails['messages']
+    res = JSON.parse(response.read_body)
+    res
+  end
+
+  def self.fetch_unsubscribes_list(start_time)
+    return if Rails.env.test?
+
+    end_time = Time.zone.now.to_i
+    # rubocop:disable Metrics/LineLength
+    response = sendgrid_api("https://api.sendgrid.com/v3/suppression/unsubscribes?start_time=#{start_time}&end_time=#{end_time}")
+    # rubocop:enable Metrics/LineLength
+    response
+  end
+
+  def self.messages_from_sendgrid(date_from = nil)
+    return if Rails.env.test?
+
+    past_date = DateTime.now - 3.days
+    end_date = ERB::Util.url_encode(past_date.to_s)
+    date_from_e = date_from.nil? ? end_date : ERB::Util.url_encode(date_from)
+    start_date = ERB::Util.url_encode(DateTime.now.to_s)
+
+    # rubocop:disable Metrics/LineLength
+    url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
+    # rubocop:enable Metrics/LineLength
+    response = sendgrid_api(url)
+    response['messages']
   end
 
   # other stuff ==> message body

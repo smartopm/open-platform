@@ -7,9 +7,11 @@ module Mutations
       argument :receiver, String, required: false
       argument :message, String, required: true
       argument :user_id, ID, required: true
+      argument :note_id, ID, required: false
 
       field :message, Types::MessageType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         message = context[:current_user].construct_message(vals)
         message.category = 'sms'
@@ -18,10 +20,15 @@ module Mutations
         if check_ids(message[:sender_id], vals[:user_id])
           message.create_message_task unless check_default_user_empty?
         end
+        raise GraphQL::ExecutionError, message.errors.full_messages unless message.persisted?
 
-        return { message: message } if message.persisted?
+        record_history(message) if vals[:note_id].present?
+        { message: message }
+      end
+      # rubocop:enable Metrics/AbcSize
 
-        raise GraphQL::ExecutionError, message.errors.full_messages
+      def record_history(message)
+        message.record_note_history(context[:current_user])
       end
 
       def check_default_user_empty?

@@ -163,8 +163,8 @@ export default function Task({
               <Link
                 href="#"
                 data-testid="more_details_btn"
-                style={{ cursor: 'pointer', color: '#69ABA4' }}
-                onClick={(event) => routeToAction(event, note.id)}
+                style={{ cursor: 'pointer', color: '#69ABA4', marginLeft: '5px' }}
+                onClick={event => routeToAction(event, note.id)}
               >
                 More Details
               </Link>
@@ -173,9 +173,9 @@ export default function Task({
           <Button
             color="primary"
             disabled={note.id && loadingMutation}
-            style={{
-              float: 'right'
-            }}
+            style={{ 
+                float: 'right',
+              }}
             onClick={() => handleCompleteNote(note.id, note.completed)}
           >
             {note.completed ? 'Completed' : 'Mark as complete'}

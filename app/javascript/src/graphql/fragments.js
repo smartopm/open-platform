@@ -72,10 +72,12 @@ export const NotesFragment = {
       id
       completed
       category
+      description
       dueDate
       user {
         id
         name
+        imageUrl
       }
       author {
         id
@@ -85,6 +87,15 @@ export const NotesFragment = {
         id
         name
         imageUrl
+      }
+      noteComments {
+       id
+       body
+       createdAt
+       user {
+         name
+         imageUrl
+       }
       }
     }
   `

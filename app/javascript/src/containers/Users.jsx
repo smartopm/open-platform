@@ -191,19 +191,17 @@ export default function UsersList() {
   }
 
   function handleCampaignCreate() {
-    const filters = type.concat(labels)
     if (userList) {
       campaignCreate({
-        variables: { filters: filters.join(), userIdList: userList.join() }
+        variables: { labels: labels.join(), userType: type.join(), number: searchValue }
       }).then(res => {
         const { data } = res
         setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
       }).catch(error => {
         setError(error.message)
       })
-
     }
-
+    
   }
 
   function handleLabelChange(event) {

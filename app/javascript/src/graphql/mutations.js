@@ -288,8 +288,8 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category) {
+  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String, $description: String) {
+    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category, description: $description) {
       note {
         body
         id
@@ -297,12 +297,48 @@ export const CreateNote = gql`
     }
   }
 `
+
+export const TaskComment = gql`
+mutation noteCommentCreate($noteId: ID!, $body: String!) {
+  noteCommentCreate(
+    noteId: $noteId,,
+    body:$body
+  ) {
+    noteComment {
+      body
+    }
+  }
+}
+`
+
+export const TaskCommentUpdate = gql`
+mutation noteCommentUpdate($id: ID!, $body: String!) {
+  noteCommentUpdate(
+    id: $id,
+    body: $body
+  ) {
+    noteComment {
+      body
+    }
+  }
+}
+`
+
+export const DeleteNoteComment = gql`
+  mutation noteCommentDelete($id: ID!) {
+    noteCommentDelete(id: $id) {
+      commentDelete
+    }
+  }
+`
+
 export const UpdateNote = gql`
   mutation noteupdate(
     $id: ID!
     $body: String
     $flagged: Boolean
     $category: String
+    $description: String
     $userId: ID
     $completed: Boolean
     $dueDate: String
@@ -312,6 +348,7 @@ export const UpdateNote = gql`
       body: $body
       flagged: $flagged
       category: $category
+      description: $description
       userId: $userId
       completed: $completed
       dueDate: $dueDate
@@ -620,8 +657,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($filters: String, $userIdList: String!){
-    campaignCreateThroughUsers(filters: $filters, userIdList: $userIdList){
+  mutation campaignCreateThroughUsers($labels: String, $userType: String, $number: String){
+    campaignCreateThroughUsers(labels: $labels, userType: $userType, number: $number){
       campaign{
         id
       }

@@ -80,20 +80,22 @@ export function Results({ data, loading, called, authState }) {
 
 export default function SearchContainer({ location }) {
   const [offset, setOffset] = useState(0)
+  const [name, setName] = useState('')
   const limit = 50
 
   function updateSearch(e) {
     const { value } = e.target
-    setName(value || '')
-    if (value && value.length > 0) {
+    setName(value)
+  }
+
+  function handleSearch(event){
+    if(event.keyCode == 13){
       loadGQL({
-        variables: { query: value, limit, offset },
+        variables: { query: name, limit, offset },
         errorPolicy: 'all'
       })
     }
   }
-
-  const [name, setName] = useState('')
   const [loadGQL, { called, loading, error, data, fetchMore }] = useLazyQuery(
     UserSearchQuery
   )
@@ -134,6 +136,7 @@ export default function SearchContainer({ location }) {
           placeholder="Search"
           value={name}
           autoFocus
+          onKeyDown={handleSearch}
         />
         <Link
           to={(location.state && location.state.from) || '/'}

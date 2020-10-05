@@ -9,6 +9,7 @@ RSpec.describe PointsAutoAlertJob, type: :job do
            })
   end
   let!(:user) { create(:user, community: community, user_type: 'client') }
+  before { Rails.env.stub(production?: true) }
 
   describe '#perform' do
     it 'enqueues the job' do

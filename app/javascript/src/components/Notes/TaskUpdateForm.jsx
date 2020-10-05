@@ -34,6 +34,7 @@ const initialData = {
 
 export default function TaskForm({ users, data, assignUser }) {
   const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
   const [taskType, setTaskType] = useState('')
   const [selectedDate, setDate] = useState(new Date())
@@ -57,6 +58,7 @@ export default function TaskForm({ users, data, assignUser }) {
         body: title,
         dueDate: selectedDate,
         completed: taskStatus,
+        description,
         category: taskType,
         flagged: true,
         userId: userData.userId
@@ -73,6 +75,7 @@ export default function TaskForm({ users, data, assignUser }) {
     setTitle(data.body)
     setTaskType(data.category)
     setTaskStatus(data.completed)
+    setDescription(data.description)
     setDate(data.dueDate)
     setData({
       user: data.user.name,
@@ -90,80 +93,99 @@ export default function TaskForm({ users, data, assignUser }) {
   }, [])
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Snackbar
-        open={updated}
-        autoHideDuration={3000}
-        onClose={() => setUpdated(!updated)}
-        color="primary"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        message="Task updated successfully"
-      />
-      <TextField
-        name="task_description"
-        label="Task Description"
-        placeholder="Describe the task here"
-        style={{ width: '100%' }}
-        onChange={(e) => setTitle(e.target.value)}
-        value={title}
-        multiline
-        fullWidth
-        rows={2}
-        margin="normal"
-        inputProps={{
-          'aria-label': 'task_description'
+    <>
+      <form onSubmit={handleSubmit}>
+        <Snackbar
+          open={updated}
+          autoHideDuration={3000}
+          onClose={() => setUpdated(!updated)}
+          color="primary"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          message="Task updated successfully"
+        />
+        <TextField
+          name="task_body"
+          label="Task Body"
+          placeholder="Add task body here"
+          style={{ width: '100%' }}
+          onChange={e => setTitle(e.target.value)}
+          value={title}
+          multiline
+          fullWidth
+          rows={2}
+          margin="normal"
+          inputProps={{
+          'aria-label': 'task_body'
         }}
-        InputLabelProps={{
+          InputLabelProps={{
           shrink: true
         }}
-        required
-      />
-      <br />
-      <FormControl fullWidth>
-        <InputLabel id="taskType">Task Type</InputLabel>
-        <Select
-          id="taskType"
-          value={taskType}
-          onChange={(event) => setTaskType(event.target.value)}
-          name="taskType"
+          required
+        />
+        <TextField
+          name="task_description"
+          label="Task Description"
+          placeholder="Describe the task here"
+          style={{ width: '100%' }}
+          onChange={e => setDescription(e.target.value)}
+          value={description}
+          multiline
           fullWidth
-        >
-          {Object.entries(NotesCategories).map(([key, val]) => (
-            <MenuItem key={key} value={key}>
-              {val}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <br />
-      <FormControl fullWidth>
-        <div>
-          {data.assignees.map((user) => (
-            <UserChip
-              key={user.id}
-              user={user}
-              size="medium"
-              onDelete={() => assignUser(data.id, user.id)}
-            />
-          ))}
-          <Chip
-            key={data.id}
-            variant="outlined"
-            label={
-                  autoCompleteOpen ? 'Close' : 'Add Assignee'
+          rows={2}
+          margin="normal"
+          inputProps={{
+          'aria-label': 'task_description'
+        }}
+          InputLabelProps={{
+          shrink: true
+        }}
+        />
+        <br />
+        <FormControl fullWidth>
+          <InputLabel id="taskType">Task Type</InputLabel>
+          <Select
+            id="taskType"
+            value={taskType}
+            onChange={event => setTaskType(event.target.value)}
+            name="taskType"
+            fullWidth
+          >
+            {Object.entries(NotesCategories).map(([key, val]) => (
+              <MenuItem key={key} value={key}>
+                {val}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <br />
+        <FormControl fullWidth> 
+          <div>
+            {data.assignees.map(user => (
+              <UserChip
+                key={user.id}
+                user={user}
+                size="medium"
+                onDelete={() => assignUser(data.id, user.id)}
+              />
+              ))}
+            <Chip
+              key={data.id}
+              variant="outlined"
+              label={
+                  autoCompleteOpen  ? 'Close' : 'Add Assignee'
                 }
-            size="medium"
-            icon={
-                  autoCompleteOpen ? (
+              size="medium"
+              icon={
+                  autoCompleteOpen  ? (
                     <CancelIcon />
                   ) : (
                     <AddCircleIcon />
                   )
                 }
-            onClick={(event) => handleOpenAutoComplete(event, data.id)}
-          />
+              onClick={event => handleOpenAutoComplete(event, data.id)}
+            />
 
-          {
+            {
               autoCompleteOpen && (
                 <Autocomplete
                   clearOnEscape
@@ -187,56 +209,62 @@ export default function TaskForm({ users, data, assignUser }) {
                 />
               )
 }
-        </div>
-      </FormControl>
-      <br />
-      <UserSearch userData={userData} update={setData} />
-      <br />
-      <FormControlLabel
-        value="end"
-        control={(
-          <Checkbox
-            aria-label="task_status"
-            data-testid="task_status"
-            checked={taskStatus}
-            onChange={() => setTaskStatus(!taskStatus)}
-            color="primary"
-          />
+          </div>
+        </FormControl>
+        <br />
+        <UserSearch userData={userData} update={setData} /> 
+        <br />
+        <FormControlLabel
+          value="end"
+          control={(
+            <Checkbox
+              aria-label="task_status"
+              data-testid="task_status"
+              checked={taskStatus}
+              onChange={() => setTaskStatus(!taskStatus)}
+              color="primary"
+            />
         )}
-        label="Task Status"
-        labelPlacement="end"
-      />
-      <FormHelperText>Checked for complete</FormHelperText>
-      <div>
-        <DatePickerDialog
-          handleDateChange={(date) => setDate(date)}
-          selectedDate={selectedDate}
+          label="Task Status"
+          labelPlacement="end"
         />
-        <FormHelperText>Pick a due date</FormHelperText>
-      </div>
+        <FormHelperText>Checked for complete</FormHelperText>
+        <div>
+          <DatePickerDialog
+            handleDateChange={date => setDate(date)}
+            selectedDate={selectedDate}
+          />
+          <FormHelperText>Pick a due date</FormHelperText>
+        </div>
 
-      <br />
-      <div className="d-flex row justify-content-center">
-        <Button
-          variant="contained"
-          type="submit"
-          color="primary"
-          disabled={loading}
-          aria-label="task_submit"
-          className={`btn ${css(discussStyles.submitBtn)}`}
-        >
-          {loading ? 'Updating a task ...' : 'Update Task'}
-        </Button>
-      </div>
-      <p className="text-center">
-        {Boolean(error.length) && error}
-      </p>
-    </form>
+        <br />
+        <div className="d-flex row justify-content-center">
+          <Button
+            variant="contained"
+            type="submit"
+            color="primary"
+            disabled={loading}
+            aria-label="task_submit"
+            className={`btn ${css(discussStyles.submitBtn)}`}
+          >
+            {loading ? 'Updating a task ...' : 'Update Task'}
+          </Button>
+        </div>
+        <p className="text-center">
+          {Boolean(error.length) && error}
+        </p>
+      </form>
+    </>
   )
 }
 
+TaskForm.defaultProps = {
+ users: [],
+ data: {}
+}
 TaskForm.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.string).isRequired,
-  data: PropTypes.func.isRequired,
+  users: PropTypes.arrayOf(PropTypes.object),
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object,
   assignUser: PropTypes.func.isRequired
 }

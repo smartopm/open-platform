@@ -69,7 +69,7 @@ export default function Home() {
       <NewsFeed />
       <br />
       {
-          userPoints &&
+          authState.user.userType.toLowerCase() === 'client' && userPoints &&
           (<UserPoints userPoints={userPoints} />)
         }
       <Homepage authState={authState} />

@@ -42,7 +42,7 @@ module Types::Queries::Note
   def all_notes(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:user).limit(limit).offset(offset)
+    context[:site_community].notes.includes(:user, :note_comments).limit(limit).offset(offset)
   end
 
   def user_notes(id:)

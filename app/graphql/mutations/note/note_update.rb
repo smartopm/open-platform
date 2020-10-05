@@ -8,6 +8,7 @@ module Mutations
       argument :id, ID, required: true
       argument :body, String, required: false
       argument :category, String, required: false
+      argument :description, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
       argument :due_date, String, required: false
@@ -19,9 +20,13 @@ module Mutations
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
         # TODO: @olivier Find a way of adding an updated_at datetime
-        return { note: note } if note.update!(attributes)
+        updates_hash = {}
+        attributes.each { |key, value| updates_hash[key] = [note.send(key), value] }
+        raise GraphQL::ExecutionError, note.errors.full_messages unless note.update!(attributes)
 
-        raise GraphQL::ExecutionError, note.errors.full_messages
+        note.record_note_history(context[:current_user], updates_hash)
+
+        { note: note }
       end
 
       # TODO: Better auth here

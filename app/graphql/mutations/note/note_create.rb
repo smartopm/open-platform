@@ -7,6 +7,7 @@ module Mutations
       argument :user_id, ID, required: false
       argument :body, String, required: true
       argument :category, String, required: false
+      argument :description, String, required: false
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
       argument :due_date, String, required: false
@@ -15,9 +16,10 @@ module Mutations
 
       def resolve(vals)
         note = context[:current_user].generate_note(vals)
-        return { note: note } if note.persisted?
+        raise GraphQL::ExecutionError, note.errors.full_messages unless note.persisted?
 
-        raise GraphQL::ExecutionError, note.errors.full_messages
+        note.record_note_history(context[:current_user])
+        { note: note }
       end
 
       # TODO: Better auth here

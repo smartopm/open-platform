@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable no-use-before-define */
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useHistory } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
@@ -13,7 +13,8 @@ import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
 import { sanitizeText } from '../../utils/helpers'
 
-const useStyles = makeStyles((theme) => ({
+const NUMBER_OF_POSTS_TO_DISPLAY = 5
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -31,11 +32,10 @@ const useStyles = makeStyles((theme) => ({
 
 export function PostItemGrid({ data }) {
   const classes = useStyles()
-  const history = useHistory()
   const matches = useMediaQuery('(max-width:600px)')
 
   function routeToPost(postId) {
-    history.push(`/news/post/${postId}`)
+    window.location.href = `/news/post/${postId}`
   }
   return (
     <div className={classes.root}>
@@ -94,6 +94,21 @@ export default function NewsFeed() {
   if (!response || !response.posts) {
     return <Spinner />
   }
-  const data = response.posts?.slice(0, 5) || []
-  return <PostItemGrid data={data} />
+
+  return <PostItemGrid data={postsToDisplay(response.posts)} />
+}
+
+function postsToDisplay(posts) {
+  const data = []
+  if (posts && posts.length) {
+    const stickyPosts = posts.filter(post => post.sticky).slice(0, NUMBER_OF_POSTS_TO_DISPLAY)
+    data.push(...stickyPosts)
+    if (stickyPosts.length < NUMBER_OF_POSTS_TO_DISPLAY) {
+      const nonStickyPosts = posts.filter(post => !post.sticky)
+      const moreToDisplay = nonStickyPosts.slice(0, NUMBER_OF_POSTS_TO_DISPLAY - stickyPosts.length)
+      data.push(...moreToDisplay)
+    }
+  }
+
+  return data
 }

@@ -18,7 +18,17 @@ class User < ApplicationRecord
   search_scope :search do
     attributes :name, :phone_number, :user_type, :email
     attributes labels: ['labels.short_desc']
+  end
+
+  search_scope :heavy_search do
+    attributes :name, :phone_number, :user_type, :email
+    attributes labels: ['labels.short_desc']
     attributes date_filter: ['acting_event_log.created_at']
+    scope { joins(:acting_event_log).eager_load(:labels) }
+  end
+
+  search_scope :search_lite do
+    attributes :name, :phone_number, :user_type, :email
   end
 
   scope :allowed_users, lambda { |current_user|
@@ -32,6 +42,12 @@ class User < ApplicationRecord
 
     return relat.where(user_type: allowed_user_types)
   }
+  scope :by_phone_number, ->(number) { where('phone_number IN (?)', number&.split(',')) }
+  scope :by_type, ->(user_type) { where('user_type IN (?)', user_type&.split(',')) }
+  scope :by_labels, lambda { |label|
+                      joins(:labels).where('labels.short_desc IN (?)',
+                                           label&.split(','))
+                    }
 
   belongs_to :community, dependent: :destroy
   has_many :entry_requests, dependent: :destroy
@@ -39,6 +55,7 @@ class User < ApplicationRecord
                                     dependent: :destroy, inverse_of: :user
 
   has_many :notes, dependent: :destroy
+  has_many :note_comments, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
   has_many :accounts, dependent: :destroy
@@ -208,6 +225,7 @@ class User < ApplicationRecord
       user_id: vals[:user_id] || self[:id],
       body: vals[:body],
       category: vals[:category],
+      description: vals[:description],
       flagged: vals[:flagged],
       author_id: self[:id],
       completed: vals[:completed],

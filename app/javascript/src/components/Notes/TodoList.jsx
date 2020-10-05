@@ -64,7 +64,7 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false'
   }
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type: admin' },
+    variables: { query: 'user_type = admin' },
     errorPolicy: 'all'
   })
 
