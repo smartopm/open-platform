@@ -8,6 +8,8 @@ module Types::Queries::Label
     # Get label entries
     field :labels, [Types::LabelType], null: true do
       description 'Get all labels'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
 
     # Get label for the user, using the user id
@@ -23,10 +25,10 @@ module Types::Queries::Label
     end
   end
 
-  def labels
+  def labels(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].labels.eager_load(:users)
+    context[:site_community].labels.eager_load(:users).limit(limit).offset(offset)
   end
 
   def user_labels(user_id:)
