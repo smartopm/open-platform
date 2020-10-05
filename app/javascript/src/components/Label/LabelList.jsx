@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, Container } from '@material-ui/core'
 import { makeStyles } from "@material-ui/core/styles";
 import { LabelsQuery } from '../../graphql/queries'
 import ErrorPage from '../Error'
@@ -15,8 +15,9 @@ export default function LabelList({ userType }) {
     return <ErrorPage title={error.message} />
   }
   return (
-    <>
+    <Container>
       <LabelPageTitle />
+      <br />
       {data.labels.map(label => (
         <LabelItem
           key={label.id}
@@ -25,7 +26,7 @@ export default function LabelList({ userType }) {
           userCount={label.users.length}
         />
       ))}
-    </>
+    </Container>
   )
 }
 
@@ -35,8 +36,8 @@ function LabelPageTitle(){
   return (
     <Grid container spacing={3} className={classes.labelTitle}>
       <Grid item xs={3}>
-        <Typography variant="subtitle1" data-testid="label-name" className={classes.labelTitle}>
-          Label
+        <Typography variant="subtitle1" data-testid="label-name" className={classes.label}>
+          Labels
         </Typography>
       </Grid>
       <Grid item xs={3}>

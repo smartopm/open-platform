@@ -22,23 +22,23 @@ export default function LabelItem({ label, userType, userCount }) {
   }
   return (
     <ListItem key={label.id} className={classes.labelItem}>
-      <Grid container spacing={3}>
-        <Grid item xs={3}>
-          <Typography variant="subtitle1" data-testid="label-name">
+      <Grid container spacing={6}>
+        <Grid item xs={4}>
+          <Typography variant="subtitle1" data-testid="label-title">
             {label.shortDesc}
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          <Typography variant="subtitle1" data-testid="label-name">
+          <Typography variant="subtitle1" data-testid="label-users">
             {userCount}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
-          <Typography variant="subtitle1" data-testid="label-name">
+        <Grid item sm={6}>
+          <Typography variant="subtitle1" data-testid="label-description">
             This is a label description
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4} sm={4}>
           {userType === 'admin' && (
           <IconButton
             className={classes.menuButton}
@@ -66,12 +66,12 @@ LabelItem.propTypes = {
 
 const useStyles = makeStyles(() => ({
   labelItem: {
-      borderStyle: 'solid',
-      borderColor: '#F6F6F6',
+      borderBottomStyle: 'solid',
+      borderBottomColor: '#F6F6F6',
       borderBottom: 10,
       backgroundColor: '#FFFFFF'
   },
   menuButton: {
-    float: 'right'
-  }
+    float: 'right!'
+  },
 }));
