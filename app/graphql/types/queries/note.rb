@@ -65,7 +65,7 @@ module Types::Queries::Note
   def task(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:assignees, :author, :user, :note_comments)
+    context[:site_community].notes.includes(:assignees, :author, :user)
                             .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .find(task_id)

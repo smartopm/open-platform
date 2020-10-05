@@ -14,14 +14,14 @@ import ErrorPage from "../Error"
 
 export default function TaskComment({ authState }) {
   const { taskId } = useParams()
-  const { data: commentData, error, loading: commentLoad, refetch } = useQuery(CommentQuery, {
+  const { data: commentData, error, refetch } = useQuery(CommentQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
   const [open, setOpen] = useState(false)
 
-  if (commentLoad) return <Loading />
+  // if (commentLoad) return <Loading />
   if (error) return <ErrorPage />
   return (
     <>

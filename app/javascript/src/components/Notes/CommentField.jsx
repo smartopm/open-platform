@@ -20,7 +20,10 @@ export default function CommentTextField({ data, refetch, authState }) {
     commentCreate({ variables: {
       noteId: data.task.id,
       body
-    }}).then(() => refetch())
+    }}).then(() => {
+      setBody('')
+      refetch()
+    })
   }
   return(
     <>
@@ -28,6 +31,7 @@ export default function CommentTextField({ data, refetch, authState }) {
         <Avatar style={{ marginTop: '7px' }} src={authState.user.imageUrl} alt="avatar-image" />
         <div className={classes.root} style={{ display: 'flex', flexDirection: 'column', color: '#69ABA4' }}>
           <TextField
+            value={body}
             multiline
             id="outlined-size-small"
             variant="outlined"

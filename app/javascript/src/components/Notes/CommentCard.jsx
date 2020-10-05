@@ -120,9 +120,10 @@ const useStyles = makeStyles({
 });
 
 CommentCard.defaultProps = {
-  data: []
+  data: {}
  }
  CommentCard.propTypes = {
-   data: PropTypes.arrayOf(PropTypes.object),
+   // eslint-disable-next-line react/forbid-prop-types
+   data: PropTypes.object,
    refetch: PropTypes.func.isRequired
  }

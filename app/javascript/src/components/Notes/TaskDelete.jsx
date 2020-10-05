@@ -23,7 +23,10 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
   function handleDelete(comId) {
     commentDelete({ variables: {
       id: comId
-    }}).then(() => refetch())
+    }}).then(() => {
+      handleClose()
+      refetch()
+    })
   }
 
   return (
@@ -88,6 +91,6 @@ const useStyles = makeStyles({
    imageUrl: PropTypes.string.isRequired,
    name: PropTypes.string.isRequired,
    refetch: PropTypes.func.isRequired,
-   open: PropTypes.func.isRequired,
+   open: PropTypes.bool.isRequired,
    handleClose: PropTypes.func.isRequired
  }

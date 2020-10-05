@@ -18,7 +18,10 @@ export default function EditField({ handleClose, data, refetch }) {
     commentUpdate({ variables: {
       id: data.id,
       body
-    }}).then(() => refetch())
+    }}).then(() => {
+      handleClose()
+      refetch()
+    })
   }
 
   useEffect(() => {
