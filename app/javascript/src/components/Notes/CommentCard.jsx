@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
+import PropTypes from 'prop-types'
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -117,3 +118,11 @@ const useStyles = makeStyles({
     order: 2
   }
 });
+
+CommentCard.defaultProps = {
+  data: []
+ }
+ CommentCard.propTypes = {
+   data: PropTypes.arrayOf(PropTypes.object),
+   refetch: PropTypes.func.isRequired
+ }

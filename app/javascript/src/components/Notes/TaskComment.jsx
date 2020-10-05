@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import {
   Typography
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import ChatIcon from '@material-ui/icons/Chat';
 import CommentTextField from './CommentField'
 import { CommentQuery } from '../../graphql/queries'
@@ -37,3 +38,10 @@ export default function TaskComment({ authState }) {
     </>
   )
 }
+
+TaskComment.defaultProps = {
+  authState: {}
+ }
+ TaskComment.propTypes = {
+   authState: PropTypes.object
+ }

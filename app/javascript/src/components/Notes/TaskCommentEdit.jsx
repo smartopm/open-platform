@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, {useState, useEffect} from 'react';
 import { useMutation } from 'react-apollo'
+import PropTypes from 'prop-types'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
@@ -69,3 +70,14 @@ const useStyles = makeStyles({
     fontWeight: 'bold'
   }
 });
+
+EditField.defaultProps = {
+  data: {}
+ }
+
+ EditField.propTypes = {
+   // eslint-disable-next-line react/forbid-prop-types
+   data: PropTypes.object,
+   refetch: PropTypes.func.isRequired,
+   handleClose: PropTypes.func.isRequired 
+ }

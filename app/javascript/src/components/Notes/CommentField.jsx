@@ -1,6 +1,8 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar';
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useMutation } from 'react-apollo'
@@ -62,3 +64,13 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
+
+CommentTextField.defaultProps = {
+  data: {},
+  authState: {}
+ }
+ CommentTextField.propTypes = {
+   data: PropTypes.object,
+   authState: PropTypes.object,
+   refetch: PropTypes.func.isRequired
+ }

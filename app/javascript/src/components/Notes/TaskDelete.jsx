@@ -2,6 +2,7 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
 import Dialog from '@material-ui/core/Dialog';
+import PropTypes from 'prop-types'
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -80,3 +81,13 @@ const useStyles = makeStyles({
     fontWeight: 'bold'
   }
 });
+
+ TaskDelete.propTypes = {
+   id: PropTypes.string.isRequired,
+   body: PropTypes.string.isRequired,
+   imageUrl: PropTypes.string.isRequired,
+   name: PropTypes.string.isRequired,
+   refetch: PropTypes.func.isRequired,
+   open: PropTypes.func.isRequired,
+   handleClose: PropTypes.func.isRequired
+ }
