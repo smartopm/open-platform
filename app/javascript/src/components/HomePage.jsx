@@ -241,6 +241,14 @@ export default function Homepage({ authState }) {
         'resident',
         'visitor'
       ]
+    },
+    {
+      title: 'Labels',
+      path: `/labels`,
+      icon: <HelpIcon fontSize="large" />,
+      access: [
+        'admin'
+      ]
     }
   ]
 
