@@ -7,6 +7,7 @@ import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
+import TaskComment from '../../components/Notes/TaskComment'
 import { AssignUser } from '../../graphql/mutations'
 
 export default function TaskUpdate({ match }) {
@@ -39,6 +40,7 @@ export default function TaskUpdate({ match }) {
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
       <div className="container">
         <TaskUpdateForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser} />
+        <TaskComment authState={authState} />
       </div>
     </>
   )

@@ -297,6 +297,41 @@ export const CreateNote = gql`
     }
   }
 `
+
+export const TaskComment = gql`
+mutation noteCommentCreate($noteId: ID!, $body: String!) {
+  noteCommentCreate(
+    noteId: $noteId,,
+    body:$body
+  ) {
+    noteComment {
+      body
+    }
+  }
+}
+`
+
+export const TaskCommentUpdate = gql`
+mutation noteCommentUpdate($id: ID!, $body: String!) {
+  noteCommentUpdate(
+    id: $id,
+    body: $body
+  ) {
+    noteComment {
+      body
+    }
+  }
+}
+`
+
+export const DeleteNoteComment = gql`
+  mutation noteCommentDelete($id: ID!) {
+    noteCommentDelete(id: $id) {
+      commentDelete
+    }
+  }
+`
+
 export const UpdateNote = gql`
   mutation noteupdate(
     $id: ID!

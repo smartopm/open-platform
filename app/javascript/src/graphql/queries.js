@@ -526,6 +526,25 @@ query taskDetail($taskId: ID!){
  ${NotesFragment.note}
 `
 
+export const CommentQuery  = gql`
+query commentDetail($taskId: ID!){
+  task(taskId: $taskId){
+    id
+    body
+    noteComments {
+      id
+      body
+      createdAt
+      user {
+        id
+        name
+        imageUrl
+      }
+    }
+   }
+ }
+`
+
 export const UserPointQuery = gql`
   query userActivityPoint{
     userActivityPoint{

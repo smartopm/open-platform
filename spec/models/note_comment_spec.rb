@@ -17,7 +17,7 @@ RSpec.describe NoteComment, type: :model do
     let(:note_comment) { create(:note_comment, note: note, user: current_user) }
 
     it 'should create a comment on a note' do
-      current_user.note_comments.create!(note_id: note.id, body: 'Test Comment')
+      current_user.note_comments.create!(note_id: note.id, body: 'Test Comment', status: 'active')
       expect(note.note_comments.length).to eql 1
       expect(note.note_comments.pluck(:body)).to include 'Test Comment'
     end
