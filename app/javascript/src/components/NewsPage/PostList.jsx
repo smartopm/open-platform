@@ -14,18 +14,13 @@ import { ShareButton } from '../ShareButton'
 import { Spinner } from '../Loading'
 import { LogSharedPost } from '../../graphql/mutations'
 import CenteredContent from '../CenteredContent'
+import { titleize } from '../../utils/helpers'
 
 export default function PostsList() {
     const { slug } = useParams()
-    const slugs = {
-      posts: "Post",
-      policy: "Policies",
-      promos: "Promos",
-      resources: "Resources"
-    }
     const [page, setPageNumber] = useState(1)
     const limit = 20
-    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug === "posts" ? 'post' : slug || ''}`)
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
     const [logSharedPost] = useMutation(LogSharedPost)
     const currentUrl = window.location.href
 
@@ -56,9 +51,7 @@ export default function PostsList() {
       <>
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
           <Typography variant='h4' color='textSecondary'>
-            {slugs[slug] === "Post" && "Posts" || slug === "artists-in-residence"
-            && "Artist in Residence"
-            || slugs[slug] || "Posts"}
+            {titleize(slug || "Posts")}
           </Typography>
         </Box>
         <Categories />
@@ -89,9 +82,9 @@ export default function PostsList() {
           {
             totalPosts > limit && (
               <CenteredContent>
-                <Pagination 
-                  count={Math.round(totalPosts / limit)} 
-                  page={page} 
+                <Pagination
+                  count={Math.round(totalPosts / limit)}
+                  page={page}
                   onChange={handlePageChange}
                   color="primary"
                 />
