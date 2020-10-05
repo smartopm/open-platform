@@ -1,7 +1,8 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
 import { Grid, Typography, Container } from '@material-ui/core'
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles"
+import PropTypes from 'prop-types'
 import { LabelsQuery } from '../../graphql/queries'
 import ErrorPage from '../Error'
 import Loading from '../Loading'
@@ -18,7 +19,7 @@ export default function LabelList({ userType }) {
     <Container>
       <LabelPageTitle />
       <br />
-      {data.labels.map(label => (
+      {data?.labels.map(label => (
         <LabelItem
           key={label.id}
           label={label}
@@ -36,17 +37,17 @@ function LabelPageTitle(){
   return (
     <Grid container spacing={3} className={classes.labelTitle}>
       <Grid item xs={3}>
-        <Typography variant="subtitle1" data-testid="label-name" className={classes.label}>
+        <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
           Labels
         </Typography>
       </Grid>
       <Grid item xs={3}>
-        <Typography variant="subtitle1" data-testid="label-name">
+        <Typography variant="subtitle2" data-testid="label-name">
           Total Number of users
         </Typography>
       </Grid>
       <Grid item xs={3}>
-        <Typography variant="subtitle1" data-testid="label-name">
+        <Typography variant="subtitle2" data-testid="label-name">
           Description
         </Typography>
       </Grid>
@@ -54,6 +55,9 @@ function LabelPageTitle(){
   )
 }
 
+LabelList.propTypes = {
+  userType: PropTypes.string.isRequired
+}
 const useStyles = makeStyles(() => ({
   labelTitle: {
     marginTop: '5%'

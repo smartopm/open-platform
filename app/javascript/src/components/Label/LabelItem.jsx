@@ -61,7 +61,9 @@ LabelItem.propTypes = {
     label: PropTypes.shape({
         id: PropTypes.string,
         shortDesc: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    userType: PropTypes.string.isRequired,
+    userCount: PropTypes.number.isRequired
 }
 
 const useStyles = makeStyles(() => ({
