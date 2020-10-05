@@ -23,7 +23,7 @@ export default function LabelItem({ label, userType, userCount }) {
   return (
     <ListItem key={label.id} className={classes.labelItem}>
       <Grid container spacing={6}>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Typography variant="subtitle1" data-testid="label-title">
             {label.shortDesc}
           </Typography>
@@ -33,12 +33,12 @@ export default function LabelItem({ label, userType, userCount }) {
             {userCount}
           </Typography>
         </Grid>
-        <Grid item sm={6}>
+        <Grid item xs={3}>
           <Typography variant="subtitle1" data-testid="label-description">
             This is a label description
           </Typography>
         </Grid>
-        <Grid item xs={4} sm={4}>
+        <Grid item xs={3}>
           {userType === 'admin' && (
           <IconButton
             className={classes.menuButton}
@@ -72,6 +72,6 @@ const useStyles = makeStyles(() => ({
       backgroundColor: '#FFFFFF'
   },
   menuButton: {
-    float: 'right!'
+    float: 'right'
   },
 }));
