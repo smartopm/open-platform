@@ -14,6 +14,7 @@ export default function CommentTextField({ data, refetch, authState }) {
   const classes = useStyles();
   const [commentCreate] = useMutation(TaskComment)
   const [body, setBody] = useState('')
+  const [error, setErrorMessage] = useState('')
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -23,7 +24,7 @@ export default function CommentTextField({ data, refetch, authState }) {
     }}).then(() => {
       setBody('')
       refetch()
-    })
+    }).catch((err) => setErrorMessage(err))
   }
   return(
     <>
@@ -42,6 +43,9 @@ export default function CommentTextField({ data, refetch, authState }) {
         </div>
       </form>
       <CommentCard data={data.task} refetch={refetch} />
+      <p className="text-center">
+        {Boolean(error.length) && error}
+      </p>
     </>
   )
 }
