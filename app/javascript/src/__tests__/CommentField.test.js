@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
-import CommentField from '../components/Notes/CommentField'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import CommentField from '../components/Notes/CommentField'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Field Component', () => {

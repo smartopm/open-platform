@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
-import CommentCard from '../components/Notes/CommentCard'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import CommentCard from '../components/Notes/CommentCard'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Card Component', () => {

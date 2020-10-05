@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
-import TaskDelete from '../components/Notes/TaskDelete'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import TaskDelete from '../components/Notes/TaskDelete'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Delete Component', () => {
