@@ -11,7 +11,7 @@ describe('Label Item Component', () => {
             shortDesc: "com_news_sms",
             userCount: 10
         },
-        userType: 'admin', 
+        userType: 'admin',
       }
     const container = render(<LabelItem {...props} />)
     expect(container.queryByText('com_news_sms')).toBeInTheDocument()
