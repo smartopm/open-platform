@@ -7,11 +7,11 @@ describe('Label Item Component', () => {
   it('it should include the label details ', () => {
       const props = {
         label: {
-            "id": "2b3f902b-eb44",
-            "shortDesc": "com_news_sms"
+            id: "2b3f902b-eb44",
+            shortDesc: "com_news_sms",
+            userCount: 10
         },
         userType: 'admin', 
-        userCount: 10
       }
     const container = render(<LabelItem {...props} />)
     expect(container.queryByText('com_news_sms')).toBeInTheDocument()

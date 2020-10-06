@@ -491,9 +491,7 @@ export const LabelsQuery = gql`
     labels {
       id
       shortDesc
-      users {
-        id
-      }
+      userCount
     }
   }
 `

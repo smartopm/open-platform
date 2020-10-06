@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // number of users
 // color
 // description
-export default function LabelItem({ label, userType, userCount }) {
+export default function LabelItem({ label, userType }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
 
@@ -30,7 +30,7 @@ export default function LabelItem({ label, userType, userCount }) {
         </Grid>
         <Grid item xs={3}>
           <Typography variant="subtitle1" data-testid="label-users">
-            {userCount}
+            {label.userCount}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -60,10 +60,10 @@ export default function LabelItem({ label, userType, userCount }) {
 LabelItem.propTypes = {
     label: PropTypes.shape({
         id: PropTypes.string,
-        shortDesc: PropTypes.string
+        shortDesc: PropTypes.string,
+        userCount: PropTypes.number
     }).isRequired,
     userType: PropTypes.string.isRequired,
-    userCount: PropTypes.number.isRequired
 }
 
 const useStyles = makeStyles(() => ({
