@@ -18,16 +18,12 @@ describe('Label List Component', () => {
             {
               id: '2b3f902b-eb44-42a1-b2f3',
               shortDesc: 'com_news_sms',
-              users: {
-                  id: '34985u639485'
-              }
+              userCount: 1
             },
             {
               id: '2b3f902b-eb44-42a1-b2f3',
               shortDesc: 'com_news_email',
-              users: {
-                  id: '34985u685'
-              }
+              userCount: 3
             }
           ]
         }
