@@ -34,11 +34,11 @@ export default function Categories() {
 
 const styles = StyleSheet.create({
   categoryLink: {
-    marginLeft: '10px',
+    marginLeft: '15px',
     ':focus': {
       textDecoration: 'none',
       backgroundColor: '#69ABA4',
-      padding: '5px',
+      padding: '10px',
       borderRadius: '5px',
       color: 'rgba(0, 0, 0, 0.54)'
     },
