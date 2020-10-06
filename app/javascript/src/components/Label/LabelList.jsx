@@ -25,7 +25,7 @@ export default function LabelList({ userType }) {
       setOffset(offset + limit)
     }
   }
- console.log(offset)
+ 
   if (loading) return <Loading />
   if (error) {
     return <ErrorPage title={error.message} />
