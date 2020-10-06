@@ -18,7 +18,7 @@ class User < ApplicationRecord
   search_scope :search do
     attributes :name, :phone_number, :user_type, :email
     attributes labels: ['labels.short_desc']
-    attributes plot_number: ['accounts.land_parcels.parcel_number']
+    attributes plot_number: ['land_parcels.parcel_number']
   end
 
   search_scope :heavy_search do
@@ -63,6 +63,7 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :discussion_users, dependent: :destroy
   has_many :discussions, through: :discussion_users
+  has_many :land_parcels, through: :accounts
   has_many :businesses, dependent: :destroy
   has_many :user_labels, dependent: :destroy
   has_many :contact_infos, dependent: :destroy
