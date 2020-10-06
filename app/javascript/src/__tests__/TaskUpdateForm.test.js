@@ -18,12 +18,17 @@ describe('task form component', () => {
         
         const description = container.queryByLabelText('task_description')
         const submitBtn = container.queryByLabelText('task_submit')
+        const previewBtn = container.queryByLabelText('preview')
+        const editBtn = container.queryByLabelText('edit')
 
         fireEvent.change(description, { target: { value: 'This is a description of the task' } })
         expect(description.value).toBe('This is a description of the task')
 
         expect(container.queryByText('Task Status')).toBeInTheDocument()
+        expect(container.queryByText('Task Body')).toBeInTheDocument() // for the toggler
         expect(submitBtn.textContent).toContain('Update Task')
+        expect(previewBtn).not.toBeNull()
+        expect(editBtn).not.toBeNull()
         expect(submitBtn).not.toBeDisabled()
     })
 })
