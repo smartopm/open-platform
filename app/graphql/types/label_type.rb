@@ -11,9 +11,5 @@ module Types
     field :campaigns, [Types::CampaignType], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-
-    def user_count
-      object.users.count
-    end
   end
 end

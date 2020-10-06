@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { Grid, Typography, Container } from '@material-ui/core'
 import { makeStyles } from "@material-ui/core/styles"
@@ -7,10 +7,25 @@ import { LabelsQuery } from '../../graphql/queries'
 import ErrorPage from '../Error'
 import Loading from '../Loading'
 import LabelItem from './LabelItem'
+import CenteredContent from '../CenteredContent'
+import Paginate from '../Paginate'
 
 export default function LabelList({ userType }) {
-  const { data, error, loading } = useQuery(LabelsQuery)
+  const limit = 5
+  const [offset, setOffset] = useState(0)
+  const { data, error, loading } = useQuery(LabelsQuery, {
+    variables: { limit, offset }
+  })
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return
+      setOffset(offset - limit)
+    } else if (action === 'next') {
+      setOffset(offset + limit)
+    }
+  }
+ console.log(offset)
   if (loading) return <Loading />
   if (error) {
     return <ErrorPage title={error.message} />
@@ -27,6 +42,14 @@ export default function LabelList({ userType }) {
           userCount={label.userCount}
         />
       ))}
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={paginate}
+        />
+      </CenteredContent>
     </Container>
   )
 }

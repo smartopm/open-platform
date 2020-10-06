@@ -74,5 +74,12 @@ describe('Label List Component', () => {
       },
       { timeout: 1000 }
     )
+    await waitFor(() => {
+        expect(
+          container.queryAllByTestId('prev-btn')
+        ).toHaveTextContent('Previous')
+      },
+      { timeout: 1000 }
+    )
   })
 })
