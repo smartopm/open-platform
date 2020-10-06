@@ -387,11 +387,13 @@ ActiveRecord::Schema.define(version: 2020_10_06_100437) do
   create_table "user_form_properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "form_properties_id", null: false
     t.uuid "form_user_id", null: false
+    t.uuid "user_id"
     t.string "value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["form_properties_id"], name: "index_user_form_properties_on_form_properties_id"
     t.index ["form_user_id"], name: "index_user_form_properties_on_form_user_id"
+    t.index ["user_id"], name: "index_user_form_properties_on_user_id"
   end
 
   create_table "user_labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -476,6 +478,7 @@ ActiveRecord::Schema.define(version: 2020_10_06_100437) do
   add_foreign_key "note_histories", "users"
   add_foreign_key "user_form_properties", "form_properties", column: "form_properties_id"
   add_foreign_key "user_form_properties", "form_users"
+  add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
 end
