@@ -1,8 +1,10 @@
 import React from 'react'
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ToggleButton from '@material-ui/lab/ToggleButton'
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import EditIcon from '@material-ui/icons/Edit'
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
-
+// TODO: Reuse the toggler
 export default function CampaignCreate({ campaignType, handleCampaignType }) {
   return (
     <>
@@ -18,6 +20,27 @@ export default function CampaignCreate({ campaignType, handleCampaignType }) {
         </ToggleButton>
         <ToggleButton value="scheduled" aria-label="campaign schedule">
           Schedule
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </>
+    )
+}
+
+export function FormToggle({ type, handleType }) {
+  return (
+    <>
+      <ToggleButtonGroup
+        value={type}
+        exclusive
+        onChange={handleType}
+        aria-label="text alignment"
+        style={{ marginBottom: '10px' }}
+      >
+        <ToggleButton value="preview" aria-label="preview">
+          <VisibilityIcon />
+        </ToggleButton>
+        <ToggleButton value="edit" aria-label="edit">
+          <EditIcon />
         </ToggleButton>
       </ToggleButtonGroup>
     </>
