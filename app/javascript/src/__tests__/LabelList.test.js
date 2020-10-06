@@ -12,7 +12,7 @@ describe('Label List Component', () => {
     const mocks = {
       request: {
         query: LabelsQuery,
-        variables: { limit: 5, offset: 0 }
+        variables: { limit: 50, offset: 0 }
       },
       result: {
         data: {

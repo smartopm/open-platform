@@ -11,7 +11,7 @@ import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 
 export default function LabelList({ userType }) {
-  const limit = 5
+  const limit = 50
   const [offset, setOffset] = useState(0)
   const { data, error, loading } = useQuery(LabelsQuery, {
     variables: { limit, offset }
