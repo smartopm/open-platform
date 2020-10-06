@@ -24,7 +24,7 @@ export default function LabelList({ userType }) {
           key={label.id}
           label={label}
           userType={userType}
-          userCount={label.users.length}
+          userCount={label.userCount}
         />
       ))}
     </Container>
