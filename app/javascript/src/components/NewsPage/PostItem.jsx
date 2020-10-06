@@ -69,11 +69,11 @@ export default function PostItem({
   )
 }
 
-PostItem.propType = {
+PostItem.propTypes = {
   title: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string,
-  datePosted: PropTypes.string,
-  subTitle: PropTypes.string,
+  imageUrl: PropTypes.string.isRequired,
+  datePosted: PropTypes.string.isRequired,
+  subTitle: PropTypes.string.isRequired,
 }
 
 // Moved this at the bottom

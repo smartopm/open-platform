@@ -28,6 +28,7 @@ RSpec.describe Types::Queries::Label do
       %(query {
             labels {
                 shortDesc
+                userCount
             }
         })
     end
@@ -67,6 +68,7 @@ RSpec.describe Types::Queries::Label do
                                        }).as_json
       expect(result.dig('data', 'labels').length).to eql 4
       expect(result.dig('data', 'labels', 2, 'shortDesc')).to include 'label'
+      expect(result.dig('data', 'labels', 1, 'userCount')).to eql 3
     end
 
     it 'should retrieve labels for the other user' do

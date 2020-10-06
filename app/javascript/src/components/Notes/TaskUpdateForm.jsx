@@ -12,7 +12,7 @@ import {
   InputLabel,
   FormControl,
   Snackbar,
-  Chip
+  Chip,Typography
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
@@ -26,6 +26,8 @@ import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
+import { FormToggle } from '../Campaign/ToggleButton'
+import { sanitizeText } from '../../utils/helpers'
 
 const initialData = {
   user: '',
@@ -44,6 +46,11 @@ export default function TaskForm({ users, data, assignUser }) {
   const [taskUpdate] = useMutation(UpdateNote)
   const [updated, setUpdated] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
+
+  const [type, setType] = useState("preview")
+    const handleType = (event, value) => {
+        setType(value);
+    };
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -91,7 +98,7 @@ export default function TaskForm({ users, data, assignUser }) {
     setDefaultData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -103,25 +110,47 @@ export default function TaskForm({ users, data, assignUser }) {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           message="Task updated successfully"
         />
-        <TextField
-          name="task_body"
-          label="Task Body"
-          placeholder="Add task body here"
-          style={{ width: '100%' }}
-          onChange={e => setTitle(e.target.value)}
-          value={title}
-          multiline
-          fullWidth
-          rows={2}
-          margin="normal"
-          inputProps={{
-          'aria-label': 'task_body'
-        }}
-          InputLabelProps={{
-          shrink: true
-        }}
-          required
-        />
+
+        <FormToggle type={type} handleType={handleType} />
+
+        {
+            type === 'preview' ? (
+              <p>
+                <Typography variant="caption" display="block" gutterBottom>
+                  Task Body
+                </Typography>
+                <span 
+                // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                  __html: sanitizeText(title)
+                }}
+                />
+              </p>
+            ) :
+            (
+              <TextField
+                name="task_body"
+                label="Task Body"
+                placeholder="Add task body here"
+                style={{ width: '100%' }}
+                onChange={e => setTitle(e.target.value)}
+                value={title}
+                multiline
+                fullWidth
+                rows={2}
+                margin="normal"
+                inputProps={{
+              'aria-label': 'task_body'
+            }}
+                InputLabelProps={{
+              shrink: true
+            }}
+                required
+              />
+            )
+          }
+
+
         <TextField
           name="task_description"
           label="Task Description"

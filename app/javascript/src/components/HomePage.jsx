@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import PersonIcon from '@material-ui/icons/Person'
+import LabelIcon from '@material-ui/icons/Label';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import MessageIcon from '@material-ui/icons/Message'
@@ -241,6 +242,14 @@ export default function Homepage({ authState }) {
         'contractor',
         'resident',
         'visitor'
+      ]
+    },
+    {
+      title: 'Labels',
+      path: `/labels`,
+      icon: <LabelIcon fontSize="large" />,
+      access: [
+        'admin'
       ]
     }
   ]
