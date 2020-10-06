@@ -25,6 +25,7 @@ describe('task form component', () => {
         expect(description.value).toBe('This is a description of the task')
 
         expect(container.queryByText('Task Status')).toBeInTheDocument()
+        expect(container.queryByText('Task Body')).toBeInTheDocument() // for the toggler
         expect(submitBtn.textContent).toContain('Update Task')
         expect(previewBtn).not.toBeNull()
         expect(editBtn).not.toBeNull()
