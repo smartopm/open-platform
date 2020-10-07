@@ -18,7 +18,6 @@ class User < ApplicationRecord
   search_scope :search do
     attributes :name, :phone_number, :user_type, :email
     attributes labels: ['labels.short_desc']
-    attributes plot_number: ['land_parcels.parcel_number']
   end
 
   search_scope :heavy_search do
@@ -26,6 +25,10 @@ class User < ApplicationRecord
     attributes labels: ['labels.short_desc']
     attributes date_filter: ['acting_event_log.created_at']
     scope { joins(:acting_event_log).eager_load(:labels) }
+  end
+
+  search_scope :plot_number do
+    attributes plot_no: ['land_parcels.parcel_number']
   end
 
   search_scope :search_lite do

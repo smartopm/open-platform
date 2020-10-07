@@ -101,6 +101,13 @@ module Types::Queries::User
           .order(name: :asc)
           .limit(limit)
           .offset(offset).with_attached_avatar
+    elsif query.present? && query.include?('plot_no')
+      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+          .eager_load(:notes, :accounts, :labels)
+          .plot_number(query)
+          .order(name: :asc)
+          .limit(limit)
+          .offset(offset).with_attached_avatar
     else
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
           .eager_load(:notes, :accounts, :labels)
