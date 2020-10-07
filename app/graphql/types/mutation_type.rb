@@ -77,5 +77,9 @@ module Types
     # posts
     field :log_read_post, mutation: Mutations::Post::LogReadPost
     field :log_shared_post, mutation: Mutations::Post::LogSharedPost
+
+    # forms
+    field :form_create, mutation: Mutations::Form::FormCreate
+    field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
   end
 end
