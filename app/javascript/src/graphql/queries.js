@@ -557,3 +557,23 @@ export const UserPointQuery = gql`
     }
   }
 `
+
+export const FormsQuery = gql`
+  {
+    forms {
+      id
+      name
+      expiresAt
+      createdAt
+    }
+  }
+`
+
+export const FormQuery = gql`
+query ($id: ID!){
+  form(id: $id) {
+    id
+    name
+  }
+}
+`

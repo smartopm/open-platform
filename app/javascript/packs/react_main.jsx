@@ -84,6 +84,7 @@ import Notifications from '../src/containers/Preferences/Notifications'
 import { MuiThemeProvider } from '@material-ui/core'
 import { theme } from '../src/themes/nkwashi/theme'
 import FormLinks from '../src/containers/FormLinks'
+import FormPage from '../src/containers/Forms/FormPage'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -309,6 +310,8 @@ const App = () => {
                         />
 
                         <Route path="/forms" component={FormLinks} />
+                        <Route path="/form/:formId?" component={FormPage} />
+                        
                         <AdminRoutes>
                           <Switch>
                             <Route

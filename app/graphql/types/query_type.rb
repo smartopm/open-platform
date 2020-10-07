@@ -13,6 +13,7 @@ module Types
     include Types::Queries::Business
     include Types::Queries::Label
     include Types::Queries::Note
+    include Types::Queries::Form
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
