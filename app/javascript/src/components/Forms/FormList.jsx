@@ -2,9 +2,18 @@
 import React, { useContext } from 'react'
 import { Button, List } from '@material-ui/core'
 import CenteredContent from '../CenteredContent'
+import { useQuery } from 'react-apollo'
 import FormLinks from './FormLinks'
+import { FormsQuery } from '../../graphql/queries'
+import Loading from '../Loading'
+import ErrorPage from '../Error'
 
 export default function FormLinkList() {
+  const { data, error, loading } = useQuery(FormsQuery)
+
+  if (loading) return <Loading />
+  if (error) return <ErrorPage />
+  
   return (
     <div>
       <List
@@ -19,3 +28,4 @@ export default function FormLinkList() {
     </div>
   )
 }
+
