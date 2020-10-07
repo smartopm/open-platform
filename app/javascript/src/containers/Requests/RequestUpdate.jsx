@@ -1,31 +1,31 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
-import React, { useState, useEffect } from "react";
-import { useQuery, useMutation } from "react-apollo";
-import { TextField, MenuItem, Button } from "@material-ui/core";
-import { StyleSheet, css } from "aphrodite";
-import Nav from "../../components/Nav";
+import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation } from 'react-apollo';
+import { TextField, MenuItem, Button } from '@material-ui/core';
+import { StyleSheet, css } from 'aphrodite';
+import Nav from '../../components/Nav';
 
-import { EntryRequestQuery } from "../../graphql/queries";
+import { EntryRequestQuery } from '../../graphql/queries';
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
   CreateUserMutation,
   UpdateLogMutation
-} from "../../graphql/mutations";
-import Loading from "../../components/Loading";
-import { isTimeValid, getWeekDay } from "../../utils/dateutil";
-import { ponisoNumber, userState, userType } from "../../utils/constants"
+} from '../../graphql/mutations';
+import Loading from '../../components/Loading';
+import { isTimeValid, getWeekDay } from '../../utils/dateutil';
+import { ponisoNumber, userState, userType } from '../../utils/constants'
 import { ModalDialog } from '../../components/Dialog'
-import CaptureTemp from "../../components/CaptureTemp";
-import { dateToString, dateTimeToString } from "../../components/DateContainer";
-
+import CaptureTemp from '../../components/CaptureTemp';
+import { dateToString, dateTimeToString } from '../../components/DateContainer';
 
 export default function RequestUpdate({ match, history, location }) {
   const previousRoute = location.state && location.state.from
-  const isFromLogs = previousRoute === "logs" || false;
+  const isFromLogs = previousRoute === 'logs' || false;
 
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
@@ -42,18 +42,17 @@ export default function RequestUpdate({ match, history, location }) {
   const [date, setDate] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false)
   const [formData, setFormData] = useState({
-    name: "",
-    phoneNumber: "",
-    nrc: "",
-    vehiclePlate: "",
-    reason: "",
-    state: "",
-    userType: "",
-    expiresAt: "",
-    email: "",
+    name: '',
+    phoneNumber: '',
+    nrc: '',
+    vehiclePlate: '',
+    reason: '',
+    state: '',
+    userType: '',
+    expiresAt: '',
+    email: '',
     loaded: false
   });
-
 
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
@@ -66,7 +65,6 @@ export default function RequestUpdate({ match, history, location }) {
   function tick() {
     setDate(new Date());
   }
-
 
   if (loading) {
     return <Loading />;
@@ -93,10 +91,10 @@ export default function RequestUpdate({ match, history, location }) {
     handleUpdateRecord()
       .then(grantEntry({ variables: { id: match.params.id } }))
       .then(() => {
-        history.push("/entry_logs", { tab: 1 });
+        history.push('/entry_logs', { tab: 1 });
         setLoading(false)
       })
-      .catch(error => {
+      .catch((error) => {
         setLoading(false)
         setMessage(error.message)
       });
@@ -108,10 +106,9 @@ export default function RequestUpdate({ match, history, location }) {
     handleUpdateRecord()
       .then(denyEntry({ variables: { id: match.params.id } }))
       .then(() => {
-        history.push("/entry_logs", { tab: 1 });
+        history.push('/entry_logs', { tab: 1 });
         setLoading(false)
       });
-
   }
 
   function handleEnrollUser() {
@@ -139,7 +136,7 @@ export default function RequestUpdate({ match, history, location }) {
           history.push(`/user/${userData.result.user.id}`)
         })
       })
-      .catch(err => {
+      .catch((err) => {
         setLoading(false)
         setMessage(err.message)
       })
@@ -159,8 +156,6 @@ export default function RequestUpdate({ match, history, location }) {
     }
   }
 
-
-
   return (
     <>
       <Nav
@@ -169,8 +164,8 @@ export default function RequestUpdate({ match, history, location }) {
           previousRoute === 'logs'
             ? 'Request Access'
             : previousRoute === 'enroll'
-            ? 'Enroll User'
-            : 'Approve Request'
+              ? 'Enroll User'
+              : 'Approve Request'
         }
         menuButton="cancel"
         backTo={`/entry_logs/?offset=${location.state?.offset}`}
@@ -186,13 +181,13 @@ export default function RequestUpdate({ match, history, location }) {
         {modalAction === 'grant' && !isTimeValid(date) && (
           <div>
             <p>
-              Today is 
+              Today is
               {' '}
               {`${getWeekDay(date)} ${dateToString(date)}`}
               {' '}
               at
               {' '}
-              <b> 
+              <b>
                 {' '}
                 {dateTimeToString(new Date(date))}
                 {' '}
@@ -219,8 +214,8 @@ export default function RequestUpdate({ match, history, location }) {
                 value={
                   formData.guard
                     ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                        new Date(formData.createdAt)
-                      )}`
+                      new Date(formData.createdAt)
+                    )}`
                     : ''
                 }
                 disabled
@@ -407,7 +402,7 @@ export default function RequestUpdate({ match, history, location }) {
               <div className="col">
                 <Button
                   variant="contained"
-                  onClick={event => handleModal(event, 'grant')}
+                  onClick={(event) => handleModal(event, 'grant')}
                   className={`btn ${css(styles.grantButton)}`}
                   disabled={isLoading}
                 >
@@ -442,33 +437,31 @@ export default function RequestUpdate({ match, history, location }) {
   )
 }
 
-
-
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
-    width: "75%",
-    boxShadow: "none"
+    backgroundColor: '#69ABA4',
+    color: '#FFF',
+    width: '75%',
+    boxShadow: 'none'
   },
   selectInput: {
-    width: "100%"
+    width: '100%'
   },
   grantButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
+    backgroundColor: '#69ABA4',
+    color: '#FFF',
     marginRight: 60,
     // width: "35%"
   },
   denyButton: {
     // backgroundColor: "rgb(230, 63, 69)",
-    backgroundColor: "rgb(38, 38, 38)",
-    color: "#FFF",
+    backgroundColor: 'rgb(38, 38, 38)',
+    color: '#FFF',
     // width: "35%"
   },
   callButton: {
-    color: "rgb(230, 63, 69)",
-    textTransform: "unset",
-    textDecoration: "none"
+    color: 'rgb(230, 63, 69)',
+    textTransform: 'unset',
+    textDecoration: 'none'
   }
 });

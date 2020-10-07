@@ -1,8 +1,10 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import EditIcon from '@material-ui/icons/Edit'
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import PropTypes from 'prop-types'
 
 // TODO: Reuse the toggler
 export default function CampaignCreate({ campaignType, handleCampaignType }) {
@@ -23,7 +25,7 @@ export default function CampaignCreate({ campaignType, handleCampaignType }) {
         </ToggleButton>
       </ToggleButtonGroup>
     </>
-    )
+  )
 }
 
 export function FormToggle({ type, handleType }) {
@@ -46,4 +48,15 @@ export function FormToggle({ type, handleType }) {
     </>
     )
 }
+
+CampaignCreate.propTypes = {
+  campaignType: PropTypes.string.isRequired,
+  handleCampaignType: PropTypes.func.isRequired
+}
+
+FormToggle.propTypes = {
+  type: PropTypes.string.isRequired,
+  handleType: PropTypes.func.isRequired
+}
+
   

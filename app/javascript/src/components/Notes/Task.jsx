@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react'
 import {
@@ -12,7 +13,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { Link , useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import { Spinner } from '../Loading'
 import { UserChip } from '../UserChip'
@@ -63,9 +64,9 @@ export default function Task({
               {' '}
             </Link>
             created this note for
-            {' '} 
+            {' '}
             <Link style={{ textDecoration: 'none' }} to={`/user/${note.user.id}`}>
-              {note.user.name} 
+              {note.user.name}
               {' '}
               {' '}
             </Link>
@@ -77,7 +78,7 @@ export default function Task({
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {note.assignees.map(user => (
+          {note.assignees.map((user) => (
             <UserChip
               key={user.id}
               user={user}
@@ -104,7 +105,7 @@ export default function Task({
                   <AddCircleIcon />
                 )
               }
-              onClick={event => handleOpenAutoComplete(event, note.id)}
+              onClick={(event) => handleOpenAutoComplete(event, note.id)}
             />
           )}
           {/* error message */}
@@ -122,7 +123,7 @@ export default function Task({
               loading={loading}
               id={note.id}
               options={users}
-              getOptionLabel={option => option.name}
+              getOptionLabel={(option) => option.name}
               style={{ width: 300 }}
               onChange={(_evt, value) => {
                 // if nothing selected, ignore and move on
@@ -132,7 +133,7 @@ export default function Task({
                 // assign or unassign the user here
                 assignUnassignUser(note.id, value.id)
               }}
-              renderInput={params => (
+              renderInput={(params) => (
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 <TextField {...params} placeholder="Name of assignee" />
               )}
@@ -148,15 +149,15 @@ export default function Task({
           >
             <EditIcon
               style={{
-              cursor: 'pointer',
-              margin: '5px 4px 0 0',
-              fontSize: 18,
-            }}
+                cursor: 'pointer',
+                margin: '5px 4px 0 0',
+                fontSize: 18,
+              }}
               color="inherit"
               onClick={() => handleModal(note.id)}
             />
             <Typography variant="subtitle1" gutterBottom>
-              Due at: 
+              Due at:
               {' '}
               {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
               <Link
@@ -170,7 +171,7 @@ export default function Task({
             </Typography>
           </div>
           <Button
-            color='primary'
+            color="primary"
             disabled={note.id && loadingMutation}
             style={{ 
                 float: 'right',

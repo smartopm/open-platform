@@ -158,7 +158,7 @@ export function CustomButton({ title, ...props }) {
   )
 }
 
-CustomButton.propType = {
+CustomButton.propTypes = {
   title: PropTypes.string.isRequired
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
@@ -51,24 +52,24 @@ export function PostItemGrid({ data }) {
         cols={matches ? 2 : 3}
         spacing={15}
       >
-        {data.length &&
-          data.map(tile => (
-            <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
-              <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
-              <GridListTileBar
-                title={(
+        {data.length
+        && data.map((tile) => (
+          <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
+            <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
+            <GridListTileBar
+              title={(
                   // eslint-disable-next-line react/no-danger
-                  <span dangerouslySetInnerHTML={{
+                <span dangerouslySetInnerHTML={{
                   __html: sanitizeText(tile.title)
                 }}
-                  />
+                />
                   )}
-                classes={{
-                  title: classes.title
-                }}
-              />
-            </GridListTile>
-          ))}
+              classes={{
+                title: classes.title
+              }}
+            />
+          </GridListTile>
+        ))}
       </GridList>
     </div>
   )

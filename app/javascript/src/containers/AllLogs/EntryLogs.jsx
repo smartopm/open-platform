@@ -1,9 +1,12 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
-import React, { useState, Fragment, useContext,useEffect } from 'react'
+import React, {
+  useState, Fragment, useContext, useEffect
+} from 'react'
 import { useQuery } from 'react-apollo'
 import { useLocation } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
@@ -14,9 +17,9 @@ import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
 import newUserIcon from '../../../../assets/images/new.svg'
 import gateIcon from '../../../../assets/images/bar.svg'
-import {userType} from '../../utils/constants'
-import useDebounce  from '../../utils/useDebounce'
-import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
+import { userType } from '../../utils/constants'
+import useDebounce from '../../utils/useDebounce'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import {
   StyledTabs,
   StyledTab,
@@ -25,14 +28,12 @@ import {
 } from '../../components/Tabs'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
 
-export default ({ history, match }) => {
-  return AllEventLogs(history, match)
-}
+export default ({ history, match }) => AllEventLogs(history, match)
 
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50
 const AllEventLogs = (history, match) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom','user_temp']
+  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_temp']
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(initialLimit)
   const [searchTerm, setSearchTerm] = useState('')
@@ -41,24 +42,25 @@ const AllEventLogs = (history, match) => {
 
   const refId = match.params.userId || null
 
-    useEffect(
-        () => {
-            setSearchTerm(dbcSearchTerm)
-        },
-        [dbcSearchTerm]
-      );
+  useEffect(
+    () => {
+      setSearchTerm(dbcSearchTerm)
+    },
+    [dbcSearchTerm]
+  );
 
-      function getQuery() {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        return new URLSearchParams(useLocation().search);
-      }
+  function getQuery() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return new URLSearchParams(useLocation().search);
+  }
 
-      const query = getQuery()
+  const query = getQuery()
 
-      useEffect(() => {
-        const offsetParams = query.get('offset')
-        setOffset(Number(offsetParams))
-      }, [])
+  useEffect(() => {
+    const offsetParams = query.get('offset')
+    setOffset(Number(offsetParams))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
@@ -151,15 +153,14 @@ export function IndexComponent({
     if (!eventLogs) {
       return 'No Entry logs yet'
     }
-      
-    return eventLogs.map(event => {
+
+    return eventLogs.map((event) => {
       // Todo: To be followed up
-      const source =
-        event.subject === 'user_entry'
-          ? 'Scan'
-          : event.subject === 'showroom'
-            ? 'Showroom'
-            : 'Manual'
+      const source = event.subject === 'user_entry'
+        ? 'Scan'
+        : event.subject === 'showroom'
+          ? 'Showroom'
+          : 'Manual'
       const isDigital = source === 'Scan' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
 
@@ -170,8 +171,7 @@ export function IndexComponent({
           : ''
 
       const enrolled = event.data.enrolled || false
-      const visitorName =
-        event.data.ref_name || event.data.visitor_name || event.data.name
+      const visitorName = event.data.ref_name || event.data.visitor_name || event.data.name
       return (
         <Fragment key={event.id}>
           <div className="container">
@@ -211,10 +211,10 @@ export function IndexComponent({
               <div className="col-xs-4">
 
                 {/* Temperature status placeholder */}
-                <span className={css(styles.subTitle)}> 
+                <span className={css(styles.subTitle)}>
                   {' '}
                   { /* eslint-disable-next-line no-useless-concat */}
-                  {event.subject==='user_temp' ? 'Temperature Recorded |' + ' ' : ''}
+                  {event.subject === 'user_temp' ? 'Temperature Recorded |' + ' ' : ''}
                 </span>
 
                 <span className={css(styles.subTitle)}>
@@ -230,15 +230,15 @@ export function IndexComponent({
                         Enroll user
                         {' '}
                       </span>
-                      | 
+                      |
                       {' '}
                       {source}
                     </>
                   ) : source === 'Scan' && isDigital !== null ? (
                     `${isDigital ? 'Digital' : 'Print'} Scan`
                   ) : (
-                        source
-                      )}
+                    source
+                  )}
                   {' '}
                   |
                   {' '}
@@ -265,13 +265,9 @@ export function IndexComponent({
     })
   }
 
-
-
-  const filteredEvents =
-    data.result &&
-    data.result.filter(log => {
-      const visitorName =
-        log.data.ref_name || log.data.visitor_name || log.data.name || ''
+  const filteredEvents = data.result
+    && data.result.filter((log) => {
+      const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || ''
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase())
     })
   return (
@@ -310,37 +306,35 @@ export function IndexComponent({
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
 
-          {data.result.map(user => {
-            return (
-              <Fragment key={user.id}>
-                <div className="container">
-                  <div className="row justify-content-between">
-                    <div className="col-xs-8">
-                      <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
-                    </div>
-                    <div className="col-xs-4">
-                      <span className={css(styles.subTitle)}>
-                        {dateToString(user.createdAt)}
-                      </span>
-                    </div>
+          {data.result.map((user) => (
+            <Fragment key={user.id}>
+              <div className="container">
+                <div className="row justify-content-between">
+                  <div className="col-xs-8">
+                    <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
                   </div>
-                  <br />
-                  <div className="row justify-content-between">
-                    <div className="col-xs-8">
-                      <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
-                    </div>
-                    <div className="col-xs-4">
-                      <span className={css(styles.subTitle)}>
-                        {dateTimeToString(new Date(user.createdAt))}
-                      </span>
-                    </div>
+                  <div className="col-xs-4">
+                    <span className={css(styles.subTitle)}>
+                      {dateToString(user.createdAt)}
+                    </span>
                   </div>
-                  <br />
-                  <div className="border-top my-3" />
                 </div>
-              </Fragment>
-            )
-          })}
+                <br />
+                <div className="row justify-content-between">
+                  <div className="col-xs-8">
+                    <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
+                  </div>
+                  <div className="col-xs-4">
+                    <span className={css(styles.subTitle)}>
+                      {dateTimeToString(new Date(user.createdAt))}
+                    </span>
+                  </div>
+                </div>
+                <br />
+                <div className="border-top my-3" />
+              </div>
+            </Fragment>
+          ))}
         </TabPanel>
       </div>
 
@@ -354,8 +348,8 @@ export function IndexComponent({
               </a>
             </li>
             <li
-              className={`page-item ${filteredEvents.length < limit &&
-                'disabled'}`}
+              className={`page-item ${filteredEvents.length < limit
+                && 'disabled'}`}
             >
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={nextPage} href="#">

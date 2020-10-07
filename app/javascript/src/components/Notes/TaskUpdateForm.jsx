@@ -59,7 +59,8 @@ export default function TaskForm({ users, data, assignUser }) {
   }
 
   function updateTask() {
-    taskUpdate({ variables: {
+    taskUpdate({
+      variables: {
         id: data.id,
         body: title,
         dueDate: selectedDate,
@@ -68,7 +69,8 @@ export default function TaskForm({ users, data, assignUser }) {
         category: taskType,
         flagged: true,
         userId: userData.userId
-      }}).then(() => {
+      }
+    }).then(() => {
       setLoadingStatus(false)
       setUpdated(true)
     }).catch((err) => {
@@ -93,7 +95,8 @@ export default function TaskForm({ users, data, assignUser }) {
   }
 
   useEffect(() => {
-      setDefaultData()
+    setDefaultData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   return (
@@ -221,7 +224,7 @@ export default function TaskForm({ users, data, assignUser }) {
                   loading={loading}
                   id={data.id}
                   options={users}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   style={{ width: 300 }}
                   onChange={(_evt, value) => {
                     if (!value) {
@@ -229,11 +232,11 @@ export default function TaskForm({ users, data, assignUser }) {
                     }
                     assignUser(data.id, value.id)
                   }}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField {...params} placeholder="Name of assignee" />
                   )}
                 />
-          )
+              )
 }
           </div>
         </FormControl>
@@ -294,4 +297,3 @@ TaskForm.propTypes = {
   data: PropTypes.object,
   assignUser: PropTypes.func.isRequired
 }
-

@@ -3,8 +3,8 @@ import { render } from '@testing-library/react'
 import Square from '../components/Square'
 import '@testing-library/jest-dom/extend-expect'
 
-describe('Square component', function() {
-  it("should render title and subtitle", function() {
+describe('Square component', () => {
+  it("should render title and subtitle", () => {
     const props = {
       title: '5',
       subtitle: 'Total number of points',
