@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
