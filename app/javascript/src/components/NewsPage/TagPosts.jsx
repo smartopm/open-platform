@@ -25,11 +25,11 @@ export default function TagPosts({ open, handleClose, tagName }) {
 
   return (
     <>
-      {console.log(response)}
       <SwipeableDrawer
         anchor='right'
         open={open}
         onClose={handleClose}
+        className={classes.root}
       >
         <div
           className={classes.list}
