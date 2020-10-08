@@ -83,6 +83,7 @@ export default function UsersImport() {
               accept=".csv"
               className={css(styles.inputField)}
               id="contained-button-file"
+              data-testid="csv-input"
               type="file"
               onChange={processCsv}
             />
