@@ -35,6 +35,8 @@ import CreateLabel from '../components/CreateLabel'
 import FilterComponent from '../components/FilterComponent'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { dateToString } from '../utils/dateutil'
+import { Link } from 'react-router-dom'
+
 const limit = 50
 
 export default function UsersList() {
@@ -103,7 +105,7 @@ export default function UsersList() {
     userList = data.users.map(user => user.id)
   }
 
-  //TODO: @dennis, add pop up for notes 
+  //TODO: @dennis, add pop up for notes
   const [userLabelCreate] = useMutation(UserLabelCreate)
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
   function handleFilterModal() {
@@ -201,7 +203,6 @@ export default function UsersList() {
         setError(error.message)
       })
     }
-    
   }
 
   function handleLabelChange(event) {
@@ -408,7 +409,12 @@ export default function UsersList() {
               className={classes.filterButton}
               endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
           </Grid>
-          
+
+          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
+            <Link to="/users/import">
+              Bulk Upload
+            </Link>
+          </Grid>
         </Grid>
 
         <br />

@@ -717,3 +717,11 @@ export const LogSharedPost = gql`
     }
   }
 `
+
+export const ImportCreate = gql`
+  mutation usersImport($csvString: String!) {
+    usersImport(csvString: $csvString) {
+      message
+    }
+  }
+`
