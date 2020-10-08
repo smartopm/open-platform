@@ -11,6 +11,7 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/BlockLength
+      # rubocop:disable Metrics/CyclomaticComplexity
       def resolve(csv_string:)
         current_user = context[:current_user]
         errors = {}
@@ -38,11 +39,15 @@ module Mutations
             user = current_user.enroll_user(name: name, email: email,
                                             phone_number: phone, state: state,
                                             user_type: user_type,
-                                            expires_at: expires_at, request_note: notes)
+                                            expires_at: expires_at)
 
             user.contact_infos.build(contact_type: 'email', info: email) if email.present?
             phone_list.each do |p|
               user.contact_infos.build(contact_type: 'phone', info: p)
+            end
+
+            if notes.present?
+              user.notes.build(body: notes, author_id: current_user.id, community: user.community)
             end
 
             labels.each do |l|
@@ -61,6 +66,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/BlockLength
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def user_already_present?(email, phone_list)
         ::User.where(email: email).or(

@@ -65,6 +65,18 @@ RSpec.describe Mutations::User::Import do
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
     end
+
+    it "raises 'Unauthorized' error if user is not an admin" do
+      variables = {
+        csvString: "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here",
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: non_admin,
+                                              }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
+    end
   end
 end
 # rubocop:enable Metrics/LineLength
