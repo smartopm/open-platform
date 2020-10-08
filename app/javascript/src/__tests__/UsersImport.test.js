@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, waitFor, fireEvent,  } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import UsersImport from '../containers/UsersImport'
