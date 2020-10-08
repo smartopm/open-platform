@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-import React from 'react'
-import { Button, TextField } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Button, Container, TextField } from '@material-ui/core'
 import { AddCircleOutline } from '@material-ui/icons'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
@@ -9,18 +8,24 @@ import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
-import FormBuilder from './FormBuilder'
 
 // date
 // text input (TextField or TextArea)
 // upload
+const initialData = {
+  fieldType: '',
+  fieldName: '',
+  required: false,
+  order: '',
+  shortDesc: '',
+  longDesc: '',
+  date: new Date()
+}
 
 export default function GenericForm() {
-  const fieldType = {
-    date: <DatePickerDialog />,
-    file: <UploadField />,
-    text: <TextInput />
-  }
+
+  const [properties, setProperties] = useState(initialData)
+
   const { formId } = useParams()
   const { data, error, loading } = useQuery(FormQuery, {
     variables: { id: formId }
@@ -30,32 +35,76 @@ export default function GenericForm() {
     variables: { formId }
   })
 
+  // separate function for file upload
+  function handleValueChange(event){
+    const { name, value } = event.target
+    setProperties({
+      ...properties,
+      [name]: value
+    })
+  }
+  function handleDateChange(date){
+    setProperties({
+      ...properties,
+      date
+    })
+  }
+
+  function saveFormData(){
+    // get values from properties state
+    console.log(properties)
+  }
+
   if (loading || propertiesLoading) return <Loading />
   if (error || propertiesError) return <ErrorPage title={error?.message || propertiesError?.message} />
- 
+
+  function renderForm(props){
+      const fields = {
+        text: <TextInput key={props.id} label={props.fieldName} defaultValue={properties.fieldName} handleValue={handleValueChange} />,
+        date: <DatePickerDialog key={props.id} selectedDate={properties.date} handleDateChange={handleDateChange} label={props.fieldName} />,
+        image: <UploadField key={props.id} upload={handleValueChange} />,
+      }
+      return fields[props.fieldType]
+  }
+
   return (
     <>
       <CenteredContent>
         {data.form.name}
       </CenteredContent>
-      <FormBuilder />
+      <Container>
+        {
+          formData.formProperties.map((field) => renderForm(field))
+        }
+        <CenteredContent>
+          <Button
+            variant="outlined"
+            type="submit"
+            color="primary"
+            aria-label="form_submit"
+            onClick={saveFormData}
+          >
+            Submit 
+          </Button>
+        </CenteredContent>
+      </Container>
     </>
   )
 }
 
 
 // can be short or paragraph
-export function TextInput({ label, type, value, handleValue }) {
+export function TextInput({ label, value, handleValue }) {
   return (
     <TextField
       id={`${label}`}
-      placeholder={`Type ${label} here`}
+      label={`Type ${label} here`}
+      style={{ width: '100%' }}
       value={value}
       onChange={handleValue}
-      multiline={type === 'long'}
-      rows={3}
-      margin="normal"
-      variant="outlined"
+      margin="dense"
+      variant="standard"
+      name={label}
       inputProps={{ 'data-testid': `${label}-id` }}
       InputLabelProps={{
         shrink: true
@@ -66,16 +115,24 @@ export function TextInput({ label, type, value, handleValue }) {
 
 export function UploadField({ upload }) {
   return (
-    <label style={{ marginTop: 5 }} htmlFor="image">
-      <input
-        type="file"
-        name="image"
-        id="image"
-        capture
-        onChange={upload}
-        style={{ display: 'none' }}
-      />
-      <AddCircleOutline color="primary" />
-    </label>
+    <>
+      <label htmlFor="button-file">
+        <input
+          type="file"
+          name="image"
+          id="button-file"
+          capture
+          onChange={upload}
+          hidden
+        />
+        <Button 
+          variant="text" 
+          component="span" 
+          startIcon={<AddCircleOutline />}
+        >
+          Upload File
+        </Button>
+      </label> 
+    </>
   )
 }

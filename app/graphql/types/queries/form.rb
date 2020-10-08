@@ -37,6 +37,7 @@ module Types::Queries::Form
   def form_properties(form_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
+    # order_by
     context[:site_community].forms.find(form_id).form_properties
   end
 end

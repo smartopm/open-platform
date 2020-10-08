@@ -7,11 +7,15 @@ import {
   Box,
   Avatar
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 
+// this is for existing google forms
 export default function FormLinks() {
 const authState = useContext(AuthStateContext)
+// eslint-disable-next-line no-use-before-define
+const classes = useStyles()
   return (
     <>
       <ListItem
@@ -28,15 +32,7 @@ const authState = useContext(AuthStateContext)
             <AssignmentIcon />
           </Avatar>
         </ListItemAvatar>
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-            marginLeft: 30
-          }}
-        >
+        <Box className={classes.listBox}>
           <Typography variant="subtitle1" data-testid="forms-building-permit">
             Building Permit
           </Typography>
@@ -63,15 +59,7 @@ const authState = useContext(AuthStateContext)
             <AssignmentIcon />
           </Avatar>
         </ListItemAvatar>
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-            marginLeft: 30
-          }}
-        >
+        <Box className={classes.listBox}>
           <Typography variant="subtitle1" data-testid="forms-crf ">
             Client Request Form
           </Typography>
@@ -80,3 +68,13 @@ const authState = useContext(AuthStateContext)
     </>
   )
 }
+
+export const useStyles = makeStyles({
+  listBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginLeft: 30
+  },
+})

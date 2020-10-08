@@ -5,8 +5,8 @@ module Types
   class FormPropertiesType < Types::BaseObject
     field :id, ID, null: false
     field :order, String, null: true
-    field :field_name, String, null: true
-    field :field_type, Integer, null: true
+    field :field_name, String, null: false
+    field :field_type, String, null: false
     field :short_desc, String, null: true
     field :long_desc, String, null: true
     field :required, Boolean, null: true

@@ -583,6 +583,7 @@ query formDetails($formId: ID!){
   formProperties(formId: $formId){
 		id
     fieldName
+    fieldType
     shortDesc
     longDesc
     shortDesc

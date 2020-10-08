@@ -19,6 +19,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           format="yyyy-MM-dd"
           placeholder="YYYY-MM-DD"
           value={selectedDate}
+          name={label}
           onChange={date => handleDateChange(date)}
           KeyboardButtonProps={{
                         'aria-label': 'change date',
