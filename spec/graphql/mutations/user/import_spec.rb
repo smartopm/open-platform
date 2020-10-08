@@ -12,7 +12,10 @@ RSpec.describe Mutations::User::Import do
       <<~GQL
         mutation usersImport($csvString: String!) {
           usersImport(csvString: $csvString) {
-            message
+            errors
+            noOfDuplicates
+            noOfValid
+            noOfInvalid
           }
         }
       GQL
@@ -30,9 +33,12 @@ RSpec.describe Mutations::User::Import do
                                                 current_user: user,
                                               }).as_json
 
-      expect(JSON.parse(result.dig('data', 'usersImport', 'message'))).to eq({})
+      expect(JSON.parse(result.dig('data', 'usersImport', 'errors'))).to eq({})
       expect(User.count).to eql(prev_user_count + 2)
       expect(ContactInfo.count).to eql(prev_contact_info + 4)
+      expect(result.dig('data', 'usersImport', 'noOfDuplicates')).to eql(0)
+      expect(result.dig('data', 'usersImport', 'noOfValid')).to eql(2)
+      expect(result.dig('data', 'usersImport', 'noOfInvalid')).to eql(0)
     end
 
     it "returns an error message if there's any and doesn't create anything" do
@@ -47,11 +53,14 @@ RSpec.describe Mutations::User::Import do
                                                 current_user: user,
                                               }).as_json
 
-      errors = JSON.parse(result.dig('data', 'usersImport', 'message'))
+      errors = JSON.parse(result.dig('data', 'usersImport', 'errors'))
       expect(errors['1']).to include("Phone number can only contain 0-9, '-', '+' and space")
       expect(errors['2']).to include('State is not included in the list', 'Phone number must be a valid length')
       expect(User.count).to eql(prev_user_count)
       expect(ContactInfo.count).to eql(prev_contact_info)
+      expect(result.dig('data', 'usersImport', 'noOfDuplicates')).to eql(0)
+      expect(result.dig('data', 'usersImport', 'noOfValid')).to eql(0)
+      expect(result.dig('data', 'usersImport', 'noOfInvalid')).to eql(2)
     end
 
     it "raises 'Unauthorized' error if user is not logged in" do

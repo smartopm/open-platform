@@ -15,6 +15,7 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/BlockLength
       # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def resolve(csv_string:)
         current_user = context[:current_user]
         errors = {}
@@ -76,13 +77,14 @@ module Mutations
           errors: errors.to_json,
           no_of_duplicates: no_of_duplicates,
           no_of_invalid: no_of_invalid,
-          no_of_valid: no_of_valid
+          no_of_valid: no_of_valid,
         }
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/BlockLength
       # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
 
       def user_already_present?(email, phone_list)
         ::User.where(email: email).or(
