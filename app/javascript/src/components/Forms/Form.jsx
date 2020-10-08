@@ -36,11 +36,12 @@ export default function GenericForm() {
   })
 
   // separate function for file upload
-  function handleValueChange(event){
+  function handleValueChange(event, propId){
     const { name, value } = event.target
+    console.log(propId)
     setProperties({
       ...properties,
-      [name]: value
+      [name]: {value, id: propId}
     })
   }
   function handleDateChange(date){
@@ -53,6 +54,8 @@ export default function GenericForm() {
   function saveFormData(){
     // get values from properties state
     console.log(properties)
+    // create form user ==> form_id, user_id, status
+    // create user form property ==> form_property_id, form_user_id, value
   }
 
   if (loading || propertiesLoading) return <Loading />
@@ -60,7 +63,7 @@ export default function GenericForm() {
 
   function renderForm(props){
       const fields = {
-        text: <TextInput key={props.id} label={props.fieldName} defaultValue={properties.fieldName} handleValue={handleValueChange} />,
+        text: <TextInput key={props.id} label={props.fieldName} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)} />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date} handleDateChange={handleDateChange} label={props.fieldName} />,
         image: <UploadField key={props.id} upload={handleValueChange} />,
       }
