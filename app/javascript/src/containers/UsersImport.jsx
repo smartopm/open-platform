@@ -23,7 +23,6 @@ export default function UsersImport() {
       variables: { csvString }
     })
       .then(res => {
-        console.log(JSON.parse(res.data.usersImport.message))
         formatErrorMessage(JSON.parse(res.data.usersImport.message))
         setIsLoading(false)
       })
@@ -39,21 +38,27 @@ export default function UsersImport() {
 
   function processCsv(evt) {
     const file = evt.target.files[0]
+    if (errorMessage) setErrorMessage(null)
     if (!file) {
       setCsvString('')
       return
     }
     const reader = new FileReader()
     reader.onload = function(e) {
-      console.log('strinnnn', e.target.result)
       setCsvString(e.target.result)
     }
     reader.readAsText(file)
   }
 
   function formatErrorMessage(messageObject) {
+    const rows = Object.keys(messageObject)
+    if (rows.length === 0) {
+      setErrorMessage("Import was successful")
+      return
+    }
+
     let message = 'The following error(s) occurred, fix and try again: <br><br>'
-    Object.keys(messageObject).forEach((row) => {
+    rows.forEach((row) => {
       message += `Row ${row}: <br>`
       messageObject[row].forEach(err => {
         message += `&nbsp; ${err} <br>`
