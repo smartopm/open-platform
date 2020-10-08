@@ -70,7 +70,7 @@ module Mutations
             end
           end
 
-          raise ActiveRecord::Rollback unless errors.empty?
+          raise ActiveRecord::Rollback if !errors.empty? || no_of_duplicates.positive?
         end
 
         {
