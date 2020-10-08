@@ -1,35 +1,34 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, Container, TextField } from '@material-ui/core'
 import { AddCircleOutline } from '@material-ui/icons'
-import { useQuery } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
 import DatePickerDialog from '../DatePickerDialog'
 import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
-
+import { FormUserCreateMutation, UserFormPropertyCreateMutation } from '../../graphql/mutations'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 // date
 // text input (TextField or TextArea)
 // upload
 const initialData = {
   fieldType: '',
-  fieldName: '',
-  required: false,
-  order: '',
-  shortDesc: '',
-  longDesc: '',
-  date: new Date()
+  date: { value: null }
 }
 
 export default function GenericForm() {
 
   const [properties, setProperties] = useState(initialData)
-
+  const authState = useContext(AuthStateContext)
   const { formId } = useParams()
   const { data, error, loading } = useQuery(FormQuery, {
     variables: { id: formId }
   })
+  // create form user
+  const [createFormUser] = useMutation(FormUserCreateMutation)
+  const [createUserFormProperty] = useMutation(UserFormPropertyCreateMutation)
 
   const { data: formData, error: propertiesError, loading: propertiesLoading } = useQuery(FormPropertiesQuery, {
     variables: { formId }
@@ -38,24 +37,44 @@ export default function GenericForm() {
   // separate function for file upload
   function handleValueChange(event, propId){
     const { name, value } = event.target
-    console.log(propId)
     setProperties({
       ...properties,
-      [name]: {value, id: propId}
+      [name]: {value, formPropertyId: propId}
     })
   }
-  function handleDateChange(date){
+  function handleDateChange(date, id){
     setProperties({
       ...properties,
-      date
+      date: { value: date,  formPropertyId: id}
     })
   }
 
-  function saveFormData(){
+  function saveFormData(event){
+    event.preventDefault()
     // get values from properties state
-    console.log(properties)
+    const formattedProperties = Object.entries(properties).map(([, value]) => value)
+    // eslint-disable-next-line array-callback-return
+    // formUserId
+    // fields and their values
     // create form user ==> form_id, user_id, status
-    // create user form property ==> form_property_id, form_user_id, value
+    createFormUser({
+      variables: { formId, userId: authState.user.id, status: 'draft' }
+    // eslint-disable-next-line no-shadow
+    }).then(({ data }) => {
+      formattedProperties.forEach(property => {
+        if(!property || !property.value) return 
+        // create user form property ==> form_property_id, form_user_id, value
+        createUserFormProperty({ 
+          variables: { 
+            formPropertyId: property.formPropertyId,
+            formUserId: data.formUserCreate.formUser.id,
+            value: property.value
+          }
+         })
+         .then(() => console.log('saved'))
+         .catch(err => console.log(err.message))
+      })
+    })
   }
 
   if (loading || propertiesLoading) return <Loading />
@@ -63,8 +82,8 @@ export default function GenericForm() {
 
   function renderForm(props){
       const fields = {
-        text: <TextInput key={props.id} label={props.fieldName} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)} />,
-        date: <DatePickerDialog key={props.id} selectedDate={properties.date} handleDateChange={handleDateChange} label={props.fieldName} />,
+        text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
+        date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
         image: <UploadField key={props.id} upload={handleValueChange} />,
       }
       return fields[props.fieldType]
@@ -76,20 +95,21 @@ export default function GenericForm() {
         {data.form.name}
       </CenteredContent>
       <Container>
-        {
+        <form onSubmit={saveFormData}>
+          {
           formData.formProperties.map((field) => renderForm(field))
         }
-        <CenteredContent>
-          <Button
-            variant="outlined"
-            type="submit"
-            color="primary"
-            aria-label="form_submit"
-            onClick={saveFormData}
-          >
-            Submit 
-          </Button>
-        </CenteredContent>
+          <CenteredContent>
+            <Button
+              variant="outlined"
+              type="submit"
+              color="primary"
+              aria-label="form_submit"
+            >
+              Submit 
+            </Button>
+          </CenteredContent>
+        </form>
       </Container>
     </>
   )
@@ -97,21 +117,22 @@ export default function GenericForm() {
 
 
 // can be short or paragraph
-export function TextInput({ label, value, handleValue }) {
+export function TextInput({handleValue, properties, value }) {
   return (
     <TextField
-      id={`${label}`}
-      label={`Type ${label} here`}
+      id={`${properties.fieldName}`}
+      label={`Type ${properties.fieldName} here`}
       style={{ width: '100%' }}
       value={value}
       onChange={handleValue}
       margin="dense"
       variant="standard"
-      name={label}
-      inputProps={{ 'data-testid': `${label}-id` }}
+      name={properties.fieldName}
+      inputProps={{ 'data-testid': `${properties.fieldName}-id` }}
       InputLabelProps={{
         shrink: true
       }}
+      required={properties.required}
     />
   )
 }
