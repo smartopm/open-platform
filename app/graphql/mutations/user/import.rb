@@ -6,7 +6,10 @@ module Mutations
     class Import < BaseMutation
       argument :csv_string, String, required: true
 
-      field :message, String, null: true
+      field :errors, String, null: false
+      field :no_of_duplicates, Int, null: false
+      field :no_of_invalid, Int, null: false
+      field :no_of_valid, Int, null: false
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
@@ -15,8 +18,11 @@ module Mutations
       def resolve(csv_string:)
         current_user = context[:current_user]
         errors = {}
-        csv = CSV.new(csv_string, headers: true)
+        no_of_duplicates = 0
+        no_of_invalid = 0
+        no_of_valid = 0
 
+        csv = CSV.new(csv_string, headers: true)
         ActiveRecord::Base.transaction do
           csv.each_with_index do |row, index|
             name       = row['Name']&.strip
@@ -32,7 +38,7 @@ module Mutations
             phone_list = [phone, phone1, phone2].compact
 
             if user_already_present?(email, phone_list)
-              errors[index + 1] = ['User already present']
+              no_of_duplicates += 1
               next
             end
 
@@ -55,13 +61,23 @@ module Mutations
               user.labels << label unless user.labels.exists?(label.id)
             end
 
-            errors[index + 1] = user.errors.full_messages unless user.save
+            if user.save
+              no_of_valid += 1
+            else
+              errors[index + 1] = user.errors.full_messages
+              no_of_invalid += 1
+            end
           end
 
           raise ActiveRecord::Rollback unless errors.empty?
         end
 
-        { message: errors.to_json }
+        {
+          errors: errors.to_json,
+          no_of_duplicates: no_of_duplicates,
+          no_of_invalid: no_of_invalid,
+          no_of_valid: no_of_valid
+        }
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength

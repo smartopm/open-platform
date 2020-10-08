@@ -8,12 +8,13 @@ import Nav from '../components/Nav'
 import { ImportCreate } from '../graphql/mutations'
 import CenteredContent from '../components/CenteredContent'
 import Loading from '../components/Loading'
-import { sanitizeText } from '../utils/helpers'
+import { sanitizeText, pluralizeCount } from '../utils/helpers'
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate)
   const [csvString, setCsvString] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [errorSummary, setErrorSummary] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const history = useHistory()
 
@@ -23,12 +24,12 @@ export default function UsersImport() {
       variables: { csvString }
     })
       .then(res => {
-        formatErrorMessage(JSON.parse(res.data.usersImport.message))
+        formatResponseMessage(res.data.usersImport)
         setIsLoading(false)
       })
-      .catch((err) => {
+      .catch(err => {
         setIsLoading(false)
-        console.log(err.message)
+        console.log(err)
       })
   }
 
@@ -39,6 +40,8 @@ export default function UsersImport() {
   function processCsv(evt) {
     const file = evt.target.files[0]
     if (errorMessage) setErrorMessage(null)
+    if (errorSummary) setErrorSummary(null)
+
     if (!file) {
       setCsvString('')
       return
@@ -50,22 +53,51 @@ export default function UsersImport() {
     reader.readAsText(file)
   }
 
-  function formatErrorMessage(messageObject) {
-    const rows = Object.keys(messageObject)
-    if (rows.length === 0) {
-      setErrorMessage("Import was successful")
+  function formatResponseMessage({errors, noOfDuplicates, noOfInvalid, noOfValid}) {
+    if ((noOfDuplicates + noOfInvalid) ===  0) {
+      setErrorMessage('Import was successful')
       return
     }
 
-    let message = 'The following error(s) occurred, fix and try again: <br><br>'
-    rows.forEach((row) => {
-      message += `Row ${row}: <br>`
-      messageObject[row].forEach(err => {
-        message += `&nbsp; ${err} <br>`
+    if (noOfDuplicates > 0) {
+      setErrorSummary(
+        `${duplicateStatement(noOfDuplicates)},
+        ${noOfValid} ${pluralizeCount(noOfValid, 'user')} will be added,
+        ${invalidStatement(noOfInvalid)}.`
+      )
+    }
+
+    const parsedErrors = JSON.parse(errors)
+    const errorRows = Object.keys(parsedErrors)
+    if (errorRows.length > 0) {
+      let message = ''
+      errorRows.forEach(row => {
+        message += `Row ${row}: <br>`
+        parsedErrors[row].forEach(err => {
+          message += `&nbsp; ${err} <br>`
+        })
       })
-    })
-    setErrorMessage(message)
+      setErrorMessage(message)
+    }
   }
+
+  function duplicateStatement(duplicatesNumber) {
+    let statement = `${duplicatesNumber} user already exists`
+    if (duplicatesNumber > 1) {
+      statement = `${duplicatesNumber} users already exist`
+    }
+    return statement
+  }
+
+  function invalidStatement(invalidNumber) {
+    let statement = `${invalidNumber} user has errors`
+    if (invalidNumber > 1) {
+      statement = `${invalidNumber} users have errors`
+    }
+    return statement
+  }
+
+  const hasErrors = (errorMessage || errorSummary)
 
   return (
     <>
@@ -74,6 +106,7 @@ export default function UsersImport() {
         <Loading />
       ) : (
         <div>
+          <div className="text-center">{errorSummary}</div>
           {errorMessage && (
             <div className={css(styles.errorContainer)}>
               <div
@@ -94,7 +127,7 @@ export default function UsersImport() {
             />
           </Grid>
           <br />
-          {csvString.length > 0 && !errorMessage && (
+          {csvString.length > 0 && !hasErrors && (
             <CenteredContent>
               <Button
                 variant="contained"
