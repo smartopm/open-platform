@@ -20,6 +20,12 @@ module Types::Queries::Form
       description 'Get form by its id'
       argument :form_id, GraphQL::Types::ID, required: true
     end
+    # Get form status for user
+    field :form_user, Types::FormUsersType, null: true do
+      description 'Get user form by form id and user id'
+      argument :form_id, GraphQL::Types::ID, required: true
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
   def forms
@@ -39,5 +45,11 @@ module Types::Queries::Form
 
     # order_by
     context[:site_community].forms.find(form_id).form_properties
+  end
+
+  def form_user(form_id:, user_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    FormUser.find_by(form_id: form_id, user_id: user_id)
   end
 end

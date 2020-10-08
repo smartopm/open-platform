@@ -2,21 +2,19 @@
 
 module Mutations
   module Form
-    # For adding form users
-    class FormUserCreate < BaseMutation
+    # For updating status of form users
+    class FormUserStatusUpdate < BaseMutation
       argument :form_id, ID, required: true
       argument :user_id, ID, required: true
-      argument :status, String, required: false
+      argument :status, String, required: true
 
       field :form_user, Types::FormUsersType, null: true
 
       def resolve(vals)
-        form = context[:site_community].forms.find(vals[:form_id])
-        raise GraphQL::ExecutionError, 'Form not found' if form.nil?
+        form_user = ::FormUser.find_by(form_id: vals[:form_id], user_id: vals[:user_id])
+        raise GraphQL::ExecutionError, 'Record not found' if form_user.nil?
 
-        vals = vals.except(:form_id).merge({ status_updated_by: context[:current_user] })
-        form_user = form.form_users.new(vals)
-        return { form_user: form_user } if form_user.save
+        return { form_user: form_user } if form_user.update(status: vals[:status])
 
         raise GraphQL::ExecutionError, form_user.errors.full_messages
       end
