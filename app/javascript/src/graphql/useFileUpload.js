@@ -1,5 +1,4 @@
 /* eslint-disable */
-/* eslint-disable */
 import { useReducer, useEffect } from 'react'
 import { FileChecksum } from '@rails/activestorage/src/file_checksum'
 

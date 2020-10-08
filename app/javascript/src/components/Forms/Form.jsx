@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Button, Container, TextField } from '@material-ui/core'
 import { AddCircleOutline } from '@material-ui/icons'
-import { useMutation, useQuery } from 'react-apollo'
+import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
 import DatePickerDialog from '../DatePickerDialog'
 import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
@@ -10,6 +10,8 @@ import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
 import { FormUserCreateMutation, UserFormPropertyCreateMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { useFileUpload } from '../../graphql/useFileUpload'
+
 // date
 // text input (TextField or TextArea)
 // upload
@@ -35,6 +37,12 @@ export default function GenericForm() {
   })
 
   // separate function for file upload
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+
+  console.log({status, url, signedBlobId})
+  
   function handleValueChange(event, propId){
     const { name, value } = event.target
     setProperties({
@@ -84,7 +92,7 @@ export default function GenericForm() {
       const fields = {
         text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField key={props.id} upload={handleValueChange} />,
+        image: <UploadField key={props.id} upload={onChange} />,
       }
       return fields[props.fieldType]
   }
