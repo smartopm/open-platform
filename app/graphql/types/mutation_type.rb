@@ -81,5 +81,7 @@ module Types
     # forms
     field :form_create, mutation: Mutations::Form::FormCreate
     field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
+    field :form_user_create, mutation: Mutations::Form::FormUserCreate
+    field :user_form_properties_create, mutation: Mutations::Form::UserFormPropertiesCreate
   end
 end

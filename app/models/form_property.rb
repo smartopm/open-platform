@@ -3,6 +3,7 @@
 # Form Fields
 class FormProperty < ApplicationRecord
   belongs_to :form
+  has_many :user_form_properties, dependent: :destroy
 
   default_scope { order(order: :asc) }
 
