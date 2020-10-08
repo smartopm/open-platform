@@ -1,8 +1,12 @@
-import React, { useContext, useState } from 'react'
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable no-use-before-define */
+import React, { useContext, useRef, useState } from 'react'
 import { Button, Container, TextField } from '@material-ui/core'
 import { AddCircleOutline } from '@material-ui/icons'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
+import { makeStyles } from '@material-ui/styles'
+import Signature from "react-signature-canvas";
 import DatePickerDialog from '../DatePickerDialog'
 import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -23,6 +27,7 @@ const initialData = {
 export default function GenericForm() {
 
   const [properties, setProperties] = useState(initialData)
+  const signRef = useRef(null);
   const authState = useContext(AuthStateContext)
   const { formId } = useParams()
   const { data, error, loading } = useQuery(FormQuery, {
@@ -59,8 +64,15 @@ export default function GenericForm() {
 
   function saveFormData(event){
     event.preventDefault()
+
+    // capture the signature here signRef.current.toDataURL("image/png")
+    // console.log(signRef.current.toDataURL("image/png"))
+    
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
+    // get signedBlobId as value and attach it to the formPropertyId
+    // eslint-disable-next-line no-unused-vars
+    const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     // eslint-disable-next-line array-callback-return
     // formUserId
     // fields and their values
@@ -92,7 +104,8 @@ export default function GenericForm() {
       const fields = {
         text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField key={props.id} upload={onChange} />,
+        image: <UploadField key={props.id} upload={onChange} /* updateProperty={} */ />,
+        signature: <SignaturePad signRef={signRef} />
       }
       return fields[props.fieldType]
   }
@@ -145,7 +158,7 @@ export function TextInput({handleValue, properties, value }) {
   )
 }
 
-export function UploadField({ upload }) {
+export function UploadField({ upload, updateProperty }) {
   return (
     <>
       <label htmlFor="button-file">
@@ -161,6 +174,7 @@ export function UploadField({ upload }) {
           variant="text" 
           component="span" 
           startIcon={<AddCircleOutline />}
+          onClick={updateProperty}
         >
           Upload File
         </Button>
@@ -168,3 +182,33 @@ export function UploadField({ upload }) {
     </>
   )
 }
+
+
+export function SignaturePad({signRef, showClear}){
+  const classes = useStyles()
+  return (
+    <div className={classes.signatureContainer}>
+      <label className="bmd-label-static">
+        SIGNATURE
+      </label>
+      <Signature
+        canvasProps={{ className: classes.signaturePad }}
+        ref={signRef}
+        onEnd={showClear}
+      />
+    </div>
+  )
+}
+
+const useStyles = makeStyles({
+  signatureContainer: {
+    width: "100%",
+    height: "100%",
+    margin: "0 auto",
+    backgroundColor: "#FFFFFF"
+  },
+  signaturePad: {
+    width: "100%",
+    height: "100%"
+  }
+})
