@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_06_100437) do
+ActiveRecord::Schema.define(version: 2020_10_08_124930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -252,7 +252,10 @@ ActiveRecord::Schema.define(version: 2020_10_06_100437) do
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "status_updated_by_id"
     t.index ["form_id"], name: "index_form_users_on_form_id"
+    t.index ["status_updated_by_id"], name: "index_form_users_on_status_updated_by_id"
+    t.index ["user_id", "form_id"], name: "index_form_users_on_user_id_and_form_id", unique: true
     t.index ["user_id"], name: "index_form_users_on_user_id"
   end
 
@@ -467,6 +470,7 @@ ActiveRecord::Schema.define(version: 2020_10_06_100437) do
   add_foreign_key "form_properties", "forms"
   add_foreign_key "form_users", "forms"
   add_foreign_key "form_users", "users"
+  add_foreign_key "form_users", "users", column: "status_updated_by_id"
   add_foreign_key "forms", "communities"
   add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"

@@ -14,6 +14,7 @@ module Mutations
         form = context[:site_community].forms.find(vals[:form_id])
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
 
+        vals = vals.except(:form_id).merge({ status_updated_by: context[:current_user] })
         form_user = form.form_users.new(vals)
         return { form_user: form_user } if form_user.save
 
