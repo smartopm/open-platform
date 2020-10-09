@@ -74,6 +74,13 @@ export default function GenericForm() {
     // get signedBlobId as value and attach it to the form_property_id
     // eslint-disable-next-line no-unused-vars
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
+    
+    // check if we uploaded then attach the blob id to the newValue
+    if (signedBlobId && url) {
+      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id }
+      filledInProperties.push(newValue)
+      // then update the value and property id
+    }
     // eslint-disable-next-line array-callback-return
     // formUserId
     // fields and their values
