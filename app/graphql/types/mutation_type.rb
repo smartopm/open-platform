@@ -84,6 +84,7 @@ module Types
     field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
     field :form_properties_update, mutation: Mutations::Form::FormPropertiesUpdate
     field :form_user_create, mutation: Mutations::Form::FormUserCreate
+    field :form_user_update, mutation: Mutations::Form::FormUserUpdate
     field :form_user_status_update, mutation: Mutations::Form::FormUserStatusUpdate
     field :user_form_properties_create, mutation: Mutations::Form::UserFormPropertiesCreate
     field :user_form_properties_update, mutation: Mutations::Form::UserFormPropertiesUpdate
