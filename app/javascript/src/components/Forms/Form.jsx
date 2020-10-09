@@ -34,6 +34,7 @@ export default function GenericForm() {
   })
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
+  // eslint-disable-next-line no-unused-vars
   const [createUserFormProperty] = useMutation(UserFormPropertyCreateMutation)
 
   const { data: formData, error: propertiesError, loading: propertiesLoading } = useQuery(FormPropertiesQuery, {
@@ -45,19 +46,19 @@ export default function GenericForm() {
     client: useApolloClient()
   })
 
-  console.log({status, url, signedBlobId})
+  console.log({status, url, signedBlobId  })
   
   function handleValueChange(event, propId){
     const { name, value } = event.target
     setProperties({
       ...properties,
-      [name]: {value, formPropertyId: propId}
+      [name]: {value, form_property_id: propId}
     })
   }
   function handleDateChange(date, id){
     setProperties({
       ...properties,
-      date: { value: date,  formPropertyId: id}
+      date: { value: date,  form_property_id: id}
     })
   }
 
@@ -69,31 +70,40 @@ export default function GenericForm() {
     
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    // get signedBlobId as value and attach it to the formPropertyId
+    const filledInProperties = formattedProperties.filter(item => item.value)
+    // get signedBlobId as value and attach it to the form_property_id
     // eslint-disable-next-line no-unused-vars
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     // eslint-disable-next-line array-callback-return
     // formUserId
     // fields and their values
     // create form user ==> form_id, user_id, status
+    // const params = JSON.()
     createFormUser({
-      variables: { formId, userId: authState.user.id, status: 'draft' }
-    // eslint-disable-next-line no-shadow
-    }).then(({ data }) => {
-      formattedProperties.forEach(property => {
-        if(!property || !property.value) return 
-        // create user form property ==> form_property_id, form_user_id, value
-        createUserFormProperty({ 
-          variables: { 
-            formPropertyId: property.formPropertyId,
-            formUserId: data.formUserCreate.formUser.id,
-            value: property.value
-          }
-         })
-         .then(() => console.log('saved'))
-         .catch(err => console.log(err.message))
-      })
+      variables: { 
+        formId,
+        userId: authState.user.id,
+        status: 'draft',
+        params: { user_form_properties: filledInProperties},
+      }
     })
+    // eslint-disable-next-line no-shadow
+    .then(({ data }) => console.log(data))
+    // .then(({ data }) => {
+      // formattedProperties.forEach(property => {
+      //   if(!property || !property.value) return 
+      //   // create user form property ==> form_property_id, form_user_id, value
+      //   createUserFormProperty({ 
+      //     variables: { 
+      //       form_property_id: property.form_property_id,
+      //       formUserId: data.formUserCreate.formUser.id,
+      //       value: property.value
+      //     }
+      //    })
+      //    .then(() => console.log('saved'))
+      //    .catch(err => console.log(err.message))
+      // })
+    // })
   }
 
   if (loading || propertiesLoading) return <Loading />
