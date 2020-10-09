@@ -24,6 +24,7 @@ import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation, LogReadPost, LogSharedPost } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
+import TagsComponent from '../../components/NewsPage/Tags'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -106,13 +107,16 @@ export default function PostPage() {
     <>
       <Nav
         menuButton="back"
-        backTo={authState.loggedIn ? '/news/post' : '/welcome'}
+        backTo={authState.loggedIn ? '/news' : '/welcome'}
       />
       <div className="post_page">
         <IframeContainer
           link={response?.URL || ''}
           width={width}
           height={height}
+        />
+        <TagsComponent 
+          tags={response?.tags}
         />
         <ShareButton
           url={currentUrl}
