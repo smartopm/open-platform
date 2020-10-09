@@ -214,3 +214,12 @@ export function titleize(string) {
     return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase()
   }).join(' ')
 }
+
+
+export async function convertBase64ToFile(data){
+  const res = await fetch(data)
+  const blob = await res.blob()
+  // will pass in file name 
+  const file = new File([blob], "File name", { type: "image/png" })
+  return file
+}

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function SignaturePad({signRef, showClear}){
+export default function SignaturePad({signRef, props}){
     const classes = useStyles()
     return (
       <div className={classes.signatureContainer}>
@@ -26,7 +26,7 @@ export default function SignaturePad({signRef, showClear}){
         <Signature
           canvasProps={{ className: classes.signaturePad }}
           ref={signRef}
-          onEnd={showClear}
+          {...props}
         />
       </div>
     )

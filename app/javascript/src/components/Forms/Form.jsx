@@ -14,6 +14,7 @@ import { useFileUpload } from '../../graphql/useFileUpload'
 import TextInput from './TextInput'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
+import { convertBase64ToFile } from '../../utils/helpers'
 
 // date
 // text input (TextField or TextArea)
@@ -62,12 +63,30 @@ export default function GenericForm() {
     })
   }
 
+  function handleSignatureUpload(){
+    const url64 =  signRef.current.toDataURL("image/png")
+    // convert the file
+    const signature = convertBase64ToFile(url64)
+    console.log(signature)
+    onChange(signature)
+  }
+
   function saveFormData(event){
     event.preventDefault()
 
     // capture the signature here signRef.current.toDataURL("image/png")
     // console.log(signRef.current.toDataURL("image/png"))
     
+
+    const sign =  signRef.current.toDataURL("image/png")
+    // convert the file
+    // eslint-disable-next-line no-unused-vars
+    const signature = convertBase64ToFile(sign, 'signature')
+    // send it to upload
+    // onChange(signature)
+    // console.log(signature.then((file) => file))
+    
+
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value)
@@ -96,21 +115,6 @@ export default function GenericForm() {
     })
     // eslint-disable-next-line no-shadow
     .then(({ data }) => console.log(data))
-    // .then(({ data }) => {
-      // formattedProperties.forEach(property => {
-      //   if(!property || !property.value) return 
-      //   // create user form property ==> form_property_id, form_user_id, value
-      //   createUserFormProperty({ 
-      //     variables: { 
-      //       form_property_id: property.form_property_id,
-      //       formUserId: data.formUserCreate.formUser.id,
-      //       value: property.value
-      //     }
-      //    })
-      //    .then(() => console.log('saved'))
-      //    .catch(err => console.log(err.message))
-      // })
-    // })
   }
 
   if (loading || propertiesLoading) return <Loading />
@@ -120,8 +124,8 @@ export default function GenericForm() {
       const fields = {
         text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField key={props.id} upload={onChange} /* updateProperty={} */ />,
-        signature: <SignaturePad signRef={signRef} />
+        image: <UploadField key={props.id} upload={evt => onChange(evt.target.files[0])} /* updateProperty={} */ />,
+        signature: <SignaturePad signRef={signRef} onEnd={handleSignatureUpload} />
       }
       return fields[props.fieldType]
   }
