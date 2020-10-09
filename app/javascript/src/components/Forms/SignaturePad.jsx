@@ -2,6 +2,8 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Signature from "react-signature-canvas";
+import PropTypes from 'prop-types'
+
 
 const useStyles = makeStyles({
   signatureContainer: {
@@ -30,5 +32,11 @@ export default function SignaturePad({signRef, props}){
         />
       </div>
     )
-  }
+}
+
+SignaturePad.propTypes = {
+    signRef: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    props: PropTypes.object.isRequired,
+}
   

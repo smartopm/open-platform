@@ -1,5 +1,6 @@
 import React from 'react'
 import { TextField } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
 export default function TextInput({ handleValue, properties, value }) {
     return (
@@ -19,4 +20,13 @@ export default function TextInput({ handleValue, properties, value }) {
         required={properties.required}
       />
     )
+  }
+
+  TextInput.propTypes = {
+      handleValue: PropTypes.func.isRequired,
+      properties: PropTypes.shape({
+          fieldName: PropTypes.string,
+          required: PropTypes.bool,
+      }).isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]).isRequired
   }

@@ -2,9 +2,10 @@ import React from 'react'
 import { AddCircleOutline } from '@material-ui/icons'
 import DoneIcon from '@material-ui/icons/Done';
 import { Button } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
 
-export default function UploadField({ status, upload, updateProperty }) {
+export default function UploadField({ status, upload }) {
     return (
       <>
         <label htmlFor="button-file">
@@ -20,7 +21,6 @@ export default function UploadField({ status, upload, updateProperty }) {
             variant="text" 
             component="span" 
             startIcon={status === 'DONE' ? <DoneIcon /> : <AddCircleOutline />}
-            onClick={updateProperty}
           >
             { status === 'DONE' ? 'File Uploaded' :  'Upload File'}
           </Button>
@@ -28,3 +28,8 @@ export default function UploadField({ status, upload, updateProperty }) {
       </>
     )
   }
+
+UploadField.propTypes = {
+      status: PropTypes.string.isRequired,
+      upload: PropTypes.func.isRequired,
+}
