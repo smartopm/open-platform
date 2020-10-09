@@ -183,6 +183,7 @@ GEM
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
     jmespath (1.4.0)
+    json_logic (0.4.7)
     jwt (2.2.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -434,6 +435,7 @@ DEPENDENCIES
   graphql (~> 1.9)
   graphql-guard
   jbuilder (~> 2.7)
+  json_logic
   jwt
   listen (>= 3.0.5, < 3.2)
   newrelic_rpm

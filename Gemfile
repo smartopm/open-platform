@@ -69,6 +69,9 @@ gem 'rollbar'
 # full text searching on models
 gem 'search_cop'
 
+# dynamic logic using json
+gem 'json_logic'
+
 # for reading and xls and xlsx files
 gem "roo", "~> 2.8.0"
 
