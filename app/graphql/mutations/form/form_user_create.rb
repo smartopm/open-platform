@@ -25,21 +25,20 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_user_form_properties(form_user, vals)
-        vals[:params]["user_form_properties"].each do |value|
+        vals[:params]['user_form_properties'].each do |value|
           value = value.merge(user_id: vals[:user_id])
           form_user.user_form_properties.create!(value)
         end
 
         { form_user: form_user }
-      rescue
+      rescue StandardError
         form_user.destroy
       end
 
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user].present?
 
-        true
+        raise GraphQL::ExecutionError, 'Unauthorized'
       end
     end
   end

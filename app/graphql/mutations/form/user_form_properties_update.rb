@@ -12,7 +12,7 @@ module Mutations
       def resolve(vals)
         user_form_property = context[:current_user].user_form_properties.find(vals[:id])
         if user_form_property.update(vals.except(:id))
-          return { user_form_property: user_form_property } 
+          return { user_form_property: user_form_property }
         end
 
         raise GraphQL::ExecutionError, user_form_property.errors.full_messages
