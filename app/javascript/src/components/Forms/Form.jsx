@@ -1,12 +1,8 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-use-before-define */
 import React, { useContext, useRef, useState } from 'react'
-import { Button, Container, TextField } from '@material-ui/core'
-import { AddCircleOutline } from '@material-ui/icons'
+import { Button, Container } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
-import { makeStyles } from '@material-ui/styles'
-import Signature from "react-signature-canvas";
 import DatePickerDialog from '../DatePickerDialog'
 import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -15,6 +11,9 @@ import CenteredContent from '../CenteredContent'
 import { FormUserCreateMutation, UserFormPropertyCreateMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { useFileUpload } from '../../graphql/useFileUpload'
+import TextInput from './TextInput'
+import UploadField from './UploadField'
+import SignaturePad from './SignaturePad'
 
 // date
 // text input (TextField or TextArea)
@@ -135,80 +134,3 @@ export default function GenericForm() {
     </>
   )
 }
-
-
-// can be short or paragraph
-export function TextInput({handleValue, properties, value }) {
-  return (
-    <TextField
-      id={`${properties.fieldName}`}
-      label={`Type ${properties.fieldName} here`}
-      style={{ width: '100%' }}
-      value={value}
-      onChange={handleValue}
-      margin="dense"
-      variant="standard"
-      name={properties.fieldName}
-      inputProps={{ 'data-testid': `${properties.fieldName}-id` }}
-      InputLabelProps={{
-        shrink: true
-      }}
-      required={properties.required}
-    />
-  )
-}
-
-export function UploadField({ upload, updateProperty }) {
-  return (
-    <>
-      <label htmlFor="button-file">
-        <input
-          type="file"
-          name="image"
-          id="button-file"
-          capture
-          onChange={upload}
-          hidden
-        />
-        <Button 
-          variant="text" 
-          component="span" 
-          startIcon={<AddCircleOutline />}
-          onClick={updateProperty}
-        >
-          Upload File
-        </Button>
-      </label> 
-    </>
-  )
-}
-
-
-export function SignaturePad({signRef, showClear}){
-  const classes = useStyles()
-  return (
-    <div className={classes.signatureContainer}>
-      <label className="bmd-label-static">
-        SIGNATURE
-      </label>
-      <Signature
-        canvasProps={{ className: classes.signaturePad }}
-        ref={signRef}
-        onEnd={showClear}
-      />
-    </div>
-  )
-}
-
-const useStyles = makeStyles({
-  signatureContainer: {
-    width: "100%",
-    height: "100%",
-    margin: "0 auto",
-    backgroundColor: "#FFFFFF"
-  },
-  signaturePad: {
-    width: "100%",
-    height: "100%"
-  }
-})
