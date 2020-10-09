@@ -124,7 +124,7 @@ export default function GenericForm() {
       const fields = {
         text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField key={props.id} upload={evt => onChange(evt.target.files[0])} /* updateProperty={} */ />,
+        image: <UploadField key={props.id} upload={onChange} status={status} />,
         signature: <SignaturePad signRef={signRef} onEnd={handleSignatureUpload} />
       }
       return fields[props.fieldType]
