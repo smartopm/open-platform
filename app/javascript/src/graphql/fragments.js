@@ -40,6 +40,15 @@ export const UserFragment = {
         id
         shortDesc
       }
+      formUsers {
+        id
+        status
+        createdAt
+        form {
+          id
+          name
+        }
+      }
     }
   `
 }

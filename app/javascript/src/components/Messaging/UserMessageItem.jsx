@@ -63,7 +63,7 @@ export default function UserMessageItem({
                   />
                 )
               }
-              
+
               {isTruncate && (
                 <span className={css(styles.ownerType)}>
                   {`  ${userType[user.userType] || ''}`}
@@ -123,7 +123,7 @@ export function check_route(location) {
     message: 'is_message',
     messages: 'is_message'
   }
-  if(!location.length) return 
+  if(!location.length) return
   return routes[location.split('/')[1]]
 }
 
