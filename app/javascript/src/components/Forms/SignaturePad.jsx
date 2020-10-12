@@ -23,7 +23,7 @@ export default function SignaturePad({signRef, props}){
     const classes = useStyles()
     return (
       <div className={classes.signatureContainer}>
-        <label className="bmd-label-static">
+        <label className="bmd-label-static" aria-label="sign_title">
           SIGNATURE
         </label>
         <Signature

@@ -12,6 +12,7 @@ export default function TextInput({ handleValue, properties, value }) {
         onChange={handleValue}
         margin="dense"
         variant="standard"
+        aria-label="text-input"
         name={properties.fieldName}
         inputProps={{ 'data-testid': `${properties.fieldName}-id` }}
         InputLabelProps={{

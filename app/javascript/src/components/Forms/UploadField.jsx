@@ -13,13 +13,15 @@ export default function UploadField({ status, upload }) {
             type="file"
             name="image"
             id="button-file"
+            aria-label="upload_field"
             capture
             onChange={upload}
             hidden
           />
           <Button 
             variant="text" 
-            component="span" 
+            component="span"
+            aria-label="upload_button"
             startIcon={status === 'DONE' ? <DoneIcon /> : <AddCircleOutline />}
           >
             { status === 'DONE' ? 'File Uploaded' :  'Upload File'}
