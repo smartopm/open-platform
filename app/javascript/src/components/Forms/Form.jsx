@@ -111,7 +111,6 @@ export default function GenericForm() {
         status: 'draft',
         values: cleanFormData,
       }
-    // })
     }).then(() => {
       // formattedProperties.forEach(property => {
       //   if(!property || !property.value) return 
