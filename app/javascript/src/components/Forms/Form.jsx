@@ -8,7 +8,7 @@ import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
-import { FormUserCreateMutation, UserFormPropertyCreateMutation } from '../../graphql/mutations'
+import { FormUserCreateMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import TextInput from './TextInput'
@@ -37,8 +37,6 @@ export default function GenericForm() {
   })
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
-  // eslint-disable-next-line no-unused-vars
-  const [createUserFormProperty] = useMutation(UserFormPropertyCreateMutation)
 
   const { data: formData, error: propertiesError, loading: propertiesLoading } = useQuery(FormPropertiesQuery, {
     variables: { formId }

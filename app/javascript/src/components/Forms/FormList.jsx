@@ -34,10 +34,10 @@ export default function FormLinkList() {
             <Divider variant="middle" />
             <ListItem
               key={form.id}
-              data-testid="forms-link-building-permit"
+              data-testid="community_form"
               onClick={() => history.push(`/form/${form.id}?name=${form.name}`)}
             >
-              <ListItemAvatar data-testid="forms-link-building-icon">
+              <ListItemAvatar data-testid="community_form_icon">
                 <Avatar>
                   <AssignmentIcon />
                 </Avatar>
@@ -45,7 +45,7 @@ export default function FormLinkList() {
               <Box className={classes.listBox}>
                 <Typography
                   variant="subtitle1"
-                  data-testid="forms-building-permit"
+                  data-testid="form_name"
                 >
                   {form.name}
                 </Typography>
