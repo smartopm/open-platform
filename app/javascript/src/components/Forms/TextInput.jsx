@@ -8,7 +8,7 @@ export default function TextInput({ handleValue, properties, value }) {
         id={`${properties.fieldName}`}
         label={`Type ${properties.fieldName} here`}
         style={{ width: '100%' }}
-        defaultValue={value}
+        value={value}
         onChange={handleValue}
         margin="dense"
         variant="standard"
@@ -22,11 +22,12 @@ export default function TextInput({ handleValue, properties, value }) {
     )
   }
 
-  TextInput.propTypes = {
+TextInput.propTypes = {
       handleValue: PropTypes.func.isRequired,
       properties: PropTypes.shape({
           fieldName: PropTypes.string,
           required: PropTypes.bool,
       }).isRequired,
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]).isRequired
+      // eslint-disable-next-line react/require-default-props
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number])
   }

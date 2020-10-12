@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext, useRef, useState } from 'react'
-import { Button, Container } from '@material-ui/core'
+import { Button, Container, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
 import DatePickerDialog from '../DatePickerDialog'
@@ -28,7 +28,7 @@ const initialData = {
 export default function GenericForm() {
 
   const [properties, setProperties] = useState(initialData)
-  const [message, setMessage] = useState({err: false, info: ''})
+  const [message, setMessage] = useState({err: false, info: '', signed: false})
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
   const { formId } = useParams()
@@ -64,6 +64,7 @@ export default function GenericForm() {
   }
 
   function handleSignatureUpload(){
+    setMessage({ ...message, signed: true})
     const url64 =  signRef.current.toDataURL("image/png")
     // convert the file
     // eslint-disable-next-line no-unused-vars
@@ -75,20 +76,20 @@ export default function GenericForm() {
 
     // capture the signature here signRef.current.toDataURL("image/png")
     // console.log(signRef.current.toDataURL("image/png"))
-    
-
-    const sign =  signRef.current.toDataURL("image/png")
-    // convert the file
-    // eslint-disable-next-line no-unused-vars
-    const signedImage = convertBase64ToFile(sign, 'signature')
-    // send it to upload
-    // onChange(signature)
-    // console.log(signature.then((file) => file))
+    if (message.signed) {
+      const sign =  signRef.current.toDataURL("image/png")
+      // convert the file
+      // eslint-disable-next-line no-unused-vars
+      const signedImage = convertBase64ToFile(sign, 'signature')
+      // send it to upload
+      // onChange(signature)
+      // console.log(signature.then((file) => file))
+    }
     
 
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    const filledInProperties = formattedProperties.filter(item => item.value)
+    const filledInProperties = formattedProperties.filter(item => item.value !== null || item.value !== '')
     // get signedBlobId as value and attach it to the form_property_id
     // eslint-disable-next-line no-unused-vars
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
@@ -108,28 +109,15 @@ export default function GenericForm() {
       variables: { 
         formId,
         userId: authState.user.id,
-        status: 'draft',
+        status: 'pending',
         values: cleanFormData,
       }
     }).then(() => {
-      // formattedProperties.forEach(property => {
-      //   if(!property || !property.value) return 
-      //   // create user form property ==> formPropertyId, form_user_id, value
-      //   createUserFormProperty({ 
-      //     variables: { 
-      //       formPropertyId: property.formPropertyId,
-      //       formUserId: data.formUserCreate.formUser.id,
-      //       value: property.value
-      //     }
-      //    })
-      //    .then(() => {
-          setMessage({ ...message, info: 'You have successfully submitted the form' })
-          // empty the form
-          setProperties(initialData)
-      //    })
-      // })
+        setMessage({ ...message, info: 'You have successfully submitted the form' })
+        // empty the form
+        setProperties(initialData)
     })
-   .catch(err => setMessage({ err: true, info: err.message }))
+   .catch(err => setMessage({ ...message, err: true, info: err.message }))
   }
 
   if (loading || propertiesLoading) return <Loading />
@@ -137,7 +125,7 @@ export default function GenericForm() {
 
   function renderForm(props){
       const fields = {
-        text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
+        text: <TextInput key={props.id} properties={props} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
         image: <UploadField status={status} key={props.id} upload={evt => onChange(evt.target.files[0])} /* updateProperty={} */ />,
         signature: <SignaturePad key={props.id} signRef={signRef} onEnd={handleSignatureUpload} />
@@ -147,14 +135,10 @@ export default function GenericForm() {
 
   return (
     <>
-      <CenteredContent>
-        {data.form.name}
-      </CenteredContent>
+      <CenteredContent>{data.form.name}</CenteredContent>
       <Container>
         <form onSubmit={saveFormData}>
-          {
-          formData.formProperties.map((field) => renderForm(field))
-        }
+          {formData.formProperties.map(field => renderForm(field))}
           <CenteredContent>
             <Button
               variant="outlined"
@@ -162,8 +146,13 @@ export default function GenericForm() {
               color="primary"
               aria-label="form_submit"
             >
-              Submit 
+              Submit
             </Button>
+            <br />
+            <br />
+          </CenteredContent>
+          <CenteredContent>
+            {Boolean(message.info.length) && <Typography variant="body1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}
           </CenteredContent>
         </form>
       </Container>
