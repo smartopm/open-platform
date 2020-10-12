@@ -6,6 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Paper from '@material-ui/core/Paper';
 import { useMutation } from 'react-apollo';
 import { LabelEdit } from '../../graphql/mutations';
 
@@ -42,6 +43,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
             multiline
             value={data.description}
           />
+          <Paper variant="outlined" style={{ height: '40px', width: '40px'}} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary" variant="outlined">

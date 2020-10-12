@@ -29,6 +29,19 @@ export const userType = {
   custodian: 'Store Custodian'
 }
 
+export const colorPallete = {
+  p_one: '#2c8bd0',
+  p_two: '#f07030',
+  p_three: '#61d190',
+  p_four: '#b54ecf',
+  p_five: '#65d11e',
+  p_six: '#afcf21',
+  p_seven: '#cf9e28',
+  p_eight: '#cfc028',
+  p_nine: '#cf5628',
+  p_ten: '#3a7047'
+}
+
 export const userState = {
   valid: 'Valid',
   pending: 'Pending',
