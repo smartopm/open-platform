@@ -21,9 +21,9 @@ class Label < ApplicationRecord
   has_many :campaigns, through: :campaign_labels
 
   def self.with_users(com, limit, offset)
-    Label.find_by_sql(["SELECT labels.id, labels.short_desc, COUNT(*) AS user_count
+    Label.find_by_sql(["SELECT labels.id, labels.short_desc, labels.color, COUNT(*) AS user_count
                 FROM user_labels INNER JOIN labels ON user_labels.label_id = labels.id
                 WHERE labels.community_id=?
-                GROUP BY labels.id, labels.short_desc LIMIT ? OFFSET ? "] + [com, limit, offset])
+                GROUP BY labels.id, labels.short_desc, labels.color LIMIT ? OFFSET ? "] + [com, limit, offset])
   end
 end

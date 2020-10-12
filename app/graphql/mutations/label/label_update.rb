@@ -6,13 +6,14 @@ module Mutations
     class LabelUpdate < BaseMutation
       argument :id, ID, required: true
       argument :short_desc, String, required: true
+      argument :description, String, required: false
 
       field :label, Types::LabelType, null: true
 
-      def resolve(id:, short_desc:)
+      def resolve(id:, short_desc:, description:)
         label = context[:site_community].labels.find(id)
         raise GraphQL::ExecutionError, 'Label not found' if label.nil?
-        return { label: label } if label.update(short_desc: short_desc)
+        return { label: label } if label.update(short_desc: short_desc, description: description)
 
         raise GraphQL::ExecutionError, label.errors.full_messages
       end

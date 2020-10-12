@@ -13,7 +13,7 @@ import Paginate from '../Paginate'
 export default function LabelList({ userType }) {
   const limit = 50
   const [offset, setOffset] = useState(0)
-  const { data, error, loading } = useQuery(LabelsQuery, {
+  const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
   })
 
@@ -34,12 +34,14 @@ export default function LabelList({ userType }) {
     <Container>
       <LabelPageTitle />
       <br />
+      {console.log(data.labels)}
       {data?.labels.map(label => (
         <LabelItem
           key={label.id}
           label={label}
           userType={userType}
           userCount={label.userCount}
+          refetch={refetch}
         />
       ))}
       <CenteredContent>
