@@ -15,6 +15,7 @@ import { colorPallete } from '../../utils/constants'
 export default function EditModal({ open, handleClose, data, refetch }) {
   const [editLabel] = useMutation(LabelEdit);
   const [color, setColor] = useState(null)
+  const [error, setErrorMessage] = useState('')
   const [shortDesc, setShortDesc] = useState('')
   const [description, setDescription] = useState('')
   function handleEdit() {
@@ -23,7 +24,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
     }).then(() => {
       handleClose();
       refetch();
-    });
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
   }
   function setDefaultValues() {
     setColor(data.color)
@@ -95,6 +98,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <p className="text-center">
+        {Boolean(error.length) && error}
+      </p>
     </div>
   );
 }
