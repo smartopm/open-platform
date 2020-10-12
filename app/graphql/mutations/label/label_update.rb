@@ -7,12 +7,12 @@ module Mutations
       argument :id, ID, required: true
       argument :short_desc, String, required: true
       argument :description, String, required: false
-      argument :color, String, required: false
+      argument :color, String, required: true
 
       field :label, Types::LabelType, null: true
 
       def resolve(id:, short_desc:, description:, color:)
-        label = context[:site_community].labels.find(id)
+        label = context[:site_community].labels.find_by(id: id)
         raise GraphQL::ExecutionError, 'Label not found' if label.nil?
         return { label: label } if label.update(short_desc: short_desc,
                                                 description: description, color: color)
