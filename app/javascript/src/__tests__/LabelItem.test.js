@@ -24,6 +24,5 @@ describe('Label Item Component', () => {
     expect(container.queryByText('com_news_sms')).toBeInTheDocument()
     expect(container.queryByText('10')).toBeInTheDocument()
     expect(container.queryByTestId('label-title')).toHaveTextContent('com_news_sms')
-    expect(container).toMatchSnapshot()
   })
 })
