@@ -34,7 +34,6 @@ export default function LabelList({ userType }) {
     <Container>
       <LabelPageTitle />
       <br />
-      {console.log(data.labels)}
       {data?.labels.map(label => (
         <LabelItem
           key={label.id}
@@ -60,7 +59,7 @@ function LabelPageTitle(){
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   return (
-    <Grid container spacing={3} className={classes.labelTitle}>
+    <Grid container spacing={6} className={classes.labelTitle}>
       <Grid item xs={3}>
         <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
           Labels

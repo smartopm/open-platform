@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types'
 import { Menu, MenuItem } from '@material-ui/core';
 import EditModal from './EditModal'
 
@@ -45,4 +45,18 @@ export default function LabelActionMenu({
       </div>
     </Menu>
   );
+}
+
+LabelActionMenu.defaultProps = {
+  anchorEl: {}
+ }
+LabelActionMenu.propTypes = {
+  data: PropTypes.shape({
+      id: PropTypes.string
+  }).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  anchorEl: PropTypes.object 
 }

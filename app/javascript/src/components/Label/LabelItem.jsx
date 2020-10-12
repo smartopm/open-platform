@@ -10,10 +10,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import LabelActionMenu from './LabelActionMenu'
 
 
-// shortDesc
-// number of users
-// color
-// description
 export default function LabelItem({ label, userType, refetch }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
@@ -30,18 +26,26 @@ export default function LabelItem({ label, userType, refetch }) {
   return (
     <ListItem key={label.id} className={classes.labelItem}>
       <Grid container spacing={6}>
-        {/* add a proper background here */}
-        <Grid item xs={3} style={{ backgroundColor:  label.color}}>
-          <Typography variant="subtitle1" data-testid="label-title">
+        <Grid item xs={3} className={classes.labelGrid}>
+          <Typography 
+            variant="subtitle1" 
+            data-testid="label-title" 
+            style={{
+              textAlign: 'center', 
+              backgroundColor: `${label.color}`,
+              color: '#ffffff',
+              borderRadius: '5px'
+            }}
+          >
             {label.shortDesc}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} className={classes.labelGrid}>
           <Typography variant="subtitle1" data-testid="label-users">
             {label.userCount}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} className={classes.labelGrid}>
           <Typography variant="subtitle1" data-testid="label-description">
             {label.description}
           </Typography>
@@ -90,6 +94,9 @@ const useStyles = makeStyles(() => ({
       borderBottomColor: '#F6F6F6',
       borderBottom: 10,
       backgroundColor: '#FFFFFF'
+  },
+  labelGrid: {
+    marginTop: '8px'
   },
   menuButton: {
     float: 'right'

@@ -20,11 +20,15 @@ describe('Label List Component', () => {
             {
               id: '2b3f902b-eb44-42a1-b2f3',
               shortDesc: 'com_news_sms',
+              color: '#fff',
+              description: 'this',
               userCount: 1
             },
             {
               id: '2b3f902b-eb44-42a1-b2f3',
               shortDesc: 'com_news_email',
+              color: '#fff',
+              description: 'this',
               userCount: 3
             }
           ]
