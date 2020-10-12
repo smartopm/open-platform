@@ -28,18 +28,4 @@ describe('Comment Edit Field Component', () => {
       </MockedProvider>
     )
   })
-
-  it('should render with edit Label', () => {
-    const container = render(
-      <BrowserRouter>
-        <MockedProvider mocks={[]}>
-          <EditModal
-            open={open}
-            data={data}
-            handleClose={handleClose}
-          />
-        </MockedProvider>
-      </BrowserRouter>)
-    expect(container.queryByText('Edit Label')).toBeInTheDocument()
-  })
 })
