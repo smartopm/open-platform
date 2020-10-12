@@ -6,8 +6,11 @@ import Badge from '@material-ui/core/Badge'
 import ListItemText from '@material-ui/core/ListItemText'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
+import colors from '../../themes/nkwashi/colors'
 
+const { gray } = colors
 export default function UserFilledForms({ userFormsFilled }) {
+
   return (
     <div className="container">
       {userFormsFilled.map(userForm => (
@@ -22,7 +25,6 @@ export default function UserFilledForms({ userFormsFilled }) {
                 <span className="nz_msg_owner">
                   {userForm.form.name}
                   <Badge
-                    className="nz_msg_tag"
                     color="secondary"
                     badgeContent={<span>{userForm.status}</span>}
                     style={{ marginLeft: 35 }}
@@ -58,6 +60,6 @@ const styles = StyleSheet.create({
   timeStamp: {
     float: 'right',
     fontSize: 14,
-    color: '#737380'
+    color: gray,
   }
 })
