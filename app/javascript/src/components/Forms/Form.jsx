@@ -89,7 +89,7 @@ export default function GenericForm() {
 
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    const filledInProperties = formattedProperties.filter(item => item.value !== null || item.value !== '')
+    const filledInProperties = formattedProperties.filter(item => item.value)
     // get signedBlobId as value and attach it to the form_property_id
     // eslint-disable-next-line no-unused-vars
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
@@ -148,11 +148,11 @@ export default function GenericForm() {
             >
               Submit
             </Button>
-            <br />
-            <br />
           </CenteredContent>
+          <br />
+          <br />
           <CenteredContent>
-            {Boolean(message.info.length) && <Typography variant="body1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}
+            {Boolean(message.info.length) && <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}
           </CenteredContent>
         </form>
       </Container>

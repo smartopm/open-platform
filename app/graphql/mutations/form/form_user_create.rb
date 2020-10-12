@@ -12,6 +12,8 @@ module Mutations
       field :form_user, Types::FormUsersType, null: true
 
       def resolve(vals)
+        puts "value==============================="
+        puts vals
         form = context[:site_community].forms.find(vals[:form_id])
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
 
