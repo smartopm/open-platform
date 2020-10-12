@@ -26,12 +26,6 @@ module Types::Queries::Form
       argument :form_id, GraphQL::Types::ID, required: true
       argument :user_id, GraphQL::Types::ID, required: true
     end
-
-    # Get forms filled by a user
-    field :form_users, [Types::FormUsersType], null: true do
-      description 'Get forms filled by a user'
-      argument :user_id, GraphQL::Types::ID, required: true
-    end
   end
 
   def forms
@@ -57,11 +51,5 @@ module Types::Queries::Form
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     FormUser.find_by(form_id: form_id, user_id: user_id)
-  end
-
-  def form_users(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
-
-    context[:current_user].form_users
   end
 end
