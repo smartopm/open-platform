@@ -53,13 +53,13 @@ export default function GenericForm() {
     const { name, value } = event.target
     setProperties({
       ...properties,
-      [name]: {value, formPropertyId: propId}
+      [name]: {value, form_property_id: propId}
     })
   }
   function handleDateChange(date, id){
     setProperties({
       ...properties,
-      date: { value: date,  formPropertyId: id}
+      date: { value: date,  form_property_id: id}
     })
   }
 
@@ -89,41 +89,48 @@ export default function GenericForm() {
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value)
-    // get signedBlobId as value and attach it to the formPropertyId
+    // get signedBlobId as value and attach it to the form_property_id
     // eslint-disable-next-line no-unused-vars
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     
     // check if we uploaded then attach the blob id to the newValue
     if (signedBlobId && url) {
-      const newValue = { value: signedBlobId, formPropertyId: fileUploadType.id }
+      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id }
       filledInProperties.push(newValue)
       // then update the value and property id
     }
+
+    const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
     // formUserId
     // fields and their values
     // create form user ==> form_id, user_id, status
     createFormUser({
-      variables: { formId, userId: authState.user.id, status: 'pending' }
-    // eslint-disable-next-line no-shadow
-    }).then(({ data }) => {
-      formattedProperties.forEach(property => {
-        if(!property || !property.value) return 
-        // create user form property ==> formPropertyId, form_user_id, value
-        createUserFormProperty({ 
-          variables: { 
-            formPropertyId: property.formPropertyId,
-            formUserId: data.formUserCreate.formUser.id,
-            value: property.value
-          }
-         })
-         .then(() => {
+      variables: { 
+        formId,
+        userId: authState.user.id,
+        status: 'draft',
+        values: cleanFormData,
+      }
+    // })
+    }).then(() => {
+      // formattedProperties.forEach(property => {
+      //   if(!property || !property.value) return 
+      //   // create user form property ==> formPropertyId, form_user_id, value
+      //   createUserFormProperty({ 
+      //     variables: { 
+      //       formPropertyId: property.formPropertyId,
+      //       formUserId: data.formUserCreate.formUser.id,
+      //       value: property.value
+      //     }
+      //    })
+      //    .then(() => {
           setMessage({ ...message, info: 'You have successfully submitted the form' })
           // empty the form
           setProperties(initialData)
-         })
-         .catch(err => setMessage({ err: true, info: err.message }))
-      })
+      //    })
+      // })
     })
+   .catch(err => setMessage({ err: true, info: err.message }))
   }
 
   if (loading || propertiesLoading) return <Loading />
