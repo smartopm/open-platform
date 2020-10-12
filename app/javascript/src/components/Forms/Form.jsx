@@ -110,7 +110,7 @@ export default function GenericForm() {
         formId,
         userId: authState.user.id,
         status: 'draft',
-        params: { user_form_properties: filledInProperties},
+        values: { user_form_properties: filledInProperties },
       }
     })
     // eslint-disable-next-line no-shadow

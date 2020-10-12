@@ -7,7 +7,7 @@ module Mutations
       argument :form_id, ID, required: true
       argument :user_id, ID, required: true
       argument :status, String, required: false
-      argument :params, GraphQL::Types::JSON, required: true
+      argument :values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true
 
@@ -18,7 +18,7 @@ module Mutations
 
         vals = vals.merge(status_updated_by: context[:current_user])
         ActiveRecord::Base.transaction do
-          form_user = form.form_users.new(vals.except(:form_id, :params))
+          form_user = form.form_users.new(vals.except(:form_id, :values))
           return add_user_form_properties(form_user, vals) if form_user.save
 
           raise GraphQL::ExecutionError, form_user.errors.full_messages
@@ -27,7 +27,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_user_form_properties(form_user, vals)
-        vals[:params]['user_form_properties'].each do |value|
+        vals[:values]['user_form_properties'].each do |value|
           value = value.merge(user_id: vals[:user_id])
           form_user.user_form_properties.create!(value)
         end
