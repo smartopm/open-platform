@@ -310,7 +310,7 @@ const App = () => {
                         />
 
                         <Route path="/forms" component={FormLinks} />
-                        <Route path="/form/:formId?" component={FormPage} />
+                        <Route path="/form/:formId?/:formName?" component={FormPage} />
                         
                         <AdminRoutes>
                           <Switch>

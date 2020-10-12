@@ -586,7 +586,6 @@ query formDetails($formId: ID!){
     fieldType
     shortDesc
     longDesc
-    shortDesc
     required
     adminUse
   }

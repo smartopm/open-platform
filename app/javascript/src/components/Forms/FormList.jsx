@@ -23,7 +23,7 @@ export default function FormLinkList() {
   const classes = useStyles()
 
   if (loading) return <Loading />
-  if (error) return <ErrorPage />
+  if (error) return <ErrorPage title={error.message} />
  
   return (
     <div>
@@ -35,7 +35,7 @@ export default function FormLinkList() {
             <ListItem
               key={form.id}
               data-testid="community_form"
-              onClick={() => history.push(`/form/${form.id}?name=${form.name}`)}
+              onClick={() => history.push(`/form/${form.id}/${form.name}`)}
             >
               <ListItemAvatar data-testid="community_form_icon">
                 <Avatar>

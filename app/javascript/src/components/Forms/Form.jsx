@@ -4,7 +4,7 @@ import { Button, Container, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
 import DatePickerDialog from '../DatePickerDialog'
-import { FormQuery, FormPropertiesQuery } from '../../graphql/queries'
+import { FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
@@ -32,14 +32,12 @@ export default function GenericForm() {
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
   const { formId } = useParams()
-  const { data, error, loading } = useQuery(FormQuery, {
-    variables: { id: formId }
-  })
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
 
   const { data: formData, error: propertiesError, loading: propertiesLoading } = useQuery(FormPropertiesQuery, {
-    variables: { formId }
+    variables: { formId },
+    errorPolicy: 'all'
   })
 
   // separate function for file upload
@@ -118,8 +116,8 @@ export default function GenericForm() {
    .catch(err => setMessage({ ...message, err: true, info: err.message }))
   }
 
-  if (loading || propertiesLoading) return <Loading />
-  if (error || propertiesError) return <ErrorPage title={error?.message || propertiesError?.message} />
+  if (propertiesLoading) return <Loading />
+  if (propertiesError) return <ErrorPage title={propertiesError?.message} />
 
   function renderForm(props){
       const fields = {
@@ -133,7 +131,6 @@ export default function GenericForm() {
 
   return (
     <>
-      <CenteredContent>{data.form.name}</CenteredContent>
       <Container>
         <form onSubmit={saveFormData}>
           {formData.formProperties.map(field => renderForm(field))}
