@@ -2,7 +2,6 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import { BrowserRouter } from 'react-router-dom'
 import Loading from '../../components/Loading'
 import Form from '../../components/Forms/Form'
 import { FormPropertiesQuery } from '../../graphql/queries'
@@ -13,13 +12,13 @@ describe('Form Component', () => {
     const mocks = {
         request: {
           query: FormPropertiesQuery,
-          variables: { formId: '837b8ce8-sd' }
+          variables: { formId: 'caea7b44-ee95-42a6-a42f-3e530432172e' }
         },
         result: {
           data: {
             formProperties: [
                 {
-                id: "837b8ce8-f8e6",
+                id: "837b8ce8-f8e6-45fb-89a8-abb8fc0cc079",
                 fieldName: "Client Name",
                 fieldType: "text",
                 shortDesc: "This is a short description",
@@ -32,26 +31,27 @@ describe('Form Component', () => {
         },
       }
     const container = render(
-      <BrowserRouter>
-        <MockedProvider mocks={[mocks]} addTypename={false}>
-          <Form />
-        </MockedProvider>
-      </BrowserRouter>
+      <MockedProvider mocks={[mocks]} addTypename={false}>
+        <Form formId="caea7b44-ee95-42a6-a42f-3e530432172e" />
+      </MockedProvider>
     )
     const loader = render(<Loading />)
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
     await waitFor(() => {
-        expect(container.queryAllByTestId('text-input')).toHaveLength(2)
+        expect(container.queryByText('Submit')).toBeInTheDocument(1)
       },
       { timeout: 500 }
     )
-    // await waitFor(() => {
-    //     expect(container.queryAllByTestId('form_name')).toHaveLength(2)
-    //     expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form')
-    //     expect(container.queryAllByTestId('form_name')[1]).toHaveTextContent('Another Form')
-    //   },
-    //   { timeout: 500 }
-    // )
+    await waitFor(() => {
+        expect(container.queryAllByLabelText('text-input')).toHaveLength(1)
+      },
+      { timeout: 500 }
+    )
+    await waitFor(() => {
+        expect(container.queryAllByLabelText('text-input')[0]).toHaveTextContent('Client Name')
+      },
+      { timeout: 500 }
+    )
   })
 })

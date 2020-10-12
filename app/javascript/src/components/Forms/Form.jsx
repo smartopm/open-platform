@@ -2,7 +2,6 @@
 import React, { useContext, useRef, useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
-import { useParams } from 'react-router'
 import DatePickerDialog from '../DatePickerDialog'
 import { FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -25,18 +24,17 @@ const initialData = {
   date: { value: null }
 }
 
-export default function GenericForm() {
+export default function GenericForm({ formId }) {
 
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
-  const { formId } = useParams()
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
 
   const { data: formData, error: propertiesError, loading: propertiesLoading } = useQuery(FormPropertiesQuery, {
-    variables: { formId: '76756rfghbgh' },
+    variables: { formId },
     errorPolicy: 'all'
   })
 
@@ -128,7 +126,7 @@ export default function GenericForm() {
       }
       return fields[props.fieldType]
   }
-console.log(formData)
+
   return (
     <>
       <Container>

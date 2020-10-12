@@ -5,12 +5,12 @@ import Form from '../../components/Forms/Form'
 import Nav from '../../components/Nav'
 
 export default function FormPage(){
-  const { formName } = useParams()
+  const { formName, formId } = useParams()
     return (
       <>
         <Nav navName={formName} menuButton="back" backTo="/forms" />
         <br />
-        <Form />
+        <Form formId={formId} />
       </>
     )
 }
