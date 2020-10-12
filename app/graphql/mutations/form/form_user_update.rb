@@ -27,9 +27,9 @@ module Mutations
 
         { form_user: form_user }
       end
-      
+
       def user_form_property(form_user, value)
-        form_user.user_form_properties.find_by(form_property_id: value["form_property_id"]) ||
+        form_user.user_form_properties.find_by(form_property_id: value['form_property_id']) ||
           form_user.user_form_properties.create!(value)
       end
 
