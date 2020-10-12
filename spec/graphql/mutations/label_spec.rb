@@ -158,7 +158,7 @@ RSpec.describe Mutations::Label do
     let(:query) do
       <<~GQL
         mutation {
-          labelUpdate(id: "#{label.id}", shortDesc: "green") {
+          labelUpdate(id: "#{label.id}", shortDesc: "green", color: "#fff", description: "this") {
           label {
               shortDesc
             }

@@ -14,7 +14,8 @@ module Mutations
       def resolve(id:, short_desc:, description:, color:)
         label = context[:site_community].labels.find(id)
         raise GraphQL::ExecutionError, 'Label not found' if label.nil?
-        return { label: label } if label.update(short_desc: short_desc, description: description, color: color)
+        return { label: label } if label.update(short_desc: short_desc,
+                                                description: description, color: color)
 
         raise GraphQL::ExecutionError, label.errors.full_messages
       end
