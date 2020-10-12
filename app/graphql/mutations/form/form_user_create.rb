@@ -26,7 +26,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_user_form_properties(form_user, vals)
-        vals[:values]['user_form_properties'].each do |value|
+        JSON.parse(vals[:values])['user_form_properties'].each do |value|
           value = value.merge(user_id: vals[:user_id])
           form_user.user_form_properties.create!(value)
         end
