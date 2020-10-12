@@ -35,7 +35,7 @@ export default function FormLinkList() {
             <ListItem
               key={form.id}
               data-testid="forms-link-building-permit"
-              onClick={() => history.push(`/form/${form.id}`)}
+              onClick={() => history.push(`/form/${form.id}?name=${form.name}`)}
             >
               <ListItemAvatar data-testid="forms-link-building-icon">
                 <Avatar>

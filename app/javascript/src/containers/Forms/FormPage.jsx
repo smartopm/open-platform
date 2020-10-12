@@ -1,7 +1,14 @@
 // page that renders the form being created
 import React from 'react'
-import GenericForm from '../../components/Forms/Form'
+import Form from '../../components/Forms/Form'
+import Nav from '../../components/Nav'
 
 export default function FormPage(){
-    return <GenericForm />
+    return (
+      <>
+        <Nav navName="My Form" menuButton="back" backTo="/forms" />
+        <br />
+        <Form />
+      </>
+    )
 }
