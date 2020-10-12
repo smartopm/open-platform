@@ -8,7 +8,7 @@ export default function TextInput({ handleValue, properties, value }) {
         id={`${properties.fieldName}`}
         label={`Type ${properties.fieldName} here`}
         style={{ width: '100%' }}
-        value={value}
+        defaultValue={value}
         onChange={handleValue}
         margin="dense"
         variant="standard"

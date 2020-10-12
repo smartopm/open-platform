@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
@@ -35,8 +36,8 @@ export default function SignaturePad({signRef, props}){
 }
 
 SignaturePad.propTypes = {
-    signRef: PropTypes.func.isRequired,
-    // eslint-disable-next-line react/forbid-prop-types
-    props: PropTypes.object.isRequired,
+    signRef: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/require-default-props
+    props: PropTypes.object,
 }
   

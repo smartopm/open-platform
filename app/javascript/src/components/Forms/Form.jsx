@@ -21,13 +21,15 @@ import { convertBase64ToFile } from '../../utils/helpers'
 // upload
 const initialData = {
   fieldType: '',
+  fieldName: ' ',
   date: { value: null }
 }
 
 export default function GenericForm() {
 
   const [properties, setProperties] = useState(initialData)
-  const signRef = useRef(null);
+  const [message, setMessage] = useState({err: false, info: ''})
+  const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
   const { formId } = useParams()
   const { data, error, loading } = useQuery(FormQuery, {
@@ -47,28 +49,25 @@ export default function GenericForm() {
     client: useApolloClient()
   })
 
-  console.log({status, url, signedBlobId  })
-  
   function handleValueChange(event, propId){
     const { name, value } = event.target
     setProperties({
       ...properties,
-      [name]: {value, form_property_id: propId}
+      [name]: {value, formPropertyId: propId}
     })
   }
   function handleDateChange(date, id){
     setProperties({
       ...properties,
-      date: { value: date,  form_property_id: id}
+      date: { value: date,  formPropertyId: id}
     })
   }
 
   function handleSignatureUpload(){
     const url64 =  signRef.current.toDataURL("image/png")
     // convert the file
+    // eslint-disable-next-line no-unused-vars
     const signature = convertBase64ToFile(url64)
-    console.log(signature)
-    onChange(signature)
   }
 
   function saveFormData(event){
@@ -81,7 +80,7 @@ export default function GenericForm() {
     const sign =  signRef.current.toDataURL("image/png")
     // convert the file
     // eslint-disable-next-line no-unused-vars
-    const signature = convertBase64ToFile(sign, 'signature')
+    const signedImage = convertBase64ToFile(sign, 'signature')
     // send it to upload
     // onChange(signature)
     // console.log(signature.then((file) => file))
@@ -90,31 +89,41 @@ export default function GenericForm() {
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value)
-    // get signedBlobId as value and attach it to the form_property_id
+    // get signedBlobId as value and attach it to the formPropertyId
     // eslint-disable-next-line no-unused-vars
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     
     // check if we uploaded then attach the blob id to the newValue
     if (signedBlobId && url) {
-      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id }
+      const newValue = { value: signedBlobId, formPropertyId: fileUploadType.id }
       filledInProperties.push(newValue)
       // then update the value and property id
     }
-    // eslint-disable-next-line array-callback-return
     // formUserId
     // fields and their values
     // create form user ==> form_id, user_id, status
-    // const params = JSON.()
     createFormUser({
-      variables: { 
-        formId,
-        userId: authState.user.id,
-        status: 'draft',
-        params: { user_form_properties: filledInProperties},
-      }
-    })
+      variables: { formId, userId: authState.user.id, status: 'pending' }
     // eslint-disable-next-line no-shadow
-    .then(({ data }) => console.log(data))
+    }).then(({ data }) => {
+      formattedProperties.forEach(property => {
+        if(!property || !property.value) return 
+        // create user form property ==> formPropertyId, form_user_id, value
+        createUserFormProperty({ 
+          variables: { 
+            formPropertyId: property.formPropertyId,
+            formUserId: data.formUserCreate.formUser.id,
+            value: property.value
+          }
+         })
+         .then(() => {
+          setMessage({ ...message, info: 'You have successfully submitted the form' })
+          // empty the form
+          setProperties(initialData)
+         })
+         .catch(err => setMessage({ err: true, info: err.message }))
+      })
+    })
   }
 
   if (loading || propertiesLoading) return <Loading />
@@ -124,8 +133,8 @@ export default function GenericForm() {
       const fields = {
         text: <TextInput key={props.id} properties={props} value={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField key={props.id} upload={onChange} status={status} />,
-        signature: <SignaturePad signRef={signRef} onEnd={handleSignatureUpload} />
+        image: <UploadField status={status} key={props.id} upload={evt => onChange(evt.target.files[0])} /* updateProperty={} */ />,
+        signature: <SignaturePad key={props.id} signRef={signRef} onEnd={handleSignatureUpload} />
       }
       return fields[props.fieldType]
   }
