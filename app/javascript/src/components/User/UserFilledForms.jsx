@@ -4,19 +4,15 @@ import PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem'
 import Badge from '@material-ui/core/Badge'
 import ListItemText from '@material-ui/core/ListItemText'
-import { useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
 
 export default function UserFilledForms({ userFormsFilled }) {
-  const history = useHistory()
-
   return (
     <div className="container">
       {userFormsFilled.map(userForm => (
         <ListItem
           alignItems="flex-start"
-          onClick={() => history.push(`/form/${userForm.form.id}`)}
           key={userForm.id}
           button
         >
@@ -33,7 +29,7 @@ export default function UserFilledForms({ userFormsFilled }) {
                   />
 
                   <span className={css(styles.timeStamp)}>
-                    Created: 
+                    Created:
                     {' '}
                     <DateContainer date={userForm.createdAt} />
                   </span>
