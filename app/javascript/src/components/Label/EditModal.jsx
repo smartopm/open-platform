@@ -14,7 +14,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
   const [editLabel] = useMutation(LabelEdit);
   function handleEdit() {
     editLabel({
-      variables: { id: data.id, shortDesc: data.shortDesc }
+      variables: { id: data.id, shortDesc: data.shortDesc, description: data.description  }
     }).then(() => {
       handleClose();
       refetch();

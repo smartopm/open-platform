@@ -30,7 +30,8 @@ export default function LabelItem({ label, userType, refetch }) {
   return (
     <ListItem key={label.id} className={classes.labelItem}>
       <Grid container spacing={6}>
-        <Grid item xs={3}>
+        {/* add a proper background here */}
+        <Grid item xs={3} style={{ backgroundColor:  label.color}}>
           <Typography variant="subtitle1" data-testid="label-title">
             {label.shortDesc}
           </Typography>
@@ -42,7 +43,7 @@ export default function LabelItem({ label, userType, refetch }) {
         </Grid>
         <Grid item xs={3}>
           <Typography variant="subtitle1" data-testid="label-description">
-            This is a label description
+            {label.description}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -75,9 +76,12 @@ LabelItem.propTypes = {
     label: PropTypes.shape({
         id: PropTypes.string,
         shortDesc: PropTypes.string,
+        color: PropTypes.string,
+        description: PropTypes.string,
         userCount: PropTypes.number
     }).isRequired,
     userType: PropTypes.string.isRequired,
+    refetch: PropTypes.func.isRequired,
 }
 
 const useStyles = makeStyles(() => ({

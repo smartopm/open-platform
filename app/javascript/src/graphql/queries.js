@@ -492,6 +492,8 @@ query labels($limit: Int, $offset: Int){
       id
       shortDesc
       userCount
+      description
+      color
     }
   }
 `
