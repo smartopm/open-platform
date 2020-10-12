@@ -36,7 +36,7 @@ export default function GenericForm() {
   const [createFormUser] = useMutation(FormUserCreateMutation)
 
   const { data: formData, error: propertiesError, loading: propertiesLoading } = useQuery(FormPropertiesQuery, {
-    variables: { formId },
+    variables: { formId: '76756rfghbgh' },
     errorPolicy: 'all'
   })
 
@@ -128,7 +128,7 @@ export default function GenericForm() {
       }
       return fields[props.fieldType]
   }
-
+console.log(formData)
   return (
     <>
       <Container>

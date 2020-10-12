@@ -17,7 +17,7 @@ describe('Form Component', () => {
         },
         result: {
           data: {
-            campaigns: [
+            formProperties: [
                 {
                 id: "837b8ce8-f8e6",
                 fieldName: "Client Name",
@@ -32,11 +32,11 @@ describe('Form Component', () => {
         },
       }
     const container = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
-        <BrowserRouter>
+      <BrowserRouter>
+        <MockedProvider mocks={[mocks]} addTypename={false}>
           <Form />
-        </BrowserRouter>
-      </MockedProvider>
+        </MockedProvider>
+      </BrowserRouter>
     )
     const loader = render(<Loading />)
 

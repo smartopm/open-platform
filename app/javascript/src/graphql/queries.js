@@ -579,7 +579,7 @@ query ($id: ID!){
 `
 
 export const FormPropertiesQuery = gql`
-query formDetails($formId: ID!){
+query ($formId: ID!){
   formProperties(formId: $formId){
 		id
     fieldName
