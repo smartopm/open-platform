@@ -64,16 +64,8 @@ export default function GenericForm({ formId }) {
     setMessage({ ...message, signed: true})
     const url64 =  signRef.current.toDataURL("image/png")
     // convert the file
-    // eslint-disable-next-line no-unused-vars
     const signature = await convertBase64ToFile(url64)
     await uploadSignature(signature)
-    // update the form property with correct image_blog_id
-    // setProperties({
-    //   ...properties,
-    //   // signedBlobId will likely be null at this point, we update it later updateUploadProperty
-    //   signature: { value: signedBlobId,  form_property_id: propId}
-    // })
-    // setMessage({ ...message, err: status === 'DONE', info: status === 'DONE' ? 'Signature Saved' : '' })
   }
 
   function saveFormData(event){
@@ -94,7 +86,6 @@ export default function GenericForm({ formId }) {
     if (signedBlobId && url) {
       const newValue = { value: signedBlobId, form_property_id: fileUploadType.id }
       filledInProperties.push(newValue)
-      // then update the value and property id
     }
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
     // formUserId
@@ -108,7 +99,7 @@ export default function GenericForm({ formId }) {
         values: cleanFormData,
       }
     }).then(() => {
-        setMessage({ ...message, info: 'You have successfully submitted the form' })
+        setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
         // empty the form
         setProperties(initialData)
     })
