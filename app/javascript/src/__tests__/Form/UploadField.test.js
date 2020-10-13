@@ -8,12 +8,11 @@ describe('Upload component', () => {
       const handler = jest.fn()
     const props = {
         upload: handler,
-        status: ''
+        detail: { status: '', type: 'file' }
     }
     const container = render(<Upload {...props} />)
     const uploadBtn = container.queryByLabelText('upload_button')
     const uploadField = container.queryByLabelText('upload_field')
-    // expect(uploadBtn).toHaveTextContent('Client Name')
     expect(uploadBtn).not.toBeDisabled()
     fireEvent.change(uploadField)
     expect(handler).toHaveBeenCalled()
