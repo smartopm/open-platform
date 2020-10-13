@@ -332,6 +332,16 @@ export const DeleteNoteComment = gql`
   }
 `
 
+export const LabelEdit = gql`
+  mutation LabelEdit($id: ID! $shortDesc: String!, $description: String, $color: String!) {
+    labelUpdate(id: $id shortDesc: $shortDesc, description: $description, color: $color) {
+      label {
+        id
+      }
+    }
+  }
+`
+
 export const UpdateNote = gql`
   mutation noteupdate(
     $id: ID!
@@ -727,12 +737,13 @@ export const FormUserCreateMutation = gql`
   }
 `
 
-export const UserFormPropertyCreateMutation = gql`
-  mutation userFormPropertiesCreate($formPropertyId: ID!, $formUserId: ID!, $propValues: String!) {
-    userFormPropertiesCreate(formPropertyId: $formPropertyId, formUserId: $formUserId, propValues: $propValues){
-      userFormProperty {
-        id
-      }
+export const ImportCreate = gql`
+  mutation usersImport($csvString: String!) {
+    usersImport(csvString: $csvString) {
+      errors,
+      noOfDuplicates,
+      noOfValid,
+      noOfInvalid
     }
   }
 `

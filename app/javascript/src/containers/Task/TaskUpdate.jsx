@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'

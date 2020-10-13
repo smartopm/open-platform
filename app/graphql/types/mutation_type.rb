@@ -10,6 +10,7 @@ module Types
     field :one_time_login, mutation: Mutations::User::OneTimeLogin
     field :user_merge, mutation: Mutations::User::Merge
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
+    field :users_import, mutation: Mutations::User::Import
 
     # Entry Requests
     field :entry_request_create, mutation: Mutations::EntryRequest::EntryRequestCreate
@@ -63,6 +64,7 @@ module Types
 
     # labels
     field :label_create, mutation: Mutations::Label::LabelCreate
+    field :label_update, mutation: Mutations::Label::LabelUpdate
     field :user_label_create, mutation: Mutations::Label::UserLabelCreate
     field :user_label_update, mutation: Mutations::Label::UserLabelUpdate
 

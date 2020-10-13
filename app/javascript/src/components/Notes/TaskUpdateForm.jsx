@@ -12,7 +12,7 @@ import {
   InputLabel,
   FormControl,
   Snackbar,
-  Chip
+  Chip,Typography
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
@@ -26,6 +26,8 @@ import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
+import { FormToggle } from '../Campaign/ToggleButton'
+import { sanitizeText } from '../../utils/helpers'
 
 const initialData = {
   user: '',
@@ -45,6 +47,11 @@ export default function TaskForm({ users, data, assignUser }) {
   const [updated, setUpdated] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
 
+  const [type, setType] = useState("preview")
+    const handleType = (event, value) => {
+        setType(value);
+    };
+
   function handleSubmit(event) {
     event.preventDefault()
     setLoadingStatus(true)
@@ -52,7 +59,8 @@ export default function TaskForm({ users, data, assignUser }) {
   }
 
   function updateTask() {
-    taskUpdate({ variables: {
+    taskUpdate({
+      variables: {
         id: data.id,
         body: title,
         dueDate: selectedDate,
@@ -61,7 +69,8 @@ export default function TaskForm({ users, data, assignUser }) {
         category: taskType,
         flagged: true,
         userId: userData.userId
-      }}).then(() => {
+      }
+    }).then(() => {
       setLoadingStatus(false)
       setUpdated(true)
     }).catch((err) => {
@@ -86,9 +95,10 @@ export default function TaskForm({ users, data, assignUser }) {
   }
 
   useEffect(() => {
-      setDefaultData()
+    setDefaultData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -100,25 +110,47 @@ export default function TaskForm({ users, data, assignUser }) {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           message="Task updated successfully"
         />
-        <TextField
-          name="task_body"
-          label="Task Body"
-          placeholder="Add task body here"
-          style={{ width: '100%' }}
-          onChange={e => setTitle(e.target.value)}
-          value={title}
-          multiline
-          fullWidth
-          rows={2}
-          margin="normal"
-          inputProps={{
-          'aria-label': 'task_body'
-        }}
-          InputLabelProps={{
-          shrink: true
-        }}
-          required
-        />
+
+        <FormToggle type={type} handleType={handleType} />
+
+        {
+            type === 'preview' ? (
+              <p>
+                <Typography variant="caption" display="block" gutterBottom>
+                  Task Body
+                </Typography>
+                <span 
+                // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                  __html: sanitizeText(title)
+                }}
+                />
+              </p>
+            ) :
+            (
+              <TextField
+                name="task_body"
+                label="Task Body"
+                placeholder="Add task body here"
+                style={{ width: '100%' }}
+                onChange={e => setTitle(e.target.value)}
+                value={title}
+                multiline
+                fullWidth
+                rows={2}
+                margin="normal"
+                inputProps={{
+              'aria-label': 'task_body'
+            }}
+                InputLabelProps={{
+              shrink: true
+            }}
+                required
+              />
+            )
+          }
+
+
         <TextField
           name="task_description"
           label="Task Description"
@@ -192,7 +224,7 @@ export default function TaskForm({ users, data, assignUser }) {
                   loading={loading}
                   id={data.id}
                   options={users}
-                  getOptionLabel={option => option.name}
+                  getOptionLabel={(option) => option.name}
                   style={{ width: 300 }}
                   onChange={(_evt, value) => {
                     if (!value) {
@@ -200,11 +232,11 @@ export default function TaskForm({ users, data, assignUser }) {
                     }
                     assignUser(data.id, value.id)
                   }}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField {...params} placeholder="Name of assignee" />
                   )}
                 />
-          )
+              )
 }
           </div>
         </FormControl>
@@ -265,4 +297,3 @@ TaskForm.propTypes = {
   data: PropTypes.object,
   assignUser: PropTypes.func.isRequired
 }
-

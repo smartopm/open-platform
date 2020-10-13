@@ -37,6 +37,7 @@ describe("HomePage component ",() => {
       expect(container.queryByText('Notes')).toBeInTheDocument()
       expect(container.queryByText('Time Card')).toBeInTheDocument()
       expect(container.queryByText('Tasks')).toBeInTheDocument()
+      expect(container.queryByText('Labels')).toBeInTheDocument()
     })
   
   it('should render without error and have all cards for custodian', () => {
@@ -71,6 +72,7 @@ describe("HomePage component ",() => {
     expect(container.queryByText('Tasks')).not.toBeInTheDocument()
     expect(container.queryByText('Log Book')).not.toBeInTheDocument()
     expect(container.queryByText('Users')).not.toBeInTheDocument()
+    expect(container.queryByText('Labels')).not.toBeInTheDocument()
   })
   it('should render without error and have all cards for client', () => {
     const clientAuthState = {
@@ -105,6 +107,7 @@ describe("HomePage component ",() => {
     expect(container.queryByText('Log Book')).not.toBeInTheDocument()
     expect(container.queryByText('Users')).not.toBeInTheDocument()
     expect(container.queryByText('Referrals')).toBeInTheDocument()
+    expect(container.queryByText('Labels')).not.toBeInTheDocument()
   })
   
   it('should render without error and have all cards for prospective client', () => {

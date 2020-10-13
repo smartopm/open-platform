@@ -2,6 +2,7 @@
 import React, { useContext, useRef, useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
 import DatePickerDialog from '../DatePickerDialog'
 import { FormPropertiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -99,9 +100,9 @@ export default function GenericForm({ formId }) {
         propValues: cleanFormData,
       }
     }).then(() => {
-        setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
         // empty the form
         setProperties(initialData)
+        setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
     })
    .catch(err => setMessage({ ...message, err: true, info: err.message }))
   }
@@ -109,14 +110,14 @@ export default function GenericForm({ formId }) {
   if (propertiesLoading) return <Loading />
   if (propertiesError) return <ErrorPage title={propertiesError?.message} />
 
-  function renderForm(props){
+  function renderForm(formPropertiesData){
       const fields = {
-        text: <TextInput key={props.id} properties={props} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
-        date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField detail={{ type: 'file', status }} key={props.id} upload={(evt) => onChange(evt.target.files[0])} />,
-        signature: <SignaturePad key={props.id} detail={{ type: 'signature', status: signatureStatus }} signRef={signRef} onEnd={() => handleSignatureUpload(props.id)} />
+        text: <TextInput key={formPropertiesData.id} properties={formPropertiesData} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, formPropertiesData.id)}  />,
+        date: <DatePickerDialog key={formPropertiesData.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, formPropertiesData.id)} label={formPropertiesData.fieldName} />,
+        image: <UploadField detail={{ type: 'file', status }} key={formPropertiesData.id} upload={(evt) => onChange(evt.target.files[0])} />,
+        signature: <SignaturePad key={formPropertiesData.id} detail={{ type: 'signature', status: signatureStatus }} signRef={signRef} onEnd={() => handleSignatureUpload(formPropertiesData.id)} />
       }
-      return fields[props.fieldType]
+      return fields[formPropertiesData.fieldType]
   }
   return (
     <>
@@ -142,4 +143,9 @@ export default function GenericForm({ formId }) {
       </Container>
     </>
   )
+}
+
+
+GenericForm.propTypes = {
+  formId: PropTypes.string.isRequired
 }

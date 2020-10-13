@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
@@ -13,7 +14,9 @@ import ErrorPage from '../components/Error'
 export default ({ history }) => {
   const { id, dg, tm } = useParams() // get timestamp and dg
   const authState = useContext(AuthStateContext)
-  const { loading, error, data, refetch } = useQuery(UserQuery, {
+  const {
+    loading, error, data, refetch
+  } = useQuery(UserQuery, {
     variables: { id },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -42,8 +45,8 @@ export default ({ history }) => {
   }
   return (
     <>
-      {history.location.state?.from === 'logs' ?  <Nav navName="Identification" menuButton="cancel" backTo={`/entry_logs?offset=${history.location.state?.offset}`} /> 
-          : <Nav navName="Identification" menuButton="cancel" backTo='/' />}
+      {history.location.state?.from === 'logs' ? <Nav navName="Identification" menuButton="cancel" backTo={`/entry_logs?offset=${history.location.state?.offset}`} />
+        : <Nav navName="Identification" menuButton="cancel" backTo="/" />}
       <UserInformation
         data={data}
         authState={authState}

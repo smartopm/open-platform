@@ -85,6 +85,8 @@ import { MuiThemeProvider } from '@material-ui/core'
 import { theme } from '../src/themes/nkwashi/theme'
 import FormLinks from '../src/containers/FormLinks'
 import FormPage from '../src/containers/Forms/FormPage'
+import Labels from '../src/containers/Label/Labels'
+import UsersImport from '../src/containers/UsersImport'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -319,7 +321,8 @@ const App = () => {
                               exact
                               component={ClientRequestForm}
                             />
-                            <Route path="/users" component={UsersList} />
+                            <Route path="/users" exact component={UsersList} />
+                            <Route path="/users/import" component={UsersImport} />
                             <Route path="/messages" component={AllMessages} />
                             <Route
                               path="/showroom_logs"
@@ -331,6 +334,7 @@ const App = () => {
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
+                            <Route path="/labels" component={Labels} />
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route

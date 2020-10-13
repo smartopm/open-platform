@@ -487,10 +487,13 @@ export const UserLabelsQuery = gql`
 `
 
 export const LabelsQuery = gql`
-  {
-    labels {
+query labels($limit: Int, $offset: Int){
+    labels(limit: $limit, offset: $offset) {
       id
       shortDesc
+      userCount
+      description
+      color
     }
   }
 `

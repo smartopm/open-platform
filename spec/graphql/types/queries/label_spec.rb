@@ -28,6 +28,7 @@ RSpec.describe Types::Queries::Label do
       %(query {
             labels {
                 shortDesc
+                userCount
             }
         })
     end
@@ -66,7 +67,8 @@ RSpec.describe Types::Queries::Label do
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'labels').length).to eql 4
-      expect(result.dig('data', 'labels', 2, 'shortDesc')).to include 'label'
+      expect(result.dig('data', 'labels', 2, 'shortDesc')).not_to be_nil
+      expect(result.dig('data', 'labels', 1, 'userCount')).not_to be_nil
     end
 
     it 'should retrieve labels for the other user' do

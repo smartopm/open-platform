@@ -1,16 +1,14 @@
 /* eslint-disable no-use-before-define */
-import React, {useContext} from 'react'
-import { Grid, Box, Button } from '@material-ui/core'
+import React from 'react'
+import { Grid, Box } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
 import { Spinner } from '../Loading'
-import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 
 export default function Categories() {
     const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
-    const theme = useContext(ThemeContext)
     // TODO: @olivier ==> add better error page and loading component here
     if (error) {
         return error.message
@@ -24,11 +22,9 @@ export default function Categories() {
         <Grid>
           <Grid item xs>
             {cats.map(category => (
-              <Button style={{color: theme.primaryColor}} className={`${css(styles.categoryButton)}`} key={category.ID}>
-                <Link data-testid="post_cat" to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`}>
-                  {category.name}
-                </Link>
-              </Button>
+              <Link data-testid="post_cat" to={`/news/${category.slug}`} className={`${css(styles.categoryLink)}`} key={category.ID}>
+                {category.name}
+              </Link>
                 ))}
           </Grid>
         </Grid>
@@ -38,12 +34,16 @@ export default function Categories() {
 
 const styles = StyleSheet.create({
   categoryLink: {
-    ':hover': {
+    marginLeft: '15px',
+    ':focus': {
       textDecoration: 'none',
       backgroundColor: '#69ABA4',
-      padding: '5px',
+      padding: '10px',
       borderRadius: '5px',
       color: 'rgba(0, 0, 0, 0.54)'
+    },
+    ':hover': {
+      textDecoration: 'none'
     }
   }
 })

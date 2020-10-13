@@ -27,6 +27,10 @@ class User < ApplicationRecord
     scope { joins(:acting_event_log).eager_load(:labels) }
   end
 
+  search_scope :plot_number do
+    attributes plot_no: ['land_parcels.parcel_number']
+  end
+
   search_scope :search_lite do
     attributes :name, :phone_number, :user_type, :email
   end
@@ -62,6 +66,7 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :discussion_users, dependent: :destroy
   has_many :discussions, through: :discussion_users
+  has_many :land_parcels, through: :accounts
   has_many :businesses, dependent: :destroy
   has_many :user_labels, dependent: :destroy
   has_many :contact_infos, dependent: :destroy

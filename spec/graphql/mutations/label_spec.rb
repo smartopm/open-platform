@@ -144,9 +144,45 @@ RSpec.describe Mutations::Label do
       # user labels should be gone after the mutation
       expect(res.dig('data', 'userLabels').length).to eql 2
       # community labels should remain untouched after unassigning from a user
-      expect(labels.dig('data', 'labels').length).to eql 4
+      expect(labels.dig('data', 'labels').length).to eql 3
       expect(result.dig('data', 'userLabelUpdate', 'label', 'userId')).to be_nil
       expect(result.dig('errors')).to be_nil
+    end
+  end
+
+  describe 'creating a Label' do
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:label) { create(:label, community_id: user.community_id) }
+
+    let(:query) do
+      <<~GQL
+        mutation {
+          labelUpdate(id: "#{label.id}", shortDesc: "green", color: "#fff", description: "this") {
+          label {
+              shortDesc
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'returns the updated Label' do
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('data', 'labelUpdate', 'label', 'shortDesc')).to eql 'green'
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'returns error when user is not admin' do
+      result = DoubleGdpSchema.execute(query,
+                                       context: {
+                                         current_user: user,
+                                       }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end
