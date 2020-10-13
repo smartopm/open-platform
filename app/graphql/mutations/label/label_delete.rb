@@ -9,20 +9,19 @@ module Mutations
       field :label_delete, GraphQL::Types::Boolean, null: false
 
       def resolve(id:)
-        label_delete = context[:site_community].labels.find_by(id: id)
+        label_delete = check_label(id)
         raise GraphQL::ExecutionError, 'Label not found' if label_delete.nil?
 
-        label_delete&.user_labels.where(label_id: id)&.delete
-        label_delete&.campaign_labels.where(label_id: id)&.delete 
-      
-        # UserLabel.where(label_id: id).delete unless label_delete.nil?
-        # CampaignLabel.where(label_id: id)&.delete unless label_delete.nil?
+        label_delete.user_labels.where(label_id: id).delete_all
+        label_delete.campaign_labels.where(label_id: id).delete_all
 
-        label_delete&.update(status: 'deleted')
-        
-        return { label_delete: label_delete } if label_delete
+        return { label_delete: label_delete } if label_delete.update(status: 'deleted')
 
         raise GraphQL::ExecutionError, label_delete.errors.full_message
+      end
+
+      def check_label(id)
+        context[:site_community].labels.find_by(id: id)
       end
 
       def authorized?(_vals)

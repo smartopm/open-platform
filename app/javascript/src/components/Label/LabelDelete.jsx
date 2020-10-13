@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
-import React from 'react'
+import React, { useState } from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,10 +8,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import { useMutation } from 'react-apollo'
-// import Card from '@material-ui/core/Card';
-// import Avatar from '@material-ui/core/Avatar';
-// import CardContent from '@material-ui/core/CardContent';
-// import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteLabel } from '../../graphql/mutations'
@@ -19,6 +15,7 @@ import { DeleteLabel } from '../../graphql/mutations'
 export default function TaskDelete({ open, handleClose, refetch, data }) {
   const classes = useStyles();
   const [labelDelete] = useMutation(DeleteLabel)
+  const [error, setErrorMessage] = useState('')
 
   function handleDelete(comId) {
     labelDelete({ variables: {
@@ -26,6 +23,9 @@ export default function TaskDelete({ open, handleClose, refetch, data }) {
     }}).then(() => {
       handleClose()
       refetch()
+    }).catch((err) => {
+      handleClose()
+      setErrorMessage(err)
     })
   }
 
@@ -52,6 +52,9 @@ export default function TaskDelete({ open, handleClose, refetch, data }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <p className="text-center">
+        {Boolean(error.length) && error}
+      </p>
     </>
   )
 }
