@@ -42,6 +42,9 @@ export default function GenericForm({ formId }) {
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
+  const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
 
   function handleValueChange(event, propId){
     const { name, value } = event.target
@@ -57,44 +60,42 @@ export default function GenericForm({ formId }) {
     })
   }
 
-  function handleSignatureUpload(){
+  async function handleSignatureUpload(){
     setMessage({ ...message, signed: true})
     const url64 =  signRef.current.toDataURL("image/png")
     // convert the file
     // eslint-disable-next-line no-unused-vars
-    const signature = convertBase64ToFile(url64)
+    const signature = await convertBase64ToFile(url64)
+    await uploadSignature(signature)
+    // update the form property with correct image_blog_id
+    // setProperties({
+    //   ...properties,
+    //   // signedBlobId will likely be null at this point, we update it later updateUploadProperty
+    //   signature: { value: signedBlobId,  form_property_id: propId}
+    // })
+    // setMessage({ ...message, err: status === 'DONE', info: status === 'DONE' ? 'Signature Saved' : '' })
   }
 
   function saveFormData(event){
     event.preventDefault()
-
-    // capture the signature here signRef.current.toDataURL("image/png")
-    // console.log(signRef.current.toDataURL("image/png"))
-    if (message.signed) {
-      const sign =  signRef.current.toDataURL("image/png")
-      // convert the file
-      // eslint-disable-next-line no-unused-vars
-      const signedImage = convertBase64ToFile(sign, 'signature')
-      // send it to upload
-      // onChange(signature)
-      // console.log(signature.then((file) => file))
-    }
+    const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
+    const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0]
     
-
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value)
-    // get signedBlobId as value and attach it to the form_property_id
-    // eslint-disable-next-line no-unused-vars
-    const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     
+    // get signedBlobId as value and attach it to the form_property_id
+    if (message.signed) {
+      const newValue = { value: signatureBlobId, form_property_id: fileSignType.id }
+      filledInProperties.push(newValue)
+    }
     // check if we uploaded then attach the blob id to the newValue
     if (signedBlobId && url) {
       const newValue = { value: signedBlobId, form_property_id: fileUploadType.id }
       filledInProperties.push(newValue)
       // then update the value and property id
     }
-
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
     // formUserId
     // fields and their values
@@ -121,12 +122,11 @@ export default function GenericForm({ formId }) {
       const fields = {
         text: <TextInput key={props.id} properties={props} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, props.id)}  />,
         date: <DatePickerDialog key={props.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, props.id)} label={props.fieldName} />,
-        image: <UploadField status={status} key={props.id} upload={evt => onChange(evt.target.files[0])} /* updateProperty={} */ />,
-        signature: <SignaturePad key={props.id} signRef={signRef} onEnd={handleSignatureUpload} />
+        image: <UploadField detail={{ type: 'file', status }} key={props.id} upload={(evt) => onChange(evt.target.files[0])} />,
+        signature: <SignaturePad key={props.id} detail={{ type: 'signature', status: signatureStatus }} signRef={signRef} onEnd={() => handleSignatureUpload(props.id)} />
       }
       return fields[props.fieldType]
   }
-
   return (
     <>
       <Container>
