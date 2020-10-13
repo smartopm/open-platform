@@ -4,9 +4,11 @@ module Mutations
   module Form
     # For updating form users and property values
     class FormUserUpdate < BaseMutation
+      include Helpers::UploadHelper
+
       argument :user_id, ID, required: true
       argument :form_id, ID, required: true
-      argument :values, GraphQL::Types::JSON, required: true
+      argument :prop_values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true
 
@@ -18,11 +20,15 @@ module Mutations
       end
 
       def add_user_form_properties(form_user, vals)
-        JSON.parse(vals[:values])['user_form_properties'].each do |value|
+        vals[:prop_values]['user_form_properties'].each do |value|
           property = user_form_property(form_user, value.merge(user_id: vals[:user_id]))
           raise GraphQL::ExecutionError, 'User Form Property not found' if property.nil?
 
-          property.update!(value.except(:property_id))
+          if value.key?('image_blob_id')
+            attach_image(property, value)
+          else
+            property.update!(value.except(:property_id))
+          end
         end
 
         { form_user: form_user }
