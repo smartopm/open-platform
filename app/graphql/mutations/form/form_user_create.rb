@@ -29,7 +29,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_user_form_properties(form_user, vals)
-        JSON.parse(vals[:values])['user_form_properties'].each do |value|
+        JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
           value = value.merge(user_id: vals[:user_id])
           user_prop = form_user.user_form_properties.create!(value.except('image_blob_id'))
           attach_image(user_prop, value) if value.key?('image_blob_id')

@@ -78,13 +78,13 @@ export default function GenericForm({ formId }) {
     const filledInProperties = formattedProperties.filter(item => item.value)
     
     // get signedBlobId as value and attach it to the form_property_id
-    if (message.signed) {
-      const newValue = { value: signatureBlobId, form_property_id: fileSignType.id }
+    if (message.signed && signatureBlobId) {
+      const newValue = { value: signatureBlobId, form_property_id: fileSignType.id, image_blob_id: signatureBlobId }
       filledInProperties.push(newValue)
     }
     // check if we uploaded then attach the blob id to the newValue
     if (signedBlobId && url) {
-      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id }
+      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id, image_blob_id: signedBlobId }
       filledInProperties.push(newValue)
     }
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
@@ -96,7 +96,7 @@ export default function GenericForm({ formId }) {
         formId,
         userId: authState.user.id,
         status: 'pending',
-        values: cleanFormData,
+        propValues: cleanFormData,
       }
     }).then(() => {
         setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
