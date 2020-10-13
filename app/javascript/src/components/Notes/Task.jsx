@@ -19,6 +19,7 @@ import { Spinner } from '../Loading'
 import { UserChip } from '../UserChip'
 import DateContainer, { dateToString } from '../DateContainer'
 import { removeNewLines, sanitizeText } from '../../utils/helpers'
+import RemindMeLaterMenu from './RemindMeLaterMenu'
 
 export default function Task({
   note,
@@ -36,6 +37,8 @@ export default function Task({
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
   const history = useHistory()
 
@@ -48,26 +51,44 @@ export default function Task({
     return history.push(`/todo/${taskId}`)
   }
 
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleClose() {
+    setAnchorEl(null)
+  }
+
   return (
     <>
       <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
-            { /* eslint-disable-next-line react/no-danger */}
-            <span style={{ whiteSpace: 'pre-line' }} dangerouslySetInnerHTML={{ __html: sanitizeText(removeNewLines(note.body)) }} />
+            {/* eslint-disable-next-line react/no-danger */}
+            <span
+              style={{ whiteSpace: 'pre-line' }}
+              dangerouslySetInnerHTML={{
+                __html: sanitizeText(removeNewLines(note.body))
+              }}
+            />
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="caption" gutterBottom>
-            <Link style={{ textDecoration: 'none' }} to={`/user/${note.author.id}`}>
+            <Link
+              style={{ textDecoration: 'none' }}
+              to={`/user/${note.author.id}`}
+            >
               {note.author.name}
               {' '}
             </Link>
             created this note for
             {' '}
-            <Link style={{ textDecoration: 'none' }} to={`/user/${note.user.id}`}>
+            <Link
+              style={{ textDecoration: 'none' }}
+              to={`/user/${note.user.id}`}
+            >
               {note.user.name}
-              {' '}
               {' '}
             </Link>
             on
@@ -78,7 +99,7 @@ export default function Task({
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {note.assignees.map((user) => (
+          {note.assignees.map(user => (
             <UserChip
               key={user.id}
               user={user}
@@ -105,7 +126,7 @@ export default function Task({
                   <AddCircleIcon />
                 )
               }
-              onClick={(event) => handleOpenAutoComplete(event, note.id)}
+              onClick={event => handleOpenAutoComplete(event, note.id)}
             />
           )}
           {/* error message */}
@@ -123,7 +144,7 @@ export default function Task({
               loading={loading}
               id={note.id}
               options={users}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={option => option.name}
               style={{ width: 300 }}
               onChange={(_evt, value) => {
                 // if nothing selected, ignore and move on
@@ -133,7 +154,7 @@ export default function Task({
                 // assign or unassign the user here
                 assignUnassignUser(note.id, value.id)
               }}
-              renderInput={(params) => (
+              renderInput={params => (
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 <TextField {...params} placeholder="Name of assignee" />
               )}
@@ -142,16 +163,17 @@ export default function Task({
 }
         </Grid>
         <Grid item>
-          <div style={{
-            display: 'inline-flex',
-            margin: '5px 0 10px 0'
-          }}
+          <div
+            style={{
+              display: 'inline-flex',
+              margin: '5px 0 10px 0'
+            }}
           >
             <EditIcon
               style={{
                 cursor: 'pointer',
                 margin: '5px 4px 0 0',
-                fontSize: 18,
+                fontSize: 18
               }}
               color="inherit"
               onClick={() => handleModal(note.id)}
@@ -163,7 +185,11 @@ export default function Task({
               <Link
                 href="#"
                 data-testid="more_details_btn"
-                style={{ cursor: 'pointer', color: '#69ABA4', marginLeft: '5px' }}
+                style={{
+                  cursor: 'pointer',
+                  color: '#69ABA4',
+                  marginLeft: '5px'
+                }}
                 onClick={event => routeToAction(event, note.id)}
               >
                 More Details
@@ -173,14 +199,29 @@ export default function Task({
           <Button
             color="primary"
             disabled={note.id && loadingMutation}
-            style={{ 
-                float: 'right',
-              }}
+            style={{
+              float: 'right'
+            }}
             onClick={() => handleCompleteNote(note.id, note.completed)}
           >
             {note.completed ? 'Completed' : 'Mark as complete'}
           </Button>
+          <Button
+            color="primary"
+            style={{
+              float: 'right'
+            }}
+            onClick={handleOpenMenu}
+          >
+            Remind me later
+          </Button>
         </Grid>
+        <RemindMeLaterMenu
+          taskId={id}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+          open={open}
+        />
       </Grid>
       <Divider />
       <br />
