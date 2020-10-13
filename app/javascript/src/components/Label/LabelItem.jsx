@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   ListItem,
   Typography,
@@ -7,35 +7,47 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import PropTypes from 'prop-types'
 import { makeStyles } from "@material-ui/core/styles";
+import LabelActionMenu from './LabelActionMenu'
 
 
-// shortDesc
-// number of users
-// color
-// description
-export default function LabelItem({ label, userType }) {
+export default function LabelItem({ label, userType, refetch }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
-  function handleOpenMenu() {
-    // handle modal stuff here
+  function handleClose() {
+    setAnchorEl(null)
+  }
+
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
   }
   return (
     <ListItem key={label.id} className={classes.labelItem}>
       <Grid container spacing={6}>
-        <Grid item xs={3}>
-          <Typography variant="subtitle1" data-testid="label-title">
+        <Grid item xs={3} className={classes.labelGrid}>
+          <Typography 
+            variant="subtitle1" 
+            data-testid="label-title" 
+            style={{
+              textAlign: 'center', 
+              backgroundColor: `${label.color}`,
+              color: '#ffffff',
+              borderRadius: '5px'
+            }}
+          >
             {label.shortDesc}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} className={classes.labelGrid}>
           <Typography variant="subtitle1" data-testid="label-users">
             {label.userCount}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} className={classes.labelGrid}>
           <Typography variant="subtitle1" data-testid="label-description">
-            This is a label description
+            {label.description}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -50,8 +62,15 @@ export default function LabelItem({ label, userType }) {
           >
             <MoreVertIcon />
           </IconButton>
-      )}
+          )}
         </Grid>
+        <LabelActionMenu
+          data={label}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+          open={open}
+          refetch={refetch}
+        />
       </Grid>
     </ListItem>
   )
@@ -61,9 +80,12 @@ LabelItem.propTypes = {
     label: PropTypes.shape({
         id: PropTypes.string,
         shortDesc: PropTypes.string,
+        color: PropTypes.string,
+        description: PropTypes.string,
         userCount: PropTypes.number
     }).isRequired,
     userType: PropTypes.string.isRequired,
+    refetch: PropTypes.func.isRequired,
 }
 
 const useStyles = makeStyles(() => ({
@@ -72,6 +94,9 @@ const useStyles = makeStyles(() => ({
       borderBottomColor: '#F6F6F6',
       borderBottom: 10,
       backgroundColor: '#FFFFFF'
+  },
+  labelGrid: {
+    marginTop: '8px'
   },
   menuButton: {
     float: 'right'

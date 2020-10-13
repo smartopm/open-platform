@@ -13,7 +13,7 @@ import Paginate from '../Paginate'
 export default function LabelList({ userType }) {
   const limit = 50
   const [offset, setOffset] = useState(0)
-  const { data, error, loading } = useQuery(LabelsQuery, {
+  const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
   })
 
@@ -40,6 +40,7 @@ export default function LabelList({ userType }) {
           label={label}
           userType={userType}
           userCount={label.userCount}
+          refetch={refetch}
         />
       ))}
       <CenteredContent>
@@ -58,7 +59,7 @@ function LabelPageTitle(){
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
   return (
-    <Grid container spacing={3} className={classes.labelTitle}>
+    <Grid container spacing={6} className={classes.labelTitle}>
       <Grid item xs={3}>
         <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
           Labels

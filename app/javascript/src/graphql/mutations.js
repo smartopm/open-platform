@@ -332,6 +332,16 @@ export const DeleteNoteComment = gql`
   }
 `
 
+export const LabelEdit = gql`
+  mutation LabelEdit($id: ID! $shortDesc: String!, $description: String, $color: String!) {
+    labelUpdate(id: $id shortDesc: $shortDesc, description: $description, color: $color) {
+      label {
+        id
+      }
+    }
+  }
+`
+
 export const UpdateNote = gql`
   mutation noteupdate(
     $id: ID!
