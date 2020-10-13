@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 import { Menu, MenuItem } from '@material-ui/core';
 import EditModal from './EditModal'
+import DeleteModal from './LabelDelete'
 
 export default function LabelActionMenu({
   data,
@@ -11,6 +12,7 @@ export default function LabelActionMenu({
   refetch
 }) {
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false)
 
   return (
     <Menu
@@ -37,10 +39,13 @@ export default function LabelActionMenu({
           <MenuItem
             id="delete_button"
             key="delete_user"
+            style={{ color: 'red' }}
+            onClick={() => setOpenDelete(true)}
           >
             Delete
           </MenuItem>
           <EditModal open={openEdit} handleClose={() => setOpenEdit(false)} refetch={refetch} data={data} />
+          <DeleteModal open={openDelete} handleClose={() => setOpenDelete(false)} refetch={refetch} data={data} />
         </>
       </div>
     </Menu>
