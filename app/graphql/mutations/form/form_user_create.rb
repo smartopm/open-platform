@@ -12,6 +12,7 @@ module Mutations
       argument :prop_values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true
+      field :error, String, null: true
 
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
@@ -21,9 +22,12 @@ module Mutations
         vals = vals.merge(status_updated_by: context[:current_user])
         ActiveRecord::Base.transaction do
           form_user = form.form_users.new(vals.except(:form_id, :prop_values))
-          return add_user_form_properties(form_user, vals) if form_user.save
-
-          raise GraphQL::ExecutionError, form_user.errors.full_messages
+          begin
+            return add_user_form_properties(form_user, vals) if form_user.save
+            raise GraphQL::ExecutionError, form_user.errors.full_messages
+          rescue ActiveRecord::RecordNotUnique
+            { error: I18n.t('error.form_user.duplicate_submission') }
+          end
         end
       end
       # rubocop:enable Metrics/AbcSize
