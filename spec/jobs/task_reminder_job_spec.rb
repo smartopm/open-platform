@@ -3,8 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe TaskReminderJob, type: :job do
+  let!(:community) do
+    create(:community, templates: {
+             task_reminder_template_id: 'fgcagv5r2yr67',
+           })
+  end
   let!(:user) { create(:user_with_community) }
-  let!(:admin) { create(:admin_user, community_id: user.community_id) }
+  let!(:admin) { create(:admin_user, community_id: community.id) }
   let!(:note) do
     admin.notes.create!(
       body: 'Note body',
@@ -22,10 +27,11 @@ RSpec.describe TaskReminderJob, type: :job do
       end.to have_enqueued_job
     end
 
-    # it 'invokes EmailMsg' do
-    #   expect(EmailMsg).to receive(:send_mail).with(
-    #     admin.email, 'fgcagv5r2yr67', 'url': ENV['HOST'])
-    #   perform_enqueued_jobs { described_class.perform_later(note.id, admin.id) }
-    # end
+    it 'invokes EmailMsg' do
+      expect(EmailMsg).to receive(:send_mail).with(
+        admin.email, 'fgcagv5r2yr67', "url": "#{ENV['HOST']}/todo/#{note.id}"
+      )
+      perform_enqueued_jobs { described_class.perform_later(note.id, admin.id) }
+    end
   end
 end
