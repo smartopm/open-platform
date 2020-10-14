@@ -9,13 +9,12 @@ module Mutations
 
       field :note, Types::NoteType, null: false
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(note_id:, hour:)
         user = context[:current_user]
         note = ::Note.find(note_id)
 
-        unless user.tasks.where(id: note.id).present?
-          raise GraphQL::ExecutionError, 'Unauthorized'
-        end
+        raise GraphQL::ExecutionError, 'Unauthorized' if user.tasks.where(id: note.id).blank?
 
         time = hour.send(:hour)
         note.reminder_time = time.from_now
@@ -26,6 +25,7 @@ module Mutations
 
         { note: note }
       end
+      # rubocop:enable Metrics/AbcSize
 
       def update_reminder_job!(note, new_job_id)
         Sidekiq::ScheduledSet.new.find_job(note.reminder_job_id)&.delete

@@ -23,7 +23,8 @@ RSpec.describe TaskReminderJob, type: :job do
     end
 
     # it 'invokes EmailMsg' do
-    #   expect(EmailMsg).to receive(:send_mail).with(admin.email, 'fgcagv5r2yr67', 'url': ENV['HOST'])
+    #   expect(EmailMsg).to receive(:send_mail).with(
+    #     admin.email, 'fgcagv5r2yr67', 'url': ENV['HOST'])
     #   perform_enqueued_jobs { described_class.perform_later(note.id, admin.id) }
     # end
   end

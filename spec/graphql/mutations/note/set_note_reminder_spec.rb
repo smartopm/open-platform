@@ -40,8 +40,8 @@ RSpec.describe Mutations::Note::SetNoteReminder do
                                                 current_user: admin,
                                               }).as_json
       expect(result.dig('data', 'setNoteReminder', 'note', 'reminderTime')).not_to be_nil
-      expect(result.dig('data', 'setNoteReminder', 'note', 'reminderTime').to_datetime.
-        strftime("%d %b %Y, %H:%M")).to eql 24.hours.from_now.strftime("%d %b %Y, %H:%M")
+      expect(result.dig('data', 'setNoteReminder', 'note', 'reminderTime').to_datetime
+        .strftime('%d %b %Y, %H:%M')).to eql 24.hours.from_now.strftime('%d %b %Y, %H:%M')
       expect(result.dig('errors')).to be_nil
     end
 
