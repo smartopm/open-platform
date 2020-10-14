@@ -12,7 +12,7 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(note_id:, hour:)
         user = context[:current_user]
-        note = ::Note.find(note_id)
+        note = context[:site_community].notes.find(note_id)
 
         raise GraphQL::ExecutionError, 'Unauthorized' if user.tasks.where(id: note.id).blank?
 

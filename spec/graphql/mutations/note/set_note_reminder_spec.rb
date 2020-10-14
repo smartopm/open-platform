@@ -38,6 +38,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'setNoteReminder', 'note', 'reminderTime')).not_to be_nil
       expect(result.dig('data', 'setNoteReminder', 'note', 'reminderTime').to_datetime
@@ -55,6 +56,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
+                                                site_community: admin.community
                                               }).as_json
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
@@ -68,6 +70,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
+                                                site_community: admin.community
                                               }).as_json
       expect(result.dig('errors')).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
