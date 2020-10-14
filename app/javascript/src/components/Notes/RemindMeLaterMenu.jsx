@@ -13,12 +13,9 @@ export default function RemindMeLaterMenu({
   open,
   handleClose,
   anchorEl,
-  taskId
+  taskId,
+  setTaskReminder
 }) {
-
-  function setTaskReminder(time) {
-    console.log(time)
-  }
 
   return (
     <Menu
@@ -72,9 +69,10 @@ RemindMeLaterMenu.defaultProps = {
   anchorEl: {}
  }
  RemindMeLaterMenu.propTypes = {
-  taskId: PropTypes.number.isRequired,
+  taskId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  setTaskReminder: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object
 }

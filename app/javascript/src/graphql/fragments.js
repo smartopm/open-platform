@@ -74,6 +74,7 @@ export const NotesFragment = {
       category
       description
       dueDate
+      reminderTime
       user {
         id
         name

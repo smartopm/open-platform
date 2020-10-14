@@ -16,8 +16,8 @@ export function dateToString(date) {
 }
 
 /**
- * 
- * @param {Number} days 
+ *
+ * @param {Number} days
  * @returns Date
  * @description returns a date in the future based on the days given, yyyy-mm-dd hh:mm
  */

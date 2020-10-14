@@ -11,15 +11,18 @@ import {
 } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import EditIcon from '@material-ui/icons/Edit'
+import AlarmIcon from '@material-ui/icons/Alarm'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { Link, useHistory } from 'react-router-dom'
 
+import { useMutation } from 'react-apollo'
 import { Spinner } from '../Loading'
 import { UserChip } from '../UserChip'
-import DateContainer, { dateToString } from '../DateContainer'
+import DateContainer, { dateToString, dateTimeToString } from '../DateContainer'
 import { removeNewLines, sanitizeText } from '../../utils/helpers'
 import RemindMeLaterMenu from './RemindMeLaterMenu'
+import { TaskReminder } from '../../graphql/mutations'
 
 export default function Task({
   note,
@@ -40,6 +43,9 @@ export default function Task({
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
+  const [setReminder] = useMutation(TaskReminder)
+  const [reminderTime, setReminderTime] = useState(null)
+
   const history = useHistory()
 
   function handleOpenAutoComplete(_event, noteId) {
@@ -57,6 +63,32 @@ export default function Task({
 
   function handleClose() {
     setAnchorEl(null)
+  }
+
+  function timeFormat(time) {
+    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`
+  }
+
+  function setTaskReminder(hour) {
+    setReminder({
+      variables: { noteId: note.id, hour }
+    })
+    .then(() => {
+      handleClose()
+      const timeScheduled = new Date(Date.now() + (hour * 60 * 60000)).toISOString()
+      setReminderTime(timeFormat(timeScheduled))
+    })
+    .catch(err => console.log(err))
+  }
+
+  function currentActiveReminder() {
+    const timeScheduled = reminderTime || note.reminderTime
+    let formattedTime = null
+    if (timeScheduled && (new Date(timeScheduled).getTime() > new Date().getTime())) {
+      formattedTime = timeFormat(timeScheduled)
+    }
+
+    return formattedTime
   }
 
   return (
@@ -213,14 +245,26 @@ export default function Task({
             }}
             onClick={handleOpenMenu}
           >
-            Remind me later
+            {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
           </Button>
+          {currentActiveReminder() && (
+            <>
+              <Typography
+                variant="subtitle1"
+                style={{ margin: '5px 5px 10px 0', float: 'right' }}
+              >
+                {currentActiveReminder()}
+              </Typography>
+              <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
+            </>
+          )}
         </Grid>
         <RemindMeLaterMenu
           taskId={id}
           anchorEl={anchorEl}
           handleClose={handleClose}
           open={open}
+          setTaskReminder={setTaskReminder}
         />
       </Grid>
       <Divider />
