@@ -137,6 +137,7 @@ export default function GenericForm({ formId }) {
           detail={{ type: 'file', status }}
           key={formPropertiesData.id}
           upload={evt => onChange(evt.target.files[0])}
+          editable={editable}
         />
       ),
       signature: (

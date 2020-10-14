@@ -19,6 +19,7 @@ export default function TextInput({ handleValue, properties, value, editable }) 
           shrink: true
         }}
         required={properties.required}
+        helperText={editable && 'for admins only'}
       />
     )
   }
