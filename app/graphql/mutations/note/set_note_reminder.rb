@@ -17,10 +17,19 @@ module Mutations
           raise GraphQL::ExecutionError, 'Unauthorized'
         end
 
-        note.reminder_time = hour.send(:hour).from_now
+        time = hour.send(:hour)
+        note.reminder_time = time.from_now
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.save
 
+        job = TaskReminderJob.set(wait: time).perform_later(note_id, user.id)
+        update_reminder_job!(note, job.provider_job_id)
+
         { note: note }
+      end
+
+      def update_reminder_job!(note, new_job_id)
+        Sidekiq::ScheduledSet.new.find_job(note.reminder_job_id)&.delete
+        note.update!(reminder_job_id: new_job_id)
       end
 
       def authorized?(_vals)
