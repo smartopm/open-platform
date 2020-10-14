@@ -37,7 +37,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
         fieldName: 'Field Name',
         fieldType: %w[text date image signature display_text display_image].sample,
         formId: form.id,
-        order: 'order'
+        order: 'order',
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
@@ -45,7 +45,9 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                                                    site_community: user.community,
                                                  }).as_json
       expect(result.dig('data', 'formPropertiesCreate', 'formProperty', 'id')).not_to be_nil
-      expect(result.dig('data', 'formPropertiesCreate', 'formProperty', 'fieldName')).to eql 'Field Name'
+      expect(
+        result.dig('data', 'formPropertiesCreate', 'formProperty', 'fieldName'),
+      ).to eql 'Field Name'
       expect(result.dig('errors')).to be_nil
     end
 
@@ -54,7 +56,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
         fieldName: 'Field Name',
         fieldType: %w[text date image signature display_text display_image].sample,
         formId: form.id,
-        order: 'order'
+        order: 'order',
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {

@@ -34,7 +34,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
                                                    site_community: user.community,
                                                  }).as_json
       expect(
-        result.dig('data', 'formPropertiesUpdate', 'formProperty', 'fieldName')
+        result.dig('data', 'formPropertiesUpdate', 'formProperty', 'fieldName'),
       ).to eql 'Updated Name'
       expect(result.dig('errors')).to be_nil
     end
