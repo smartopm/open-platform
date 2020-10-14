@@ -21,6 +21,7 @@ export default function UploadField({ detail, upload }) {
           variant="text"
           component="span"
           aria-label="upload_button"
+          disabled
           startIcon={detail.type === 'file' && detail.status === 'DONE' ? <DoneIcon /> : <AddCircleOutline />}
         >
           {detail.status === 'DONE' ? 'File Uploaded' : 'Upload File'}

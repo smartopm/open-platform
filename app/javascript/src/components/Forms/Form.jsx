@@ -112,14 +112,43 @@ export default function GenericForm({ formId }) {
   if (propertiesLoading) return <Loading />
   if (propertiesError) return <ErrorPage title={propertiesError?.message} />
 
-  function renderForm(formPropertiesData){
-      const fields = {
-        text: <TextInput key={formPropertiesData.id} properties={formPropertiesData} defaultValue={properties.fieldName} handleValue={(event) => handleValueChange(event, formPropertiesData.id)}  />,
-        date: <DatePickerDialog key={formPropertiesData.id} selectedDate={properties.date.value} handleDateChange={(date) => handleDateChange(date, formPropertiesData.id)} label={formPropertiesData.fieldName} />,
-        image: <UploadField detail={{ type: 'file', status }} key={formPropertiesData.id} upload={(evt) => onChange(evt.target.files[0])} />,
-        signature: <SignaturePad key={formPropertiesData.id} detail={{ type: 'signature', status: signatureStatus }} signRef={signRef} onEnd={() => handleSignatureUpload(formPropertiesData.id)} />
-      }
-      return fields[formPropertiesData.fieldType]
+  function renderForm(formPropertiesData) {
+    const editable = !formPropertiesData.adminUse ? false : !(formPropertiesData.adminUse && authState.user.userType === 'admin')
+    const fields = {
+      text: (
+        <TextInput
+          key={formPropertiesData.id}
+          properties={formPropertiesData}
+          defaultValue={properties.fieldName}
+          handleValue={event => handleValueChange(event, formPropertiesData.id)}
+          editable={editable}
+        />
+      ),
+      date: (
+        <DatePickerDialog
+          key={formPropertiesData.id}
+          selectedDate={properties.date.value}
+          handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
+          label={formPropertiesData.fieldName}
+        />
+      ),
+      image: (
+        <UploadField
+          detail={{ type: 'file', status }}
+          key={formPropertiesData.id}
+          upload={evt => onChange(evt.target.files[0])}
+        />
+      ),
+      signature: (
+        <SignaturePad
+          key={formPropertiesData.id}
+          detail={{ type: 'signature', status: signatureStatus }}
+          signRef={signRef}
+          onEnd={() => handleSignatureUpload(formPropertiesData.id)}
+        />
+      )
+    }
+    return fields[formPropertiesData.fieldType]
   }
   return (
     <>

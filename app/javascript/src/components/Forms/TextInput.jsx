@@ -2,7 +2,7 @@ import React from 'react'
 import { TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function TextInput({ handleValue, properties, value }) {
+export default function TextInput({ handleValue, properties, value, editable }) {
     return (
       <TextField
         id={`${properties.fieldName}`}
@@ -14,7 +14,7 @@ export default function TextInput({ handleValue, properties, value }) {
         variant="standard"
         aria-label="text-input"
         name={properties.fieldName}
-        inputProps={{ 'data-testid': `${properties.fieldName}-id` }}
+        inputProps={{ 'data-testid': `${properties.fieldName}-id`, readOnly: editable }}
         InputLabelProps={{
           shrink: true
         }}
@@ -30,5 +30,6 @@ TextInput.propTypes = {
           required: PropTypes.bool,
       }).isRequired,
       // eslint-disable-next-line react/require-default-props
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number])
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
+      editable: PropTypes.bool.isRequired
   }
