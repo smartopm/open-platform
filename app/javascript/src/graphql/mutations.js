@@ -733,6 +733,7 @@ export const FormUserCreateMutation = gql`
       formUser {
         id
       }
+      error
     }
   }
 `

@@ -99,9 +99,11 @@ export default function GenericForm({ formId }) {
         status: 'pending',
         propValues: cleanFormData,
       }
-    }).then(() => {
-        // empty the form
-        setProperties(initialData)
+    }).then(({ data }) => {
+          if (data.formUserCreate.formUser === null) {
+             setMessage({ ...message, err: true, info: data.formUserCreate.error })
+             return
+          }
         setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
     })
    .catch(err => setMessage({ ...message, err: true, info: err.message }))
