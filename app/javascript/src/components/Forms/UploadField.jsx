@@ -15,6 +15,7 @@ export default function UploadField({ detail, upload, editable }) {
           aria-label="upload_field"
           capture
           onChange={upload}
+          readOnly={editable}
           hidden
         />
         <Button

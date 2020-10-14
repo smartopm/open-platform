@@ -8,7 +8,8 @@ describe('Upload component', () => {
       const handler = jest.fn()
     const props = {
         upload: handler,
-        detail: { status: '', type: 'file' }
+        detail: { status: '', type: 'file' },
+        editable: false
     }
     const container = render(<Upload {...props} />)
     const uploadBtn = container.queryByLabelText('upload_button')
