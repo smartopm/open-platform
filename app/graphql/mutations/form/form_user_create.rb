@@ -44,8 +44,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
         true
       end
