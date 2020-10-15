@@ -13,7 +13,7 @@ export default function UserDetail({ data, userType }) {
       <h5>{data.user.name}</h5>
       <div className="expires">
         User Type:{' '}
-        {titleCase(userType)}
+        {titleCase(data.user.userType)}
       </div>
       <div className="expires">
         Expiration:{' '}
