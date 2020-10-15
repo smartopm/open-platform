@@ -84,6 +84,7 @@ import Notifications from '../src/containers/Preferences/Notifications'
 import { MuiThemeProvider } from '@material-ui/core'
 import { theme } from '../src/themes/nkwashi/theme'
 import FormLinks from '../src/containers/FormLinks'
+import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
 import UsersImport from '../src/containers/UsersImport'
 
@@ -311,6 +312,8 @@ const App = () => {
                         />
 
                         <Route path="/forms" component={FormLinks} />
+                        <Route path="/form/:formId?/:formName?" component={FormPage} />
+                        
                         <AdminRoutes>
                           <Switch>
                             <Route

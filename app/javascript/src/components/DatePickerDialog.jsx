@@ -8,25 +8,26 @@ import {
 } from '@material-ui/pickers'
 
 export default function DatePickerDialog({ selectedDate, handleDateChange, label }) {
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        data-testid="date-picker"
-        style={{ width: '100%' }}
-        clearable
-        margin="normal"
-        id="date-picker-dialog"
-        label={label}
-        format="yyyy-MM-dd"
-        placeholder="YYYY-MM-DD"
-        value={selectedDate}
-        onChange={(date) => handleDateChange(date)}
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
-      />
-    </MuiPickersUtilsProvider>
-  );
+    return (
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          data-testid='date-picker'
+          style={{ width: '100%' }}
+          clearable
+          margin="normal"
+          id="date-picker-dialog"
+          label={label}
+          format="yyyy-MM-dd"
+          placeholder="YYYY-MM-DD"
+          value={selectedDate}
+          name={label}
+          onChange={date => handleDateChange(date)}
+          KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                    }}
+        />
+      </MuiPickersUtilsProvider>
+    );
 }
 
 export function DateAndTimePickers({ selectedDateTime, handleDateChange, label }) {

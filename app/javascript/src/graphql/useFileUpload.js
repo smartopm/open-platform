@@ -1,5 +1,4 @@
 /* eslint-disable */
-/* eslint-disable */
 import { useReducer, useEffect } from 'react'
 import { FileChecksum } from '@rails/activestorage/src/file_checksum'
 
@@ -116,11 +115,11 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   maxSize = maxSize || 500
 
-  const onChange = e => {
-    if (e.target.files.length) {
-      const file = e.target.files[0]
-      startUpload(file)
-    }
+  const onChange = (file) => {
+    // if (e.target.files.length) {
+    //   const file = e.target.files[0]
+    // }
+    startUpload(file)
   }
 
   const startUpload = file => {
@@ -135,16 +134,17 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
   // Upload the 'placeholder' for the object and get back blob details
   useEffect(() => {
     if (state.status == STATE.FILE_RESIZE) {
-      ImageResize({ file: state.file, maxSize }).then(resizedImage => {
+      // check the file type before resizing
+      // ImageResize({ file: state.file, maxSize }).then(resizedImage => {
         dispatch({
-          file: resizedImage,
-          contentType: resizedImage.type,
-          byteSize: resizedImage.size,
+          file: state.file,
+          contentType: state.file.type,
+          byteSize: state.file.size,
 
           current: STATE.FILE_RESIZE,
           next: STATE.FILE_CHECKSUM
         })
-      })
+      // })
     }
     if (state.status == STATE.FILE_CHECKSUM) {
       getFileData(state.file).then(checksum => {

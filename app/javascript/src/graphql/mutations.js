@@ -735,6 +735,16 @@ export const LogSharedPost = gql`
     }
   }
 `
+export const FormUserCreateMutation = gql`
+  mutation formUserCreate($formId: ID!, $userId: ID!, $status: String, $propValues: JSON!){
+    formUserCreate(formId: $formId, userId: $userId, status: $status, propValues: $propValues){
+      formUser {
+        id
+      }
+      error
+    }
+  }
+`
 
 export const ImportCreate = gql`
   mutation usersImport($csvString: String!) {

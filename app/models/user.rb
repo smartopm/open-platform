@@ -76,7 +76,8 @@ class User < ApplicationRecord
                               foreign_key: :acting_user_id, inverse_of: false, dependent: :destroy
   has_many :tasks, through: :assignee_notes, source: :note
   has_many :activity_points, dependent: :destroy
-
+  has_many :user_form_properties, dependent: :destroy
+  has_many :form_users, dependent: :destroy
   has_one_attached :avatar
   has_one_attached :document
 

@@ -142,7 +142,9 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
+    t.uuid "note_id"
     t.string "status"
+    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -228,6 +230,42 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
     t.string "review"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "form_properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "order"
+    t.string "field_name"
+    t.integer "field_type"
+    t.boolean "required", default: false
+    t.string "short_desc"
+    t.string "long_desc"
+    t.boolean "admin_use", default: false
+    t.uuid "form_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["form_id"], name: "index_form_properties_on_form_id"
+  end
+
+  create_table "form_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "form_id", null: false
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "status_updated_by_id"
+    t.index ["form_id"], name: "index_form_users_on_form_id"
+    t.index ["status_updated_by_id"], name: "index_form_users_on_status_updated_by_id"
+    t.index ["user_id", "form_id"], name: "index_form_users_on_user_id_and_form_id", unique: true
+    t.index ["user_id"], name: "index_form_users_on_user_id"
+  end
+
+  create_table "forms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "community_id", null: false
+    t.datetime "expires_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_forms_on_community_id"
   end
 
   create_table "labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -354,6 +392,18 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
+  create_table "user_form_properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "form_property_id", null: false
+    t.uuid "form_user_id", null: false
+    t.uuid "user_id"
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["form_property_id"], name: "index_user_form_properties_on_form_property_id"
+    t.index ["form_user_id"], name: "index_user_form_properties_on_form_user_id"
+    t.index ["user_id"], name: "index_user_form_properties_on_user_id"
+  end
+
   create_table "user_labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "label_id", null: false
@@ -422,6 +472,11 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
   add_foreign_key "discussion_users", "users"
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
+  add_foreign_key "form_properties", "forms"
+  add_foreign_key "form_users", "forms"
+  add_foreign_key "form_users", "users"
+  add_foreign_key "form_users", "users", column: "status_updated_by_id"
+  add_foreign_key "forms", "communities"
   add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
@@ -430,6 +485,9 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
   add_foreign_key "note_comments", "users"
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
+  add_foreign_key "user_form_properties", "form_properties"
+  add_foreign_key "user_form_properties", "form_users"
+  add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
 end

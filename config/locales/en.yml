@@ -34,6 +34,8 @@ en:
 
   error:
     visibility: "You do not have permission to access %{field}"
+    form_user:
+      duplicate_submission: "Duplicate Submission"
 
   campaign:
     default_message: "Default Campaign Message"

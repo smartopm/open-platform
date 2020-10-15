@@ -81,5 +81,16 @@ module Types
     # posts
     field :log_read_post, mutation: Mutations::Post::LogReadPost
     field :log_shared_post, mutation: Mutations::Post::LogSharedPost
+
+    # forms
+    field :form_create, mutation: Mutations::Form::FormCreate
+    field :form_update, mutation: Mutations::Form::FormUpdate
+    field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
+    field :form_properties_update, mutation: Mutations::Form::FormPropertiesUpdate
+    field :form_user_create, mutation: Mutations::Form::FormUserCreate
+    field :form_user_update, mutation: Mutations::Form::FormUserUpdate
+    field :form_user_status_update, mutation: Mutations::Form::FormUserStatusUpdate
+    field :user_form_properties_create, mutation: Mutations::Form::UserFormPropertiesCreate
+    field :user_form_properties_update, mutation: Mutations::Form::UserFormPropertiesUpdate
   end
 end

@@ -66,27 +66,27 @@ export const infoSource = [
 ]
 
 export const NotesCategories = {
-  call:  'Call',
-  message:  'Message',
-  email:  'Email',
-  to_do:  'To-Do',
+  call: 'Call',
+  message: 'Message',
+  email: 'Email',
+  to_do: 'To-Do'
 }
 
 export const businessCategories = {
- agriculture: 'Agriculture and Farming',
- real_estate: 'Real Estate',
- art: 'Arts and Culture',
- transportation: 'Transportation',
- construction: 'Construction',
- health: 'Health Service',
- restaurant: 'Restaurant',
- beauty_salon: 'Beauty Salon',
- supermarket: 'Supermarket'
+  agriculture: 'Agriculture and Farming',
+  real_estate: 'Real Estate',
+  art: 'Arts and Culture',
+  transportation: 'Transportation',
+  construction: 'Construction',
+  health: 'Health Service',
+  restaurant: 'Restaurant',
+  beauty_salon: 'Beauty Salon',
+  supermarket: 'Supermarket'
 }
 
 export const businessStatus = {
   verified: 'Verified',
-  pending: 'Pending',
+  pending: 'Pending'
 }
 
 export const commentStatusAction = {
@@ -97,69 +97,78 @@ export const commentStatusAction = {
 export const ponisoNumber = '+260976064298'
 export const salesSupport = [
   {
-    contact: "+260 966 194383",
-    type: "phone"
+    contact: '+260 966 194383',
+    type: 'phone'
   },
   {
-    contact: "+260 760 635024",
-    type: "phone"
+    contact: '+260 760 635024',
+    type: 'phone'
   },
   {
-    contact: " nkwashi-sales@doublegdp.com",
-    type: "mail"
+    contact: ' nkwashi-sales@doublegdp.com',
+    type: 'mail'
   }
 ]
 
 export const customerCare = [
   {
-    contact: "+260 976 261199",
-    type: "phone"
+    contact: '+260 976 261199',
+    type: 'phone'
   },
   {
-    contact: "+260 974 624243",
-    type: "phone"
+    contact: '+260 974 624243',
+    type: 'phone'
   },
   {
-    contact: "+260 974 624243",
-    type: "whatsapp"
+    contact: '+260 974 624243',
+    type: 'whatsapp'
   },
   {
-    contact: "support@doublegdp.com",
-    type: "mail"
+    contact: 'support@doublegdp.com',
+    type: 'mail'
   }
 ]
 
 export const messageFilters = [
   {
-    value: "sms/",
-    title: "SMS",
+    value: 'sms/',
+    title: 'SMS'
   },
   {
-    value: "email/",
-    title: "Email",
+    value: 'email/',
+    title: 'Email'
   },
   {
-    value: "/campaign",
-    title: "Campaign",
+    value: '/campaign',
+    title: 'Campaign'
   },
   {
-    value: "/non_campaign",
-    title: "Non Campaign",
+    value: '/non_campaign',
+    title: 'Non Campaign'
   },
   {
-    value: "sms/campaign",
-    title: "SMS and Campaign",
+    value: 'sms/campaign',
+    title: 'SMS and Campaign'
   },
   {
-    value: "sms/non_campaign",
-    title: "SMS and Non-Campaign",
+    value: 'sms/non_campaign',
+    title: 'SMS and Non-Campaign'
   },
   {
-    value: "email/campaign",
-    title: "Email and Campaign",
+    value: 'email/campaign',
+    title: 'Email and Campaign'
   },
   {
-    value: "email/non_campaign",
-    title: "Email and Non-Campaign",
-  },
+    value: 'email/non_campaign',
+    title: 'Email and Non-Campaign'
+  }
 ]
+
+export const fieldType = {
+  text: 0,
+  date: 1,
+  image: 2,
+  signature: 3,
+  display_text: 4,
+  display_image: 5
+}
