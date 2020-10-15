@@ -5,11 +5,16 @@ import { css, StyleSheet } from 'aphrodite'
 import dateutil from '../../utils/dateutil'
 import UserLabels from '../UserLabels'
 import StatusBadge from '../StatusBadge'
+import { titleCase } from '../../utils/helpers'
 
 export default function UserDetail({ data, userType }) {
   return (
     <div className="col-4">
       <h5>{data.user.name}</h5>
+      <div className="expires">
+        User Type:{' '}
+        {titleCase(userType)}
+      </div>
       <div className="expires">
         Expiration:{' '}
         {dateutil.isExpired(data.user.expiresAt) ? (
