@@ -17,7 +17,7 @@ module Types::Queries::Form
     end
     # Get form properties
     field :form_properties, [Types::FormPropertiesType], null: true do
-      description 'Get form property by its id'
+      description 'Get form properties by form id'
       argument :form_id, GraphQL::Types::ID, required: true
     end
     # Get form status for user
