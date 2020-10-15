@@ -37,5 +37,6 @@ describe('entry request list', () => {
     expect(container.queryByTestId('entry_phone').textContent).toContain('309475834')
     expect(container.queryByTestId('entry_nrc').textContent).toContain('37348u53')
     expect(container.queryByTestId('entry_guard').textContent).toContain('Some Guard Name')
+    expect(container.queryByTestId('entry_reason').textContent).toContain('Prospective Client')
   })
 })
