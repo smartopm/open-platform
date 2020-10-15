@@ -17,6 +17,7 @@ export function UserChip({ user, ...props }) {
       style={{ margin: 5 }}
       variant="outlined"
       label={user.name}
+      data-testid="user_chip"
       onClick={() => history.push(`/user/${user.id}`)}
       avatar={<Avatar src={forceLinkHttps(user.imageUrl)} alt={user.name} />}
       {...props}
