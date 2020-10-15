@@ -746,3 +746,13 @@ export const ImportCreate = gql`
     }
   }
 `
+
+export const TaskReminder = gql`
+  mutation setNoteReminder($noteId: ID!, $hour: Int!) {
+    setNoteReminder(noteId: $noteId, hour: $hour) {
+      note {
+        id
+      }
+    }
+  }
+`
