@@ -5,7 +5,7 @@ import { css, StyleSheet } from 'aphrodite'
 import dateutil from '../../utils/dateutil'
 import UserLabels from '../UserLabels'
 import StatusBadge from '../StatusBadge'
-import { titleCase } from '../../utils/helpers'
+import { titleize } from '../../utils/helpers'
 
 export default function UserDetail({ data, userType }) {
   return (
@@ -13,7 +13,7 @@ export default function UserDetail({ data, userType }) {
       <h5>{data.user.name}</h5>
       <div className="expires">
         User Type:{' '}
-        {titleCase(data.user.userType)}
+        {titleize(data.user.userType)}
       </div>
       <div className="expires">
         Expiration:{' '}
