@@ -20,7 +20,7 @@ export default function TaskComment({ authState }) {
   })
   const [open, setOpen] = useState(false)
   
-  if (error) return <ErrorPage />
+  if (error) return <ErrorPage title={error.message} />
   return (
     <>
       <div style={{ display: 'flex', marginBottom: "10px" }}>
