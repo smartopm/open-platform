@@ -24,9 +24,8 @@ import CaptureTemp from '../../components/CaptureTemp';
 import { dateToString, dateTimeToString } from '../../components/DateContainer';
 
 export default function RequestUpdate({ match, history, location }) {
-  const previousRoute = location.state && location.state.from
-  const isFromLogs = previousRoute === 'logs' || false;
-
+  const previousRoute = location.state?.from || match.params.logs
+  const isFromLogs = previousRoute === 'logs' ||  false
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
   });
