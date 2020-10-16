@@ -39,7 +39,7 @@ class Campaign < ApplicationRecord
   end
 
   def target_list_user
-    label = Label.find_by(short_desc: "com_news_#{campaign_type}")
+    label = community.labels.find_by(short_desc: "com_news_#{campaign_type}")
     user_ids = target_list.uniq
     return [] if label.nil? || user_ids.empty?
 
