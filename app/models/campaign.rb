@@ -35,12 +35,12 @@ class Campaign < ApplicationRecord
   def target_list
     return [] if user_id_list.blank? && labels.empty?
 
-    user_id_list.split(',') + labels.joins(:users).pluck(:user_id) - already_sent_user_ids
+    user_id_list.split(',') + labels.joins(:users).pluck(:user_id)
   end
 
   def target_list_user
     label = Label.find_by(short_desc: "com_news_#{campaign_type}")
-    user_ids = target_list.uniq
+    user_ids = target_list.uniq - already_sent_user_ids
     return [] if label.nil? || user_ids.empty?
 
     label.users.where(state: 'valid', id: user_ids)
