@@ -13,7 +13,8 @@ export default function Notifications() {
     const authState = useContext(AuthStateContext)
     const [checkedState, setCheckedState] = useState({
         smsChecked: false,
-        emailChecked: false
+        emailChecked: false,
+        weeklyEmailReminderChecked: false
     })
 
     const { data, loading: labelsLoading, error } = useQuery(UserLabelsQuery, {
@@ -28,9 +29,12 @@ export default function Notifications() {
         if (!labelsLoading && !error && data) {
             const smsChecked = data.userLabels.some(lab => lab.shortDesc === 'com_news_sms')
             const emailChecked = data.userLabels.some(lab => lab.shortDesc === 'com_news_email')
+            const weeklyEmailReminderChecked = data.userLabels.some(lab => lab.shortDesc === 'weekly_point_reminder_email')
+
             setCheckedState({
                 smsChecked,
-                emailChecked
+                emailChecked,
+                weeklyEmailReminderChecked
             })
         }
     }, [labelsLoading, data, error])
@@ -44,7 +48,8 @@ export default function Notifications() {
       // fill an array with keys that are only checked
       const preferences = [
         checkedState.smsChecked ? 'com_news_sms' : null,
-        checkedState.emailChecked ? 'com_news_email' : null
+        checkedState.emailChecked ? 'com_news_email' : null,
+        checkedState.weeklyEmailReminderChecked ? 'weekly_point_reminder_email' : null
       ]
 
       savePreferredNotification({
@@ -74,7 +79,7 @@ export default function Notifications() {
                     handleChange={handleChange}
                     checkedState={checkedState}
                     loading={loading}
-                    handleSave={handleSave} /> 
+                    handleSave={handleSave} />
             </Fragment>
         </div>
     )

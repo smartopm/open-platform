@@ -89,7 +89,7 @@ class User < ApplicationRecord
   VALID_USER_TYPES = %w[security_guard admin resident contractor
                         prospective_client client visitor custodian].freeze
   VALID_STATES = %w[valid pending banned expired].freeze
-  DEFAULT_PREFERENCE = %w[com_news_sms com_news_email].freeze
+  DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
