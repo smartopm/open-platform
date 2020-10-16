@@ -82,11 +82,9 @@ export default function DiscussionList({ data, refetch, isAdmin }) {
                         {
                            isAdmin && (
                            <IconButton
-                             onClick={event =>
-                                handleDeleteClick(event, discussion.id)}
+                             onClick={event => handleDeleteClick(event, discussion.id)}
                              edge="end"
                              aria-label="delete"
-                             data-testid="delete_icon"
                              className={css(styles.deleteBtn)}
                            >
                              <DeleteIcon />

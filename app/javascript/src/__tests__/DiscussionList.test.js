@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
@@ -44,7 +44,11 @@ describe('Discussion List page', () => {
         expect(container.queryByText('John Mbuzi')).toBeInTheDocument()
         expect(container.queryByText('Second Title')).toBeInTheDocument()
         expect(container.queryByText('Jo Kos')).toBeInTheDocument()
-        expect(container.queryAllByTestId('delete_icon')).toHaveLength(2)
+        expect(container.getAllByLabelText('delete')).toHaveLength(2)
+        const deleteBtns = container.getAllByLabelText('delete')
+        expect(deleteBtns[0]).not.toBeDisabled()
+        expect(deleteBtns[1]).not.toBeDisabled()
+        // can click
+        fireEvent.click(deleteBtns[0])
     })
-    
 })
