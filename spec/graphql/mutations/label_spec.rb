@@ -142,9 +142,9 @@ RSpec.describe Mutations::Label do
                                          site_community: user.community,
                                        }).as_json
       # user labels should be gone after the mutation
-      expect(res.dig('data', 'userLabels').length).to eql 2
+      expect(res.dig('data', 'userLabels').length).to eql 3
       # community labels should remain untouched after unassigning from a user
-      expect(labels.dig('data', 'labels').length).to eql 3
+      expect(labels.dig('data', 'labels').length).to eql 4
       expect(result.dig('data', 'userLabelUpdate', 'label', 'userId')).to be_nil
       expect(result.dig('errors')).to be_nil
     end
