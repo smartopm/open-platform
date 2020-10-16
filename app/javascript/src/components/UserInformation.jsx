@@ -29,6 +29,7 @@ import UserInfo from './User/UserInfo'
 import UserDetail from './User/UserDetail'
 import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
+import UserFilledForms from '../components/User/UserFilledForms'
 
 
 export default function UserInformation({
@@ -70,7 +71,8 @@ export default function UserInformation({
       Notes: 'Notes',
       Communication: 'Communication',
       Plots: 'Plots',
-      Payments: 'Payments'
+      Payments: 'Payments',
+      Forms: 'Forms'
     }
     if (location.pathname.includes('/user')) {
       let [, rootURL, , userPage] = location.pathname.split('/')
@@ -128,11 +130,11 @@ export default function UserInformation({
           })
         })
   }
-  
+
   return (
     <div>
       <Fragment>
-    
+
         <Dialog
           open={isDialogOpen}
           fullWidth={true}
@@ -171,12 +173,12 @@ export default function UserInformation({
                 </IconButton>
               )}
               {/* Menu */}
-              <UserActionMenu 
-                    data={data} 
-                    router={router} 
-                    anchorEl={anchorEl} 
-                    handleClose={handleClose} 
-                    userType={userType} 
+              <UserActionMenu
+                    data={data}
+                    router={router}
+                    anchorEl={anchorEl}
+                    handleClose={handleClose}
+                    userType={userType}
                     sendOTP={sendOTP}
                     CSMNumber={CSMNumber}
                     open={open}
@@ -233,7 +235,7 @@ export default function UserInformation({
                   <Loading />
                 ) : data.user.notes ? (
                     data.user.notes.map(note => (
-                    <UserNote 
+                    <UserNote
                         key={note.id}
                         note={note}
                         handleFlagNote={handleFlagNote}
@@ -255,6 +257,9 @@ export default function UserInformation({
         )}
         <TabPanel value={tabValue} index={'Plots'}>
           <UserPlotInfo accounts={data.user.accounts} />
+        </TabPanel>
+        <TabPanel value={tabValue} index={'Forms'}>
+          <UserFilledForms userFormsFilled={data.user.formUsers} />
         </TabPanel>
         <TabPanel value={tabValue} index={'Payments'}>
           <h4 className="text-center">Coming soon</h4>
