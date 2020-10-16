@@ -71,7 +71,7 @@ export default function Discussions() {
             </DialogContent>
           </Dialog>
                 
-          <DiscussionList data={data.discussions} />
+          <DiscussionList data={data.discussions} refetch={refetch} />
           {
                     data.discussions.length >= limit && (
                     <CenteredContent>

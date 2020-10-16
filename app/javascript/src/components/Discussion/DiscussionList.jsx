@@ -1,19 +1,37 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useState } from 'react'
 import { List, ListItem, Divider, ListItemText, Typography, ListItemAvatar, IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@material-ui/icons/Delete'
 import { truncateString } from '../../utils/helpers';
 import Avatar from '../Avatar';
 import { css, StyleSheet } from 'aphrodite';
+import { useMutation } from 'react-apollo';
+import { DiscussionUpdateMutation } from '../../graphql/mutations';
+import DeleteDialogueBox from '../Business/DeleteDialogue';
 
 
-export default function DiscussionList({ data }) {
-    function deleteDiscussion(e, id){
-        e.stopPropagation();
-        e.preventDefault()
-        // call the delete mutation right here
-        console.log(id)
+export default function DiscussionList({ data, refetch }) {
+    const [updateDiscussion] = useMutation(DiscussionUpdateMutation)
+    const [discussionId, setDiscussionId] = useState('')
+    const [openModal, setOpenModal] = useState(false)
+    const [error, setError] = useState(null)
+
+
+    function handleDeleteClick(event, id = discussionId) {
+        event.stopPropagation()
+        event.preventDefault()
+        setOpenModal(!openModal)
+        setDiscussionId(id)
+      }
+
+    function deleteDiscussion() {
+      updateDiscussion({ variables: { discussionId, status: 'deleted' } })
+        .then(() => {
+          refetch()
+          setOpenModal(!openModal)
+        })
+        .catch(err => setError(err.message))
     }
     return (
         <div className={css(styles.discussionList)}>
@@ -41,7 +59,7 @@ export default function DiscussionList({ data }) {
                                         </Typography>
                                         { discussion.description ? ` — ${truncateString(discussion.description, 100)}` : ''}
                                         <span style={{ float: 'right' }}>
-                                        <IconButton onClick={event => deleteDiscussion(event, discussion.id)} edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
+                                        <IconButton onClick={event => handleDeleteClick(event, discussion.id)} edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
                                             <DeleteIcon />
                                         </IconButton>
                                         </span>
@@ -53,6 +71,12 @@ export default function DiscussionList({ data }) {
                     </Link>
                 )) : 'No Discussions Topics'
                 }
+                <DeleteDialogueBox
+                    open={openModal}
+                    handleClose={handleDeleteClick}
+                    handleDelete={deleteDiscussion}
+                    title="discussion"
+                />
             </List>
         </div>
     )
