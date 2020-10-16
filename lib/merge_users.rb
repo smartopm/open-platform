@@ -3,7 +3,6 @@
 require 'roo'
 
 # Script to read from spreadsheet and merge duplicate users
-# rubocop:disable Metrics/ClassLength
 class MergeUsers
   def self.batch_merge_from_file(path)
     cleanup_file = Roo::Spreadsheet.open(path)
@@ -26,7 +25,7 @@ class MergeUsers
 
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
     end
-  
+
     # Update showroom User
     showrooms = Showroom.where(userId: user_id)
     showrooms.each do |showroom|
@@ -111,4 +110,3 @@ class MergeUsers
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
 end
-# rubocop:enable Metrics/ClassLength
