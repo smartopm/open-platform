@@ -20,7 +20,7 @@ module Mutations
       end
 
       def add_user_form_properties(form_user, vals)
-        vals[:prop_values]['user_form_properties'].each do |value|
+        JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
           property = user_form_property(form_user, value.merge(user_id: vals[:user_id]))
           raise GraphQL::ExecutionError, 'User Form Property not found' if property.nil?
 
