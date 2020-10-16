@@ -19,18 +19,20 @@ class MergeUsers
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   def self.merge(user_id, duplicate_id)
+    %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
+       DiscussionUser Discussion EntryRequest Feedback FormUser Message
+       NoteComment NoteHistory Note TimeSheet UserFormProperty].each do |table_name|
+      table_name.constantize.where(user_id: user_id).update(user_id: duplicate_id)
+
+      raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
+    end
+  
     # Update showroom User
     showrooms = Showroom.where(userId: user_id)
     showrooms.each do |showroom|
       showroom.update(userId: duplicate_id)
     end
     raise StandardError, 'Update Failed' if Showroom.where(userId: user_id).any?
-
-    # Update user in notes
-    notes = Note.where(user_id: user_id)
-    notes.each do |note|
-      note.update(user_id: duplicate_id)
-    end
 
     # Update author in Notes
     notes_auth = Note.where(author_id: user_id)
@@ -39,66 +41,12 @@ class MergeUsers
     end
     raise StandardError, 'Update Failed' if Note.where(author_id: user_id).any?
 
-    # Update assignee in Notes
-    assignees = AssigneeNote.where(user_id: user_id)
-    assignees.each do |assignee|
-      assignee.update(user_id: duplicate_id)
-    end
-
-    # Update user in Business
-    businesses = Business.where(user_id: user_id)
-    businesses.each do |business|
-      business.update(user_id: duplicate_id)
-    end
-
-    # Update user in Comment
-    comments = Comment.where(user_id: user_id)
-    comments.each do |comment|
-      comment.update(user_id: duplicate_id)
-    end
-
-    # Update user in ContactInfo
-    contact_infos = ContactInfo.where(user_id: user_id)
-    contact_infos.each do |contact_info|
-      contact_info.update(user_id: duplicate_id)
-    end
-
-    # Update user in Discussion
-    discussions = Discussion.where(user_id: user_id)
-    discussions.each do |discussion|
-      discussion.update(user_id: duplicate_id)
-    end
-
-    # Update user in DiscussionUser
-    discussion_users = DiscussionUser.where(user_id: user_id)
-    discussion_users.each do |discussion_user|
-      discussion_user.update(user_id: duplicate_id)
-    end
-
-    # Update user in Messages
-    messages = Message.where(user_id: user_id)
-    messages.each do |message|
-      message.update(user_id: duplicate_id)
-    end
-
     # Update sender in Messages
     message_senders = Message.where(sender_id: user_id)
     message_senders.each do |message|
       message.update(sender_id: duplicate_id)
     end
     raise StandardError, 'Update Failed' if Message.where(sender_id: user_id).any?
-
-    # Update sender in Feedback
-    feedbacks = Feedback.where(user_id: user_id)
-    feedbacks.each do |feedback|
-      feedback.update(user_id: duplicate_id)
-    end
-
-    # Update user in Entry Request
-    entry_requests = EntryRequest.where(user_id: user_id)
-    entry_requests.each do |entry_request|
-      entry_request.update(user_id: duplicate_id)
-    end
 
     # Update grantor in Entry Request
     entry_request_grantors = EntryRequest.where(grantor_id: user_id)
@@ -118,18 +66,6 @@ class MergeUsers
     refs = EventLog.where(ref_id: user_id, ref_type: 'user')
     refs.each do |ref|
       ref.update(ref_id: duplicate_id)
-    end
-
-    # Update user in Accounts
-    accounts = Account.where(user_id: user_id)
-    accounts.each do |account|
-      account.update(user_id: duplicate_id)
-    end
-
-    # Update user in TimeSheet
-    time_sheets = TimeSheet.where(user_id: user_id)
-    time_sheets.each do |time_sheet|
-      time_sheet.update(user_id: duplicate_id)
     end
 
     # Update user in UserLabel
@@ -160,8 +96,9 @@ class MergeUsers
 
     # rubocop:enable Metrics/LineLength
 
-    %w[Note AssigneeNote Business Comment ContactInfo Discussion
-       Message Feedback EntryRequest Account TimeSheet UserLabel].each do |table_name|
+    %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
+       DiscussionUser Discussion EntryRequest Feedback FormUser Message
+       NoteComment NoteHistory Note TimeSheet UserFormProperty].each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
       raise StandardError, 'Update Failed'
