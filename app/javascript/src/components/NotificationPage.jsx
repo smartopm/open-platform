@@ -79,7 +79,7 @@ export default function NotificationPage({
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="body1" data-testid="notification-description">
+          <Typography variant="body1" data-testid="points-and-rewards-description">
             Points and Rewards: Get weekly reminders to collect and view the
             points on your account. Points are a great way to engage with the
             community and are sometimes used to grant awards and rewards to our
