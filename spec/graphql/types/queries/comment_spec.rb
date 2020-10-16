@@ -6,11 +6,11 @@ RSpec.describe Types::Queries::Comment do
   describe 'comment queries' do
     let!(:current_user) { create(:user_with_community) }
     let!(:user_discussion) do
-      create(:discussion, user_id: current_user.id,
+      create(:discussion, user_id: current_user.id, status: 'valid',
                           community_id: current_user.community_id, post_id: '20')
     end
     let!(:another_user_discussion) do
-      create(:discussion, user_id: current_user.id,
+      create(:discussion, user_id: current_user.id, status: 'valid',
                           community_id: current_user.community_id)
     end
     let!(:user_comments) do
