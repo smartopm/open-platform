@@ -8,7 +8,6 @@ module Mutations
 
       argument :form_id, ID, required: true
       argument :user_id, ID, required: true
-      argument :status, String, required: false
       argument :prop_values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true
@@ -23,7 +22,8 @@ module Mutations
       end
 
       def create_form_user(form, vals)
-        form_user = form.form_users.new(vals.except(:form_id, :prop_values))
+        form_user = form.form_users.new(vals.except(:form_id, :prop_values)
+                                            .merge(status: 'pending'))
         ActiveRecord::Base.transaction do
           return add_user_form_properties(form_user, vals) if form_user.save
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_14_044904) do
+ActiveRecord::Schema.define(version: 2020_10_16_081007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -364,6 +364,8 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
     t.text "description"
     t.datetime "reminder_time"
     t.string "reminder_job_id"
+    t.uuid "form_user_id"
+    t.index ["form_user_id"], name: "index_notes_on_form_user_id"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -485,6 +487,7 @@ ActiveRecord::Schema.define(version: 2020_10_14_044904) do
   add_foreign_key "note_comments", "users"
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
+  add_foreign_key "notes", "form_users"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"
