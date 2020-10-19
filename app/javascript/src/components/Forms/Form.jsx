@@ -152,7 +152,6 @@ export default function GenericForm({ formId }) {
   }
 
   function sortPropertyOrder(field1, field2){
-    console.log(field1.order)
       return Number(field1.order) - Number(field2.order)
   }
 
