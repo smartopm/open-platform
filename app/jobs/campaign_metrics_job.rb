@@ -9,7 +9,8 @@ class CampaignMetricsJob < ApplicationJob
     return if campaign.expired? || campaign.batch_time.blank?
 
     clicks_count = EventLog.since_date(campaign.start_time).by_user_activity
-                           .with_acting_user_id(user_id_list.split(',')).count
+                           .with_acting_user_id(user_id_list.split(','))
+                           .group_by(&:acting_user_id).count
     update_clicks(campaign, clicks_count, user_id_list)
   end
 

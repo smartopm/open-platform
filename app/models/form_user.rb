@@ -19,6 +19,8 @@ class FormUser < ApplicationRecord
       body: 'Form Submitted',
       category: 'form',
       form_user_id: id,
+      flagged: true,
+      completed: false,
     )
   end
 end

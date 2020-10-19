@@ -35,7 +35,7 @@ class Campaign < ApplicationRecord
   def target_list
     return [] if user_id_list.blank? && labels.empty?
 
-    user_id_list.split(',') + labels.joins(:users).pluck(:user_id) - already_sent_user_ids
+    user_id_list.split(',') + labels.joins(:users).pluck(:user_id)
   end
 
   def target_list_user
