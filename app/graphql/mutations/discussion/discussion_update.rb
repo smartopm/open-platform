@@ -14,7 +14,7 @@ module Mutations
 
         raise GraphQL::ExecutionError, 'NotFound' if discussion.blank?
 
-        response = discussion.update!(status: vals[:status])
+        response = discussion.update(status: vals[:status])
 
         return { success: 'updated' } if response
 

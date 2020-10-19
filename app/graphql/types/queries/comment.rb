@@ -62,7 +62,7 @@ module Types::Queries::Comment
   def discussions(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussions = context[:site_community].discussions.valid.where(post_id: nil)
+    discussions = context[:site_community].discussions.where(post_id: nil)
                                           .limit(limit).offset(offset)
     discussions
   end

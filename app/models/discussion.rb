@@ -7,9 +7,7 @@ class Discussion < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :discussion_users, dependent: :destroy
   has_many :users, through: :discussion_users
-  default_scope { order(created_at: :desc) }
-
-  scope :valid, -> { where.not(status: 'deleted') }
+  default_scope { order(created_at: :desc).where.not(status: 'deleted') }
 
   scope :by_subscribers, lambda { |disc_ids|
     User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids }).distinct
