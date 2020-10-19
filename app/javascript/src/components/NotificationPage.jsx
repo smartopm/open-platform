@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import {
   Box,
@@ -11,6 +10,7 @@ import {
   FormGroup,
   FormControlLabel
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import CenteredContent from './CenteredContent'
 
 export default function NotificationPage({
@@ -50,7 +50,7 @@ export default function NotificationPage({
               <FormControlLabel
                 value="top"
                 data-testid="sms-checkbox"
-                control={
+                control={(
                   <Checkbox
                     checked={smsChecked}
                     name="smsChecked"
@@ -58,13 +58,13 @@ export default function NotificationPage({
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
-                }
+                )}
                 label="SMS"
               />
               <FormControlLabel
                 value="top"
                 data-testid="email-checkbox"
-                control={
+                control={(
                   <Checkbox
                     checked={emailChecked}
                     name="emailChecked"
@@ -72,7 +72,7 @@ export default function NotificationPage({
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
-                }
+                )}
                 label="Email"
               />
             </FormGroup>
@@ -92,7 +92,7 @@ export default function NotificationPage({
               <FormControlLabel
                 value="top"
                 data-testid="weekly-email-reminder-checkbox"
-                control={
+                control={(
                   <Checkbox
                     checked={weeklyEmailReminderChecked}
                     name="weeklyEmailReminderChecked"
@@ -100,7 +100,7 @@ export default function NotificationPage({
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
-                }
+                )}
                 label="Email"
               />
             </FormGroup>
@@ -120,4 +120,15 @@ export default function NotificationPage({
       </CenteredContent>
     </Box>
   )
+}
+
+NotificationPage.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  handleSave: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  checkedState: PropTypes.shape({
+    smsChecked: PropTypes.bool,
+    emailChecked: PropTypes.bool,
+    weeklyEmailReminderChecked: PropTypes.bool
+  }).isRequired
 }
