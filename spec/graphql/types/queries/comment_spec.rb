@@ -10,8 +10,7 @@ RSpec.describe Types::Queries::Comment do
                           community_id: current_user.community_id, post_id: '20')
     end
     let!(:another_user_discussion) do
-      create(:discussion, user_id: current_user.id, status: 'valid',
-                          community_id: current_user.community_id)
+      create(:discussion, user_id: current_user.id, community_id: current_user.community_id)
     end
     let!(:user_comments) do
       current_user.comments.create(content: 'This is an awesome comment',
