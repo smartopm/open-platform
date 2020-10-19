@@ -16,7 +16,7 @@ class FormUser < ApplicationRecord
 
   def create_form_task
     user.generate_note(
-      body: 'Form Submitted',
+      body: "#{user.name} Submitted #{form.name}",
       category: 'form',
       form_user_id: id,
       flagged: true,
