@@ -274,7 +274,8 @@ ActiveRecord::Schema.define(version: 2020_10_16_081007) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
-    t.string "color", default: "#f6f6f6"
+    t.string "color", default: "#f07030"
+    t.string "status", default: "active"
     t.index ["community_id"], name: "index_labels_on_community_id"
   end
 
@@ -361,6 +362,8 @@ ActiveRecord::Schema.define(version: 2020_10_16_081007) do
     t.uuid "assigned_to"
     t.uuid "community_id"
     t.text "description"
+    t.datetime "reminder_time"
+    t.string "reminder_job_id"
     t.uuid "form_user_id"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
   end

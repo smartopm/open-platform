@@ -24,7 +24,7 @@ export default function UserCommunication({user, phoneNumber}) {
     })
     function sendMessage() {
         setLoading(true)
-        const receiver = phoneNumber 
+        const receiver = phoneNumber
         if (!message.length) {
             setError('The message must contain some text')
             return

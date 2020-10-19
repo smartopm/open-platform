@@ -18,5 +18,6 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :due_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :reminder_time, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

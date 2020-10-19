@@ -20,11 +20,13 @@ class Label < ApplicationRecord
   has_many :campaign_labels, dependent: :destroy
   has_many :campaigns, through: :campaign_labels
 
+  default_scope { where('status != ?', 'deleted') }
+
   def self.with_users(com, limit, offset)
     Label.find_by_sql(["SELECT labels.id, labels.short_desc, labels.color, labels.description,
     COUNT(*) AS user_count
                 FROM user_labels INNER JOIN labels ON user_labels.label_id = labels.id
-                WHERE labels.community_id=?
+                WHERE labels.community_id=? AND labels.status <> 'deleted'
                 GROUP BY labels.id, labels.short_desc, labels.color,
                 labels.description LIMIT ? OFFSET ? "] + [com, limit, offset])
   end

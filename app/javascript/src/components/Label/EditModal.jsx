@@ -25,6 +25,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
       handleClose();
       refetch();
     }).catch((err) => {
+      handleClose()
       setErrorMessage(err)
     })
   }

@@ -89,6 +89,7 @@ UserSearch.propTypes = {
   update: PropTypes.func.isRequired,
   userData: PropTypes.exact({
     user: PropTypes.string,
-    userId: PropTypes.string
+    userId: PropTypes.string,
+    imageUrl: PropTypes.string
   })
 }

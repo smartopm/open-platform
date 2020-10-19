@@ -22,5 +22,11 @@ RSpec.describe PointsAutoAlertJob, type: :job do
       expect(EmailMsg).to receive(:send_mail).with(user.email, 'fgcagv5r2yr67', 'url': ENV['HOST'])
       perform_enqueued_jobs { described_class.perform_later }
     end
+
+    it 'does not invoke EmailMsg if user is in ignored list' do
+      user.update!(email: 'fkaputula@yahoo.com')
+      expect(EmailMsg).not_to receive(:send_mail)
+      perform_enqueued_jobs { described_class.perform_later }
+    end
   end
 end

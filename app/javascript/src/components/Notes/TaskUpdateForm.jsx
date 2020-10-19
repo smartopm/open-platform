@@ -48,7 +48,7 @@ export default function TaskForm({ users, data, assignUser }) {
   const [autoCompleteOpen, setOpen] = useState(false)
 
   const [type, setType] = useState("preview")
-    const handleType = (event, value) => {
+    const handleType = (_event, value) => {
         setType(value);
     };
 
@@ -86,7 +86,8 @@ export default function TaskForm({ users, data, assignUser }) {
     setDate(data.dueDate)
     setData({
       user: data.user.name,
-      userId: data.user.id
+      userId: data.user.id,
+      imageUrl: data.user.imageUrl
     })
   }
 
@@ -98,7 +99,7 @@ export default function TaskForm({ users, data, assignUser }) {
     setDefaultData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -242,6 +243,8 @@ export default function TaskForm({ users, data, assignUser }) {
         </FormControl>
         <br />
         <UserSearch userData={userData} update={setData} /> 
+        <br />
+        <UserChip user={{ name: userData.user, id: userData.userId, imageUrl: userData.imageUrl }} />
         <br />
         <FormControlLabel
           value="end"

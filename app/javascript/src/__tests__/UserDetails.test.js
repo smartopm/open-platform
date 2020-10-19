@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
@@ -15,7 +14,8 @@ describe('user detail component', () => {
           name: 'User Name',
           email: 'user@dgdp.com',
           id: '34543543rfsf3',
-          expiresAt: new Date('03-03-2020')
+          expiresAt: new Date('03-03-2020'),
+          userType: 'admin'
         }
       },
       userType: 'admin'

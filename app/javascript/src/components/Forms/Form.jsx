@@ -150,11 +150,17 @@ export default function GenericForm({ formId }) {
     }
     return fields[formPropertiesData.fieldType]
   }
+
+  function sortPropertyOrder(field1, field2){
+    console.log(field1.order)
+      return Number(field1.order) - Number(field2.order)
+  }
+
   return (
     <>
       <Container>
         <form onSubmit={saveFormData}>
-          {formData.formProperties.map(field => renderForm(field))}
+          {formData.formProperties.sort(sortPropertyOrder).map(field => renderForm(field))}
           <CenteredContent>
             <Button
               variant="outlined"

@@ -34,7 +34,7 @@ export default function TaskUpdate({ match }) {
     return <Redirect push to="/" />
   }
   if (loading) return <Loading />
-  if (error) return <ErrorPage />
+  if (error) return <ErrorPage title={error.message} />
   
   return (
     <>

@@ -9,9 +9,10 @@ describe('task form component', () => {
         const data = {
           id: '6v2y3etyu2g3eu2',
           user: {
-            name: "tolulope"
+            name: "tolulope",
+            imageUrl: "http://image.com"
           },
-          assignees: ["tolulope"]
+          assignees: ["tolulope", "another_user"]
         }
         const container = render(<MockedProvider><TaskUpadateForm data={data} /></MockedProvider>)
         expect(container.queryByText('Update Task')).toBeInTheDocument()
@@ -25,6 +26,8 @@ describe('task form component', () => {
         expect(description.value).toBe('This is a description of the task')
 
         expect(container.queryByText('Task Status')).toBeInTheDocument()
+        expect(container.queryByText('tolulope')).toBeInTheDocument()
+        expect(container.queryAllByTestId('user_chip').length).toBe(3)
         expect(container.queryByText('Task Body')).toBeInTheDocument() // for the toggler
         expect(submitBtn.textContent).toContain('Update Task')
         expect(previewBtn).not.toBeNull()

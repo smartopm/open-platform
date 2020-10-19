@@ -31,6 +31,7 @@ module Types
     field :note_comment_create, mutation: Mutations::Note::NoteCommentCreate
     field :note_comment_update, mutation: Mutations::Note::NoteCommentUpdate
     field :note_comment_delete, mutation: Mutations::Note::NoteCommentDelete
+    field :set_note_reminder, mutation: Mutations::Note::SetNoteReminder
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate
@@ -65,6 +66,7 @@ module Types
     # labels
     field :label_create, mutation: Mutations::Label::LabelCreate
     field :label_update, mutation: Mutations::Label::LabelUpdate
+    field :label_delete, mutation: Mutations::Label::LabelDelete
     field :user_label_create, mutation: Mutations::Label::UserLabelCreate
     field :user_label_update, mutation: Mutations::Label::UserLabelUpdate
 

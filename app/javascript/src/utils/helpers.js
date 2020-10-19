@@ -209,7 +209,7 @@ export function pluralizeCount(count, noun, suffix = 's') {
  * @returns {String}
  */
 export function titleize(string) {
-  var words = string.split("-")
+  var words = string.split(/-|_/)
   return words.map(function(word) {
     return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase()
   }).join(' ')
