@@ -10,8 +10,9 @@ describe("User infromation component loads",()=>{
         user : {
             id : "1",
             name : "Yoram",
-            state : "Valid", 
-            userType : "admin"     
+            state : "Valid",
+            userType : "admin",
+            formUsers: []
         }
     }
     const authstate = {
@@ -31,8 +32,8 @@ describe("User infromation component loads",()=>{
           </MockedProvider>
         )
         expect(getByText('Yoram')).toBeInTheDocument()
-        expect(getByText('Valid')).toBeInTheDocument() 
-    })    
+        expect(getByText('Valid')).toBeInTheDocument()
+    })
     it('should render tab elemets',()=>{
         const {getByText} = render(
           <MockedProvider mock={data}>
@@ -46,8 +47,8 @@ describe("User infromation component loads",()=>{
         )
         expect(getByText('Plots')).toBeInTheDocument()
         expect(getByText('Communication')).toBeInTheDocument()
-        expect(getByText('Payments')).toBeInTheDocument() 
-        expect(getByText('Contact')).toBeInTheDocument() 
+        expect(getByText('Payments')).toBeInTheDocument()
+        expect(getByText('Contact')).toBeInTheDocument()
     })
     it('should render Comming soon',()=>{
         const {getByText} = render(

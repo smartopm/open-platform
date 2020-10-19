@@ -17,4 +17,5 @@ export default {
         jungleMist: '#b7d4d9',
         lightGreen: '#F4FFFD',
         clearDay: '#EFFFFC',
+        gray: '#737380'
 }
