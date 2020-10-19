@@ -96,7 +96,6 @@ export default function GenericForm({ formId }) {
       variables: { 
         formId,
         userId: authState.user.id,
-        status: 'pending',
         propValues: cleanFormData,
       }
     }).then(({ data }) => {

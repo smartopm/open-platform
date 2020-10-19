@@ -728,8 +728,8 @@ export const LogSharedPost = gql`
   }
 `
 export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $status: String, $propValues: JSON!){
-    formUserCreate(formId: $formId, userId: $userId, status: $status, propValues: $propValues){
+  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!){
+    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
       formUser {
         id
       }
