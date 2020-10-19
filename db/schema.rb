@@ -487,7 +487,6 @@ ActiveRecord::Schema.define(version: 2020_10_16_090952) do
   add_foreign_key "note_comments", "users"
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
-  add_foreign_key "notes", "form_users"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"
