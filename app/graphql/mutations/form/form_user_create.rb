@@ -43,10 +43,11 @@ module Mutations
         { form_user: form_user }
       end
 
-      def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+      def authorized?(vals)
+        return true if context[:current_user]&.admin? ||
+                       context[:current_user]&.id.eql?(vals[:user_id])
 
-        true
+        raise GraphQL::ExecutionError, 'Unauthorized'
       end
     end
   end

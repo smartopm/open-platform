@@ -39,8 +39,10 @@ module Mutations
           form_user.user_form_properties.create!(value)
       end
 
-      def authorized?(_vals)
-        return true if context[:current_user].present?
+
+      def authorized?(vals)
+        return true if context[:current_user]&.admin? ||
+                       context[:current_user]&.id.eql?(vals[:user_id])
 
         raise GraphQL::ExecutionError, 'Unauthorized'
       end
