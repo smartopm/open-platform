@@ -48,7 +48,8 @@ module Types::Queries::Form
   end
 
   def form_user(form_id:, user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
+                                                         context[:current_user]&.id.eql?(user_id)
 
     FormUser.find_by(form_id: form_id, user_id: user_id)
   end
