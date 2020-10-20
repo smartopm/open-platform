@@ -516,6 +516,7 @@ export const TaskStatsQuery = gql`
       tasksWithNoDueDate
       myOpenTasks
       totalCallsOpen
+      totalFormsOpen
     }
   }
 `

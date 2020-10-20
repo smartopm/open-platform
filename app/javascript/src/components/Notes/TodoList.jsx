@@ -61,7 +61,8 @@ export default function TodoList({
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
     myOpenTasks: `assignees: ${currentUser} AND completed: false`,
-    totalCallsOpen: 'category: call AND completed: false'
+    totalCallsOpen: 'category: call AND completed: false',
+    totalFormsOpen: 'category: form AND completed: false'
   }
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: 'user_type = admin' },
