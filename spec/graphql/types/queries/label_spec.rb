@@ -66,7 +66,7 @@ RSpec.describe Types::Queries::Label do
                                          current_user: current_user,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'labels').length).to eql 4
+      expect(result.dig('data', 'labels').length).to eql 5
       expect(result.dig('data', 'labels', 2, 'shortDesc')).not_to be_nil
       expect(result.dig('data', 'labels', 1, 'userCount')).not_to be_nil
     end
@@ -76,8 +76,8 @@ RSpec.describe Types::Queries::Label do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'userLabels', 2, 'shortDesc')).to include 'label'
-      expect(result.dig('data', 'userLabels', 2, 'id')).to eql second_label.id
+      expect(result.dig('data', 'userLabels', 3, 'shortDesc')).to include 'label'
+      expect(result.dig('data', 'userLabels', 3, 'id')).to eql second_label.id
     end
 
     it 'should retrieve labels for the other user' do
@@ -85,7 +85,7 @@ RSpec.describe Types::Queries::Label do
                                          current_user: current_user,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'userLabels', 2, 'id')).to eql first_label.id
+      expect(result.dig('data', 'userLabels', 3, 'id')).to eql first_label.id
     end
 
     it 'should retrieve all users who have this label' do
@@ -95,7 +95,7 @@ RSpec.describe Types::Queries::Label do
                                        }).as_json
       expect(result.dig('data', 'labelUsers').length).to eql 1
       expect(result.dig('data', 'labelUsers', 0, 'id')).to eql current_user.id
-      expect(result.dig('data', 'labelUsers', 0, 'labels', 2, 'id')).to eql first_label.id
+      expect(result.dig('data', 'labelUsers', 0, 'labels', 3, 'id')).to eql first_label.id
     end
   end
 end

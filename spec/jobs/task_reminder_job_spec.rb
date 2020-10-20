@@ -18,7 +18,6 @@ RSpec.describe TaskReminderJob, type: :job do
       author_id: admin.id,
     )
   end
-  before { Rails.env.stub(production?: true) }
 
   describe '#perform' do
     it 'enqueues the job' do
