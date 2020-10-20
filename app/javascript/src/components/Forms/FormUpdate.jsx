@@ -112,17 +112,28 @@ export default function FormUpdate({ formId, userId }) {
       <Container>
         <form onSubmit={saveFormData}>
           {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
-          <CenteredContent>
+          <br />
+          <br />
+          <div className="d-flex row justify-content-center">
             <Button
               variant="outlined"
               type="submit"
               color="primary"
-              aria-label="form_submit"
+              aria-label="form_approve"
             >
-              Update
+              Approve
             </Button>
-          </CenteredContent>
-          <br />
+            <Button
+              variant="outlined"
+              type="submit"
+              color="secondary"
+              aria-label="form_submit"
+              style={{ marginLeft: '10vw' }}
+            >
+              Reject
+            </Button>
+          </div>
+          
           <br />
           <CenteredContent>
             {Boolean(message.info.length) && <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}
