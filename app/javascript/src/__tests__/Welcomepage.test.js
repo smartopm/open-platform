@@ -26,7 +26,7 @@ describe('component that centers divs', () => {
 
     it('should have main centered text', () => {
         const container = render(<Welcome />)
-        expect(container.queryByTestId('maintext-centered').textContent).toContain('Its not just a house')
+        expect(container.queryByTestId('maintext-centered').textContent).toContain("It's not just a house")
     })
     it('should have location text', () => {
         const container = render(<Welcome />)
