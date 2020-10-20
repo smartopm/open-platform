@@ -20,7 +20,7 @@ const initialData = {
   date: { value: null }
 }
 
-export default function FormUpdate({ formId }) {
+export default function FormUpdate({ formId, userId }) {
 
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
@@ -29,7 +29,7 @@ export default function FormUpdate({ formId }) {
   const [createFormUser] = useMutation(FormUserCreateMutation)
 
   const { data, error, loading } = useQuery(UserFormProperiesQuery, {
-    variables: { formId, userId: authState.user.id },
+    variables: { formId, userId },
     errorPolicy: 'all'
   })
 
@@ -134,5 +134,6 @@ export default function FormUpdate({ formId }) {
 }
 
 FormUpdate.propTypes = {
-  formId: PropTypes.string.isRequired
+  formId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired
 }

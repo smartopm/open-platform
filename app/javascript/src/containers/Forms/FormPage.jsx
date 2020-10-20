@@ -5,7 +5,7 @@ import FormUpdate from '../../components/Forms/FormUpdate'
 import Nav from '../../components/Nav'
 
 export default function FormPage(){
-  const { formName, formId } = useParams()
+  const { formName, formId, userId } = useParams()
   const location = useLocation()
   const isFormFilled = location.pathname.includes('user_form')
     return (
@@ -13,7 +13,7 @@ export default function FormPage(){
         <Nav navName={formName} menuButton="back" backTo="/forms" />
         <br />
         {
-          isFormFilled ? <FormUpdate formId={formId} /> : <Form formId={formId} />
+          isFormFilled ? <FormUpdate formId={formId} userId={userId} /> : <Form formId={formId} />
         }
       </>
     )

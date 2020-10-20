@@ -64,6 +64,6 @@ module Types::Queries::Form
                                                          context[:current_user]&.id.eql?(user_id)
 
     context[:site_community].forms.find(form_id).form_users.find_by(user_id: user_id)
-                                  .user_form_properties.eager_load(:form_property)
+                            .user_form_properties.eager_load(:form_property)
   end
 end
