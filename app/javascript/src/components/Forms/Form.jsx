@@ -159,7 +159,7 @@ export default function GenericForm({ formId }) {
     <>
       <Container>
         <form onSubmit={saveFormData}>
-          {formData.formProperties.sort(sortPropertyOrder).map(field => renderForm(field))}
+          {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           <CenteredContent>
             <Button
               variant="outlined"

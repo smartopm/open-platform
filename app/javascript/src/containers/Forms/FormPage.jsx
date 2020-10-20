@@ -1,16 +1,20 @@
-// page that renders the form being created
 import React from 'react'
-import { useParams } from 'react-router'
+import { useLocation, useParams } from 'react-router'
 import Form from '../../components/Forms/Form'
+import FormUpdate from '../../components/Forms/FormUpdate'
 import Nav from '../../components/Nav'
 
 export default function FormPage(){
   const { formName, formId } = useParams()
+  const location = useLocation()
+  const isFormFilled = location.pathname.includes('user_form')
     return (
       <>
         <Nav navName={formName} menuButton="back" backTo="/forms" />
         <br />
-        <Form formId={formId} />
+        {
+          isFormFilled ? <FormUpdate formId={formId} /> : <Form formId={formId} />
+        }
       </>
     )
 }

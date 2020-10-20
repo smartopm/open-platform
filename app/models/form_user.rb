@@ -17,7 +17,7 @@ class FormUser < ApplicationRecord
   def create_form_task
     user.generate_note(
       body: "<a href=\"https://#{ENV['HOST']}/user/#{user.id}\">#{user.name}</a> Submitted
-              <a href=\"https://#{ENV['HOST']}/form/#{form.id}\">#{form.name}</a>",
+            <a href=\"https://#{ENV['HOST']}/user_form/#{form.id}/#{form.name}\">#{form.name}</a>",
       category: 'form',
       form_user_id: id,
       flagged: true,
