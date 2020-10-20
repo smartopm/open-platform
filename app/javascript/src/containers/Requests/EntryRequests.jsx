@@ -24,15 +24,15 @@ const AllEntryRequests = () => {
 export function IndexComponent({ data }) {
   function logs(entries) {
     return entries.map(entry => (
-      <tr key={entry.id}>
-        <td>{entry.name}</td>
-        <td>{entry.guard.name}</td>
+      <tr data-testid="entry_row" key={entry.id}>
+        <td data-testid="entry_name">{entry.name}</td>
+        <td data-testid="entry_guard">{entry.guard.name}</td>
         <td>{dateToString(entry.createdAt)}</td>
         <td>{dateTimeToString(new Date(entry.createdAt))}</td>
-        <td>{entry.phoneNumber}</td>
-        <td>{entry.nrc}</td>
+        <td data-testid="entry_phone">{entry.phoneNumber}</td>
+        <td data-testid="entry_nrc">{entry.nrc}</td>
         <td>{entry.vehiclePlate}</td>
-        <td>{entry.reason}</td>
+        <td data-testid="entry_reason">{entry.reason}</td>
         <td>
           {["Pending", "Granted", "Denied"][entry.grantedState] || "Pending"}
         </td>

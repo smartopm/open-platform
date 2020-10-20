@@ -39,8 +39,8 @@ class EntryRequest < ApplicationRecord
   def create_entry_task
     task_obj = {
       body: "New prospective client
-      <a href=\"https://#{ENV['HOST']}/entry_logs\">#{self[:name]}</a>
-      visited Nkwashi site. Please enroll them in system and setup a followup call",
+      <a href=\"https://#{ENV['HOST']}/request/#{self[:id]}/logs\">#{self[:name]}</a>
+      visited Nkwashi site. Please enroll them in system and setup a follow-up call",
       category: 'to_do',
       flagged: true,
       completed: false,

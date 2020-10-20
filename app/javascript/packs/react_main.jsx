@@ -225,7 +225,7 @@ const App = () => {
                         <Route path="/guard_home" component={GuardHome} />
                         {/* requests */}
                         <Route path="/entry_request" component={EntryRequest} />
-                        <Route path="/request/:id" component={RequestUpdate} />
+                        <Route path="/request/:id/:logs?" component={RequestUpdate} />
                         <Route
                           path="/request_hos/:id/"
                           component={RequestConfirm}
