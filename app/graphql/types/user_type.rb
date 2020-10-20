@@ -51,13 +51,5 @@ module Types
       Rails.application.routes.url_helpers
            .rails_blob_url(object.document)
     end
-
-    # Revert this once this PR(https://github.com/simi/omniauth-facebook/pull/344/files) is merged
-    def image_url
-      url = object.image_url
-      return url unless url.starts_with?('https://graph.facebook.com')
-
-      "#{url}?access_token=#{object.token}"
-    end
   end
 end
