@@ -4,7 +4,7 @@ module Types
   # UserFormPropertiesType
   class UserFormPropertiesType < Types::BaseObject
     field :id, ID, null: false
-    field :form_property_id, Types::FormPropertiesType, null: false
+    field :form_property, Types::FormPropertiesType, null: false
     field :form_user_id, Types::FormUsersType, null: false
     field :user, Types::UserType, null: false
     field :value, String, null: true
