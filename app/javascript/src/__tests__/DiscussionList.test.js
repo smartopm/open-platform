@@ -1,13 +1,17 @@
-/* eslint-disable */
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import DiscussionList from '../components/Discussion/DiscussionList'
 import { BrowserRouter } from 'react-router-dom'
+import { MockedProvider } from '@apollo/react-testing'
+import DiscussionList from '../components/Discussion/DiscussionList'
 
 describe('Discussion List page', () => {
     it('renders no topics when none provided', () => {
-        const container = render(<DiscussionList  data={[]} />)
+        const container = render(
+          <MockedProvider>
+            <DiscussionList data={[]} />
+          </MockedProvider>
+        )
         expect(container.queryByText('No Discussions Topics')).toBeInTheDocument()
     })
       
@@ -26,16 +30,25 @@ describe('Discussion List page', () => {
                 id: '4567sd3874jssdf'
             }
         ]
+        const fetchMock = jest.fn()
+        const isAdmin = true
         const container = render(
+          <MockedProvider mocks={[]}>
             <BrowserRouter>
-                <DiscussionList data={data} />
+              <DiscussionList data={data} refetch={fetchMock} isAdmin={isAdmin} />
             </BrowserRouter>
+          </MockedProvider>
         )
         expect(container.queryByText('No Discussions Topics')).not.toBeInTheDocument()
         expect(container.queryAllByTestId('disc_title')).toHaveLength(2)
         expect(container.queryByText('John Mbuzi')).toBeInTheDocument()
         expect(container.queryByText('Second Title')).toBeInTheDocument()
         expect(container.queryByText('Jo Kos')).toBeInTheDocument()
+        expect(container.getAllByLabelText('delete')).toHaveLength(2)
+        const deleteBtns = container.getAllByLabelText('delete')
+        expect(deleteBtns[0]).not.toBeDisabled()
+        expect(deleteBtns[1]).not.toBeDisabled()
+        // can click
+        fireEvent.click(deleteBtns[0])
     })
-    
 })
