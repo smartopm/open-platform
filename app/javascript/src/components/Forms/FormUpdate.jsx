@@ -8,7 +8,7 @@ import { UserFormProperiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
-import { FormUserUpdateMutation } from '../../graphql/mutations'
+import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import TextInput from './TextInput'
 import { sortPropertyOrder } from '../../utils/helpers'
@@ -28,6 +28,7 @@ export default function FormUpdate({ formId, userId }) {
   const authState = useContext(AuthStateContext)
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation)
+  const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation)
 
   const { data, error, loading } = useQuery(UserFormProperiesQuery, {
     variables: { formId, userId },
@@ -48,6 +49,17 @@ export default function FormUpdate({ formId, userId }) {
     })
   }
 
+  function handleStatusUpdate(status){
+    updateFormUserStatus({
+      variables: {
+        formId,
+        userId,
+        status 
+      }
+    })
+    .then(() => setMessage({ ...message, err: false, info: 'The Form was successfully updated' }))
+    .catch(err => setMessage({ ...message, err: true, info: err.message }))
+  }
 
   function saveFormData(event){
     event.preventDefault()
@@ -80,6 +92,7 @@ export default function FormUpdate({ formId, userId }) {
     const fields = {
       text: (
         <TextInput
+          id={formPropertiesData.formProperty.id}
           key={formPropertiesData.formProperty.id}
           properties={formPropertiesData.formProperty}
           value={formPropertiesData.value}
@@ -96,6 +109,8 @@ export default function FormUpdate({ formId, userId }) {
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
+      image: <p key={formPropertiesData.formProperty.id}>Image was uploaded</p>,
+      signature: <p key={formPropertiesData.formProperty.id}>This form was signed</p>
     }
     return fields[formPropertiesData.formProperty.fieldType]
   }
@@ -112,15 +127,24 @@ export default function FormUpdate({ formId, userId }) {
               variant="outlined"
               type="submit"
               color="primary"
+              aria-label="form_update"
+            >
+              Update
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => handleStatusUpdate('approved')}
+              color="primary"
               aria-label="form_approve"
+              style={{ marginLeft: '10vw' }}
             >
               Approve
             </Button>
             <Button
               variant="outlined"
-              type="submit"
+              onClick={() => handleStatusUpdate('rejected')}
               color="secondary"
-              aria-label="form_submit"
+              aria-label="form_reject"
               style={{ marginLeft: '10vw' }}
             >
               Reject

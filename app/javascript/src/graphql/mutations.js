@@ -783,3 +783,12 @@ export const FormUserUpdateMutation = gql`
     }
   }
 `
+export const FormUserStatusUpdateMutation = gql`
+    mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!){
+      formUserStatusUpdate(formId: $formId, userId: $userId, status:$status){
+        formUser {
+          id
+        }
+      }
+    }
+`
