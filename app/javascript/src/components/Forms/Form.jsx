@@ -30,7 +30,6 @@ export default function GenericForm({ formId }) {
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const signRef = useRef(null)
-  const formRef = useRef(null)
   const authState = useContext(AuthStateContext)
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
@@ -160,7 +159,7 @@ export default function GenericForm({ formId }) {
   return (
     <>
       <Container>
-        <form onSubmit={saveFormData} ref={formRef}>
+        <form onSubmit={saveFormData}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           <CenteredContent>
             <Button
@@ -189,11 +188,11 @@ GenericForm.propTypes = {
 }
 
 
-function propExists(values, propId) {
+export function propExists(values, propId) {
   return values.some(value => value.form_property_id === propId)
 }
 
-function addPropWithValue(properties, propId) {
+export function addPropWithValue(properties, propId) {
   if (propExists(properties, propId)) {
     return
   }
