@@ -59,6 +59,7 @@ module Types::Queries::Form
     FormUser.eager_load(:user, :form).find_by(form_id: form_id, user_id: user_id)
   end
 
+  # rubocop:disable Metrics/AbcSize
   def form_user_properties(form_id:, user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          context[:current_user]&.id.eql?(user_id)
@@ -66,4 +67,5 @@ module Types::Queries::Form
     context[:site_community].forms.find(form_id).form_users.find_by(user_id: user_id)
                             .user_form_properties.eager_load(:form_property)
   end
+  # rubocop:enable Metrics/AbcSize
 end

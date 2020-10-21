@@ -14,6 +14,7 @@ class FormUser < ApplicationRecord
 
   private
 
+  # rubocop:disable Metrics/AbcSize
   def create_form_task
     user.generate_note(
       body: "<a href=\"https://#{ENV['HOST']}/user/#{user.id}\">#{user.name}</a> Submitted
@@ -25,4 +26,5 @@ class FormUser < ApplicationRecord
       completed: false,
     )
   end
+  # rubocop:enable Metrics/AbcSize
 end

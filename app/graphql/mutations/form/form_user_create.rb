@@ -39,9 +39,6 @@ module Mutations
           user_prop = form_user.user_form_properties.create!(value.except('image_blob_id'))
           attach_image(user_prop, value) if value.key?('image_blob_id')
         end
-      #  load the form and iterate ==> properties
-      #  diff => value ==> form_property_id
-      #  use a passed value or a default value for that property_id
 
         { form_user: form_user }
       end
