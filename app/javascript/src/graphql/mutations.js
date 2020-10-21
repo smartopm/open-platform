@@ -332,6 +332,16 @@ export const DeleteNoteComment = gql`
   }
 `
 
+export const AddPlotNumber = gql`
+  mutation AddPlotNumber($userId: ID!, $accountId: ID, $parcelNumber: String!) {
+    landParcel(userId: $userId, accountId: $accountId, parcelNumber: $parcelNumber) {
+      landParcel {
+        id
+      }
+    }
+  }
+`
+
 export const DeleteLabel = gql`
   mutation LabelDelete($id: ID!) {
     labelDelete(id: $id) {

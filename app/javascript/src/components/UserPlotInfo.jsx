@@ -1,101 +1,151 @@
-/* eslint-disable */
-import React from 'react'
-import { Link } from 'react-router-dom'
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable no-use-before-define */
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import {  Button } from '@material-ui/core'
-import { useHistory } from 'react-router-dom'
-import { dateToString } from '../components/DateContainer'
-import { Grid } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
+import CreateIcon from '@material-ui/icons/Create';
+import { dateToString } from "./DateContainer"
 import GeoData from '../data/nkwashi_plots.json'
+import PlotModal from "./PlotOpen"
 
-/**
- * @param {object} jsonData
- * @param {string} value
- * @description return feature in geodata that matches property name
- * @example getPropertyByName(data, 'Basic')
- * @returns {object}
- */
-function getPropertyByName(jsonData, value) {
-  const data = jsonData.features
-  const property = data.filter(feature =>
-    value.includes(feature.properties.name)
-  )
-  return property
-}
-
-export function UserPlotInfo({ accounts }) {
-  let land_parcels = []
-  let plotNumber = []
-  accounts &&
-    accounts.forEach(account => {
-      land_parcels = [...land_parcels, ...account.landParcels]
-    })
-
-  land_parcels &&
-    land_parcels.forEach(plot => {
-      plotNumber.push(plot.parcelNumber)
-    })
-  let history = useHistory()
-  function plotInformation() {
-    return (
-      <div className="container">
-        <p data-testid="no_plot">No plots information available. </p>
-      </div>
+export default function UserPlotInfo({ accounts, userId, refetch }) {
+  function getPropertyByName(jsonData, value) {
+    const data = jsonData.features
+    const property = data.filter(feature =>
+      value.includes(feature.properties.name)
     )
+    return property
   }
 
-  if (accounts && accounts.length > 0 && land_parcels.length > 0) {
-    const convertedDateTime = dateToString(accounts[0].updatedAt)
+  const [landParcel, setLandParcel] = useState([])
+  const [plotNumber, setPlotNumber] = useState([])
+  const [addOpen, setAddOpen] = useState(false)
 
-    let features = getPropertyByName(GeoData, plotNumber)
+  function setData(){
+    if (accounts) {
+      console.log(accounts)
+      accounts.forEach(account => {
+        setLandParcel([...landParcel, ...account.landParcels])
+      })
+    }
+
+    if (landParcel.length > 0){
+      landParcel.forEach(plot => {
+        setPlotNumber(...plotNumber, ...plot.parcelNumber)
+      })
+    }
+  }
+
+  useEffect(() => {
+    setData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+    const history = useHistory() 
+
+    const features = getPropertyByName(GeoData, plotNumber)
     return (
       <>
-        <div className="container">
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <p>Plots associated with this account:</p>
-              <ol data-testid="parcel_list">
-                {land_parcels.map((plot, index) => (
-                  <li key={index}>{plot.parcelNumber}</li>
-                ))}
-              </ol>
-              <p>
-                This data was updated on {convertedDateTime}. If Something seems
-                incorrect, contact our
-                <span className={css(styles.supportLink)}>
-                  &nbsp;
-                  <Link
-                    data-testid="support_link"
-                    to="/contact"
-                    className={css(styles.routeLink)}
+        {accounts && accounts.length > 0 && landParcel.length > 0 ? (
+          <div className="container">
+            <div className={css(styles.body)}>
+              <div>
+                <div style={{display: 'flex'}}>
+                  <Typography variant='body1'><b>Plots associated with this account:</b></Typography>
+                  {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                  <div 
+                    style={{display: 'flex', marginLeft: 'auto', order: 2, color: '#69aba4', cursor: 'pointer'}}
+                    onClick={() => setAddOpen(true)}
                   >
-                    Support Team.
-                  </Link>
-                </span>
-              </p>
-            </Grid>
-            <Grid item lg={12} md={12} xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => history.push({ pathname: '/myplot', state: { features } })}
-                className={`${css(styles.chatButton)}`}
-              >
-                My Plot Location
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
+                    <AddIcon style={{marginRight: '5px', paddingBottom: '2px'}} />
+                    <Typography variant='body2'>Add Plots</Typography>
+                  </div>
+                </div>
+                {landParcel.map((plot, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <div style={{display: 'flex'}} key={index}>
+                    <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
+                    <div style={{margin: '20px 10px', color: '#69ABA4', cursor: 'pointer'}}>
+                      <Tooltip title="Edit Plot" placement="top">
+                        <CreateIcon />
+                      </Tooltip>
+                    </div>
+                  </div>
+                ))}
+                <Typography variant='body2'>
+                  This data was updated on 
+                  {' '}
+                  {dateToString(accounts[0]?.updatedAt)}
+                  . If Something seems
+                  incorrect, contact our
+                  <span className={css(styles.supportLink)}>
+                  &nbsp;
+                    <Link
+                      data-testid="support_link"
+                      to="/contact"
+                      className={css(styles.routeLink)}
+                    >
+                      Support Team.
+                    </Link>
+                  </span>
+                </Typography>
+              </div>
+              <div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => history.push({ pathname: '/myplot', state: { features } })}
+                  className={`${css(styles.chatButton)}`}
+                >
+                  My Plot Location
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="container">
+            <p data-testid="no_plot">No plots information available. </p>
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+            <div 
+              style={{display: 'flex', marginLeft: 'auto', order: 2, color: '#69aba4', cursor: 'pointer'}}
+              onClick={() => setAddOpen(true)}
+            >
+              <AddIcon style={{marginRight: '5px', paddingBottom: '2px'}} />
+              <Typography variant='body2'>Add Plots</Typography>
+            </div>
+          </div>
+        )}
+        <PlotModal open={addOpen} handleClose={() => setAddOpen(false)} accountId={accounts[0]?.id} userId={userId} refetch={refetch} />
       </>
     )
   }
-  return plotInformation()
-}
 
 const styles = StyleSheet.create({
   supportLink: {
     fontWeight: 'bold',
     cursor: 'pointer'
+  },
+  plotNumber: {
+    listStyle: 'none',
+    background: '#fafefe',
+    padding: '10px',
+    width: '30%',
+    margin: '10px',
+    textAlign: 'center',
+    border: '2px solid #69aba4',
+    color: '#69aba4'
+  },
+  body: {
+    display: 'flex',
+    flexDirection: 'column',       
+    alignItems: 'center'
   },
   routeLink: {
     textDecoration: 'underline',
@@ -104,7 +154,7 @@ const styles = StyleSheet.create({
   chatButton: {
     backgroundColor: '#69ABA4',
     color: '#FFF',
-    width: '55%',
+    width: '100%',
     height: 51,
     boxShadow: 'none',
     marginTop: 50

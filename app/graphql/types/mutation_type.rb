@@ -92,5 +92,9 @@ module Types
     field :form_user_status_update, mutation: Mutations::Form::FormUserStatusUpdate
     field :user_form_properties_create, mutation: Mutations::Form::UserFormPropertiesCreate
     field :user_form_properties_update, mutation: Mutations::Form::UserFormPropertiesUpdate
+
+    # land_parcel
+    field :land_parcel, mutation: Mutations::LandParcel::LandParcelCreate
+    field :land_parcel_update, mutation: Mutations::LandParcel::LandParcelUpdate
   end
 end

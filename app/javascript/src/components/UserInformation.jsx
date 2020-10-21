@@ -2,7 +2,7 @@
 import React, { Fragment, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { UserPlotInfo } from './UserPlotInfo'
+import UserPlotInfo from './UserPlotInfo'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
@@ -256,7 +256,7 @@ export default function UserInformation({
           </>
         )}
         <TabPanel value={tabValue} index={'Plots'}>
-          <UserPlotInfo accounts={data.user.accounts} />
+          <UserPlotInfo accounts={data.user.accounts} userId={data.user.id} refetch={refetch} />
         </TabPanel>
         <TabPanel value={tabValue} index={'Forms'}>
           <UserFilledForms userFormsFilled={data.user.formUsers} />
