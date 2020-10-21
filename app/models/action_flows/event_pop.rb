@@ -12,32 +12,52 @@ class EventPop
         },
         'Message' => {
             'message' => 'Message'
-        }   
+        },
+        'Note' => {
+            'id' => '',
+            'user_id' => '',
+            'author_id' => '',
+            'body' => '',
+        }
     }
     attr_accessor :data_set
+              
+    def self.event_description
+        EVENT_DESC
+    end
+
+    def self.event_type
+        EVENT_TYPE
+    end
+
     def self.obj_data 
         OBJECT_DATA
     end
-    def initialize 
+
+    def initialize
         @data_set ={}
     end
 
     def self.event_metadata
-        {}
+        # Rule Builder
+        {} 
     end
 
     def load_data(data)
         data.keys.each{| key |
-            obj_val = self.class.event_metadata[key]
+            obj_val = self.class.event_metadata[key.to_s]
             obj_val.keys.each { | co |
             puts co
-                @data_set["#{key}-#{co}"] = data[key].send(co)  
+                @data_set["#{key.to_s.downcase}_#{co}".to_sym] = data.dig(key, co)
             }
         }
     end
 
     def event_condition
         EventCondition.new(@data_set.to_json)
+    end
+
+    def run_condition
     end
 
     def self.event_list 

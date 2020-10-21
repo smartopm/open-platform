@@ -4,15 +4,6 @@ module ActionFlows
             EVENT_TYPE='user_login'
             EVENT_DESC='User Login'
 
-            
-            def self.event_description
-                EVENT_DESC
-            end
-        
-            def self.event_type
-                EVENT_TYPE
-            end
-
             def self.event_metadata
                 {
                     'User' => self.obj_data['User']
