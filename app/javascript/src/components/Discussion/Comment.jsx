@@ -225,7 +225,7 @@ export function CommentBox({
               name="image"
               id="image"
               capture
-              onChange={upload.handleFileUpload}
+              onChange={event => upload.handleFileUpload(event.target.files[0])}
               style={{ display: 'none' }}
             />
             <AddPhotoAlternateIcon

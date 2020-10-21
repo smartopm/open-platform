@@ -43,7 +43,7 @@ export default function GenericForm({ formId }) {
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
-  const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId } = useFileUpload({
+  const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId, url: signUrl } = useFileUpload({
     client: useApolloClient()
   })
 
@@ -81,12 +81,12 @@ export default function GenericForm({ formId }) {
 
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
-      const newValue = { value: signatureBlobId, form_property_id: fileSignType.id, image_blob_id: signatureBlobId }
+      const newValue = { value: signUrl, form_property_id: fileSignType.id, image_blob_id: signatureBlobId }
       filledInProperties.push(newValue)
     }
     // check if we uploaded then attach the blob id to the newValue
     if (signedBlobId && url) {
-      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id, image_blob_id: signedBlobId }
+      const newValue = { value: url, form_property_id: fileUploadType.id, image_blob_id: signedBlobId }
       filledInProperties.push(newValue)
     }
     // update all form values
