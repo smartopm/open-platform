@@ -10,15 +10,10 @@ module Mutations
       field :land_parcel_update, GraphQL::Types::Boolean, null: true
 
       def resolve(vals)
-        puts "####################################################&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-        land_parcel_update = LandParcel.find_by(id: vals[:id])
-        # land_parcel_update = context[:site_community].land_parcels.find_by(id: vals[:id])
-        puts "####################################################&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-        puts land_parcel_update
-        puts "####################################################&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+        land_parcel_update = context[:site_community].land_parcels.find_by(id: vals[:id])
         raise GraphQL::ExecutionError, 'Land Parcel not found' if land_parcel_update.nil?
 
-        land_parcel_update.update!(parcel_number: vals[:parcel_number])
+        land_parcel_update.update(parcel_number: vals[:parcel_number])
 
         return { land_parcel_update: land_parcel_update } if land_parcel_update
 
@@ -26,7 +21,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        # raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
         true
       end

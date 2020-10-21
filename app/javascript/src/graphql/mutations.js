@@ -345,9 +345,7 @@ export const AddPlotNumber = gql`
 export const EditPlotNumber = gql`
   mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
     landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {
-      landParcelUpdate {
-        id
-      }
+      landParcelUpdate
     }
   }
 `
