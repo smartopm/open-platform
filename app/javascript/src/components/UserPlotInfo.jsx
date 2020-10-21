@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
+import { useQuery } from 'react-apollo'
 import {  Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
@@ -13,8 +14,11 @@ import { dateToString } from "./DateContainer"
 import GeoData from '../data/nkwashi_plots.json'
 import PlotModal from "./PlotOpen"
 import EditModal from './EditPlot'
+import { UserAccountQuery } from '../graphql/queries'
+import ErrorPage from "./Error"
+import Loading from './Loading'
 
-export default function UserPlotInfo({ accounts, userId, refetch }) {
+export default function UserPlotInfo({ userId }) {
   function getPropertyByName(jsonData, value) {
     const data = jsonData.features
     const property = data.filter(feature =>
@@ -28,6 +32,12 @@ export default function UserPlotInfo({ accounts, userId, refetch }) {
   const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [plotData, setPlotData] = useState({})
+
+  const { data: {user: {accounts}}, error, loading, refetch } = useQuery(UserAccountQuery, {
+    variables: { id: userId },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  })
 
   function handlePlotData(plot){
     setPlotData(plot)
@@ -51,11 +61,13 @@ export default function UserPlotInfo({ accounts, userId, refetch }) {
   useEffect(() => {
     setData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [accounts])
 
     const history = useHistory() 
 
     const features = getPropertyByName(GeoData, plotNumber)
+    if (loading) return <Loading />
+    if (error) return <ErrorPage title={error.message} />
     return (
       <>
         {accounts && accounts.length > 0 && landParcel.length > 0 ? (

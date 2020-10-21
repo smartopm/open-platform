@@ -26,19 +26,17 @@ export default function EditPlotModal({ open, handleClose, data, refetch }) {
       id: data.id,
       parcelNumber: data.parcelNumber
     }}).then(() => {
-      handleClose()
       refetch()
+      handleClose()
     })
   }
 
   useEffect(() => {
     setParcelNumber(data.parcelNumber)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [data])
 
   return (
     <>
-      {console.log(data)}
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose} className={classes.title}>
           Edit Plot

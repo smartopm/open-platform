@@ -21,8 +21,6 @@ export default function PlotModal({ open, handleClose, userId, accountId, refetc
   const [parcelNumber, setParcelNumber] = useState('')
 
   function handleAddPlotNumber(event) {
-    console.log(event)
-    event.stopPropagation()
     event.preventDefault()
     addPlot({ variables: {
       userId,
