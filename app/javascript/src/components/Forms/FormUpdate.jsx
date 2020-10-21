@@ -124,7 +124,6 @@ export default function FormUpdate({ formId, userId }) {
           <br />
           <div className="d-flex row justify-content-center">
             <Button
-              variant="outlined"
               type="submit"
               color="primary"
               aria-label="form_update"
