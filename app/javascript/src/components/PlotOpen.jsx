@@ -4,8 +4,8 @@
 import React, {useState} from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import { useMutation } from 'react-apollo'
@@ -39,19 +39,19 @@ export default function PlotModal({ open, handleClose, userId, accountId, refetc
           Add Plot
         </DialogTitle>
         <form onSubmit={handleAddPlotNumber}>
-          <div style={{ margin: '15px' }}>
+          <DialogContent style={{ margin: '15px' }}>
             <Typography variant='body1'><b>Add a new plot associated with this user</b></Typography>
             <TextField autoFocus id="standard-basic" label="Plot Number" style={{width: '100%'}} onChange={e => setParcelNumber(e.target.value)} />
-          </div>
+          </DialogContent>
           <Divider />
-          <div style={{ margin: '10px' }}>
+          <DialogActions style={{ margin: '10px' }}>
             <Button onClick={handleClose} variant="outlined" color="secondary">
               Cancel
             </Button>
             <Button autoFocus variant="contained" type="submit" style={{ backgroundColor: '#66a59a', color: 'white' }}>
               Save changes
             </Button>
-          </div>
+          </DialogActions>
         </form>
       </Dialog>
     </>

@@ -6,7 +6,7 @@ module Mutations
     class LandParcelUpdate < BaseMutation
       argument :id, ID, required: true
       argument :parcel_number, String, required: true
-      
+
       field :land_parcel_update, GraphQL::Types::Boolean, null: true
 
       def resolve(vals)

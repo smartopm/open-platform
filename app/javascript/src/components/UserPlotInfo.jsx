@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
-import { useQuery } from 'react-apollo'
 import {  Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
@@ -14,11 +13,8 @@ import { dateToString } from "./DateContainer"
 import GeoData from '../data/nkwashi_plots.json'
 import PlotModal from "./PlotOpen"
 import EditModal from './EditPlot'
-import { UserAccountQuery } from '../graphql/queries'
-import ErrorPage from "./Error"
-import Loading from './Loading'
 
-export default function UserPlotInfo({ userId }) {
+export default function UserPlotInfo({ userId, account, refetch }) {
   function getPropertyByName(jsonData, value) {
     const data = jsonData.features
     const property = data.filter(feature =>
@@ -27,17 +23,11 @@ export default function UserPlotInfo({ userId }) {
     return property
   }
 
-  const [landParcel, setLandParcel] = useState([])
+  // const [landParcel, setLandParcel] = useState([])
   const [plotNumber, setPlotNumber] = useState([])
   const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [plotData, setPlotData] = useState({})
-
-  const { data: {user: {accounts}}, error, loading, refetch } = useQuery(UserAccountQuery, {
-    variables: { id: userId },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  })
 
   function handlePlotData(plot){
     setPlotData(plot)
@@ -45,14 +35,14 @@ export default function UserPlotInfo({ userId }) {
   } 
 
   function setData(){
-    if (accounts) {
-      accounts.forEach(account => {
-        setLandParcel([...landParcel, ...account.landParcels])
-      })
-    }
+    // if (account) {
+    //   account.forEach(accounts => {
+    //     setLandParcel([...landParcel, ...accounts.landParcels])
+    //   })
+    // }
 
-    if (landParcel.length > 0){
-      landParcel.forEach(plot => {
+    if (account[0]?.landParcels[0]){
+      account[0].landParcels.forEach(plot => {
         setPlotNumber(...plotNumber, ...plot.parcelNumber)
       })
     }
@@ -61,16 +51,14 @@ export default function UserPlotInfo({ userId }) {
   useEffect(() => {
     setData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accounts])
+  }, [account])
 
     const history = useHistory() 
 
     const features = getPropertyByName(GeoData, plotNumber)
-    if (loading) return <Loading />
-    if (error) return <ErrorPage title={error.message} />
     return (
       <>
-        {accounts && accounts.length > 0 && landParcel.length > 0 ? (
+        {account[0]?.landParcels?.length > 0 ? (
           <div className="container">
             <div className={css(styles.body)}>
               <div>
@@ -86,7 +74,7 @@ export default function UserPlotInfo({ userId }) {
                     <Typography variant='body2'>Add Plots</Typography>
                   </div>
                 </div>
-                {landParcel.map((plot, index) => (
+                {account[0].landParcels.map((plot, index) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <div style={{display: 'flex'}} key={index}>
                     <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
@@ -100,7 +88,7 @@ export default function UserPlotInfo({ userId }) {
                 <Typography variant='body2'>
                   This data was updated on 
                   {' '}
-                  {dateToString(accounts[0]?.updatedAt)}
+                  {dateToString(account[0]?.updatedAt)}
                   . If Something seems
                   incorrect, contact our
                   <span className={css(styles.supportLink)}>
@@ -141,7 +129,7 @@ export default function UserPlotInfo({ userId }) {
             </div>
           </div>
         )}
-        <PlotModal open={addOpen} handleClose={() => setAddOpen(false)} accountId={accounts[0]?.id} userId={userId} refetch={refetch} />
+        <PlotModal open={addOpen} handleClose={() => setAddOpen(false)} accountId={account[0]?.id} userId={userId} refetch={refetch} />
         <EditModal open={editOpen} handleClose={() => setEditOpen(false)} refetch={refetch} data={plotData} />
       </>
     )

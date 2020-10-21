@@ -24,7 +24,7 @@ export default function EditPlotModal({ open, handleClose, data, refetch }) {
     event.preventDefault()
     editPlot({ variables: {
       id: data.id,
-      parcelNumber: data.parcelNumber
+      parcelNumber
     }}).then(() => {
       refetch()
       handleClose()

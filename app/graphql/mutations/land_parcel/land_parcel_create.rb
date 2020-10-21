@@ -7,15 +7,15 @@ module Mutations
       argument :user_id, ID, required: true
       argument :account_id, ID, required: false
       argument :parcel_number, String, required: true
-      
+
       field :land_parcel, Types::LandParcelType, null: true
 
       def resolve(vals)
-        if vals[:account_id].present?
-          land_parcel = create_land_parcel(vals)
-        else
-          land_parcel = create_account_land_parcel(vals)
-        end
+        land_parcel = if vals[:account_id].present?
+                        create_land_parcel(vals)
+                      else
+                        create_account_land_parcel(vals)
+                      end
 
         return { land_parcel: land_parcel } if land_parcel
       end
@@ -23,6 +23,7 @@ module Mutations
       def create_land_parcel(vals)
         account = context[:site_community].accounts.find_by(id: vals[:account_id])
         raise GraphQL::ExecutionError, 'Account not found' if account.nil?
+
         check_land_parcel(vals, account)
       end
 
