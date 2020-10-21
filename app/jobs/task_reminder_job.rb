@@ -5,8 +5,6 @@ class TaskReminderJob < ApplicationJob
   queue_as :default
 
   def perform(note_id, user_id)
-    return unless Rails.env.production?
-
     user = User.find(user_id)
     note = Note.find(note_id)
 

@@ -8,9 +8,10 @@ import { UserFormProperiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
-import { FormUserCreateMutation } from '../../graphql/mutations'
+import { FormUserUpdateMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import TextInput from './TextInput'
+import { sortPropertyOrder } from '../../utils/helpers'
 // date
 // text input (TextField or TextArea)
 // upload
@@ -26,7 +27,7 @@ export default function FormUpdate({ formId, userId }) {
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const authState = useContext(AuthStateContext)
   // create form user
-  const [createFormUser] = useMutation(FormUserCreateMutation)
+  const [updateFormUser] = useMutation(FormUserUpdateMutation)
 
   const { data, error, loading } = useQuery(UserFormProperiesQuery, {
     variables: { formId, userId },
@@ -58,19 +59,15 @@ export default function FormUpdate({ formId, userId }) {
     // formUserId
     // fields and their values
     // create form user ==> form_id, user_id, status
-    createFormUser({
+    updateFormUser({
       variables: { 
         formId,
         userId: authState.user.id,
         propValues: cleanFormData,
       }
     // eslint-disable-next-line no-shadow
-    }).then(({ data }) => {
-          if (data.formUserCreate.formUser === null) {
-             setMessage({ ...message, err: true, info: data.formUserCreate.error })
-             return
-          }
-        setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
+    }).then(() => {
+        setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
     })
    .catch(err => setMessage({ ...message, err: true, info: err.message }))
   }
@@ -101,10 +98,6 @@ export default function FormUpdate({ formId, userId }) {
       ),
     }
     return fields[formPropertiesData.formProperty.fieldType]
-  }
-
-  function sortPropertyOrder(field1, field2){
-      return Number(field1.formProperty.order) - Number(field2.formProperty.order)
   }
 
   return (

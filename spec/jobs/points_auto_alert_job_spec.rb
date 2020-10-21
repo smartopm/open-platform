@@ -9,6 +9,7 @@ RSpec.describe PointsAutoAlertJob, type: :job do
            })
   end
   let!(:user) { create(:user, community: community, user_type: 'client') }
+
   before { Rails.env.stub(production?: true) }
 
   describe '#perform' do
@@ -23,8 +24,9 @@ RSpec.describe PointsAutoAlertJob, type: :job do
       perform_enqueued_jobs { described_class.perform_later }
     end
 
-    it 'does not invoke EmailMsg if user is in ignored list' do
-      user.update!(email: 'fkaputula@yahoo.com')
+    it 'does not invoke EmailMsg if user does not have weekly_point_reminder_email' do
+      reminder_label = Label.find_by(short_desc: 'weekly_point_reminder_email')
+      user.user_labels.find_by(label_id: reminder_label.id).destroy
       expect(EmailMsg).not_to receive(:send_mail)
       perform_enqueued_jobs { described_class.perform_later }
     end

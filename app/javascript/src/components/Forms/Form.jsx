@@ -14,7 +14,7 @@ import { useFileUpload } from '../../graphql/useFileUpload'
 import TextInput from './TextInput'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
-import { convertBase64ToFile } from '../../utils/helpers'
+import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
 
 // date
 // text input (TextField or TextArea)
@@ -30,6 +30,7 @@ export default function GenericForm({ formId }) {
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const signRef = useRef(null)
+  const formRef = useRef(null)
   const authState = useContext(AuthStateContext)
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
@@ -68,11 +69,12 @@ export default function GenericForm({ formId }) {
     const signature = await convertBase64ToFile(url64)
     await uploadSignature(signature)
   }
-
-  function saveFormData(event){
+  
+   function saveFormData(event){
     event.preventDefault()
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0]
+    
     
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
@@ -88,6 +90,8 @@ export default function GenericForm({ formId }) {
       const newValue = { value: signedBlobId, form_property_id: fileUploadType.id, image_blob_id: signedBlobId }
       filledInProperties.push(newValue)
     }
+    // update all form values
+     formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id))
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
     // formUserId
     // fields and their values
@@ -116,6 +120,7 @@ export default function GenericForm({ formId }) {
     const fields = {
       text: (
         <TextInput
+          id={formPropertiesData.id}
           key={formPropertiesData.id}
           properties={formPropertiesData}
           defaultValue={properties.fieldName}
@@ -125,6 +130,7 @@ export default function GenericForm({ formId }) {
       ),
       date: (
         <DatePickerDialog
+          id={formPropertiesData.id}
           key={formPropertiesData.id}
           selectedDate={properties.date.value}
           handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
@@ -151,14 +157,10 @@ export default function GenericForm({ formId }) {
     return fields[formPropertiesData.fieldType]
   }
 
-  function sortPropertyOrder(field1, field2){
-      return Number(field1.order) - Number(field2.order)
-  }
-
   return (
     <>
       <Container>
-        <form onSubmit={saveFormData}>
+        <form onSubmit={saveFormData} ref={formRef}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           <CenteredContent>
             <Button
@@ -184,4 +186,16 @@ export default function GenericForm({ formId }) {
 
 GenericForm.propTypes = {
   formId: PropTypes.string.isRequired
+}
+
+
+function propExists(values, propId) {
+  return values.some(value => value.form_property_id === propId)
+}
+
+function addPropWithValue(properties, propId) {
+  if (propExists(properties, propId)) {
+    return
+  }
+  properties.push({ value: null, form_property_id: propId })
 }

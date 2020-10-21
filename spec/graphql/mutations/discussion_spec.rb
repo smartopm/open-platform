@@ -7,6 +7,11 @@ RSpec.describe Mutations::Discussion do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
     let!(:non_admin) { create(:user_with_community, user_type: 'resident') }
     let!(:guard) { create(:user_with_community, user_type: 'security_guard') }
+    let!(:discussion) do
+      create(:discussion, user_id: current_user.id,
+                          community_id: current_user.community_id)
+    end
+
     let(:query) do
       <<~GQL
         mutation discussionCreate(
@@ -27,6 +32,16 @@ RSpec.describe Mutations::Discussion do
       GQL
     end
 
+    let(:update_query) do
+      <<~GQL
+        mutation discussionUpdate($discussionId: ID!, $status: String!){
+          discussionUpdate(discussionId: $discussionId, status: $status){
+            success
+          }
+        }
+      GQL
+    end
+
     it 'returns a created Discussion' do
       variables = {
         postId: '21',
@@ -44,6 +59,21 @@ RSpec.describe Mutations::Discussion do
       expect(result.dig('data', 'discussionCreate', 'discussion', 'userId')).to eql current_user.id
       expect(result.dig('data', 'discussionCreate', 'discussion', 'postId')).to eql '21'
       expect(result.dig('data', 'discussionCreate', 'discussion', 'description')).to include 'Lets'
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'deletes a discussion' do
+      variables = {
+        discussionId: discussion.id,
+        status: 'deleted',
+      }
+
+      result = DoubleGdpSchema.execute(update_query, variables: variables,
+                                                     context: {
+                                                       current_user: current_user,
+                                                       site_community: current_user.community,
+                                                     }).as_json
+      expect(result.dig('data', 'discussionUpdate', 'success')).to eql 'updated'
       expect(result.dig('errors')).to be_nil
     end
 

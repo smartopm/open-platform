@@ -766,3 +766,20 @@ export const TaskReminder = gql`
     }
   }
 `
+
+export const DiscussionUpdateMutation = gql`
+  mutation discussionUpdate($discussionId: ID!, $status: String!){
+    discussionUpdate(discussionId: $discussionId, status: $status){
+      success
+    }
+  }
+`
+export const FormUserUpdateMutation = gql`
+  mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!){
+    formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues){
+      formUser {
+        id
+      }
+    }
+  }
+`
