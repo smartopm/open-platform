@@ -12,6 +12,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import { dateToString } from "./DateContainer"
 import GeoData from '../data/nkwashi_plots.json'
 import PlotModal from "./PlotOpen"
+import EditModal from './EditPlot'
 
 export default function UserPlotInfo({ accounts, userId, refetch }) {
   function getPropertyByName(jsonData, value) {
@@ -25,10 +26,16 @@ export default function UserPlotInfo({ accounts, userId, refetch }) {
   const [landParcel, setLandParcel] = useState([])
   const [plotNumber, setPlotNumber] = useState([])
   const [addOpen, setAddOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [plotData, setPlotData] = useState({})
+
+  function handlePlotData(plot){
+    setPlotData(plot)
+    setEditOpen(true)
+  } 
 
   function setData(){
     if (accounts) {
-      console.log(accounts)
       accounts.forEach(account => {
         setLandParcel([...landParcel, ...account.landParcels])
       })
@@ -73,7 +80,7 @@ export default function UserPlotInfo({ accounts, userId, refetch }) {
                     <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
                     <div style={{margin: '20px 10px', color: '#69ABA4', cursor: 'pointer'}}>
                       <Tooltip title="Edit Plot" placement="top">
-                        <CreateIcon />
+                        <CreateIcon onClick={() => handlePlotData(plot)} />
                       </Tooltip>
                     </div>
                   </div>
@@ -123,6 +130,7 @@ export default function UserPlotInfo({ accounts, userId, refetch }) {
           </div>
         )}
         <PlotModal open={addOpen} handleClose={() => setAddOpen(false)} accountId={accounts[0]?.id} userId={userId} refetch={refetch} />
+        <EditModal open={editOpen} handleClose={() => setEditOpen(false)} refetch={refetch} data={plotData} />
       </>
     )
   }

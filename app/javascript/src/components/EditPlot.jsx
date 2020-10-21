@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import { useMutation } from 'react-apollo'
@@ -13,47 +13,57 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { AddPlotNumber } from '../graphql/mutations'
+import { EditPlotNumber } from '../graphql/mutations'
 
-export default function PlotModal({ open, handleClose, userId, accountId, refetch }) {
+export default function EditPlotModal({ open, handleClose, data, refetch }) {
   const classes = useStyles();
-  const [addPlot] = useMutation(AddPlotNumber)
+  const [editPlot] = useMutation(EditPlotNumber)
   const [parcelNumber, setParcelNumber] = useState('')
 
-  function handleAddPlotNumber(event) {
-    console.log(event)
-    event.stopPropagation()
+  function handleEditPlotNumber(event) {
     event.preventDefault()
-    addPlot({ variables: {
-      userId,
-      accountId,
-      parcelNumber
+    editPlot({ variables: {
+      id: data.id,
+      parcelNumber: data.parcelNumber
     }}).then(() => {
       handleClose()
       refetch()
     })
   }
 
+  useEffect(() => {
+    setParcelNumber(data.parcelNumber)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <>
+      {console.log(data)}
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose} className={classes.title}>
-          Add Plot
+          Edit Plot
         </DialogTitle>
-        <form onSubmit={handleAddPlotNumber}>
-          <div style={{ margin: '15px' }}>
-            <Typography variant='body1'><b>Add a new plot associated with this user</b></Typography>
-            <TextField autoFocus id="standard-basic" label="Plot Number" style={{width: '100%'}} onChange={e => setParcelNumber(e.target.value)} />
-          </div>
+        <form onSubmit={handleEditPlotNumber}>
+          <DialogContent style={{ margin: '15px' }}>
+            <Typography variant='body1'><b>Edit plot associated with this user</b></Typography>
+            <TextField 
+              autoFocus 
+              id="standard-basic" 
+              label="Plot Number" 
+              style={{width: '100%'}} 
+              onChange={e => setParcelNumber(e.target.value)}
+              value={parcelNumber}
+            />
+          </DialogContent>
           <Divider />
-          <div style={{ margin: '10px' }}>
+          <DialogActions style={{ margin: '10px' }}>
             <Button onClick={handleClose} variant="outlined" color="secondary">
               Cancel
             </Button>
-            <Button autoFocus variant="contained" type="submit" style={{ backgroundColor: '#66a59a', color: 'white' }}>
+            <Button variant="contained" type="submit" style={{ backgroundColor: '#66a59a', color: 'white' }}>
               Save changes
             </Button>
-          </div>
+          </DialogActions>
         </form>
       </Dialog>
     </>
@@ -82,7 +92,7 @@ const useStyles = makeStyles({
   }
 });
 
-PlotModal.propTypes = {
+EditPlotModal.propTypes = {
    open: PropTypes.bool.isRequired,
    handleClose: PropTypes.func.isRequired
  }

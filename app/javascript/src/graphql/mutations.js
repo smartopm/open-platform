@@ -342,6 +342,16 @@ export const AddPlotNumber = gql`
   }
 `
 
+export const EditPlotNumber = gql`
+  mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
+    landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {
+      landParcelUpdate {
+        id
+      }
+    }
+  }
+`
+
 export const DeleteLabel = gql`
   mutation LabelDelete($id: ID!) {
     labelDelete(id: $id) {
