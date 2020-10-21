@@ -77,7 +77,7 @@ export default function GenericForm({ formId }) {
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value)
-    
+
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
       const newValue = { value: signatureBlobId, form_property_id: fileSignType.id, image_blob_id: signatureBlobId }
