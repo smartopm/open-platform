@@ -109,8 +109,18 @@ export default function FormUpdate({ formId, userId }) {
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
-      image: <p key={formPropertiesData.formProperty.id}>Image was uploaded</p>,
-      signature: <p key={formPropertiesData.formProperty.id}>This form was signed</p>
+      image: (
+        <p key={formPropertiesData.formProperty.id}>
+          Image was uploaded
+          <a href={formPropertiesData.value}> here</a>
+        </p>
+      ),
+      signature: (
+        <p key={formPropertiesData.formProperty.id}>
+          This form was signed 
+          <a href={formPropertiesData.value}> here</a>
+        </p>
+      )
     }
     return fields[formPropertiesData.formProperty.fieldType]
   }
