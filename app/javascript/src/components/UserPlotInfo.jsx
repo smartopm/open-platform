@@ -23,7 +23,6 @@ export default function UserPlotInfo({ userId, account, refetch }) {
     return property
   }
 
-  // const [landParcel, setLandParcel] = useState([])
   const [plotNumber, setPlotNumber] = useState([])
   const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
@@ -110,7 +109,7 @@ export default function UserPlotInfo({ userId, account, refetch }) {
             </div>
           </div>
         ) : (
-          <div className="container">
+          <div className="container" style={{display: 'flex', margin: '20px 150px'}}>
             <p data-testid="no_plot">No plots information available. </p>
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}

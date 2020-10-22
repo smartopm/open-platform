@@ -46,7 +46,7 @@ export default function PlotModal({ open, handleClose, userId, accountId, refetc
             <Button onClick={handleClose} variant="outlined" color="secondary">
               Cancel
             </Button>
-            <Button autoFocus variant="contained" type="submit" style={{ backgroundColor: '#66a59a', color: 'white' }}>
+            <Button variant="contained" type="submit" style={{ backgroundColor: '#66a59a', color: 'white' }}>
               Save changes
             </Button>
           </DialogActions>
