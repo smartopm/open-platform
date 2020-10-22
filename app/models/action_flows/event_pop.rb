@@ -58,6 +58,8 @@ class EventPop
     end
 
     def run_condition
+        # fetch rule and perform action
+        event_condition.run_condition({})
     end
 
     def self.event_list 

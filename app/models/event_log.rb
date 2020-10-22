@@ -9,6 +9,7 @@ class EventLog < ApplicationRecord
 
   after_create :notify_slack
   after_create :populate_activity_points
+  after_create :run_action_flow
   validate :validate_log, :validate_acting_user
 
   default_scope { order(created_at: :desc) }
@@ -179,6 +180,21 @@ class EventLog < ApplicationRecord
 
   def populate_activity_points
     ActivityPointsJob.perform_now(acting_user.id, subject)
+  end
+
+  def run_action_flow
+    event = "#{subject.camelize}Event"
+    return if ActionFlows::Events.constants.exclude?(event.to_sym)
+
+    action_class_name = "ActionFlows::Events::#{event}"
+    action = action_class_name.constantize.new
+    metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
+    action.setup_data(ref_object_attributes&.slice(*metadata_keys))
+    action.run_condition
+  end
+
+  def ref_object_attributes
+    ref_type.constantize.find_by_id(ref_id)&.attributes
   end
 end
 # rubocop:enable Metrics/ClassLength
