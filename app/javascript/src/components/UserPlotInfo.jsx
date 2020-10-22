@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
+import PropTypes from 'prop-types'
 import {  Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
@@ -35,12 +35,6 @@ export default function UserPlotInfo({ userId, account, refetch }) {
   } 
 
   function setData(){
-    // if (account) {
-    //   account.forEach(accounts => {
-    //     setLandParcel([...landParcel, ...accounts.landParcels])
-    //   })
-    // }
-
     if (account[0]?.landParcels[0]){
       account[0].landParcels.forEach(plot => {
         setPlotNumber(...plotNumber, ...plot.parcelNumber)
@@ -168,3 +162,20 @@ const styles = StyleSheet.create({
     marginTop: 50
   }
 })
+
+UserPlotInfo.defaultProps = {
+  userId: '',
+  account: []
+ }
+UserPlotInfo.propTypes = {
+  account: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      landParcels: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        plotNumber: PropTypes.string
+      })),
+      updatedAt: PropTypes.string
+    })),
+  refetch: PropTypes.func.isRequired,
+  userId: PropTypes.string
+}

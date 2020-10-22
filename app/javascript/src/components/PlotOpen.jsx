@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
 import React, {useState} from 'react'
 import Dialog from '@material-ui/core/Dialog';
@@ -80,7 +78,14 @@ const useStyles = makeStyles({
   }
 });
 
-PlotModal.propTypes = {
+PlotModal.defaultProps = {
+  userId: '',
+  accountId: ''
+ }
+ PlotModal.propTypes = {
+   userId: PropTypes.string,
+   refetch: PropTypes.func.isRequired,
    open: PropTypes.bool.isRequired,
-   handleClose: PropTypes.func.isRequired
+   handleClose: PropTypes.func.isRequired,
+   accountId: PropTypes.string
  }

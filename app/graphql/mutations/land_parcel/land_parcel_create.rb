@@ -28,17 +28,23 @@ module Mutations
       end
 
       def create_account_land_parcel(vals)
-        account = context[:site_community].accounts.create(user_id: vals[:user_id])
+        account = context[:site_community].accounts.create!(user_id: vals[:user_id])
         check_land_parcel(vals, account) if account
       end
 
       def check_land_parcel(vals, account)
-        check_number = context[:site_community].land_parcels.find_by(parcel_number: vals[:parcel_number])
+        v = vals[:parcel_number]
+        check_number = check_parcel_number(v)
         if check_number.nil?
-          account.land_parcels.create!(community_id: context[:site_community].id, parcel_number: vals[:parcel_number])
+          account
+            .land_parcels.create!(community_id: context[:site_community].id, parcel_number: v)
         else
-          t = check_number.land_parcel_accounts.create!(account_id: vals[:account_id])
+          check_number.land_parcel_accounts.create!(account_id: vals[:account_id])
         end
+      end
+
+      def check_parcel_number(num)
+        context[:site_community].land_parcels.find_by(parcel_number: num)
       end
 
       def authorized?(_vals)

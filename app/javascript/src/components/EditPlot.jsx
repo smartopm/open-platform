@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
 import React, {useState, useEffect} from 'react'
 import Dialog from '@material-ui/core/Dialog';
@@ -90,7 +88,12 @@ const useStyles = makeStyles({
   }
 });
 
-EditPlotModal.propTypes = {
-   open: PropTypes.bool.isRequired,
-   handleClose: PropTypes.func.isRequired
- }
+ EditPlotModal.propTypes = {
+  data: PropTypes.shape({
+      id: PropTypes.string,
+      parcelNumber: PropTypes.string
+  }).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
+}
