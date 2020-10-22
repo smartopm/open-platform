@@ -47,7 +47,7 @@ module Types
     end
 
     def users_feedback(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, 'Unauthorized' if current_user&.admin?
+      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
