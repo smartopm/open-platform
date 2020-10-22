@@ -19,14 +19,13 @@ import {
   CircularProgress,
   Chip
 } from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
 import TelegramIcon from '@material-ui/icons/Telegram'
+import FilterListIcon from '@material-ui/icons/FilterList';
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
 import { UserLabelCreate, CampaignCreateThroughUsers , CreateNote, SendOneTimePasscode } from '../graphql/mutations'
-
 import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
@@ -342,13 +341,22 @@ export default function UsersList() {
               inputProps={{ 'aria-label': 'search User' }}
             />
             <Divider className={classes.divider} orientation="vertical" />
-            <IconButton
-              type="submit"
-              className={classes.iconButton}
-              aria-label="search"
-            >
-              <SearchIcon />
-            </IconButton>
+            <div style={{display: 'flex'}}>
+              <IconButton
+                type="submit"
+                className={classes.iconButton}
+                aria-label="search"
+              >
+                <FilterListIcon onClick={() => inputToSearch()} />
+              </IconButton>
+              <div style={{ marginLeft: 5 }}>
+                <Link to="/users/import" style={{textDecoration: 'none'}}>
+                  <Button variant="contained" style={{border: '1px #dfdfdf solid'}}>
+                    UPLOAD
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </>
         </div>
         <Grid container alignItems="center">
@@ -438,12 +446,6 @@ export default function UsersList() {
             >
               Create Campaign
             </Button>
-          </Grid>
-
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
-            <Link to="/users/import">
-              Bulk Upload
-            </Link>
           </Grid>
         </Grid>
 
