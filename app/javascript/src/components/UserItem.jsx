@@ -119,7 +119,7 @@ export default function UserItem({
                     key={user.id}
                   >
                     <Typography component="span" variant="subtitle1">
-                      <strong> 
+                      <strong>
                         {' '}
                         {user.name}
                         {' '}
