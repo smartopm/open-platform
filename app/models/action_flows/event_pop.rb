@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative './events/'
 module ActionFlows
+  # Class to check for JSON rules for events and fire relevant action
   class EventPop
     OBJECT_DATA = {
       'User' => {
@@ -7,10 +10,10 @@ module ActionFlows
         'id' => 'Id',
         'user_type' => 'User Type',
         'email' => 'Email',
-        'phone_number' => 'Phone'
+        'phone_number' => 'Phone',
       },
       'Message' => {
-        'message' => 'Message'
+        'message' => 'Message',
       },
       'Note' => {
         'id' => '',
@@ -18,20 +21,20 @@ module ActionFlows
         'author_id' => '',
         'body' => '',
         'subject' => '',
-      }
-    }
+      },
+    }.freeze
 
     # To be fetched dynamically later : Saurabh
-    RULE = { 
+    RULE = {
       "if": [
-        {"===": [{"var": "note_subject"}, 'task_update']},
-        ["email", {"var": "note_user_id"}],
-        []
-      ]
-    }
+        { "===": [{ "var": 'note_subject' }, 'task_update'] },
+        ['email', { "var": 'note_user_id' }],
+        [],
+      ],
+    }.freeze
 
     attr_accessor :data_set
-            
+
     def self.event_description
       EVENT_DESC
     end
@@ -40,28 +43,30 @@ module ActionFlows
       EVENT_TYPE
     end
 
-    def self.obj_data 
+    def self.obj_data
       OBJECT_DATA
     end
 
     def initialize
-      @data_set ={}
+      @data_set = {}
     end
 
     def self.event_metadata
       # Rule Builder
-      {} 
+      {}
     end
 
+    # rubocop:disable Rails/Output
     def load_data(data)
-      data.keys.each{| key |
+      data.keys.each do |key|
         obj_val = self.class.event_metadata[key.to_s]
-        obj_val.keys.each { | co |
-        puts co
+        obj_val.keys.each do |co|
+          puts co
           @data_set["#{key.to_s.downcase}_#{co}".to_sym] = data.dig(key, co)
-        }
-      }
+        end
+      end
     end
+    # rubocop:enable Rails/Output
 
     def event_condition
       EventCondition.new(@data_set.to_json)
@@ -77,7 +82,11 @@ module ActionFlows
     end
 
     def self.event_list
-      ActionFlows::Events.constants.map { |const_symbol| ActionFlows::Events.const_get(const_symbol) }.select { |c| !c.ancestors.include?(StandardError) && c.class != Module }
+      # ActionFlows::Events.constants
+      #                    .map { |const_symbol| ActionFlows::Events.const_get(const_symbol) }
+      #                    .select { |c|
+      #                      !c.ancestors.include?(StandardError) && c.class != Module
+      #                     }
     end
 
     def self.inherited(klass)

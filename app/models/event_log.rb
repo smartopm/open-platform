@@ -182,20 +182,26 @@ class EventLog < ApplicationRecord
     ActivityPointsJob.perform_now(acting_user.id, subject)
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Lint/SafeNavigationChain
   def run_action_flow
     event = "#{subject.camelize}Event"
-    return if ActionFlows::Events.constants.exclude?(event.to_sym)
+    return if ActionFlows::Events.constants.exclude?(event.to_sym) || ref_type.nil?
 
     action_class_name = "ActionFlows::Events::#{event}"
     action = action_class_name.constantize.new
     metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
     action.setup_data(ref_object_attributes&.slice(*metadata_keys)
-          .merge({subject: subject}.stringify_keys))
+          .merge({ subject: subject }.stringify_keys))
     action.run_condition
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Lint/SafeNavigationChain
 
+  # rubocop:disable Rails/DynamicFindBy
   def ref_object_attributes
     ref_type.constantize.find_by_id(ref_id)&.attributes
   end
+  # rubocop:enable Rails/DynamicFindBy
 end
 # rubocop:enable Metrics/ClassLength
