@@ -189,7 +189,8 @@ class EventLog < ApplicationRecord
     action_class_name = "ActionFlows::Events::#{event}"
     action = action_class_name.constantize.new
     metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
-    action.setup_data(ref_object_attributes&.slice(*metadata_keys))
+    action.setup_data(ref_object_attributes&.slice(*metadata_keys)
+          .merge({subject: subject}.stringify_keys))
     action.run_condition
   end
 
