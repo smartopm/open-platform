@@ -1,5 +1,5 @@
 import React from 'react'
-import { render,} from '@testing-library/react'
+import { render} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
@@ -15,6 +15,19 @@ describe("User infromation component loads",()=>{
             formUsers: []
         }
     }
+
+    const accountData = {
+      user : {
+        accounts : [{
+          id: "jlklkwe",
+          updatedAt: "2020-10-21T06:23:12Z",
+          landParcels: [{
+            id: "c9de32f7-ad64-41ed-9c05-79d85d088b1b",
+            parcelNumber: "las"
+          }]
+        }]
+      }
+    }
     const authstate = {
         user:{
             userType : "admin"
@@ -27,6 +40,7 @@ describe("User infromation component loads",()=>{
               <UserInformation
                 data={data}
                 authState={authstate}
+                accountData={accountData}
               />
             </BrowserRouter>
           </MockedProvider>
@@ -41,6 +55,7 @@ describe("User infromation component loads",()=>{
               <UserInformation
                 data={data}
                 authState={authstate}
+                accountData={accountData}
               />
             </BrowserRouter>
           </MockedProvider>
@@ -57,6 +72,7 @@ describe("User infromation component loads",()=>{
               <UserInformation
                 data={data}
                 authState={authstate}
+                accountData={accountData}
               />
             </BrowserRouter>
           </MockedProvider>
@@ -70,6 +86,7 @@ describe("User infromation component loads",()=>{
               <UserInformation
                 data={data}
                 authState={authstate}
+                accountData={accountData}
               />
             </BrowserRouter>
           </MockedProvider>
