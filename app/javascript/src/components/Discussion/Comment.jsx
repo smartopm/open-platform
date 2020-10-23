@@ -18,6 +18,7 @@ import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import DeleteDialogueBox from '../Business/DeleteDialogue'
 import { commentStatusAction } from '../../utils/constants'
+import ImageAuth from '../ImageAuth'
 
 export default function Comments({ comments, refetch, discussionId }) {
   const init = {
@@ -100,12 +101,14 @@ export default function Comments({ comments, refetch, discussionId }) {
           comments.length >= 1 ? comments.map((comment) => (
             <CommentSection
               key={comment.id}
+              token={authState.token}
               data={{
                 isAdmin: authState.user.userType === 'admin',
                 createdAt: comment.createdAt,
                 comment: comment.content,
                 imageUrl: comment.imageUrl,
-                user: comment.user
+                user: comment.user,
+                token: authState.token
               }}
               handleDeleteComment={() => handleDeleteClick(comment.id)}
             />
@@ -151,8 +154,10 @@ export function CommentSection({ data, handleDeleteComment }) {
               />
               <br />
               {
+
               // eslint-disable-next-line react/prop-types
-              data.imageUrl && <img src={data.imageUrl} className="img-responsive img-thumbnail" alt={`${data.comment}`} /> 
+              data.imageUrl && <ImageAuth imageLink={data.imageUrl} token={data.token} />
+              // <img src={data.imageUrl} className="img-responsive img-thumbnail" alt={`${data.comment}`} /> 
 }
             </span>
             <span
