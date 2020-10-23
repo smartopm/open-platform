@@ -21,6 +21,7 @@ module ActionFlows
         'author_id' => '',
         'body' => '',
         'subject' => '',
+        'assignees' => [],
       },
     }.freeze
 
@@ -28,7 +29,7 @@ module ActionFlows
     RULE = {
       "if": [
         { "===": [{ "var": 'note_subject' }, 'task_update'] },
-        ['email', { "var": 'note_user_id' }],
+        ['email', { "var": 'note_assignees' }],
         [],
       ],
     }.freeze
@@ -77,7 +78,7 @@ module ActionFlows
       return if result.empty?
 
       action = result.first
-      user_list = result[1..]
+      user_list = result.last
       "ActionFlows::Actions::#{action.camelize}".constantize.run_action(user_list)
     end
 

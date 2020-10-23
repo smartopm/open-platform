@@ -4,12 +4,9 @@ module ActionFlows
   module Actions
     # Action defined for firing email
     class Email
-      def self.run_action(user_ids)
-        users = User.where(id: user_ids)
-        return if users.empty?
-
+      def self.run_action(users)
         users.each do |user|
-          EmailMsg.send_mail(user.email, community_template, {})
+          EmailMsg.send_mail(user['email'], community_template, {})
         end
       end
 

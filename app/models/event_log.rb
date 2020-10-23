@@ -183,7 +183,6 @@ class EventLog < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Lint/SafeNavigationChain
   def run_action_flow
     event = "#{subject.camelize}Event"
     return if ActionFlows::Events.constants.exclude?(event.to_sym) || ref_type.nil?
@@ -191,17 +190,27 @@ class EventLog < ApplicationRecord
     action_class_name = "ActionFlows::Events::#{event}"
     action = action_class_name.constantize.new
     metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
-    action.setup_data(ref_object_attributes&.slice(*metadata_keys)
-          .merge({ subject: subject }.stringify_keys))
+    action.setup_data(ref_object_attributes(metadata_keys))
     action.run_condition
   end
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Lint/SafeNavigationChain
 
-  # rubocop:disable Rails/DynamicFindBy
-  def ref_object_attributes
-    ref_type.constantize.find_by_id(ref_id)&.attributes
+  def ref_object_attributes(metadata_keys)
+    ref_obj = ref_type.constantize.find_by_id(ref_id) # rubocop:disable Rails/DynamicFindBy
+    return if ref_obj.nil?
+
+    obj_attr_hash = ref_obj.attributes.slice(*metadata_keys)
+                           .merge({ subject: subject }.stringify_keys)
+    associations = metadata_keys - obj_attr_hash.keys
+    merge_associations(ref_obj, obj_attr_hash, associations)
   end
-  # rubocop:enable Rails/DynamicFindBy
+
+  def merge_associations(ref_obj, obj_attr_hash, associations)
+    hash = {}
+    associations.each do |association_name|
+      hash[association_name] = ref_obj.send(association_name)
+    end
+    obj_attr_hash.merge(hash)
+  end
 end
 # rubocop:enable Metrics/ClassLength
