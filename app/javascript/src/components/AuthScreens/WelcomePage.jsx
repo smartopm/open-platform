@@ -36,7 +36,7 @@ export default function WelcomePage() {
         <div className="container_img">
           <img className="img-fluid home_hero" src="https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg" alt="Nkwashi landing page" />
           <div className="centered" data-testid="maintext-centered">
-            <h2>Its not just a house, its a way of life</h2>
+            <h2>It&apos;s not just a house, it&apos;s a way of life</h2>
           </div>
           <br />
           <CustomButton variant="contained" color="primary" title="Apply for Nkwashi Residency" disableElevation />
