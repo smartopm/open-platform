@@ -2,17 +2,13 @@
 
 # Overridng ActiceStorage controller
 class ActiveStorage::BlobsController < AasController
-  # skip_before_action :verify_authenticity_token, only: [:execute]
-  # before_action :check_auth
-
   include ActiveStorage::SetBlob
 
   def show
     if check_auth
-      expires_in ActiveStorage.service_urls_expire_in
       redirect_to @blob.service_url(disposition: params[:disposition])
     else
-      redirect_to '/'
+      # redirect_to '/'
     end
   end
 
