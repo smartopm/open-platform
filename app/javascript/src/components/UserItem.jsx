@@ -10,13 +10,14 @@ import {
   Grid,
   Dialog,
   DialogTitle,
-  DialogContent
+  DialogContent,
+  Hidden
 } from '@material-ui/core'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import { Link , useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Avatar from './Avatar'
 import UserActionMenu from './User/UserActionMenu'
 
@@ -100,58 +101,80 @@ export default function UserItem({
         onClick={showUserDetails}
       >
         <Grid container alignItems="center">
-          <Grid item md={4}>
-            <Box className={classes.detailsRow}>
-              <ListItemAvatar>
-                <Avatar imageUrl={user.imageUrl} />
-              </ListItemAvatar>
-              <Box style={{ margin: 5 }}>
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-around'
-                  }}
+          <ListItemAvatar className={classes.avatarList}>
+            <Avatar imageUrl={user.imageUrl} />
+          </ListItemAvatar>
+
+          <Hidden smUp>
+            <Grid style={{ width: '20%' }}>
+              <Grid container direction="row" alignItems="center">
+                <AssignmentIcon color="primary" />
+                [
+                {user.notes.length}
+                ]
+              </Grid>
+            </Grid>
+            <Grid className={classes.actionIcon}>
+              <IconButton
+                className={classes.menuButton}
+                aria-label={`more-${user.name}`}
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleOpenMenu}
+                dataid={user.id}
+              >
+                <MoreHorizIcon />
+              </IconButton>
+            </Grid>
+          </Hidden>
+
+          <Box className={classes.detailsRow}>
+            <Box style={{ margin: 5 }}>
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around'
+                }}
+              >
+                <Link
+                  style={{ color: 'black' }}
+                  to={`/user/${user.id}`}
+                  key={user.id}
                 >
-                  <Link
-                    style={{ color: 'black' }}
-                    to={`/user/${user.id}`}
-                    key={user.id}
-                  >
-                    <Typography component="span" variant="subtitle1">
-                      <strong>
-                        {' '}
-                        {user.name}
-                        {' '}
-                      </strong>
-                    </Typography>
-                  </Link>
-                </Box>
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-around',
-                    marginRight: 30
-                  }}
-                >
-                  <Typography variant="body2" color="textSecondary">
-                    {user.email}
+                  <Typography component="span" variant="subtitle1">
+                    <strong> 
+                      {' '}
+                      {user.name}
+                      {' '}
+                    </strong>
                   </Typography>
-                  <Typography component="span" variant="body2">
-                    {user.phoneNumber}
-                  </Typography>
-                </Box>
+                </Link>
+              </Box>
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                  marginRight: 30
+                }}
+              >
+                <Typography variant="body2" color="textSecondary">
+                  {user.email}
+                </Typography>
+                <Typography component="span" variant="body2">
+                  {user.phoneNumber}
+                </Typography>
               </Box>
             </Box>
-          </Grid>
+          </Box>
 
-          <Grid item md={3}>
+          <Grid className={classes.userTypeRow}>
             <Typography variant="subtitle1" data-testid="label-users">
               {user.roleName}
             </Typography>
           </Grid>
-          <Grid item md={3}>
+          <Grid container className={classes.labelsRow}>
             {user.labels.map(label => (
               <Chip
                 key={label.id}
@@ -160,26 +183,28 @@ export default function UserItem({
               />
             ))}
           </Grid>
-          <Grid item md={1}>
-            <Grid container direction="row" alignItems="center">
-              <AssignmentIcon color="primary" />
-              [
-              {user.notes.length}
-              ]
+          <Hidden xsDown>
+            <Grid className={classes.noteCount}>
+              <Grid container direction="row" alignItems="center">
+                <AssignmentIcon color="primary" />
+                [
+                {user.notes.length}
+                ]
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item m={1}>
-            <IconButton
-              className={classes.menuButton}
-              aria-label={`more-${user.name}`}
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              onClick={handleOpenMenu}
-              dataid={user.id}
-            >
-              <MoreHorizIcon />
-            </IconButton>
-          </Grid>
+            <Grid className={classes.actionIcon}>
+              <IconButton
+                className={classes.menuButton}
+                aria-label={`more-${user.name}`}
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleOpenMenu}
+                dataid={user.id}
+              >
+                <MoreHorizIcon />
+              </IconButton>
+            </Grid>
+          </Hidden>
           <UserActionMenu
             data={{ user }}
             router={history}
@@ -207,10 +232,10 @@ UserItem.propTypes = {
     roleName: PropTypes.string,
     imageUrl: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),
-    labels: PropTypes.arrayOf(PropTypes.object),
+    labels: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired,
+  sendOneTimePasscode: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles(() => ({
@@ -223,15 +248,54 @@ const useStyles = makeStyles(() => ({
   menuButton: {
     float: 'right'
   },
-  detailsRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: 400
-  },
   linkItem: {
     color: '#000000',
     textDecoration: 'none'
+  },
+
+  '@media (min-width: 768px)': {
+    avatarList: {
+      width: '5%'
+    },
+    detailsRow: {
+      width: '25%'
+    },
+    userTypeRow: {
+      width: '16%',
+      textAlign: 'center'
+    },
+    labelsRow: {
+      width: '35%'
+    },
+    noteCount: {
+      width: '10%'
+    },
+    actionIcon: {
+      width: '5%'
+    }
+  },
+  '@media only screen and (min-width: 320px) and (max-width: 374px)': {
+    detailsRow: {
+      width: '50%'
+    },
+    userTypeRow: {
+      width: '50%',
+      textAlign: 'right'
+    },
+    actionIcon: {
+      width: '57%'
+    }
+  },
+  '@media only screen and (min-width: 375px) and (max-width: 767px)': {
+    detailsRow: {
+      width: '50%'
+    },
+    userTypeRow: {
+      width: '50%',
+      textAlign: 'right'
+    },
+    actionIcon: {
+      width: '60%'
+    }
   }
 }))

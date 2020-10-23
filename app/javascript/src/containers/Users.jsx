@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import { Redirect , Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
@@ -275,7 +275,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for 
+                Add note for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -295,7 +295,7 @@ export default function UsersList() {
 
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for 
+                Add Outgoing call answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -315,7 +315,7 @@ export default function UsersList() {
 
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for 
+                Add Outgoing call not answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
