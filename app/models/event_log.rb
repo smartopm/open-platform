@@ -23,7 +23,7 @@ class EventLog < ApplicationRecord
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update user_temp
                       shift_start shift_end user_referred post_read post_shared
-                      task_create task_update].freeze
+                      task_create task_update note_comment_create note_comment_update].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -208,9 +208,17 @@ class EventLog < ApplicationRecord
   def merge_associations(ref_obj, obj_attr_hash, associations)
     hash = {}
     associations.each do |association_name|
-      hash[association_name] = ref_obj.send(association_name)
+      hash[association_name] = chain_association(ref_obj, association_name)
     end
     obj_attr_hash.merge(hash)
+  end
+
+  def chain_association(ref_obj, association_name)
+    val = ref_obj
+    association_name.split('.').each do |relation|
+      val = val.send(relation)
+    end
+    val
   end
 end
 # rubocop:enable Metrics/ClassLength

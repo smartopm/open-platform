@@ -7,6 +7,27 @@ module ActionFlows
       EVENT_TYPE = 'note_update'
       EVENT_DESC = 'Note Update'
 
+      # To be fetched dynamically later : Saurabh
+      def rule
+        {
+          "if": [
+            { "===": [{ "var": 'note_subject' }, 'task_update'] },
+            ['email', { "var": 'note_assignees' }],
+            [],
+          ],
+        }.freeze
+      end
+
+      def data_rule
+        {
+          "if": [
+            { "===": [{ "var": 'note_subject' }, 'task_update'] },
+            ['task_name', { "var": 'note_body' }, 'url', { "var": 'note_id' }],
+            [],
+          ],
+        }.freeze
+      end
+
       def self.event_metadata
         {
           'Note' => obj_data['Note'],

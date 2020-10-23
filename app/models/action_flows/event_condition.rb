@@ -14,6 +14,8 @@ module ActionFlows
       @json_condition = json_condition
       condition = JSON.parse(@json_condition)
       data = JSON.parse(@json_data)
+      return [] if condition.blank? || data.blank?
+
       JSONLogic.apply(condition, data)
     end
   end

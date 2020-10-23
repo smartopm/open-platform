@@ -23,23 +23,14 @@ module ActionFlows
         'subject' => '',
         'assignees' => [],
       },
-    }.freeze
-
-    # To be fetched dynamically later : Saurabh
-    RULE = {
-      "if": [
-        { "===": [{ "var": 'note_subject' }, 'task_update'] },
-        ['email', { "var": 'note_assignees' }],
-        [],
-      ],
-    }.freeze
-
-    DATA_RULE = {
-      "if": [
-        { "===": [{ "var": 'note_subject' }, 'task_update'] },
-        ['task_name', { "var": 'note_body' }, 'url', { "var": 'note_id' }],
-        [],
-      ],
+      'NoteComment' => {
+        'id' => '',
+        'user_id' => '',
+        'note_id' => '',
+        'body' => '',
+        'subject' => '',
+        'note.assignees' => [],
+      },
     }.freeze
 
     attr_accessor :data_set
@@ -71,7 +62,7 @@ module ActionFlows
         obj_val = self.class.event_metadata[key.to_s]
         obj_val.keys.each do |co|
           puts co
-          @data_set["#{key.to_s.downcase}_#{co}".to_sym] = data.dig(key, co)
+          @data_set["#{key.underscore}_#{co.tr('.', '_')}".to_sym] = data.dig(key, co)
         end
       end
     end
@@ -82,7 +73,7 @@ module ActionFlows
     end
 
     def run_condition
-      result = event_condition.run_condition(RULE.to_json)
+      result = event_condition.run_condition(rule.to_json)
       return if result.empty?
 
       action = result.first
@@ -91,9 +82,12 @@ module ActionFlows
     end
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def data_json
       hash = {}
-      data = event_condition.run_condition(DATA_RULE.to_json)
+      data = event_condition.run_condition(data_rule.to_json)
+      return hash if data.empty?
+
       start_index = 0
       end_index = data.length
       while start_index < end_index
@@ -105,6 +99,7 @@ module ActionFlows
       hash
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     def self.event_list
       # ActionFlows::Events.constants
