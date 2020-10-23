@@ -26,6 +26,10 @@ module ActionFlows
       def setup_data(note)
         load_data('Note' => note)
       end
+
+      def url_format(id)
+        "https://#{ENV['HOST']}/todo/#{id}"
+      end
     end
   end
 end

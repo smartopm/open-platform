@@ -37,7 +37,7 @@ module ActionFlows
     DATA_RULE = {
       "if": [
         { "===": [{ "var": 'note_subject' }, 'task_update'] },
-        ['task_name', { "var": 'note_body' }],
+        ['task_name', { "var": 'note_body' }, 'url', { "var": 'note_id' }],
         [],
       ],
     }.freeze
@@ -90,12 +90,21 @@ module ActionFlows
       "ActionFlows::Actions::#{action.camelize}".constantize.run_action(user_list, data_json)
     end
 
+    # rubocop:disable Metrics/MethodLength
     def data_json
       hash = {}
       data = event_condition.run_condition(DATA_RULE.to_json)
-      hash[data.first] = data.last
+      start_index = 0
+      end_index = data.length
+      while start_index < end_index
+        key = data[start_index]
+        value = key.eql?('url') ? url_format(data[start_index + 1]) : data[start_index + 1]
+        hash[key] = value
+        start_index += 2
+      end
       hash
     end
+    # rubocop:enable Metrics/MethodLength
 
     def self.event_list
       # ActionFlows::Events.constants
