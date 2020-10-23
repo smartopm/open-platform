@@ -34,6 +34,14 @@ module ActionFlows
       ],
     }.freeze
 
+    DATA_RULE = {
+      "if": [
+        { "===": [{ "var": 'note_subject' }, 'task_update'] },
+        ['task_name', { "var": 'note_body' }],
+        [],
+      ],
+    }.freeze
+
     attr_accessor :data_set
 
     def self.event_description
@@ -79,7 +87,14 @@ module ActionFlows
 
       action = result.first
       user_list = result.last
-      "ActionFlows::Actions::#{action.camelize}".constantize.run_action(user_list)
+      "ActionFlows::Actions::#{action.camelize}".constantize.run_action(user_list, data_json)
+    end
+
+    def data_json
+      hash = {}
+      data = event_condition.run_condition(DATA_RULE.to_json)
+      hash[data.first] = data.last
+      hash
     end
 
     def self.event_list
