@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React from "react";
-import UserListCard from '../components/UserListCard'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
+import UserListCard from '../components/UserListCard'
 
 describe('It displays the user list and interactions', () => {
 
@@ -25,44 +24,45 @@ const props = {
                     }
                 ]
              }
-            ], 
+            ],
         },
-        handleNoteModal : jest.fn()
+        sendOneTimePasscode: jest.fn(),
+        currentUserType: "Admin"
     }
     it('it mounts component without error', () => {
         const container = render(
-            <BrowserRouter>
+          <BrowserRouter>
             <UserListCard {...props} />
-            </BrowserRouter>
+          </BrowserRouter>
         )
         expect(container.queryByText(/Test Referral 2/).textContent).toContain('Test Referral 2')
     });
 
     it('it mounts component with role', () => {
         const container = render(
-            <BrowserRouter>
+          <BrowserRouter>
             <UserListCard {...props} />
-            </BrowserRouter>
+          </BrowserRouter>
         )
         expect(container.queryByText(/Admin/).textContent).toContain('Admin')
     });
 
        it('it mounts component with PhoneNumber', () => {
         const container = render(
-            <BrowserRouter>
+          <BrowserRouter>
             <UserListCard {...props} />
-            </BrowserRouter>
+          </BrowserRouter>
         )
         expect(container.queryByText(/0987654123/).textContent).toContain('0987654123')
     });
 
       it('it mounts component with email', () => {
         const container = render(
-            <BrowserRouter>
+          <BrowserRouter>
             <UserListCard {...props} />
-            </BrowserRouter>
+          </BrowserRouter>
         )
         expect(container.queryByText(/domain@email.com/).textContent).toContain('domain@email.com')
     });
-        
+
 });
