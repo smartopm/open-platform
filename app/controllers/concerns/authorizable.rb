@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-# Inherit from ActiceStorage controller
-class AasController < ActiveStorage::BaseController
-  helper_method :current_member
-  before_action :current_community
-  before_action :set_paper_trail_whodunnit
+# Abstracts authorization methods
+module Authorizable
+  extend ActiveSupport::Concern
+
+  included do
+    helper_method :current_member
+    before_action :current_community
+    before_action :set_paper_trail_whodunnit
+  end
 
   def new_session_path(_scope)
     user_google_oauth2_omniauth_authorize_path

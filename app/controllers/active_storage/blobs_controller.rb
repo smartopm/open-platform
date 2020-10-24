@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 # Overridng ActiceStorage controller
-class ActiveStorage::BlobsController < AasController
+class ActiveStorage::BlobsController < ActiveStorage::BaseController
   include ActiveStorage::SetBlob
+  include Authorizable
 
   def show
     if check_auth
       redirect_to @blob.service_url(disposition: params[:disposition])
     else
-      # redirect_to '/'
+      redirect_to '/'
     end
   end
 
