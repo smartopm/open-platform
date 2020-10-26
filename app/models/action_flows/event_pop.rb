@@ -27,7 +27,6 @@ module ActionFlows
         'user_id' => '',
         'note_id' => '',
         'body' => '',
-        'subject' => '',
         'assignees_emails' => '',
       },
     }.freeze

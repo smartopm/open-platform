@@ -25,8 +25,10 @@ module ActionFlows
         EVENT_TYPE
       end
 
-      def setup_data(note_comment)
-        load_data('NoteComment' => note_comment)
+      def preload_data(eventlog)
+        note_comment = eventlog.ref_type.constantize.find eventlog.ref_id
+        assignees_email = note_comment.note.assignees.map(&:email).join(',')
+        load_data({ 'NoteComment' => note_comment }, 'assignees_emails' => assignees_email)
       end
 
       def url_format(note_id)

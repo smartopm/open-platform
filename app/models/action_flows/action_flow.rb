@@ -70,16 +70,42 @@ module ActionFlows
           },
         },
       }, {
-        'description' => 'NOT READYEmail On task update',
+        'description' => 'Email On task update',
         'event_type' => 'note_comment_update',
-        'event_condition' => '',
-        'event_action' => 'email',
+        'event_condition' => '{"==":[1,1]}',
+        'event_action' => {
+          'action_name' => 'email',
+          'action_fields' => {
+            'email' => {
+              'name' => 'email',
+              'value' => 'note_comment_assignees_emails',
+              'type' => 'variable',
+            }, 'template' => {
+              'name' => 'template',
+              'value' => 'd-285b8ab4099b424a93fc04be801a87db',
+              'type' => 'string',
+            }
+          },
+        },
       },
        {
-         'description' => 'NOT READYEmail On task update',
+         'description' => 'Email On task update',
          'event_type' => 'note_comment_create',
-         'event_condition' => '',
-         'event_action' => 'email',
+         'event_condition' => '{"==":[1,1]}',
+         'event_action' => {
+           'action_name' => 'email',
+           'action_fields' => {
+             'email' => {
+               'name' => 'email',
+               'value' => 'note_comment_assignees_emails',
+               'type' => 'variable',
+             }, 'template' => {
+               'name' => 'template',
+               'value' => 'd-285b8ab4099b424a93fc04be801a87db',
+               'type' => 'string',
+             }
+           },
+         },
        }].map do |e|
         ActionFlows::ActionFlow.new(e['description'], e['event_type'],
                                     e['event_condition'], e['event_action'])
