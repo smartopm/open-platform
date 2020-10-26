@@ -24,6 +24,7 @@ export default function ImageAuth({ imageLink, token }) {
       }
     }
     fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return <img src={response.url} className="img-responsive img-thumbnail" alt="authenticated link" />

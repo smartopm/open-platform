@@ -13,7 +13,7 @@ describe('Avatar component', function() {
       imageUrl: googleAvatar,
       avatarUrl: customAvatar
     }
-    const rendered = shallow(<Avatar user={userData} />)
+    const rendered = shallow(<Avatar user={userData} imageUrl={customAvatar} />)
     expect(rendered.find('img').length).toBe(1)
     expect(rendered.find('img').props().src).toEqual(customAvatar)
   })
