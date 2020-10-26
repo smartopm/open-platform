@@ -341,21 +341,19 @@ export default function UsersList() {
               inputProps={{ 'aria-label': 'search User' }}
             />
             <Divider className={classes.divider} orientation="vertical" />
-            <div style={{display: 'flex'}}>
-              <IconButton
-                type="submit"
-                className={classes.iconButton}
-                aria-label="search"
-              >
-                <FilterListIcon onClick={() => inputToSearch()} />
-              </IconButton>
-              <div style={{ marginLeft: 5 }}>
-                <Link to="/users/import" style={{textDecoration: 'none'}}>
-                  <Button variant="contained" style={{border: '1px #dfdfdf solid'}}>
-                    UPLOAD
-                  </Button>
-                </Link>
-              </div>
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+            >
+              <FilterListIcon onClick={() => inputToSearch()} />
+            </IconButton>
+            <div className={classes.searchButton}>
+              <Link to="/users/import" style={{textDecoration: 'none'}}>
+                <Button variant="contained" style={{border: '1px #dfdfdf solid'}}>
+                  UPLOAD
+                </Button>
+              </Link>
             </div>
           </>
         </div>
@@ -480,6 +478,7 @@ export const useStyles = makeStyles(theme => ({
   root: {
     padding: '2px 4px',
     display: 'flex',
+    flexWrap: 'wrap',
     alignItems: 'right',
     width: '100%'
   },
@@ -512,8 +511,15 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   },
   filterButton: {
-
     textTransform: 'none'
+  },
+  searchButton: {
+    display: 'flex'
+  },
+  '@media only screen and (max-width: 768px)': {
+    searchButton: {
+      flexBasis: '100%',
+    }
   }
 }))
 
