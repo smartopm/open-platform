@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { Document } from 'react-pdf'
 import DatePickerDialog from '../DatePickerDialog'
 import { UserFormProperiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -117,7 +118,7 @@ export default function FormUpdate({ formId, userId }) {
           {
             formPropertiesData.fileType.includes('image') 
             ? <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
-            : <span>PDF</span>
+            : <Document file={formPropertiesData.imageUrl} />
           }
           
         </p>
