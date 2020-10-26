@@ -61,7 +61,7 @@ export default function Todo({ history }) {
           handleDateChange={handleDateChange}
           todoAction={todoAction}
           location={location.pathname.replace(/\//, '')}
-          currentUser={authState.user.name}
+          currentUser={authState.user}
         />
     </Fragment>
   )

@@ -102,7 +102,7 @@ export default function UserItem({
       >
         <Grid container alignItems="center">
           <ListItemAvatar className={classes.avatarList}>
-            <Avatar imageUrl={user.imageUrl} />
+            <Avatar imageUrl={user.imageUrl} user={user} />
           </ListItemAvatar>
 
           <Hidden smUp>
@@ -143,7 +143,7 @@ export default function UserItem({
                   key={user.id}
                 >
                   <Typography component="span" variant="subtitle1">
-                    <strong> 
+                    <strong>
                       {' '}
                       {user.name}
                       {' '}
