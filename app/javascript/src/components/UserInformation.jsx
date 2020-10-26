@@ -259,12 +259,18 @@ export default function UserInformation({
             </TabPanel>
           </>
         )}
-        <TabPanel value={tabValue} index={'Plots'}>
-          <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} />
-        </TabPanel>
-        <TabPanel value={tabValue} index={'Forms'}>
-          <UserFilledForms userFormsFilled={data.user.formUsers} />
-        </TabPanel>
+        {
+          !['security_guard', 'custodian'].includes(userType) && (
+            <>
+            <TabPanel value={tabValue} index={'Plots'}>
+              <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} />
+            </TabPanel>
+            <TabPanel value={tabValue} index={'Forms'}>
+              <UserFilledForms userFormsFilled={data.user.formUsers} />
+            </TabPanel>
+            </>
+          )
+        }
         <TabPanel value={tabValue} index={'Payments'}>
           <h4 className="text-center">Coming soon</h4>
         </TabPanel>
