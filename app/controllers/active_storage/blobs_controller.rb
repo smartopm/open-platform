@@ -22,7 +22,7 @@ class ActiveStorage::BlobsController < ActiveStorage::BaseController
 
   def owner_verified?
     record_id = ActiveStorage::Attachment.find_by(blob_id: @blob.id).record_id
-    user_id = UserFormProperty.find_by(id: record_id).user_id
+    user_id = UserFormProperty.find_by(id: record_id)&.user_id
     auth_user.admin? || user_id.eql?(auth_user.id)
   end
 end

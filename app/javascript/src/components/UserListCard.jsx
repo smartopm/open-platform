@@ -35,7 +35,7 @@ export default function UserListCard({
                             <Grid item xs={12} sm={6}>
                                 <Box className={classes.detailsRow} >
                                     <ListItemAvatar>
-                                        <Avatar imageUrl={user.imageUrl} style={"medium"} />
+                                        <Avatar user={user} style={"medium"} />
                                     </ListItemAvatar>
                                     <Box style={{ margin: 5 }}>
                                         <Box

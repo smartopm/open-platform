@@ -155,10 +155,15 @@ export function CommentSection({ data, handleDeleteComment }) {
               <br />
               {
 
-              // eslint-disable-next-line react/prop-types
-              data.imageUrl && <ImageAuth imageLink={data.imageUrl} token={data.token} />
-              // <img src={data.imageUrl} className="img-responsive img-thumbnail" alt={`${data.comment}`} /> 
-}
+                // eslint-disable-next-line react/prop-types
+              data.imageUrl && (
+                <ImageAuth 
+                  imageLink={data.imageUrl} 
+                  token={data.token} 
+                  className="img-responsive img-thumbnail"
+                />
+              )
+              }
             </span>
             <span
               data-testid="delete_icon"
@@ -281,7 +286,9 @@ CommentSection.propTypes = {
     }),
     createdAt: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
-    isAdmin: PropTypes.bool
+    isAdmin: PropTypes.bool,
+    imageUrl: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
   }).isRequired,
   handleDeleteComment: PropTypes.func.isRequired,
 }
