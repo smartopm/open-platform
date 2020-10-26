@@ -37,7 +37,7 @@ export default function TaskDashboard({ filterTasks, currentTile }) {
   }
 // use extra white space
   return Object.entries(tiles).map(([key, val]) => (
-    <Grid item xs={12} sm={4} lg={3} key={key}>
+    <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
       <TaskStatCard
         filterTasks={evt => filterTasks(evt, key)}
         title={val}
