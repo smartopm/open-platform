@@ -138,24 +138,24 @@ export default function FormUpdate({ formId, userId }) {
               type="submit"
               color="primary"
               aria-label="form_update"
+              variant="outlined"
             >
               Update
             </Button>
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={() => handleStatusUpdate('approved')}
               color="primary"
               aria-label="form_approve"
-              style={{ marginLeft: '10vw' }}
+              style={{ marginLeft: '10vw',  }}
             >
               Approve
             </Button>
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={() => handleStatusUpdate('rejected')}
-              color="secondary"
               aria-label="form_reject"
-              style={{ marginLeft: '10vw' }}
+              style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
             >
               Reject
             </Button>
