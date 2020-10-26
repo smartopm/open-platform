@@ -608,6 +608,7 @@ query userFormProperties($formId: ID!, $userId: ID!) {
       adminUse
     }
     value
+    imageUrl
   }
 }
 

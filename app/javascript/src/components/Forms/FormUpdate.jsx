@@ -12,6 +12,7 @@ import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../../grap
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import TextInput from './TextInput'
 import { sortPropertyOrder } from '../../utils/helpers'
+import ImageAuth from '../ImageAuth'
 // date
 // text input (TextField or TextArea)
 // upload
@@ -111,14 +112,14 @@ export default function FormUpdate({ formId, userId }) {
       ),
       image: (
         <p key={formPropertiesData.formProperty.id}>
-          Image was uploaded
-          <a href={formPropertiesData.value}> here</a>
+          Attachments
+          <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
         </p>
       ),
       signature: (
         <p key={formPropertiesData.formProperty.id}>
-          This form was signed 
-          <a href={formPropertiesData.value}> here</a>
+          Signature
+          <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
         </p>
       )
     }

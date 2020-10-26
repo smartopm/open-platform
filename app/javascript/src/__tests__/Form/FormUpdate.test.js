@@ -28,17 +28,41 @@ describe('Form Component', () => {
                 adminUse: false,
                 order: '1'
               },
-              value: '7th Street'
+              value: '7th Street',
+              imageUrl: 'https://image.com'
             },
             {
               formProperty: {
                 fieldName: 'Dead Line',
                 fieldType: 'date',
-                id: '3145c47e-1279-47b0-9dac-dc4a7e362e',
+                id: '3145c47e-1279-47b0-8dac-dc4a7e362e',
                 adminUse: false,
                 order: '2'
               },
-              value: null
+              value: null,
+              imageUrl: 'https://another_image.com'
+            },
+            {
+              formProperty: {
+                fieldName: 'Dead Line',
+                fieldType: 'image',
+                id: '3145c47e-1279-47b0-9da454c-dc4a7e362e',
+                adminUse: false,
+                order: '3'
+              },
+              value: 'some values',
+              imageUrl: 'https://another2_image.com'
+            },
+            {
+              formProperty: {
+                fieldName: 'Dead Line',
+                fieldType: 'signature',
+                id: '3145c47e-1279-47b0-9dac-dc7e362e',
+                adminUse: false,
+                order: '4'
+              },
+              value: null,
+              imageUrl: 'https://another3_image.com'
             }
           ]
         }
@@ -57,16 +81,19 @@ describe('Form Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
     await waitFor(
       () => {
-        expect(container.queryByText('Update')).toBeInTheDocument(1)
-        expect(container.queryByText('Approve')).toBeInTheDocument(1)
-        expect(container.queryByText('Reject')).toBeInTheDocument(1)
+        expect(container.queryByText('Update')).toBeInTheDocument()
+        expect(container.queryByText('Approve')).toBeInTheDocument()
+        expect(container.queryByText('Reject')).toBeInTheDocument()
         expect(container.queryAllByLabelText('text-input')).toHaveLength(1)
         expect(
           container.queryAllByLabelText('text-input')[0]
-        ).toHaveTextContent('Address')
-        expect(
-          container.queryAllByTestId('date-picker')[0]
-        ).toHaveTextContent('Dead Line')
+          ).toHaveTextContent('Address')
+          expect(
+            container.queryAllByTestId('date-picker')[0]
+            ).toHaveTextContent('Dead Line')
+        expect(container.queryAllByAltText('authenticated link')).toHaveLength(2)
+        expect(container.queryByText('Signature')).toBeInTheDocument()
+        expect(container.queryByText('Attachments')).toBeInTheDocument()
       },
       { timeout: 500 }
     )
