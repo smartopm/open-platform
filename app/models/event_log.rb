@@ -144,7 +144,7 @@ class EventLog < ApplicationRecord
       events = ActionFlows::ActionFlow.find_by_event_type(subject)
       return if events.blank?
       events.each do |af|
-        event = af.event_flow.new
+        event = af.event_object.new
         event.preload_data(self)
         cond = event.event_condition
         if cond.run_condition(af.condition)
