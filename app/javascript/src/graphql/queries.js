@@ -11,6 +11,22 @@ export const UserQuery = gql`
   ${UserFragment.publicFields}
 `
 
+export const UserAccountQuery = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      id
+      accounts {
+        id
+        updatedAt
+        landParcels {
+          id
+          parcelNumber
+        }
+      }
+    }
+  }
+`
+
 export const EntryRequestQuery = gql`
   query EntryRequest($id: ID!) {
     result: entryRequest(id: $id) {

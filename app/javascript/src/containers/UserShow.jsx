@@ -7,7 +7,7 @@ import UserInformation from '../components/UserInformation'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
-import { UserQuery } from '../graphql/queries'
+import { UserQuery, UserAccountQuery } from '../graphql/queries'
 import { AddActivityLog, SendOneTimePasscode } from '../graphql/mutations'
 import ErrorPage from '../components/Error'
 
@@ -36,6 +36,12 @@ export default ({ history }) => {
     }
   })
 
+  const { data: accountData, refetch: accountRefetch } = useQuery(UserAccountQuery, {
+    variables: { id },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  })
+
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
   if (loading || entry.loading) return <Loading />
@@ -49,6 +55,8 @@ export default ({ history }) => {
         : <Nav navName="Identification" menuButton="cancel" backTo="/" />}
       <UserInformation
         data={data}
+        accountData={accountData}
+        accountRefetch={accountRefetch}
         authState={authState}
         onLogEntry={addLogEntry}
         sendOneTimePasscode={sendOneTimePasscode}

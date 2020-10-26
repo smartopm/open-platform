@@ -196,7 +196,7 @@ RSpec.describe Types::QueryType do
   describe 'feedback' do
     before :each do
       @user = create(:security_guard)
-      @current_user = create(:user, community: @user.community)
+      @current_user = create(:admin_user, community: @user.community)
 
       @query =
         %(query {

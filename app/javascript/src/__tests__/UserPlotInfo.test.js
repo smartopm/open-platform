@@ -1,11 +1,12 @@
-/* eslint-disable */
 import React from 'react'
-import { UserPlotInfo } from '../components/UserPlotInfo'
 import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
+import UserPlotInfo from '../components/UserPlotInfo'
+import '@testing-library/jest-dom/extend-expect'
+
 describe('User Plot Info Page', () => {
-  const accounts = [
+  const account = [
     {
       id: '2dc81-48ab-9afc',
       updatedAt: '2020-05-15T17:09:37Z',
@@ -32,46 +33,37 @@ describe('User Plot Info Page', () => {
     }
   ]
 
-  it('Component should display all parcel numbers', () => {
-    let numberOfPlots = accounts.reduce((sum, account) => {
-      return account.landParcels.length + sum
-    }, 0)
-    const { getByTestId } = render(
-      <MockedProvider  mock={[]} >
-      <BrowserRouter>
-        <UserPlotInfo accounts={accounts} />
-      </BrowserRouter>
+  const userId = 'bwekwjkewj'
+  
+  it('should include this type of a plot', () => {
+    const container = render(
+      <MockedProvider mock={[]}>
+        <BrowserRouter>
+          <UserPlotInfo account={account} userId={userId} />
+        </BrowserRouter>
       </MockedProvider>
     )
-    const ol = getByTestId('parcel_list')
-    expect(ol.children.length).toBe(numberOfPlots)
-  })
-
-  it('should include this type of a plot', () => {
-    const { getByTestId } = render(
-      <BrowserRouter>
-        <UserPlotInfo accounts={accounts} />
-      </BrowserRouter>
-    )
-    expect(getByTestId('parcel_list').textContent).toContain('Basic-1')
+    expect(container.queryByText('Standard434')).toBeInTheDocument()
   })
 
   it('should show no plot when plots are empty', () => {
-    const { getByTestId } = render(
-      <BrowserRouter>
-        <UserPlotInfo accounts={[]} />
-      </BrowserRouter>
+    const container = render(
+      <MockedProvider mock={[]}>
+        <BrowserRouter>
+          <UserPlotInfo account={[]} userId={userId} />
+        </BrowserRouter>
+      </MockedProvider>
     )
-    expect(getByTestId('no_plot').textContent).toContain(
-      'No plots information available'
-    )
+    expect(container.queryByText('No plots information available.')).toBeInTheDocument()
   })
 
   it('should include support team link', () => {
     const { getByTestId } = render(
-      <BrowserRouter>
-        <UserPlotInfo accounts={accounts} />
-      </BrowserRouter>
+      <MockedProvider mock={[]}>
+        <BrowserRouter>
+          <UserPlotInfo account={account} userId={userId} />
+        </BrowserRouter>
+      </MockedProvider>
     )
     expect(getByTestId('support_link').textContent).toContain('Support Team')
   })

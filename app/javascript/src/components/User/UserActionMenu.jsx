@@ -16,6 +16,7 @@ export default function UserActionMenu({
     OpenMergeDialog,
     linkStyles
   }) {
+
     return (
       <Menu
         id="long-menu"
@@ -25,7 +26,7 @@ export default function UserActionMenu({
         onClose={handleClose}
         PaperProps={{
           style: {
-            width: 200
+            width: 252
           }
         }}
       >
@@ -60,7 +61,7 @@ export default function UserActionMenu({
                   Send SMS to {data.user.name}
                 </Link>
               </MenuItem>
-  
+
               {data.user.phoneNumber ? (
                 <MenuItem key={'call_user'}>
                   <a

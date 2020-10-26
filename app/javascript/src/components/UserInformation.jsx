@@ -2,7 +2,7 @@
 import React, { Fragment, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { UserPlotInfo } from './UserPlotInfo'
+import UserPlotInfo from './UserPlotInfo'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core'
 import { ponisoNumber } from '../utils/constants.js'
 import { css, StyleSheet } from 'aphrodite'
+import { useQuery } from 'react-apollo'
 import { CreateNote, UpdateNote } from '../graphql/mutations'
 import { useMutation } from 'react-apollo'
 import Loading from './Loading.jsx'
@@ -39,7 +40,9 @@ export default function UserInformation({
   sendOneTimePasscode,
   refetch,
   userId,
-  router
+  router,
+  accountData,
+  accountRefetch
 }) {
   const CSMNumber = '260974624243'
   const [tabValue, setValue] = useState('Contacts')
@@ -61,6 +64,7 @@ export default function UserInformation({
       form.reset()
     })
   }
+  
   const open = Boolean(anchorEl)
   const userType = authState.user.userType.toLowerCase()
 
@@ -256,7 +260,7 @@ export default function UserInformation({
           </>
         )}
         <TabPanel value={tabValue} index={'Plots'}>
-          <UserPlotInfo accounts={data.user.accounts} />
+          <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} />
         </TabPanel>
         <TabPanel value={tabValue} index={'Forms'}>
           <UserFilledForms userFormsFilled={data.user.formUsers} />

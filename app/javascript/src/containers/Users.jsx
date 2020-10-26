@@ -1,13 +1,7 @@
-/* eslint-disable */
-import React, { Fragment, useState, useEffect } from 'react'
+/* eslint-disable no-use-before-define */
+import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
-import Nav from '../components/Nav'
-import { Redirect } from 'react-router-dom'
-import Loading from '../components/Loading'
-import ErrorPage from '../components/Error'
-import { UsersQuery, LabelsQuery } from '../graphql/queries'
-import { UserLabelCreate, CampaignCreateThroughUsers } from '../graphql/mutations'
-import { CreateNote } from '../graphql/mutations'
+import { Redirect , Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -25,17 +19,23 @@ import {
   CircularProgress,
   Chip
 } from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
+import TelegramIcon from '@material-ui/icons/Telegram'
+import FilterListIcon from '@material-ui/icons/FilterList';
+import Nav from '../components/Nav'
+import Loading from '../components/Loading'
+import ErrorPage from '../components/Error'
+import { UsersQuery, LabelsQuery } from '../graphql/queries'
+import { UserLabelCreate, CampaignCreateThroughUsers , CreateNote, SendOneTimePasscode } from '../graphql/mutations'
 import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
-import TelegramIcon from '@material-ui/icons/Telegram'
 import CreateLabel from '../components/CreateLabel'
 import FilterComponent from '../components/FilterComponent'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { dateToString } from '../utils/dateutil'
-import { Link } from 'react-router-dom'
+
+import { Context as AuthStateContext } from "./Provider/AuthStateProvider"
 
 const limit = 50
 
@@ -64,20 +64,22 @@ export default function UsersList() {
   const [selectDateTo, setSelectDateTo] = useState('')
   const [selectDateOn, setSelectDateOn] = useState('')
   const [filterOpen, setOpenFilter] = useState(false)
+  const authState = useContext(AuthStateContext)
+  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
   const search = {
     type,
     phone: phoneNumbers,
     label: labels
   }
-  function joinSearchQuery(query, type) {
+  function joinSearchQuery(query, currentSearchType) {
     const types = {
       phone: 'phone_number',
       label: 'labels',
       type: 'user_type'
     }
-    const filterType = types[type]
-    return query.map(query => `${filterType} = "${query}"`).join(' OR ')
+    const currentFilterType = types[currentSearchType]
+    return query.map(q => `${currentFilterType} = "${q}"`).join(' OR ')
   }
   function specifyUserQuery() {
     if (selectDateFrom !== '') {
@@ -105,7 +107,7 @@ export default function UsersList() {
     userList = data.users.map(user => user.id)
   }
 
-  //TODO: @dennis, add pop up for notes
+  // TODO: @dennis, add pop up for notes
   const [userLabelCreate] = useMutation(UserLabelCreate)
   const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
   function handleFilterModal() {
@@ -156,8 +158,8 @@ export default function UsersList() {
       setNote('')
     })
   }
-  function handleNoteModal(userId = '', username = '', type = '') {
-    setId(userId)
+  function handleNoteModal(noteUserId = '', username = '', noteType = '') {
+    setId(noteUserId)
     setName(username)
     setIsDialogOpen(!isDialogOpen)
     const NoteTypes = {
@@ -165,7 +167,7 @@ export default function UsersList() {
       Answered: 'Answered',
       Missed: 'Missed'
     }
-    setModalAction(NoteTypes[type])
+    setModalAction(NoteTypes[noteType])
   }
   function inputToSearch() {
     setRedirect('/search')
@@ -185,9 +187,9 @@ export default function UsersList() {
         refetch()
         setLabels([...labels, shortDesc])
         setLabelLoading(false)
-      }).catch(error => {
+      }).catch(err => {
         setLabelLoading(false)
-        setError(error.message)
+        setError(err.message)
       })
     }
   }
@@ -197,8 +199,10 @@ export default function UsersList() {
       campaignCreate({
         variables: { labels: labels.join(), userType: type.join(), number: searchValue }
       }).then(res => {
+        // eslint-disable-next-line no-shadow
         const { data } = res
         setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
+        // eslint-disable-next-line no-shadow
       }).catch(error => {
         setError(error.message)
       })
@@ -245,7 +249,7 @@ export default function UsersList() {
   }
 
   return (
-    <Fragment>
+    <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
         <CustomizedDialogs
@@ -253,9 +257,14 @@ export default function UsersList() {
           saveAction="Save"
           dialogHeader="Filter by User Phone # (provide a comma delimited list)"
           handleBatchFilter={handleBatchFilter}
-          handleModal={handleFilterModal}>
-          <TextField rows={5}
-            multiline className="form-control" onChange={event => setSearchValue(event.target.value)} />
+          handleModal={handleFilterModal}
+        >
+          <TextField
+            rows={5}
+            multiline
+            className="form-control"
+            onChange={event => setSearchValue(event.target.value)}
+          />
         </CustomizedDialogs>
         <ModalDialog
           handleClose={handleNoteModal}
@@ -265,7 +274,10 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for <strong>{userName}</strong>{' '}
+                Add note for
+                {' '}
+                <strong>{userName}</strong>
+                {' '}
               </h6>
               <input
                 className="form-control"
@@ -282,7 +294,10 @@ export default function UsersList() {
 
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for <strong>{userName}</strong>{' '}
+                Add Outgoing call answered for
+                {' '}
+                <strong>{userName}</strong>
+                {' '}
               </h6>
               <input
                 className="form-control"
@@ -299,7 +314,10 @@ export default function UsersList() {
 
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for <strong>{userName}</strong>{' '}
+                Add Outgoing call not answered for
+                {' '}
+                <strong>{userName}</strong>
+                {' '}
               </h6>
               <input
                 className="form-control"
@@ -314,7 +332,7 @@ export default function UsersList() {
           )}
         </ModalDialog>
         <div className={classes.root}>
-          <Fragment>
+          <>
             <InputBase
               className={classes.input}
               type="text"
@@ -328,12 +346,19 @@ export default function UsersList() {
               className={classes.iconButton}
               aria-label="search"
             >
-              <SearchIcon />
+              <FilterListIcon onClick={() => inputToSearch()} />
             </IconButton>
-          </Fragment>
+            <div className={classes.searchButton}>
+              <Link to="/users/import" style={{textDecoration: 'none'}}>
+                <Button variant="contained" style={{border: '1px #dfdfdf solid'}}>
+                  UPLOAD
+                </Button>
+              </Link>
+            </div>
+          </>
         </div>
         <Grid container alignItems="center">
-          <Grid item xs={'auto'}>
+          <Grid item xs="auto">
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
               <Select
@@ -346,6 +371,7 @@ export default function UsersList() {
                 renderValue={selected => (
                   <div>
                     {selected.map((value, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
                       <Chip key={i} label={value} />
                     ))}
                   </div>
@@ -363,7 +389,7 @@ export default function UsersList() {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
             <FilterComponent
               stateList={labels}
               list={labelsData.labels || []}
@@ -375,18 +401,23 @@ export default function UsersList() {
               handleOpenSelect={handleSelect}
             />
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
+          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
             <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
             {labelLoading ? <CircularProgress size={25} /> : ''}
           </Grid>
 
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <Button variant="contained"
+          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <Button
+              variant="contained"
               color="primary"
               className={classes.filterButton}
-              endIcon={<Icon>search</Icon>} onClick={handleFilterModal}>Filter by Phone #</Button>
+              endIcon={<Icon>search</Icon>}
+              onClick={handleFilterModal}
+            >
+              Filter by Phone #
+            </Button>
             {Boolean(phoneNumbers.length) && (
               <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
             )}
@@ -403,17 +434,16 @@ export default function UsersList() {
             handleDateChangeOn={handleDateChangeOn}
             resetFilter={resetDateFilter}
           />
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
-            <Button variant="contained"
+          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
+            <Button
+              variant="contained"
               color="primary"
               className={classes.filterButton}
-              endIcon={<TelegramIcon />} onClick={handleCampaignCreate} >Create Campaign</Button>
-          </Grid>
-
-          <Grid item xs={'auto'} style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
-            <Link to="/users/import">
-              Bulk Upload
-            </Link>
+              endIcon={<TelegramIcon />}
+              onClick={handleCampaignCreate}
+            >
+              Create Campaign
+            </Button>
           </Grid>
         </Grid>
 
@@ -428,7 +458,7 @@ export default function UsersList() {
         <br />
 
 
-        <UserListCard userData={data} handleNoteModal={handleNoteModal} />
+        <UserListCard userData={data} handleNoteModal={handleNoteModal} currentUserType={authState.user.userType} sendOneTimePasscode={sendOneTimePasscode} />
 
         <Grid container direction="row" justify="center" alignItems="center">
           <Paginate
@@ -440,7 +470,7 @@ export default function UsersList() {
           />
         </Grid>
       </div>
-    </Fragment>
+    </>
   )
 }
 
@@ -448,6 +478,7 @@ export const useStyles = makeStyles(theme => ({
   root: {
     padding: '2px 4px',
     display: 'flex',
+    flexWrap: 'wrap',
     alignItems: 'right',
     width: '100%'
   },
@@ -480,8 +511,15 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   },
   filterButton: {
-
     textTransform: 'none'
+  },
+  searchButton: {
+    display: 'flex'
+  },
+  '@media only screen and (max-width: 768px)': {
+    searchButton: {
+      flexBasis: '100%',
+    }
   }
 }))
 

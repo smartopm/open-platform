@@ -213,26 +213,27 @@
   transform: translate(-50%, -50%);
 }
 
-@media only screen and (max-width: 600px) {
-  .home_hero {
-    height: 300px;
-  }
+@media only screen and (max-width: 539px) {
   .centered h2 {
-    font-size: 27px;
+    font-size: 20px;
     line-height: 1;
     font-weight: 500;
   }
  .centered {
-    top: 10%;
+    top: 5%;
     position: absolute;
 
   }
 }
 
-@media only screen and (max-width: 980px) {
+@media only screen and (min-width: 540px) and (max-width: 600px) {
   .centered h2 {
-    font-size: 35px;
+    font-size: 30px;
+    line-height: 1;
     font-weight: 500;
+  }
+  .centered {
+    top: 7%;
   }
 }
 /* Open Page Styles */
