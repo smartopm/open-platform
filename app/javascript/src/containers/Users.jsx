@@ -19,14 +19,13 @@ import {
   CircularProgress,
   Chip
 } from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
 import TelegramIcon from '@material-ui/icons/Telegram'
+import FilterListIcon from '@material-ui/icons/FilterList';
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersQuery, LabelsQuery } from '../graphql/queries'
 import { UserLabelCreate, CampaignCreateThroughUsers , CreateNote, SendOneTimePasscode } from '../graphql/mutations'
-
 import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
@@ -347,8 +346,15 @@ export default function UsersList() {
               className={classes.iconButton}
               aria-label="search"
             >
-              <SearchIcon />
+              <FilterListIcon onClick={() => inputToSearch()} />
             </IconButton>
+            <div className={classes.searchButton}>
+              <Link to="/users/import" style={{textDecoration: 'none'}}>
+                <Button variant="contained" style={{border: '1px #dfdfdf solid'}}>
+                  UPLOAD
+                </Button>
+              </Link>
+            </div>
           </>
         </div>
         <Grid container alignItems="center">
@@ -439,12 +445,6 @@ export default function UsersList() {
               Create Campaign
             </Button>
           </Grid>
-
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
-            <Link to="/users/import">
-              Bulk Upload
-            </Link>
-          </Grid>
         </Grid>
 
         <br />
@@ -478,6 +478,7 @@ export const useStyles = makeStyles(theme => ({
   root: {
     padding: '2px 4px',
     display: 'flex',
+    flexWrap: 'wrap',
     alignItems: 'right',
     width: '100%'
   },
@@ -510,8 +511,15 @@ export const useStyles = makeStyles(theme => ({
     margin: 2
   },
   filterButton: {
-
     textTransform: 'none'
+  },
+  searchButton: {
+    display: 'flex'
+  },
+  '@media only screen and (max-width: 768px)': {
+    searchButton: {
+      flexBasis: '100%',
+    }
   }
 }))
 
