@@ -626,6 +626,7 @@ query userFormProperties($formId: ID!, $userId: ID!) {
     }
     value
     imageUrl
+    fileType
   }
 }
 

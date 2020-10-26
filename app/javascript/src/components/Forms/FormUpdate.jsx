@@ -113,7 +113,13 @@ export default function FormUpdate({ formId, userId }) {
       image: (
         <p key={formPropertiesData.formProperty.id}>
           Attachments
-          <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
+          {/* can be either pdf or image */}
+          {
+            formPropertiesData.fileType.includes('image') 
+            ? <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
+            : <span>PDF</span>
+          }
+          
         </p>
       ),
       signature: (
