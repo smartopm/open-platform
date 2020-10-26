@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-use-before-define */
 import React, { useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
@@ -14,7 +13,6 @@ export function safeAvatarLink({ imageUrl, user}){
   return forceLinkHttps(imageUrl)
 }
 
-
 export default function Avatar({ imageUrl, user, style}) {
   const { token } = useContext(Context)
   const imageStyles = {
@@ -22,8 +20,8 @@ export default function Avatar({ imageUrl, user, style}) {
     medium: styles.avatarMedium,
     big: styles.avatarBig
   }
-  // we have imageUrl and avatarUrl and we don't need to re-authenticate these
-  // user.imageUrl contains links from Auth Providers ==> Google and Google 
+  // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
+  // user.imageUrl contains links from Auth Providers ==> Google and Facebook 
   if (user.imageUrl) {
     return (
       <img
@@ -53,7 +51,10 @@ Avatar.defaultProps = {
 
 Avatar.propTypes = {
   imageUrl: PropTypes.string,
-  user: PropTypes.object,
+  user: PropTypes.shape({
+    imageUrl: PropTypes.string,
+    avatarUrl: PropTypes.string
+  }),
   style: PropTypes.string
 }
 
