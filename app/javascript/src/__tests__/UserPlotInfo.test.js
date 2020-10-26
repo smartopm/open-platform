@@ -54,7 +54,7 @@ describe('User Plot Info Page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByText('No plots information available.')).toBeInTheDocument()
+    expect(container.queryByText('No plots information available')).toBeInTheDocument()
   })
 
   it('should include support team link', () => {

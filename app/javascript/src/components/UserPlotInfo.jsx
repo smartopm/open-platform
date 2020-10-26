@@ -13,6 +13,7 @@ import { dateToString } from "./DateContainer"
 import GeoData from '../data/nkwashi_plots.json'
 import PlotModal from "./PlotOpen"
 import EditModal from './EditPlot'
+import CenteredContent from './CenteredContent'
 
 export default function UserPlotInfo({ userId, account, refetch }) {
   function getPropertyByName(jsonData, value) {
@@ -49,6 +50,9 @@ export default function UserPlotInfo({ userId, account, refetch }) {
     const history = useHistory() 
 
     const features = getPropertyByName(GeoData, plotNumber)
+    if (!account || !account[0]) {
+      return <CenteredContent>No plots information available</CenteredContent>
+    }
     return (
       <>
         {account[0]?.landParcels?.length > 0 ? (
