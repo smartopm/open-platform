@@ -13,8 +13,8 @@ class UserFormProperty < ApplicationRecord
   }.freeze
 
   def attach_file(vals)
-    IMAGE_ATTACHMENTS.each_pair do |key, attr|
-      self.send(attr).attach(vals['image_blob_id'])
+    IMAGE_ATTACHMENTS.each_pair do |_key, attr|
+      send(attr).attach(vals['image_blob_id'])
     end
   end
 end
