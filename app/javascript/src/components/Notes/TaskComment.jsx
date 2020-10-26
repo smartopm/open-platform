@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo'
@@ -6,49 +7,65 @@ import {
   Typography
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import ChatIcon from '@material-ui/icons/Chat';
 import CommentTextField from './CommentField'
-import { TaskHistoryQuery } from '../../graphql/queries'
+import { CommentQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
 
 export default function TaskComment({ authState }) {
   const { taskId } = useParams()
-  const { data: commentData, error, refetch } = useQuery(TaskHistoryQuery, {
+  const { data: commentData, error, refetch } = useQuery(CommentQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
-  const [open, setOpen] = useState(false)
+  const [commentOpen, setCommentOpen] = useState(false)
+  const [updateOpen, setUpdateOpen] = useState(false)
+
+  function handleCommentOpen(){
+    setCommentOpen(true)
+    setUpdateOpen(false)
+  }
+
+  function handleUpdateOpen(){
+    setUpdateOpen(true)
+    setCommentOpen(false)
+  }
+  // function handleCommentClose() {
+  //   setCommentOpen(!commentOpen)
+  //   setUpdateOpen(!updateOpen)
+  // }
+  
   
   if (error) return <ErrorPage title={error.message} />
   return (
     <>
-      {console.log(commentData)}
-      <div style={{ display: 'flex', marginBottom: "10px" }}>
-        <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} gutterBottom>
-          {commentData?.task.noteComments.length}
-          {' '}
-          Comments
-        </Typography>
-        <Typography variant="caption" style={{ cursor: 'pointer', color: '#69ABA4' }} gutterBottom>
-          {open ? (
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-            <div onClick={() => setOpen(false)}>
-              |
-              <span style={{ marginLeft: "10px" }}>Collapse Comments</span>
-            </div>
-) 
-            : (
-              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div style={{ display: 'flex' }} onClick={() => setOpen(true)}>
-                <ChatIcon />  
-                {' '}
-                <span style={{ marginLeft: "5px" }}>Comment</span>
-              </div>
-)}
-        </Typography>
+      <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
+        {!commentOpen ? (
+          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={() => handleCommentOpen()} gutterBottom>
+            {commentData?.task.noteComments.length}
+            {' '}
+            Comments
+          </Typography>
+        ) : (
+          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={() => setCommentOpen(false)} gutterBottom>
+            Collapse Comments
+          </Typography>
+        )}
+        {' '}
+        |
+        {!updateOpen ? (
+          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={() => handleUpdateOpen()} gutterBottom>
+            {commentData?.task.noteComments.length}
+            {' '}
+            Updates
+          </Typography>
+        ) : (
+          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} gutterBottom onClick={() => handleUpdateOpen()}>
+            Collapse Updates
+          </Typography>
+        )}
       </div>
-      {open && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
+      {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
     </>
   )
 }

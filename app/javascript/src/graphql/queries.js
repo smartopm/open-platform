@@ -552,7 +552,6 @@ export const TaskHistoryQuery  = gql`
 query historyDetail($taskId: ID!){
   noteHistories(taskId: $taskId){
     id
-    body
     attrChanged
     initialValue
     updatedValue
@@ -561,6 +560,11 @@ query historyDetail($taskId: ID!){
     noteEntityId
     noteId
     userId
+    user {
+      id
+      name
+      imageUrl
+    }
    }
  }
 `

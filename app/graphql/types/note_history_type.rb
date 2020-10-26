@@ -12,6 +12,7 @@ module Types
     field :note_entity_type, String, null: true
     field :note_id, ID, null: false
     field :user_id, ID, null: false
+    field :user, Types::UserType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end

@@ -38,7 +38,7 @@ module Types::Queries::Note
       argument :task_id, GraphQL::Types::ID, required: true
     end
 
-    field :note_histories, Types::NoteHistoryType, null: false do
+    field :note_histories, [Types::NoteHistoryType], null: false do
       description 'return all histories for a note'
       argument :task_id, GraphQL::Types::ID, required: true
     end
@@ -111,6 +111,10 @@ module Types::Queries::Note
   def note_histories(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    NoteHistory.where(note_id: task_id)
+    # context[:site_community].notes.includes(:note_histories)
+                            # .find(task_id)
+
+    # context[:site_community].notes.find_by()note_histories.where(note_id: task_id)
+    history = NoteHistory.includes(:user).where(note_id: task_id)
   end
 end
