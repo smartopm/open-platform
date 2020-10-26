@@ -24,7 +24,7 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-import { UsersQuery, LabelsQuery } from '../graphql/queries'
+import { UsersDetails, LabelsQuery } from '../graphql/queries'
 import { UserLabelCreate, CampaignCreateThroughUsers , CreateNote, SendOneTimePasscode } from '../graphql/mutations'
 
 import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
@@ -94,7 +94,7 @@ export default function UsersList() {
     }
     return joinSearchQuery(search[searchType], searchType)
   }
-  const { loading, error, data, refetch } = useQuery(UsersQuery, {
+  const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
       query: specifyUserQuery(),
       limit,
