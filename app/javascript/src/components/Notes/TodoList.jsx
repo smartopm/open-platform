@@ -60,7 +60,7 @@ export default function TodoList({
     tasksOpen: 'completed: false',
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
-    myOpenTasks: `assignees: ${currentUser} AND completed: false`,
+    myOpenTasks: `assignees: ${currentUser.name} AND completed: false`,
     totalCallsOpen: 'category: call AND completed: false'
   }
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
@@ -77,7 +77,7 @@ export default function TodoList({
   // TODO: simplify this: @olivier
   const assignees = assignee.map((q) => `assignees = "${q}"`).join(' OR ')
   // eslint-disable-next-line no-nested-ternary
-  const qr = query.length ? query : location === 'my_tasks' ? currentUser : assignees
+  const qr = query.length ? query : location === 'my_tasks' ? currentUser.name : assignees
   const [loadTasks, {
     loading: isLoading, error: tasksError, data, refetch
   }] = useLazyQuery(
@@ -236,6 +236,7 @@ export default function TodoList({
                       loadingMutation={loadingMutation}
                       handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
                       isAssignTaskOpen={isAssignTaskOpen}
+                      currentUser={currentUser}
                     />
                     <CenteredContent>
                       <Button
@@ -289,6 +290,7 @@ export default function TodoList({
               loadingMutation={loadingMutation}
               handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
               isAssignTaskOpen={isAssignTaskOpen}
+              currentUser={currentUser}
             />
           )) : (
             <CenteredContent>Click a card above to filter</CenteredContent>
