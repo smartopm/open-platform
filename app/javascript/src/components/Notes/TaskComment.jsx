@@ -8,12 +8,12 @@ import {
 import PropTypes from 'prop-types'
 import ChatIcon from '@material-ui/icons/Chat';
 import CommentTextField from './CommentField'
-import { CommentQuery } from '../../graphql/queries'
+import { TaskHistoryQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
 
 export default function TaskComment({ authState }) {
   const { taskId } = useParams()
-  const { data: commentData, error, refetch } = useQuery(CommentQuery, {
+  const { data: commentData, error, refetch } = useQuery(TaskHistoryQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -23,6 +23,7 @@ export default function TaskComment({ authState }) {
   if (error) return <ErrorPage title={error.message} />
   return (
     <>
+      {console.log(commentData)}
       <div style={{ display: 'flex', marginBottom: "10px" }}>
         <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} gutterBottom>
           {commentData?.task.noteComments.length}

@@ -37,6 +37,11 @@ module Types::Queries::Note
       description 'return details for one task'
       argument :task_id, GraphQL::Types::ID, required: true
     end
+
+    field :note_histories, Types::NoteHistoryType, null: false do
+      description 'return all histories for a note'
+      argument :task_id, GraphQL::Types::ID, required: true
+    end
   end
 
   def all_notes(offset: 0, limit: 50)
@@ -101,5 +106,11 @@ module Types::Queries::Note
 
   def my_task
     context[:current_user].tasks.by_completion(false).count
+  end
+
+  def note_histories(task_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    NoteHistory.where(note_id: task_id)
   end
 end
