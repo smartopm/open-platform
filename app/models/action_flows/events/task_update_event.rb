@@ -4,29 +4,8 @@ module ActionFlows
   module Events
     # Task Update Event to handle related action
     class TaskUpdateEvent < ActionFlows::EventPop
-      EVENT_TYPE = 'task_create'
+      EVENT_TYPE = 'task_update'
       EVENT_DESC = 'Note Update'
-
-      # To be fetched dynamically later : Saurabh
-      def rule
-        {
-          "if": [
-            { "===": [{ "var": 'note_subject' }, 'task_update'] },
-            ['email', { "var": 'note_assignees' }],
-            [],
-          ],
-        }.freeze
-      end
-
-      def data_rule
-        {
-          "if": [
-            { "===": [{ "var": 'note_subject' }, 'task_update'] },
-            ['task_name', { "var": 'note_body' }, 'url', { "var": 'note_id' }],
-            [],
-          ],
-        }.freeze
-      end
 
       def self.event_metadata
         {
@@ -43,7 +22,7 @@ module ActionFlows
       def self.event_description
         EVENT_DESC
       end
-  
+
       def self.event_type
         EVENT_TYPE
       end
@@ -54,12 +33,8 @@ module ActionFlows
 
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
-        assignees_email = note.assignees.map {|d| d.email }.join(',')
-        load_data({'Note' => note},{'assignees_emails' => assignees_email})
-      end
-
-      def setup_data(note)
-        load_data('Note' => note)
+        assignees_email = note.assignees.map(&:email).join(',')
+        load_data({ 'Note' => note }, 'assignees_emails' => assignees_email)
       end
 
       def url_format(id)

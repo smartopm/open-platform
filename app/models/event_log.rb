@@ -9,7 +9,7 @@ class EventLog < ApplicationRecord
 
   after_create :notify_slack
   after_create :populate_activity_points
-  after_create :run_action_flow
+  after_create :execute_action_flows
   validate :validate_log, :validate_acting_user
 
   default_scope { order(created_at: :desc) }
@@ -139,25 +139,18 @@ class EventLog < ApplicationRecord
     end
   end
 
-    # rubocop:disable Metrics/AbcSize
-    def execute_action_flows
-      events = ActionFlows::ActionFlow.find_by_event_type(subject)
-      return if events.blank?
-      events.each do |af|
-        event = af.event_object.new
-        event.preload_data(self)
-        cond = event.event_condition
-        if cond.run_condition(af.condition)
-          af.action.execute_action(event.data_set, af.action_fields)
-        end
-      end
-     # action_class_name = "ActionFlows::Events::#{event}"
-     # action = action_class_name.constantize.new
-     # metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
-     # action.setup_data(ref_object_attributes(metadata_keys))
-     # action.run_condition
+  def execute_action_flows
+    events = ActionFlows::ActionFlow.find_by_event_type(subject)
+    return if events.blank?
+
+    events.each do |af|
+      event = af.event_object.new
+      event.preload_data(self)
+      cond = event.event_condition
+      af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
     end
-    # rubocop:enable Metrics/AbcSize
+  end
+
   private
 
   def validate_acting_user
@@ -199,47 +192,6 @@ class EventLog < ApplicationRecord
 
   def populate_activity_points
     ActivityPointsJob.perform_now(acting_user.id, subject)
-  end
-
-  # rubocop:disable Metrics/AbcSize
-  def run_action_flow
-    event = "#{subject.camelize}Event"
-    return if ActionFlows::Events.constants.exclude?(event.to_sym) || ref_type.nil?
-
-    action_class_name = "ActionFlows::Events::#{event}"
-    action = action_class_name.constantize.new
-    metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
-    action.setup_data(ref_object_attributes(metadata_keys))
-    action.run_condition
-  end
-  # rubocop:enable Metrics/AbcSize
-
-
-
-  def ref_object_attributes(metadata_keys)
-    ref_obj = ref_type.constantize.find_by_id(ref_id) # rubocop:disable Rails/DynamicFindBy
-    return if ref_obj.nil?
-
-    obj_attr_hash = ref_obj.attributes.slice(*metadata_keys)
-                           .merge({ subject: subject }.stringify_keys)
-    associations = metadata_keys - obj_attr_hash.keys
-    merge_associations(ref_obj, obj_attr_hash, associations)
-  end
-
-  def merge_associations(ref_obj, obj_attr_hash, associations)
-    hash = {}
-    associations.each do |association_name|
-      hash[association_name] = chain_association(ref_obj, association_name)
-    end
-    obj_attr_hash.merge(hash)
-  end
-
-  def chain_association(ref_obj, association_name)
-    val = ref_obj
-    association_name.split('.').each do |relation|
-      val = val.send(relation)
-    end
-    val
   end
 end
 # rubocop:enable Metrics/ClassLength

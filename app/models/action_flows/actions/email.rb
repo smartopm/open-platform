@@ -2,32 +2,25 @@
 
 module ActionFlows
   module Actions
-    # Action defined for firing email
-
     ACTION_FIELDS = [
-      {'name' => 'email' }
-      {'name'=> 'template'}]
-    class Email
-      def self.run_action(users, mail_data)
-        users.each do |user|
-          EmailMsg.send_mail(user['email'], community_template, mail_data)
-        end
-      end
+      { 'name' => 'email' },
+      { 'name' => 'template' },
+    ].freeze
 
+    # Action defined for firing email
+    class Email
       def self.process_vars(field, data, field_config)
-        ret_val = nil
         if field_config[field]['type'] == 'variable'
-          ret_val = data[field_config[field]['value']]
-        else
-          ret_val = field_config[field]['value']
+          return data[(field_config[field]['value']).to_sym]
         end
-        ret_val
+
+        field_config[field]['value']
       end
 
       def self.execute_action(data, field_config)
-        emails = self.process_vars('email', data, field_config)
-        template = self.process_vars('template', data, field_config)
-        emails.split(",").each do |email|
+        emails = process_vars('email', data, field_config)
+        template = process_vars('template', data, field_config)
+        emails.split(',').each do |email|
           EmailMsg.send_mail(email, template)
         end
       end
