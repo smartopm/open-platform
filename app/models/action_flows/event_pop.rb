@@ -20,8 +20,7 @@ module ActionFlows
         'user_id' => '',
         'author_id' => '',
         'body' => '',
-        'subject' => '',
-        'assignees' => [],
+        'assignees_emails' => '',
       },
       'NoteComment' => {
         'id' => '',
@@ -57,12 +56,18 @@ module ActionFlows
     end
 
     # rubocop:disable Rails/Output
-    def load_data(data)
+    def load_data(data, overwrite_hash = nil)
       data.keys.each do |key|
         obj_val = self.class.event_metadata[key.to_s]
         obj_val.keys.each do |co|
           puts co
-          @data_set["#{key.underscore}_#{co.tr('.', '_')}".to_sym] = data.dig(key, co)
+          if overwrite_hash.present? && overwrite_hash[co].present?
+            @data_set["#{key}_#{co.tr('.', '_')}".to_sym] = overwrite_hash[co]  
+          else
+            puts data.dig(key).send(co)
+            puts data.inspect
+            @data_set["#{key}_#{co.tr('.', '_')}".to_sym] = data.dig(key).send(co)
+          end
         end
       end
     end
@@ -102,11 +107,11 @@ module ActionFlows
     # rubocop:enable Metrics/AbcSize
 
     def self.event_list
-      # ActionFlows::Events.constants
-      #                    .map { |const_symbol| ActionFlows::Events.const_get(const_symbol) }
-      #                    .select { |c|
-      #                      !c.ancestors.include?(StandardError) && c.class != Module
-      #                     }
+       ActionFlows::Events.constants
+                          .map { |const_symbol| ActionFlows::Events.const_get(const_symbol) }
+                          .select { |c|
+                            !c.ancestors.include?(StandardError) && c.class != Module
+                           }
     end
 
     def self.inherited(klass)

@@ -139,6 +139,25 @@ class EventLog < ApplicationRecord
     end
   end
 
+    # rubocop:disable Metrics/AbcSize
+    def execute_action_flows
+      events = ActionFlows::ActionFlow.find_by_event_type(subject)
+      return if events.blank?
+      events.each do |af|
+        event = af.event_flow.new
+        event.preload_data(self)
+        cond = event.event_condition
+        if cond.run_condition(af.condition)
+          af.action.execute_action(event.data_set, af.action_fields)
+        end
+      end
+     # action_class_name = "ActionFlows::Events::#{event}"
+     # action = action_class_name.constantize.new
+     # metadata_keys = action_class_name.constantize.event_metadata[ref_type]&.keys
+     # action.setup_data(ref_object_attributes(metadata_keys))
+     # action.run_condition
+    end
+    # rubocop:enable Metrics/AbcSize
   private
 
   def validate_acting_user
@@ -194,6 +213,8 @@ class EventLog < ApplicationRecord
     action.run_condition
   end
   # rubocop:enable Metrics/AbcSize
+
+
 
   def ref_object_attributes(metadata_keys)
     ref_obj = ref_type.constantize.find_by_id(ref_id) # rubocop:disable Rails/DynamicFindBy

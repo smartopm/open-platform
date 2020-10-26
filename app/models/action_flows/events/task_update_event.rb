@@ -4,7 +4,7 @@ module ActionFlows
   module Events
     # Task Update Event to handle related action
     class TaskUpdateEvent < ActionFlows::EventPop
-      EVENT_TYPE = 'note_update'
+      EVENT_TYPE = 'task_create'
       EVENT_DESC = 'Note Update'
 
       # To be fetched dynamically later : Saurabh
@@ -40,8 +40,22 @@ module ActionFlows
         }
       end
 
+      def self.event_description
+        EVENT_DESC
+      end
+  
+      def self.event_type
+        EVENT_TYPE
+      end
+
       def initialize
         super
+      end
+
+      def preload_data(eventlog)
+        note = eventlog.ref_type.constantize.find eventlog.ref_id
+        assignees_email = note.assignees.map {|d| d.email }.join(',')
+        load_data({'Note' => note},{'assignees_emails' => assignees_email})
       end
 
       def setup_data(note)

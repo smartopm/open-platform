@@ -38,6 +38,14 @@ module ActionFlows
         super
       end
 
+      def self.event_description
+        EVENT_DESC
+      end
+  
+      def self.event_type
+        EVENT_TYPE
+      end
+      
       def setup_data(note_comment)
         load_data('NoteComment' => note_comment)
       end
