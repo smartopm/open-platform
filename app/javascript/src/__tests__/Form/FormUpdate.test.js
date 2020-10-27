@@ -29,7 +29,8 @@ describe('Form Component', () => {
                 order: '1'
               },
               value: '7th Street',
-              imageUrl: 'https://image.com'
+              imageUrl: 'https://image.com',
+              fileType: null
             },
             {
               formProperty: {
@@ -40,7 +41,8 @@ describe('Form Component', () => {
                 order: '2'
               },
               value: null,
-              imageUrl: 'https://another_image.com'
+              imageUrl: 'https://another_image.com',
+              fileType: 'null'
             },
             {
               formProperty: {
@@ -51,7 +53,8 @@ describe('Form Component', () => {
                 order: '3'
               },
               value: 'some values',
-              imageUrl: 'https://another2_image.com'
+              imageUrl: 'https://another2_image.com',
+              fileType: 'image/jpg'
             },
             {
               formProperty: {
@@ -62,7 +65,8 @@ describe('Form Component', () => {
                 order: '4'
               },
               value: null,
-              imageUrl: 'https://another3_image.com'
+              imageUrl: 'https://another3_image.com',
+              fileType: 'image/jpg'
             }
           ]
         }
