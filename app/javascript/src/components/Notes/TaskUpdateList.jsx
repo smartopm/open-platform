@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 
-export default function TaskUpdateList() {
+export default function TaskUpdateList({ data }) {
 
   return(
     <>
-      <div>This is update</div>
+      {data?.map()}
     </>
   )
 }
