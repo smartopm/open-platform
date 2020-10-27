@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
@@ -12,7 +13,7 @@ import { CommentQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
 import TaskUpdateList from './TaskUpdateList'
 
-export default function TaskComment({ authState }) {
+export default function TaskComment({ authState, data }) {
   const { taskId } = useParams()
   const { data: commentData, error, refetch } = useQuery(CommentQuery, {
     variables: { taskId },
@@ -30,19 +31,14 @@ export default function TaskComment({ authState }) {
   function handleUpdateOpen(){
     setUpdateOpen(true)
     setCommentOpen(false)
-  }
-  // function handleCommentClose() {
-  //   setCommentOpen(!commentOpen)
-  //   setUpdateOpen(!updateOpen)
-  // }
-  
+  } 
   
   if (error) return <ErrorPage title={error.message} />
   return (
     <>
       <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
         {!commentOpen ? (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={() => handleCommentOpen()} gutterBottom>
+          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={handleCommentOpen} gutterBottom>
             {commentData?.task.noteComments.length}
             {' '}
             Comments
@@ -55,19 +51,19 @@ export default function TaskComment({ authState }) {
         {' '}
         |
         {!updateOpen ? (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={() => handleUpdateOpen()} gutterBottom>
-            {commentData?.task.noteComments.length}
+          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={handleUpdateOpen} gutterBottom>
+            {data?.task.noteHistories.length}
             {' '}
             Updates
           </Typography>
         ) : (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} gutterBottom onClick={() => handleUpdateOpen()}>
+          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} gutterBottom onClick={() => setUpdateOpen(false)}>
             Collapse Updates
           </Typography>
         )}
       </div>
       {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
-      {updateOpen && <TaskUpdateList data={commentData.task.noteHistories} refetch={refetch} />}
+      {updateOpen && <TaskUpdateList data={data.task.noteHistories} refetch={refetch} />}
     </>
   )
 }
