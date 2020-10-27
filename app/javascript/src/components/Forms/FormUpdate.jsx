@@ -142,19 +142,27 @@ export default function FormUpdate({ formId, userId }) {
       ),
       image: (
         <p key={formPropertiesData.formProperty.id}>
-          Attachments 
-          <br />
-          {/* can be either pdf or image */}
-          {
-            <ImageAuth type={formPropertiesData.fileType?.split('/')[0]} imageLink={formPropertiesData.imageUrl} token={authState.token} />
-          }
-          
+          { formPropertiesData.imageUrl ? (
+            <>
+              Attachments
+              <br />
+              <ImageAuth type={formPropertiesData.fileType?.split('/')[0]} imageLink={formPropertiesData.imageUrl} token={authState.token} />
+            </>
+          ) : <span>No Attached File</span> }  
         </p>
       ),
       signature: (
         <p key={formPropertiesData.formProperty.id}>
-          Signature
-          <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
+          {
+            formPropertiesData.imageUrl ? (
+              <>
+                Signature
+                <br />
+                <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
+              </>
+            )
+            : <span>File has not been signed</span>
+          }
         </p>
       )
     }
