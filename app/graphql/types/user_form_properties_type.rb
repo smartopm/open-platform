@@ -23,7 +23,8 @@ module Types
     def file_type
       return nil unless object.image.attached?
 
-      file = ActiveStorage::Attachment.where(record_id: object.id, record_type: 'UserFormProperty').first.blob
+      file = ActiveStorage::Attachment.where(record_id: object.id,
+                                             record_type: 'UserFormProperty').first.blob
       file.content_type
     end
   end

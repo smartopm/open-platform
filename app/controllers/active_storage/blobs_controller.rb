@@ -22,7 +22,7 @@ class ActiveStorage::BlobsController < ActiveStorage::BaseController
 
   def owner_verified?
     file = ActiveStorage::Attachment.find_by(blob_id: @blob.id)
-    return true if file.record_type != "UserFormProperty"
+    return true if file.record_type != 'UserFormProperty'
 
     user_id = UserFormProperty.find_by(id: file.record_id)&.user_id
     auth_user.admin? || user_id.eql?(auth_user.id)
