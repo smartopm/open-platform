@@ -21,10 +21,9 @@ module Mutations
 
         # TODO: @olivier Find a way of adding an updated_at datetime
         updates_hash = {}
-        attributes.each { |key, value| 
-          next if value == attributes[:user_id] 
-          updates_hash[key] = [note.send(key), value] 
-        }
+        attributes.each do |key, value|
+          updates_hash[key] = [note.send(key), value]
+        end
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.update!(attributes)
 
         note.record_note_history(context[:current_user], updates_hash)

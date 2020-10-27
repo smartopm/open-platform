@@ -37,11 +37,6 @@ module Types::Queries::Note
       description 'return details for one task'
       argument :task_id, GraphQL::Types::ID, required: true
     end
-
-    field :note_histories, [Types::NoteHistoryType], null: false do
-      description 'return all histories for a note'
-      argument :task_id, GraphQL::Types::ID, required: true
-    end
   end
 
   def all_notes(offset: 0, limit: 50)
