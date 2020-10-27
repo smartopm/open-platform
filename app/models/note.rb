@@ -19,6 +19,9 @@ class Note < ApplicationRecord
   has_many :note_comments, dependent: :destroy
   has_many :note_histories, dependent: :destroy
 
+  after_create :log_create_event
+  after_update :log_update_event
+
   default_scope { order(created_at: :desc) }
   scope :by_due_date, ->(date) { where('due_date <= ?', date) }
   scope :by_completion, ->(is_complete) { where(completed: is_complete) }
@@ -33,5 +36,15 @@ class Note < ApplicationRecord
     else
       assignee_notes.create!(user_id: user_id, note_id: self[:id])
     end
+  end
+
+  private
+
+  def log_create_event
+    user.generate_events('task_create', self)
+  end
+
+  def log_update_event
+    user.generate_events('task_update', self)
   end
 end
