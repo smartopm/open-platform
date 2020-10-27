@@ -34,7 +34,7 @@ const initialData = {
   userId: ''
 }
 
-export default function TaskForm({ users, data, assignUser }) {
+export default function TaskForm({ users, data, assignUser, refetch }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
@@ -73,6 +73,7 @@ export default function TaskForm({ users, data, assignUser }) {
     }).then(() => {
       setLoadingStatus(false)
       setUpdated(true)
+      refetch()
     }).catch((err) => {
       setErrorMessage(err)
     })
@@ -238,7 +239,7 @@ export default function TaskForm({ users, data, assignUser }) {
                   )}
                 />
               )
-}
+            }
           </div>
         </FormControl>
         <br />
@@ -298,5 +299,6 @@ TaskForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
-  assignUser: PropTypes.func.isRequired
+  assignUser: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
 }

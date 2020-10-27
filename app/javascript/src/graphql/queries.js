@@ -583,6 +583,19 @@ query commentDetail($taskId: ID!){
         imageUrl
       }
     }
+    noteHistories {
+      id
+      attrChanged
+      initialValue
+      updatedValue
+      action
+      noteEntityType
+      user {
+        id
+        name
+        imageUrl
+      }
+    }
    }
  }
 `
