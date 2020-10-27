@@ -36,7 +36,8 @@ export default function Task({
   loading,
   loadingMutation,
   isAssignTaskOpen,
-  handleOpenTaskAssign
+  handleOpenTaskAssign,
+  currentUser
 }) {
   const [autoCompleteOpen, setOpen] = useState(false)
   const [id, setNoteId] = useState('')
@@ -73,22 +74,31 @@ export default function Task({
     setReminder({
       variables: { noteId: note.id, hour }
     })
-    .then(() => {
-      handleClose()
-      const timeScheduled = new Date(Date.now() + (hour * 60 * 60000)).toISOString()
-      setReminderTime(timeFormat(timeScheduled))
-    })
-    .catch(err => console.log(err))
+      .then(() => {
+        handleClose()
+        const timeScheduled = new Date(
+          Date.now() + hour * 60 * 60000
+        ).toISOString()
+        setReminderTime(timeFormat(timeScheduled))
+      })
+      .catch(err => console.log(err))
   }
 
   function currentActiveReminder() {
     const timeScheduled = reminderTime || note.reminderTime
     let formattedTime = null
-    if (timeScheduled && (new Date(timeScheduled).getTime() > new Date().getTime())) {
+    if (
+      timeScheduled &&
+      new Date(timeScheduled).getTime() > new Date().getTime()
+    ) {
       formattedTime = timeFormat(timeScheduled)
     }
 
     return formattedTime
+  }
+
+  function isCurrentUserAnAssignee() {
+    return note.assignees.find(assignee => assignee.id === currentUser.id)
   }
 
   return (
@@ -238,16 +248,18 @@ export default function Task({
           >
             {note.completed ? 'Completed' : 'Mark as complete'}
           </Button>
-          <Button
-            color="primary"
-            style={{
-              float: 'right'
-            }}
-            onClick={handleOpenMenu}
-          >
-            {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
-          </Button>
-          {currentActiveReminder() && (
+          {isCurrentUserAnAssignee() && (
+            <Button
+              color="primary"
+              style={{
+                float: 'right'
+              }}
+              onClick={handleOpenMenu}
+            >
+              {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
+            </Button>
+          )}
+          {isCurrentUserAnAssignee() && currentActiveReminder() && (
             <>
               <Typography
                 variant="subtitle1"

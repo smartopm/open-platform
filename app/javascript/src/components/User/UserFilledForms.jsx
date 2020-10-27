@@ -7,13 +7,17 @@ import ListItemText from '@material-ui/core/ListItemText'
 import { css, StyleSheet } from 'aphrodite'
 import DateContainer from '../DateContainer'
 import colors from '../../themes/nkwashi/colors'
+import CenteredContent from '../CenteredContent'
 
 const { gray } = colors
 export default function UserFilledForms({ userFormsFilled }) {
+  if(!userFormsFilled || !userFormsFilled.length){
+    return <CenteredContent>You have no forms </CenteredContent>
+  }
 
   return (
     <div className="container">
-      {userFormsFilled.map(userForm => (
+      {userFormsFilled.length && userFormsFilled.map(userForm => (
         <ListItem
           alignItems="flex-start"
           key={userForm.id}
@@ -45,6 +49,11 @@ export default function UserFilledForms({ userFormsFilled }) {
   )
 }
 
+
+UserFilledForms.defaultProps = {
+  userFormsFilled: []
+}
+
 UserFilledForms.propTypes = {
   userFormsFilled: PropTypes.arrayOf(
     PropTypes.shape({
@@ -53,7 +62,7 @@ UserFilledForms.propTypes = {
         name: PropTypes.string
       })
     })
-  ).isRequired
+  )
 }
 
 const styles = StyleSheet.create({

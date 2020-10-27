@@ -7,33 +7,35 @@ import { createClient } from '../utils/apollo'
 import Task from '../components/Notes/Task'
 
 // find elements that are available when DOM mounts then check the visual contents
+const mck = jest.fn()
+const props = {
+  note: {
+    body: 'Note example',
+    id: '23',
+    createdAt: new Date('2020-08-01'),
+    author: {
+      name: 'Johnsc'
+    },
+    user: {
+      name: 'somebody'
+    },
+    assignees: [{ name: 'Tester', id: '93sd45435' }]
+  },
+  message: '',
+  users: [],
+  handleCompleteNote: mck,
+  loaded: true,
+  loading: false,
+  classes: {},
+  completed: false,
+  assignUnassignUser: jest.fn(),
+  handleDelete: jest.fn(),
+  handleModal: jest.fn(),
+  currentUser: { name: 'Tester', id: '93sd45435' }
+}
+
 describe('Task Component', () => {
   it('should not render with wrong props', () => {
-    const mck = jest.fn()
-    const props = {
-      note: {
-        body: 'Note example',
-        id: '23',
-        createdAt: new Date('2020-08-01'),
-        author: {
-          name: 'Johnsc'
-        },
-        user: {
-          name: 'somebody'
-        },
-        assignees: [{ name: 'Tester', id: '93sd45435'}]
-      },
-      message: '',
-      users: [],
-      handleCompleteNote: mck,
-      loaded: true,
-      loading: false,
-      classes: {},
-      completed: false,
-      assignUnassignUser: jest.fn(),
-      handleDelete: jest.fn(),
-      handleModal: jest.fn()
-    }
     const container = render(
       <BrowserRouter>
         <ApolloProvider client={createClient}>
@@ -63,5 +65,19 @@ describe('Task Component', () => {
     expect(reminderBtn).toBeInTheDocument()
     fireEvent.click(reminderBtn)
     expect(mck).toHaveBeenCalled()
+  })
+
+  it('should not render reminder button if current user is not an assignee', () => {
+    const newProps = {...props, currentUser: {name: 'Tester2', id: '103sd45435' }}
+    const container = render(
+      <BrowserRouter>
+        <ApolloProvider client={createClient}>
+          <Task {...newProps} />
+        </ApolloProvider>
+      </BrowserRouter>
+    )
+
+    const reminderBtn = container.queryByText(/Remind me later/i)
+    expect(reminderBtn).toBeNull()
   })
 })

@@ -181,6 +181,27 @@ export const UsersQuery = gql`
   ${UserFragment.publicFields}
 `
 
+export const UsersDetails = gql`
+  query users($limit: Int, $offset: Int, $query: String) {
+    users(limit: $limit, offset: $offset, query: $query) {
+      name
+      phoneNumber
+      roleName
+      id
+      email
+      avatarUrl
+      imageUrl
+      notes {
+        id
+      }
+      labels{
+        id
+        shortDesc
+      }
+    }
+  }
+`
+
 export const UsersLiteQuery = gql`
   query usersLite($query: String!){
       usersLite(query: $query) {

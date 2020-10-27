@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { useWindowDimensions } from '../utils/customHooks'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
-export default function ImageAuth({ imageLink, token, className }) {
+export default function ImageAuth({ imageLink, token, className, type }) {
     const [response, setData] = useState('')
+    const { width } = useWindowDimensions()
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState(null)
 
@@ -26,17 +28,21 @@ export default function ImageAuth({ imageLink, token, className }) {
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  return <img src={response.url} className={className} alt="authenticated link" />
+  if (type === 'image') {
+    return <img src={response.url} className={className} alt="authenticated link" />
+  }
+  return <iframe height={600} width={width < 550 ? width - 20 : 600} title="attachment" src={response.url} />
 }
 
 ImageAuth.defaultProps = {
-  className: 'img-responsive img-thumbnail'
+  className: 'img-responsive img-thumbnail',
+  type: 'image'
 }
 
 ImageAuth.propTypes = {
   imageLink: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
+  type: PropTypes.string,
   className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 }
 
