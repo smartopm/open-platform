@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import Loading from '../../components/Loading'
-import Form from '../../components/Forms/Form'
+import Form, { propExists, addPropWithValue } from '../../components/Forms/Form'
 import { FormPropertiesQuery } from '../../graphql/queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -24,10 +24,11 @@ describe('Form Component', () => {
                 shortDesc: "This is a short description",
                 longDesc: null,
                 required: false,
-                adminUse: false
+                adminUse: false,
+                order: '1'
                 }
             ],
-          },
+          }
         },
       }
     const container = render(
@@ -54,4 +55,17 @@ describe('Form Component', () => {
       { timeout: 500 }
     )
   })
+  it('modifies the prop value array', () => {
+    // propExists
+    const values = [{value: '24223', form_property_id: '34fw4342'}, {value: '45', form_property_id: '3fw4342'}]
+    expect(propExists(values, '34fw4342')).toBe(true)
+    expect(propExists(values, '34f')).toBe(false)
+    // add null values to array
+    addPropWithValue(values, '34f')
+    expect(values).toHaveLength(3)
+    // this should pass this time
+    expect(propExists(values, '34f')).toBe(true)
+  })
 })
+
+

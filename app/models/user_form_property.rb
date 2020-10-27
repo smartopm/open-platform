@@ -11,4 +11,10 @@ class UserFormProperty < ApplicationRecord
   IMAGE_ATTACHMENTS = {
     image_blob_id: :image,
   }.freeze
+
+  def attach_file(vals)
+    IMAGE_ATTACHMENTS.each_pair do |_key, attr|
+      send(attr).attach(vals['image_blob_id'])
+    end
+  end
 end

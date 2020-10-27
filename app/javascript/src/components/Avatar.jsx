@@ -1,65 +1,60 @@
-/* eslint-disable */
-import React from 'react'
+/* eslint-disable no-use-before-define */
+import React, { useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { forceLinkHttps } from '../utils/helpers'
+import ImageAuth from './ImageAuth'
+import { Context } from '../containers/Provider/AuthStateProvider'
 
-export const avatarUrl = ({ imageUrl, user }) => {
-  if (imageUrl) {
-    return forceLinkHttps(imageUrl)
-  } else if (user && user.avatarUrl) {
-    return user.avatarUrl
-  } else if (user && user.imageUrl) {
-    return forceLinkHttps(user.imageUrl)
-  } else {
-    return '/images/default_avatar.svg'
+export function safeAvatarLink({ imageUrl, user}){
+  if (user.imageUrl || user.avatarUrl) {
+    return forceLinkHttps(user.imageUrl || user.avatarUrl )
   }
+  return forceLinkHttps(imageUrl)
 }
 
-export default function Avatar({ imageUrl, user, style = 'small' }) {
-  if (style === 'big') {
+export default function Avatar({ imageUrl, user, style}) {
+  const { token } = useContext(Context)
+  const imageStyles = {
+    small: styles.avatarSmall,
+    medium: styles.avatarMedium,
+    big: styles.avatarBig
+  }
+  // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
+  // user.imageUrl contains links from Auth Providers ==> Google and Facebook 
+  if (user.imageUrl) {
     return (
-      <div className="d-flex justify-content-center">
-        <img
-          src={avatarUrl({ imageUrl, user })}
-          className={css(styles.avatarBig)}
-          alt="avatar for the user"
-        />
-      </div>
-    )
-  } else if (style === 'small') {
-    return (
-      <div className="d-flex justify-content-center">
-        <img
-          src={avatarUrl({ imageUrl, user })}
-          className={css(styles.avatarSmall)}
-          alt="avatar for the user"
-        />
-      </div>
-    )
-  } else if (style === 'medium') {
-    return (
-      <div style={{ width: 80 }}>
-        <img
-          src={avatarUrl({ imageUrl, user })}
-          className={css(styles.avatarMedium)}
-          alt="avatar for the user"
-        />
-      </div>
+      <img
+        src={safeAvatarLink({user, imageUrl})}
+        className={css(imageStyles[style])}
+        alt="avatar for the user"
+      />
     )
   }
+  return (
+    <ImageAuth
+      imageLink={safeAvatarLink({ imageUrl, user })}
+      token={token}
+      className={css(imageStyles[style])}
+    />
+  )
 }
 
 Avatar.defaultProps = {
   user: {
     avatarUrl: '/images/default_avatar.svg',
     imageUrl: '/images/default_avatar.svg'
-  }
+  },
+  imageUrl: '/images/default_avatar.svg',
+  style: 'small'
 }
 
 Avatar.propTypes = {
   imageUrl: PropTypes.string,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.shape({
+    imageUrl: PropTypes.string,
+    avatarUrl: PropTypes.string
+  }),
   style: PropTypes.string
 }
 

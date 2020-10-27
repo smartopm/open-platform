@@ -424,6 +424,7 @@ export const DiscussionCommentsQuery = gql`
       user {
         id
         name
+        avatarUrl
       }
     }
   }
@@ -553,6 +554,7 @@ export const TaskStatsQuery = gql`
       tasksWithNoDueDate
       myOpenTasks
       totalCallsOpen
+      totalFormsOpen
     }
   }
 `
@@ -628,6 +630,25 @@ query ($formId: ID!){
     longDesc
     required
     adminUse
+    order
   }
 }
+`
+
+export const UserFormProperiesQuery = gql`
+query userFormProperties($formId: ID!, $userId: ID!) {
+  formUserProperties(formId: $formId, userId: $userId){
+    formProperty{
+      fieldName
+      fieldType
+      order
+      id
+      adminUse
+    }
+    value
+    imageUrl
+    fileType
+  }
+}
+
 `

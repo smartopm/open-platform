@@ -1,7 +1,7 @@
-/* eslint-disable */
 import { createMuiTheme } from '@material-ui/core'
 import colors from './colors'
 
+// eslint-disable-next-line import/prefer-default-export
 export const theme = createMuiTheme({
   palette: {
     primary: {
@@ -27,11 +27,6 @@ export const theme = createMuiTheme({
         backgroundColor: colors.primary
       },
       current: {
-        color: colors.primary
-      }
-    },
-    MuiPickersModal: {
-      dialogAction: {
         color: colors.primary
       }
     }

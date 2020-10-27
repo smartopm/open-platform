@@ -26,6 +26,12 @@ module Types::Queries::Form
       argument :form_id, GraphQL::Types::ID, required: true
       argument :user_id, GraphQL::Types::ID, required: true
     end
+    # Get form properties with values for user
+    field :form_user_properties, [Types::UserFormPropertiesType], null: true do
+      description 'Get user form properties by form id and user id'
+      argument :form_id, GraphQL::Types::ID, required: true
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
   def forms
@@ -43,13 +49,23 @@ module Types::Queries::Form
   def form_properties(form_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    # order_by
     context[:site_community].forms.find(form_id).form_properties
   end
 
   def form_user(form_id:, user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
+                                                         context[:current_user]&.id.eql?(user_id)
 
     FormUser.find_by(form_id: form_id, user_id: user_id)
   end
+
+  # rubocop:disable Metrics/AbcSize
+  def form_user_properties(form_id:, user_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
+                                                         context[:current_user]&.id.eql?(user_id)
+
+    context[:site_community].forms.find(form_id).form_users.find_by(user_id: user_id)
+                            .user_form_properties.eager_load(:form_property)
+  end
+  # rubocop:enable Metrics/AbcSize
 end

@@ -102,7 +102,7 @@ export default function UserItem({
       >
         <Grid container alignItems="center">
           <ListItemAvatar className={classes.avatarList}>
-            <Avatar imageUrl={user.imageUrl} user={user} />
+            <Avatar user={user} />
           </ListItemAvatar>
 
           <Hidden smUp>

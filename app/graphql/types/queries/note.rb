@@ -93,6 +93,7 @@ module Types::Queries::Note
       total_calls_open: tasks.by_completion(false).by_category('call').count,
       tasks_open_and_overdue: tasks.by_completion(false).by_due_date(Time.zone.now).count,
       tasks_with_no_due_date: tasks.where(due_date: nil).count,
+      total_forms_open: tasks.by_completion(false).by_category('form').count,
       my_open_tasks: my_task,
     }
   end

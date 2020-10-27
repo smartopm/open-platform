@@ -12,7 +12,7 @@ import { Context as AuthStateContext } from '../containers/Provider/AuthStatePro
 import logoUrl from '../../../assets/images/nkwashi_white_logo_transparent.png'
 import Drawer from '@material-ui/core/Drawer'
 import { SideList } from './SideList.jsx'
-import { avatarUrl } from './Avatar.jsx'
+import { safeAvatarLink } from './Avatar.jsx'
 import { FormContext } from '../containers/UserEdit.jsx'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import { Badge } from '@material-ui/core';
@@ -54,7 +54,7 @@ export function Component({
 }) {
   const [state, setState] = React.useState(false)
   const { values, handleSubmit } = useContext(FormContext)
-  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-and-network' })
+  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' })
   const theme = useContext(ThemeContext)
 
 
@@ -113,7 +113,7 @@ export function Component({
               alt="Default Avatar"
               onClick={toggleDrawer}
               className={`${css(styles.userAvatar)}`}
-              src={avatarUrl({ user: authState.user })}
+              src={safeAvatarLink({ user: authState.user })}
             />
           )}
 

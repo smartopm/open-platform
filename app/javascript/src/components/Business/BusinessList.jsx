@@ -78,7 +78,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
             >
               <ListItemAvatar>
                 <Avatar
-                  imageUrl={business.imageUrl}
+                  user={business}
                   style={avatarStyle.style}
                 />
               </ListItemAvatar>

@@ -754,8 +754,8 @@ export const LogSharedPost = gql`
   }
 `
 export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $status: String, $propValues: JSON!){
-    formUserCreate(formId: $formId, userId: $userId, status: $status, propValues: $propValues){
+  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!){
+    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
       formUser {
         id
       }
@@ -791,4 +791,22 @@ export const DiscussionUpdateMutation = gql`
       success
     }
   }
+`
+export const FormUserUpdateMutation = gql`
+  mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!){
+    formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues){
+      formUser {
+        id
+      }
+    }
+  }
+`
+export const FormUserStatusUpdateMutation = gql`
+    mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!){
+      formUserStatusUpdate(formId: $formId, userId: $userId, status:$status){
+        formUser {
+          id
+        }
+      }
+    }
 `

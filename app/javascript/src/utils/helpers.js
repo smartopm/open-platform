@@ -223,3 +223,14 @@ export async function convertBase64ToFile(data){
   const file = new File([blob], "File name", { type: "image/png" })
   return file
 }
+
+/**
+ * 
+ * @param {Object} field1 
+ * @param {Object} field2 
+ * @returns order
+ */
+export function sortPropertyOrder(field1, field2){
+  if(!field1 || !field2) return
+  return Number(field1.formProperty?.order) - Number(field2.formProperty?.order)
+}
