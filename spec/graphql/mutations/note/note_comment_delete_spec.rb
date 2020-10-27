@@ -26,7 +26,7 @@ RSpec.describe Mutations::Note::NoteCommentDelete do
       GQL
     end
 
-    it 'creates a comment under note' do
+    it 'deletes a comment under note' do
       variables = {
         id: note_comment.id,
       }
@@ -34,6 +34,7 @@ RSpec.describe Mutations::Note::NoteCommentDelete do
                                               context: {
                                                 current_user: admin,
                                               }).as_json
+
       expect(result.dig('data', 'noteCommentDelete', 'commentDelete')).not_to be_nil
       expect(result.dig('data', 'noteCommentDelete', 'commentDelete')).to eql true
       expect(result.dig('errors')).to be_nil

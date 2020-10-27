@@ -18,7 +18,7 @@ module ActionFlows
       end
 
       def self.execute_action(data, field_config)
-        emails = process_vars('email', data, field_config)
+        emails = process_vars('email', data, field_config) || ''
         template = process_vars('template', data, field_config)
         emails.split(',').each do |email|
           EmailMsg.send_mail(email, template)

@@ -54,15 +54,20 @@ module ActionFlows
       {}
     end
 
+    # rubocop:disable Metrics/AbcSize
     def load_data(data, overwrite_hash = {})
       data.keys.each do |key|
         obj_val = self.class.event_metadata[key.to_s]
         obj_val.keys.each do |co|
-          @data_set["#{key.underscore}_#{co}".to_sym] = overwrite_hash[co].presence ||
-                                                        data.dig(key).send(co)
+          if overwrite_hash.present? && overwrite_hash.keys.include?(co)
+            @data_set["#{key.underscore}_#{co}".to_sym] = overwrite_hash[co]
+          else
+            @data_set["#{key.underscore}_#{co}".to_sym] = data.dig(key).send(co)
+          end
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def event_condition
       EventCondition.new(@data_set.to_json)
