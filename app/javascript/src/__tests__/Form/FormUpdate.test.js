@@ -67,6 +67,30 @@ describe('Form Component', () => {
               value: null,
               imageUrl: 'https://another3_image.com',
               fileType: 'image/jpg'
+            },
+            {
+              formProperty: {
+                fieldName: 'Sign here',
+                fieldType: 'signature',
+                id: '3145c47e-1234-47b0-9dac-dc7e362e',
+                adminUse: false,
+                order: '5'
+              },
+              value: null,
+              imageUrl: null,
+              fileType: null
+            },
+            {
+              formProperty: {
+                fieldName: 'Attach a file here',
+                fieldType: 'image',
+                id: '3145c47e-1234-47b0-9dac-dc7e362e',
+                adminUse: false,
+                order: '5'
+              },
+              value: null,
+              imageUrl: null,
+              fileType: null
             }
           ]
         }
@@ -98,6 +122,8 @@ describe('Form Component', () => {
         expect(container.queryAllByAltText('authenticated link')).toHaveLength(2)
         expect(container.queryByText('Signature')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
+        expect(container.queryByText('File has not been signed')).toBeInTheDocument()
+        expect(container.queryByText('No Attached File')).toBeInTheDocument()
       },
       { timeout: 500 }
     )
