@@ -98,28 +98,6 @@ export const NotesFragment = {
         name
         imageUrl
       }
-      noteComments {
-       id
-       body
-       createdAt
-       user {
-         name
-         imageUrl
-       }
-      }
-      noteHistories {
-        id
-        attrChanged
-        initialValue
-        updatedValue
-        action
-        noteEntityType
-        user {
-          id
-          name
-          imageUrl
-        }
-      }
     }
   `
 }

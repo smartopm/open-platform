@@ -12,7 +12,7 @@ import { CommentQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
 import TaskUpdateList from './TaskUpdateList'
 
-export default function TaskComment({ authState, data }) {
+export default function TaskComment({ authState }) {
   const { taskId } = useParams()
   const { data: commentData, error, refetch } = useQuery(CommentQuery, {
     variables: { taskId },
@@ -51,7 +51,7 @@ export default function TaskComment({ authState, data }) {
         |
         {!updateOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={handleUpdateOpen} gutterBottom>
-            {data.length}
+            {commentData?.task.noteHistories.length}
             {' '}
             Updates
           </Typography>
@@ -62,20 +62,15 @@ export default function TaskComment({ authState, data }) {
         )}
       </div>
       {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
-      {updateOpen && <TaskUpdateList data={data} refetch={refetch} />}
+      {updateOpen && <TaskUpdateList data={commentData.task.noteHistories} refetch={refetch} />}
     </>
   )
 }
 
 TaskComment.defaultProps = {
-  authState: {},
-  data: []
+  authState: {}
  }
  TaskComment.propTypes = {
    // eslint-disable-next-line react/forbid-prop-types
-   authState: PropTypes.object,
-   data: PropTypes.arrayOf(PropTypes.shape({
-    length: PropTypes.func,
-    id: PropTypes.string
-  }))
+   authState: PropTypes.object
  }  

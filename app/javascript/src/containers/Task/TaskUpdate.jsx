@@ -41,7 +41,7 @@ export default function TaskUpdate({ match }) {
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
       <div className="container">
         <TaskUpdateForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser} />
-        <TaskComment authState={authState} data={data?.task.noteHistories} />
+        <TaskComment authState={authState} />
       </div>
     </>
   )
