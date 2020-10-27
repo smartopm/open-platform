@@ -17,7 +17,7 @@ export default function TaskUpdateList({ data }) {
 
   return(
     <>
-      {data?.length === 0 && (
+      {!data || data.length === 0 && (
         <div>
           <p>No update available</p>
         </div>
