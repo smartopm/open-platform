@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
@@ -52,7 +51,7 @@ export default function TaskComment({ authState, data }) {
         |
         {!updateOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={handleUpdateOpen} gutterBottom>
-            {data?.task.noteHistories.length}
+            {data.length}
             {' '}
             Updates
           </Typography>
@@ -63,15 +62,20 @@ export default function TaskComment({ authState, data }) {
         )}
       </div>
       {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
-      {updateOpen && <TaskUpdateList data={data.task.noteHistories} refetch={refetch} />}
+      {updateOpen && <TaskUpdateList data={data} refetch={refetch} />}
     </>
   )
 }
 
 TaskComment.defaultProps = {
-  authState: {}
+  authState: {},
+  data: []
  }
  TaskComment.propTypes = {
    // eslint-disable-next-line react/forbid-prop-types
-   authState: PropTypes.object
- }
+   authState: PropTypes.object,
+   data: PropTypes.arrayOf(PropTypes.shape({
+    length: PropTypes.func,
+    id: PropTypes.string
+  }))
+ }  

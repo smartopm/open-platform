@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable react/prop-types */
 import React from 'react'
 import EventNoteOutlinedIcon from '@material-ui/icons/EventNoteOutlined';
+import PropTypes from 'prop-types'
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
@@ -17,7 +17,6 @@ export default function TaskUpdateList({ data }) {
 
   return(
     <>
-      {console.log(data)}
       {data?.map(history => (
         <div key={history.id}>
           {history.action === 'create' && history.noteEntityType === 'NoteComment' && (
@@ -85,3 +84,13 @@ const useStyles = makeStyles({
     borderRadius: '50%'
   }
 });
+
+TaskUpdateList.defaultProps = {
+  data: []
+ }
+ TaskUpdateList.propTypes = {
+   // eslint-disable-next-line react/forbid-prop-types
+   data: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string
+  }))
+ }  
