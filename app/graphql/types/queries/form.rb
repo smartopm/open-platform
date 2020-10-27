@@ -56,7 +56,7 @@ module Types::Queries::Form
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          context[:current_user]&.id.eql?(user_id)
 
-    FormUser.eager_load(:user, :form).find_by(form_id: form_id, user_id: user_id)
+    FormUser.find_by(form_id: form_id, user_id: user_id)
   end
 
   # rubocop:disable Metrics/AbcSize
