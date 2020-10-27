@@ -544,6 +544,14 @@ query commentDetail($taskId: ID!){
         imageUrl
       }
     }
+    noteHistories {
+      id
+      user {
+        id
+        name
+        imageUrl
+      }
+    }
    }
  }
 `

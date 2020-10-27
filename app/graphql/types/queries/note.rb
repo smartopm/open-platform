@@ -107,14 +107,4 @@ module Types::Queries::Note
   def my_task
     context[:current_user].tasks.by_completion(false).count
   end
-
-  def note_histories(task_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-
-    # context[:site_community].notes.includes(:note_histories)
-                            # .find(task_id)
-
-    # context[:site_community].notes.find_by()note_histories.where(note_id: task_id)
-    history = NoteHistory.includes(:user).where(note_id: task_id)
-  end
 end

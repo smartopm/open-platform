@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 import CommentTextField from './CommentField'
 import { CommentQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
+import TaskUpdateList from './TaskUpdateList'
 
 export default function TaskComment({ authState }) {
   const { taskId } = useParams()
@@ -39,6 +40,7 @@ export default function TaskComment({ authState }) {
   if (error) return <ErrorPage title={error.message} />
   return (
     <>
+      {console.log(commentData)}
       <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
         {!commentOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={() => handleCommentOpen()} gutterBottom>
@@ -66,6 +68,7 @@ export default function TaskComment({ authState }) {
         )}
       </div>
       {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
+      {updateOpen && <TaskUpdateList />}
     </>
   )
 }
