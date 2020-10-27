@@ -41,8 +41,8 @@ export default function TaskUpdateList({ data }) {
             {history.action === 'update' && history.attrChanged === 'due_date' && (
               <TaskUpdateItem
                 user={history.user.name} 
-                icon={<EventNoteOutlinedIcon className={classes.icon} />} 
-                content={`change due date from ${dateToString(history.initialValue) || 'empty value'} to ${dateToString(history.updatedValue) || 'empty value'}`}
+                icon={<EventNoteOutlinedIcon className={classes.icon} />}
+                content={`change due date from ${history.initialValue !== null ? dateToString(history.initialValue) : 'empty value'} to ${history.updatedValue !== null ? dateToString(history.updatedValue) : 'empty value'}`}
               />
             )}
             {history.action === 'update' && history.attrChanged === 'completed' && (
