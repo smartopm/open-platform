@@ -546,6 +546,11 @@ query commentDetail($taskId: ID!){
     }
     noteHistories {
       id
+      attrChanged
+      initialValue
+      updatedValue
+      action
+      noteEntityType
       user {
         id
         name
