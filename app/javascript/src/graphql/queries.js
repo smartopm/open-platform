@@ -561,27 +561,6 @@ query commentDetail($taskId: ID!){
  }
 `
 
-export const TaskHistoryQuery  = gql`
-query historyDetail($taskId: ID!){
-  noteHistories(taskId: $taskId){
-    id
-    attrChanged
-    initialValue
-    updatedValue
-    action
-    noteEntityType
-    noteEntityId
-    noteId
-    userId
-    user {
-      id
-      name
-      imageUrl
-    }
-   }
- }
-`
-
 export const UserPointQuery = gql`
   query userActivityPoint{
     userActivityPoint{
