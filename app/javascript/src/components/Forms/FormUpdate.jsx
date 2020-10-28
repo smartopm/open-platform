@@ -79,7 +79,7 @@ export default function FormUpdate({ formId, userId }) {
     updateFormUser({
       variables: { 
         formId,
-        userId: authState.user.id,
+        userId,
         propValues: cleanFormData,
       }
     // eslint-disable-next-line no-shadow
