@@ -8,13 +8,18 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import CommentTextField from './CommentField'
-import { CommentQuery } from '../../graphql/queries'
+import { CommentQuery, HistoryQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
 import TaskUpdateList from './TaskUpdateList'
 
 export default function TaskComment({ authState }) {
   const { taskId } = useParams()
   const { data: commentData, error, refetch } = useQuery(CommentQuery, {
+    variables: { taskId },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  })
+  const { data: historyData, error: historyError, refetch: historyRefetch } = useQuery(HistoryQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -32,13 +37,18 @@ export default function TaskComment({ authState }) {
     setCommentOpen(false)
   } 
   
-  if (error) return <ErrorPage title={error.message} />
+  if (error || historyError) return <ErrorPage title={error.message} />
   return (
     <>
+      {!commentData || !historyData && (
+        <div>
+          <p>Data not available</p>
+        </div>
+      )}
       <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
         {!commentOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={handleCommentOpen} gutterBottom>
-            {commentData?.task.noteComments.length}
+            {commentData?.taskComments.length}
             {' '}
             Comments
           </Typography>
@@ -51,7 +61,7 @@ export default function TaskComment({ authState }) {
         |
         {!updateOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={handleUpdateOpen} gutterBottom>
-            {commentData?.task.noteHistories.length}
+            {historyData?.taskHistories.length}
             {' '}
             Updates
           </Typography>
@@ -61,8 +71,8 @@ export default function TaskComment({ authState }) {
           </Typography>
         )}
       </div>
-      {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} />}
-      {updateOpen && <TaskUpdateList data={commentData.task.noteHistories} refetch={refetch} />}
+      {commentOpen && <CommentTextField data={commentData} refetch={refetch} authState={authState} taskId={taskId} historyRefetch={historyRefetch} />}
+      {updateOpen && <TaskUpdateList data={historyData.taskHistories} />}
     </>
   )
 }

@@ -9,8 +9,6 @@ module Types
     field :assigned_to, ID, null: true
     field :author, Types::UserType, null: false
     field :assignees, [Types::UserType], null: true
-    field :note_comments, [Types::NoteCommentType], null: true
-    field :note_histories, [Types::NoteHistoryType], null: true
     field :body, String, null: true
     field :category, String, null: true
     field :description, String, null: true
