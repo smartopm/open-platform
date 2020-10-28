@@ -8,7 +8,7 @@ import '@testing-library/jest-dom/extend-expect'
 describe('Comment Card Component', () => {
   const deleteModal = jest.fn
   const data = {
-    noteComments: [
+    taskComments: [
       {
       id: 'jwhekw',
       body: 'whgeukhw',
