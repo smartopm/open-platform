@@ -86,13 +86,13 @@ module Types::Queries::Note
   def task_comments(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.eager_load(:user).find(task_id).note_comments
+    context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
   end
 
   def task_histories(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.eager_load(:user).find(task_id).note_histories
+    context[:site_community].notes.find(task_id).note_histories.eager_load(:user)
   end
 
   def my_tasks_count
