@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
 import React, { useEffect, useState } from 'react'
@@ -14,7 +15,7 @@ import GeoData from '../data/nkwashi_plots.json'
 import PlotModal from "./PlotOpen"
 import EditModal from './EditPlot'
 
-export default function UserPlotInfo({ userId, account, refetch }) {
+export default function UserPlotInfo({ userId, account, refetch, userType }) {
   function getPropertyByName(jsonData, value) {
     const data = jsonData.features
     const property = data.filter(feature =>
@@ -58,8 +59,7 @@ export default function UserPlotInfo({ userId, account, refetch }) {
               <div>
                 <div style={{display: 'flex'}}>
                   <Typography variant='body1'><b>Plots associated with this account:</b></Typography>
-                  {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                  {userType === 'admin' && (
                   <div 
                     style={{display: 'flex', marginLeft: 'auto', order: 2, color: '#69aba4', cursor: 'pointer'}}
                     onClick={() => setAddOpen(true)}
@@ -67,16 +67,19 @@ export default function UserPlotInfo({ userId, account, refetch }) {
                     <AddIcon style={{marginRight: '5px', paddingBottom: '2px'}} />
                     <Typography variant='body2'>Add Plots</Typography>
                   </div>
+                )}
                 </div>
                 {account[0].landParcels.map((plot, index) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <div style={{display: 'flex'}} key={index}>
                     <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
-                    <div style={{margin: '20px 10px', color: '#69ABA4', cursor: 'pointer'}}>
-                      <Tooltip title="Edit Plot" placement="top">
-                        <CreateIcon onClick={() => handlePlotData(plot)} />
-                      </Tooltip>
-                    </div>
+                    {userType === 'admin' && (
+                      <div style={{margin: '20px 10px', color: '#69ABA4', cursor: 'pointer'}}>
+                        <Tooltip title="Edit Plot" placement="top">
+                          <CreateIcon onClick={() => handlePlotData(plot)} />
+                        </Tooltip>
+                      </div>
+                    )}
                   </div>
                 ))}
                 <Typography variant='body2'>
@@ -112,8 +115,7 @@ export default function UserPlotInfo({ userId, account, refetch }) {
         ) : (
           <div className="container" style={{display: 'flex', margin: '20px 150px'}}>
             <p data-testid="no_plot">No plots information available</p>
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+            {userType === 'admin ' && (
             <div 
               style={{display: 'flex', marginLeft: 'auto', order: 2, color: '#69aba4', cursor: 'pointer'}}
               onClick={() => setAddOpen(true)}
@@ -121,6 +123,7 @@ export default function UserPlotInfo({ userId, account, refetch }) {
               <AddIcon style={{marginRight: '5px', paddingBottom: '2px'}} />
               <Typography variant='body2'>Add Plots</Typography>
             </div>
+            )}
           </div>
         )}
         <PlotModal open={addOpen} handleClose={() => setAddOpen(false)} accountId={account[0]?.id} userId={userId} refetch={refetch} />
@@ -165,8 +168,10 @@ const styles = StyleSheet.create({
 
 UserPlotInfo.defaultProps = {
   userId: '',
-  account: []
+  account: [],
+  userType: ''
  }
+ 
 UserPlotInfo.propTypes = {
   account: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
@@ -177,5 +182,6 @@ UserPlotInfo.propTypes = {
       updatedAt: PropTypes.string
     })),
   refetch: PropTypes.func.isRequired,
-  userId: PropTypes.string
+  userId: PropTypes.string,
+  userType: PropTypes.string
 }

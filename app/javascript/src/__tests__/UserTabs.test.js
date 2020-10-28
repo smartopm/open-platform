@@ -30,6 +30,6 @@ describe('component that with styled tabs', () => {
     expect(container.queryByText('Notes')).not.toBeInTheDocument()
     expect(container.queryByText('Contact')).toBeInTheDocument()
     expect(container.queryByText('Payments')).toBeInTheDocument()
-    expect(container.queryByText('Plots')).toBeInTheDocument()
+    expect(container.queryByText('Plots')).not.toBeInTheDocument()
   })
 })
