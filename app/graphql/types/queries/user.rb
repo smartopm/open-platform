@@ -67,6 +67,9 @@ module Types::Queries::User
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def users(offset: 0, limit: 50, query: nil)
+    puts "---------huhuhuh---------"
+    puts query
+    puts "---------huhuhuh---------"
     adm = context[:current_user]
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 

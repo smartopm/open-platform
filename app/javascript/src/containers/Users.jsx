@@ -34,6 +34,7 @@ import CreateLabel from '../components/CreateLabel'
 import FilterComponent from '../components/FilterComponent'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { dateToString } from '../utils/dateutil'
+import QueryBuilder from '../components/QueryBuilder'
 
 import { Context as AuthStateContext } from "./Provider/AuthStateProvider"
 
@@ -53,6 +54,7 @@ export default function UsersList() {
   const [labelError, setError] = useState('')
   const [labelLoading, setLabelLoading] = useState(false)
   const [searchType, setSearchType] = useState('type')
+  const [searchQuery, setSearchQuery] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
 
@@ -81,6 +83,7 @@ export default function UsersList() {
     const currentFilterType = types[currentSearchType]
     return query.map(q => `${currentFilterType} = "${q}"`).join(' OR ')
   }
+  // eslint-disable-next-line no-unused-vars
   function specifyUserQuery() {
     if (selectDateFrom !== '') {
       return `date_filter > ${dateToString(selectDateFrom)}`
@@ -91,11 +94,12 @@ export default function UsersList() {
     if (selectDateOn !== '') {
       return `date_filter = ${dateToString(selectDateOn)}`
     }
+    console.log(joinSearchQuery(search[searchType], searchType))
     return joinSearchQuery(search[searchType], searchType)
   }
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
-      query: specifyUserQuery(),
+      query: searchQuery,
       limit,
       offset
     },
@@ -117,6 +121,11 @@ export default function UsersList() {
   function handleBatchFilter() {
     setPhoneNumbers(searchValue.split('\n').join(',').split(','))
     setOpen(!open)
+  }
+  function sendQuery(query) {
+    setSearchQuery(query)
+    // setType(event.target.value)
+    // setSearchType('type')
   }
   function handleFilterInputChange(event) {
     setFilterType("")
@@ -234,7 +243,7 @@ export default function UsersList() {
   }
 
 
-  if (loading || labelsLoading) return <Loading />
+  if (labelsLoading) return <Loading />
   if (error || labelsError) return <ErrorPage error={error.message || labelsError.message} />
   if (redirect) {
     return (
@@ -457,18 +466,26 @@ export default function UsersList() {
         <br />
         <br />
 
+        <QueryBuilder handleOnChange={sendQuery} />
+        {
+          (loading || labelsLoading) ? (
+            <Loading />
+          ) : (
+            <>
+              <UserListCard userData={data} handleNoteModal={handleNoteModal} currentUserType={authState.user.userType} sendOneTimePasscode={sendOneTimePasscode} />
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Paginate
+                  count={data.users.length}
+                  active={false}
+                  offset={offset}
+                  handlePageChange={paginate}
+                  limit={limit}
+                />
+              </Grid>
+            </>
+          )
+        }
 
-        <UserListCard userData={data} handleNoteModal={handleNoteModal} currentUserType={authState.user.userType} sendOneTimePasscode={sendOneTimePasscode} />
-
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Paginate
-            count={data.users.length}
-            active={false}
-            offset={offset}
-            handlePageChange={paginate}
-            limit={limit}
-          />
-        </Grid>
       </div>
     </>
   )
