@@ -346,7 +346,7 @@ export default function UsersList() {
               className={classes.iconButton}
               aria-label="search"
             >
-              <FilterListIcon onClick={() => inputToSearch()} />
+              <FilterListIcon onClick={inputToSearch} />
             </IconButton>
             <div className={classes.searchButton}>
               <Link to="/users/import" style={{textDecoration: 'none'}}>
