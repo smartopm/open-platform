@@ -1,14 +1,15 @@
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
-import { Button, Grid } from '@material-ui/core'
+import { Button, Grid, Typography } from '@material-ui/core'
 import Nav from '../components/Nav'
 import { ImportCreate } from '../graphql/mutations'
 import CenteredContent from '../components/CenteredContent'
 import Loading from '../components/Loading'
 import { sanitizeText, pluralizeCount } from '../utils/helpers'
+import { Context } from "./Provider/AuthStateProvider"
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate)
@@ -17,6 +18,7 @@ export default function UsersImport() {
   const [errorSummary, setErrorSummary] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const history = useHistory()
+  const { token } = useContext(Context)
 
   function createImport() {
     setIsLoading(true)
@@ -53,8 +55,13 @@ export default function UsersImport() {
     reader.readAsText(file)
   }
 
-  function formatResponseMessage({errors, noOfDuplicates, noOfInvalid, noOfValid}) {
-    if ((noOfDuplicates + noOfInvalid) ===  0) {
+  function formatResponseMessage({
+    errors,
+    noOfDuplicates,
+    noOfInvalid,
+    noOfValid
+  }) {
+    if (noOfDuplicates + noOfInvalid === 0) {
       setErrorMessage('Import was successful')
       return
     }
@@ -97,11 +104,27 @@ export default function UsersImport() {
     return statement
   }
 
-  const hasErrors = (errorMessage || errorSummary)
+  const hasErrors = errorMessage || errorSummary
 
   return (
     <>
       <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
+      <Typography
+        variant="body2"
+        align="justify"
+        style={{ width: 500, margin: '5px auto' }}
+      >
+        You can upload a .csv file with users. The following are the expected
+        fields: Name, Email primary, Phone number primary, Phone number
+        secondary 1, Phone number secondary 2, User type, Labels (separated by
+        comma if more than one), State, Expiration date, and Notes on client.
+        You can click
+        {' '}
+        <a href={`/csv_import_sample/download?token=${token}`}>here</a>
+        {' '}
+        to
+        download a sample csv file.
+      </Typography>
       {isLoading ? (
         <Loading />
       ) : (
