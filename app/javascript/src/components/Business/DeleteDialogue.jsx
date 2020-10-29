@@ -13,7 +13,8 @@ export default function DeleteDialogueBox({
   open,
   handleClose,
   handleDelete,
-  title
+  title,
+  action
 }) {
   return (
     <>
@@ -24,10 +25,10 @@ export default function DeleteDialogueBox({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {`Delete ${capitalize(title)}`} 
+          {`${capitalize(action)} ${capitalize(title)}`} 
         </DialogTitle>
         <DialogContent>
-          { `Are you sure you want to delete this ${title} ?` }
+          { `Are you sure you want to ${action} this ${title} ?` }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
@@ -42,9 +43,14 @@ export default function DeleteDialogueBox({
   )
 }
 
+DeleteDialogueBox.defaultProps = {
+  action: 'delete'
+}
+
 DeleteDialogueBox.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  action: PropTypes.string
 }

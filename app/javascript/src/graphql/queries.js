@@ -424,6 +424,7 @@ export const DiscussionCommentsQuery = gql`
       user {
         id
         name
+        avatarUrl
       }
     }
   }
@@ -553,6 +554,7 @@ export const TaskStatsQuery = gql`
       tasksWithNoDueDate
       myOpenTasks
       totalCallsOpen
+      totalFormsOpen
     }
   }
 `
@@ -568,21 +570,35 @@ query taskDetail($taskId: ID!){
 
 export const CommentQuery  = gql`
 query commentDetail($taskId: ID!){
-  task(taskId: $taskId){
+  taskComments(taskId: $taskId){
     id
     body
-    noteComments {
+    createdAt
+    user {
       id
-      body
-      createdAt
-      user {
-        id
-        name
-        imageUrl
-      }
+      name
+      imageUrl
     }
-   }
- }
+  }
+}
+`
+
+export const HistoryQuery  = gql`
+query historyDetail($taskId: ID!){
+  taskHistories(taskId: $taskId){
+    id
+    attrChanged
+    initialValue
+    updatedValue
+    action
+    noteEntityType
+    user {
+      id
+      name
+      imageUrl
+    }
+  }
+}
 `
 
 export const UserPointQuery = gql`
@@ -628,6 +644,25 @@ query ($formId: ID!){
     longDesc
     required
     adminUse
+    order
   }
 }
+`
+
+export const UserFormProperiesQuery = gql`
+query userFormProperties($formId: ID!, $userId: ID!) {
+  formUserProperties(formId: $formId, userId: $userId){
+    formProperty{
+      fieldName
+      fieldType
+      order
+      id
+      adminUse
+    }
+    value
+    imageUrl
+    fileType
+  }
+}
+
 `

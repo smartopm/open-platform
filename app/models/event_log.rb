@@ -9,6 +9,7 @@ class EventLog < ApplicationRecord
 
   after_create :notify_slack
   after_create :populate_activity_points
+  after_create :execute_action_flows
   validate :validate_log, :validate_acting_user
 
   default_scope { order(created_at: :desc) }
@@ -21,7 +22,8 @@ class EventLog < ApplicationRecord
 
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update user_temp
-                      shift_start shift_end user_referred post_read post_shared].freeze
+                      shift_start shift_end user_referred post_read post_shared
+                      task_create task_update note_comment_create note_comment_update].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -134,6 +136,20 @@ class EventLog < ApplicationRecord
       "Deleted User(#{acting_user_id})"
     else
       acting_user.name
+    end
+  end
+
+  def execute_action_flows
+    # rubocop:disable Rails/DynamicFindBy
+    events = ActionFlows::ActionFlow.find_by_event_type(subject)
+    return if events.blank?
+
+    # rubocop:enable Rails/DynamicFindBy
+    events.each do |af|
+      event = af.event_object.new
+      event.preload_data(self)
+      cond = event.event_condition
+      af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
     end
   end
 

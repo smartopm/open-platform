@@ -13,6 +13,7 @@ const tiles = {
   tasksOpenAndOverdue: 'Overdue Tasks',
   tasksWithNoDueDate: 'Tasks with no due date',
   totalCallsOpen: 'Total Calls Open',
+  totalFormsOpen: 'Total Forms Open',
   tasksOpen: 'Tasks Open',
   completedTasks: 'Tasks Completed',
 }

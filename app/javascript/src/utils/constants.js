@@ -69,7 +69,8 @@ export const NotesCategories = {
   call: 'Call',
   message: 'Message',
   email: 'Email',
-  to_do: 'To-Do'
+  to_do: 'To-Do',
+  form: 'Form'
 }
 
 export const businessCategories = {

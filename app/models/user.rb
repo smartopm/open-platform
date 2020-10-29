@@ -225,6 +225,7 @@ class User < ApplicationRecord
                       data: data)
   end
 
+  # rubocop:disable MethodLength
   def generate_note(vals)
     community.notes.create(
       # give the note to the author if no other user
@@ -236,10 +237,10 @@ class User < ApplicationRecord
       author_id: self[:id],
       completed: vals[:completed],
       due_date: vals[:due_date],
+      form_user_id: vals[:form_user_id],
     )
   end
 
-  # rubocop:disable MethodLength
   def manage_shift(target_user_id, event_tag)
     user = find_a_user(target_user_id)
     data = { ref_name: user.name, type: user.user_type }
@@ -421,7 +422,7 @@ class User < ApplicationRecord
 
   # catch exceptions in here to be caught in the mutation
   def merge_user(dup_id)
-    MergeUsers.merge(self[:id], dup_id)
+    MergeUsers.merge(dup_id, self[:id])
   end
 
   def activity_point_for_current_week

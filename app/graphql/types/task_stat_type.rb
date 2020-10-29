@@ -9,6 +9,7 @@ module Types
     field :overdue_tasks, Integer, null: true
     field :completed_tasks, Integer, null: true
     field :total_calls_open, Integer, null: true
+    field :total_forms_open, Integer, null: true
     field :tasks_open_and_overdue, Integer, null: true
     field :tasks_with_no_due_date, Integer, null: true
     field :my_open_tasks, Integer, null: true

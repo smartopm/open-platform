@@ -47,7 +47,7 @@ export default function UserForm() {
                   accepts="image/*"
                   capture
                   id="file"
-                  onChange={handleFileUpload}
+                  onChange={event => handleFileUpload(event.target.files[0])}
                   className={`${css(styles.fileInput)}`}
                 />
                 <PhotoCameraIcon />

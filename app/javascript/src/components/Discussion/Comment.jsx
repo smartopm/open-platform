@@ -18,6 +18,7 @@ import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import DeleteDialogueBox from '../Business/DeleteDialogue'
 import { commentStatusAction } from '../../utils/constants'
+import ImageAuth from '../ImageAuth'
 
 export default function Comments({ comments, refetch, discussionId }) {
   const init = {
@@ -100,12 +101,14 @@ export default function Comments({ comments, refetch, discussionId }) {
           comments.length >= 1 ? comments.map((comment) => (
             <CommentSection
               key={comment.id}
+              token={authState.token}
               data={{
                 isAdmin: authState.user.userType === 'admin',
                 createdAt: comment.createdAt,
                 comment: comment.content,
                 imageUrl: comment.imageUrl,
-                user: comment.user
+                user: comment.user,
+                token: authState.token
               }}
               handleDeleteComment={() => handleDeleteClick(comment.id)}
             />
@@ -151,9 +154,16 @@ export function CommentSection({ data, handleDeleteComment }) {
               />
               <br />
               {
-              // eslint-disable-next-line react/prop-types
-              data.imageUrl && <img src={data.imageUrl} className="img-responsive img-thumbnail" alt={`${data.comment}`} /> 
-}
+
+                // eslint-disable-next-line react/prop-types
+              data.imageUrl && (
+                <ImageAuth 
+                  imageLink={data.imageUrl} 
+                  token={data.token} 
+                  className="img-responsive img-thumbnail"
+                />
+              )
+              }
             </span>
             <span
               data-testid="delete_icon"
@@ -225,7 +235,7 @@ export function CommentBox({
               name="image"
               id="image"
               capture
-              onChange={upload.handleFileUpload}
+              onChange={event => upload.handleFileUpload(event.target.files[0])}
               style={{ display: 'none' }}
             />
             <AddPhotoAlternateIcon
@@ -276,7 +286,9 @@ CommentSection.propTypes = {
     }),
     createdAt: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
-    isAdmin: PropTypes.bool
+    isAdmin: PropTypes.bool,
+    imageUrl: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
   }).isRequired,
   handleDeleteComment: PropTypes.func.isRequired,
 }

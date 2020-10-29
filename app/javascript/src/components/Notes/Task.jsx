@@ -7,7 +7,7 @@ import {
   Divider,
   Grid,
   Button,
-  Typography
+  Typography, Link as MuiLink
 } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import EditIcon from '@material-ui/icons/Edit'
@@ -224,7 +224,7 @@ export default function Task({
               Due at:
               {' '}
               {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
-              <Link
+              <MuiLink
                 href="#"
                 data-testid="more_details_btn"
                 style={{
@@ -235,7 +235,7 @@ export default function Task({
                 onClick={event => routeToAction(event, note.id)}
               >
                 More Details
-              </Link>
+              </MuiLink>
             </Typography>
           </div>
           <Button

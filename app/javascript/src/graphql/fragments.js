@@ -98,15 +98,6 @@ export const NotesFragment = {
         name
         imageUrl
       }
-      noteComments {
-       id
-       body
-       createdAt
-       user {
-         name
-         imageUrl
-       }
-      }
     }
   `
 }
