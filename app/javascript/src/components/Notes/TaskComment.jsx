@@ -40,6 +40,7 @@ export default function TaskComment({ authState }) {
   if (error || historyError) return <ErrorPage title={error.message} />
   return (
     <>
+      {console.log(historyData)}
       {!commentData || !historyData && (
         <div>
           <p>Data not available</p>

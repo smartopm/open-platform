@@ -27,6 +27,12 @@ module Mutations
         { assignee_note: 'success' }
       end
 
+      # if key.eql?(:user_id)
+      #   value = context[:site_community].users.find(value)&.name
+      #   updates_hash[:user_id] = [note.user.name, value]
+      #   next
+      # end
+
       # TODO: Better auth here
       def authorized?(_vals)
         current_user = context[:current_user]
