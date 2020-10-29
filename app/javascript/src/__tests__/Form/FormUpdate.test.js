@@ -96,11 +96,16 @@ describe('Form Component', () => {
         }
       }
     }
+    const authState = {
+      user: { userType: 'admin' },
+      token: '894573rhuehf783'
+    }
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <FormUpdate
           formId="caea7b44-ee95-42a6-a42f-3e530432172e"
           userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+          authState={authState}
         />
       </MockedProvider>
     )

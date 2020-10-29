@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
@@ -10,7 +10,6 @@ import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../../graphql/mutations'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import TextInput from './TextInput'
 import { sortPropertyOrder } from '../../utils/helpers'
 import ImageAuth from '../ImageAuth'
@@ -24,14 +23,13 @@ const initialData = {
   date: { value: null }
 }
 
-export default function FormUpdate({ formId, userId }) {
+export default function FormUpdate({ formId, userId, authState }) {
 
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [openModal, setOpenModal] = useState(false)
   const [isLoading, setLoading] = useState(false)
   const [formAction, setFormAction] = useState('')
-  const authState = useContext(AuthStateContext)
   const history = useHistory()
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation)
@@ -242,5 +240,9 @@ export default function FormUpdate({ formId, userId }) {
 
 FormUpdate.propTypes = {
   formId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  authState: PropTypes.shape({
+    user: PropTypes.shape({ userType: PropTypes.string }),
+    token: PropTypes.string
+  }).isRequired
 }
