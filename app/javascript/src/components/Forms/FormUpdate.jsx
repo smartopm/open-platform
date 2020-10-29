@@ -29,6 +29,7 @@ export default function FormUpdate({ formId, userId }) {
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [openModal, setOpenModal] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [formAction, setFormAction] = useState('')
   const authState = useContext(AuthStateContext)
   const history = useHistory()
@@ -82,11 +83,14 @@ export default function FormUpdate({ formId, userId }) {
         userId,
         propValues: cleanFormData,
       }
-    // eslint-disable-next-line no-shadow
     }).then(() => {
-        setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
+      setLoading(false)
+      setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
     })
-   .catch(err => setMessage({ ...message, err: true, info: err.message }))
+    .catch(err => {
+      setLoading(false)
+      setMessage({ ...message, err: true, info: err.message })
+   })
   }
 
   function handleActionClick(_event, action){
@@ -97,6 +101,7 @@ export default function FormUpdate({ formId, userId }) {
 
   function handleAction(){
       // check which button was clicked, pattern matching couldn't work here
+      setLoading(!isLoading)
       switch (formAction) {
         case 'update':
            saveFormData()
@@ -112,7 +117,10 @@ export default function FormUpdate({ formId, userId }) {
       }
       setOpenModal(!openModal)
       // wait a moment and route back where the user came from 
-      setTimeout(() => { history.goBack()}, 2000)
+      setTimeout(() => { 
+        setLoading(false)
+        history.goBack()
+      }, 2000)
   }
 
   if (loading) return <Loading />
@@ -182,6 +190,7 @@ export default function FormUpdate({ formId, userId }) {
               color="primary"
               aria-label="form_update"
               variant="outlined"
+              disabled={isLoading}
             >
               Update
             </Button>
@@ -191,6 +200,7 @@ export default function FormUpdate({ formId, userId }) {
               color="primary"
               aria-label="form_approve"
               style={{ marginLeft: '10vw',  }}
+              disabled={isLoading}
             >
               Approve
             </Button>
@@ -199,6 +209,7 @@ export default function FormUpdate({ formId, userId }) {
               onClick={event => handleActionClick(event, 'reject')}
               aria-label="form_reject"
               style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
+              disabled={isLoading}
             >
               Reject
             </Button>
