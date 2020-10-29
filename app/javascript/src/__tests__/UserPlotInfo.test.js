@@ -32,6 +32,7 @@ describe('User Plot Info Page', () => {
       ]
     }
   ]
+  const userType = 'admin'
 
   const userId = 'bwekwjkewj'
   
@@ -39,7 +40,7 @@ describe('User Plot Info Page', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userId} />
+          <UserPlotInfo account={account} userId={userId} userType={userType} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -50,7 +51,7 @@ describe('User Plot Info Page', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={[]} userId={userId} />
+          <UserPlotInfo account={[]} userId={userId} userType={userType} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -61,7 +62,7 @@ describe('User Plot Info Page', () => {
     const { getByTestId } = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userId} />
+          <UserPlotInfo account={account} userId={userId} userType={userType} />
         </BrowserRouter>
       </MockedProvider>
     )
