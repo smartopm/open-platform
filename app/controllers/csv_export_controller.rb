@@ -23,7 +23,7 @@ class CsvExportController < ApplicationController
   end
 
   def download_sample_csv
-    send_file "public/bulk_import_sample.csv", filename: "bulk_import_sample.csv"
+    send_file 'public/bulk_import_sample.csv', filename: 'bulk_import_sample.csv'
   end
 
   private
