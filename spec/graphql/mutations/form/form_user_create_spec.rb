@@ -3,36 +3,94 @@
 require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormUserCreate do
-  # TODO: Facing parsing error while passing a JSON argument - Saurabh
+  describe 'create for forms' do
+    let!(:current_user) { create(:user_with_community) }
+    let!(:another_user) { create(:user, community_id: current_user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:form) { create(:form, community_id: current_user.community_id) }
+    let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
 
-  # describe 'create for forms' do
-  #   let!(:current_user) { create(:user_with_community) }
-  #   let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-  #   let!(:form) { create(:form, community_id: current_user.community_id) }
-  #   let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
+    let(:mutation) do
+      <<~GQL
+        mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!) {
+          formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
+            formUser {
+              id
+              form {
+                id
+              }
+            }
+          }
+        }
+      GQL
+    end
+    it 'creates a form ' do
+      values = {
+        user_form_properties: [
+          {
+            form_property_id: form_property.id,
+            value: 'something new',
+          },
+        ],
+      }
+      variables = {
+        formId: form.id,
+        userId: current_user.id,
+        propValues: values.to_json,
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: admin,
+                                                   site_community: current_user.community,
+                                                 }).as_json
 
-  #   let(:mutation) do
-  #     <<~GQL
-  #       mutation formUserCreate($formId: ID!, $userId: ID!) {
-  #         formUserCreate(formId: $formId, userId: $userId, propValues: $propValue){
-  #           formUser {
-  #             id
-  #           }
-  #         }
-  #       }
-  #     GQL
-  #   end
+      expect(result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
+      expect(result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
+      expect(result.dig('errors')).to be_nil
+    end
 
-  #   it 'creates a form ' do
-  #     variables = {
-  #       formId: form.id,
-  #       userId: current_user.id,
-  #     }
-  #     result = DoubleGdpSchema.execute(mutation, variables: variables,
-  #                                                context: {
-  #                                                  current_user: admin,
-  #                                                  site_community: current_user.community,
-  #                                                }).as_json
-  #   end
-  # end
+    it 'should err when form not provided' do
+      values = {
+        user_form_properties: [
+          {
+            form_property_id: form_property.id,
+            value: 'something new',
+          },
+        ],
+      }
+      variables = {
+        formId: '3453rsnjsdi-43rdf34-sdf43',
+        userId: current_user.id,
+        propValues: values.to_json,
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: admin,
+                                                   site_community: current_user.community,
+                                                 }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
+    end
+
+    it 'should err when user not admin and user_id is different' do
+      values = {
+        user_form_properties: [
+          {
+            form_property_id: form_property.id,
+            value: 'something new',
+          },
+        ],
+      }
+      variables = {
+        formId: form.id,
+        userId: current_user.id,
+        propValues: values.to_json,
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: another_user,
+                                                   site_community: current_user.community,
+                                                 }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+  end
 end
