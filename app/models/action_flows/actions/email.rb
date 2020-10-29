@@ -21,8 +21,15 @@ module ActionFlows
         emails = process_vars('email', data, field_config) || ''
         template = process_vars('template', data, field_config)
         emails.split(',').each do |email|
-          EmailMsg.send_mail(email, template)
+          EmailMsg.send_mail(email, template, mail_data(data, field_config))
         end
+      end
+
+      def self.mail_data(data, field_config)
+        {
+          url: process_vars('url', data, field_config),
+          body: process_vars('body', data, field_config),
+        }
       end
 
       # Method temporarily here, need a more generic way to get template id : Saurabh

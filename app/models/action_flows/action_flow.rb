@@ -2,6 +2,7 @@
 
 module ActionFlows
   # Class to run JSONLogic with passed rules and data
+  # rubocop:disable Metrics/ClassLength
   class ActionFlow
     #  ActionFlows::ActionFlow
     attr_accessor :description
@@ -66,11 +67,19 @@ module ActionFlows
               'name' => 'template',
               'value' => 'd-285b8ab4099b424a93fc04be801a87db',
               'type' => 'string',
+            }, 'url' => {
+              'name' => 'url',
+              'value' => 'note_url',
+              'type' => 'variable',
+            }, 'body' => {
+              'name' => 'body',
+              'value' => 'note_body',
+              'type' => 'variable',
             }
           },
         },
       }, {
-        'description' => 'Email On task update',
+        'description' => 'Email On comment update',
         'event_type' => 'note_comment_update',
         'event_condition' => '{"==":[1,1]}',
         'event_action' => {
@@ -84,12 +93,20 @@ module ActionFlows
               'name' => 'template',
               'value' => 'd-285b8ab4099b424a93fc04be801a87db',
               'type' => 'string',
+            }, 'url' => {
+              'name' => 'url',
+              'value' => 'note_comment_url',
+              'type' => 'variable',
+            }, 'body' => {
+              'name' => 'body',
+              'value' => 'note_comment_body',
+              'type' => 'variable',
             }
           },
         },
       },
        {
-         'description' => 'Email On task update',
+         'description' => 'Email On comment create',
          'event_type' => 'note_comment_create',
          'event_condition' => '{"==":[1,1]}',
          'event_action' => {
@@ -103,6 +120,14 @@ module ActionFlows
                'name' => 'template',
                'value' => 'd-285b8ab4099b424a93fc04be801a87db',
                'type' => 'string',
+             }, 'url' => {
+               'name' => 'url',
+               'value' => 'note_comment_url',
+               'type' => 'variable',
+             }, 'body' => {
+               'name' => 'body',
+               'value' => 'note_comment_body',
+               'type' => 'variable',
              }
            },
          },
@@ -113,4 +138,5 @@ module ActionFlows
     end
     # rubocop:enable Metrics/MethodLength
   end
+  # rubocop:enable Metrics/ClassLength
 end
