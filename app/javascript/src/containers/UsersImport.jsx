@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid } from '@material-ui/core'
 import Nav from '../components/Nav'
 import { ImportCreate } from '../graphql/mutations'
 import CenteredContent from '../components/CenteredContent'
@@ -109,24 +109,32 @@ export default function UsersImport() {
   return (
     <>
       <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
-      <Typography
-        variant="body2"
-        align="justify"
-        style={{ width: 500, margin: '5px auto' }}
-      >
-        You can upload a .csv file with users. The following are the expected
-        fields: Name, Email primary, Phone number primary, Phone number
-        secondary 1, Phone number secondary 2, User type, Labels (separated by
-        comma if more than one), State, Expiration date, and Notes on client.
-        You can click
-        {' '}
-        <a href={`/csv_import_sample/download?token=${token}`}>here</a>
-        {' '}
-        to
-        download a sample csv file.
-      </Typography>
-      {isLoading ? (
-        <Loading />
+      <Grid container style={{margin: '30px'}}>
+        <Grid item md={6}>
+          You can upload a .csv file with users. The following are the expected
+          fields with examples, and the column headers should be specified accordingly:
+          <ul>
+            <li> Name: i.e John Doe </li>
+            <li> Email primary: i.e john@gmail.com </li>
+            <li> Phone number primary: i.e 260666050378 </li>
+            <li> Phone number secondary 1: i.e 260999050378 </li>
+            <li> Phone number secondary 2: i.e +260777050378 </li>
+            <li> User type: i.e client, prospective client, visitor, admin, etc. </li>
+            <li> Labels: i.e import, facebook </li>
+            <li> State: i.e valid, pending, banned, expired </li>
+            <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
+            <li> Notes on client: i.e Here&apos;s a new note </li>
+          </ul>
+          You can click
+          {' '}
+          <a href={`/csv_import_sample/download?token=${token}`}>here</a>
+          {' '}
+          to
+          download a sample csv file.
+        </Grid>
+        <Grid item md={6} style={{margin: '5px auto'}}>
+          {isLoading ? (
+            <Loading />
       ) : (
         <div>
           <div className="text-center">{errorSummary}</div>
@@ -175,6 +183,8 @@ export default function UsersImport() {
           )}
         </div>
       )}
+        </Grid>
+      </Grid>
     </>
   )
 }
