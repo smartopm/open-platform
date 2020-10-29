@@ -70,7 +70,7 @@ class MergeUsers
     # Update user in UserLabel
     user_labels = UserLabel.where(user_id: user_id)
     user_labels.each do |user_label|
-      if UserLabel.exists?(user_id: duplicate_id)
+      if UserLabel.exists?(user_id: duplicate_id, label_id: user_label.label_id)
         user_label.destroy
       else
         user_label.update(user_id: duplicate_id)
