@@ -266,7 +266,7 @@ export default function UserInformation({
               <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} />
             </TabPanel>
             <TabPanel value={tabValue} index={'Forms'}>
-              <UserFilledForms userFormsFilled={data.user.formUsers} />
+              <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
             </TabPanel>
             </>
           )
