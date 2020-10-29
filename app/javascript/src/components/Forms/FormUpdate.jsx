@@ -194,25 +194,31 @@ export default function FormUpdate({ formId, userId }) {
             >
               Update
             </Button>
-            <Button
-              variant="contained"
-              onClick={event => handleActionClick(event, 'approve')}
-              color="primary"
-              aria-label="form_approve"
-              style={{ marginLeft: '10vw',  }}
-              disabled={isLoading}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              onClick={event => handleActionClick(event, 'reject')}
-              aria-label="form_reject"
-              style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
-              disabled={isLoading}
-            >
-              Reject
-            </Button>
+            {
+              authState.user.userType === 'admin' && (
+                <>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'approve')}
+                    color="primary"
+                    aria-label="form_approve"
+                    style={{ marginLeft: '10vw',  }}
+                    disabled={isLoading}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'reject')}
+                    aria-label="form_reject"
+                    style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                    disabled={isLoading}
+                  >
+                    Reject
+                  </Button>
+                </>
+              )
+            }
           </div>
           
           <br />
