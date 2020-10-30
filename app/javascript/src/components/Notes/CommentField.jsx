@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import CommentCard from './CommentCard'
 import { TaskComment } from '../../graphql/mutations'
 
-export default function CommentTextField({ data, refetch, authState }) {
+export default function CommentTextField({ data, refetch, authState, taskId, historyRefetch }) {
   const classes = useStyles();
   const [commentCreate] = useMutation(TaskComment)
   const [body, setBody] = useState('')
@@ -19,11 +19,12 @@ export default function CommentTextField({ data, refetch, authState }) {
   function handleSubmit(event) {
     event.preventDefault();
     commentCreate({ variables: {
-      noteId: data.task.id,
+      noteId: taskId,
       body
     }}).then(() => {
       setBody('')
       refetch()
+      historyRefetch()
     }).catch((err) => setErrorMessage(err))
   }
   return(
@@ -42,7 +43,7 @@ export default function CommentTextField({ data, refetch, authState }) {
           <Button variant="contained" color="inherit" type="submit" disabled={!body.length}>SHARE</Button>
         </div>
       </form>
-      <CommentCard data={data.task} refetch={refetch} />
+      <CommentCard data={data} refetch={refetch} />
       <p className="text-center">
         {Boolean(error.length) && error}
       </p>
@@ -75,10 +76,13 @@ const useStyles = makeStyles((theme) => ({
 
 CommentTextField.defaultProps = {
   data: {},
-  authState: {}
+  authState: {},
+  taskId: ''
  }
  CommentTextField.propTypes = {
    data: PropTypes.object,
    authState: PropTypes.object,
-   refetch: PropTypes.func.isRequired
+   refetch: PropTypes.func.isRequired,
+   historyRefetch: PropTypes.func.isRequired,
+   taskId: PropTypes.string,
  }

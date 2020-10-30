@@ -28,7 +28,11 @@ module ActionFlows
       def preload_data(eventlog)
         note_comment = eventlog.ref_type.constantize.unscoped.find eventlog.ref_id
         assignees_email = note_comment.note.assignees.map(&:email).join(',')
-        load_data({ 'NoteComment' => note_comment }, 'assignees_emails' => assignees_email)
+        load_data(
+          { 'NoteComment' => note_comment },
+          'assignees_emails' => assignees_email,
+          'url' => url_format(note_comment.note.id),
+        )
       end
 
       def url_format(note_id)

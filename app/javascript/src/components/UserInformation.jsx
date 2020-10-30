@@ -263,7 +263,7 @@ export default function UserInformation({
           !['security_guard', 'custodian'].includes(userType) && (
             <>
             <TabPanel value={tabValue} index={'Plots'}>
-              <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} />
+              <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} userType={userType}/>
             </TabPanel>
             <TabPanel value={tabValue} index={'Forms'}>
               <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />

@@ -430,7 +430,7 @@ class User < ApplicationRecord
 
   # catch exceptions in here to be caught in the mutation
   def merge_user(dup_id)
-    MergeUsers.merge(self[:id], dup_id)
+    MergeUsers.merge(dup_id, self[:id])
   end
 
   def activity_point_for_current_week

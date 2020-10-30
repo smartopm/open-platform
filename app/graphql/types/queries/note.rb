@@ -6,6 +6,7 @@
 module Types::Queries::Note
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/BlockLength
   included do
     field :all_notes, [Types::NoteType], null: false do
       description 'Returns a list of all the notes'
@@ -37,7 +38,18 @@ module Types::Queries::Note
       description 'return details for one task'
       argument :task_id, GraphQL::Types::ID, required: true
     end
+
+    field :task_comments, [Types::NoteCommentType], null: false do
+      description 'return comments for one task'
+      argument :task_id, GraphQL::Types::ID, required: true
+    end
+
+    field :task_histories, [Types::NoteHistoryType], null: false do
+      description 'return histories for one task'
+      argument :task_id, GraphQL::Types::ID, required: true
+    end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def all_notes(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
@@ -69,6 +81,18 @@ module Types::Queries::Note
                             .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .find(task_id)
+  end
+
+  def task_comments(task_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
+  end
+
+  def task_histories(task_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:site_community].notes.find(task_id).note_histories.eager_load(:user)
   end
 
   def my_tasks_count

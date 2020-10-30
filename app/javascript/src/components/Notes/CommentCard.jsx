@@ -37,7 +37,7 @@ export default function CommentCard({ data, refetch }) {
 
   return(
     <>
-      {data.noteComments.map((com) => (
+      {data.taskComments.map((com) => (
         <Card style={{ display: 'flex' }} className={classes.root} key={com.id}>
           {!edit && editId !== com.id && <Avatar src={com.user.imageUrl} alt="avatar-image" style={{ marginTop: '7px' }} />}
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>

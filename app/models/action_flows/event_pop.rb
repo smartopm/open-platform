@@ -21,6 +21,7 @@ module ActionFlows
         'author_id' => '',
         'body' => '',
         'assignees_emails' => '',
+        'url' => '',
       },
       'NoteComment' => {
         'id' => '',
@@ -28,6 +29,7 @@ module ActionFlows
         'note_id' => '',
         'body' => '',
         'assignees_emails' => '',
+        'url' => '',
       },
     }.freeze
 

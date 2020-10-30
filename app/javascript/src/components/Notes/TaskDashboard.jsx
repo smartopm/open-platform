@@ -20,7 +20,9 @@ const tiles = {
 
 // data.taskStasts
 export default function TaskDashboard({ filterTasks, currentTile }) {
-  const { loading, data, error } = useQuery(TaskStatsQuery)
+  const { loading, data, error } = useQuery(TaskStatsQuery, {
+    fetchPolicy: 'network-only'
+  })
 
   if (loading || error) {
     return (

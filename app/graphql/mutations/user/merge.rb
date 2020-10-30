@@ -17,7 +17,7 @@ module Mutations
           user.merge_user(duplicate_id)
           return { success: true }
         rescue StandardError
-          raise GraphQL::ExecutionError, 'Duplicate Entry'
+          raise GraphQL::ExecutionError, 'Merge Failed'
         end
       end
 
