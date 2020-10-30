@@ -24,7 +24,7 @@ module Mutations
           raise GraphQL::ExecutionError, note.errors.full_messages unless note.save
 
           job = TaskReminderJob.set(wait: time).perform_later(note_id, user.id)
-          TaskReminderUpdateJob.perform_now(note_id, job.provider_job_id)
+          TaskReminderUpdateJob.perform_later(note_id, job.provider_job_id)
         end
 
         { note: note }
