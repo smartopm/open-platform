@@ -275,6 +275,14 @@ class User < ApplicationRecord
     end
   end
 
+  def user_form(form_id, user_id)
+    if admin?
+      community.forms.find(form_id).form_users.find_by(user_id: user_id)
+    else
+      form_users.find_by(form_id: form_id)
+    end
+  end
+
   def find_a_user(a_user_id)
     community.users.allowed_users(self).find(a_user_id)
   end

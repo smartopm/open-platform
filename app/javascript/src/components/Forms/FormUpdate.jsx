@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
@@ -10,7 +10,6 @@ import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../../graphql/mutations'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import TextInput from './TextInput'
 import { sortPropertyOrder } from '../../utils/helpers'
 import ImageAuth from '../ImageAuth'
@@ -24,13 +23,13 @@ const initialData = {
   date: { value: null }
 }
 
-export default function FormUpdate({ formId, userId }) {
+export default function FormUpdate({ formId, userId, authState }) {
 
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [openModal, setOpenModal] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [formAction, setFormAction] = useState('')
-  const authState = useContext(AuthStateContext)
   const history = useHistory()
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation)
@@ -79,14 +78,17 @@ export default function FormUpdate({ formId, userId }) {
     updateFormUser({
       variables: { 
         formId,
-        userId: authState.user.id,
+        userId,
         propValues: cleanFormData,
       }
-    // eslint-disable-next-line no-shadow
     }).then(() => {
-        setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
+      setLoading(false)
+      setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
     })
-   .catch(err => setMessage({ ...message, err: true, info: err.message }))
+    .catch(err => {
+      setLoading(false)
+      setMessage({ ...message, err: true, info: err.message })
+   })
   }
 
   function handleActionClick(_event, action){
@@ -97,6 +99,7 @@ export default function FormUpdate({ formId, userId }) {
 
   function handleAction(){
       // check which button was clicked, pattern matching couldn't work here
+      setLoading(!isLoading)
       switch (formAction) {
         case 'update':
            saveFormData()
@@ -112,7 +115,10 @@ export default function FormUpdate({ formId, userId }) {
       }
       setOpenModal(!openModal)
       // wait a moment and route back where the user came from 
-      setTimeout(() => { history.goBack()}, 2000)
+      setTimeout(() => { 
+        setLoading(false)
+        history.goBack()
+      }, 2000)
   }
 
   if (loading) return <Loading />
@@ -182,26 +188,35 @@ export default function FormUpdate({ formId, userId }) {
               color="primary"
               aria-label="form_update"
               variant="outlined"
+              disabled={isLoading}
             >
               Update
             </Button>
-            <Button
-              variant="contained"
-              onClick={event => handleActionClick(event, 'approve')}
-              color="primary"
-              aria-label="form_approve"
-              style={{ marginLeft: '10vw',  }}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              onClick={event => handleActionClick(event, 'reject')}
-              aria-label="form_reject"
-              style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
-            >
-              Reject
-            </Button>
+            {
+              authState.user.userType === 'admin' && (
+                <>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'approve')}
+                    color="primary"
+                    aria-label="form_approve"
+                    style={{ marginLeft: '10vw',  }}
+                    disabled={isLoading}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'reject')}
+                    aria-label="form_reject"
+                    style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                    disabled={isLoading}
+                  >
+                    Reject
+                  </Button>
+                </>
+              )
+            }
           </div>
           
           <br />
@@ -225,5 +240,9 @@ export default function FormUpdate({ formId, userId }) {
 
 FormUpdate.propTypes = {
   formId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  authState: PropTypes.shape({
+    user: PropTypes.shape({ userType: PropTypes.string }),
+    token: PropTypes.string
+  }).isRequired
 }
