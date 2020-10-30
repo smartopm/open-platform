@@ -20,14 +20,14 @@ module Mutations
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
         # TODO: @olivier Find a way of adding an updated_at datetime
-        updates_hash = record_attributes(:user_id, attributes, note)
+        updates_hash = record_attributes(attributes, note)
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.update!(attributes)
 
         note.record_note_history(context[:current_user], updates_hash)
         { note: note }
       end
 
-      def record_attributes(_user_id, attributes, note)
+      def record_attributes(attributes, note)
         updates_hash = {}
         attributes.each do |key, value|
           if key.eql?(:user_id)
