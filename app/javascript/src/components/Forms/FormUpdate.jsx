@@ -41,6 +41,7 @@ export default function FormUpdate({ formId, userId, authState }) {
 
   const { data, error, loading } = useQuery(UserFormProperiesQuery, {
     variables: { formId, userId },
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   })
 
