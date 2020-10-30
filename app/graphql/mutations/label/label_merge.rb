@@ -13,8 +13,21 @@ module Mutations
         raise GraphQL::ExecutionError, 'Label not found' if label.nil? || merge_label.nil?
 
         label.user_labels.each do |lab|
-          merge_label.user_labels.create!(lab)
+          begin
+            merge_label.user_labels.create!(lab)
+          rescue PG::UniqueViolation
+            next
+          end
         end
+
+        {success: true} if label
+      end
+
+      def authorized?(_vals)
+        current_user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+        true
       end
     end
   end
