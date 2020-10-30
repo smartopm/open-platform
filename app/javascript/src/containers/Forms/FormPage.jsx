@@ -6,13 +6,15 @@ import Nav from '../../components/Nav'
 import { Context } from '../Provider/AuthStateProvider'
 
 export default function FormPage(){
-  const { formName, formId, userId } = useParams()
+  const { formName, formId, userId, type } = useParams()
   const location = useLocation()
   const authState = useContext(Context)
   const isFormFilled = location.pathname.includes('user_form')
+  // eslint-disable-next-line no-nested-ternary
+  const backTo = isFormFilled && type ? `/todo` : isFormFilled && !type ? `/user/${userId}` : '/forms'
     return (
       <>
-        <Nav navName={formName} menuButton="back" backTo="/forms" />
+        <Nav navName={formName} menuButton="back" backTo={backTo} />
         <br />
         {
           isFormFilled ? <FormUpdate formId={formId} userId={userId} authState={authState} /> : <Form formId={formId} />
