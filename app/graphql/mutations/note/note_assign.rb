@@ -11,11 +11,15 @@ module Mutations
 
       def resolve(note_id:, user_id:)
         note = context[:site_community].notes.find(note_id)
-        init_assignee = note.assignee_notes.includes(:user).pluck(:name).join(', ')
+        init_assignee = init_assignee_name(note)
         note.assign_or_unassign_user(user_id)
         raise GraphQL::ExecutionError, note.errors.full_messages if note.errors.present?
 
         record_history(init_assignee, note)
+      end
+
+      def init_assignee_name(note)
+        note.assignee_notes.includes(:user).pluck(:name).join(', ')
       end
 
       def record_history(init_user_ids, note)

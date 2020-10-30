@@ -79,14 +79,14 @@ export default function TaskUpdateList({ data }) {
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<PersonOutlinedIcon className={classes.icon} />} 
-                content={`changed the author of the task from ${history.initialValue} to ${history.updatedValue}`}
+                content={`changed the author of the task from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
               />
             )}
             {history.action === 'update' && history.attrChanged === 'assign' && (
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<PeopleAltOutlinedIcon className={classes.icon} />} 
-                content={`changed author from ${history.initialValue} to ${history.updatedValue}`}
+                content={`changed assignees from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
               />
             )}
           </div>
