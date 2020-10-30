@@ -82,7 +82,7 @@ export default function FormUpdate({ formId, userId, authState }) {
         status: formStatus 
       }
     })
-    .then(() => setMessage({ ...message, err: false, info: `The Form was successfully ${status}` }))
+    .then(() => setMessage({ ...message, err: false, info: `The Form was successfully ${formStatus}` }))
     .catch(err => setMessage({ ...message, err: true, info: err.message }))
   }
 
