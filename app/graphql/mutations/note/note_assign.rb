@@ -22,10 +22,10 @@ module Mutations
         note.assignee_notes.includes(:user).pluck(:name).join(', ')
       end
 
-      def record_history(init_user_ids, note)
-        updated_user_ids = note.reload.assignee_notes.includes(:user).pluck(:name).join(', ')
-        updates_hash = { assign: [init_user_ids, updated_user_ids] }
-        return { assignee_note: 'failed' } if updated_user_ids.eql?(init_user_ids)
+      def record_history(init_user_names, note)
+        updated_user_names = note.reload.assignee_notes.includes(:user).pluck(:name).join(', ')
+        updates_hash = { assign: [init_user_names, updated_user_names] }
+        return { assignee_note: 'failed' } if updated_user_names.eql?(init_user_names)
 
         note.record_note_history(context[:current_user], updates_hash)
         { assignee_note: 'success' }
