@@ -113,7 +113,7 @@ export default function UsersImport() {
         <Grid item md={6}>
           You can upload a .csv file with users. The following are the expected
           fields with examples, and the column headers should be specified accordingly:
-          <ul>
+          <ol>
             <li> Name: i.e John Doe </li>
             <li> Email primary: i.e john@gmail.com </li>
             <li> Phone number primary: i.e 260666050378 </li>
@@ -124,7 +124,7 @@ export default function UsersImport() {
             <li> State: i.e valid, pending, banned, expired </li>
             <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li> Notes on client: i.e Here&apos;s a new note </li>
-          </ul>
+          </ol>
           You can click
           {' '}
           <a href={`/csv_import_sample/download?token=${token}`}>here</a>
