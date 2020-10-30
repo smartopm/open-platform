@@ -71,11 +71,11 @@ export default function Task({
   }
 
   function setTaskReminder(hour) {
-    handleClose()
     setReminder({
       variables: { noteId: note.id, hour }
     })
       .then(() => {
+        handleClose()
         const timeScheduled = new Date(
           Date.now() + hour * 60 * 60000
         ).toISOString()
