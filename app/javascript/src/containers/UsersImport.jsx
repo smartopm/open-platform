@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { ImportCreate } from '../graphql/mutations'
 import CenteredContent from '../components/CenteredContent'
 import Loading from '../components/Loading'
 import { sanitizeText, pluralizeCount } from '../utils/helpers'
+import { Context } from "./Provider/AuthStateProvider"
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate)
@@ -17,6 +18,7 @@ export default function UsersImport() {
   const [errorSummary, setErrorSummary] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const history = useHistory()
+  const { token } = useContext(Context)
 
   function createImport() {
     setIsLoading(true)
@@ -53,8 +55,13 @@ export default function UsersImport() {
     reader.readAsText(file)
   }
 
-  function formatResponseMessage({errors, noOfDuplicates, noOfInvalid, noOfValid}) {
-    if ((noOfDuplicates + noOfInvalid) ===  0) {
+  function formatResponseMessage({
+    errors,
+    noOfDuplicates,
+    noOfInvalid,
+    noOfValid
+  }) {
+    if (noOfDuplicates + noOfInvalid === 0) {
       setErrorMessage('Import was successful')
       return
     }
@@ -97,13 +104,37 @@ export default function UsersImport() {
     return statement
   }
 
-  const hasErrors = (errorMessage || errorSummary)
+  const hasErrors = errorMessage || errorSummary
 
   return (
     <>
       <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
-      {isLoading ? (
-        <Loading />
+      <Grid container style={{margin: '30px'}}>
+        <Grid item md={6}>
+          You can upload a .csv file with users. The following are the expected
+          fields with examples, and the column headers should be specified accordingly:
+          <ol>
+            <li> Name: i.e John Doe </li>
+            <li> Email primary: i.e john@gmail.com </li>
+            <li> Phone number primary: i.e 260666050378 </li>
+            <li> Phone number secondary 1: i.e 260999050378 </li>
+            <li> Phone number secondary 2: i.e +260777050378 </li>
+            <li> User type: i.e client, prospective client, visitor, admin, etc. </li>
+            <li> Labels: i.e import, facebook </li>
+            <li> State: i.e valid, pending, banned, expired </li>
+            <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
+            <li> Notes on client: i.e Here&apos;s a new note </li>
+          </ol>
+          You can click
+          {' '}
+          <a href={`/csv_import_sample/download?token=${token}`}>here</a>
+          {' '}
+          to
+          download a sample csv file.
+        </Grid>
+        <Grid item md={6} style={{margin: '5px auto'}}>
+          {isLoading ? (
+            <Loading />
       ) : (
         <div>
           <div className="text-center">{errorSummary}</div>
@@ -152,6 +183,8 @@ export default function UsersImport() {
           )}
         </div>
       )}
+        </Grid>
+      </Grid>
     </>
   )
 }
