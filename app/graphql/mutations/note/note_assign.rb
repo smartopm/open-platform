@@ -11,7 +11,7 @@ module Mutations
 
       def resolve(note_id:, user_id:)
         note = context[:site_community].notes.find(note_id)
-        init_assignee = note.assignee_notes.pluck(:user_id).join(',')
+        init_assignee = note.assignee_notes.includes(:user).pluck(:name).join(', ')
         note.assign_or_unassign_user(user_id)
         raise GraphQL::ExecutionError, note.errors.full_messages if note.errors.present?
 
@@ -19,19 +19,13 @@ module Mutations
       end
 
       def record_history(init_user_ids, note)
-        updated_user_ids = note.reload.assignee_notes.pluck(:user_id).join(',')
-        updates_hash = { user_id: [init_user_ids, updated_user_ids] }
+        updated_user_ids = note.reload.assignee_notes.includes(:user).pluck(:name).join(', ')
+        updates_hash = { assign: [init_user_ids, updated_user_ids] }
         return { assignee_note: 'failed' } if updated_user_ids.eql?(init_user_ids)
 
         note.record_note_history(context[:current_user], updates_hash)
         { assignee_note: 'success' }
       end
-
-      # if key.eql?(:user_id)
-      #   value = context[:site_community].users.find(value)&.name
-      #   updates_hash[:user_id] = [note.user.name, value]
-      #   next
-      # end
 
       # TODO: Better auth here
       def authorized?(_vals)
