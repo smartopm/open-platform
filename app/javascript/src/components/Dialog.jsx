@@ -141,7 +141,7 @@ ModalDialog.propTypes = {
 
 CustomizedDialogs.defaultProps = {
   dialogHeader: '',
-  subHeader: 'Save',
+  subHeader: '',
   children: {}
 }
 
