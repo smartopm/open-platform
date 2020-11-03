@@ -1,8 +1,9 @@
-/* eslint-disable */
+/* eslint-disable no-use-before-define */
 import React from 'react'
 import { DialogContent, DialogActions, Button, Dialog, DialogContentText, DialogTitle } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles';
+
 export function ModalDialog({
   handleClose,
   open,
@@ -21,7 +22,15 @@ export function ModalDialog({
         {
           Boolean(name.length) && (
             <p className="deny-msg">
-              Are you sure you want to {action} access to <strong>{name}</strong> ?
+              Are you sure you want to 
+              {' '}
+              {action}
+              {' '}
+              access to 
+              {' '}
+              <strong>{name}</strong>
+              {' '}
+              ?
             </p>
           )
         }
@@ -53,8 +62,8 @@ export function ReasonInputModal({ handleClose, open, children }) {
       onClose={handleClose}
       aria-labelledby="simple-dialog-title"
       open={open}
-      fullWidth={true}
-      maxWidth={'lg'}
+      fullWidth
+      maxWidth="lg"
     >
       <DialogContent>
         <p className="deny-msg">Other Business</p>
@@ -62,7 +71,7 @@ export function ReasonInputModal({ handleClose, open, children }) {
         {children}
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleClose} color={'primary'}>
+        <Button autoFocus onClick={handleClose} color="primary">
           Save
         </Button>
         <Button className="btn-close" onClick={handleClose}>
@@ -82,27 +91,32 @@ export function CustomizedDialogs({
   subHeader,
   saveAction
 }) {
+  const classes = useStyles();
   return (
     <Dialog 
       onClose={handleModal}
       aria-labelledby="simple-dialog-title"
       open={open}
     >
-      <DialogTitle>
+      <DialogTitle className={classes.title}>
         <div className="d-flex justify-content-between">
-          <h6 data-testid ='customDialog'>{dialogHeader}</h6>
-          <CloseIcon onClick={handleModal} />
+          <h6 data-testid='customDialog'>{dialogHeader}</h6>
         </div>
       </DialogTitle>
-      <DialogContent data-testid= 'customDialogcontent'>
-        {subHeader ? <DialogContentText>
-          {subHeader}
-        </DialogContentText>
+      <DialogContent data-testid='customDialogcontent'>
+        {subHeader ? (
+          <DialogContentText>
+            {subHeader}
+          </DialogContentText>
+)
           : null}
         {children}
       </DialogContent>
       <DialogActions>
-        <Button data-testid="custom-dialog-button" onClick={handleBatchFilter} color={'primary'}>
+        <Button onClick={handleModal} variant="outlined" color="secondary">
+          Cancel
+        </Button>
+        <Button data-testid="custom-dialog-button" onClick={handleBatchFilter} color="primary" variant="contained">
           {saveAction}
         </Button>
       </DialogActions>
@@ -110,6 +124,11 @@ export function CustomizedDialogs({
   )
 }
 
+const useStyles = makeStyles({
+  title: {
+    borderBottom: '1px #b8d4d0 solid'
+  }
+});
 
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,

@@ -350,6 +350,14 @@ export const EditPlotNumber = gql`
   }
 `
 
+export const LabelMerge = gql`
+  mutation LabelMerge($labelId: ID!, $mergeLabelId: ID!) {
+    labelMerge(labelId: $labelId, mergeLabelId: $mergeLabelId) {
+      success
+   }
+  }
+`
+
 export const DeleteLabel = gql`
   mutation LabelDelete($id: ID!) {
     labelDelete(id: $id) {
