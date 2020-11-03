@@ -219,4 +219,39 @@ RSpec.describe Mutations::Label do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
+
+  describe 'merging a two Labels' do
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:f_label) { create(:label, community_id: user.community_id) }
+    let!(:s_label) { create(:label, community_id: user.community_id) }
+
+    let(:query) do
+      <<~GQL
+        mutation {
+          labelMerge(labelId: "#{f_label.id}", mergeLabelId: "#{s_label.id}") {
+            success
+         }
+        }
+      GQL
+    end
+
+    it 'returns success if merging is successful' do
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('data', 'labelMerge', 'success')).to eql true
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'returns error when user is not admin' do
+      result = DoubleGdpSchema.execute(query,
+                                       context: {
+                                         current_user: user,
+                                       }).as_json
+      expect(result.dig('errors')).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+  end
 end
