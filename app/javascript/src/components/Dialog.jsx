@@ -139,19 +139,26 @@ ModalDialog.propTypes = {
   children: PropTypes.node
 }
 
+CustomizedDialogs.defaultProps = {
+  dialogHeader: '',
+  subHeader: 'Save',
+  children: {}
+}
+
 CustomizedDialogs.propTypes = {
   children: PropTypes.node,
   open: PropTypes.bool.isRequired,
   handleBatchFilter: PropTypes.func.isRequired,
   handleModal: PropTypes.func.isRequired,
   dialogHeader: PropTypes.string,
-  subHeade: PropTypes.string
-
+  subHeader: PropTypes.string,
+  saveAction: PropTypes.string.isRequired
 }
 
 ModalDialog.defaultProps = {
   name: '',
-  action: 'Save'
+  action: 'Save',
+  children: {}
 }
 
 ReasonInputModal.propTypes = {
