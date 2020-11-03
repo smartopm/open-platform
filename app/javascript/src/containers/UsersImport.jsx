@@ -109,7 +109,7 @@ export default function UsersImport() {
   return (
     <>
       <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
-      <Grid container style={{margin: '30px'}}>
+      <Grid container style={{margin: '5px auto', width: '95%'}}>
         <Grid item md={6}>
           You can upload a .csv file with users. The following are the expected
           fields with examples, and the column headers should be specified accordingly:
