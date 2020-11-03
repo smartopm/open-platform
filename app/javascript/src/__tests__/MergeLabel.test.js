@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import MergeLabel from '../components/Label/MergeLabel'
 import '@testing-library/jest-dom/extend-expect'
 
-describe('Comment Delete Component', () => {
+describe('Merge Label Component', () => {
   const handleClose = jest.fn
   const open = jest.fn
   const mergeData = {
