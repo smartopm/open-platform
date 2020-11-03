@@ -15,6 +15,7 @@ module Mutations
       argument :expires_at, String, required: false
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
+      argument :sub_status, String, required: false
 
       field :user, Types::UserType, null: true
 
