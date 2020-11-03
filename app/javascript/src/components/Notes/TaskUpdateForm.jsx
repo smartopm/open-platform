@@ -57,6 +57,7 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
 
   function handleTaskComplete(){
     // call the mutation with just the complete status
+    setLoadingStatus(true)
     taskUpdate({
       variables: { id: data.id, completed: !taskStatus}
     })

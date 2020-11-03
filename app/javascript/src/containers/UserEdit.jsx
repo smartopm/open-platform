@@ -21,7 +21,8 @@ const initialValues = {
   userType: '',
   state: '',
   signedBlobId: '',
-  imageUrl: ''
+  imageUrl: '',
+  subStatus: '',
 }
 
 export const FormContext = React.createContext({
@@ -49,14 +50,12 @@ export default function FormContainer({ match, history, location }) {
   const [isModalOpen, setDenyModal] = React.useState(false)
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
-  const [selectedDate, handleDateChange] = React.useState(null) 
+  const [selectedDate, handleDateChange] = React.useState(null)
   const [showResults, setShowResults] = React.useState(false)
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
 
- 
-  
   function handleModal(type) {
     if (type === 'grant') {
       setModalAction('grant')
@@ -81,7 +80,7 @@ export default function FormContainer({ match, history, location }) {
 
   function handleSubmit(event) {
     event.preventDefault()
-    
+
     const values = {
       ...data,
       name: data.name.trim(),
@@ -171,12 +170,12 @@ export default function FormContainer({ match, history, location }) {
       <br />
       {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>}
       <UserForm />
-      { showResults ? 
+      { showResults ?
         <div className='d-flex row justify-content-center'>
           <p>Thank you for your referral. We will reach out to them soon.</p>
-        </div> 
+        </div>
         : Boolean(msg.length) && <p className="text-danger text-center">This user already exists in the system.</p>  }
-        
+
     </FormContext.Provider>
   )
 }
