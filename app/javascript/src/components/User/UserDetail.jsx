@@ -8,7 +8,6 @@ import StatusBadge from '../StatusBadge'
 import { titleize } from '../../utils/helpers'
 
 export default function UserDetail({ data, userType }) {
-  console.log('data', data)
   return (
     <div className="col-4">
       <h5>{data.user.name}</h5>
