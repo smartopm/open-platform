@@ -12,6 +12,13 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:land_parcels) }
   end
 
+  describe 'validations' do
+    it {
+      should define_enum_for(:sub_status)
+        .with_values(User.sub_statuses)
+    }
+  end
+
   describe 'Creating a user from a oauth authentication callback' do
     let!(:community) { create(:community, name: 'Nkwashi') }
     auth_obj = OpenStruct.new(
@@ -108,6 +115,21 @@ RSpec.describe User, type: :model do
       expect(@user.expired?).to be true
     end
   end
+
+  # describe 'User sub status' do
+  #   # let!(:user) { create(:user_with_community, sub_status: 'heyy') }
+
+  #   it 'should save correctly ' do
+  #     user = create(:user_with_community, sub_status: 'contracted')
+  #     expect(user.sub_status).to eq('contracted')
+  #   end
+
+  # it "should a throw validtion error" do
+  #   user = create(:user_with_community, sub_status: 'heyy')
+
+  #   expect(user.valid?).to eq false
+  # end
+  # end
 
   describe 'User with user_type roles' do
     before :each do

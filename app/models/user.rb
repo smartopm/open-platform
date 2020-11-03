@@ -96,7 +96,6 @@ class User < ApplicationRecord
     architecture_reviewed: 1,
     banned: 2,
     contracted: 3,
-    
     expired: 4,
     in_construction: 5,
     interested: 6,
@@ -107,6 +106,7 @@ class User < ApplicationRecord
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
+  validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
   validates :name, presence: true
   validate :phone_number_valid?
   after_create :add_notification_preference
