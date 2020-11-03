@@ -235,7 +235,7 @@ class User < ApplicationRecord
       description: vals[:description],
       flagged: vals[:flagged],
       author_id: self[:id],
-      completed: vals[:completed],
+      completed: vals[:completed] || false,
       due_date: vals[:due_date],
       form_user_id: vals[:form_user_id],
     )

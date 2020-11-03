@@ -118,7 +118,6 @@ Discuss.propTypes = {
 export const discussStyles = StyleSheet.create({
   submitBtn: {
     width: '30%',
-    height: 51,
     boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center',
@@ -129,7 +128,6 @@ export const discussStyles = StyleSheet.create({
   cancelBtn: {
     width: '30%',
     marginRight: '20vw',
-    height: 51,
     marginTop: 50,
     alignItems: 'center',
     ':hover': {
