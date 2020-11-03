@@ -49,6 +49,19 @@ export const userState = {
   expired: 'Expired'
 }
 
+export const userSubStatus = {
+  applied: 'Applied',
+  architecture_reviewed: 'Architecture Reviewed',
+  banned: 'Approved',
+  contracted: 'Contracted',
+  expired: 'Built',
+  in_construction: 'In Construction',
+  interested: 'Interested',
+  moved_in: 'Moved-In',
+  paying: 'Paying',
+  ready_for_construction: 'Ready for Construction',
+}
+
 export const entryReason = [
   'Client',
   'Prospective Client',

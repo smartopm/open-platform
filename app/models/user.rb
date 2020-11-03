@@ -91,6 +91,20 @@ class User < ApplicationRecord
   VALID_STATES = %w[valid pending banned expired].freeze
   DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
+  enum sub_status: {
+    applied: 0,
+    architecture_reviewed: 1,
+    banned: 2,
+    contracted: 3,
+    
+    expired: 4,
+    in_construction: 5,
+    interested: 6,
+    moved_in: 7,
+    paying: 8,
+    ready_for_construction: 9,
+  }
+
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :name, presence: true
