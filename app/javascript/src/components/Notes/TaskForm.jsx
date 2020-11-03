@@ -33,7 +33,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
   const [assignees, setAssignees] = useState([])
   const [taskType, setTaskType] = useState('')
   const [selectedDate, setDate] = useState(new Date())
-  const [taskStatus, setTaskStatus] = useState(false)
   const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
@@ -47,7 +46,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         body: title,
         description: description,
         due: selectedDate ? selectedDate.toISOString() : null,
-        completed: taskStatus,
         category: taskType,
         flagged: true,
         userId: userData.userId
@@ -146,21 +144,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       <br />
         <UserSearch userData={userData} update={setData}/> 
       <br />
-      <FormControlLabel
-        value="end"
-        control={
-          <Checkbox
-            aria-label="task_status"
-            data-testid="task_status"
-            checked={taskStatus}
-            onChange={() => setTaskStatus(!taskStatus)}
-            color="primary"
-          />
-        }
-        label="Task Status"
-        labelPlacement="end"
-      />
-      <FormHelperText>Checked for complete</FormHelperText>
       <div>
         <DatePickerDialog
           handleDateChange={date => setDate(date)}
