@@ -25,7 +25,7 @@ import ReactGA from 'react-ga';
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
 import UserActionMenu from './User/UserActionMenu'
-import { UserNote } from './User/UserNote'
+import UserNote from './User/UserNote'
 import UserInfo from './User/UserInfo'
 import UserDetail from './User/UserDetail'
 import UserStyledTabs from './User/UserTabs'

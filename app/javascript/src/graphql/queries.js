@@ -666,3 +666,14 @@ query userFormProperties($formId: ID!, $userId: ID!) {
 }
 
 `
+
+export const UserNotesQuery = gql`
+query userNote($userId: ID!) {
+  userNotes(id: $userId){
+    body
+    completed
+    createdAt
+    id
+  }
+}
+`
