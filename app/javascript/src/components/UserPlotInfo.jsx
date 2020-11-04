@@ -53,7 +53,6 @@ export default function UserPlotInfo({ userId, account, refetch, userType }) {
 
     return (
       <>
-        {console.log(userType)}
         {account && account[0]?.landParcels?.length > 0 ? (
           <div className="container">
             <div className={css(styles.body)}>
