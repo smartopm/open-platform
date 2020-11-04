@@ -22,6 +22,7 @@ describe('Form Component', () => {
       result: {
         data: {
           formUser: {
+            id: "162f7517-7cc8-398542-b2d0-384sds",
             status: "pending",
             statusUpdatedBy: {
               id: "162f7517-7cc8-398542-b2d0-a83569",
