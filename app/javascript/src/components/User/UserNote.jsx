@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useState } from 'react'
-import { useMutation, useQuery } from 'react-apollo'
+import React, { Fragment, useEffect, useState } from 'react'
+import { useLazyQuery, useMutation } from 'react-apollo'
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import Tooltip from '@material-ui/core/Tooltip'
 import { css, StyleSheet } from 'aphrodite'
@@ -36,13 +36,20 @@ export function UserNote({ note, handleFlagNote }) {
   )
 }
 
-export default function UserNotes({ userId }){
+export default function UserNotes({ userId, tabValue }){
   const [isLoading, setLoading] = useState(false)
   const [noteUpdate] = useMutation(UpdateNote)
-  const { loading, error, refetch, data } = useQuery(UserNotesQuery, {
+  const [loadNotes, { loading, error, refetch, data }] = useLazyQuery(UserNotesQuery, {
     variables: { userId },
     fetchPolicy: 'cache-and-network'
   })
+
+  useEffect(() => {
+    if (tabValue === 'Notes') {
+      loadNotes()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabValue])
 
   function handleFlagNote(id) {
     setLoading(true)
@@ -52,10 +59,10 @@ export default function UserNotes({ userId }){
     })
   }
 
-  if (loading || isLoading) return <Spinner />
+  if (loading || isLoading || !data) return <Spinner />
   if (error) return error.message
 
-  return data.userNotes.map(note => (
+  return data?.userNotes.map(note => (
     <UserNote
       key={note.id}
       note={note}

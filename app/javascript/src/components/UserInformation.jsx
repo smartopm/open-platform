@@ -16,10 +16,8 @@ import {
 } from '@material-ui/core'
 import { ponisoNumber } from '../utils/constants.js'
 import { css, StyleSheet } from 'aphrodite'
-import { useQuery } from 'react-apollo'
-import { CreateNote, UpdateNote } from '../graphql/mutations'
+import { CreateNote } from '../graphql/mutations'
 import { useMutation } from 'react-apollo'
-import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
 import UserMerge from './User/UserMerge'
@@ -47,11 +45,9 @@ export default function UserInformation({
   const CSMNumber = '260974624243'
   const [tabValue, setValue] = useState('Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
-  const [isLoading, setLoading] = useState(false)
   const [isDialogOpen, setDialogOpen] = useState(false)
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const [noteUpdate] = useMutation(UpdateNote)
   const { handleSubmit, register } = useForm()
   let location = useLocation()
 
@@ -219,7 +215,7 @@ export default function UserInformation({
                 </form>
                 <br />
                 <br />
-                <UserNotes userId={data.user.id} />
+                <UserNotes tabValue={tabValue} userId={data.user.id} />
               </div>
             </TabPanel>
 
