@@ -25,7 +25,7 @@ import ReactGA from 'react-ga';
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
 import UserActionMenu from './User/UserActionMenu'
-import UserNote from './User/UserNote'
+import UserNotes from './User/UserNote'
 import UserInfo from './User/UserInfo'
 import UserDetail from './User/UserDetail'
 import UserStyledTabs from './User/UserTabs'
@@ -90,22 +90,6 @@ export default function UserInformation({
 
   function handleClose() {
     setAnchorEl(null)
-  }
-
-  function handleFlagNote(id) {
-    setLoading(true)
-    noteUpdate({ variables: { id, flagged: true } }).then(() => {
-      setLoading(false)
-      refetch()
-    })
-  }
-
-  function handleOnComplete(id, isCompleted) {
-    setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
-      setLoading(false)
-      refetch()
-    })
   }
 
   function handleMergeDialog() {
@@ -235,19 +219,7 @@ export default function UserInformation({
                 </form>
                 <br />
                 <br />
-                {isLoading ? (
-                  <Loading />
-                ) : data.user.notes ? (
-                    data.user.notes.map(note => (
-                    <UserNote
-                        key={note.id}
-                        note={note}
-                        handleFlagNote={handleFlagNote}
-                        handleOnComplete={handleOnComplete} />
-                  ))
-                ) : (
-                  'No Notes Yet'
-                )}
+                <UserNotes userId={data.user.id} />
               </div>
             </TabPanel>
 

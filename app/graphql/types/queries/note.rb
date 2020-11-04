@@ -16,7 +16,7 @@ module Types::Queries::Note
 
     field :user_notes, [Types::NoteType], null: false do
       description 'Returns notes for the specific user'
-      argument :id, String, required: true
+      argument :id, GraphQL::Types::ID, required: true
     end
 
     field :flagged_notes, [Types::NoteType], null: false do
