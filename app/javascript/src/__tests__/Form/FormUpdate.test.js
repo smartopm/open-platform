@@ -2,14 +2,35 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
+import { BrowserRouter } from 'react-router-dom'
 import Loading from '../../components/Loading'
-import { UserFormProperiesQuery } from '../../graphql/queries'
+import { UserFormProperiesQuery, FormUserQuery } from '../../graphql/queries'
 import FormUpdate from '../../components/Forms/FormUpdate'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
 describe('Form Component', () => {
   it('should render form without error', async () => {
+    const formUserMocks = {
+      request: {
+        query: FormUserQuery,
+        variables: {
+          formId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
+          userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+        }
+      },
+      result: {
+        data: {
+          formUser: {
+            status: "pending",
+            statusUpdatedBy: {
+              id: "162f7517-7cc8-398542-b2d0-a83569",
+              name: "Olivier JM Maniraho"
+            }
+          }
+        }
+      }
+    } 
     const mocks = {
       request: {
         query: UserFormProperiesQuery,
@@ -102,12 +123,14 @@ describe('Form Component', () => {
       token: '894573rhuehf783'
     }
     const container = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
-        <FormUpdate
-          formId="caea7b44-ee95-42a6-a42f-3e530432172e"
-          userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
-          authState={authState}
-        />
+      <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
+        <BrowserRouter>
+          <FormUpdate
+            formId="caea7b44-ee95-42a6-a42f-3e530432172e"
+            userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+            authState={authState}
+          />
+        </BrowserRouter>
       </MockedProvider>
     )
     const loader = render(<Loading />)

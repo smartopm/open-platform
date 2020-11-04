@@ -1,11 +1,11 @@
 /* eslint-disable no-use-before-define */
 import React, { useRef, useState } from 'react'
-import { Button, Container, Typography } from '@material-ui/core'
+import { Button, Container, TextField, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import DatePickerDialog from '../DatePickerDialog'
-import { UserFormProperiesQuery } from '../../graphql/queries'
+import { FormUserQuery, UserFormProperiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
@@ -40,6 +40,12 @@ export default function FormUpdate({ formId, userId, authState }) {
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation)
 
   const { data, error, loading } = useQuery(UserFormProperiesQuery, {
+    variables: { formId, userId },
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all'
+  })
+
+  const formUserData = useQuery(FormUserQuery, {
     variables: { formId, userId },
     fetchPolicy: 'network-only',
     errorPolicy: 'all'
@@ -153,9 +159,6 @@ export default function FormUpdate({ formId, userId, authState }) {
       }, 2000)
   }
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error?.message} />
-
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.formProperty.adminUse ? false : !(formPropertiesData.formProperty.adminUse && authState.user.userType === 'admin')
     const fields = {
@@ -218,10 +221,40 @@ export default function FormUpdate({ formId, userId, authState }) {
     return fields[formPropertiesData.formProperty.fieldType]
   }
 
+  if (loading || formUserData.loading) return <Loading />
+  if (error || formUserData.error) return <ErrorPage title={error?.message || formUserData.error?.message} />
+
   return (
     <>
       <Container>
         <form onSubmit={event => handleActionClick(event, 'update')}>
+          {/* check if it is admin and add their details here */}
+          {
+            authState.user.userType === 'admin' && userId && (
+              <>
+                <TextField
+                  label="Form Status"
+                  value={formUserData.data?.formUser.status}
+                  disabled
+                  margin="dense"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  label="Form Status Updated By"
+                  value={formUserData.data.formUser.statusUpdatedBy.name}
+                  disabled
+                  margin="dense"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </>
+            )
+          }
           {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
           <br />
           <br />
