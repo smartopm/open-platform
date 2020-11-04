@@ -115,7 +115,7 @@ export default function UserPlotInfo({ userId, account, refetch, userType }) {
         ) : (
           <div className="container" style={{display: 'flex', margin: '20px 150px'}}>
             <p data-testid="no_plot">No plots information available</p>
-            {userType === 'admin ' && (
+            {userType === 'admin' && (
             <div 
               style={{display: 'flex', marginLeft: 'auto', order: 2, color: '#69aba4', cursor: 'pointer'}}
               onClick={() => setAddOpen(true)}

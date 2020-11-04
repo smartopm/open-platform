@@ -70,6 +70,7 @@ module Types
     field :label_delete, mutation: Mutations::Label::LabelDelete
     field :user_label_create, mutation: Mutations::Label::UserLabelCreate
     field :user_label_update, mutation: Mutations::Label::UserLabelUpdate
+    field :label_merge, mutation: Mutations::Label::LabelMerge
 
     # notifications
     field :notification_preference, mutation: Mutations::Settings::NotificationPreference

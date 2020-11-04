@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import {
   Button,
-  FormControlLabel,
-  Checkbox,
   FormHelperText,
   MenuItem,
   Select,
@@ -14,7 +12,6 @@ import {
   Snackbar,
   Chip,Typography
 } from '@material-ui/core'
-import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
@@ -22,7 +19,6 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import DatePickerDialog from '../DatePickerDialog'
 import { UpdateNote } from '../../graphql/mutations'
-import { discussStyles } from '../Discussion/Discuss'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
@@ -49,13 +45,29 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
 
   const [type, setType] = useState("preview")
     const handleType = (_event, value) => {
-        setType(value);
-    };
+        setType(value)
+    }
 
   function handleSubmit(event) {
     event.preventDefault()
     setLoadingStatus(true)
     updateTask()
+  }
+
+
+  function handleTaskComplete(){
+    // call the mutation with just the complete status
+    setLoadingStatus(true)
+    taskUpdate({
+      variables: { id: data.id, completed: !taskStatus}
+    })
+    .then(() => {
+      setLoadingStatus(false)
+      setUpdated(true)
+      refetch()
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
   }
 
   function updateTask() {
@@ -64,7 +76,6 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
         id: data.id,
         body: title,
         dueDate: selectedDate,
-        completed: taskStatus,
         description,
         category: taskType,
         flagged: true,
@@ -247,21 +258,6 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
         <br />
         <UserChip user={{ name: userData.user, id: userData.userId, imageUrl: userData.imageUrl }} />
         <br />
-        <FormControlLabel
-          value="end"
-          control={(
-            <Checkbox
-              aria-label="task_status"
-              data-testid="task_status"
-              checked={taskStatus}
-              onChange={() => setTaskStatus(!taskStatus)}
-              color="primary"
-            />
-        )}
-          label="Task Status"
-          labelPlacement="end"
-        />
-        <FormHelperText>Checked for complete</FormHelperText>
         <div>
           <DatePickerDialog
             handleDateChange={date => setDate(date)}
@@ -271,18 +267,25 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
         </div>
 
         <br />
-        <div className="d-flex row justify-content-center">
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={loading}
-            aria-label="task_submit"
-            className={`btn ${css(discussStyles.submitBtn)}`}
-          >
-            {loading ? 'Updating a task ...' : 'Update Task'}
-          </Button>
-        </div>
+
+        <Button
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={loading}
+          aria-label="task_submit"
+          disableElevation
+        >
+          {loading ? 'Updating a task ...' : 'Update Task'}
+        </Button>
+        <Button 
+          disabled={loading} 
+          onClick={handleTaskComplete} 
+          color="primary" 
+          style={{ marginLeft: 40 }}
+        >
+          {!taskStatus ? 'Mark as complete' : 'Mark as incomplete'}
+        </Button>
         <p className="text-center">
           {Boolean(error.length) && error}
         </p>

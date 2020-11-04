@@ -15,6 +15,7 @@ export const UserFragment = {
       state
       expiresAt
       email
+      subStatus
       accounts {
         id
         updatedAt
