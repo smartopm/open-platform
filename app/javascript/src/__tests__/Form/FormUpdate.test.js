@@ -27,8 +27,8 @@ describe('Form Component', () => {
             statusUpdatedBy: {
               id: "162f7517-7cc8-398542-b2d0-a83569",
               name: "Olivier JM Maniraho",
-              updatedAt: "2020-11-05T11:25:07Z"
-            }
+            },
+            updatedAt: "2020-11-05T11:25:07Z"
           }
         }
       }
