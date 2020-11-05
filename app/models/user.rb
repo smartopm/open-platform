@@ -94,9 +94,9 @@ class User < ApplicationRecord
   enum sub_status: {
     applied: 0,
     architecture_reviewed: 1,
-    banned: 2,
+    approved: 2,
     contracted: 3,
-    expired: 4,
+    built: 4,
     in_construction: 5,
     interested: 6,
     moved_in: 7,

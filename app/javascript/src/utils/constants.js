@@ -52,9 +52,9 @@ export const userState = {
 export const userSubStatus = {
   applied: 'Applied',
   architecture_reviewed: 'Architecture Reviewed',
-  banned: 'Approved',
+  approved: 'Approved',
   contracted: 'Contracted',
-  expired: 'Built',
+  built: 'Built',
   in_construction: 'In Construction',
   interested: 'Interested',
   moved_in: 'Moved-In',
