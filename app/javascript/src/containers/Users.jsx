@@ -146,6 +146,7 @@ export default function UsersList() {
       role: {
         label: 'Role',
         type: 'select',
+        valueSources: ['value'],
         fieldSettings: {
           listValues: Object.entries(userType).map(([key, val]) => {
             return { value: key, title: val }
@@ -155,6 +156,7 @@ export default function UsersList() {
       label: {
         label: 'Label',
         type: 'select',
+        valueSources: ['value'],
         fieldSettings: {
           listValues: labelsData.labels.map(label => {
             return { value: label.shortDesc, title: label.shortDesc }
@@ -163,11 +165,13 @@ export default function UsersList() {
       },
       phoneNumber: {
         label: 'Phone Number',
-        type: 'text'
+        type: 'text',
+        valueSources: ['value']
       },
       loginAfter: {
         label: 'Login After',
         type: 'date',
+        valueSources: ['value'],
         excludeOperators: ['not_equal']
       }
     }
@@ -313,7 +317,7 @@ export default function UsersList() {
             position: 'absolute',
             zIndex: 1,
             marginTop: '-25px',
-            display: displayBuilder
+            display: displayBuilder,
           }}
         >
           <QueryBuilder
