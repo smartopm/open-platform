@@ -5,9 +5,9 @@ import { BrowserRouter } from 'react-router-dom'
 import UsersImport from '../containers/UsersImport'
 import '@testing-library/jest-dom/extend-expect'
 
-jest.mock('@rails/activestorage/src/file_checksum', async() => jest.fn())
+jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn())
 describe('UsersImport component', () => {
-  it("renders file input", async () => {
+  it('renders file input', async () => {
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
@@ -15,10 +15,13 @@ describe('UsersImport component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    await waitFor(() => expect(container.queryByTestId("csv-input")).toBeInTheDocument(), { timeout: 1000 })
+    await waitFor(
+      () => expect(container.queryByTestId('csv-input')).toBeInTheDocument(),
+      { timeout: 1000 }
+    )
   })
 
-  it("should initialize new FileReader on selecting a file", async () => {
+  it('should initialize new FileReader on selecting a file', async () => {
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
@@ -26,11 +29,26 @@ describe('UsersImport component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const rows = ['NAME,ADDRESS,ZIP', 'james,1800 sunny ln,40000', 'ronda,1200 peaches ln,50000']
-    const file = new Blob([rows.join('\n')], {type : 'csv'})
+    const rows = [
+      'NAME,ADDRESS,ZIP',
+      'james,1800 sunny ln,40000',
+      'ronda,1200 peaches ln,50000'
+    ]
+    const file = new Blob([rows.join('\n')], { type: 'csv' })
     const inputEl = container.queryByTestId('csv-input')
-    Object.defineProperty(inputEl, 'files', { value: [file] });
+    Object.defineProperty(inputEl, 'files', { value: [file] })
     fireEvent.drop(inputEl)
     await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 1000 })
+  })
+
+  it('should render upload description', () => {
+    const container = render(
+      <MockedProvider mocks={[]}>
+        <BrowserRouter>
+          <UsersImport />
+        </BrowserRouter>
+      </MockedProvider>
+    )
+    expect(container.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument()
   })
 })

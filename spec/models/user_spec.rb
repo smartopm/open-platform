@@ -12,6 +12,13 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:land_parcels) }
   end
 
+  describe 'validations' do
+    it {
+      should define_enum_for(:sub_status)
+        .with_values(User.sub_statuses)
+    }
+  end
+
   describe 'Creating a user from a oauth authentication callback' do
     let!(:community) { create(:community, name: 'Nkwashi') }
     auth_obj = OpenStruct.new(

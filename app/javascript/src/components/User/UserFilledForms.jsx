@@ -5,16 +5,21 @@ import ListItem from '@material-ui/core/ListItem'
 import Badge from '@material-ui/core/Badge'
 import ListItemText from '@material-ui/core/ListItemText'
 import { css, StyleSheet } from 'aphrodite'
+import { useHistory } from 'react-router'
 import DateContainer from '../DateContainer'
 import colors from '../../themes/nkwashi/colors'
 import CenteredContent from '../CenteredContent'
 
 const { gray } = colors
-export default function UserFilledForms({ userFormsFilled }) {
+export default function UserFilledForms({ userFormsFilled, userId }) {
+  const history = useHistory()
   if(!userFormsFilled || !userFormsFilled.length){
     return <CenteredContent>You have no forms </CenteredContent>
   }
 
+  function handleViewForm(formId, formName) {
+    history.push(`/user_form/${formId}/${userId}/${formName}`)
+  }
   return (
     <div className="container">
       {userFormsFilled.length && userFormsFilled.map(userForm => (
@@ -22,6 +27,8 @@ export default function UserFilledForms({ userFormsFilled }) {
           alignItems="flex-start"
           key={userForm.id}
           button
+          data-testid="form_item"
+          onClick={() => handleViewForm(userForm.form.id, userForm.form.name)}
         >
           <ListItemText
             primary={(
@@ -62,7 +69,8 @@ UserFilledForms.propTypes = {
         name: PropTypes.string
       })
     })
-  )
+  ),
+  userId: PropTypes.string.isRequired
 }
 
 const styles = StyleSheet.create({

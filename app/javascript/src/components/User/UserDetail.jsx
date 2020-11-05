@@ -11,10 +11,12 @@ export default function UserDetail({ data, userType }) {
   return (
     <div className="col-4">
       <h5>{data.user.name}</h5>
-      <div className="expires">
-        User Type:{' '}
-        {titleize(data.user.userType)}
-      </div>
+      <div className="expires">User Type: {titleize(data.user.userType)}</div>
+      {data.user.subStatus && (
+        <div data-testid="user-sub-status">
+          Sub Status: {titleize(data.user.subStatus)}
+        </div>
+      )}
       <div className="expires">
         Expiration:{' '}
         {dateutil.isExpired(data.user.expiresAt) ? (

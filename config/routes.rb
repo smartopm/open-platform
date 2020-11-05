@@ -1,14 +1,15 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
-  
+
   mount Sidekiq::Web => '/sidekiq'
-  
+
   # GraphQL controller
   if Rails.env.development?
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
   post "/graphql", to: "graphql#execute"
   get "/csv_export/event_logs", to: "csv_export#event_logs"
+  get "/csv_import_sample/download", to: "csv_export#download_sample_csv"
   post "/sendgrid/webhook/:token", to: "sendgrid#webhook"
 
   # Oauth routes

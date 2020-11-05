@@ -13,6 +13,7 @@ export const CreateUserMutation = gql`
     $requestReason: String
     $avatarBlobId: String
     $documentBlobId: String
+    $subStatus: String
   ) {
     result: userCreate(
       name: $name
@@ -24,6 +25,7 @@ export const CreateUserMutation = gql`
       state: $state
       avatarBlobId: $avatarBlobId
       documentBlobId: $documentBlobId
+      subStatus: $subStatus
     ) {
       user {
         ...UserFields
@@ -46,6 +48,7 @@ export const UpdateUserMutation = gql`
     $avatarBlobId: String
     $documentBlobId: String
     $expiresAt: String
+    $subStatus: String
   ) {
     result: userUpdate(
       id: $id
@@ -59,6 +62,7 @@ export const UpdateUserMutation = gql`
       avatarBlobId: $avatarBlobId
       documentBlobId: $documentBlobId
       expiresAt: $expiresAt
+      subStatus: $subStatus
     ) {
       user {
         ...UserFields
@@ -347,6 +351,14 @@ export const EditPlotNumber = gql`
     landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {
       landParcelUpdate
     }
+  }
+`
+
+export const LabelMerge = gql`
+  mutation LabelMerge($labelId: ID!, $mergeLabelId: ID!) {
+    labelMerge(labelId: $labelId, mergeLabelId: $mergeLabelId) {
+      success
+   }
   }
 `
 
