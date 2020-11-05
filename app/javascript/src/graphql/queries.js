@@ -665,7 +665,19 @@ query userFormProperties($formId: ID!, $userId: ID!) {
     fileType
   }
 }
+`
 
+export const FormUserQuery = gql`
+query formUser($formId: ID!, $userId: ID!) {
+  formUser(formId: $formId, userId: $userId){
+    id
+    status
+     statusUpdatedBy {
+      id
+      name
+    }
+  }
+}
 `
 
 export const UserNotesQuery = gql`
