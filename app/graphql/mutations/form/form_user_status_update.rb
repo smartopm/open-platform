@@ -11,7 +11,7 @@ module Mutations
       field :form_user, Types::FormUsersType, null: true
 
       def resolve(vals)
-        form_user = ::FormUser.find_by(form_id: vals[:form_id], user_id: vals[:user_id])
+        form_user = context[:current_user].user_form(vals[:form_id], vals[:user_id])
         raise GraphQL::ExecutionError, 'Record not found' if form_user.nil?
 
         return { form_user: form_user } if form_user.update(status: vals[:status])

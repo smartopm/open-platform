@@ -10,8 +10,8 @@ export default function TaskUpdateItem({ user, content, icon }) {
     <>
       <div style={{display: 'flex'}}>
         {icon}
-        <Typography variant="body2" style={{marginTop: '10px'}}>
-          <b style={{marginLeft: '12px'}}>
+        <Typography variant="body2" style={{marginTop: '10px', marginLeft: '12px'}}>
+          <b>
             {user}
           </b>
           {' '}

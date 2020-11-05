@@ -191,6 +191,7 @@ export const UsersDetails = gql`
       email
       avatarUrl
       imageUrl
+      subStatus
       notes {
         id
       }
@@ -664,5 +665,28 @@ query userFormProperties($formId: ID!, $userId: ID!) {
     fileType
   }
 }
+`
 
+export const FormUserQuery = gql`
+query formUser($formId: ID!, $userId: ID!) {
+  formUser(formId: $formId, userId: $userId){
+    id
+    status
+     statusUpdatedBy {
+      id
+      name
+    }
+  }
+}
+`
+
+export const UserNotesQuery = gql`
+query userNote($userId: ID!) {
+  userNotes(id: $userId){
+    body
+    completed
+    createdAt
+    id
+  }
+}
 `

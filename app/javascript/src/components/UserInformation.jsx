@@ -16,16 +16,14 @@ import {
 } from '@material-ui/core'
 import { ponisoNumber } from '../utils/constants.js'
 import { css, StyleSheet } from 'aphrodite'
-import { useQuery } from 'react-apollo'
-import { CreateNote, UpdateNote } from '../graphql/mutations'
+import { CreateNote } from '../graphql/mutations'
 import { useMutation } from 'react-apollo'
-import Loading from './Loading.jsx'
 import UserCommunication from './UserCommunication'
 import ReactGA from 'react-ga';
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
 import UserActionMenu from './User/UserActionMenu'
-import { UserNote } from './User/UserNote'
+import UserNotes from './User/UserNote'
 import UserInfo from './User/UserInfo'
 import UserDetail from './User/UserDetail'
 import UserStyledTabs from './User/UserTabs'
@@ -47,11 +45,9 @@ export default function UserInformation({
   const CSMNumber = '260974624243'
   const [tabValue, setValue] = useState('Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
-  const [isLoading, setLoading] = useState(false)
   const [isDialogOpen, setDialogOpen] = useState(false)
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const [noteUpdate] = useMutation(UpdateNote)
   const { handleSubmit, register } = useForm()
   let location = useLocation()
 
@@ -90,22 +86,6 @@ export default function UserInformation({
 
   function handleClose() {
     setAnchorEl(null)
-  }
-
-  function handleFlagNote(id) {
-    setLoading(true)
-    noteUpdate({ variables: { id, flagged: true } }).then(() => {
-      setLoading(false)
-      refetch()
-    })
-  }
-
-  function handleOnComplete(id, isCompleted) {
-    setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
-      setLoading(false)
-      refetch()
-    })
   }
 
   function handleMergeDialog() {
@@ -235,19 +215,7 @@ export default function UserInformation({
                 </form>
                 <br />
                 <br />
-                {isLoading ? (
-                  <Loading />
-                ) : data.user.notes ? (
-                    data.user.notes.map(note => (
-                    <UserNote
-                        key={note.id}
-                        note={note}
-                        handleFlagNote={handleFlagNote}
-                        handleOnComplete={handleOnComplete} />
-                  ))
-                ) : (
-                  'No Notes Yet'
-                )}
+                <UserNotes tabValue={tabValue} userId={data.user.id} />
               </div>
             </TabPanel>
 
@@ -263,10 +231,10 @@ export default function UserInformation({
           !['security_guard', 'custodian'].includes(userType) && (
             <>
             <TabPanel value={tabValue} index={'Plots'}>
-              <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} />
+              <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} userType={userType}/>
             </TabPanel>
             <TabPanel value={tabValue} index={'Forms'}>
-              <UserFilledForms userFormsFilled={data.user.formUsers} />
+              <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
             </TabPanel>
             </>
           )

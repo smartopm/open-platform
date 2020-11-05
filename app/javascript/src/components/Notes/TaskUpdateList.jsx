@@ -9,6 +9,8 @@ import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
+import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
+import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import TaskUpdateItem from './TaskUpdateItem'
 import { dateToString } from "../DateContainer"
 
@@ -66,11 +68,25 @@ export default function TaskUpdateList({ data }) {
                 content={`change category from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
               />
             )}
-            {history.action === 'update' && history.attrChanged === 'flaged' && (
+            {history.action === 'update' && history.attrChanged === 'flagged' && (
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<FlagOutlinedIcon className={classes.icon} />} 
                 content={`change flagged status from ${history.initialValue === 't' ? 'true' : 'false' || 'empty value'} to ${history.updatedValue === 't' ? 'true' : 'false' || 'empty value'}`}
+              />
+            )}
+            {history.action === 'update' && history.attrChanged === 'user_id' && (
+              <TaskUpdateItem
+                user={history.user.name} 
+                icon={<PersonOutlinedIcon className={classes.icon} />} 
+                content={`changed the author of the task from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
+              />
+            )}
+            {history.action === 'update' && history.attrChanged === 'assign' && (
+              <TaskUpdateItem
+                user={history.user.name} 
+                icon={<PeopleAltOutlinedIcon className={classes.icon} />} 
+                content={`changed assignees from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
               />
             )}
           </div>

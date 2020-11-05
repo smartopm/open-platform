@@ -11,9 +11,9 @@ import {
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { makeStyles } from '@material-ui/core/styles'
-import { useMutation, useLazyQuery } from 'react-apollo'
+import { useMutation, useLazyQuery, useQuery } from 'react-apollo'
 import { useParams, useHistory } from 'react-router'
-import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../graphql/queries'
+import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
 import ErrorPage from '../Error'
@@ -64,6 +64,9 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false',
     totalFormsOpen: 'category: form AND completed: false'
   }
+
+  const taskCountData = useQuery(TaskStatsQuery)
+
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: 'user_type = admin' },
     errorPolicy: 'all'
@@ -127,6 +130,7 @@ export default function TodoList({
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => {
         refetch()
+        taskCountData.refetch()
         setLoadingAssignee(false)
       })
       .catch((err) => setErrorMessage(err.message))
@@ -138,6 +142,7 @@ export default function TodoList({
     // allow the mutation above to finish running before refetching
     setTimeout(() => {
       refetch()
+      taskCountData.refetch()
       setMutationLoading(false)
     }, 200)
   }
@@ -273,7 +278,7 @@ export default function TodoList({
           )}
           <br />
           <Grid container spacing={3}>
-            <TaskDashboard filterTasks={handleTaskFilter} currentTile={currentTile} />
+            <TaskDashboard taskData={taskCountData} filterTasks={handleTaskFilter} currentTile={currentTile} />
           </Grid>
           <br />
           {data?.flaggedNotes.length ? data?.flaggedNotes.map((note) => (
