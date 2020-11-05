@@ -1,9 +1,6 @@
-/* eslint-disable */
 import React from 'react'
-import TaskStatCard from './TaskStatCard'
-import { useQuery } from 'react-apollo'
-import { TaskStatsQuery } from '../../graphql/queries'
 import { Grid, Typography } from '@material-ui/core'
+import TaskStatCard from './TaskStatCard'
 import CenteredContent from '../CenteredContent'
 
 const tiles = {
@@ -18,13 +15,8 @@ const tiles = {
   completedTasks: 'Tasks Completed',
 }
 
-// data.taskStasts
-export default function TaskDashboard({ filterTasks, currentTile }) {
-  const { loading, data, error } = useQuery(TaskStatsQuery, {
-    fetchPolicy: 'network-only'
-  })
-
-  if (loading || error) {
+export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
+  if (taskData.loading || taskData.error) {
     return (
       <CenteredContent>
         <Typography
@@ -44,7 +36,7 @@ export default function TaskDashboard({ filterTasks, currentTile }) {
       <TaskStatCard
         filterTasks={evt => filterTasks(evt, key)}
         title={val}
-        count={data?.taskStats[key]}
+        count={taskData.data?.taskStats[key]}
         isCurrent={key === currentTile}
       />
     </Grid>
