@@ -62,7 +62,7 @@ export default function TaskComment({ authState }) {
         |
         {!updateOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px", cursor: 'pointer' }} onClick={handleUpdateOpen} gutterBottom>
-            {historyData?.taskHistories.filter(task => task.attrChanged && task.action).length}
+            {historyData?.taskHistories.filter(task => task.noteEntityType === 'NoteComment' || task.attrChanged || task.action).length}
             {' '}
             Updates
           </Typography>
