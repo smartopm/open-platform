@@ -91,8 +91,22 @@ class User < ApplicationRecord
   VALID_STATES = %w[valid pending banned expired].freeze
   DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
+  enum sub_status: {
+    applied: 0,
+    architecture_reviewed: 1,
+    approved: 2,
+    contracted: 3,
+    built: 4,
+    in_construction: 5,
+    interested: 6,
+    moved_in: 7,
+    paying: 8,
+    ready_for_construction: 9,
+  }
+
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
+  validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
   validates :name, presence: true
   validate :phone_number_valid?
   after_create :add_notification_preference
@@ -235,7 +249,7 @@ class User < ApplicationRecord
       description: vals[:description],
       flagged: vals[:flagged],
       author_id: self[:id],
-      completed: vals[:completed],
+      completed: vals[:completed] || false,
       due_date: vals[:due_date],
       form_user_id: vals[:form_user_id],
     )
@@ -272,6 +286,14 @@ class User < ApplicationRecord
       community.discussions.find_by(post_id: id)
     else
       community.discussions.find(id)
+    end
+  end
+
+  def user_form(form_id, user_id)
+    if admin?
+      community.forms.find(form_id).form_users.find_by(user_id: user_id)
+    else
+      form_users.find_by(form_id: form_id)
     end
   end
 

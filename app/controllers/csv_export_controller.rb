@@ -22,6 +22,10 @@ class CsvExportController < ApplicationController
     send_data csv_string, filename: "event_log-#{Time.zone.today}.csv"
   end
 
+  def download_sample_csv
+    send_file 'public/bulk_import_sample.csv', filename: 'bulk_import_sample.csv'
+  end
+
   private
 
   def get_event_logs(_params)

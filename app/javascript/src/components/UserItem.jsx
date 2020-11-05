@@ -20,7 +20,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Link, useHistory } from 'react-router-dom'
 import Avatar from './Avatar'
 import UserActionMenu from './User/UserActionMenu'
-
+import { titleize } from '../utils/helpers'
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
 
@@ -162,6 +162,13 @@ export default function UserItem({
                 <Typography variant="body2" color="textSecondary">
                   {user.email}
                 </Typography>
+                {
+                  user.subStatus && (
+                  <Typography variant="body2" color="textSecondary" data-testid="user-substatus">
+                    {titleize(user.subStatus)}
+                  </Typography>
+                )
+}
                 <Typography component="span" variant="body2">
                   {user.phoneNumber}
                 </Typography>
@@ -231,8 +238,9 @@ UserItem.propTypes = {
     phoneNumber: PropTypes.string,
     roleName: PropTypes.string,
     imageUrl: PropTypes.string,
+    subStatus: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),
-    labels: PropTypes.arrayOf(PropTypes.object)
+    labels: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired
