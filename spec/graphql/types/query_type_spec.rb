@@ -338,14 +338,23 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'allNotes').length).to eql 3
     end
 
-    it 'should query all to-dos' do
+    it 'should query notes for the user' do
       result = DoubleGdpSchema.execute(user_notes_query, context: {
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'userNotes')).not_to be_nil
-      expect(result.dig('data', 'userNotes').length).to eql 3
+      expect(result.dig('data', 'userNotes').length).to eql 1
+    end
+
+    it 'should return unauthorized when user not admin' do
+      result = DoubleGdpSchema.execute(user_notes_query, context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'userNotes')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
 
     it 'should query tasks stats' do

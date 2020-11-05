@@ -1,54 +1,90 @@
-/* eslint-disable */
-import React, { Fragment } from 'react'
+/* eslint-disable no-use-before-define */
+import React, { Fragment, useEffect, useState } from 'react'
+import { useLazyQuery, useMutation } from 'react-apollo'
 import AddBoxIcon from '@material-ui/icons/AddBox'
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@material-ui/icons/CheckBox'
 import Tooltip from '@material-ui/core/Tooltip'
 import { css, StyleSheet } from 'aphrodite'
+import PropTypes from 'prop-types'
+import { IconButton } from '@material-ui/core'
 import dateutil from '../../utils/dateutil'
+import { UpdateNote } from '../../graphql/mutations'
+import { UserNotesQuery } from '../../graphql/queries'
+import { Spinner } from '../Loading'
 
-export function UserNote({ note, handleOnComplete, handleFlagNote }) {
+export function UserNote({ note, handleFlagNote }) {
   return (
     <Fragment key={note.id}>
       <div className={css(styles.commentBox)}>
         <p className="comment">{note.body}</p>
-        <i>created at: {dateutil.formatDate(note.createdAt)}</i>
+        <i>
+          created at:
+          {dateutil.formatDate(note.createdAt)}
+        </i>
       </div>
 
-      {note.completed ? (
-        <span
-          className={css(styles.actionIcon)}
-          onClick={() => handleOnComplete(note.id, note.completed)}
-        >
-          <Tooltip title="Mark this note as incomplete">
-            <CheckBoxIcon />
-          </Tooltip>
-        </span>
-      ) : !note.flagged ? (
-        <span />
-      ) : (
-        <span
-          className={css(styles.actionIcon)}
-          onClick={() => handleOnComplete(note.id, note.completed)}
-        >
-          <Tooltip title="Mark this note complete">
-            <CheckBoxOutlineBlankIcon />
-          </Tooltip>
-        </span>
-      )}
-      {!note.flagged && (
-        <span
-          className={css(styles.actionIcon)}
+      <Tooltip title="Flag as a todo ">
+        <IconButton 
+          aria-label="Flag as a todo" 
           onClick={() => handleFlagNote(note.id)}
+          className={css(styles.actionIcon)}
         >
-          <Tooltip title="Flag this note as a todo ">
-            <AddBoxIcon />
-          </Tooltip>
-        </span>
-      )}
+          <AddBoxIcon />
+        </IconButton>
+      </Tooltip>
       <br />
     </Fragment>
   )
+}
+
+export default function UserNotes({ userId, tabValue }){
+  const [isLoading, setLoading] = useState(false)
+  const [noteUpdate] = useMutation(UpdateNote)
+  const [loadNotes, { loading, error, refetch, data }] = useLazyQuery(UserNotesQuery, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network'
+  })
+
+  useEffect(() => {
+    if (tabValue === 'Notes') {
+      loadNotes()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabValue])
+
+  function handleFlagNote(id) {
+    setLoading(true)
+    noteUpdate({ variables: { id, flagged: true } }).then(() => {
+      setLoading(false)
+      refetch()
+    })
+  }
+
+  if (loading || isLoading || !data) return <Spinner />
+  if (error) return error.message
+
+  return data?.userNotes.map(note => (
+    <UserNote
+      key={note.id}
+      note={note}
+      handleFlagNote={handleFlagNote}
+    />
+  ))
+}
+
+
+UserNote.propTypes = {
+  note: PropTypes.shape({
+    id: PropTypes.string,
+    completed: PropTypes.bool,
+    createdAt: PropTypes.string,
+    body: PropTypes.string,
+    flagged: PropTypes.bool
+  }).isRequired,
+  handleFlagNote: PropTypes.func.isRequired,
+}
+
+UserNotes.propTypes = {
+  userId: PropTypes.string.isRequired
 }
 
 const styles = StyleSheet.create({

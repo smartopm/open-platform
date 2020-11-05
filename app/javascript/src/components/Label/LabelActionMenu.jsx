@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Menu, MenuItem } from '@material-ui/core';
 import EditModal from './EditModal'
 import DeleteModal from './LabelDelete'
+import MergeLabel from './MergeLabel'
 
 export default function LabelActionMenu({
   data,
@@ -13,6 +14,7 @@ export default function LabelActionMenu({
 }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false)
+  const [openMerge, setOpenMerge] = useState(false)
 
   return (
     <Menu
@@ -37,6 +39,13 @@ export default function LabelActionMenu({
             Edit
           </MenuItem>
           <MenuItem
+            id="merge_button"
+            key="merge_user"
+            onClick={() => setOpenMerge(true)}
+          >
+            Merge
+          </MenuItem>
+          <MenuItem
             id="delete_button"
             key="delete_user"
             style={{ color: 'red' }}
@@ -46,6 +55,7 @@ export default function LabelActionMenu({
           </MenuItem>
           <EditModal open={openEdit} handleClose={() => setOpenEdit(false)} refetch={refetch} data={data} />
           <DeleteModal open={openDelete} handleClose={() => setOpenDelete(false)} refetch={refetch} data={data} />
+          <MergeLabel open={openMerge} handleClose={() => setOpenMerge(false)} refetch={refetch} mergeData={data} /> 
         </>
       </div>
     </Menu>
