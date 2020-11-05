@@ -143,7 +143,7 @@ export default function UserItem({
                   key={user.id}
                 >
                   <Typography component="span" variant="subtitle1">
-                    <strong>
+                    <strong> 
                       {' '}
                       {user.name}
                       {' '}
@@ -159,19 +159,15 @@ export default function UserItem({
                   marginRight: 30
                 }}
               >
-                <Typography variant="body2" color="textSecondary">
-                  {user.email}
-                </Typography>
-                {
-                  user.subStatus && (
-                  <Typography variant="body2" color="textSecondary" data-testid="user-substatus">
-                    {titleize(user.subStatus)}
-                  </Typography>
-                )
-}
+                <Typography variant="body2">{user.email}</Typography>
                 <Typography component="span" variant="body2">
                   {user.phoneNumber}
                 </Typography>
+                {user.subStatus && (
+                  <Typography variant="body2" data-testid="user-substatus">
+                    {titleize(user.subStatus)}
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Box>
@@ -240,7 +236,7 @@ UserItem.propTypes = {
     imageUrl: PropTypes.string,
     subStatus: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),
-    labels: PropTypes.arrayOf(PropTypes.object),
+    labels: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired
