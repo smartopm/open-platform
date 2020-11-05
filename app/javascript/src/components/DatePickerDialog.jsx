@@ -30,7 +30,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
     );
 }
 
-export function DateAndTimePickers({ selectedDateTime, handleDateChange, label }) {
+export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, pastDate }) {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDateTimePicker
@@ -41,6 +41,8 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label }
         placeholder="YYYY-MM-DD hh:mm a"
         onChange={handleDateChange}
         clearable
+        disablePast={pastDate || false}
+        minutesStep={pastDate ? 60 : 1}
       />
     </MuiPickersUtilsProvider>
   );

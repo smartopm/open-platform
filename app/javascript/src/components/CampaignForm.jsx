@@ -260,6 +260,7 @@ export default function CampaignForm({
             required={campaignType === 'scheduled'}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
+            pastDate
           />
         </div>
         <div className="d-flex row justify-content-center">
