@@ -186,3 +186,9 @@ export const fieldType = {
   display_text: 4,
   display_image: 5
 }
+
+export const formStatus = {
+  rejected: 'Rejected',
+  approved: 'Approved',
+  pending: 'Pending'
+}

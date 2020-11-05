@@ -17,6 +17,8 @@ import DialogueBox from '../Business/DeleteDialogue'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
 import { useFileUpload } from '../../graphql/useFileUpload'
+import { dateFormatter } from '../DateContainer'
+import { formStatus as updatedFormStatus} from '../../utils/constants'
 // date
 // text input (TextField or TextArea)
 // upload
@@ -228,13 +230,12 @@ export default function FormUpdate({ formId, userId, authState }) {
     <>
       <Container>
         <form onSubmit={event => handleActionClick(event, 'update')}>
-          {/* check if it is admin and add their details here */}
           {
             authState.user.userType === 'admin' && userId && (
               <>
                 <TextField
                   label="Form Status"
-                  value={formUserData.data?.formUser.status}
+                  value={`${updatedFormStatus[formUserData.data?.formUser.status]} ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
                   disabled
                   margin="dense"
                   InputLabelProps={{

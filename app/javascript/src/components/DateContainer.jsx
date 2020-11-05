@@ -42,6 +42,20 @@ export default function DateContainer({ date }) {
   )
 }
 
+/**
+ * 
+ * @param {Date} date 
+ * @description works similary to DateContainer but returns a string instead
+ * @returns {String}
+ */
+export function dateFormatter(date){
+  return isToday(new Date(date))
+  ? `Today at ${dateTimeToString(new Date(date))}`
+  : isYesterday(new Date(date))
+    ? `Yesterday at ${dateTimeToString(new Date(date))}`
+    : dateToString(date)
+}
+
 DateContainer.propType = {
   date: PropTypes.instanceOf(Date).isRequired
 }

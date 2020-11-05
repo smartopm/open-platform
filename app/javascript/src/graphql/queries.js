@@ -676,6 +676,7 @@ query formUser($formId: ID!, $userId: ID!) {
       id
       name
     }
+    updatedAt
   }
 }
 `
