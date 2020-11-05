@@ -93,7 +93,7 @@ export default function NewsFeed() {
   }
   if (!response || !response.posts) {
     return (
-      <div style={{margin: '93px 0'}}>
+      <div style={{margin: '95px 0'}}>
         <Spinner />
       </div>
       )
