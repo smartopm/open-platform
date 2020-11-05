@@ -1,8 +1,4 @@
 .mui {
-  .group--actions > :first-child {
-    color: rgb(105, 171, 164);
-  }
-
   .group--actions > :last-child {
     display: none
   }
@@ -13,12 +9,5 @@
     border-top: 1px solid #ECECEC;
     border-right: 1px solid #ECECEC;
     border-bottom: 1px solid #ECECEC;
-  }
-
-  .group--conjunctions > :first-child {
-    button[class*="MuiButton-containedPrimary-"] {
-      color: #fff;
-      background: rgb(105, 171, 164);
-    }
   }
 }
