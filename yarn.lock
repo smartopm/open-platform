@@ -960,6 +960,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.12.1":
+  version "7.12.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
+  integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.10.4", "@babel/template@^7.4.0":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.10.4.tgz#3251996c4200ebc71d1a8fc405fba940f36ba278"
@@ -1015,6 +1022,13 @@
   version "1.3.13"
   resolved "https://registry.yarnpkg.com/@date-io/date-fns/-/date-fns-1.3.13.tgz#7798844041640ab393f7e21a7769a65d672f4735"
   integrity sha512-yXxGzcRUPcogiMj58wVgFjc9qUYrCnnU9eLcyNbsQCmae4jPuZCDoIBR21j8ZURsM7GRtU62VOw5yNd4dDHunA==
+  dependencies:
+    "@date-io/core" "^1.3.13"
+
+"@date-io/moment@^1.3.13":
+  version "1.3.13"
+  resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-1.3.13.tgz#56c2772bc4f6675fc6970257e6033e7a7c2960f0"
+  integrity sha512-3kJYusJtQuOIxq6byZlzAHoW/18iExJer9qfRF5DyyzdAk074seTuJfdofjz4RFfTd/Idk8WylOQpWtERqvFuQ==
   dependencies:
     "@date-io/core" "^1.3.13"
 
@@ -2933,6 +2947,11 @@ clone-deep@^4.0.1:
     is-plain-object "^2.0.4"
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
+
+clone@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
+  integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
 
 clsx@^1.0.2, clsx@^1.0.4:
   version "1.1.1"
@@ -5468,6 +5487,11 @@ ignore@^4.0.6:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
+immutable@^3.7.6:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+  integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -6969,6 +6993,11 @@ lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
+lodash@^4.17.20:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+
 log-symbols@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-4.0.0.tgz#69b3cc46d20f448eccdb75ea1fa733d9e821c920"
@@ -7059,6 +7088,11 @@ map-visit@^1.0.0:
   integrity sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
   dependencies:
     object-visit "^1.0.0"
+
+material-ui-confirm@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/material-ui-confirm/-/material-ui-confirm-2.1.1.tgz#dbc3ff66502a183966a3f0a2ebb2ff8ba22a148d"
+  integrity sha512-d671LgozdJP54buZTv+Eemo0ySYTCXF3QqfYKO7axoG/8g659G5+aD7PovYupsfSSOXOzyzpYRhjbIhE4yrPHA==
 
 md5.js@^1.3.4:
   version "1.3.5"
@@ -7316,6 +7350,11 @@ mixin-deep@^1.2.0:
   integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   dependencies:
     minimist "^1.2.5"
+
+moment@^2.28.0:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
 moo@^0.5.0:
   version "0.5.1"
@@ -9012,7 +9051,7 @@ prop-types-exact@^1.2.0:
     object.assign "^4.1.0"
     reflect.ownkeys "^0.2.0"
 
-prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9210,6 +9249,22 @@ react-apollo@^3.1.1:
     "@apollo/react-hooks" "^3.1.5"
     "@apollo/react-ssr" "^3.1.5"
 
+react-awesome-query-builder@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-awesome-query-builder/-/react-awesome-query-builder-3.0.0.tgz#eeb124b66b13f0377c68471f8e293717c106bc49"
+  integrity sha512-EWnbqbLZUqpR60fypLQBuko++2JOQkDzqtszZlVWC6IXIyrYM2GOgP+YdQod01SKIV1QWNCyUWjQlTOCVt96FA==
+  dependencies:
+    "@date-io/moment" "^1.3.13"
+    classnames "^2.2.5"
+    clone "^2.1.1"
+    immutable "^3.7.6"
+    lodash "^4.17.20"
+    moment "^2.28.0"
+    prop-types "^15.6.0"
+    react-redux "^7.2.1"
+    redux "^4.0.5"
+    sqlstring "^2.3.1"
+
 react-dom@^16.9.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
@@ -9296,6 +9351,17 @@ react-qr-svg@^2.2.1:
   dependencies:
     prop-types "^15.5.8"
     qr.js "0.0.0"
+
+react-redux@^7.2.1:
+  version "7.2.2"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.2.tgz#03862e803a30b6b9ef8582dadcc810947f74b736"
+  integrity sha512-8+CQ1EvIVFkYL/vu6Olo7JFLWop1qRUeb46sGtIMDCSpgwPQq8fPLpirIB0iTqFe9XYEFPHssdX8/UwN6pAkEA==
+  dependencies:
+    "@babel/runtime" "^7.12.1"
+    hoist-non-react-statics "^3.3.2"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^16.13.1"
 
 react-router-dom@^5.1.2:
   version "5.2.0"
@@ -9494,6 +9560,14 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
+
+redux@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
+  integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==
+  dependencies:
+    loose-envify "^1.4.0"
+    symbol-observable "^1.2.0"
 
 reflect.ownkeys@^0.2.0:
   version "0.2.0"
@@ -10334,6 +10408,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
+sqlstring@^2.3.1:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/sqlstring/-/sqlstring-2.3.2.tgz#cdae7169389a1375b18e885f2e60b3e460809514"
+  integrity sha512-vF4ZbYdKS8OnoJAWBmMxCQDkiEBkGQYU7UZPtL8flbDRSNkhaXvRJ279ZtI6M+zDaQovVU4tuRgzK5fVhvFAhg==
+
 sshpk@^1.7.0:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.16.1.tgz#fb661c0bef29b39db40769ee39fa70093d6f6877"
@@ -10685,7 +10764,7 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-symbol-observable@^1.0.2:
+symbol-observable@^1.0.2, symbol-observable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
