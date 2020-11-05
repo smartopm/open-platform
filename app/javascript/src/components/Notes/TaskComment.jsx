@@ -46,6 +46,7 @@ export default function TaskComment({ authState }) {
         </div>
       )}
       <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
+        {/* Todo: refactor code below */}
         {!commentOpen ? (
           <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={handleCommentOpen} gutterBottom>
             {commentData?.taskComments.length}

@@ -49,6 +49,19 @@ export const userState = {
   expired: 'Expired'
 }
 
+export const userSubStatus = {
+  applied: 'Applied',
+  architecture_reviewed: 'Architecture Reviewed',
+  approved: 'Approved',
+  contracted: 'Contracted',
+  built: 'Built',
+  in_construction: 'In Construction',
+  interested: 'Interested',
+  moved_in: 'Moved-In',
+  paying: 'Paying',
+  ready_for_construction: 'Ready for Construction',
+}
+
 export const entryReason = [
   'Client',
   'Prospective Client',
@@ -172,4 +185,10 @@ export const fieldType = {
   signature: 3,
   display_text: 4,
   display_image: 5
+}
+
+export const formStatus = {
+  rejected: 'Rejected',
+  approved: 'Approved',
+  pending: 'Pending'
 }

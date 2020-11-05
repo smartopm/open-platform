@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React from 'react'
 import { mount } from 'enzyme'
-import DateContainer, { dateTimeToString, dateToString } from '../components/DateContainer'
-import DateUtils, { lastDayOfTheMonth, getMonthName } from '../utils/dateutil'
+import DateContainer, { dateFormatter, dateTimeToString, dateToString } from '../components/DateContainer'
+import DateUtils, { lastDayOfTheMonth, getMonthName, getWeekDay, differenceInHours } from '../utils/dateutil'
 
 describe('date container component', () => {
   it('renders a span element and has correct time', () => {
@@ -12,6 +11,7 @@ describe('date container component', () => {
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
     expect(component.find('span').text()).toContain(`Today at ${time}`)
+    expect(dateFormatter(date)).toContain(`Today at ${time}`)
   })
   it('renders a span just yesterday time if date was from yesterday', () => {
     // get yesterday's date
@@ -19,6 +19,7 @@ describe('date container component', () => {
     const previousDate = date.setDate(date.getDate() - 1)
     const component = mount(<DateContainer date={previousDate} />)
     expect(component.find('span').text()).toContain('Yesterday')
+    expect(dateFormatter(previousDate)).toContain('Yesterday')
   })
 
  it('renders date for older dates', () => {
@@ -36,13 +37,13 @@ describe('date container component', () => {
 
   it('should return the correct week day', () => {
       const date = "2020-06-11T15:26:05.596Z"
-      expect(DateUtils.getWeekDay(new Date(date))).toContain('Thursday') // 26 as last day of the month
+      expect(getWeekDay(new Date(date))).toContain('Thursday') // 26 as last day of the month
   })
 
   it('should return the correct time difference', () => {
     const date = new Date()
     const date2 = new Date().setDate(new Date().getDate() - 2)
-    expect(DateUtils.differenceInHours(new Date(date2), date)).toContain('48 hrs')
+    expect(differenceInHours(new Date(date2), date)).toContain('48 hrs')
   })
   it('should return the correct month name', () => {
     const date = "2020-06-11T15:26:05.596Z"

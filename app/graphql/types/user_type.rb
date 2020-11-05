@@ -18,6 +18,7 @@ module Types
     field :role_name, String, null: true, visible: { roles: %i[admin security_guard custodian],
                                                      user: :id }
     field :state, String, null: true
+    field :sub_status, String, null: true
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false

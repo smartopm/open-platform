@@ -92,7 +92,11 @@ export default function NewsFeed() {
     )
   }
   if (!response || !response.posts) {
-    return <Spinner />
+    return (
+      <div style={{margin: '95px 0'}}>
+        <Spinner />
+      </div>
+      )
   }
 
   return <PostItemGrid data={postsToDisplay(response.posts)} />

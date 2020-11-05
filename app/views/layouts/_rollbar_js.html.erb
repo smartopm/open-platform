@@ -5,7 +5,14 @@
         captureUnhandledRejections: true,
         payload: {
           environment: "production",
-          version: "<%= ENV['HEROKU_RELEASE_VERSION'] || '' %>"
+          version: "<%= ENV['HEROKU_RELEASE_VERSION'] || '' %>",
+          client: {
+            javascript: {
+              source_map_enabled: true,
+              code_version: "<%= ENV['HEROKU_SLUG_COMMIT'] %>",
+              guess_uncaught_frames: true
+            }
+          }
         }
       };
       // Rollbar Snippet

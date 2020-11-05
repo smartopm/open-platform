@@ -3,7 +3,7 @@ import React, { useContext} from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
-import { reasons, userState, userType } from '../utils/constants'
+import { reasons, userState, userSubStatus, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { FormContext } from '../containers/UserEdit'
 import DatePickerDialog from './DatePickerDialog'
@@ -24,7 +24,7 @@ export default function UserForm() {
     handleFileUpload,
     selectedDate,
     imageUrl,
-    status, handleSubmit 
+    status, handleSubmit
   } = useContext(FormContext)
   if(isFromRef){
     values.userType = 'prospective_client'
@@ -150,7 +150,7 @@ export default function UserForm() {
                   ))}
                 </TextField>
               </div>
-      
+
               <div className="form-group">
                 <TextField
                   id="state"
@@ -169,10 +169,28 @@ export default function UserForm() {
                   ))}
                 </TextField>
               </div>
+              <div className="form-group">
+                <TextField
+                  id="sub-status"
+                  select
+                  label="Substatus"
+                  value={values.subStatus || ''}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  name="subStatus"
+                  className={`${css(styles.selectInput)}`}
+                >
+                  {Object.entries(userSubStatus).map(([key, val]) => (
+                    <MenuItem key={key} value={key}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
               <div >
                   <DatePickerDialog selectedDate={selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
               </div>
-              
+
           <div className="form-group">
           <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
             <input
@@ -190,8 +208,8 @@ export default function UserForm() {
                </>
       )}
       {isFromRef&&(
-        
-        <div className='d-flex row justify-content-center' > 
+
+        <div className='d-flex row justify-content-center' >
        <div className="col-8 p-0 justify-content-center" style={{ width: 256, marginRight: "10%" }}>
        <Typography color="textSecondary" variant="body2" style={{ fontSize: 13 }}>
          Nkwashi values its community and believes our community starts with you! Referring your friends and family members

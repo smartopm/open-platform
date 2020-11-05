@@ -2,13 +2,37 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
+import { BrowserRouter } from 'react-router-dom'
 import Loading from '../../components/Loading'
-import { UserFormProperiesQuery } from '../../graphql/queries'
+import { UserFormProperiesQuery, FormUserQuery } from '../../graphql/queries'
 import FormUpdate from '../../components/Forms/FormUpdate'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+
 describe('Form Component', () => {
   it('should render form without error', async () => {
+    const formUserMocks = {
+      request: {
+        query: FormUserQuery,
+        variables: {
+          formId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
+          userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+        }
+      },
+      result: {
+        data: {
+          formUser: {
+            id: "162f7517-7cc8-398542-b2d0-384sds",
+            status: "pending",
+            statusUpdatedBy: {
+              id: "162f7517-7cc8-398542-b2d0-a83569",
+              name: "Olivier JM Maniraho",
+            },
+            updatedAt: "2020-11-05T11:25:07Z"
+          }
+        }
+      }
+    } 
     const mocks = {
       request: {
         query: UserFormProperiesQuery,
@@ -84,7 +108,7 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Attach a file here',
                 fieldType: 'image',
-                id: '3145c47e-1234-47b0-9dac-dc7e362e',
+                id: '3145c47e-1234-47b0-9dac-dc723d2e',
                 adminUse: false,
                 order: '5'
               },
@@ -96,12 +120,19 @@ describe('Form Component', () => {
         }
       }
     }
+    const authState = {
+      user: { userType: 'admin' },
+      token: '894573rhuehf783'
+    }
     const container = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
-        <FormUpdate
-          formId="caea7b44-ee95-42a6-a42f-3e530432172e"
-          userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
-        />
+      <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
+        <BrowserRouter>
+          <FormUpdate
+            formId="caea7b44-ee95-42a6-a42f-3e530432172e"
+            userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+            authState={authState}
+          />
+        </BrowserRouter>
       </MockedProvider>
     )
     const loader = render(<Loading />)
@@ -122,8 +153,7 @@ describe('Form Component', () => {
         expect(container.queryAllByAltText('authenticated link')).toHaveLength(2)
         expect(container.queryByText('Signature')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
-        expect(container.queryByText('File has not been signed')).toBeInTheDocument()
-        expect(container.queryByText('No Attached File')).toBeInTheDocument()
+        expect(container.queryAllByLabelText('sign_title')[0].textContent).toContain('SIGNATURE')
       },
       { timeout: 500 }
     )

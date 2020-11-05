@@ -25,7 +25,10 @@ export default function UserStyledTabs({ tabValue, handleChange, userType }) {
       {['admin'].includes(userType) && (
         <StyledTab label="Communication" value={'Communication'} />
       )}
-      <StyledTab label="Plots" value={'Plots'} />
+      {
+        !['security_guard', 'custodian'].includes(userType) &&
+        <StyledTab label="Plots" value={'Plots'} />
+      }
       {
         !['security_guard', 'custodian'].includes(userType) &&
         <StyledTab label="Forms" value={'Forms'} />

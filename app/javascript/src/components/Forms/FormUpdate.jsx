@@ -1,20 +1,24 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext, useState } from 'react'
-import { Button, Container, Typography } from '@material-ui/core'
-import { useMutation, useQuery } from 'react-apollo'
+import React, { useRef, useState } from 'react'
+import { Button, Container, TextField, Typography } from '@material-ui/core'
+import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import DatePickerDialog from '../DatePickerDialog'
-import { UserFormProperiesQuery } from '../../graphql/queries'
+import { FormUserQuery, UserFormProperiesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../../graphql/mutations'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import TextInput from './TextInput'
-import { sortPropertyOrder } from '../../utils/helpers'
+import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
 import ImageAuth from '../ImageAuth'
 import DialogueBox from '../Business/DeleteDialogue'
+import UploadField from './UploadField'
+import SignaturePad from './SignaturePad'
+import { useFileUpload } from '../../graphql/useFileUpload'
+import { dateFormatter } from '../DateContainer'
+import { formStatus as updatedFormStatus} from '../../utils/constants'
 // date
 // text input (TextField or TextArea)
 // upload
@@ -24,22 +28,45 @@ const initialData = {
   date: { value: null }
 }
 
-export default function FormUpdate({ formId, userId }) {
+export default function FormUpdate({ formId, userId, authState }) {
 
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [openModal, setOpenModal] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [formAction, setFormAction] = useState('')
-  const authState = useContext(AuthStateContext)
   const history = useHistory()
+  const signRef = useRef(null)
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation)
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation)
 
   const { data, error, loading } = useQuery(UserFormProperiesQuery, {
     variables: { formId, userId },
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   })
+
+  const formUserData = useQuery(FormUserQuery, {
+    variables: { formId, userId },
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all'
+  })
+
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+  const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+
+  async function handleSignatureUpload(){
+    setMessage({ ...message, signed: true})
+    const url64 =  signRef.current.toDataURL("image/png")
+    // convert the file
+    const signature = await convertBase64ToFile(url64)
+    await uploadSignature(signature)
+  }
 
   function handleValueChange(event, propId){
     const { name, value } = event.target
@@ -55,38 +82,53 @@ export default function FormUpdate({ formId, userId }) {
     })
   }
 
-  function handleStatusUpdate(status){
+  function handleStatusUpdate(formStatus){
     updateFormUserStatus({
       variables: {
         formId,
         userId,
-        status 
+        status: formStatus 
       }
     })
-    .then(() => setMessage({ ...message, err: false, info: `The Form was successfully ${status}` }))
+    .then(() => setMessage({ ...message, err: false, info: `The Form was successfully ${formStatus}` }))
     .catch(err => setMessage({ ...message, err: true, info: err.message }))
   }
 
   function saveFormData(){
+    const fileUploadType = data.formUserProperties.filter(item => item.formProperty.fieldType === 'image')[0]
+    const fileSignType = data.formUserProperties.filter(item => item.formProperty.fieldType === 'signature')[0]
+    
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value)
     
+    // get signedBlobId as value and attach it to the form_property_id
+    if (message.signed && signatureBlobId) {
+      const newValue = { value: signatureBlobId, form_property_id: fileSignType.formProperty.id, image_blob_id: signatureBlobId }
+      filledInProperties.push(newValue)
+    }
+    // check if we uploaded then attach the blob id to the newValue
+    if (signedBlobId && url) {
+      const newValue = { value: signedBlobId, form_property_id: fileUploadType.formProperty.id, image_blob_id: signedBlobId }
+      filledInProperties.push(newValue)
+    }
+
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
-    // formUserId
-    // fields and their values
-    // create form user ==> form_id, user_id, status
+
     updateFormUser({
       variables: { 
         formId,
-        userId: authState.user.id,
+        userId,
         propValues: cleanFormData,
       }
-    // eslint-disable-next-line no-shadow
     }).then(() => {
-        setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
+      setLoading(false)
+      setMessage({ ...message, err: false, info: 'You have successfully updated the form' })
     })
-   .catch(err => setMessage({ ...message, err: true, info: err.message }))
+    .catch(err => {
+      setLoading(false)
+      setMessage({ ...message, err: true, info: err.message })
+   })
   }
 
   function handleActionClick(_event, action){
@@ -97,6 +139,7 @@ export default function FormUpdate({ formId, userId }) {
 
   function handleAction(){
       // check which button was clicked, pattern matching couldn't work here
+      setLoading(!isLoading)
       switch (formAction) {
         case 'update':
            saveFormData()
@@ -112,11 +155,11 @@ export default function FormUpdate({ formId, userId }) {
       }
       setOpenModal(!openModal)
       // wait a moment and route back where the user came from 
-      setTimeout(() => { history.goBack()}, 2000)
+      setTimeout(() => { 
+        setLoading(false)
+        history.goBack()
+      }, 2000)
   }
-
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error?.message} />
 
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.formProperty.adminUse ? false : !(formPropertiesData.formProperty.adminUse && authState.user.userType === 'admin')
@@ -135,44 +178,84 @@ export default function FormUpdate({ formId, userId }) {
       date: (
         <DatePickerDialog
           key={formPropertiesData.formProperty.id}
-          selectedDate={formPropertiesData.value}
+          selectedDate={properties.date.value || formPropertiesData.value}
           handleDateChange={date => handleDateChange(date, formPropertiesData.formProperty.id)}
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
       image: (
-        <p key={formPropertiesData.formProperty.id}>
-          { formPropertiesData.imageUrl ? (
+        <div key={formPropertiesData.formProperty.id}>
+          { formPropertiesData.imageUrl && (
             <>
               Attachments
               <br />
               <ImageAuth type={formPropertiesData.fileType?.split('/')[0]} imageLink={formPropertiesData.imageUrl} token={authState.token} />
             </>
-          ) : <span>No Attached File</span> }  
-        </p>
+          )}
+          <UploadField 
+            detail={{ type: 'file', status }}
+            key={formPropertiesData.id}
+            upload={evt => onChange(evt.target.files[0])}
+            editable={editable}
+          />
+        </div>
       ),
       signature: (
-        <p key={formPropertiesData.formProperty.id}>
+        <div key={formPropertiesData.formProperty.id}>
           {
-            formPropertiesData.imageUrl ? (
+            formPropertiesData.imageUrl && (
               <>
                 Signature
                 <br />
                 <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
               </>
             )
-            : <span>File has not been signed</span>
           }
-        </p>
+          <SignaturePad
+            key={formPropertiesData.id}
+            detail={{ type: 'signature', status: signatureStatus }}
+            signRef={signRef}
+            onEnd={() => handleSignatureUpload(formPropertiesData.id)}
+          />
+        </div>
       )
     }
     return fields[formPropertiesData.formProperty.fieldType]
   }
 
+  if (loading || formUserData.loading) return <Loading />
+  if (error || formUserData.error) return <ErrorPage title={error?.message || formUserData.error?.message} />
+
   return (
     <>
       <Container>
         <form onSubmit={event => handleActionClick(event, 'update')}>
+          {
+            authState.user.userType === 'admin' && userId && (
+              <>
+                <TextField
+                  label="Form Status"
+                  value={`${updatedFormStatus[formUserData.data?.formUser.status]} ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
+                  disabled
+                  margin="dense"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  label="Form Status Updated By"
+                  value={formUserData.data.formUser.statusUpdatedBy.name}
+                  disabled
+                  margin="dense"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </>
+            )
+          }
           {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
           <br />
           <br />
@@ -182,26 +265,35 @@ export default function FormUpdate({ formId, userId }) {
               color="primary"
               aria-label="form_update"
               variant="outlined"
+              disabled={isLoading}
             >
               Update
             </Button>
-            <Button
-              variant="contained"
-              onClick={event => handleActionClick(event, 'approve')}
-              color="primary"
-              aria-label="form_approve"
-              style={{ marginLeft: '10vw',  }}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              onClick={event => handleActionClick(event, 'reject')}
-              aria-label="form_reject"
-              style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
-            >
-              Reject
-            </Button>
+            {
+              authState.user.userType === 'admin' && (
+                <>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'approve')}
+                    color="primary"
+                    aria-label="form_approve"
+                    style={{ marginLeft: '10vw',  }}
+                    disabled={isLoading}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'reject')}
+                    aria-label="form_reject"
+                    style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                    disabled={isLoading}
+                  >
+                    Reject
+                  </Button>
+                </>
+              )
+            }
           </div>
           
           <br />
@@ -225,5 +317,9 @@ export default function FormUpdate({ formId, userId }) {
 
 FormUpdate.propTypes = {
   formId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  authState: PropTypes.shape({
+    user: PropTypes.shape({ userType: PropTypes.string }),
+    token: PropTypes.string
+  }).isRequired
 }

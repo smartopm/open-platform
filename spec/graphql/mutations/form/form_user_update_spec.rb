@@ -2,18 +2,21 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Form::FormUserCreate do
-  describe 'create for forms' do
+RSpec.describe Mutations::Form::FormUserUpdate do
+  describe 'update mutation for forms' do
     let!(:current_user) { create(:user_with_community) }
     let!(:another_user) { create(:user, community_id: current_user.community_id) }
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:form) { create(:form, community_id: current_user.community_id) }
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
+    let!(:form_user) do
+      current_user.form_users.create!(form_id: form.id, status: 1, status_updated_by_id: admin.id)
+    end
 
     let(:mutation) do
       <<~GQL
-        mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!) {
-          formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
+        mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!) {
+            formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues){
             formUser {
               id
               form {
@@ -24,7 +27,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         }
       GQL
     end
-    it 'creates a form ' do
+    it 'should update a form ' do
       values = {
         user_form_properties: [
           {
@@ -43,13 +46,12 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                    current_user: admin,
                                                    site_community: current_user.community,
                                                  }).as_json
-
-      expect(result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
-      expect(result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
+      expect(result.dig('data', 'formUserUpdate', 'formUser', 'id')).not_to be_nil
+      expect(result.dig('data', 'formUserUpdate', 'formUser', 'form', 'id')).to eql form.id
       expect(result.dig('errors')).to be_nil
     end
 
-    it 'should err when form not provided' do
+    it 'should err when form provided is not valid' do
       values = {
         user_form_properties: [
           {
@@ -68,6 +70,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                    current_user: admin,
                                                    site_community: current_user.community,
                                                  }).as_json
+
       expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
     end
 
