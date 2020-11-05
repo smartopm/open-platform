@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import TaskStatCard from './TaskStatCard'
 import CenteredContent from '../CenteredContent'
 
@@ -12,7 +13,7 @@ const tiles = {
   totalCallsOpen: 'Total Calls Open',
   totalFormsOpen: 'Total Forms Open',
   tasksOpen: 'Tasks Open',
-  completedTasks: 'Tasks Completed',
+  completedTasks: 'Tasks Completed'
 }
 
 export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
@@ -30,7 +31,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
       </CenteredContent>
     )
   }
-// use extra white space
+  // use extra white space
   return Object.entries(tiles).map(([key, val]) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
       <TaskStatCard
@@ -41,4 +42,24 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
       />
     </Grid>
   ))
+}
+
+TaskDashboard.propTypes = {
+  taskData: PropTypes.shape({
+    data: PropTypes.shape({
+      taskStats: PropTypes.shape({
+        myOpenTasks: PropTypes.number,
+        tasksDueIn10Days: PropTypes.number,
+        tasksDueIn30Days: PropTypes.number,
+        tasksOpenAndOverdue: PropTypes.number,
+        tasksWithNoDueDate: PropTypes.number,
+        totalCallsOpen: PropTypes.number,
+        totalFormsOpen: PropTypes.number,
+        tasksOpen: PropTypes.number,
+        completedTasks: PropTypes.number
+      })
+    })
+  }).isRequired,
+  filterTasks: PropTypes.func.isRequired,
+  currentTile: PropTypes.string.isRequired
 }
