@@ -47,26 +47,26 @@ export default function TaskComment({ authState }) {
       )}
       <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
         {!commentOpen ? (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={handleCommentOpen} gutterBottom>
+          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={handleCommentOpen} gutterBottom>
             {commentData?.taskComments.length}
             {' '}
             Comments
           </Typography>
         ) : (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px" }} onClick={() => setCommentOpen(false)} gutterBottom>
+          <Typography variant="caption" style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={() => setCommentOpen(false)} gutterBottom>
             Collapse Comments
           </Typography>
         )}
         {' '}
         |
         {!updateOpen ? (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} onClick={handleUpdateOpen} gutterBottom>
+          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px", cursor: 'pointer' }} onClick={handleUpdateOpen} gutterBottom>
             {historyData?.taskHistories.filter(task => task.noteEntityType === 'NoteComment' || task.attrChanged || task.action).length}
             {' '}
             Updates
           </Typography>
         ) : (
-          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px" }} gutterBottom onClick={() => setUpdateOpen(false)}>
+          <Typography variant="caption" style={{ color: '#69ABA4', marginLeft: "15px", cursor: 'pointer' }} gutterBottom onClick={() => setUpdateOpen(false)}>
             Collapse Updates
           </Typography>
         )}
