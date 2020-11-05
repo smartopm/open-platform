@@ -466,6 +466,10 @@ class User < ApplicationRecord
     user_logins_today.length == 1
   end
 
+  def note_assigned?(note_id)
+    tasks.where(id: note_id).present?
+  end
+
   private
 
   def current_time_in_timezone
