@@ -8,6 +8,7 @@ module Mutations
       argument :order, String, required: true
       argument :field_name, String, required: true
       argument :field_type, String, required: true
+      argument :field_value, GraphQL::Types::JSON, required: false
       argument :required, Boolean, required: false
       argument :admin_use, Boolean, required: false
       argument :short_desc, String, required: false
