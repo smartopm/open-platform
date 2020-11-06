@@ -4,8 +4,6 @@ import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
 import { dateToString } from '../utils/dateutil'
 import { theme } from "../themes/nkwashi/theme"
-import 'react-awesome-query-builder/lib/css/styles.css'
-import 'react-awesome-query-builder/lib/css/compact_styles.css'
 
 export default function QueryBuilder({
   builderConfig,
