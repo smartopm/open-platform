@@ -119,7 +119,7 @@ RSpec.describe Mutations::Campaign do
 
     it 'create a campaign with filters' do
       variables = {
-        userId: [user1.id, user2.id].join(",")
+        userId: [user1.id, user2.id].join(','),
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
