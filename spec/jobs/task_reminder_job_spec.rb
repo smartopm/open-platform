@@ -18,6 +18,7 @@ RSpec.describe TaskReminderJob, type: :job do
       author_id: admin.id,
     )
   end
+  let!(:assignee_note) { create(:assignee_note, user: admin, note: note) }
 
   describe '#perform' do
     it 'enqueues the job' do

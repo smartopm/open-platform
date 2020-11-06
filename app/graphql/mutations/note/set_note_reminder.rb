@@ -15,7 +15,7 @@ module Mutations
         user = context[:current_user]
         note = context[:site_community].notes.find(note_id)
 
-        raise GraphQL::ExecutionError, 'Unauthorized' if user.tasks.where(id: note.id).blank?
+        raise GraphQL::ExecutionError, 'Unauthorized' unless user.note_assigned?(note.id)
 
         time = hour.send(:hour)
 

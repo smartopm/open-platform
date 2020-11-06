@@ -8,6 +8,8 @@ class TaskReminderJob < ApplicationJob
     user = User.find(user_id)
     note = Note.find(note_id)
 
+    return unless user.note_assigned?(note.id)
+
     template_id = user.community.templates&.dig('task_reminder_template_id')
     return unless template_id
 

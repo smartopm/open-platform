@@ -277,4 +277,21 @@ RSpec.describe User, type: :model do
       expect(current_user.first_login_today?).to eq(false)
     end
   end
+
+  describe '#note_assigned?' do
+    let!(:user) { create(:user_with_community) }
+    let!(:note) do
+      create(:note, user: create(:user_with_community),
+                    author: create(:user_with_community))
+    end
+    let!(:assignee_note) { create(:assignee_note, user: user, note: note) }
+
+    it 'returns true if a note is assigned to a user and false otherwise' do
+      expect(user.note_assigned?(note.id)).to eq(true)
+
+      note.assign_or_unassign_user(user.id)
+
+      expect(user.note_assigned?(note.id)).to eq(false)
+    end
+  end
 end
