@@ -3,23 +3,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import { Redirect, Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Button,
-  Divider,
-  IconButton,
-  InputBase,
-  Grid
-} from '@material-ui/core'
+import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersDetails, LabelsQuery } from '../graphql/queries'
-import {
-  CreateNote,
-  SendOneTimePasscode
-} from '../graphql/mutations'
+import { CreateNote, SendOneTimePasscode } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
@@ -115,7 +106,6 @@ export default function UsersList() {
     setOffset(0)
   }, [])
 
-
   function toggleFilterMenu() {
     if (displayBuilder === '') {
       setDisplayBuilder('none')
@@ -205,7 +195,7 @@ export default function UsersList() {
   return (
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
-      <div className="container">
+      <div className="container" style={{ position: 'relative' }}>
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -214,7 +204,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                Add note for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -235,7 +225,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                Add Outgoing call answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -256,7 +246,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                Add Outgoing call not answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -313,11 +303,11 @@ export default function UsersList() {
           container
           justify="flex-end"
           style={{
-            width: '88%',
+            width: '99%',
             position: 'absolute',
             zIndex: 1,
             marginTop: '-25px',
-            display: displayBuilder,
+            display: displayBuilder
           }}
         >
           <QueryBuilder
