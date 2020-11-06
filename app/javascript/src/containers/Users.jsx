@@ -3,7 +3,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
 import { Redirect, Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Divider, IconButton, InputBase, Grid, CircularProgress } from '@material-ui/core'
+import {
+  Button,
+  Divider,
+  IconButton,
+  InputBase,
+  Grid,
+  CircularProgress
+} from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import TelegramIcon from '@material-ui/icons/Telegram'
@@ -11,7 +18,9 @@ import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersDetails, LabelsQuery } from '../graphql/queries'
-import { CreateNote, SendOneTimePasscode ,
+import {
+  CreateNote,
+  SendOneTimePasscode,
   UserLabelCreate,
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
@@ -154,9 +163,10 @@ export default function UsersList() {
         variables: { userId: userList.toString() }
       })
         .then(res => {
-          const { campaignData } = res
+          // eslint-disable-next-line no-shadow
+          const { data } = res
           setRedirect(
-            `/campaign/${campaignData.campaignCreateThroughUsers.campaign.id}`
+            `/campaign/${data.campaignCreateThroughUsers.campaign.id}`
           )
         })
         .catch(campaignError => {
@@ -255,7 +265,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for 
+                Add note for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -276,7 +286,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for 
+                Add Outgoing call answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -297,7 +307,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for 
+                Add Outgoing call not answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -358,7 +368,11 @@ export default function UsersList() {
           >
             <CreateLabel handleLabelSelect={handleLabelSelect} />
           </Grid>
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <Grid
+            item
+            xs="auto"
+            style={{ display: 'flex', alignItems: 'flex-end' }}
+          >
             {labelLoading ? <CircularProgress size={25} /> : ''}
           </Grid>
 
@@ -390,7 +404,7 @@ export default function UsersList() {
             width: '99%',
             position: 'absolute',
             zIndex: 1,
-            marginTop: '-25px',
+            marginTop: '-95px',
             display: displayBuilder
           }}
         >
@@ -401,11 +415,7 @@ export default function UsersList() {
             filterFields={filterFields}
           />
         </Grid>
-
         <br />
-        <br />
-        <br />
-
         {loading || labelsLoading ? (
           <Loading />
         ) : (
