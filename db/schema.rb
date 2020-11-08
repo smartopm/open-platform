@@ -33,6 +33,17 @@ ActiveRecord::Schema.define(version: 2020_11_09_200933) do
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
+  create_table "action_flows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.string "event_type"
+    t.string "event_condition"
+    t.json "event_action"
+    t.boolean "active", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false

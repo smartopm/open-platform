@@ -140,12 +140,13 @@ class EventLog < ApplicationRecord
   end
 
   def execute_action_flows
-    # rubocop:disable Rails/DynamicFindBy
-    events = ActionFlows::ActionFlow.find_by_event_type(subject)
-    return if events.blank?
+    action_flows = ActionFlow.where(event_type: subject, active: true).map do |f|
+      ActionFlows::ActionFlow.new(f.description, f.event_type,
+                                  f.event_condition, f.event_action)
+    end
+    return if action_flows.blank?
 
-    # rubocop:enable Rails/DynamicFindBy
-    events.each do |af|
+    action_flows.each do |af|
       event = af.event_object.new
       event.preload_data(self)
       cond = event.event_condition
