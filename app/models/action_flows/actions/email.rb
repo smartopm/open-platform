@@ -2,13 +2,14 @@
 
 module ActionFlows
   module Actions
-    ACTION_FIELDS = [
-      { 'name' => 'email' },
-      { 'name' => 'template' },
-    ].freeze
-
     # Action defined for firing email
     class Email
+      ACTION_FIELDS = [
+        { name: 'email', type: 'text' },
+        { name: 'template', type: 'text' },
+        { name: 'body', type: 'text-area' },
+      ].freeze
+
       def self.process_vars(field, data, field_config)
         if field_config[field]['type'] == 'variable'
           return data[(field_config[field]['value']).to_sym]
