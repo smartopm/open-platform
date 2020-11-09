@@ -41,6 +41,7 @@ module Types
 
     # messages
     field :message_create, mutation: Mutations::Message::MessageCreate
+    field :message_notification_update, mutation: Mutations::Message::MessageNotificationUpdate
 
     # temperature capture
     field :temperature_update, mutation: Mutations::Temperature::TemperatureUpdate

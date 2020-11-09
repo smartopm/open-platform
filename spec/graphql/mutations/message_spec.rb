@@ -51,6 +51,7 @@ RSpec.describe Mutations::Message do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
+                                                site_community: non_admin.community,
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
@@ -73,6 +74,7 @@ RSpec.describe Mutations::Message do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
+                                                site_community: non_admin.community,
                                                 current_user: non_admin,
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
@@ -96,6 +98,7 @@ RSpec.describe Mutations::Message do
       }
       result = DoubleGdpSchema.execute(query_with_note, variables: variables,
                                                         context: {
+                                                          site_community: non_admin.community,
                                                           current_user: non_admin,
                                                         }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil

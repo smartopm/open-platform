@@ -59,6 +59,7 @@ class User < ApplicationRecord
                                     dependent: :destroy, inverse_of: :user
 
   has_many :notes, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   has_many :note_comments, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
