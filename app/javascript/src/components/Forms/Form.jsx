@@ -106,7 +106,7 @@ export default function GenericForm({ formId }) {
     // fields and their values
     // create form user ==> form_id, user_id, status
     createFormUser({
-      variables: { 
+      variables: {
         formId,
         userId: authState.user.id,
         propValues: cleanFormData,
