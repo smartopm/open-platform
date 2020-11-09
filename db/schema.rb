@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_05_090245) do
+ActiveRecord::Schema.define(version: 2020_11_09_200933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -376,6 +376,8 @@ ActiveRecord::Schema.define(version: 2020_11_05_090245) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_notifications_on_community_id"
     t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -502,6 +504,7 @@ ActiveRecord::Schema.define(version: 2020_11_05_090245) do
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
   add_foreign_key "notes", "form_users"
+  add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
