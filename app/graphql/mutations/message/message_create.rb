@@ -12,6 +12,7 @@ module Mutations
       field :message, Types::MessageType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         message = context[:current_user].construct_message(vals)
         message.category = 'sms'
@@ -23,9 +24,11 @@ module Mutations
         raise GraphQL::ExecutionError, message.errors.full_messages unless message.persisted?
 
         record_history(message) if vals[:note_id].present?
+        message_notification(message)
         { message: message }
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def record_history(message)
         message.record_note_history(context[:current_user])
@@ -37,6 +40,11 @@ module Mutations
 
       def check_ids(sender_id, user_id)
         sender_id == user_id
+      end
+
+      def message_notification(msg)
+        ::Notification
+          .create(notifable_id: msg[:id], notifable_type: 'Message', user_id: msg[:user_id])
       end
 
       # TODO: Better auth here

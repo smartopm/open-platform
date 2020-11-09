@@ -23,6 +23,10 @@ module Types::Queries::Message
       argument :limit, Integer, required: false
       argument :offset, Integer, required: false
     end
+
+    field :msg_notification_count, Integer, null: true do
+      description 'Get the message notification count for current user'
+    end
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -62,5 +66,9 @@ module Types::Queries::Message
       cat: category.to_s,
       filter: flt,
     }
+  end
+
+  def msg_notification_count
+    context[:current_user].notifications.where(notifable_type: 'Message', seen_at: nil).count
   end
 end

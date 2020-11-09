@@ -8,6 +8,7 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   belongs_to :note, optional: true
   belongs_to :note_entity, polymorphic: true, optional: true
+  has_one :notification, as: :notifable, dependent: :destroy
   has_one :campaign, dependent: :restrict_with_exception
 
   default_scope { order(created_at: :asc) }

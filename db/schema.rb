@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_03_050539) do
+ActiveRecord::Schema.define(version: 2020_11_05_090245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -142,9 +142,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.uuid "note_id"
     t.string "status"
-    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -370,6 +368,18 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
   end
 
+  create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "seen_at"
+    t.string "notifable_type"
+    t.uuid "notifable_id"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "description"
+    t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "userId"
     t.string "name"
@@ -492,6 +502,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
   add_foreign_key "notes", "form_users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"

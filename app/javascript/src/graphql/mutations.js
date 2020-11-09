@@ -362,6 +362,14 @@ export const DeleteLabel = gql`
   }
 `
 
+export const MsgNotificationUpdate = gql`
+  mutation MsgNotificationUpdate {
+    messageNotificationUpdate {
+      success
+    }
+  }
+`
+
 export const LabelEdit = gql`
   mutation LabelEdit($id: ID! $shortDesc: String!, $description: String, $color: String!) {
     labelUpdate(id: $id shortDesc: $shortDesc, description: $description, color: $color) {
