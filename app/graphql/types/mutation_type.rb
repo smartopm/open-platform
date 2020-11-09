@@ -99,5 +99,8 @@ module Types
     # land_parcel
     field :land_parcel, mutation: Mutations::LandParcel::LandParcelCreate
     field :land_parcel_update, mutation: Mutations::LandParcel::LandParcelUpdate
+
+    # action_flow
+    field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
   end
 end
