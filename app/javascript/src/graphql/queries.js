@@ -641,7 +641,6 @@ query ($formId: ID!){
 		id
     fieldName
     fieldType
-    fieldValue
     shortDesc
     longDesc
     required

@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useContext, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
@@ -15,7 +15,6 @@ import TextInput from './TextInput'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
 import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
-import RadioInput from './RadioInput'
 
 // date
 // text input (TextField or TextArea)
@@ -23,8 +22,7 @@ import RadioInput from './RadioInput'
 const initialData = {
   fieldType: '',
   fieldName: ' ',
-  date: { value: null },
-  radio: { value: null }
+  date: { value: null }
 }
 
 export default function GenericForm({ formId }) {
@@ -56,7 +54,6 @@ export default function GenericForm({ formId }) {
       [name]: {value, form_property_id: propId}
     })
   }
-
   function handleDateChange(date, id){
     setProperties({
       ...properties,
@@ -154,17 +151,6 @@ export default function GenericForm({ formId }) {
           signRef={signRef}
           onEnd={() => handleSignatureUpload(formPropertiesData.id)}
         />
-      ),
-      radio: (
-        <Fragment key={formPropertiesData.id}>
-          <br />
-          <RadioInput 
-            properties={formPropertiesData}
-            value={properties.radio.value}
-            handleValue={event => handleValueChange(event, formPropertiesData.id)} 
-          />
-          <br />
-        </Fragment>
       )
     }
     return fields[formPropertiesData.fieldType]
