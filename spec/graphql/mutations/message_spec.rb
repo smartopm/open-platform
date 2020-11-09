@@ -51,7 +51,7 @@ RSpec.describe Mutations::Message do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
-                                                site_community: non_admin.community
+                                                site_community: non_admin.community,
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
