@@ -401,10 +401,10 @@ export default function UsersList() {
           container
           justify="flex-end"
           style={{
-            width: '99%',
+            width: '86%',
             position: 'absolute',
             zIndex: 1,
-            marginTop: '-95px',
+            marginTop: '-2px',
             display: displayBuilder
           }}
         >

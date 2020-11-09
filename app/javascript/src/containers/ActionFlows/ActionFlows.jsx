@@ -10,22 +10,43 @@ import {
   TextField,
   Button,
   Select,
-  MenuItem
+  MenuItem,
+  InputLabel,
+  FormControl
 } from '@material-ui/core'
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../../components/Nav'
-import { Events } from '../../graphql/queries'
+import { Events, Actions } from '../../graphql/queries'
 import colors from '../../themes/nkwashi/colors'
+import { titleize } from '../../utils/helpers'
+import QueryBuilder from '../../components/QueryBuilder'
 
 const { primary, dew } = colors
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
   const eventData = useQuery(Events)
-  // const _actionData = useQuery(Actions)
+  const actionData = useQuery(Actions)
 
   function openModal() {
     setModalOpen(!open)
   }
 
+  const InitialConfig = MaterialConfig
+  const queryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      note_user_id: {
+        label: 'Note User ID',
+        type: 'text',
+        valueSources: ['value']
+      },
+      note_author_id: {
+        label: 'Note Author ID',
+        type: 'text',
+        valueSources: ['value']
+      }
+    }
+  }
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
@@ -65,29 +86,62 @@ export default function ActionFlows() {
             // value={description}
             onChange={() => {}}
           />
-          {eventData.data && (
-            <Select
-              labelId="select-event"
-              id="select-event"
-              value=""
-              fullWidth
-              onChange={() => {}}
-            >
-              {eventData.data.events.map((event, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <MenuItem key={index} value={event}>
-                  {event}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
+          <FormControl fullWidth>
+            {eventData.data && (
+              <>
+                <InputLabel id="select-event">Select Event Type</InputLabel>
+                <Select
+                  labelId="select-event"
+                  id="select-event"
+                  value=""
+                  fullWidth
+                  onChange={() => {}}
+                >
+                  {eventData.data.events.map((event, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <MenuItem key={index} value={event}>
+                      {`On ${titleize(event)}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
+          </FormControl>
+          <div style={{ marginTop: '20px' }}>
+            <QueryBuilder
+              handleOnChange={() => {}}
+              builderConfig={queryBuilderConfig}
+              filterFields={{}}
+            />
+          </div>
+          <FormControl fullWidth>
+            {actionData.data && (
+              <>
+                <InputLabel id="select-action">Select an action</InputLabel>
+                <Select
+                  labelId="select-action"
+                  id="select-action"
+                  value=""
+                  fullWidth
+                  onChange={() => {}}
+                >
+                  {actionData.data.actions.map((action, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <MenuItem key={index} value={action}>
+                      {`Send ${action}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
+          </FormControl>
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ justifyContent: 'flex-start' }}>
           <Button onClick={() => {}} color="secondary" variant="outlined">
-            CANCEL
+            Cancel
           </Button>
           <Button onClick={() => {}} color="primary" variant="contained">
-            SAVE
+            Save
           </Button>
         </DialogActions>
       </Dialog>

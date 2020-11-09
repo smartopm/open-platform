@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
 import { dateToString } from '../utils/dateutil'
-import { theme } from "../themes/nkwashi/theme"
+import { theme } from '../themes/nkwashi/theme'
 
 export default function QueryBuilder({
   builderConfig,
@@ -55,8 +55,8 @@ export default function QueryBuilder({
 
   function renderBuilder(props) {
     return (
-      <div className="query-builder-container" style={{ padding: '10px' }}>
-        <div className="query-builder qb-lite">
+      <div className="query-builder-container">
+        <div className="query-builder qb-lite" style={{ margin: '0' }}>
           <Builder {...props} />
         </div>
       </div>
@@ -105,9 +105,13 @@ export default function QueryBuilder({
   )
 }
 
+QueryBuilder.defaultProps = {
+  initialQueryValue: null
+}
+
 QueryBuilder.propTypes = {
   builderConfig: PropTypes.object.isRequired,
-  initialQueryValue: PropTypes.object.isRequired,
+  initialQueryValue: PropTypes.object,
   handleOnChange: PropTypes.func.isRequired,
   filterFields: PropTypes.object.isRequired
 }
