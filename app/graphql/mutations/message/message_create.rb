@@ -43,7 +43,8 @@ module Mutations
       end
 
       def message_notification(msg)
-        ::Notification
+        context[:site_community]
+          .notifications
           .create(notifable_id: msg[:id], notifable_type: 'Message', user_id: msg[:user_id])
       end
 
