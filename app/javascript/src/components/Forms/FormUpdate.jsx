@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useRef, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { Button, Container, TextField, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
@@ -19,13 +19,15 @@ import SignaturePad from './SignaturePad'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import { dateFormatter } from '../DateContainer'
 import { formStatus as updatedFormStatus} from '../../utils/constants'
+import RadioInput from './RadioInput'
 // date
 // text input (TextField or TextArea)
 // upload
 const initialData = {
   fieldType: '',
   fieldName: ' ',
-  date: { value: null }
+  date: { value: null },
+  radio: { value: null }
 }
 
 export default function FormUpdate({ formId, userId, authState }) {
@@ -218,6 +220,17 @@ export default function FormUpdate({ formId, userId, authState }) {
             onEnd={() => handleSignatureUpload(formPropertiesData.id)}
           />
         </div>
+      ),
+      radio: (
+        <Fragment key={formPropertiesData.id}>
+          <br />
+          <RadioInput 
+            properties={formPropertiesData}
+            value={formPropertiesData.value === 'yes'}
+            handleValue={event => handleValueChange(event, formPropertiesData.id)} 
+          />
+          <br />
+        </Fragment>
       )
     }
     return fields[formPropertiesData.formProperty.fieldType]
