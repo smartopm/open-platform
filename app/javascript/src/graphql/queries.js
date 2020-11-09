@@ -711,3 +711,12 @@ export const Actions = gql`
     actions
   }
 `
+
+export const ActionFields = gql`
+  query actionFields($action: String!){
+    actionFields(action: $action) {
+      name,
+      type
+    }
+  }
+`

@@ -16,7 +16,7 @@ module Types::Queries::ActionFlow
     end
 
     # Get fields for an action
-    field :action_fields, [Types::ActionFieldType], null: false do
+    field :action_fields, [Types::ActionFieldType], null: true do
       description 'Get fields for an action'
       argument :action, String, required: true
     end
@@ -43,7 +43,7 @@ module Types::Queries::ActionFlow
       fields = "ActionFlows::Actions::#{action.camelize}::ACTION_FIELDS".constantize
       fields.map { |f| OpenStruct.new(f) }
     rescue => e
-      raise GraphQL::ExecutionError, 'Invalid action name'
+      nil
     end
   end
 end

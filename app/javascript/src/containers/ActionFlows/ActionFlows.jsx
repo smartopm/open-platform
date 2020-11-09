@@ -16,16 +16,29 @@ import {
 } from '@material-ui/core'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../../components/Nav'
-import { Events, Actions } from '../../graphql/queries'
+import { Events, Actions, ActionFields } from '../../graphql/queries'
 import colors from '../../themes/nkwashi/colors'
-import { titleize } from '../../utils/helpers'
+import { titleize, capitalize } from '../../utils/helpers'
 import QueryBuilder from '../../components/QueryBuilder'
 
 const { primary, dew } = colors
+const initialData = {
+  title: '',
+  description: '',
+  eventType: '',
+  eventCondition: '',
+  actionType: ''
+}
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
+  const [data, setData] = useState(initialData)
+  const [metaData, setMetaData] = useState({})
+
   const eventData = useQuery(Events)
   const actionData = useQuery(Actions)
+  const actionFieldsData = useQuery(ActionFields, {
+    variables: { action: data.actionType }
+  })
 
   const InitialConfig = MaterialConfig
   const queryBuilderConfig = {
@@ -45,7 +58,11 @@ export default function ActionFlows() {
   }
 
   function openModal() {
-    setModalOpen(!open)
+    setModalOpen(true)
+  }
+
+  function closeModal() {
+    setModalOpen(false)
   }
 
   function handleQueryOnChange(selectedOptions) {
@@ -54,12 +71,29 @@ export default function ActionFlows() {
     }
   }
 
+  function handleInputChange(event) {
+    const { name, value } = event.target
+    setData({
+      ...data,
+      [name]: value
+    })
+  }
+
+  function handleMetaDataChange(event) {
+    const { name, value } = event.target
+    setMetaData({
+      ...metaData,
+      [name]: value
+    })
+  }
+
+  console.log('metaData', metaData)
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
       <Dialog
         open={open}
-        onClose={() => {}}
+        onClose={closeModal}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle
@@ -78,20 +112,22 @@ export default function ActionFlows() {
             margin="dense"
             id="title"
             label="Title"
+            name="title"
             type="text"
             fullWidth
-            // value={shortDesc}
-            onChange={() => {}}
+            value={data.title}
+            onChange={handleInputChange}
           />
           <TextField
             margin="dense"
             id="description"
             label="Description"
+            name="description"
             type="text"
             fullWidth
             multiline
-            // value={description}
-            onChange={() => {}}
+            value={data.description}
+            onChange={handleInputChange}
           />
           <FormControl fullWidth>
             {eventData.data && (
@@ -100,9 +136,10 @@ export default function ActionFlows() {
                 <Select
                   labelId="select-event"
                   id="select-event"
-                  value=""
+                  name="eventType"
+                  value={data.eventType}
                   fullWidth
-                  onChange={() => {}}
+                  onChange={handleInputChange}
                 >
                   {eventData.data.events.map((event, index) => (
                     // eslint-disable-next-line react/no-array-index-key
@@ -128,9 +165,10 @@ export default function ActionFlows() {
                 <Select
                   labelId="select-action"
                   id="select-action"
-                  value=""
+                  name="actionType"
+                  value={data.actionType}
+                  onChange={handleInputChange}
                   fullWidth
-                  onChange={() => {}}
                 >
                   {actionData.data.actions.map((action, index) => (
                     // eslint-disable-next-line react/no-array-index-key
@@ -142,9 +180,25 @@ export default function ActionFlows() {
               </>
             )}
           </FormControl>
+          {actionFieldsData.data &&
+            actionFieldsData.data.actionFields.map((actionField, index) => (
+              <TextField
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                autoFocus
+                margin="dense"
+                id={actionField.name}
+                label={capitalize(actionField.name)}
+                name={actionField.name}
+                type="text"
+                fullWidth
+                value={metaData[actionField.name]}
+                onChange={handleMetaDataChange}
+              />
+            ))}
         </DialogContent>
         <DialogActions style={{ justifyContent: 'flex-start' }}>
-          <Button onClick={() => {}} color="secondary" variant="outlined">
+          <Button onClick={closeModal} color="secondary" variant="outlined">
             Cancel
           </Button>
           <Button onClick={() => {}} color="primary" variant="contained">

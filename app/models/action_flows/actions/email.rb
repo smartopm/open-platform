@@ -7,7 +7,6 @@ module ActionFlows
       ACTION_FIELDS = [
         { name: 'email', type: 'text' },
         { name: 'template', type: 'text' },
-        { name: 'body', type: 'text-area' },
       ].freeze
 
       def self.process_vars(field, data, field_config)
