@@ -699,3 +699,15 @@ query userNote($userId: ID!) {
   }
 }
 `
+
+export const Events = gql`
+  query events {
+    events
+  }
+`
+
+export const Actions = gql`
+  query actions {
+    actions
+  }
+`

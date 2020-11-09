@@ -13,6 +13,6 @@ export default function Labels(){
           backTo='/'
         />
         <LabelList userType={authState.user.userType} />
-      </> 
+      </>
     )
 }
