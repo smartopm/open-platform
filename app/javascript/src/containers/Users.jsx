@@ -30,6 +30,7 @@ import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import QueryBuilder from '../components/QueryBuilder'
 import CreateLabel from '../components/CreateLabel'
+import { dateToString } from '../utils/dateutil'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
@@ -78,9 +79,32 @@ export default function UsersList() {
     data: labelsData
   } = useQuery(LabelsQuery)
 
-  function handleFilterQuery(query, count) {
-    setSearchQuery(query)
-    setFilterCount(count)
+  function handleQueryOnChange(selectedOptions) {
+    if (selectedOptions) {
+      const andConjugate = selectedOptions.logic?.and
+      const orConjugate = selectedOptions.logic?.or
+      const availableConjugate = andConjugate || orConjugate
+      if (availableConjugate) {
+        const conjugate = andConjugate ? 'AND' : 'OR'
+        const query = availableConjugate
+          .map(option => {
+            let operator = Object.keys(option)[0]
+            const property = filterFields[option[operator][0].var]
+            let value = option[operator][1]
+
+            if (operator === '==') operator = '='
+            if (property === 'date_filter') {
+              operator = '>'
+              value = dateToString(value)
+            }
+
+            return `${property} ${operator} "${value}"`
+          })
+          .join(` ${conjugate} `)
+        setSearchQuery(query)
+        setFilterCount(availableConjugate.length)
+      }
+    }
   }
 
   function handleSaveNote() {
@@ -409,10 +433,10 @@ export default function UsersList() {
           }}
         >
           <QueryBuilder
-            handleOnChange={handleFilterQuery}
+            handleOnChange={handleQueryOnChange}
             builderConfig={queryBuilderConfig}
             initialQueryValue={queryBuilderInitialValue}
-            filterFields={filterFields}
+            addRuleLabel="Add filter"
           />
         </Grid>
         <br />

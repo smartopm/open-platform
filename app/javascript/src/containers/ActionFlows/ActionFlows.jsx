@@ -27,26 +27,33 @@ export default function ActionFlows() {
   const eventData = useQuery(Events)
   const actionData = useQuery(Actions)
 
-  function openModal() {
-    setModalOpen(!open)
-  }
-
   const InitialConfig = MaterialConfig
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {
-      note_user_id: {
-        label: 'Note User ID',
+      user: {
+        label: 'User',
         type: 'text',
         valueSources: ['value']
       },
-      note_author_id: {
-        label: 'Note Author ID',
+      Author: {
+        label: 'Author',
         type: 'text',
         valueSources: ['value']
       }
     }
   }
+
+  function openModal() {
+    setModalOpen(!open)
+  }
+
+  function handleQueryOnChange(selectedOptions) {
+    if (selectedOptions) {
+      console.log(selectedOptions.logic)
+    }
+  }
+
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
@@ -109,9 +116,9 @@ export default function ActionFlows() {
           </FormControl>
           <div style={{ marginTop: '20px' }}>
             <QueryBuilder
-              handleOnChange={() => {}}
+              handleOnChange={handleQueryOnChange}
               builderConfig={queryBuilderConfig}
-              filterFields={{}}
+              addRuleLabel="Add Rule"
             />
           </div>
           <FormControl fullWidth>
