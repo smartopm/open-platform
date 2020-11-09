@@ -24,7 +24,7 @@ const initialData = {
   fieldType: '',
   fieldName: ' ',
   date: { value: null },
-  radio: { value: null }
+  radio: { value: {label: '', checked: null} }
 }
 
 export default function GenericForm({ formId }) {
@@ -63,10 +63,11 @@ export default function GenericForm({ formId }) {
     })
   }
   
-  function handleRadioValueChange(event, propId){
+  function handleRadioValueChange(event, propId, fieldName){
+    const { name, value } = event.target
     setProperties({
       ...properties,
-      radio: { value: event.target.value,  form_property_id: propId}
+      [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
   })
 }
 
@@ -86,7 +87,7 @@ export default function GenericForm({ formId }) {
     
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    const filledInProperties = formattedProperties.filter(item => item.value)
+    const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
 
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
@@ -166,8 +167,8 @@ export default function GenericForm({ formId }) {
           <br />
           <RadioInput 
             properties={formPropertiesData}
-            value={properties.radio.value}
-            handleValue={event => handleRadioValueChange(event, formPropertiesData.id)} 
+            value={null}
+            handleValue={event => handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)} 
           />
           <br />
         </Fragment>
@@ -202,16 +203,27 @@ export default function GenericForm({ formId }) {
   )
 }
 
-
 GenericForm.propTypes = {
   formId: PropTypes.string.isRequired
 }
 
-
+/**
+ *
+ * @param {{}} values
+ * @param {String} propId
+ * @returns {Boolean}
+ * @description checks if a form property exist
+ */
 export function propExists(values, propId) {
   return values.some(value => value.form_property_id === propId)
 }
 
+/**
+ *
+ * @param {{}} properties
+ * @param {String} propId
+ * @description check form values that weren't filled in and add default values
+ */
 export function addPropWithValue(properties, propId) {
   if (propExists(properties, propId)) {
     return

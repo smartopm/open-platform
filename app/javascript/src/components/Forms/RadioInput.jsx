@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
@@ -7,26 +8,32 @@ import FormLabel from '@material-ui/core/FormLabel'
 import PropTypes from 'prop-types'
 
 export default function RadioInput({ handleValue, properties, value }) {
-  console.log(value)
+  // eslint-disable-next-line react/prop-types
+  const tempValue = properties?.value
+  // convert ruby hash into a normal object by replacing => with : and the parse the value
+  const cleanValue = tempValue?.replace(/=>/g, ':')
+  const parsedValue = tempValue ? JSON.parse(cleanValue) : {}
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">{properties.fieldName}</FormLabel>
+      <FormLabel component="legend">
+        {properties.fieldName || properties.formProperty.fieldName}
+      </FormLabel>
       <RadioGroup
-        aria-label="gender"
-        name={properties.fieldName}
-        value={value}
+        aria-label={properties.fieldName}
+        name={properties.fieldName || properties.formProperty.fieldName}
+        defaultValue={value || parsedValue?.checked}
         onChange={handleValue}
       >
-        {/* {
-              !properties.fieldValue && (
-                <FormControlLabel
-                  key={properties.fieldName}
-                  value={value}
-                  control={<Radio />}
-                  label={properties.fieldName}
-                />
-              )
-          } */}
+        {/* This is for form update */}
+        {properties.formProperty?.fieldValue && (
+          <FormControlLabel
+            key={parsedValue.label}
+            value={parsedValue.checked}
+            control={<Radio />}
+            label={parsedValue.checked}
+          />
+        )}
+        {/* This is for a new form */}
         {properties.fieldValue?.map(val => (
           <FormControlLabel
             key={val.label}
@@ -41,7 +48,7 @@ export default function RadioInput({ handleValue, properties, value }) {
 }
 
 RadioInput.defaultProps = {
-    value: null
+  value: null
 }
 
 RadioInput.propTypes = {
@@ -61,5 +68,5 @@ RadioInput.propTypes = {
     PropTypes.string,
     PropTypes.bool,
     PropTypes.number
-  ]),
+  ])
 }

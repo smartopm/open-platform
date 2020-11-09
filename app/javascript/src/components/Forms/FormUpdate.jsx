@@ -27,7 +27,7 @@ const initialData = {
   fieldType: '',
   fieldName: ' ',
   date: { value: null },
-  radio: { value: null }
+  radio: { value: {label: '', checked: null} }
 }
 
 export default function FormUpdate({ formId, userId, authState }) {
@@ -77,6 +77,7 @@ export default function FormUpdate({ formId, userId, authState }) {
       [name]: {value, form_property_id: propId}
     })
   }
+
   function handleDateChange(date, id){
     setProperties({
       ...properties,
@@ -102,7 +103,7 @@ export default function FormUpdate({ formId, userId, authState }) {
     
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    const filledInProperties = formattedProperties.filter(item => item.value)
+    const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
     
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
@@ -118,7 +119,7 @@ export default function FormUpdate({ formId, userId, authState }) {
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
 
     updateFormUser({
-      variables: { 
+      variables: {
         formId,
         userId,
         propValues: cleanFormData,
@@ -222,12 +223,13 @@ export default function FormUpdate({ formId, userId, authState }) {
         </div>
       ),
       radio: (
-        <Fragment key={formPropertiesData.id}>
+        <Fragment key={formPropertiesData.formProperty.id}>
+          <br />
           <br />
           <RadioInput 
             properties={formPropertiesData}
-            value={formPropertiesData.value === 'yes'}
-            handleValue={event => handleValueChange(event, formPropertiesData.id)} 
+            value={properties.radio.value.checked}
+            handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)} 
           />
           <br />
         </Fragment>

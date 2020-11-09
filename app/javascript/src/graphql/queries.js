@@ -657,6 +657,7 @@ query userFormProperties($formId: ID!, $userId: ID!) {
     formProperty{
       fieldName
       fieldType
+      fieldValue
       order
       id
       adminUse
