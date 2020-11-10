@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   # Action Flow Type
   class ActionFlowType < Types::BaseObject

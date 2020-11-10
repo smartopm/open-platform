@@ -139,6 +139,8 @@ class EventLog < ApplicationRecord
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def execute_action_flows
     action_flows = ActionFlow.where(event_type: subject, active: true).map do |f|
       ActionFlows::ActionFlow.new(f.description, f.event_type,
@@ -153,6 +155,8 @@ class EventLog < ApplicationRecord
       af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   private
 

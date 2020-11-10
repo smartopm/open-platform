@@ -37,7 +37,7 @@ module Types::Queries::ActionFlow
   def actions
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    actions = ActionFlows::Actions.constants.select do |c|
+    ActionFlows::Actions.constants.select do |c|
       ActionFlows::Actions.const_get(c).is_a?(Class)
     end.map(&:to_s)
   end
@@ -48,11 +48,12 @@ module Types::Queries::ActionFlow
     begin
       fields = "ActionFlows::Actions::#{action.camelize}::ACTION_FIELDS".constantize
       fields.map { |f| OpenStruct.new(f) }
-    rescue => e
+    rescue StandardError
       raise GraphQL::ExecutionError, 'Invalid action name'
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def rule_fields(event_type:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
@@ -62,8 +63,9 @@ module Types::Queries::ActionFlow
       prefix = metadata.keys.first.underscore
 
       metadata.values.first.keys.map { |f| "#{prefix}_#{f}" }
-    rescue => e
+    rescue StandardError
       raise GraphQL::ExecutionError, 'Invalid event type'
     end
   end
+  # rubocop:enable Metrics/AbcSize
 end

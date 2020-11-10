@@ -2,7 +2,6 @@
 
 module ActionFlows
   # Class to run JSONLogic with passed rules and data
-  # rubocop:disable Metrics/ClassLength
   class ActionFlow
     #  ActionFlows::ActionFlow
     attr_accessor :description
@@ -49,8 +48,6 @@ module ActionFlows
     # def self.find_by_event_type(event_type)
     #   ActionFlows::ActionFlow.load_flows.select { |e| e.event_type == event_type }
     # end
-
-    # rubocop:disable Metrics/MethodLength
     # def self.load_flows
     #   [{
     #     'description' => 'Email On task update',
@@ -164,7 +161,5 @@ module ActionFlows
     #                                 e['event_condition'], e['event_action'])
     #   end
     # end
-    # rubocop:enable Metrics/MethodLength
   end
-  # rubocop:enable Metrics/ClassLength
 end

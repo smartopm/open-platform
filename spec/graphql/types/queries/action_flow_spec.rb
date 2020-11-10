@@ -37,7 +37,9 @@ RSpec.describe Types::Queries::ActionFlow do
                                          current_user: current_user,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'events')).to include("note_comment_create", "note_comment_update", "task_update", "user_login")
+      expect(result.dig('data', 'events')).to include(
+        'note_comment_create', 'note_comment_update', 'task_update', 'user_login'
+      )
     end
 
     it 'retrieves available actions' do
@@ -45,7 +47,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                          current_user: current_user,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'actions')).to include("Email")
+      expect(result.dig('data', 'actions')).to include('Email')
     end
 
     it 'retrieves fields for an action' do
@@ -57,12 +59,16 @@ RSpec.describe Types::Queries::ActionFlow do
       expect(available_fields).to include('email', 'template')
     end
 
+    # rubocop:disable Metrics/LineLength
     it 'retrieves rule fields' do
       result = DoubleGdpSchema.execute(rule_fields_query, context: {
                                          current_user: current_user,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'ruleFields')).to include("note_id", "note_user_id", "note_author_id", "note_body", "note_assignees_emails", "note_url")
+      expect(result.dig('data', 'ruleFields')).to include(
+        'note_id', 'note_user_id', 'note_author_id', 'note_body', 'note_assignees_emails', 'note_url'
+      )
     end
+    # rubocop:enable Metrics/LineLength
   end
 end

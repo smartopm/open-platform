@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable Metrics/LineLength
 RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
   describe 'create actionflows' do
     let!(:user) { create(:user_with_community) }
@@ -31,15 +32,15 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
             email: {
               name: 'email',
               type: 'string',
-              value: 'email@gmail.com'
+              value: 'email@gmail.com',
             },
             template: {
               name: 'template',
               type: 'string',
-              value: 'ui123786452-d'
-            }
-          }
-        }
+              value: 'ui123786452-d',
+            },
+          },
+        },
       }
     end
 
@@ -67,3 +68,4 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
     end
   end
 end
+# rubocop:enable Metrics/LineLength
