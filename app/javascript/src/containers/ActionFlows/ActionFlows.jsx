@@ -22,6 +22,7 @@ import colors from '../../themes/nkwashi/colors'
 import { titleize, capitalize } from '../../utils/helpers'
 import QueryBuilder from '../../components/QueryBuilder'
 import { CreateActionFlow } from '../../graphql/mutations'
+import MessageAlert from '../../components/MessageAlert'
 
 const { primary, dew } = colors
 const initialData = {
@@ -33,6 +34,8 @@ const initialData = {
 }
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
+  const [messageAlertOpen, setMessageAlertOpen] = useState(false)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [data, setData] = useState(initialData)
   const [metaData, setMetaData] = useState({})
 
@@ -122,11 +125,20 @@ export default function ActionFlows() {
      }
     }).then(() => {
       closeModal()
+      setMessageAlertOpen(true)
+      setIsSuccessAlert(true)
     }).catch(error => {
-      // setError(error.message)
-      // setIsLoading(false)
+      setMessageAlertOpen(true)
+      setIsSuccessAlert(false)
       console.log(error)
     })
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlertOpen(false)
   }
 
   console.log('metaData', metaData)
@@ -258,6 +270,12 @@ export default function ActionFlows() {
           </Button>
         </DialogActions>
       </Dialog>
+      <MessageAlert
+        type={isSuccessAlert ? "success" : "error"}
+        message={isSuccessAlert ? "Success: Changes saved successfully" : "Sorry, an error occcurred. Try again."}
+        open={messageAlertOpen}
+        handleClose={handleMessageAlertClose}
+      />
       <Button
         variant="contained"
         onClick={openModal}
