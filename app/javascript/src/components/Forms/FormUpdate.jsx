@@ -258,7 +258,7 @@ export default function FormUpdate({ formId, userId, authState }) {
               <>
                 <TextField
                   label="Form Status"
-                  value={`${updatedFormStatus[formUserData.data?.formUser.status]} ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
+                  value={`${updatedFormStatus[formUserData.data?.formUser.status]} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
                   disabled
                   margin="dense"
                   InputLabelProps={{
