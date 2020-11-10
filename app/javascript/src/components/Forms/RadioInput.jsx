@@ -24,15 +24,30 @@ export default function RadioInput({ handleValue, properties, value }) {
         defaultValue={value || parsedValue?.checked}
         onChange={handleValue}
       >
-        {/* This is for form update */}
-        {properties.formProperty?.fieldValue && (
-          <FormControlLabel
-            key={parsedValue.label}
-            value={parsedValue.checked}
-            control={<Radio />}
-            label={parsedValue.checked}
-          />
-        )}
+        {
+          // This is form update, go through all possible choices and mark checked the one that was chosen
+          properties.formProperty?.fieldValue.map(field => {
+            if (field.value === parsedValue.checked) {
+              return (
+                <FormControlLabel
+                  key={parsedValue.label}
+                  value={parsedValue.checked}
+                  control={<Radio />}
+                  label={parsedValue.checked}
+                />
+              )
+            }
+            return (
+              <FormControlLabel
+                key={field.label}
+                value={field.value}
+                control={<Radio />}
+                label={field.label}
+              />
+            )
+          })
+        }
+
         {/* This is for a new form */}
         {properties.fieldValue?.map(val => (
           <FormControlLabel
