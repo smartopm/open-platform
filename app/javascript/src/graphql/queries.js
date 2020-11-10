@@ -647,6 +647,7 @@ query ($formId: ID!){
 		id
     fieldName
     fieldType
+    fieldValue
     shortDesc
     longDesc
     required
@@ -662,6 +663,7 @@ query userFormProperties($formId: ID!, $userId: ID!) {
     formProperty{
       fieldName
       fieldType
+      fieldValue
       order
       id
       adminUse

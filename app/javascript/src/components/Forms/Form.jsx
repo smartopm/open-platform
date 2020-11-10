@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext, useRef, useState } from 'react'
+import React, { Fragment, useContext, useRef, useState } from 'react'
 import { Button, Container, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
@@ -15,6 +15,7 @@ import TextInput from './TextInput'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
 import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
+import RadioInput from './RadioInput'
 
 // date
 // text input (TextField or TextArea)
@@ -22,7 +23,8 @@ import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
 const initialData = {
   fieldType: '',
   fieldName: ' ',
-  date: { value: null }
+  date: { value: null },
+  radio: { value: {label: '', checked: null} }
 }
 
 export default function GenericForm({ formId }) {
@@ -60,6 +62,14 @@ export default function GenericForm({ formId }) {
       date: { value: date,  form_property_id: id}
     })
   }
+  
+  function handleRadioValueChange(event, propId, fieldName){
+    const { name, value } = event.target
+    setProperties({
+      ...properties,
+      [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
+  })
+}
 
   async function handleSignatureUpload(){
     setMessage({ ...message, signed: true})
@@ -77,7 +87,7 @@ export default function GenericForm({ formId }) {
     
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    const filledInProperties = formattedProperties.filter(item => item.value)
+    const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
 
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
@@ -96,7 +106,7 @@ export default function GenericForm({ formId }) {
     // fields and their values
     // create form user ==> form_id, user_id, status
     createFormUser({
-      variables: { 
+      variables: {
         formId,
         userId: authState.user.id,
         propValues: cleanFormData,
@@ -151,6 +161,17 @@ export default function GenericForm({ formId }) {
           signRef={signRef}
           onEnd={() => handleSignatureUpload(formPropertiesData.id)}
         />
+      ),
+      radio: (
+        <Fragment key={formPropertiesData.id}>
+          <br />
+          <RadioInput 
+            properties={formPropertiesData}
+            value={null}
+            handleValue={event => handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)} 
+          />
+          <br />
+        </Fragment>
       )
     }
     return fields[formPropertiesData.fieldType]
@@ -182,16 +203,27 @@ export default function GenericForm({ formId }) {
   )
 }
 
-
 GenericForm.propTypes = {
   formId: PropTypes.string.isRequired
 }
 
-
+/**
+ *
+ * @param {{}} values
+ * @param {String} propId
+ * @returns {Boolean}
+ * @description checks if a form property exist
+ */
 export function propExists(values, propId) {
   return values.some(value => value.form_property_id === propId)
 }
 
+/**
+ *
+ * @param {{}} properties
+ * @param {String} propId
+ * @description check form values that weren't filled in and add default values
+ */
 export function addPropWithValue(properties, propId) {
   if (propExists(properties, propId)) {
     return

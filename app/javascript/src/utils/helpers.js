@@ -232,5 +232,8 @@ export async function convertBase64ToFile(data){
  */
 export function sortPropertyOrder(field1, field2){
   if(!field1 || !field2) return
-  return Number(field1.formProperty?.order) - Number(field2.formProperty?.order)
+  if(field1.formProperty) {
+    return Number(field1.formProperty.order) - Number(field2.formProperty.order)
+  }
+  return Number(field1.order) - Number(field2.order)
 }

@@ -243,6 +243,7 @@ ActiveRecord::Schema.define(version: 2020_11_09_200933) do
     t.uuid "form_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "field_value"
     t.index ["form_id"], name: "index_form_properties_on_form_id"
   end
 

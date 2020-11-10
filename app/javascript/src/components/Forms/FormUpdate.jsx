@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useRef, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { Button, Container, TextField, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
@@ -19,13 +19,15 @@ import SignaturePad from './SignaturePad'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import { dateFormatter } from '../DateContainer'
 import { formStatus as updatedFormStatus} from '../../utils/constants'
+import RadioInput from './RadioInput'
 // date
 // text input (TextField or TextArea)
 // upload
 const initialData = {
   fieldType: '',
   fieldName: ' ',
-  date: { value: null }
+  date: { value: null },
+  radio: { value: {label: '', checked: null} }
 }
 
 export default function FormUpdate({ formId, userId, authState }) {
@@ -75,10 +77,19 @@ export default function FormUpdate({ formId, userId, authState }) {
       [name]: {value, form_property_id: propId}
     })
   }
+
   function handleDateChange(date, id){
     setProperties({
       ...properties,
       date: { value: date,  form_property_id: id}
+    })
+  }
+
+  function handleRadioValueChange(event, propId, fieldName){
+    const { name, value } = event.target
+    setProperties({
+      ...properties,
+      [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
     })
   }
 
@@ -100,7 +111,7 @@ export default function FormUpdate({ formId, userId, authState }) {
     
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
-    const filledInProperties = formattedProperties.filter(item => item.value)
+    const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
     
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
@@ -116,7 +127,7 @@ export default function FormUpdate({ formId, userId, authState }) {
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
 
     updateFormUser({
-      variables: { 
+      variables: {
         formId,
         userId,
         propValues: cleanFormData,
@@ -218,6 +229,18 @@ export default function FormUpdate({ formId, userId, authState }) {
             onEnd={() => handleSignatureUpload(formPropertiesData.id)}
           />
         </div>
+      ),
+      radio: (
+        <Fragment key={formPropertiesData.formProperty.id}>
+          <br />
+          <br />
+          <RadioInput 
+            properties={formPropertiesData}
+            value={properties.radio.value.checked}
+            handleValue={event => handleRadioValueChange(event, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)} 
+          />
+          <br />
+        </Fragment>
       )
     }
     return fields[formPropertiesData.formProperty.fieldType]
@@ -235,7 +258,7 @@ export default function FormUpdate({ formId, userId, authState }) {
               <>
                 <TextField
                   label="Form Status"
-                  value={`${updatedFormStatus[formUserData.data?.formUser.status]} ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
+                  value={`${updatedFormStatus[formUserData.data?.formUser.status]} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
                   disabled
                   margin="dense"
                   InputLabelProps={{
