@@ -15,6 +15,7 @@ import {
   FormControl
 } from '@material-ui/core'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import Nav from '../../components/Nav'
 import { Events, Actions, ActionFields, RuleFields } from '../../graphql/queries'
 import colors from '../../themes/nkwashi/colors'
@@ -89,12 +90,12 @@ export default function ActionFlows() {
     })
   }
 
-  function handleMetaDataChange(event) {
-    const { name, value } = event.target
-    setMetaData({
-      ...metaData,
-      [name]: value
-    })
+  function isMetaDataAVariable(value) {
+    return value.indexOf(' ') >= 0
+  }
+
+  function metaDataVariableValue(value) {
+    return value.replace(/ /g, "_").toLowerCase()
   }
 
   function handleSave() {
@@ -102,8 +103,8 @@ export default function ActionFlows() {
     Object.entries(metaData).forEach(([key, value]) => {
       actionMetaData[key] = {
         name: key,
-        value,
-        type: 'string'
+        value: isMetaDataAVariable(value) ? metaDataVariableValue(value) : value,
+        type: isMetaDataAVariable(value) ? 'variable' : 'string'
       }
     })
 
@@ -223,18 +224,28 @@ export default function ActionFlows() {
           </FormControl>
           {actionFieldsData.data &&
             actionFieldsData.data.actionFields.map((actionField, index) => (
-              <TextField
+              <Autocomplete
                 // eslint-disable-next-line react/no-array-index-key
                 key={index}
-                autoFocus
-                margin="dense"
-                id={actionField.name}
-                label={capitalize(actionField.name)}
-                name={actionField.name}
-                type="text"
-                fullWidth
-                value={metaData[actionField.name]}
-                onChange={handleMetaDataChange}
+                id={`${actionField.name}-action-input`}
+                freeSolo
+                inputValue={metaData[actionField.name]}
+                onInputChange={(_event, newValue) => {
+                  setMetaData({
+                    ...metaData,
+                    [actionField.name]: newValue
+                  })
+                }}
+                options={ruleFieldsData.data?.ruleFields.map((option) => titleize(option))}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={capitalize(actionField.name)}
+                    name={actionField.name}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                )}
               />
             ))}
         </DialogContent>

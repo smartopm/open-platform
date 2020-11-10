@@ -14,7 +14,7 @@ module Mutations
 
       def resolve(vals)
         vals[:event_condition] = '{"==":[1,1]}' if vals[:event_condition].blank?
-        action_flow = ::ActionFlow.new(vals)
+        action_flow = ::ActionFlow.new(vals.merge(active: true))
         return { action_flow: action_flow } if action_flow.save
 
         raise GraphQL::ExecutionError, action_flow.errors.full_messages

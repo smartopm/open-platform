@@ -59,7 +59,7 @@ module Types::Queries::ActionFlow
     begin
       event_class = "ActionFlows::Events::#{event_type.camelize}Event".constantize
       metadata = event_class.event_metadata
-      prefix = metadata.keys.first.downcase
+      prefix = metadata.keys.first.underscore
 
       metadata.values.first.keys.map { |f| "#{prefix}_#{f}" }
     rescue => e
