@@ -122,7 +122,9 @@ export default function TodoList({
   }, [loadTask])
 
   useEffect(() => {
-    taskCountData.refetch()
+    if (taskCountData) {
+      taskCountData.refetch()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location])
 
