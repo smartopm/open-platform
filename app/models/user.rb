@@ -59,6 +59,7 @@ class User < ApplicationRecord
                                     dependent: :destroy, inverse_of: :user
 
   has_many :notes, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   has_many :note_comments, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
@@ -464,6 +465,10 @@ class User < ApplicationRecord
       id, 'user_login', current_time_in_timezone.beginning_of_day
     )
     user_logins_today.length == 1
+  end
+
+  def note_assigned?(note_id)
+    tasks.where(id: note_id).present?
   end
 
   private

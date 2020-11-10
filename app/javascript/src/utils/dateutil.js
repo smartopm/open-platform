@@ -80,6 +80,23 @@ export function getWeekDay(date) {
 }
 
 /**
+ * 
+ * @param {Date} date 
+ * @description returns a boolean if the passed date less than today's date
+ * @returns {Boolean} bool
+ */
+export function checkPastDate(selDate){
+  const today = new Date();
+  const date = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+  const time = `${today.getHours()}:${today.getMinutes()}`
+  const dateTime = `${date}${' '}${time}`
+  if (Date.parse(selDate) < Date.parse(dateTime)){
+    return true
+  }
+  return false 
+}
+
+/**
  *
  * @param {Date} date
  * @description returns the month in a year in word format based on a given day

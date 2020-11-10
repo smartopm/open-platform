@@ -121,6 +121,11 @@ export default function TodoList({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadTask])
 
+  useEffect(() => {
+    taskCountData.refetch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
+
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
     return assignUnassignUser(noteId, userId)
@@ -219,7 +224,7 @@ export default function TodoList({
               // eslint-disable-next-line no-nested-ternary
               !taskId ? (
                 <TaskForm
-                  refetch={refetch}
+                  refetch={(refetch, taskCountData.refetch())}
                   close={() => setModalOpen(!open)}
                   assignUser={assignUnassignUser}
                   users={liteData?.usersLite}

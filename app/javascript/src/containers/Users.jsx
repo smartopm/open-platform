@@ -8,23 +8,28 @@ import {
   Divider,
   IconButton,
   InputBase,
-  Grid
+  Grid,
+  CircularProgress
 } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
+import TelegramIcon from '@material-ui/icons/Telegram'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
 import { UsersDetails, LabelsQuery } from '../graphql/queries'
 import {
   CreateNote,
-  SendOneTimePasscode
+  SendOneTimePasscode,
+  UserLabelCreate,
+  CampaignCreateThroughUsers
 } from '../graphql/mutations'
 import { ModalDialog } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import QueryBuilder from '../components/QueryBuilder'
+import CreateLabel from '../components/CreateLabel'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
@@ -46,6 +51,10 @@ export default function UsersList() {
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const authState = useContext(AuthStateContext)
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
+  const [labelLoading, setLabelLoading] = useState(false)
+  const [labels, setLabels] = useState([])
+  const [labelError, setError] = useState('')
+  const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -56,7 +65,13 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
+  let userList
+  if (data) {
+    userList = data.users.map(user => user.id)
+  }
+
   // TODO: @dennis, add pop up for notes
+  const [userLabelCreate] = useMutation(UserLabelCreate)
   const {
     loading: labelsLoading,
     error: labelsError,
@@ -115,12 +130,48 @@ export default function UsersList() {
     setOffset(0)
   }, [])
 
-
   function toggleFilterMenu() {
     if (displayBuilder === '') {
       setDisplayBuilder('none')
     } else {
       setDisplayBuilder('')
+    }
+  }
+
+  function handleLabelSelect(lastLabel) {
+    const { id, shortDesc } = lastLabel
+    setLabelLoading(true)
+    if (userList) {
+      userLabelCreate({
+        variables: { userId: userList.toString(), labelId: id }
+      })
+        .then(() => {
+          refetch()
+          setLabels([...labels, shortDesc])
+          setLabelLoading(false)
+        })
+        .catch(labelErr => {
+          setLabelLoading(false)
+          setError(labelErr.message)
+        })
+    }
+  }
+
+  function handleCampaignCreate() {
+    if (userList) {
+      campaignCreate({
+        variables: { userId: userList.toString() }
+      })
+        .then(res => {
+          // eslint-disable-next-line no-shadow
+          const { data } = res
+          setRedirect(
+            `/campaign/${data.campaignCreateThroughUsers.campaign.id}`
+          )
+        })
+        .catch(campaignError => {
+          setError(campaignError.message)
+        })
     }
   }
 
@@ -205,7 +256,7 @@ export default function UsersList() {
   return (
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
-      <div className="container">
+      <div className="container" style={{ position: 'relative' }}>
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -309,15 +360,52 @@ export default function UsersList() {
             </div>
           </>
         </div>
+        <Grid container alignItems="center">
+          <Grid
+            item
+            xs="auto"
+            style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}
+          >
+            <CreateLabel handleLabelSelect={handleLabelSelect} />
+          </Grid>
+          <Grid
+            item
+            xs="auto"
+            style={{ display: 'flex', alignItems: 'flex-end' }}
+          >
+            {labelLoading ? <CircularProgress size={25} /> : ''}
+          </Grid>
+
+          <Grid
+            item
+            xs="auto"
+            style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.filterButton}
+              endIcon={<TelegramIcon />}
+              onClick={handleCampaignCreate}
+            >
+              Create Campaign
+            </Button>
+          </Grid>
+        </Grid>
+        <br />
+        <div className="d-flex justify-content-center row">
+          <span>{labelError}</span>
+        </div>
+
         <Grid
           container
           justify="flex-end"
           style={{
-            width: '88%',
+            width: '99%',
             position: 'absolute',
             zIndex: 1,
-            marginTop: '-25px',
-            display: displayBuilder,
+            marginTop: '-95px',
+            display: displayBuilder
           }}
         >
           <QueryBuilder
@@ -327,11 +415,7 @@ export default function UsersList() {
             filterFields={filterFields}
           />
         </Grid>
-
         <br />
-        <br />
-        <br />
-
         {loading || labelsLoading ? (
           <Loading />
         ) : (

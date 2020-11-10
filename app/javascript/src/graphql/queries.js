@@ -543,6 +543,12 @@ export const MyTaskCountQuery = gql`
   }
 `
 
+export const messageCountQuery = gql`
+  {
+    msgNotificationCount
+  }
+`
+
 export const TaskStatsQuery = gql`
   {
     taskStats {

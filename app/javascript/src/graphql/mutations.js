@@ -370,6 +370,14 @@ export const DeleteLabel = gql`
   }
 `
 
+export const MsgNotificationUpdate = gql`
+  mutation MsgNotificationUpdate {
+    messageNotificationUpdate {
+      success
+    }
+  }
+`
+
 export const LabelEdit = gql`
   mutation LabelEdit($id: ID! $shortDesc: String!, $description: String, $color: String!) {
     labelUpdate(id: $id shortDesc: $shortDesc, description: $description, color: $color) {
@@ -705,8 +713,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($labels: String, $userType: String, $number: String){
-    campaignCreateThroughUsers(labels: $labels, userType: $userType, number: $number){
+  mutation campaignCreateThroughUsers($userId: String!){
+    campaignCreateThroughUsers(userId: $userId){
       campaign{
         id
       }

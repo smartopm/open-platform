@@ -6,6 +6,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker
 } from '@material-ui/pickers'
+import { checkPastDate } from "../utils/dateutil"
 
 export default function DatePickerDialog({ selectedDate, handleDateChange, label }) {
     return (
@@ -43,6 +44,8 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
         clearable
         disablePast={pastDate || false}
         minutesStep={pastDate ? 60 : 1}
+        error={pastDate ? checkPastDate(selectedDateTime) : null}
+        helperText={pastDate ? 'Please select a date and time in the future' : ''}
       />
     </MuiPickersUtilsProvider>
   );
