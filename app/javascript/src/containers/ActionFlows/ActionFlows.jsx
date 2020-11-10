@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import {
   Dialog,
   DialogTitle,
@@ -16,10 +16,11 @@ import {
 } from '@material-ui/core'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../../components/Nav'
-import { Events, Actions, ActionFields } from '../../graphql/queries'
+import { Events, Actions, ActionFields, RuleFields } from '../../graphql/queries'
 import colors from '../../themes/nkwashi/colors'
 import { titleize, capitalize } from '../../utils/helpers'
 import QueryBuilder from '../../components/QueryBuilder'
+import { CreateActionFlow } from '../../graphql/mutations'
 
 const { primary, dew } = colors
 const initialData = {
@@ -39,22 +40,28 @@ export default function ActionFlows() {
   const actionFieldsData = useQuery(ActionFields, {
     variables: { action: data.actionType }
   })
+  const ruleFieldsData = useQuery(RuleFields, {
+    variables: { eventType: data.eventType }
+  })
+  const [createActionFlow] = useMutation(CreateActionFlow)
+
+
+  const ruleFieldsConfig = {}
+
+  if (ruleFieldsData.data) {
+    ruleFieldsData.data.ruleFields.forEach((field) => {
+      ruleFieldsConfig[field] = {
+        label: titleize(field),
+        type: 'text',
+        valueSources: ['value']
+      }
+    })
+  }
 
   const InitialConfig = MaterialConfig
   const queryBuilderConfig = {
     ...InitialConfig,
-    fields: {
-      user: {
-        label: 'User',
-        type: 'text',
-        valueSources: ['value']
-      },
-      Author: {
-        label: 'Author',
-        type: 'text',
-        valueSources: ['value']
-      }
-    }
+    fields: ruleFieldsConfig
   }
 
   function openModal() {
@@ -67,7 +74,10 @@ export default function ActionFlows() {
 
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
-      console.log(selectedOptions.logic)
+      setData({
+        ...data,
+        eventCondition: JSON.stringify(selectedOptions.logic)
+      })
     }
   }
 
@@ -84,6 +94,37 @@ export default function ActionFlows() {
     setMetaData({
       ...metaData,
       [name]: value
+    })
+  }
+
+  function handleSave() {
+    const actionMetaData = {}
+    Object.entries(metaData).forEach(([key, value]) => {
+      actionMetaData[key] = {
+        name: key,
+        value,
+        type: 'string'
+      }
+    })
+
+    const eventAction = {
+      action_name: data.actionType,
+      action_fields: actionMetaData
+    }
+
+    createActionFlow({ variables: {
+      title: data.title,
+      description: data.description,
+      eventType: data.eventType,
+      eventCondition: data.eventCondition,
+      eventAction
+     }
+    }).then(() => {
+      closeModal()
+    }).catch(error => {
+      // setError(error.message)
+      // setIsLoading(false)
+      console.log(error)
     })
   }
 
@@ -201,7 +242,7 @@ export default function ActionFlows() {
           <Button onClick={closeModal} color="secondary" variant="outlined">
             Cancel
           </Button>
-          <Button onClick={() => {}} color="primary" variant="contained">
+          <Button onClick={handleSave} color="primary" variant="contained">
             Save
           </Button>
         </DialogActions>

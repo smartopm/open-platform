@@ -720,3 +720,9 @@ export const ActionFields = gql`
     }
   }
 `
+
+export const RuleFields = gql`
+  query ruleFields($eventType: String!){
+    ruleFields(eventType: $eventType)
+  }
+`

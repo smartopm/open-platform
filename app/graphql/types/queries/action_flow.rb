@@ -20,6 +20,12 @@ module Types::Queries::ActionFlow
       description 'Get fields for an action'
       argument :action, String, required: true
     end
+
+    # Get fields for an event, to populate the Rule widget
+    field :rule_fields, [GraphQL::Types::String], null: true do
+      description 'Get fields for an event'
+      argument :event_type, String, required: true
+    end
   end
 
   def events
@@ -43,7 +49,21 @@ module Types::Queries::ActionFlow
       fields = "ActionFlows::Actions::#{action.camelize}::ACTION_FIELDS".constantize
       fields.map { |f| OpenStruct.new(f) }
     rescue => e
-      nil
+      raise GraphQL::ExecutionError, 'Invalid action name'
+    end
+  end
+
+  def rule_fields(event_type:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    begin
+      event_class = "ActionFlows::Events::#{event_type.camelize}Event".constantize
+      metadata = event_class.event_metadata
+      prefix = metadata.keys.first.downcase
+
+      metadata.values.first.keys.map { |f| "#{prefix}_#{f}" }
+    rescue => e
+      raise GraphQL::ExecutionError, 'Invalid event type'
     end
   end
 end
