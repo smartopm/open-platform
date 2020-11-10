@@ -25,7 +25,7 @@ export default function RadioInput({ handleValue, properties, value }) {
         onChange={handleValue}
       >
         {
-          // This is form update, go through all possible choices and mark checked the one that was chosen
+          // This is for form update, go through all possible choices and mark checked the one that was chosen
           properties.formProperty?.fieldValue.map(field => {
             if (field.value === parsedValue.checked) {
               return (
@@ -53,7 +53,7 @@ export default function RadioInput({ handleValue, properties, value }) {
           <FormControlLabel
             key={val.label}
             value={val.value}
-            control={<Radio />}
+            control={<Radio required={properties.required} />}
             label={val.label}
           />
         ))}
@@ -73,7 +73,7 @@ RadioInput.propTypes = {
     fieldType: PropTypes.string,
     fieldValue: PropTypes.arrayOf(
       PropTypes.shape({
-        value: PropTypes.oneOfType(['string', 'number', 'boolean']),
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
         label: PropTypes.string
       })
     ),

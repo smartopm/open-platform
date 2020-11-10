@@ -85,6 +85,14 @@ export default function FormUpdate({ formId, userId, authState }) {
     })
   }
 
+  function handleRadioValueChange(event, propId, fieldName){
+    const { name, value } = event.target
+    setProperties({
+      ...properties,
+      [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
+    })
+  }
+
   function handleStatusUpdate(formStatus){
     updateFormUserStatus({
       variables: {
@@ -229,7 +237,7 @@ export default function FormUpdate({ formId, userId, authState }) {
           <RadioInput 
             properties={formPropertiesData}
             value={properties.radio.value.checked}
-            handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)} 
+            handleValue={event => handleRadioValueChange(event, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)} 
           />
           <br />
         </Fragment>
