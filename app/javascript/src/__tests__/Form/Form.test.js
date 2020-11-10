@@ -21,11 +21,32 @@ describe('Form Component', () => {
                 id: "837b8ce8-f8e6-45fb-89a8-abb8fc0cc079",
                 fieldName: "Client Name",
                 fieldType: "text",
+                fieldValue: null,
                 shortDesc: "This is a short description",
                 longDesc: null,
                 required: false,
                 adminUse: false,
                 order: '1'
+                },
+                {
+                  id: "837b8ce8-f8e6-45fb-45a8-abb8fc0cc079",
+                  fieldName: "Would you rather do this?",
+                  fieldType: "radio",
+                  fieldValue: [
+                    {
+                      value: "Yes",
+                      label: "Yes"
+                    },
+                    {
+                      value: "No",
+                      label: "No"
+                    }
+                  ],
+                  shortDesc: "This is a short description",
+                  longDesc: null,
+                  required: false,
+                  adminUse: false,
+                  order: '2'
                 }
             ],
           }
@@ -41,16 +62,11 @@ describe('Form Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
     await waitFor(() => {
         expect(container.queryByText('Submit')).toBeInTheDocument(1)
-      },
-      { timeout: 500 }
-    )
-    await waitFor(() => {
         expect(container.queryAllByLabelText('text-input')).toHaveLength(1)
-      },
-      { timeout: 500 }
-    )
-    await waitFor(() => {
         expect(container.queryAllByLabelText('text-input')[0]).toHaveTextContent('Client Name')
+        expect(container.queryByLabelText('Yes')).toBeInTheDocument()
+        expect(container.queryByLabelText('No')).toBeInTheDocument()
+        expect(container.queryByLabelText('Would you rather do this?')).toBeInTheDocument()
       },
       { timeout: 500 }
     )

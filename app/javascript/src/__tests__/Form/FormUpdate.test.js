@@ -48,6 +48,7 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Address',
                 fieldType: 'text',
+                fieldValue: null,
                 id: '3145c47e-1279-47b0-9dac-dc4a7e30562e',
                 adminUse: false,
                 order: '1'
@@ -60,6 +61,7 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Dead Line',
                 fieldType: 'date',
+                fieldValue: null,
                 id: '3145c47e-1279-47b0-8dac-dc4a7e362e',
                 adminUse: false,
                 order: '2'
@@ -72,6 +74,7 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Dead Line',
                 fieldType: 'image',
+                fieldValue: null,
                 id: '3145c47e-1279-47b0-9da454c-dc4a7e362e',
                 adminUse: false,
                 order: '3'
@@ -84,6 +87,7 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Dead Line',
                 fieldType: 'signature',
+                fieldValue: null,
                 id: '3145c47e-1279-47b0-9dac-dc7e362e',
                 adminUse: false,
                 order: '4'
@@ -96,6 +100,7 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Sign here',
                 fieldType: 'signature',
+                fieldValue: null,
                 id: '3145c47e-1234-47b0-9dac-dc7e362e',
                 adminUse: false,
                 order: '5'
@@ -108,11 +113,34 @@ describe('Form Component', () => {
               formProperty: {
                 fieldName: 'Attach a file here',
                 fieldType: 'image',
+                fieldValue: null,
                 id: '3145c47e-1234-47b0-9dac-dc723d2e',
                 adminUse: false,
                 order: '5'
               },
               value: null,
+              imageUrl: null,
+              fileType: null
+            },
+            {
+              formProperty: {
+                fieldName: 'Would you rather?',
+                fieldType: 'radio',
+                fieldValue: [
+                  {
+                    value: "Yes",
+                    label: "Yes"
+                  },
+                  {
+                    value: "No",
+                    label: "No"
+                  }
+                ],
+                id: '3145c47e-1234-34b0-9dac-dc723d2e',
+                adminUse: false,
+                order: '6'
+              },
+              value: "{\"checked\"=>\"Yes\", \"label\"=>\"Would you rather?\"}",
               imageUrl: null,
               fileType: null
             }
@@ -154,6 +182,9 @@ describe('Form Component', () => {
         expect(container.queryByText('Signature')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
         expect(container.queryAllByLabelText('sign_title')[0].textContent).toContain('SIGNATURE')
+        expect(container.queryByLabelText('Yes')).toBeInTheDocument()
+        expect(container.queryByLabelText('No')).toBeInTheDocument()
+        expect(container.queryByText('Would you rather?')).toBeInTheDocument()
       },
       { timeout: 500 }
     )
