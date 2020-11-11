@@ -69,6 +69,8 @@ module Types::Queries::Message
   end
 
   def msg_notification_count
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    
     context[:current_user].notifications.where(notifable_type: 'Message', seen_at: nil).count
   end
 end
