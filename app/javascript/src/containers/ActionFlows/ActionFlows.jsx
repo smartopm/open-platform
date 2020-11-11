@@ -127,10 +127,9 @@ export default function ActionFlows() {
       closeModal()
       setMessageAlertOpen(true)
       setIsSuccessAlert(true)
-    }).catch(error => {
+    }).catch(() => {
       setMessageAlertOpen(true)
       setIsSuccessAlert(false)
-      console.log(error)
     })
   }
 
@@ -141,7 +140,6 @@ export default function ActionFlows() {
     setMessageAlertOpen(false)
   }
 
-  console.log('metaData', metaData)
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
@@ -205,7 +203,7 @@ export default function ActionFlows() {
               </>
             )}
           </FormControl>
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px', marginBottom: '5px' }}>
             <QueryBuilder
               handleOnChange={handleQueryOnChange}
               builderConfig={queryBuilderConfig}

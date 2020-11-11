@@ -280,7 +280,7 @@ export default function UsersList() {
   return (
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
-      <div className="container" style={{ position: 'relative' }}>
+      <div className="container">
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -289,7 +289,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                Add note for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -310,7 +310,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                Add Outgoing call answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -331,7 +331,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                Add Outgoing call not answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -384,61 +384,68 @@ export default function UsersList() {
             </div>
           </>
         </div>
-        <Grid container alignItems="center">
-          <Grid
-            item
-            xs="auto"
-            style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}
-          >
-            <CreateLabel handleLabelSelect={handleLabelSelect} />
-          </Grid>
-          <Grid
-            item
-            xs="auto"
-            style={{ display: 'flex', alignItems: 'flex-end' }}
-          >
-            {labelLoading ? <CircularProgress size={25} /> : ''}
-          </Grid>
-
-          <Grid
-            item
-            xs="auto"
-            style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.filterButton}
-              endIcon={<TelegramIcon />}
-              onClick={handleCampaignCreate}
-            >
-              Create Campaign
-            </Button>
-          </Grid>
-        </Grid>
-        <br />
-        <div className="d-flex justify-content-center row">
-          <span>{labelError}</span>
-        </div>
-
-        <Grid
-          container
-          justify="flex-end"
+        <div
           style={{
-            width: '86%',
-            position: 'absolute',
-            zIndex: 1,
-            marginTop: '-2px',
-            display: displayBuilder
+            display: 'flex',
+            justifyContent: 'space-between',
+            position: 'relative'
           }}
         >
-          <QueryBuilder
-            handleOnChange={handleQueryOnChange}
-            builderConfig={queryBuilderConfig}
-            initialQueryValue={queryBuilderInitialValue}
-            addRuleLabel="Add filter"
-          />
-        </Grid>
+          <Grid container alignItems="center" style={{ width: '40%' }}>
+            <Grid
+              item
+              xs="auto"
+              style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}
+            >
+              <CreateLabel handleLabelSelect={handleLabelSelect} />
+            </Grid>
+            <Grid
+              item
+              xs="auto"
+              style={{ display: 'flex', alignItems: 'flex-end' }}
+            >
+              {labelLoading ? <CircularProgress size={25} /> : ''}
+            </Grid>
+
+            <Grid
+              item
+              xs="auto"
+              style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.filterButton}
+                endIcon={<TelegramIcon />}
+                onClick={handleCampaignCreate}
+              >
+                Create Campaign
+              </Button>
+            </Grid>
+            <div className="d-flex justify-content-center row">
+              <span>{labelError}</span>
+            </div>
+          </Grid>
+
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              display: displayBuilder
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={handleQueryOnChange}
+              builderConfig={queryBuilderConfig}
+              initialQueryValue={queryBuilderInitialValue}
+              addRuleLabel="Add filter"
+            />
+          </Grid>
+        </div>
         <br />
         {loading || labelsLoading ? (
           <Loading />
