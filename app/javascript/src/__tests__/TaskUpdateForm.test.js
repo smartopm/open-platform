@@ -21,11 +21,12 @@ describe('task form component', () => {
         data,
         assignUser: jest.fn(),
         refetch: jest.fn(),
-        users: []
+        users: [],
+        currentUser: { name: 'Tester', id: '93sd45435' }
       }
         const container = render(<MockedProvider><TaskUpdateForm {...props} /></MockedProvider>)
         expect(container.queryByText('Update Task')).toBeInTheDocument()
-        
+
         const description = container.queryByLabelText('task_description')
         const submitBtn = container.queryByLabelText('task_submit')
         const previewBtn = container.queryByLabelText('preview')
