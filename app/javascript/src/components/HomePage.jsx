@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import PersonIcon from '@material-ui/icons/Person'
-import LabelIcon from '@material-ui/icons/Label';
+import LabelIcon from '@material-ui/icons/Label'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import MessageIcon from '@material-ui/icons/Message'
@@ -21,6 +21,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
+import ActionIcon from '@material-ui/icons/CallToAction'
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -146,9 +147,7 @@ export default function Homepage({ authState }) {
       titleStyle: css(styles.CardtextImg),
       clientName: authState.user.name,
       from: 'home',
-      icon: (
-        <SVGIcon image={AccountManagement} alt="account management icon" />
-      ),
+      icon: <SVGIcon image={AccountManagement} alt="account management icon" />,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -157,7 +156,7 @@ export default function Homepage({ authState }) {
       path: '/forms',
       id: 'crfl',
       icon: <ListAltIcon fontSize="large" />,
-      access: ['admin', 'resident', 'client'],
+      access: ['admin', 'resident', 'client']
     },
     {
       card_id: 12,
@@ -248,9 +247,13 @@ export default function Homepage({ authState }) {
       title: 'Labels',
       path: `/labels`,
       icon: <LabelIcon fontSize="large" />,
-      access: [
-        'admin'
-      ]
+      access: ['admin']
+    },
+    {
+      title: 'Action Flows',
+      path: '/action_flows',
+      icon: <ActionIcon fontSize="large" />,
+      access: ['admin']
     }
   ]
 

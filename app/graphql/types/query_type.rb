@@ -14,6 +14,7 @@ module Types
     include Types::Queries::Label
     include Types::Queries::Note
     include Types::Queries::Form
+    include Types::Queries::ActionFlow
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 

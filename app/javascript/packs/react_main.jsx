@@ -86,6 +86,7 @@ import { theme } from '../src/themes/nkwashi/theme'
 import FormLinks from '../src/containers/FormLinks'
 import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
+import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -314,7 +315,7 @@ const App = () => {
                         <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
-                        
+
                         <AdminRoutes>
                           <Switch>
                             <Route
@@ -336,6 +337,7 @@ const App = () => {
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
                             <Route path="/labels" component={Labels} />
+                            <Route path="/action_flows" component={ActionFlows} />
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route

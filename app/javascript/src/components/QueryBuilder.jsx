@@ -2,20 +2,19 @@
 import React, { useState } from 'react'
 import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
-import { dateToString } from '../utils/dateutil'
-import { theme } from "../themes/nkwashi/theme"
+import { theme } from '../themes/nkwashi/theme'
 
 export default function QueryBuilder({
   builderConfig,
   initialQueryValue,
   handleOnChange,
-  filterFields
+  addRuleLabel
 }) {
   const config = {
     ...builderConfig,
     settings: {
       ...builderConfig.settings,
-      addRuleLabel: 'Add filter',
+      addRuleLabel,
       showNot: false,
       groupActionsPosition: 'bottomLeft',
       canReorder: false,
@@ -55,8 +54,8 @@ export default function QueryBuilder({
 
   function renderBuilder(props) {
     return (
-      <div className="query-builder-container" style={{ padding: '10px' }}>
-        <div className="query-builder qb-lite">
+      <div className="query-builder-container">
+        <div className="query-builder qb-lite" style={{ margin: '0' }}>
           <Builder {...props} />
         </div>
       </div>
@@ -66,31 +65,7 @@ export default function QueryBuilder({
   function onChange(immutableTree, queryConfig) {
     setTreeConfig({ tree: immutableTree, config: queryConfig })
     const selectedOptions = QbUtils.jsonLogicFormat(immutableTree, config)
-
-    if (selectedOptions) {
-      const andConjugate = selectedOptions.logic?.and
-      const orConjugate = selectedOptions.logic?.or
-      const availableConjugate = andConjugate || orConjugate
-      if (availableConjugate) {
-        const conjugate = andConjugate ? 'AND' : 'OR'
-        const query = availableConjugate
-          .map(option => {
-            let operator = Object.keys(option)[0]
-            const property = filterFields[option[operator][0].var]
-            let value = option[operator][1]
-
-            if (operator === '==') operator = '='
-            if (property === 'date_filter') {
-              operator = '>'
-              value = dateToString(value)
-            }
-
-            return `${property} ${operator} "${value}"`
-          })
-          .join(` ${conjugate} `)
-        handleOnChange(query, availableConjugate.length)
-      }
-    }
+    handleOnChange(selectedOptions)
   }
 
   return (
@@ -105,9 +80,13 @@ export default function QueryBuilder({
   )
 }
 
+QueryBuilder.defaultProps = {
+  initialQueryValue: null
+}
+
 QueryBuilder.propTypes = {
   builderConfig: PropTypes.object.isRequired,
-  initialQueryValue: PropTypes.object.isRequired,
+  initialQueryValue: PropTypes.object,
   handleOnChange: PropTypes.func.isRequired,
-  filterFields: PropTypes.object.isRequired
+  addRuleLabel: PropTypes.string.isRequired
 }

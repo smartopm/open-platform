@@ -699,3 +699,30 @@ query userNote($userId: ID!) {
   }
 }
 `
+
+export const Events = gql`
+  query events {
+    events
+  }
+`
+
+export const Actions = gql`
+  query actions {
+    actions
+  }
+`
+
+export const ActionFields = gql`
+  query actionFields($action: String!){
+    actionFields(action: $action) {
+      name,
+      type
+    }
+  }
+`
+
+export const RuleFields = gql`
+  query ruleFields($eventType: String!){
+    ruleFields(eventType: $eventType)
+  }
+`
