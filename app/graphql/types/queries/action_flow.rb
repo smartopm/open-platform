@@ -31,6 +31,11 @@ module Types::Queries::ActionFlow
     field :action_flows, [Types::ActionFlowType], null: false do
       description 'Fetches all action-flows'
     end
+
+    # Get active actionflows list
+    field :active_action_flows, [Types::ActionFlowType], null: true do
+      description 'Get list of active action flows'
+    end
   end
 
   def events
@@ -79,5 +84,19 @@ module Types::Queries::ActionFlow
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     ActionFlow.order(:created_at).all
+  end
+
+  def active_action_flows
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    ActionFlow.where(active: true).map do |flow_obj|
+      {
+        title: flow_obj.title,
+        description: flow_obj.description,
+        event_type: flow_obj.event_type,
+        event_condition: flow_obj.event_condition,
+        event_action: flow_obj.event_action,
+      }
+    end
   end
 end
