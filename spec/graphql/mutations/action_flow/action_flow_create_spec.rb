@@ -66,6 +66,17 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
+
+    it 'throws an error if there\ns a validation issue' do
+      variables[:eventType] = 'nonsense'
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: admin,
+                                                   site_community: user.community,
+                                                 }).as_json
+      expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to be_nil
+      expect(JSON.parse(result.dig('errors', 0, 'message'))[0]).to eql 'Event type is not included in the list'
+    end
   end
 end
 # rubocop:enable Metrics/LineLength
