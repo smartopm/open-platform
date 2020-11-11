@@ -7,6 +7,7 @@ import {
   FormHelperText,
   MenuItem,
   Select,
+  Grid,
   InputLabel,
   FormControl,
   Snackbar,
@@ -24,6 +25,9 @@ import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
 import { FormToggle } from '../Campaign/ToggleButton'
 import { sanitizeText } from '../../utils/helpers'
+import RemindMeLaterMenu from './RemindMeLaterMenu'
+import { TaskReminder } from '../../graphql/mutations'
+import DateContainer, { dateToString, dateTimeToString } from '../DateContainer'
 
 const initialData = {
   user: '',
@@ -42,11 +46,16 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
   const [taskUpdate] = useMutation(UpdateNote)
   const [updated, setUpdated] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
+  const [setReminder] = useMutation(TaskReminder)
+  const [reminderTime, setReminderTime] = useState(null)
 
   const [type, setType] = useState("preview")
     const handleType = (_event, value) => {
         setType(value)
     }
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -107,6 +116,45 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
     setOpen(!autoCompleteOpen)
   }
 
+  function timeFormat(time) {
+    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`
+  }
+
+  function setTaskReminder(hour) {
+    setReminder({
+      variables: { noteId: data.id, hour }
+    })
+      .then(() => {
+        handleClose()
+        const timeScheduled = new Date(
+          Date.now() + hour * 60 * 60000
+        ).toISOString()
+        setReminderTime(timeFormat(timeScheduled))
+      })
+      .catch(err => console.log(err))
+  }
+
+  function currentActiveReminder() {
+    const timeScheduled = reminderTime || data.reminderTime
+    let formattedTime = null
+    if (
+      timeScheduled &&
+      new Date(timeScheduled).getTime() > new Date().getTime()
+    ) {
+      formattedTime = timeFormat(timeScheduled)
+    }
+
+    return formattedTime
+  }
+
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleClose() {
+    setAnchorEl(null)
+  }
+
   useEffect(() => {
     setDefaultData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,7 +162,25 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
 
   return (
     <>
+      <Grid>
+        <RemindMeLaterMenu
+          taskId={data.id}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+          open={open}
+          setTaskReminder={setTaskReminder}
+        />
+      </Grid>
       <form onSubmit={handleSubmit}>
+        <Button
+          color="primary"
+          style={{
+            float: 'right'
+          }}
+          onClick={handleOpenMenu}
+        >
+        {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
+        </Button>
         <Snackbar
           open={updated}
           autoHideDuration={3000}
