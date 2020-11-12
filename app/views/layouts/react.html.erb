@@ -80,8 +80,10 @@
          btSection.style.display = 'none'
          return
       }
+      setTimeout(() => {
+        btSection.style.display = 'none'
+      }, 5000);
     };
-
 
     window.addEventListener("beforeinstallprompt", function (event) {
       event.preventDefault();
