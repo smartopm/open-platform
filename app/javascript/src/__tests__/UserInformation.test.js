@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import UserInformation from '../components/UserInformation'
 
-describe("User infromation component loads",()=>{
+describe("User information component loads",()=>{
     const data = {
         user : {
             id : "1",

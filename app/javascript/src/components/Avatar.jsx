@@ -7,7 +7,7 @@ import ImageAuth from './ImageAuth'
 import { Context } from '../containers/Provider/AuthStateProvider'
 
 export function safeAvatarLink({ imageUrl, user}){
-  if (user.imageUrl || user.avatarUrl) {
+  if (user?.imageUrl || user?.avatarUrl) {
     return forceLinkHttps(user.imageUrl || user.avatarUrl )
   }
   return forceLinkHttps(imageUrl)
@@ -22,7 +22,7 @@ export default function Avatar({ imageUrl, user, style}) {
   }
   // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
   // user.imageUrl contains links from Auth Providers ==> Google and Facebook 
-  if (user.imageUrl) {
+  if (user && user.imageUrl) {
     return (
       <img
         src={safeAvatarLink({user, imageUrl})}
