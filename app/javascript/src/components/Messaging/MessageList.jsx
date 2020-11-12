@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import MaterialList from '@material-ui/core/List'
-import UserMessageItem from './UserMessageItem'
+import UserMessageItem from './MessageItem'
 import { useWindowDimensions } from '../../utils/customHooks'
 
 export default function MessageList({ messages }) {
