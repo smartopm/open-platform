@@ -102,5 +102,6 @@ module Types
 
     # action_flow
     field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
+    field :action_flow_update, mutation: Mutations::ActionFlow::ActionFlowUpdate
   end
 end

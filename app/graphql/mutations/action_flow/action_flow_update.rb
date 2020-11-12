@@ -5,9 +5,9 @@ module Mutations
     # Update an action flow
     class ActionFlowUpdate < BaseMutation
       argument :id, ID, required: true
-      argument :title, String, required: true
-      argument :description, String, required: true
-      argument :event_type, String, required: true
+      argument :title, String, required: false
+      argument :description, String, required: false
+      argument :event_type, String, required: false
       argument :event_condition, String, required: false
       argument :event_action, GraphQL::Types::JSON, required: false
 
