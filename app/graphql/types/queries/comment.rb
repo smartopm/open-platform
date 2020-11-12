@@ -39,6 +39,11 @@ module Types::Queries::Comment
       description 'Get a discussion for wordpress pages using postId'
       argument :post_id, String, required: true
     end
+
+    # Get all comments made on posts
+    field :fetch_comments, [Types::CommentType], null: true do
+      description 'Get all comments made on a post'
+    end
   end
 
   def post_comments(offset: 0, limit: 100, post_id:)
@@ -86,5 +91,11 @@ module Types::Queries::Comment
 
     discs = context[:current_user].find_user_discussion(id, type)
     discs
+  end
+
+  def fetch_comments
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+
+    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion)
   end
 end
