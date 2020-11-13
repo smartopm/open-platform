@@ -9,7 +9,9 @@ import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
 import { Button, Container } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon';
+import { useMutation } from 'react-apollo';
 import CenteredContent from '../CenteredContent'
+import { FormPropertyCreateMutation } from '../../graphql/mutations/forms'
 
 export default function FormBuilder() {
   const [isAdd, setAdd] = useState(false)
@@ -25,7 +27,7 @@ export default function FormBuilder() {
       <CenteredContent>
         <Button 
           onClick={() => setAdd(!isAdd)}
-          endIcon={<Icon>add</Icon>}
+          startIcon={<Icon>add</Icon>}
           variant="outlined"
         >
           Add Field
@@ -40,7 +42,8 @@ const initData = {
   fieldType: '',
   required: false,
   adminUse: false,
-  order: ''
+  order: '1',
+  fieldValue: {}
 }
 
 const fieldTypes = {
@@ -53,6 +56,7 @@ const fieldTypes = {
 
 export function FormPropertyForm() {
   const [propertyData, setProperty] = useState(initData)
+  const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
 
   function handlePropertyValueChange(event) {
     const { name, value } = event.target
@@ -72,6 +76,14 @@ export function FormPropertyForm() {
 
   function saveFormProperty(event){
     event.preventDefault()
+    formPropertyCreate({
+      variables: {
+        ...propertyData,
+        formId: "a6a8a10f-19ce-47e3-b811-f84e1557ef6c"
+      }
+    })
+    .then(() => console.log("successfully created ..."))
+    .catch(error => console.log(error.message))
   }
 
   console.table(propertyData)
@@ -87,6 +99,7 @@ export function FormPropertyForm() {
         name="fieldName"
         style={{ width: '100%' }}
         margin="normal"
+        required
       />
       <PropertySelector
         label="Field Type"
@@ -97,7 +110,7 @@ export function FormPropertyForm() {
       />
       <SwitchInput 
         name="required" 
-        label="Field is required" 
+        label="This field is required" 
         value={propertyData.required} 
         handleChange={handleRadioChange}
       /> 
@@ -132,9 +145,10 @@ export function PropertySelector({ label, name, value, handleChange, options }) 
         onChange={handleChange}
         label={label}
         name={name}
+        required
       >
         {Object.entries(options).map(([key, val]) => (
-          <MenuItem key={key} value={val}>
+          <MenuItem key={key} value={key}>
             {val}
           </MenuItem>
         ))}
