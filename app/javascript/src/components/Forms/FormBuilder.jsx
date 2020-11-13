@@ -1,15 +1,38 @@
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
-import { makeStyles } from '@material-ui/core/styles'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
-// import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
+import { Button, Container } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon';
+import CenteredContent from '../CenteredContent'
 
 export default function FormBuilder() {
-  return <FormPropertyForm />
+  const [isAdd, setAdd] = useState(false)
+  return (
+    <Container maxWidth="sm">
+
+      {
+        isAdd && <FormPropertyForm />
+      }
+      <br />
+      <br />
+      <br />
+      <CenteredContent>
+        <Button 
+          onClick={() => setAdd(!isAdd)}
+          endIcon={<Icon>add</Icon>}
+          variant="outlined"
+        >
+          Add Field
+        </Button>
+      </CenteredContent>
+    </Container>
+  )
 }
 
 const initData = {
@@ -29,22 +52,32 @@ const fieldTypes = {
 }
 
 export function FormPropertyForm() {
-  const classes = useStyles()
   const [propertyData, setProperty] = useState(initData)
 
   function handlePropertyValueChange(event) {
     const { name, value } = event.target
-    console.log({name, value})
     setProperty({
       ...propertyData,
       [name]: value
     })
   }
 
+  function handleRadioChange(event){
+    const { name, checked } = event.target
+    setProperty({
+      ...propertyData,
+      [name]: checked
+    })
+  }
+
+  function saveFormProperty(event){
+    event.preventDefault()
+  }
+
   console.table(propertyData)
 
   return (
-    <form className={classes.root}>
+    <form onSubmit={saveFormProperty}>
       <TextField
         id="standard-basic"
         label="Field Name"
@@ -52,6 +85,8 @@ export function FormPropertyForm() {
         value={propertyData.fieldName}
         onChange={handlePropertyValueChange}
         name="fieldName"
+        style={{ width: '100%' }}
+        margin="normal"
       />
       <PropertySelector
         label="Field Type"
@@ -60,14 +95,35 @@ export function FormPropertyForm() {
         handleChange={handlePropertyValueChange}
         options={fieldTypes}
       />
-      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+      <SwitchInput 
+        name="required" 
+        label="Field is required" 
+        value={propertyData.required} 
+        handleChange={handleRadioChange}
+      /> 
+      <SwitchInput 
+        name="adminUse" 
+        label="Only for admins" 
+        value={propertyData.adminUse} 
+        handleChange={handleRadioChange}
+      /> 
+      <br />
+      <br />
+      <br />
+      <Button 
+        variant="outlined"
+        type="submit"
+        style={{ float: 'left' }}
+      >
+        Save
+      </Button>
     </form>
   )
 }
 
 export function PropertySelector({ label, name, value, handleChange, options }) {
   return (
-    <FormControl variant="outlined">
+    <FormControl variant="outlined" style={{ width: '100%' }}>
       <InputLabel id="demo-simple-select-outlined-label">{label}</InputLabel>
       <Select
         labelId="demo-simple-select-outlined-label"
@@ -87,6 +143,27 @@ export function PropertySelector({ label, name, value, handleChange, options }) 
   )
 }
 
+
+export function SwitchInput({name, label, value, handleChange}){
+  return (
+    <FormControlLabel
+      labelPlacement="start"
+      style={{ float: 'left' }}
+      control={(
+        <Switch
+          checked={value}
+          onChange={handleChange}
+          name={name}
+          color="primary"
+        />
+    )}
+      label={label}
+    />
+  )
+}
+
+
+
 PropertySelector.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
@@ -101,11 +178,17 @@ PropertySelector.propTypes = {
   }).isRequired
 }
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-      width: '25ch'
-    }
-  }
-}))
+SwitchInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.bool.isRequired,
+  handleChange: PropTypes.func.isRequired,
+}
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     '& > *': {
+//       margin: theme.spacing(1),
+//       width: '50%'
+//     }
+//   }
+// }))
