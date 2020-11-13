@@ -43,6 +43,8 @@ module Types::Queries::Comment
     # Get all comments made on posts
     field :fetch_comments, [Types::CommentType], null: true do
       description 'Get all comments made on a post'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -93,9 +95,9 @@ module Types::Queries::Comment
     discs
   end
 
-  def fetch_comments
+  def fetch_comments(offset: 0, limit: 20)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion)
+    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion).limit(limit).offset(offset)
   end
 end

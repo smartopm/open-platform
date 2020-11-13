@@ -463,8 +463,8 @@ export const ParcelQuery = gql`
   }
 `
 export const CommentsPostQuery = gql`
-  query comments {
-    fetchComments {
+  query comments($limit: Int, $offset: Int) {
+    fetchComments(limit: $limit, offset: $offset) {
       content
       id
       createdAt
