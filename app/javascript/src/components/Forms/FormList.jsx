@@ -6,10 +6,11 @@ import {
   Avatar,
   Divider,
   Typography,
-  Box
+  Box, Fab
 } from '@material-ui/core'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import { useQuery } from 'react-apollo'
+import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../../graphql/queries'
@@ -17,7 +18,8 @@ import Loading from '../Loading'
 import ErrorPage from '../Error'
 
 // here we get existing google forms and we mix them with our own created forms
-export default function FormLinkList() {
+// eslint-disable-next-line react/prop-types
+export default function FormLinkList({ userType }) {
   const { data, error, loading } = useQuery(FormsQuery)
   const history = useHistory()
   const classes = useStyles()
@@ -54,6 +56,29 @@ export default function FormLinkList() {
           </Fragment>
         ))}
       </List>
+      {userType === 'admin' && (
+        <Fab
+          variant="extended"
+          onClick={() => history.push('/form/new')}
+          color="primary"
+          // eslint-disable-next-line no-use-before-define
+          className={`btn ${css(styles.formButton)} `}
+        >
+          Create a Form
+        </Fab>
+      )}
     </div>
   )
 }
+
+const styles = StyleSheet.create({
+  formButton: {
+    height: 51,
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    color: '#FFFFFF'
+  }
+})
