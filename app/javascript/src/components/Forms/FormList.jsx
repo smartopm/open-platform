@@ -59,7 +59,7 @@ export default function FormLinkList({ userType }) {
       {userType === 'admin' && (
         <Fab
           variant="extended"
-          onClick={() => history.push('/form/new')}
+          onClick={() => history.push('/new_form')}
           color="primary"
           // eslint-disable-next-line no-use-before-define
           className={`btn ${css(styles.formButton)} `}

@@ -88,6 +88,7 @@ import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
 import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
+import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -314,6 +315,7 @@ const App = () => {
 
                         <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
+                        <Route path="/new_form" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
 
                         <AdminRoutes>
