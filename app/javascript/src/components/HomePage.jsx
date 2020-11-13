@@ -16,6 +16,7 @@ import NotesIcon from '@material-ui/icons/Notes'
 import ForumIcon from '@material-ui/icons/Forum'
 import CallIcon from '@material-ui/icons/Call'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import CommentIcon from '@material-ui/icons/Comment'
 import LocalMallIcon from '@material-ui/icons/LocalMall'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
@@ -248,6 +249,12 @@ export default function Homepage({ authState }) {
       title: 'Labels',
       path: `/labels`,
       icon: <LabelIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Comments',
+      path: '/comments',
+      icon: <CommentIcon fontSize="large" />,
       access: ['admin']
     },
     {
