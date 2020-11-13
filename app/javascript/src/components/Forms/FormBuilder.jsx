@@ -12,12 +12,13 @@ import Icon from '@material-ui/core/Icon';
 import { useMutation } from 'react-apollo';
 import CenteredContent from '../CenteredContent'
 import { FormPropertyCreateMutation } from '../../graphql/mutations/forms'
+import GenericForm from './Form';
 
 export default function FormBuilder() {
   const [isAdd, setAdd] = useState(false)
   return (
     <Container maxWidth="sm">
-
+      <GenericForm formId="a6a8a10f-19ce-47e3-b811-f84e1557ef6c" />
       {
         isAdd && <FormPropertyForm />
       }
