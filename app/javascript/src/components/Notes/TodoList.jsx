@@ -83,7 +83,7 @@ export default function TodoList({
   // eslint-disable-next-line no-nested-ternary
   const qr = query.length ? query : location === 'my_tasks' ? currentUser.name : assignees
   const [loadTasks, {
-    loading: isLoading, error: tasksError, data, refetch
+    loading: isLoading, error: tasksError, data, refetch, called
   }] = useLazyQuery(
     flaggedNotes,
     {
@@ -141,7 +141,9 @@ export default function TodoList({
     setLoadingAssignee(true)
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => {
-        refetch()
+        if (called) {
+          refetch()
+        }
         taskCountData.refetch()
         setLoadingAssignee(false)
       })
