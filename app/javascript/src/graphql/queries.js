@@ -726,3 +726,16 @@ export const RuleFields = gql`
     ruleFields(eventType: $eventType)
   }
 `
+
+export const ActionFlow = gql`
+  query actionFlow{
+    actionFlow {
+      id
+      title
+      description
+      eventType
+      eventCondition
+      eventAction
+    }
+  }
+`

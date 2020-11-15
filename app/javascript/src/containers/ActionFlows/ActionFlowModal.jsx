@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-apollo'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
@@ -29,7 +29,7 @@ const initialData = {
   eventCondition: '',
   actionType: ''
 }
-export default function ActionFlowModal({ open, closeModal, handleSave }) {
+export default function ActionFlowModal({ open, closeModal, handleSave, selectedActionFlow }) {
   const [data, setData] = useState(initialData)
   const [metaData, setMetaData] = useState({})
 
@@ -41,6 +41,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave }) {
   const ruleFieldsData = useQuery(RuleFields, {
     variables: { eventType: data.eventType }
   })
+
+  useEffect(() => {
+    setData(selectedActionFlow)
+  }, [selectedActionFlow])
 
   const ruleFieldsConfig = {}
 
@@ -77,6 +81,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave }) {
     }
   }
 
+  function isEdit() {
+    return Object.keys(selectedActionFlow).length > 0
+  }
+
   return (
     <Dialog
       open={open}
@@ -91,7 +99,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave }) {
         color: primary
       }}
       >
-        New Workflow
+        { isEdit() ? 'Edit Workflow' : 'New Workflow' }
       </DialogTitle>
       <DialogContent>
         <TextField
@@ -199,7 +207,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave }) {
           Cancel
         </Button>
         <Button onClick={() => handleSave(data, metaData)} color="primary" variant="contained">
-          Save
+          {isEdit() ? 'Save Changes' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>
@@ -209,5 +217,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave }) {
 ActionFlowModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired,
-  closeModal: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  selectedActionFlow: PropTypes.object.isRequired
 }
