@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::Comment do
   describe 'comment queries' do
     let!(:current_user) { create(:user_with_community) }
+    let!(:admin_user) { create(:admin_user, community_id: current_user.community.id) }
     let!(:user_discussion) do
       create(:discussion, user_id: current_user.id, status: 'valid',
                           community_id: current_user.community_id, post_id: '20')
@@ -14,7 +15,9 @@ RSpec.describe Types::Queries::Comment do
     end
     let!(:user_comments) do
       current_user.comments.create(content: 'This is an awesome comment',
-                                   discussion_id: user_discussion.id, status: 'valid')
+                                   discussion_id: user_discussion.id,
+                                   status: 'valid',
+                                   community_id: current_user.community_id)
     end
     let!(:other_comments) do
       current_user.comments.create(content: 'This is an awesome but deleted comment',
@@ -71,6 +74,15 @@ RSpec.describe Types::Queries::Comment do
         })
     end
 
+    let(:comment_query) do
+      %(query {
+        fetchComments {
+              content
+              id
+            }
+        })
+    end
+
     it 'should retrieve list of comments without deleted comments' do
       result = DoubleGdpSchema.execute(comments_query,
                                        context: {
@@ -109,6 +121,17 @@ RSpec.describe Types::Queries::Comment do
                                        context: { current_user: current_user }).as_json
       expect(result.dig('data', 'discussion', 'id')).to eql user_discussion.id
       expect(result.dig('data', 'discussion', 'title')).to include 'Community Discussion'
+    end
+
+    it 'should retrieve list of all comments' do
+      result = DoubleGdpSchema.execute(comment_query,
+                                       context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'fetchComments').length).to eql 1
+      expect(result.dig('data', 'fetchComments', 0, 'id')).to eql user_comments.id
+      expect(result.dig('data', 'fetchComments', 0, 'content')).to eql 'This is an awesome comment'
     end
 
     it 'should retrieve comments for discussion' do

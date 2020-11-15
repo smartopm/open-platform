@@ -9,14 +9,16 @@ import DateContainer from '../DateContainer'
 import { CommentsPostQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
+import CenteredContent from '../CenteredContent'
 
 export default function Comments() {
-  const { loading, error, data } = useQuery(CommentsPostQuery, {
-    variables: { limit, offset }
-  })
   const limit = 20
   const [offset, setOffset] = useState(0)
   const classes = useStyles();
+
+  const { loading, error, data } = useQuery(CommentsPostQuery, {
+    variables: { limit, offset }
+  })
 
   function handleNextPage() {
     setOffset(offset + limit)
@@ -37,15 +39,27 @@ export default function Comments() {
 
   return (
     <>
-      {data?.fetchComments.filter(com => com.discussion.postId).map(comment => (
-        <div key={comment.id} className={classes.root}>
-          <Typography variant='body1'>
-            {comment.user.name}
-            {' '}
-            commented on post
-            {' '}
-            <Link to={`/news/post/${comment.discussion.postId}`}>{comment.discussion.postId}</Link>
-          </Typography>
+      {!data || !data.fetchComments.length && <CenteredContent>No comments available</CenteredContent>}
+      {data?.fetchComments.map(comment => (
+        <div key={comment.id} className={classes.root} data-testid="content">
+          <div>
+            <Typography variant='body1'>
+              {comment.user.name}
+              {' '}
+              {comment.discussion.postId ? 'commented on post' : 'commented on'}
+              {' '}
+              {comment.discussion.postId ? (
+                <Link to={`/news/post/${comment.discussion.postId}`}>
+                  {comment.discussion.postId}
+                  :
+                </Link>
+                )
+           : <Link to={`/discussions/${comment.discussion.id}`}>discussion:</Link>}  
+            </Typography>
+            <blockquote className={classes.blockQuote}>
+              <i>{comment.content}</i>
+            </blockquote>
+          </div>
           <span 
             data-testid="delete_icon"
             className={classes.itemAction}
@@ -92,5 +106,8 @@ const useStyles = makeStyles({
   itemAction: {
     marginLeft: 'auto',
     order: 2
+  }, 
+  blockQuote: {
+    marginLeft: '15px'
   }
 });

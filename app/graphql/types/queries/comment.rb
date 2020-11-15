@@ -4,6 +4,7 @@
 module Types::Queries::Comment
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get comments for wordpress posts
     field :post_comments, [Types::CommentType], null: true do
@@ -47,6 +48,7 @@ module Types::Queries::Comment
       argument :limit, Integer, required: false
     end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def post_comments(offset: 0, limit: 100, post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
@@ -98,6 +100,7 @@ module Types::Queries::Comment
   def fetch_comments(offset: 0, limit: 20)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion).limit(limit).offset(offset)
+    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion)
+                            .limit(limit).offset(offset)
   end
 end

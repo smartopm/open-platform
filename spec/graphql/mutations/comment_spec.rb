@@ -52,6 +52,7 @@ RSpec.describe Mutations::Comment do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'commentCreate', 'comment', 'id')).not_to be_nil
       expect(result.dig('data', 'commentCreate', 'comment', 'content')).to include 'last comment'
@@ -76,6 +77,7 @@ RSpec.describe Mutations::Comment do
 
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
+                                                site_community: admin.community,
                                                 current_user: user,
                                               }).as_json
 
