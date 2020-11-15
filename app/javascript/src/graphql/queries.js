@@ -736,6 +736,7 @@ export const ActionFlow = gql`
       eventType
       eventCondition
       eventAction
+      actionType
     }
   }
 `

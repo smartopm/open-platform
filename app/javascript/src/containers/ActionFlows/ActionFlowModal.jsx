@@ -1,4 +1,5 @@
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-apollo'
@@ -43,7 +44,20 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   })
 
   useEffect(() => {
-    setData(selectedActionFlow)
+    if (isEdit()) {
+      setData(selectedActionFlow)
+
+      const actionFieldsValues = {}
+      Object.entries(selectedActionFlow.eventAction.action_fields).forEach(([key, val]) => {
+        actionFieldsValues[key] = (val.value.includes('_') ? titleize(val.value) : val.value)
+      })
+      setMetaData(actionFieldsValues)
+    }
+
+    return () => {
+      setData(initialData)
+      setMetaData({})
+    }
   }, [selectedActionFlow])
 
   const ruleFieldsConfig = {}
@@ -132,7 +146,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               labelId="select-event"
               id="select-event"
               name="eventType"
-              value={data.eventType}
+              value={data.eventType || ''}
               fullWidth
               onChange={handleInputChange}
             >
@@ -161,13 +175,13 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               labelId="select-action"
               id="select-action"
               name="actionType"
-              value={data.actionType}
+              value={data.actionType?.toLowerCase() || ''}
               onChange={handleInputChange}
               fullWidth
             >
               {actionData.data.actions.map((action, index) => (
                 // eslint-disable-next-line react/no-array-index-key
-                <MenuItem key={index} value={action}>
+                <MenuItem key={index} value={action.toLowerCase()}>
                   {`Send ${action}`}
                 </MenuItem>
               ))}
@@ -175,13 +189,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           </>
         )}
         </FormControl>
-        {actionFieldsData.data &&
+        {data.actionType && actionFieldsData.data &&
         actionFieldsData.data.actionFields.map((actionField, index) => (
           <Autocomplete
             // eslint-disable-next-line react/no-array-index-key
             key={index}
             id={`${actionField.name}-action-input`}
             freeSolo
+            value={metaData[actionField.name]}
             inputValue={metaData[actionField.name]}
             onInputChange={(_event, newValue) => {
               setMetaData({
@@ -189,7 +204,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 [actionField.name]: newValue
               })
             }}
-            options={ruleFieldsData.data?.ruleFields.map((option) => titleize(option))}
+            options={ruleFieldsData.data?.ruleFields.map((option) => titleize(option)) || []}
             renderInput={(params) => (
               <TextField
                 {...params}
