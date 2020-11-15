@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
+import { BrowserRouter } from 'react-router-dom/'
 import Comments from '../components/Comments/Comments'
 import { CommentsPostQuery } from '../graphql/queries'
 
@@ -38,9 +39,11 @@ describe('It should test the comment component', () => {
   it('it should render with no error', () => {
 
      render(
-       <MockedProvider mock={mockData} addTypename={false}>
-         <Comments />
-       </MockedProvider>
+       <BrowserRouter>
+         <MockedProvider mock={mockData} addTypename={false}>
+           <Comments />
+         </MockedProvider>
+       </BrowserRouter>
     )
   });
 });
