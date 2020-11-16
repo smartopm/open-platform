@@ -17,10 +17,9 @@ import GenericForm from './GenericForm';
 import { FormPropertiesQuery } from '../../graphql/queries';
 import { Spinner } from '../Loading';
 
-export default function FormBuilder() {
+export default function FormBuilder({ formId }) {
   const [isAdd, setAdd] = useState(false)
   const { pathname } = useLocation()
-  const formId = "a6a8a10f-19ce-47e3-b811-f84e1557ef6c"
   const { data, error, loading, refetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
@@ -208,6 +207,10 @@ export function SwitchInput({name, label, value, handleChange}){
       label={label}
     />
   )
+}
+
+FormBuilder.propTypes = {
+  formId: PropTypes.string.isRequired
 }
 
 FormPropertyForm.propTypes = {

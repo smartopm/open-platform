@@ -315,7 +315,7 @@ const App = () => {
 
                         <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
-                        <Route path="/new_form" component={FormBuilderPage} />
+                        <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
 
                         <AdminRoutes>

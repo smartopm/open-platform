@@ -169,7 +169,7 @@ export default function GenericForm({ formId, pathname, formData }) {
         <form onSubmit={saveFormData}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           {
-            !pathname.includes('new_form') && (
+            !pathname.includes('edit_form') && (
             <CenteredContent>
               <Button
                 variant="outlined"

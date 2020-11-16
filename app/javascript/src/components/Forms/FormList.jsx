@@ -47,16 +47,14 @@ export default function FormLinkList({ userType }) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [anchorEl, setAnchorEl] = useState(null)
+  const [formId, setFormId] = useState("")
 
   const menuOpen = Boolean(anchorEl)
 
-  function handleClose() {
-    setAnchorEl(null)
-  }
-
-  function handleOpenMenu(event) {
+  function handleOpenMenu(event, id) {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
+    setFormId(id)
   }
   function submitForm(title, description) {
     createForm({
@@ -156,7 +154,7 @@ export default function FormLinkList({ userType }) {
                       aria-label={`more-${form.name}`}
                       aria-controls="long-menu"
                       aria-haspopup="true"
-                      onClick={handleOpenMenu}
+                      onClick={event => handleOpenMenu(event, form.id)}
                       dataid={form.id}
                     >
                       <MoreVertIcon />
@@ -165,7 +163,7 @@ export default function FormLinkList({ userType }) {
                 </Grid>
               </Grid>
               <FormMenu
-                data={form}
+                formId={formId}
                 anchorEl={anchorEl}
                 handleClose={() => setAnchorEl(null)}
                 open={menuOpen}
@@ -190,20 +188,19 @@ export default function FormLinkList({ userType }) {
   )
 }
 
-export function FormMenu({ data, anchorEl, handleClose, open }) {
+export function FormMenu({ formId, anchorEl, handleClose, open }) {
   const history = useHistory()
 
   function routeToEdit(event){  
     event.stopPropagation()
-    history.push(`/edit_form/${data.id}`)
+    history.push(`/edit_form/${formId}`)
   }
 
   return (
     <Menu
-      id={`long-menu-${data.id}`}
+      id={`long-menu-${formId}`}
       anchorEl={anchorEl}
       open={open}
-      keepMounted
       onClose={handleClose}
       PaperProps={{
         style: {
@@ -230,7 +227,7 @@ FormMenu.defaultProps = {
   anchorEl: {}
 }
 FormMenu.propTypes = {
-  data: PropTypes.shape({ id: PropTypes.string }).isRequired,
+  formId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
