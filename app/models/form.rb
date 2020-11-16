@@ -9,4 +9,6 @@ class Form < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :expires_at, presence: true
+
+  enum status: { draft: 0, published: 1 }
 end
