@@ -7,20 +7,41 @@ import Switch from '@material-ui/core/Switch';
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
+import { useLocation } from 'react-router';
 import { Button, Container } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import CenteredContent from '../CenteredContent'
 import { FormPropertyCreateMutation } from '../../graphql/mutations/forms'
-import GenericForm from './Form';
+import GenericForm from './GenericForm';
+import { FormPropertiesQuery } from '../../graphql/queries';
+import { Spinner } from '../Loading';
 
 export default function FormBuilder() {
   const [isAdd, setAdd] = useState(false)
+  const { pathname } = useLocation()
+  const formId = "a6a8a10f-19ce-47e3-b811-f84e1557ef6c"
+  const { data, error, loading, refetch } = useQuery(FormPropertiesQuery, {
+    variables: { formId },
+    errorPolicy: 'all'
+  })
+
+  if (loading) {
+    return <Spinner />
+  }
+  if (error) {
+    return error.message
+  }
+
   return (
     <Container maxWidth="sm">
-      <GenericForm formId="a6a8a10f-19ce-47e3-b811-f84e1557ef6c" />
+      <GenericForm 
+        formId={formId}
+        pathname={pathname}
+        formData={data}
+      />
       {
-        isAdd && <FormPropertyForm />
+        isAdd && <FormPropertyForm refetch={refetch} />
       }
       <br />
       <br />
@@ -28,10 +49,10 @@ export default function FormBuilder() {
       <CenteredContent>
         <Button 
           onClick={() => setAdd(!isAdd)}
-          startIcon={<Icon>add</Icon>}
+          startIcon={<Icon>{!isAdd ? 'add' : 'close'}</Icon>}
           variant="outlined"
         >
-          Add Field
+          {!isAdd ? 'Add Field' : 'Cancel'} 
         </Button>
       </CenteredContent>
     </Container>
@@ -55,8 +76,9 @@ const fieldTypes = {
   date: 'Date'
 }
 
-export function FormPropertyForm() {
+export function FormPropertyForm({ refetch }) {
   const [propertyData, setProperty] = useState(initData)
+  const [isLoading, setMutationLoading] = useState(false)
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
 
   function handlePropertyValueChange(event) {
@@ -77,14 +99,22 @@ export function FormPropertyForm() {
 
   function saveFormProperty(event){
     event.preventDefault()
+    setMutationLoading(true)
     formPropertyCreate({
       variables: {
         ...propertyData,
         formId: "a6a8a10f-19ce-47e3-b811-f84e1557ef6c"
       }
     })
-    .then(() => console.log("successfully created ..."))
-    .catch(error => console.log(error.message))
+    .then(() => {
+      console.log("successfully created ...")
+      refetch()
+      setMutationLoading(false)
+    })
+    .catch(error => {
+      console.log(error.message)
+      setMutationLoading(false)
+    })
   }
 
   console.table(propertyData)
@@ -124,13 +154,16 @@ export function FormPropertyForm() {
       <br />
       <br />
       <br />
-      <Button 
-        variant="outlined"
-        type="submit"
-        style={{ float: 'left' }}
-      >
-        Save
-      </Button>
+      <CenteredContent>
+        <Button 
+          variant="outlined"
+          type="submit"
+          disabled={isLoading}
+          color="primary"
+        >
+          {isLoading ? 'Adding Form Property ...' : 'Add Property'}
+        </Button>
+      </CenteredContent>
     </form>
   )
 }
@@ -177,6 +210,9 @@ export function SwitchInput({name, label, value, handleChange}){
   )
 }
 
+FormPropertyForm.propTypes = {
+  refetch: PropTypes.func.isRequired
+}
 
 
 PropertySelector.propTypes = {

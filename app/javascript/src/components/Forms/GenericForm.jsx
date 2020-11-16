@@ -1,0 +1,228 @@
+/* eslint-disable no-use-before-define */
+import React, { Fragment, useContext, useRef, useState } from 'react'
+import { Button, Container, Typography } from '@material-ui/core'
+import { useApolloClient, useMutation } from 'react-apollo'
+import PropTypes from 'prop-types'
+import DatePickerDialog from '../DatePickerDialog'
+import CenteredContent from '../CenteredContent'
+import { FormUserCreateMutation } from '../../graphql/mutations'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { useFileUpload } from '../../graphql/useFileUpload'
+import TextInput from './TextInput'
+import UploadField from './UploadField'
+import SignaturePad from './SignaturePad'
+import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
+import RadioInput from './RadioInput'
+
+// date
+// text input (TextField or TextArea)
+// upload
+const initialData = {
+  fieldType: '',
+  fieldName: ' ',
+  date: { value: null },
+  radio: { value: {label: '', checked: null} }
+}
+
+export default function GenericForm({ formId, pathname, formData }) {
+  const [properties, setProperties] = useState(initialData)
+  const [message, setMessage] = useState({err: false, info: '', signed: false})
+  const signRef = useRef(null)
+  const authState = useContext(AuthStateContext)
+  // create form user
+  const [createFormUser] = useMutation(FormUserCreateMutation)
+  // separate function for file upload
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+  const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+
+  function handleValueChange(event, propId){
+    const { name, value } = event.target
+    setProperties({
+      ...properties,
+      [name]: {value, form_property_id: propId}
+    })
+  }
+  function handleDateChange(date, id){
+    setProperties({
+      ...properties,
+      date: { value: date,  form_property_id: id}
+    })
+  }
+  
+  function handleRadioValueChange(event, propId, fieldName){
+    const { name, value } = event.target
+    setProperties({
+      ...properties,
+      [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
+  })
+}
+
+  async function handleSignatureUpload(){
+    setMessage({ ...message, signed: true})
+    const url64 =  signRef.current.toDataURL("image/png")
+    // convert the file
+    const signature = await convertBase64ToFile(url64)
+    await uploadSignature(signature)
+  }
+  
+   function saveFormData(event){
+    event.preventDefault()
+    const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
+    const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0]
+    
+    
+    // get values from properties state
+    const formattedProperties = Object.entries(properties).map(([, value]) => value)
+    const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
+
+    // get signedBlobId as value and attach it to the form_property_id
+    if (message.signed && signatureBlobId) {
+      const newValue = { value: signatureBlobId, form_property_id: fileSignType.id, image_blob_id: signatureBlobId }
+      filledInProperties.push(newValue)
+    }
+    // check if we uploaded then attach the blob id to the newValue
+    if (signedBlobId && url) {
+      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id, image_blob_id: signedBlobId }
+      filledInProperties.push(newValue)
+    }
+    // update all form values
+     formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id))
+    const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
+    // formUserId
+    // fields and their values
+    // create form user ==> form_id, user_id, status
+    createFormUser({
+      variables: {
+        formId,
+        userId: authState.user.id,
+        propValues: cleanFormData,
+      }
+    }).then(({ data }) => {
+          if (data.formUserCreate.formUser === null) {
+             setMessage({ ...message, err: true, info: data.formUserCreate.error })
+             return
+          }
+        setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
+    })
+   .catch(err => setMessage({ ...message, err: true, info: err.message }))
+  }
+  function renderForm(formPropertiesData) {
+    const editable = !formPropertiesData.adminUse ? false : !(formPropertiesData.adminUse && authState.user.userType === 'admin')
+    const fields = {
+      text: (
+        <TextInput
+          id={formPropertiesData.id}
+          key={formPropertiesData.id}
+          properties={formPropertiesData}
+          defaultValue={properties.fieldName}
+          handleValue={event => handleValueChange(event, formPropertiesData.id)}
+          editable={editable}
+        />
+      ),
+      date: (
+        <DatePickerDialog
+          id={formPropertiesData.id}
+          key={formPropertiesData.id}
+          selectedDate={properties.date.value}
+          handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
+          label={formPropertiesData.fieldName}
+        />
+      ),
+      image: (
+        <UploadField
+          detail={{ type: 'file', status }}
+          key={formPropertiesData.id}
+          upload={evt => onChange(evt.target.files[0])}
+          editable={editable}
+        />
+      ),
+      signature: (
+        <SignaturePad
+          key={formPropertiesData.id}
+          detail={{ type: 'signature', status: signatureStatus }}
+          signRef={signRef}
+          onEnd={() => handleSignatureUpload(formPropertiesData.id)}
+        />
+      ),
+      radio: (
+        <Fragment key={formPropertiesData.id}>
+          <br />
+          <RadioInput 
+            properties={formPropertiesData}
+            value={null}
+            handleValue={event => handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)} 
+          />
+          <br />
+        </Fragment>
+      )
+    }
+    return fields[formPropertiesData.fieldType]
+  }
+
+  return (
+    <>
+      <Container>
+        <form onSubmit={saveFormData}>
+          {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
+          {
+            !pathname.includes('new_form') && (
+            <CenteredContent>
+              <Button
+                variant="outlined"
+                type="submit"
+                color="primary"
+                aria-label="form_submit"
+              >
+                Submit
+              </Button>
+            </CenteredContent>
+
+            ) 
+          }
+          <br />
+          <br />
+          <CenteredContent>
+            {Boolean(message.info.length) && <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}
+          </CenteredContent>
+        </form>
+      </Container>
+    </>
+  )
+}
+
+GenericForm.propTypes = {
+  formId: PropTypes.string.isRequired,
+  pathname: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  // eslint-disable-next-line react/forbid-prop-types
+  // eslint-disable-next-line react/forbid-prop-types
+  formData: PropTypes.object.isRequired
+}
+
+/**
+ *
+ * @param {{}} values
+ * @param {String} propId
+ * @returns {Boolean}
+ * @description checks if a form property exist
+ */
+export function propExists(values, propId) {
+  return values.some(value => value.form_property_id === propId)
+}
+
+/**
+ *
+ * @param {{}} properties
+ * @param {String} propId
+ * @description check form values that weren't filled in and add default values
+ */
+export function addPropWithValue(properties, propId) {
+  if (propExists(properties, propId)) {
+    return
+  }
+  properties.push({ value: null, form_property_id: propId })
+}
