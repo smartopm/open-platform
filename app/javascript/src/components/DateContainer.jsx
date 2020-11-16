@@ -54,5 +54,6 @@ export default function DateContainer({ date }) {
 }
 
 DateContainer.propTypes = {
-  date: PropTypes.instanceOf(Date).isRequired
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+    .isRequired
 }

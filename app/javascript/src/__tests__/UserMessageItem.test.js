@@ -2,7 +2,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { BrowserRouter } from 'react-router-dom'
-import UserMessageItem, { check_route } from '../components/Messaging/UserMessageItem'
+import UserMessageItem, { check_route } from '../components/Messaging/MessageItem'
 
 describe('user message item component', () => {
   const message =

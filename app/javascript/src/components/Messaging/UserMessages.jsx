@@ -1,22 +1,22 @@
-/* eslint-disable */
-import React, { useContext, Fragment, useState } from 'react'
-import { useParams, useLocation, Link } from 'react-router-dom'
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-nested-ternary */
+import React, { useContext, useState } from 'react'
+import { useParams, useLocation } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { UserMessageQuery } from '../../graphql/queries'
-import {Spinner} from '../../components/Loading'
-import ErrorPage from '../../components/Error'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import TextField from '@material-ui/core/TextField'
-import { MessageCreate } from '../../graphql/mutations'
 import { Button } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Avatar from '../../components/Avatar'
 import { css, StyleSheet } from 'aphrodite'
-import Nav from '../../components/Nav'
-import UserMessageItem from '../../components/Messaging/UserMessageItem'
-import CenteredContent from '../../components/CenteredContent'
+import { UserMessageQuery } from '../../graphql/queries'
+import {Spinner} from '../Loading'
+import ErrorPage from '../Error'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { MessageCreate } from '../../graphql/mutations'
+import Avatar from '../Avatar'
+import UserMessageItem from './MessageItem'
+import CenteredContent from '../CenteredContent'
 
 export default function UserMessages() {
   const { id } = useParams()
@@ -53,12 +53,10 @@ export default function UserMessages() {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev
         setIsLoading(false)
-        return Object.assign({}, prev, {
-          userMessages: [
+        return { ...prev, userMessages: [
             ...prev.userMessages,
             ...fetchMoreResult.userMessages
-          ]
-        })
+          ]}
       }
     })
   }
@@ -68,51 +66,51 @@ export default function UserMessages() {
   }
 
   return (
-    <Fragment>
-      <Nav navName="Messages History" menuButton="back" backTo="/messages" >
-        <span className="text-center">
-          <Link to={`/user/${id}`} className={css(styles.linkedName)}>
-            {(state && state.clientName) || ''}
-          </Link>
-        </span>
-      </Nav>
+    <>
+
       <div className={css(styles.messageSection)}>
         <List>
-          { loading ? <CenteredContent > <Spinner /> </CenteredContent> : data.userMessages.length ? (
-            <>
-            {data.userMessages.map(message => (
-              <UserMessageItem
-                key={message.id}
-                id={message.sender.id}
-                name={message.sender.name}
-                user={message.sender}
-                message={message.message}
-                clientNumber={message.sender.phoneNumber}
-                dateMessageCreated={message.createdAt}
-                readAt={message.readAt}
-                category={message.category}
-                isTruncate={false}
-                isRead={message.isRead}
-                isAdmin={authState.user.userType === 'admin'}
-              />
-            ))}
-            {data?.userMessages.length >= limit && (
-              <CenteredContent>
-                <Button variant="outlined" onClick={fetchMoreMessages}>
-                  {isLoading ? <Spinner /> : 'Load more messages'}
-                </Button>
-              </CenteredContent>
-            )}
-            </>
-          ) : (
-            <p className="text-center">
-              <span>
-                {state && state.from === 'contact'
-                  ? 'Send Message to Support, You should receive an answer soon'
-                    : `There are no messages yet for ${state && state.clientName ? state.clientName : 'this user  '}`}
-              </span>
-            </p>
-          )}
+          { loading ? (
+            <CenteredContent> 
+              {' '}
+              <Spinner />
+              {' '}
+            </CenteredContent>
+              ) : data.userMessages.length ? (
+                <>
+                  {data.userMessages.map(msg => (
+                    <UserMessageItem
+                      key={msg.id}
+                      id={msg.sender.id}
+                      name={msg.sender.name}
+                      user={msg.sender}
+                      message={msg.message}
+                      clientNumber={msg.sender.phoneNumber}
+                      dateMessageCreated={msg.createdAt}
+                      readAt={msg.readAt}
+                      category={msg.category}
+                      isTruncate={false}
+                      isRead={msg.isRead}
+                      isAdmin={authState.user.userType === 'admin'}
+                    />
+                          ))}
+                  {data?.userMessages.length >= limit && (
+                  <CenteredContent>
+                    <Button variant="outlined" onClick={fetchMoreMessages}>
+                      {isLoading ? <Spinner /> : 'Load more messages'}
+                    </Button>
+                  </CenteredContent>
+                          )}
+                </>
+                  ) : (
+                    <p className="text-center">
+                      <span>
+                        {state && state.from === 'contact'
+                          ? 'Send Message to Support, You should receive an answer soon'
+                            : `There are no messages yet for ${state && state.clientName ? state.clientName : 'this user  '}`}
+                      </span>
+                    </p>
+                  )}
         </List>
 
       </div>
@@ -147,7 +145,7 @@ export default function UserMessages() {
         Send
       </Button>
       {errmsg && <p className="text-center text-danger">{errmsg}</p>}
-    </Fragment>
+    </>
   )
 }
 
@@ -160,9 +158,5 @@ const styles = StyleSheet.create({
   messageSection: {
     overflow: 'auto',
     maxHeight: '74vh'
-  },
-  linkedName: {
-    textDecoration: 'none',
-    color: '#FFFFFF'
   }
 })
