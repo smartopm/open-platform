@@ -25,12 +25,8 @@ export default function FormBuilder({ formId }) {
     errorPolicy: 'all'
   })
 
-  if (loading) {
-    return <Spinner />
-  }
-  if (error) {
-    return error.message
-  }
+  if (loading) return <Spinner />
+  if (error) return error.message
 
   return (
     <Container maxWidth="lg">
@@ -114,7 +110,6 @@ export function FormPropertyForm({ refetch }) {
     })
   }
 
-  console.table(propertyData)
 
   return (
     <form onSubmit={saveFormProperty}>
@@ -234,11 +229,3 @@ SwitchInput.propTypes = {
   value: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
 }
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     '& > *': {
-//       margin: theme.spacing(1),
-//       width: '50%'
-//     }
-//   }
-// }))

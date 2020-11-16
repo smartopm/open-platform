@@ -36,3 +36,13 @@ export const FormCreateMutation = gql`
     }
   }
 `
+
+export const FormPropertyDeleteMutation = gql`
+  mutation formPropertiesDelete($formId: ID!, $formPropertyId: ID!){
+    formPropertiesDelete(formId: $formId, formPropertyId: $formPropertyId){
+      formProperty {
+        id
+      }
+    }
+  }
+`
