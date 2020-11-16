@@ -8,7 +8,8 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router';
-import { Button, Container } from '@material-ui/core'
+import { Button, Container, IconButton } from '@material-ui/core'
+import { AddCircleOutline, RemoveCircleOutline } from '@material-ui/icons';
 import Icon from '@material-ui/core/Icon';
 import { useMutation, useQuery } from 'react-apollo';
 import CenteredContent from '../CenteredContent'
@@ -72,6 +73,7 @@ const fieldTypes = {
 export function FormPropertyForm({ refetch, formId }) {
   const [propertyData, setProperty] = useState(initData)
   const [isLoading, setMutationLoading] = useState(false)
+  const [options, setOptions] = useState([""])
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
 
   function handlePropertyValueChange(event) {
@@ -100,14 +102,25 @@ export function FormPropertyForm({ refetch, formId }) {
       }
     })
     .then(() => {
-      console.log("successfully created ...")
       refetch()
       setMutationLoading(false)
     })
-    .catch(error => {
-      console.log(error.message)
+    .catch(() => {
       setMutationLoading(false)
     })
+  }
+
+  function handleAddOption(){
+    setOptions([...options, ""])
+  }
+
+  function handleRemoveOption(id){
+    const values = options
+    // radio buttons should have at least one choice 
+    if (values.length !== 1) {
+      values.splice(id, 1)
+    }
+    setOptions([...values])
   }
 
 
@@ -131,18 +144,34 @@ export function FormPropertyForm({ refetch, formId }) {
         handleChange={handlePropertyValueChange}
         options={fieldTypes}
       />
-      <SwitchInput 
-        name="required" 
-        label="This field is required" 
-        value={propertyData.required} 
-        handleChange={handleRadioChange}
-      /> 
-      <SwitchInput 
-        name="adminUse" 
-        label="Only for admins" 
-        value={propertyData.adminUse} 
-        handleChange={handleRadioChange}
-      /> 
+      {
+        // propertyData.fieldType === 'radio' && options.length && 
+        options.map((option, i) => (
+          <ChoiceInput 
+            // eslint-disable-next-line react/no-array-index-key
+            key={i} 
+            option={option}
+            actions={{
+              handleAddOption,
+              handleRemoveOption: () => handleRemoveOption(i),
+            }} 
+          />
+        ))
+      }
+      <div>
+        <SwitchInput 
+          name="required" 
+          label="This field is required" 
+          value={propertyData.required} 
+          handleChange={handleRadioChange}
+        /> 
+        <SwitchInput 
+          name="adminUse" 
+          label="Only for admins" 
+          value={propertyData.adminUse} 
+          handleChange={handleRadioChange}
+        />
+      </div>
       <br />
       <CenteredContent>
         <Button 
@@ -200,6 +229,32 @@ export function SwitchInput({name, label, value, handleChange}){
   )
 }
 
+export function ChoiceInput({ actions }){
+  function handleChoice(){
+
+  }
+  return (
+    <div>
+      <TextField
+        label="Option"
+        variant="outlined"
+        size="small"
+        defaultValue=""
+        onChange={handleChoice}
+        name="fieldName"
+        margin="normal"
+        required
+      />
+      <IconButton style={{ marginTop: 13 }} onClick={actions.handleRemoveOption} aria-label="remove">
+        <RemoveCircleOutline />
+      </IconButton>
+      <IconButton style={{ marginTop: 13 }} onClick={actions.handleAddOption} aria-label="add">
+        <AddCircleOutline />
+      </IconButton>
+    </div>
+  )
+}
+
 FormBuilder.propTypes = {
   formId: PropTypes.string.isRequired
 }
@@ -228,4 +283,11 @@ SwitchInput.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
+}
+
+ChoiceInput.propTypes = {
+  actions: PropTypes.shape({
+    handleRemoveOption: PropTypes.func,
+    handleAddOption: PropTypes.func,
+  }).isRequired
 }
