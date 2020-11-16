@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { Fab, useMediaQuery, Dialog, DialogTitle, DialogContent, Button } from '@material-ui/core'
-import { useQuery } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { css } from 'aphrodite'
 import { useTheme } from '@material-ui/core/styles';
 import Nav from '../../components/Nav'
@@ -9,17 +9,20 @@ import { DiscussionsQuery } from '../../graphql/queries'
 import Loading, { Spinner } from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import { styles } from '../../components/ShareButton'
-import Discuss from '../../components/Discussion/Discuss'
 import CenteredContent from '../../components/CenteredContent'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
+import TitleDescriptionForm from '../../components/Forms/TitleDescriptionForm';
+import { DiscussionMutation } from '../../graphql/mutations';
 
 export default function Discussions() {
     const limit = 20
     const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionsQuery, {
         variables: { limit }
     })
+    const [createDiscuss] = useMutation(DiscussionMutation)
     const [open, setOpen] = useState(false)
     const [isLoading, setLoading] = useState(false)
+    const [message, setMessage] = useState(false)
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
     const authState = useContext(AuthStateContext)
@@ -45,6 +48,23 @@ export default function Discussions() {
         })
     }
 
+    function saveDiscussion(title, description){
+      setLoading(true)
+      createDiscuss({ variables: { title, description } })
+        .then(() => {
+          setMessage('Discussion created')
+          setLoading(false)
+          setTimeout(() => {
+            updateList()
+          }, 1000)
+          setOpen(!open)
+        })
+        .catch((err) => {
+          setLoading(false)
+          setMessage(err.message)
+        })
+    }
+
     if (loading) return <Loading />
     if (error) {
         return <ErrorPage title={error.message || error} />
@@ -67,7 +87,15 @@ export default function Discussions() {
               </CenteredContent>
             </DialogTitle>
             <DialogContent>
-              <Discuss update={updateList} />
+              <TitleDescriptionForm 
+                close={updateList} 
+                type="discussion" 
+                save={saveDiscussion} 
+                data={{
+                  loading: isLoading,
+                  msg: message
+                }} 
+              />
             </DialogContent>
           </Dialog>
                 
