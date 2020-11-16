@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { useMutation , useQuery } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 import { useLocation } from 'react-router'
@@ -10,7 +10,6 @@ import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
 import { Flows } from '../../graphql/queries'
-
 
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
@@ -41,15 +40,7 @@ export default function ActionFlows() {
       path = `/action_flows/${flowId}/edit`
     }
 
-    const flow = getActionFlow(flowId)
-    if (!flow) {
-      setMessageAlert('Error: Record not found.')
-      setIsSuccessAlert(false)
-      closeModal()
-      return
-    }
-
-    setSelectedActionFlow(flow)
+    setSelectedActionFlow(getActionFlow(flowId))
     history.push(path)
     setModalOpen(true)
   }
@@ -114,7 +105,7 @@ export default function ActionFlows() {
         setMessageAlert('Success: Changes saved successfully')
         setIsSuccessAlert(true)
       })
-      .catch((e) => {
+      .catch(e => {
         setMessageAlert(e.message)
         setIsSuccessAlert(false)
       })
@@ -130,9 +121,11 @@ export default function ActionFlows() {
   function getActionFlow(id) {
     if (!id) return {}
 
-    return actionFlowsData.data?.actionFlows.find(flow => {
+    return (
+      actionFlowsData.data?.actionFlows.find(flow => {
         return flow.id === id
-    })
+      }) || {}
+    )
   }
 
   return (
@@ -162,7 +155,7 @@ export default function ActionFlows() {
         <Button
           key={flow.id}
           onClick={() => openModal(flow.id)}
-          style={{margin: '10px'}}
+          style={{ margin: '10px' }}
         >
           {flow.title}
         </Button>
