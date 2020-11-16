@@ -22,7 +22,7 @@ export default function Discussions() {
     const [createDiscuss] = useMutation(DiscussionMutation)
     const [open, setOpen] = useState(false)
     const [isLoading, setLoading] = useState(false)
-    const [message, setMessage] = useState(false)
+    const [message, setMessage] = useState("")
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
     const authState = useContext(AuthStateContext)

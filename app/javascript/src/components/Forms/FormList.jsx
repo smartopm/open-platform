@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+/* eslint-disable no-unused-vars */
+import React, { Fragment, useState } from 'react'
 import {
   List,
   ListItem,
@@ -6,29 +7,69 @@ import {
   Avatar,
   Divider,
   Typography,
-  Box, Fab
+  Box, Fab, Dialog, DialogTitle, DialogContent, useMediaQuery
 } from '@material-ui/core'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import { useQuery } from 'react-apollo'
+import { useTheme } from '@material-ui/styles'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory } from 'react-router'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
+import CenteredContent from '../CenteredContent'
+import TitleDescriptionForm from './TitleDescriptionForm'
 
 // here we get existing google forms and we mix them with our own created forms
 // eslint-disable-next-line react/prop-types
 export default function FormLinkList({ userType }) {
-  const { data, error, loading } = useQuery(FormsQuery)
+  const { data, error, loading, refetch } = useQuery(FormsQuery)
   const history = useHistory()
   const classes = useStyles()
+  const [open, setOpen] = useState(false)
+  const [isLoading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  function submitForm() {
+}
+function updateList() {
+    refetch()
+    setOpen(!open)
+}
+
 
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
  
   return (
     <div>
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        fullWidth
+        maxWidth="lg"
+        onClose={() => setOpen(!open)}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          <CenteredContent>
+            <span>Create a form</span>
+          </CenteredContent>
+        </DialogTitle>
+        <DialogContent>
+          <TitleDescriptionForm 
+            close={updateList} 
+            type="form" 
+            save={submitForm} 
+            data={{
+                  loading: isLoading,
+                  msg: message
+                }}
+          />
+        </DialogContent>
+      </Dialog>
       <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
         <FormLinks />
         {data.forms.map(form => (
@@ -59,7 +100,7 @@ export default function FormLinkList({ userType }) {
       {userType === 'admin' && (
         <Fab
           variant="extended"
-          onClick={() => history.push('/new_form')}
+          onClick={() => setOpen(!open)}
           color="primary"
           // eslint-disable-next-line no-use-before-define
           className={`btn ${css(styles.formButton)} `}
