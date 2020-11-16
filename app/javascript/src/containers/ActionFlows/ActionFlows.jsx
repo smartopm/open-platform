@@ -9,12 +9,12 @@ import Nav from '../../components/Nav'
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
-import { ActionFlow } from '../../graphql/queries'
+import { Flows } from '../../graphql/queries'
 
 
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
-  const [messageAlertOpen, setMessageAlertOpen] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [selectedActionFlow, setSelectedActionFlow] = useState({})
   const location = useLocation()
@@ -22,7 +22,7 @@ export default function ActionFlows() {
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
 
-  const actionFlowData = useQuery(ActionFlow)
+  const actionFlowsData = useQuery(Flows)
 
   useEffect(() => {
     const locationInfo = location.pathname.split('/')
@@ -33,7 +33,7 @@ export default function ActionFlows() {
     if (locationInfo[locationInfo.length - 1] === 'edit') {
       openModal(locationInfo[locationInfo.length - 2])
     }
-  }, [actionFlowData.data])
+  }, [actionFlowsData.data, location.pathname, openModal])
 
   function openModal(flowId = null) {
     let path = '/action_flows/new'
@@ -41,7 +41,15 @@ export default function ActionFlows() {
       path = `/action_flows/${flowId}/edit`
     }
 
-    setSelectedActionFlow(getActionFlow(flowId))
+    const flow = getActionFlow(flowId)
+    if (!flow) {
+      setMessageAlert('Error: Record not found.')
+      setIsSuccessAlert(false)
+      closeModal()
+      return
+    }
+
+    setSelectedActionFlow(flow)
     history.push(path)
     setModalOpen(true)
   }
@@ -102,12 +110,12 @@ export default function ActionFlows() {
     })
       .then(() => {
         closeModal()
-        actionFlowData.refetch()
-        setMessageAlertOpen(true)
+        actionFlowsData.refetch()
+        setMessageAlert('Success: Changes saved successfully')
         setIsSuccessAlert(true)
       })
-      .catch(() => {
-        setMessageAlertOpen(true)
+      .catch((e) => {
+        setMessageAlert(e.message)
         setIsSuccessAlert(false)
       })
   }
@@ -116,16 +124,15 @@ export default function ActionFlows() {
     if (reason === 'clickaway') {
       return
     }
-    setMessageAlertOpen(false)
+    setMessageAlert('')
   }
 
   function getActionFlow(id) {
     if (!id) return {}
-    return (
-      actionFlowData.data?.actionFlow.find(flow => {
+
+    return actionFlowsData.data?.actionFlows.find(flow => {
         return flow.id === id
-      }) || {}
-    )
+    })
   }
 
   return (
@@ -139,12 +146,8 @@ export default function ActionFlows() {
       />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
-        message={
-          isSuccessAlert
-            ? 'Success: Changes saved successfully'
-            : 'Sorry, an error occcurred. Try again.'
-        }
-        open={messageAlertOpen}
+        message={messageAlert}
+        open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
       <Button
@@ -155,12 +158,13 @@ export default function ActionFlows() {
       >
         New Workflow
       </Button>
-      {actionFlowData.data?.actionFlow.map(flow => (
+      {actionFlowsData.data?.actionFlows.map(flow => (
         <Button
           key={flow.id}
           onClick={() => openModal(flow.id)}
+          style={{margin: '10px'}}
         >
-          {`Edit - ${flow.id}`}
+          {flow.title}
         </Button>
       ))}
     </>

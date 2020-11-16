@@ -26,6 +26,11 @@ module Types::Queries::ActionFlow
       description 'Get fields for an event'
       argument :event_type, String, required: true
     end
+
+    # Fetch all action flows(for now)
+    field :action_flows, [Types::ActionFlowType], null: false do
+      description 'Fetches all action-flows'
+    end
   end
 
   def events
@@ -68,4 +73,11 @@ module Types::Queries::ActionFlow
     end
   end
   # rubocop:enable Metrics/AbcSize
+
+  # This will be removed once Suarabh's work is in, so not test
+  def action_flows
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    ActionFlow.all
+  end
 end

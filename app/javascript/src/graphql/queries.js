@@ -727,9 +727,9 @@ export const RuleFields = gql`
   }
 `
 
-export const ActionFlow = gql`
-  query actionFlow{
-    actionFlow {
+export const Flows = gql`
+  query actionFlows{
+    actionFlows {
       id
       title
       description

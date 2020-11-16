@@ -8,6 +8,7 @@ RSpec.describe ActionFlow, type: :model do
     it { is_expected.to have_db_column(:description).of_type(:string) }
     it { is_expected.to have_db_column(:event_type).of_type(:string) }
     it { is_expected.to have_db_column(:event_condition).of_type(:string) }
+    it { is_expected.to have_db_column(:event_condition_query).of_type(:string) }
     it { is_expected.to have_db_column(:event_action).of_type(:json) }
   end
 
