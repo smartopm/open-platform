@@ -26,3 +26,13 @@ export const FormPropertyCreateMutation = gql`
     }
   }
 `
+
+export const FormCreateMutation = gql`
+  mutation  formCreate($name: String!, $expiresAt: String!, $description: String) {
+    formCreate(name: $name, expiresAt:$expiresAt, description: $description){
+      form {
+        id
+      }
+    }
+  }
+`

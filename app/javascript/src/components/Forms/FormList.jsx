@@ -7,12 +7,18 @@ import {
   Avatar,
   Divider,
   Typography,
-  Box, Fab, Dialog, DialogTitle, DialogContent, useMediaQuery
+  Box,
+  Fab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  useMediaQuery
 } from '@material-ui/core'
 import AssignmentIcon from '@material-ui/icons/Assignment'
-import { useQuery } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { useTheme } from '@material-ui/styles'
 import { StyleSheet, css } from 'aphrodite'
+import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../../graphql/queries'
@@ -20,29 +26,53 @@ import Loading from '../Loading'
 import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
+import { DateAndTimePickers } from '../DatePickerDialog'
+import { FormCreateMutation } from '../../graphql/mutations/forms'
 
 // here we get existing google forms and we mix them with our own created forms
-// eslint-disable-next-line react/prop-types
 export default function FormLinkList({ userType }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery)
+  const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [isLoading, setLoading] = useState(false)
-  const [message, setMessage] = useState("")
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
-  function submitForm() {
-}
-function updateList() {
+  const [message, setMessage] = useState('')
+  const [expiresAt, setExpiresAtDate] = useState(null)
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
+
+  function submitForm(title, description) {
+    console.log(title, description)
+    createForm({
+      variables: { name: title, expiresAt, description }
+    })
+    .then(() => {
+      setMessage('Form created')
+      setLoading(false)
+      setTimeout(() => {
+        updateList()
+      }, 1000)
+      setOpen(!open)
+    })
+    .catch((err) => {
+      setLoading(false)
+      setMessage(err.message)
+    })
+  }
+
+  function updateList() {
     refetch()
     setOpen(!open)
-}
+  }
 
+  function handleDateChange(date) {
+    setExpiresAtDate(date)
+  }
 
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
- 
+
   return (
     <div>
       <Dialog
@@ -59,15 +89,24 @@ function updateList() {
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
-          <TitleDescriptionForm 
-            close={updateList} 
-            type="form" 
-            save={submitForm} 
+          <TitleDescriptionForm
+            close={updateList}
+            type="form"
+            save={submitForm}
             data={{
-                  loading: isLoading,
-                  msg: message
-                }}
-          />
+              loading: isLoading,
+              msg: message
+            }}
+          >
+            <DateAndTimePickers
+              style={{ width: '63vw' }}
+              label="Expiry Date"
+              required
+              selectedDateTime={expiresAt}
+              handleDateChange={handleDateChange}
+              pastDate
+            />
+          </TitleDescriptionForm>
         </DialogContent>
       </Dialog>
       <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
@@ -86,10 +125,7 @@ function updateList() {
                 </Avatar>
               </ListItemAvatar>
               <Box className={classes.listBox}>
-                <Typography
-                  variant="subtitle1"
-                  data-testid="form_name"
-                >
+                <Typography variant="subtitle1" data-testid="form_name">
                   {form.name}
                 </Typography>
               </Box>
@@ -110,6 +146,10 @@ function updateList() {
       )}
     </div>
   )
+}
+
+FormLinkList.propTypes = {
+  userType: PropTypes.string.isRequired
 }
 
 const styles = StyleSheet.create({

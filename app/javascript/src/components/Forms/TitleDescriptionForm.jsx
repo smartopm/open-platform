@@ -5,7 +5,7 @@ import { Button, TextField, Snackbar } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { titleize } from '../../utils/helpers'
 
-export default function TitleDescriptionForm({ save, type, close, data }) {
+export default function TitleDescriptionForm({ save, type, close, data, children }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [open, setOpen] = useState(false)
@@ -63,6 +63,9 @@ export default function TitleDescriptionForm({ save, type, close, data }) {
           }}
           required
         />
+        {
+          children
+        }
         <br />
         <div className="d-flex row justify-content-center">
           <Button
@@ -94,9 +97,14 @@ export default function TitleDescriptionForm({ save, type, close, data }) {
   )
 }
 
+TitleDescriptionForm.defaultProps = {
+  children: <span />
+}
+
 TitleDescriptionForm.propTypes = {
   close: PropTypes.func.isRequired,
   save: PropTypes.func.isRequired,
+  children: PropTypes.node,
   type: PropTypes.string.isRequired,
   data: PropTypes.shape({
       loading: PropTypes.bool,
