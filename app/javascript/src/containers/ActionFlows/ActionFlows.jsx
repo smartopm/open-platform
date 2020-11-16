@@ -33,7 +33,7 @@ export default function ActionFlows() {
     if (locationInfo[locationInfo.length - 1] === 'edit') {
       openModal(locationInfo[locationInfo.length - 2])
     }
-  }, [actionFlowsData.data, location.pathname, openModal])
+  }, [actionFlowsData.data])
 
   function openModal(flowId = null) {
     let path = '/action_flows/new'
