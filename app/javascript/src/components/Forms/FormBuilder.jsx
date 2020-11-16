@@ -36,7 +36,7 @@ export default function FormBuilder({ formId }) {
         formData={data}
       />
       {
-        isAdd && <FormPropertyForm refetch={refetch} />
+        isAdd && <FormPropertyForm formId={formId} refetch={refetch} />
       }
       <br />
       <CenteredContent>
@@ -69,7 +69,7 @@ const fieldTypes = {
   date: 'Date'
 }
 
-export function FormPropertyForm({ refetch }) {
+export function FormPropertyForm({ refetch, formId }) {
   const [propertyData, setProperty] = useState(initData)
   const [isLoading, setMutationLoading] = useState(false)
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
@@ -96,7 +96,7 @@ export function FormPropertyForm({ refetch }) {
     formPropertyCreate({
       variables: {
         ...propertyData,
-        formId: "a6a8a10f-19ce-47e3-b811-f84e1557ef6c"
+        formId
       }
     })
     .then(() => {
@@ -205,9 +205,9 @@ FormBuilder.propTypes = {
 }
 
 FormPropertyForm.propTypes = {
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired
 }
-
 
 PropertySelector.propTypes = {
   label: PropTypes.string.isRequired,
