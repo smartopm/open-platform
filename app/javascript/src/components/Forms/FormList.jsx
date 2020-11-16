@@ -112,8 +112,7 @@ export default function FormLinkList({ userType }) {
             }}
           >
             <DateAndTimePickers
-              style={{ width: '63vw' }}
-              label="Expiry Date"
+              label="Form Expiry Date"
               required
               selectedDateTime={expiresAt}
               handleDateChange={handleDateChange}

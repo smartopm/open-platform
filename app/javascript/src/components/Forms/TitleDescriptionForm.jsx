@@ -32,7 +32,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
         <TextField
           name="title"
           label={`${titleize(type)} Title`}
-          style={{ width: '63vw' }}
+          style={{ width: '100%' }}
           placeholder="Type a title here"
           onChange={(e) => setTitle(e.target.value)}
           value={title}
@@ -48,7 +48,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
         <TextField
           name="description"
           label={`${titleize(type)} Description`}
-          style={{ width: '63vw' }}
+          style={{ width: '100%' }}
           placeholder="Type a description here"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
