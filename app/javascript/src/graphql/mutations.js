@@ -840,3 +840,13 @@ export const CreateActionFlow = gql`
     }
   }
 `
+
+export const UpdateActionFlow = gql`
+  mutation actionFlowUpdate($id: ID!, $title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowUpdate(id: $id, title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+      actionFlow {
+        description
+      }
+    }
+  }
+`

@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 import { useLocation } from 'react-router'
 import Nav from '../../components/Nav'
-import { CreateActionFlow } from '../../graphql/mutations'
+import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
 import { ActionFlow } from '../../graphql/queries'
@@ -20,6 +20,7 @@ export default function ActionFlows() {
   const location = useLocation()
   const history = useHistory()
   const [createActionFlow] = useMutation(CreateActionFlow)
+  const [updateActionFlow] = useMutation(UpdateActionFlow)
 
   const actionFlowData = useQuery(ActionFlow)
 
@@ -76,18 +77,32 @@ export default function ActionFlows() {
       action_fields: actionMetaData
     }
 
-    createActionFlow({
-      variables: {
-        title: data.title,
-        description: data.description,
-        eventType: data.eventType,
-        eventCondition: data.eventCondition,
-        eventConditionQuery: data.eventConditionQuery,
-        eventAction
+    let variables = {
+      title: data.title,
+      description: data.description,
+      eventType: data.eventType,
+      eventCondition: data.eventCondition,
+      eventConditionQuery: data.eventConditionQuery,
+      eventAction
+    }
+
+    let action = createActionFlow
+
+    if (Object.keys(selectedActionFlow).length) {
+      variables = {
+        ...variables,
+        id: selectedActionFlow.id
       }
+
+      action = updateActionFlow
+    }
+
+    action({
+      variables
     })
       .then(() => {
         closeModal()
+        actionFlowData.refetch()
         setMessageAlertOpen(true)
         setIsSuccessAlert(true)
       })
