@@ -12,8 +12,13 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  useMediaQuery
+  useMediaQuery,
+  Grid,
+  IconButton,
+  MenuItem,
+  Menu
 } from '@material-ui/core'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import { useMutation, useQuery } from 'react-apollo'
 import { useTheme } from '@material-ui/styles'
@@ -41,24 +46,34 @@ export default function FormLinkList({ userType }) {
   const [expiresAt, setExpiresAtDate] = useState(null)
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const [anchorEl, setAnchorEl] = useState(null)
 
+  const menuOpen = Boolean(anchorEl)
+
+  function handleClose() {
+    setAnchorEl(null)
+  }
+
+  function handleOpenMenu(event) {
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+  }
   function submitForm(title, description) {
-    console.log(title, description)
     createForm({
       variables: { name: title, expiresAt, description }
     })
-    .then(() => {
-      setMessage('Form created')
-      setLoading(false)
-      setTimeout(() => {
-        updateList()
-      }, 1000)
-      setOpen(!open)
-    })
-    .catch((err) => {
-      setLoading(false)
-      setMessage(err.message)
-    })
+      .then(() => {
+        setMessage('Form created')
+        setLoading(false)
+        setTimeout(() => {
+          updateList()
+        }, 1000)
+        setOpen(!open)
+      })
+      .catch(err => {
+        setLoading(false)
+        setMessage(err.message)
+      })
   }
 
   function updateList() {
@@ -119,20 +134,47 @@ export default function FormLinkList({ userType }) {
               data-testid="community_form"
               onClick={() => history.push(`/form/${form.id}/${form.name}`)}
             >
-              <ListItemAvatar data-testid="community_form_icon">
-                <Avatar>
-                  <AssignmentIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <Box className={classes.listBox}>
-                <Typography variant="subtitle1" data-testid="form_name">
-                  {form.name}
-                </Typography>
-              </Box>
+              <Grid container spacing={1}>
+                <Grid item xs={1}>
+                  <ListItemAvatar data-testid="community_form_icon">
+                    <Avatar>
+                      <AssignmentIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                </Grid>
+                <Grid item xs={9}>
+                  <Box className={classes.listBox}>
+                    <Typography variant="subtitle1" data-testid="form_name">
+                      {form.name}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={2}>
+                  {userType === 'admin' && (
+                    <IconButton
+                      className={classes.menuButton}
+                      aria-label={`more-${form.name}`}
+                      aria-controls="long-menu"
+                      aria-haspopup="true"
+                      onClick={handleOpenMenu}
+                      dataid={form.id}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  )}
+                </Grid>
+              </Grid>
+              <FormMenu
+                data={form}
+                anchorEl={anchorEl}
+                handleClose={() => setAnchorEl(null)}
+                open={menuOpen}
+              />
             </ListItem>
           </Fragment>
         ))}
       </List>
+
       {userType === 'admin' && (
         <Fab
           variant="extended"
@@ -148,6 +190,53 @@ export default function FormLinkList({ userType }) {
   )
 }
 
+export function FormMenu({ data, anchorEl, handleClose, open }) {
+  const history = useHistory()
+
+  function routeToEdit(event){  
+    event.stopPropagation()
+    history.push(`/edit_form/${data.id}`)
+  }
+
+  return (
+    <Menu
+      id={`long-menu-${data.id}`}
+      anchorEl={anchorEl}
+      open={open}
+      keepMounted
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          width: 200
+        }
+      }}
+    >
+      <div>
+        <>
+          <MenuItem
+            id="edit_button"
+            key="edit_form"
+            onClick={routeToEdit}
+          >
+            Edit
+          </MenuItem>
+        </>
+      </div>
+    </Menu>
+  )
+}
+
+FormMenu.defaultProps = {
+  anchorEl: {}
+}
+FormMenu.propTypes = {
+  data: PropTypes.shape({ id: PropTypes.string }).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  anchorEl: PropTypes.object
+}
+
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired
 }
@@ -161,5 +250,8 @@ const styles = StyleSheet.create({
     right: 57,
     marginLeft: '30%',
     color: '#FFFFFF'
+  },
+  menuButton: {
+    float: 'right'
   }
 })
