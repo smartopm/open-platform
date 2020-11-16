@@ -33,7 +33,7 @@ export default function FormBuilder({ formId }) {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <GenericForm 
         formId={formId}
         pathname={pathname}
@@ -42,8 +42,6 @@ export default function FormBuilder({ formId }) {
       {
         isAdd && <FormPropertyForm refetch={refetch} />
       }
-      <br />
-      <br />
       <br />
       <CenteredContent>
         <Button 
@@ -150,8 +148,6 @@ export function FormPropertyForm({ refetch }) {
         value={propertyData.adminUse} 
         handleChange={handleRadioChange}
       /> 
-      <br />
-      <br />
       <br />
       <CenteredContent>
         <Button 
