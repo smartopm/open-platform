@@ -28,6 +28,7 @@ const initialData = {
   description: '',
   eventType: '',
   eventCondition: '',
+  eventConditionQuery: '',
   actionType: ''
 }
 export default function ActionFlowModal({ open, closeModal, handleSave, selectedActionFlow }) {
@@ -53,7 +54,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       })
       setMetaData(actionFieldsValues)
     }
-
     return () => {
       setData(initialData)
       setMetaData({})
@@ -86,11 +86,12 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     })
   }
 
-  function handleQueryOnChange(selectedOptions) {
-    if (selectedOptions) {
+  function handleQueryOnChange(conditionJsonLogic, conditionQuery) {
+    if (conditionJsonLogic) {
       setData({
         ...data,
-        eventCondition: JSON.stringify(selectedOptions.logic)
+        eventCondition: JSON.stringify(conditionJsonLogic.logic),
+        eventConditionQuery: JSON.stringify(conditionQuery)
       })
     }
   }
@@ -164,6 +165,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           <QueryBuilder
             handleOnChange={handleQueryOnChange}
             builderConfig={queryBuilderConfig}
+            initialQueryValue={JSON.parse(selectedActionFlow.eventConditionQuery || '{}')}
             addRuleLabel="Add Rule"
           />
         </div>

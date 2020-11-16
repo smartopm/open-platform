@@ -82,6 +82,7 @@ export default function ActionFlows() {
         description: data.description,
         eventType: data.eventType,
         eventCondition: data.eventCondition,
+        eventConditionQuery: data.eventConditionQuery,
         eventAction
       }
     })
@@ -115,14 +116,12 @@ export default function ActionFlows() {
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
-      {!actionFlowData.loading && (
-        <ActionFlowModal
-          open={open}
-          closeModal={closeModal}
-          handleSave={handleSave}
-          selectedActionFlow={selectedActionFlow}
-        />
-      )}
+      <ActionFlowModal
+        open={open}
+        closeModal={closeModal}
+        handleSave={handleSave}
+        selectedActionFlow={selectedActionFlow}
+      />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={

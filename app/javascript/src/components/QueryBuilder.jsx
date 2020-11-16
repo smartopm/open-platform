@@ -65,7 +65,7 @@ export default function QueryBuilder({
   function onChange(immutableTree, queryConfig) {
     setTreeConfig({ tree: immutableTree, config: queryConfig })
     const selectedOptions = QbUtils.jsonLogicFormat(immutableTree, config)
-    handleOnChange(selectedOptions)
+    handleOnChange(selectedOptions, immutableTree)
   }
 
   return (

@@ -8,6 +8,7 @@ module Mutations
       argument :description, String, required: true
       argument :event_type, String, required: true
       argument :event_condition, String, required: false
+      argument :event_condition_query, String, required: false
       argument :event_action, GraphQL::Types::JSON, required: false
 
       field :action_flow, Types::ActionFlowType, null: false
