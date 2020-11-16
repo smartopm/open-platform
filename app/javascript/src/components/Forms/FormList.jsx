@@ -131,7 +131,7 @@ export default function FormLinkList({ userType }) {
               data-testid="community_form"
               onClick={() => history.push(`/form/${form.id}/${form.name}`)}
             >
-              <Grid container spacing={1}>
+              <Grid container spacing={1} style={{ marginTop: '8px' }}>
                 <Grid item xs={1}>
                   <ListItemAvatar data-testid="community_form_icon">
                     <Avatar>
@@ -149,7 +149,7 @@ export default function FormLinkList({ userType }) {
                 <Grid item xs={2}>
                   {userType === 'admin' && (
                     <IconButton
-                      className={classes.menuButton}
+                      className={css(styles.menuButton)}
                       aria-label={`more-${form.name}`}
                       aria-controls="long-menu"
                       aria-haspopup="true"
