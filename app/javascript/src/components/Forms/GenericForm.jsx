@@ -31,6 +31,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [isDeletingProperty, setDeleteLoading] = useState(false)
+  const [isSubmitting, setSubmitting] = useState(false)
   const [currentPropId, setCurrentPropertyId] = useState("")
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
@@ -90,6 +91,7 @@ function handleDeleteProperty(propId){
   
    function saveFormData(event){
     event.preventDefault()
+    setSubmitting(true)
     const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0]
     
@@ -118,16 +120,26 @@ function handleDeleteProperty(propId){
       variables: {
         formId,
         userId: authState.user.id,
-        propValues: cleanFormData,
+        propValues: cleanFormData
       }
-    }).then(({ data }) => {
-          if (data.formUserCreate.formUser === null) {
-             setMessage({ ...message, err: true, info: data.formUserCreate.error })
-             return
-          }
-        setMessage({ ...message, err: false, info: 'You have successfully submitted the form' })
     })
-   .catch(err => setMessage({ ...message, err: true, info: err.message }))
+      .then(({ data }) => {
+        if (data.formUserCreate.formUser === null) {
+          setMessage({ ...message, err: true, info: data.formUserCreate.error })
+          setSubmitting(false)
+          return
+        }
+        setSubmitting(false)
+        setMessage({
+          ...message,
+          err: false,
+          info: 'You have successfully submitted the form'
+        })
+      })
+      .catch(err => {
+        setMessage({ ...message, err: true, info: err.message })
+        setSubmitting(false)
+      })
   }
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.adminUse ? false : !(formPropertiesData.adminUse && authState.user.userType === 'admin')
@@ -257,8 +269,9 @@ function handleDeleteProperty(propId){
                 type="submit"
                 color="primary"
                 aria-label="form_submit"
+                disabled={isSubmitting}
               >
-                Submit
+                {isSubmitting ? 'Submitting ...' : 'Submit'}
               </Button>
             </CenteredContent>
 

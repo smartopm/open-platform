@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { Fragment, useState } from 'react'
 import {
   List,
@@ -208,15 +207,13 @@ export function FormMenu({ formId, anchorEl, handleClose, open }) {
       }}
     >
       <div>
-        <>
-          <MenuItem
-            id="edit_button"
-            key="edit_form"
-            onClick={routeToEdit}
-          >
-            Edit
-          </MenuItem>
-        </>
+        <MenuItem
+          id="edit_button"
+          key="edit_form"
+          onClick={routeToEdit}
+        >
+          Edit
+        </MenuItem>
       </div>
     </Menu>
   )
