@@ -7,7 +7,8 @@ FactoryBot.define do
 
   factory :form do
     name { generate(:form_name) }
-    expires_at { 1.hour.from_now }
+    expires_at { 10.days.from_now }
+    status { 1 }
     community
   end
 end

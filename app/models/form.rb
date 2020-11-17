@@ -10,7 +10,7 @@ class Form < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :expires_at, presence: true
   scope :by_user_type, lambda { |user|
-    where('expires_at > ?', Date.zone.today).where(status: 1) if user.user_type != 'admin'
+    where('expires_at > ?', Time.zone.now).where(status: 1) if user.user_type != 'admin'
   }
   enum status: { draft: 0, published: 1 }
 end
