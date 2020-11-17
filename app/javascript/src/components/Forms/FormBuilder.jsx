@@ -36,6 +36,7 @@ export default function FormBuilder({ formId }) {
         pathname={pathname}
         formData={data}
         refetch={refetch}
+        editMode
       />
       {
         isAdd && <FormPropertyForm formId={formId} refetch={refetch} />
@@ -168,7 +169,6 @@ export function FormPropertyForm({ refetch, formId }) {
             id={i+1}
             option={option}
             actions={{
-              handleAddOption,
               handleRemoveOption: () => handleRemoveOption(i),
               handleOptionChange: event => handleOptionChange(event, i)
             }} 
@@ -317,7 +317,6 @@ SwitchInput.propTypes = {
 ChoiceInput.propTypes = {
   actions: PropTypes.shape({
     handleRemoveOption: PropTypes.func,
-    handleAddOption: PropTypes.func,
     handleOptionChange: PropTypes.func,
   }).isRequired,
   // eslint-disable-next-line react/require-default-props

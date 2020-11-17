@@ -27,7 +27,7 @@ const initialData = {
   radio: { value: {label: '', checked: null} }
 }
 
-export default function GenericForm({ formId, pathname, formData, refetch }) {
+export default function GenericForm({ formId, pathname, formData, refetch, editMode }) {
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [isDeletingProperty, setDeleteLoading] = useState(false)
@@ -134,12 +134,16 @@ function handleDeleteProperty(propId){
     const fields = {
       text: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          <Grid item xs={1}>
-            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
-            </IconButton>
-          </Grid>
-          <Grid item xs={11}>
+          {
+            editMode && (
+              <Grid item xs={1}>
+                <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                </IconButton>
+              </Grid>
+            )
+          }
+          <Grid item xs={editMode ? 11 : 12}>
             <TextInput
               id={formPropertiesData.id}
               properties={formPropertiesData}
@@ -152,12 +156,16 @@ function handleDeleteProperty(propId){
       ),
       date: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          <Grid item xs={1}>
-            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
-            </IconButton>
-          </Grid>
-          <Grid item xs={11}>
+          {
+            editMode && (
+              <Grid item xs={1}>
+                <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                </IconButton>
+              </Grid>
+            )
+          }
+          <Grid item xs={editMode ? 11 : 12}>
             <DatePickerDialog
               id={formPropertiesData.id}
               selectedDate={properties.date.value}
@@ -169,12 +177,16 @@ function handleDeleteProperty(propId){
       ),
       image: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          <Grid item xs={1}>
-            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
-            </IconButton>
-          </Grid>
-          <Grid item xs={11}>
+          {
+            editMode && (
+              <Grid item xs={1}>
+                <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                </IconButton>
+              </Grid>
+            )
+          }
+          <Grid item xs={editMode ? 11 : 12}>
             <UploadField
               detail={{ type: 'file', status }}
               upload={evt => onChange(evt.target.files[0])}
@@ -185,12 +197,16 @@ function handleDeleteProperty(propId){
       ),
       signature: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          <Grid item xs={1}>
-            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
-            </IconButton>
-          </Grid>
-          <Grid item xs={11}>
+          {
+            editMode && (
+              <Grid item xs={1}>
+                <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                </IconButton>
+              </Grid>
+            )
+          }
+          <Grid item xs={editMode ? 11 : 12}>
             <SignaturePad
               key={formPropertiesData.id}
               detail={{ type: 'signature', status: signatureStatus }}
@@ -202,12 +218,16 @@ function handleDeleteProperty(propId){
       ),
       radio: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          <Grid item xs={1}>
-            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
-            </IconButton>
-          </Grid>
-          <Grid item xs={11}>
+          {
+            editMode && (
+              <Grid item xs={1}>
+                <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                </IconButton>
+              </Grid>
+            )
+          }
+          <Grid item xs={editMode ? 11 : 12}>
             <Fragment key={formPropertiesData.id}>
               <br />
               <RadioInput 
@@ -263,6 +283,7 @@ GenericForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired,
   refetch: PropTypes.func.isRequired,
+  editMode: PropTypes.bool.isRequired,
 }
 
 /**

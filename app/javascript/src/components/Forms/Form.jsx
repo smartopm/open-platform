@@ -7,7 +7,7 @@ import GenericForm from './GenericForm'
 import { Spinner } from '../Loading'
 
 export default function Form({ formId, pathname }) {
-  const { data: formData, error, loading } = useQuery(FormPropertiesQuery, {
+  const { data: formData, error, loading, refetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
   })
@@ -17,7 +17,13 @@ export default function Form({ formId, pathname }) {
 
   return (
     <>
-      <GenericForm formId={formId} pathname={pathname} formData={formData} />
+      <GenericForm 
+        formId={formId} 
+        pathname={pathname} 
+        formData={formData} 
+        editMode={false}
+        refetch={refetch}
+      />
     </>
   )
 }
