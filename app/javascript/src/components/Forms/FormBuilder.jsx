@@ -94,7 +94,7 @@ export function FormPropertyForm({ refetch, formId }) {
 
   function saveFormProperty(event){
     event.preventDefault()
-    // const options.
+    const nextOrder = Number(propertyData.order) + 1
     const fieldValue = options.map(option => ({value: option, label: option}))
     setMutationLoading(true)
     formPropertyCreate({
@@ -107,7 +107,10 @@ export function FormPropertyForm({ refetch, formId }) {
     .then(() => {
       refetch()
       setMutationLoading(false)
-      setProperty(initData)
+      setProperty({
+        ...initData,
+        order: nextOrder.toString()
+      })
       setOptions([""])
     })
     .catch(() => {
@@ -170,7 +173,7 @@ export function FormPropertyForm({ refetch, formId }) {
           />
         ))
       }
-      <div>
+      <div style={{ marginTop: 20 }}>
         <SwitchInput 
           name="required" 
           label="This field is required" 
@@ -182,6 +185,16 @@ export function FormPropertyForm({ refetch, formId }) {
           label="Only for admins" 
           value={propertyData.adminUse} 
           handleChange={handleRadioChange}
+        />
+        <TextField
+          label="Order Number"
+          id="outlined-size-small"
+          value={propertyData.order}
+          onChange={handlePropertyValueChange}
+          variant="outlined"
+          size="small"
+          name="order"
+          style={{ marginLeft: 20 }}
         />
       </div>
       <br />
