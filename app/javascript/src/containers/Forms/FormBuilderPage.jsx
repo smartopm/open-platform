@@ -7,7 +7,7 @@ export default function FormBuilderPage(){
   const { formId} = useParams()
     return (
       <>
-        <Nav navName="FormBuilder" />
+        <Nav navName="FormBuilder" menuButton="back" backTo="/forms" />
         <FormBuilder formId={formId} />
       </>
     )

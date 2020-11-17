@@ -28,6 +28,7 @@ export default function FormBuilder({ formId }) {
 
   return (
     <Container maxWidth="lg">
+      <br />
       <GenericForm 
         formId={formId}
         pathname={pathname}

@@ -24,7 +24,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
     it 'deletes a form property' do
       variables = {
         formId: form.id,
-        formPropertyId: form_property.id
+        formPropertyId: form_property.id,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
@@ -37,10 +37,10 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
     end
 
     it 'throws unauthorized error when user is not admin' do
-        variables = {
-            formId: form.id,
-            formPropertyId: form_property.id
-          }
+      variables = {
+        formId: form.id,
+        formPropertyId: form_property.id,
+      }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
                                                    current_user: user,
