@@ -89,6 +89,7 @@ import Labels from '../src/containers/Label/Labels'
 import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
+import LandParcel from '../src/containers/LandParcels/LandParcel'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -340,6 +341,8 @@ const App = () => {
                             <Route path="/event_logs" component={EventLogs} />
                             <Route path="/labels" component={Labels} />
                             <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} />
+                            <Route path="/action_flows" component={ActionFlows} />
+                            <Route path="/land_parcels" component={LandParcel} />
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route
