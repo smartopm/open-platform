@@ -94,20 +94,31 @@ export function FormPropertyForm({ refetch, formId }) {
 
   function saveFormProperty(event){
     event.preventDefault()
+    // const options.
+    const fieldValue = options.map(option => ({value: option, label: option}))
     setMutationLoading(true)
     formPropertyCreate({
       variables: {
         ...propertyData,
+        fieldValue,
         formId
       }
     })
     .then(() => {
       refetch()
       setMutationLoading(false)
+      setProperty(initData)
+      setOptions([""])
     })
     .catch(() => {
       setMutationLoading(false)
     })
+  }
+
+  function handleOptionChange(event, index){
+      const values = options
+      values[index] = event.target.value
+      setOptions(values)
   }
 
   function handleAddOption(){
@@ -122,7 +133,6 @@ export function FormPropertyForm({ refetch, formId }) {
     }
     setOptions([...values])
   }
-
 
   return (
     <form onSubmit={saveFormProperty}>
@@ -145,15 +155,17 @@ export function FormPropertyForm({ refetch, formId }) {
         options={fieldTypes}
       />
       {
-        // propertyData.fieldType === 'radio' && options.length && 
+        propertyData.fieldType === 'radio' && 
         options.map((option, i) => (
           <ChoiceInput 
             // eslint-disable-next-line react/no-array-index-key
             key={i} 
+            id={i+1}
             option={option}
             actions={{
               handleAddOption,
               handleRemoveOption: () => handleRemoveOption(i),
+              handleOptionChange: event => handleOptionChange(event, i)
             }} 
           />
         ))
@@ -229,19 +241,16 @@ export function SwitchInput({name, label, value, handleChange}){
   )
 }
 
-export function ChoiceInput({ actions }){
-  function handleChoice(){
+export function ChoiceInput({ actions, value, id }){
 
-  }
   return (
     <div>
       <TextField
-        label="Option"
+        label={`Option ${id}`}
         variant="outlined"
         size="small"
-        defaultValue=""
-        onChange={handleChoice}
-        name="fieldName"
+        value={value}
+        onChange={actions.handleOptionChange}
         margin="normal"
         required
       />
@@ -289,5 +298,8 @@ ChoiceInput.propTypes = {
   actions: PropTypes.shape({
     handleRemoveOption: PropTypes.func,
     handleAddOption: PropTypes.func,
-  }).isRequired
+    handleOptionChange: PropTypes.func,
+  }).isRequired,
+  value: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired
 }

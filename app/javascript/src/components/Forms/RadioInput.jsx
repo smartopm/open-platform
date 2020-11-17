@@ -49,7 +49,7 @@ export default function RadioInput({ handleValue, properties, value }) {
         }
 
         {/* This is for a new form */}
-        {properties.fieldValue?.map(val => (
+        {properties.fieldValue?.length && properties.fieldValue.map(val => (
           <FormControlLabel
             key={val.label}
             value={val.value}
