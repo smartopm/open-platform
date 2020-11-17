@@ -37,7 +37,7 @@ module Types::Queries::Form
   def forms
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].forms.order(created_at: :desc)
+    context[:site_community].forms.by_user_type(context[:current_user]).order(created_at: :desc)
   end
 
   def form(id:)
