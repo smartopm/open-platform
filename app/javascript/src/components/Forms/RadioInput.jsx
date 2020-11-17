@@ -8,7 +8,6 @@ import FormLabel from '@material-ui/core/FormLabel'
 import PropTypes from 'prop-types'
 
 export default function RadioInput({ handleValue, properties, value }) {
-  // eslint-disable-next-line react/prop-types
   const tempValue = properties?.value
   // convert ruby hash into a normal object by replacing => with : and the parse the value
   const cleanValue = tempValue?.replace(/=>/g, ':')
@@ -71,12 +70,15 @@ RadioInput.propTypes = {
   properties: PropTypes.shape({
     fieldName: PropTypes.string,
     fieldType: PropTypes.string,
-    fieldValue: PropTypes.arrayOf(
-      PropTypes.shape({
-        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
-        label: PropTypes.string
-      })
-    ),
+    fieldValue: PropTypes.oneOfType([
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+          label: PropTypes.string
+        })
+      ),
+      PropTypes.object
+    ]),
     required: PropTypes.bool
   }).isRequired,
   value: PropTypes.oneOfType([

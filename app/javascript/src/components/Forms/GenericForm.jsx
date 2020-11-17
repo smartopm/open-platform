@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { Fragment, useContext, useRef, useState } from 'react'
-import { Button, Container, Typography } from '@material-ui/core'
+import { Button, Container, Grid, IconButton, Typography } from '@material-ui/core'
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useApolloClient, useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import DatePickerDialog from '../DatePickerDialog'
@@ -13,6 +14,8 @@ import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
 import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
 import RadioInput from './RadioInput'
+import { FormPropertyDeleteMutation } from '../../graphql/mutations/forms';
+import { Spinner } from '../Loading';
 
 // date
 // text input (TextField or TextArea)
@@ -24,13 +27,16 @@ const initialData = {
   radio: { value: {label: '', checked: null} }
 }
 
-export default function GenericForm({ formId, pathname, formData }) {
+export default function GenericForm({ formId, pathname, formData, refetch }) {
   const [properties, setProperties] = useState(initialData)
   const [message, setMessage] = useState({err: false, info: '', signed: false})
+  const [isDeletingProperty, setDeleteLoading] = useState(false)
+  const [currentPropId, setCurrentPropertyId] = useState("")
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
+  const [deleteProperty] = useMutation(FormPropertyDeleteMutation)
   // separate function for file upload
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -59,6 +65,19 @@ export default function GenericForm({ formId, pathname, formData }) {
       ...properties,
       [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
   })
+}
+
+function handleDeleteProperty(propId){
+  setDeleteLoading(true)
+  setCurrentPropertyId(propId)
+  deleteProperty({ 
+      variables: { formId, formPropertyId: propId }
+    })
+    .then(() => {
+      setDeleteLoading(false)
+      refetch()
+    })
+    .catch(error => console.log(error.message))
 }
 
   async function handleSignatureUpload(){
@@ -114,50 +133,92 @@ export default function GenericForm({ formId, pathname, formData }) {
     const editable = !formPropertiesData.adminUse ? false : !(formPropertiesData.adminUse && authState.user.userType === 'admin')
     const fields = {
       text: (
-        <TextInput
-          id={formPropertiesData.id}
-          key={formPropertiesData.id}
-          properties={formPropertiesData}
-          defaultValue={properties.fieldName}
-          handleValue={event => handleValueChange(event, formPropertiesData.id)}
-          editable={editable}
-        />
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          <Grid item xs={1}>
+            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+            </IconButton>
+          </Grid>
+          <Grid item xs={11}>
+            <TextInput
+              id={formPropertiesData.id}
+              properties={formPropertiesData}
+              defaultValue={properties.fieldName}
+              handleValue={event => handleValueChange(event, formPropertiesData.id)}
+              editable={editable}
+            />
+          </Grid>
+        </Grid>
       ),
       date: (
-        <DatePickerDialog
-          id={formPropertiesData.id}
-          key={formPropertiesData.id}
-          selectedDate={properties.date.value}
-          handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
-          label={formPropertiesData.fieldName}
-        />
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          <Grid item xs={1}>
+            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
+            </IconButton>
+          </Grid>
+          <Grid item xs={11}>
+            <DatePickerDialog
+              id={formPropertiesData.id}
+              selectedDate={properties.date.value}
+              handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
+              label={formPropertiesData.fieldName}
+            />
+          </Grid>
+        </Grid>
       ),
       image: (
-        <UploadField
-          detail={{ type: 'file', status }}
-          key={formPropertiesData.id}
-          upload={evt => onChange(evt.target.files[0])}
-          editable={editable}
-        />
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          <Grid item xs={1}>
+            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
+            </IconButton>
+          </Grid>
+          <Grid item xs={11}>
+            <UploadField
+              detail={{ type: 'file', status }}
+              upload={evt => onChange(evt.target.files[0])}
+              editable={editable}
+            />
+          </Grid>
+        </Grid>
       ),
       signature: (
-        <SignaturePad
-          key={formPropertiesData.id}
-          detail={{ type: 'signature', status: signatureStatus }}
-          signRef={signRef}
-          onEnd={() => handleSignatureUpload(formPropertiesData.id)}
-        />
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          <Grid item xs={1}>
+            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
+            </IconButton>
+          </Grid>
+          <Grid item xs={11}>
+            <SignaturePad
+              key={formPropertiesData.id}
+              detail={{ type: 'signature', status: signatureStatus }}
+              signRef={signRef}
+              onEnd={() => handleSignatureUpload(formPropertiesData.id)}
+            />
+          </Grid>
+        </Grid>
       ),
       radio: (
-        <Fragment key={formPropertiesData.id}>
-          <br />
-          <RadioInput 
-            properties={formPropertiesData}
-            value={null}
-            handleValue={event => handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)} 
-          />
-          <br />
-        </Fragment>
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          <Grid item xs={1}>
+            <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+              { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
+            </IconButton>
+          </Grid>
+          <Grid item xs={11}>
+            <Fragment key={formPropertiesData.id}>
+              <br />
+              <RadioInput 
+                properties={formPropertiesData}
+                value={null}
+                handleValue={event => handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)}
+              />
+              <br />
+            </Fragment>
+          </Grid>
+        </Grid>
       )
     }
     return fields[formPropertiesData.fieldType]
@@ -200,7 +261,8 @@ GenericForm.propTypes = {
   // eslint-disable-next-line react/require-default-props
   // eslint-disable-next-line react/forbid-prop-types
   // eslint-disable-next-line react/forbid-prop-types
-  formData: PropTypes.object.isRequired
+  formData: PropTypes.object.isRequired,
+  refetch: PropTypes.func.isRequired,
 }
 
 /**

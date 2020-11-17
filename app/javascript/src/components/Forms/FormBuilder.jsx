@@ -9,7 +9,7 @@ import Select from '@material-ui/core/Select'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router';
 import { Button, Container, IconButton } from '@material-ui/core'
-import { AddCircleOutline, RemoveCircleOutline } from '@material-ui/icons';
+import { AddCircleOutline, DeleteOutline } from '@material-ui/icons';
 import Icon from '@material-ui/core/Icon';
 import { useMutation, useQuery } from 'react-apollo';
 import CenteredContent from '../CenteredContent'
@@ -35,6 +35,7 @@ export default function FormBuilder({ formId }) {
         formId={formId}
         pathname={pathname}
         formData={data}
+        refetch={refetch}
       />
       {
         isAdd && <FormPropertyForm formId={formId} refetch={refetch} />
@@ -148,6 +149,7 @@ export function FormPropertyForm({ refetch, formId }) {
         name="fieldName"
         style={{ width: '100%' }}
         margin="normal"
+        autoFocus
         required
       />
       <PropertySelector
@@ -172,6 +174,13 @@ export function FormPropertyForm({ refetch, formId }) {
             }} 
           />
         ))
+      }
+      {
+        propertyData.fieldType === 'radio' && (
+          <IconButton onClick={handleAddOption} aria-label="add">
+            <AddCircleOutline />
+          </IconButton>
+        )
       }
       <div style={{ marginTop: 20 }}>
         <SwitchInput 
@@ -215,9 +224,9 @@ export function FormPropertyForm({ refetch, formId }) {
 export function PropertySelector({ label, name, value, handleChange, options }) {
   return (
     <FormControl variant="outlined" style={{ width: '100%' }}>
-      <InputLabel id="demo-simple-select-outlined-label">{label}</InputLabel>
+      <InputLabel id={`${name}-${label}-id`}>{label}</InputLabel>
       <Select
-        labelId="demo-simple-select-outlined-label"
+        labelId={`${name}-${label}-id`}
         id="demo-simple-select-outlined"
         value={value}
         onChange={handleChange}
@@ -265,13 +274,11 @@ export function ChoiceInput({ actions, value, id }){
         value={value}
         onChange={actions.handleOptionChange}
         margin="normal"
+        autoFocus
         required
       />
       <IconButton style={{ marginTop: 13 }} onClick={actions.handleRemoveOption} aria-label="remove">
-        <RemoveCircleOutline />
-      </IconButton>
-      <IconButton style={{ marginTop: 13 }} onClick={actions.handleAddOption} aria-label="add">
-        <AddCircleOutline />
+        <DeleteOutline />
       </IconButton>
     </div>
   )
@@ -313,6 +320,7 @@ ChoiceInput.propTypes = {
     handleAddOption: PropTypes.func,
     handleOptionChange: PropTypes.func,
   }).isRequired,
-  value: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired
+  // eslint-disable-next-line react/require-default-props
+  value: PropTypes.string,
+  id: PropTypes.number.isRequired
 }
