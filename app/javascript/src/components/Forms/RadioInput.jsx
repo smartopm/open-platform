@@ -23,39 +23,39 @@ export default function RadioInput({ handleValue, properties, value }) {
         defaultValue={value || parsedValue?.checked}
         onChange={handleValue}
       >
-        {
-          // This is for form update, go through all possible choices and mark checked the one that was chosen
-          properties.formProperty?.fieldValue.map(field => {
-            if (field.value === parsedValue.checked) {
-              return (
-                <FormControlLabel
-                  key={parsedValue.label}
-                  value={parsedValue.checked}
-                  control={<Radio />}
-                  label={parsedValue.checked}
-                />
-              )
-            }
+        {// This is for form update, go through all possible choices and mark checked the one that was chosen
+        properties.formProperty?.fieldValue.map(field => {
+          if (field.value === parsedValue.checked) {
             return (
               <FormControlLabel
-                key={field.label}
-                value={field.value}
+                key={parsedValue.label}
+                value={parsedValue.checked}
                 control={<Radio />}
-                label={field.label}
+                label={parsedValue.checked}
               />
             )
-          })
+          }
+          return (
+            <FormControlLabel
+              key={field.label}
+              value={field.value}
+              control={<Radio />}
+              label={field.label}
+            />
+          )
+        })
         }
 
         {/* This is for a new form */}
-        {properties.fieldValue?.length && properties.fieldValue.map(val => (
-          <FormControlLabel
-            key={val.label}
-            value={val.value}
-            control={<Radio required={properties.required} />}
-            label={val.label}
-          />
-        ))}
+        {properties.fieldValue?.length &&
+          properties.fieldValue.map(val => (
+            <FormControlLabel
+              key={val.label}
+              value={val.value}
+              control={<Radio required={properties.required} />}
+              label={val.label}
+            />
+          ))}
       </RadioGroup>
     </FormControl>
   )
@@ -73,7 +73,11 @@ RadioInput.propTypes = {
     fieldValue: PropTypes.oneOfType([
       PropTypes.arrayOf(
         PropTypes.shape({
-          value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+          value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.bool
+          ]),
           label: PropTypes.string
         })
       ),
