@@ -22,6 +22,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import ActionIcon from '@material-ui/icons/CallToAction'
+import LandscapeIcon from '@material-ui/icons/Landscape';
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -30,7 +31,6 @@ import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { Footer } from './Footer'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
-import LandscapeIcon from '@material-ui/icons/Landscape';
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()

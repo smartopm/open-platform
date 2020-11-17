@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { Grid, Typography, Container } from '@material-ui/core'
@@ -6,8 +7,6 @@ import { ParcelQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import ParcelItem from './LandParcelItem'
-import CenteredContent from '../CenteredContent'
-import Paginate from '../Paginate'
 
 
 export default function LandParcelPage() {
@@ -47,24 +46,24 @@ export default function LandParcelPage() {
           <ParcelItem key={parcel.id} parcel={parcel} />
       ))}
         <div className="d-flex justify-content-center">
-        <nav aria-label="center Page navigation">
-          <ul className="pagination">
-            <li className={`page-item ${offset < limit && 'disabled'}`}>
-              <a className="page-link" onClick={handlePreviousPage} href="#">
-                Previous
-              </a>
-            </li>
-            <li
-              className={`page-item ${data.fetchLandParcel.length < limit &&
+          <nav aria-label="center Page navigation">
+            <ul className="pagination">
+              <li className={`page-item ${offset < limit && 'disabled'}`}>
+                <a className="page-link" onClick={handlePreviousPage} href="#">
+                  Previous
+                </a>
+              </li>
+              <li
+                className={`page-item ${data.fetchLandParcel.length < limit &&
                   'disabled'}`}
-            >
-              <a className="page-link" onClick={handleNextPage} href="#">
-                Next
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+              >
+                <a className="page-link" onClick={handleNextPage} href="#">
+                  Next
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </Container>
     </>
   )

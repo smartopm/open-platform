@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   ListItem,
-  Typography,
-  IconButton, Grid
+  Typography, Grid
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from "@material-ui/core/styles";
@@ -74,9 +73,7 @@ ParcelItem.propTypes = {
         stateProvince: PropTypes.string,
         country: PropTypes.string,
         parcelType: PropTypes.string
-    }).isRequired,
-    userType: PropTypes.string.isRequired,
-    refetch: PropTypes.func.isRequired,
+    }).isRequired
 }
 
 const useStyles = makeStyles(() => ({

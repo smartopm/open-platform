@@ -37,11 +37,11 @@ describe('It should test the comment component', () => {
 
   it('it should render with no error', () => {
     const container = render(
-       <BrowserRouter>
-         <MockedProvider mock={mockData} addTypename={false}>
-           <LandParcel />
-         </MockedProvider>
-       </BrowserRouter>
+      <BrowserRouter>
+        <MockedProvider mock={mockData} addTypename={false}>
+          <LandParcel />
+        </MockedProvider>
+      </BrowserRouter>
     )
 
     expect( container.queryByText('Parcel Number')).toBeInTheDocument()
