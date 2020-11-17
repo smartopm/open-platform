@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
@@ -44,6 +44,11 @@ describe('It should test the comment component', () => {
       </BrowserRouter>
     )
 
-    expect( container.queryByText('Parcel Number')).toBeInTheDocument()
+    await waitFor(() => {
+        expect( container.queryByText('Parcel Number')).toBeInTheDocument()
+      },
+      { timeout: 500 }
+    )
+  
   });
 });
