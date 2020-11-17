@@ -77,7 +77,6 @@ module Types::Queries::ActionFlow
       raise GraphQL::ExecutionError, 'Invalid event type'
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   # This will be removed once Suarabh's work is in, so not test
   def action_flows
@@ -86,17 +85,25 @@ module Types::Queries::ActionFlow
     ActionFlow.order(:created_at).all
   end
 
+  # rubocop:disable Metrics/MethodLength
   def active_action_flows
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    ActionFlow.where(active: true).map do |flow_obj|
+    # Listing all actionflows for now later to be replaced with
+    # ActionFlow.where(active: true) when we add filters : Saurabh
+    ActionFlow.order(:created_at).all.map do |flow_obj|
       {
+        id: flow_obj.id,
         title: flow_obj.title,
         description: flow_obj.description,
-        event_type: flow_obj.event_type,
+        event_type: flow_obj.event_type.gsub('_', ' ').capitalize,
         event_condition: flow_obj.event_condition,
         event_action: flow_obj.event_action,
+        active: flow_obj.active,
+        created_at: flow_obj.created_at,
       }
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end

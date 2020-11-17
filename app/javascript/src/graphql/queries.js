@@ -775,3 +775,15 @@ export const Flows = gql`
     }
   }
 `
+export const activeActionFlows = gql`
+    {
+    activeActionFlows {
+      id
+      description
+      title
+      eventType
+      createdAt
+      active
+    }
+  }
+`

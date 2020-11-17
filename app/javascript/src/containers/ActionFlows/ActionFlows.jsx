@@ -10,6 +10,7 @@ import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
 import { Flows } from '../../graphql/queries'
+import ActionFlowsList from '../../components/ActionFlowsList'
 
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
@@ -160,6 +161,7 @@ export default function ActionFlows() {
           {flow.title}
         </Button>
       ))}
+      <ActionFlowsList />
     </>
   )
 }
