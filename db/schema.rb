@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_16_104828) do
+ActiveRecord::Schema.define(version: 2020_11_18_202939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -280,7 +280,7 @@ ActiveRecord::Schema.define(version: 2020_11_16_104828) do
     t.datetime "expires_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "status"
+    t.integer "status", default: 0
     t.text "description"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
