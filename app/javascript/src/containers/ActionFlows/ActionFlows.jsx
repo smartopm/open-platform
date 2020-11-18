@@ -1,96 +1,54 @@
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { useQuery, useMutation } from 'react-apollo'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl
-} from '@material-ui/core'
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import { useMutation, useQuery } from 'react-apollo'
+import { useHistory } from 'react-router-dom'
+import { Button } from '@material-ui/core'
+import { useLocation } from 'react-router'
 import Nav from '../../components/Nav'
-import { Events, Actions, ActionFields, RuleFields } from '../../graphql/queries'
-import colors from '../../themes/nkwashi/colors'
-import { titleize, capitalize } from '../../utils/helpers'
-import QueryBuilder from '../../components/QueryBuilder'
-import { CreateActionFlow } from '../../graphql/mutations'
+import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
+import ActionFlowModal from './ActionFlowModal'
+import { Flows } from '../../graphql/queries'
 
-const { primary, dew } = colors
-const initialData = {
-  title: '',
-  description: '',
-  eventType: '',
-  eventCondition: '',
-  actionType: ''
-}
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
-  const [messageAlertOpen, setMessageAlertOpen] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [data, setData] = useState(initialData)
-  const [metaData, setMetaData] = useState({})
-
-  const eventData = useQuery(Events)
-  const actionData = useQuery(Actions)
-  const actionFieldsData = useQuery(ActionFields, {
-    variables: { action: data.actionType }
-  })
-  const ruleFieldsData = useQuery(RuleFields, {
-    variables: { eventType: data.eventType }
-  })
+  const [selectedActionFlow, setSelectedActionFlow] = useState({})
+  const location = useLocation()
+  const history = useHistory()
   const [createActionFlow] = useMutation(CreateActionFlow)
+  const [updateActionFlow] = useMutation(UpdateActionFlow)
 
+  const actionFlowsData = useQuery(Flows)
 
-  const ruleFieldsConfig = {}
+  useEffect(() => {
+    const locationInfo = location.pathname.split('/')
+    if (locationInfo[locationInfo.length - 1] === 'new') {
+      openModal()
+    }
 
-  if (ruleFieldsData.data) {
-    ruleFieldsData.data.ruleFields.forEach((field) => {
-      ruleFieldsConfig[field] = {
-        label: titleize(field),
-        type: 'text',
-        valueSources: ['value']
-      }
-    })
-  }
+    if (locationInfo[locationInfo.length - 1] === 'edit') {
+      openModal(locationInfo[locationInfo.length - 2])
+    }
+  }, [actionFlowsData.data])
 
-  const InitialConfig = MaterialConfig
-  const queryBuilderConfig = {
-    ...InitialConfig,
-    fields: ruleFieldsConfig
-  }
+  function openModal(flowId = null) {
+    let path = '/action_flows/new'
+    if (flowId) {
+      path = `/action_flows/${flowId}/edit`
+    }
 
-  function openModal() {
+    setSelectedActionFlow(getActionFlow(flowId))
+    history.push(path)
     setModalOpen(true)
   }
 
   function closeModal() {
+    setSelectedActionFlow({})
+    history.push('/action_flows')
     setModalOpen(false)
-  }
-
-  function handleQueryOnChange(selectedOptions) {
-    if (selectedOptions) {
-      setData({
-        ...data,
-        eventCondition: JSON.stringify(selectedOptions.logic)
-      })
-    }
-  }
-
-  function handleInputChange(event) {
-    const { name, value } = event.target
-    setData({
-      ...data,
-      [name]: value
-    })
   }
 
   function isMetaDataAVariable(value) {
@@ -98,15 +56,17 @@ export default function ActionFlows() {
   }
 
   function metaDataVariableValue(value) {
-    return value.replace(/ /g, "_").toLowerCase()
+    return value.replace(/ /g, '_').toLowerCase()
   }
 
-  function handleSave() {
+  function handleSave(data, metaData) {
     const actionMetaData = {}
     Object.entries(metaData).forEach(([key, value]) => {
       actionMetaData[key] = {
         name: key,
-        value: isMetaDataAVariable(value) ? metaDataVariableValue(value) : value,
+        value: isMetaDataAVariable(value)
+          ? metaDataVariableValue(value)
+          : value,
         type: isMetaDataAVariable(value) ? 'variable' : 'string'
       }
     })
@@ -116,172 +76,90 @@ export default function ActionFlows() {
       action_fields: actionMetaData
     }
 
-    createActionFlow({ variables: {
+    let variables = {
       title: data.title,
       description: data.description,
       eventType: data.eventType,
       eventCondition: data.eventCondition,
+      eventConditionQuery: data.eventConditionQuery,
       eventAction
-     }
-    }).then(() => {
-      closeModal()
-      setMessageAlertOpen(true)
-      setIsSuccessAlert(true)
-    }).catch(() => {
-      setMessageAlertOpen(true)
-      setIsSuccessAlert(false)
+    }
+
+    let action = createActionFlow
+
+    if (Object.keys(selectedActionFlow).length) {
+      variables = {
+        ...variables,
+        id: selectedActionFlow.id
+      }
+
+      action = updateActionFlow
+    }
+
+    action({
+      variables
     })
+      .then(() => {
+        closeModal()
+        actionFlowsData.refetch()
+        setMessageAlert('Success: Changes saved successfully')
+        setIsSuccessAlert(true)
+      })
+      .catch(e => {
+        setMessageAlert(e.message)
+        setIsSuccessAlert(false)
+      })
   }
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
       return
     }
-    setMessageAlertOpen(false)
+    setMessageAlert('')
+  }
+
+  function getActionFlow(id) {
+    if (!id) return {}
+
+    return (
+      actionFlowsData.data?.actionFlows.find(flow => {
+        return flow.id === id
+      }) || {}
+    )
   }
 
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
-      <Dialog
+      <ActionFlowModal
         open={open}
-        onClose={closeModal}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle
-          id="workflow-dialog-title"
-          style={{
-            borderBottom: `1px solid ${primary}`,
-            background: dew,
-            color: primary
-          }}
-        >
-          New Workflow
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="title"
-            label="Title"
-            name="title"
-            type="text"
-            fullWidth
-            value={data.title}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            id="description"
-            label="Description"
-            name="description"
-            type="text"
-            fullWidth
-            multiline
-            value={data.description}
-            onChange={handleInputChange}
-          />
-          <FormControl fullWidth>
-            {eventData.data && (
-              <>
-                <InputLabel id="select-event">Select Event Type</InputLabel>
-                <Select
-                  labelId="select-event"
-                  id="select-event"
-                  name="eventType"
-                  value={data.eventType}
-                  fullWidth
-                  onChange={handleInputChange}
-                >
-                  {eventData.data.events.map((event, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <MenuItem key={index} value={event}>
-                      {`On ${titleize(event)}`}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </>
-            )}
-          </FormControl>
-          <div style={{ marginTop: '20px', marginBottom: '5px' }}>
-            <QueryBuilder
-              handleOnChange={handleQueryOnChange}
-              builderConfig={queryBuilderConfig}
-              addRuleLabel="Add Rule"
-            />
-          </div>
-          <FormControl fullWidth>
-            {actionData.data && (
-              <>
-                <InputLabel id="select-action">Select an action</InputLabel>
-                <Select
-                  labelId="select-action"
-                  id="select-action"
-                  name="actionType"
-                  value={data.actionType}
-                  onChange={handleInputChange}
-                  fullWidth
-                >
-                  {actionData.data.actions.map((action, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <MenuItem key={index} value={action}>
-                      {`Send ${action}`}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </>
-            )}
-          </FormControl>
-          {actionFieldsData.data &&
-            actionFieldsData.data.actionFields.map((actionField, index) => (
-              <Autocomplete
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                id={`${actionField.name}-action-input`}
-                freeSolo
-                inputValue={metaData[actionField.name]}
-                onInputChange={(_event, newValue) => {
-                  setMetaData({
-                    ...metaData,
-                    [actionField.name]: newValue
-                  })
-                }}
-                options={ruleFieldsData.data?.ruleFields.map((option) => titleize(option))}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={capitalize(actionField.name)}
-                    name={actionField.name}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                )}
-              />
-            ))}
-        </DialogContent>
-        <DialogActions style={{ justifyContent: 'flex-start' }}>
-          <Button onClick={closeModal} color="secondary" variant="outlined">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} color="primary" variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+        closeModal={closeModal}
+        handleSave={handleSave}
+        selectedActionFlow={selectedActionFlow}
+      />
       <MessageAlert
-        type={isSuccessAlert ? "success" : "error"}
-        message={isSuccessAlert ? "Success: Changes saved successfully" : "Sorry, an error occcurred. Try again."}
-        open={messageAlertOpen}
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
       <Button
         variant="contained"
-        onClick={openModal}
+        onClick={() => openModal()}
         color="primary"
         className={`btn ${css(styles.addFlow)} `}
       >
         New Workflow
       </Button>
+      {actionFlowsData.data?.actionFlows.map(flow => (
+        <Button
+          key={flow.id}
+          onClick={() => openModal(flow.id)}
+          style={{ margin: '10px' }}
+        >
+          {flow.title}
+        </Button>
+      ))}
     </>
   )
 }

@@ -337,7 +337,7 @@ const App = () => {
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
                             <Route path="/labels" component={Labels} />
-                            <Route path="/action_flows" component={ActionFlows} />
+                            <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} />
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route

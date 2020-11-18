@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_09_200933) do
+ActiveRecord::Schema.define(version: 2020_11_16_104828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -42,6 +42,9 @@ ActiveRecord::Schema.define(version: 2020_11_09_200933) do
     t.boolean "active", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.string "event_condition_query"
+    t.index ["community_id"], name: "index_action_flows_on_community_id"
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -489,6 +492,7 @@ ActiveRecord::Schema.define(version: 2020_11_09_200933) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "action_flows", "communities"
   add_foreign_key "activity_points", "users"
   add_foreign_key "assignee_notes", "notes"
   add_foreign_key "assignee_notes", "users"
