@@ -5,7 +5,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { Redirect, useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import {
-  Button, TextField, Chip, Snackbar, MenuItem
+  Button, TextField, Chip, Snackbar, MenuItem, FormControlLabel, Checkbox
 } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import {
@@ -29,7 +29,8 @@ const initData = {
   preHeader: '',
   templateStyle: '',
   loaded: false,
-  labels: []
+  labels: [],
+  replyLink: false
 }
 export default function CampaignForm({
   authState, data, loading, refetch
@@ -128,7 +129,7 @@ export default function CampaignForm({
     return <Redirect push to="/" />
   }
   if (!loading && !formData.loaded && data) {
-    setFormData({ ...data, loaded: true, })
+    setFormData({ ...data, loaded: true, replyLink: false })
   }
   return (
     <div className="container">
@@ -261,6 +262,19 @@ export default function CampaignForm({
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
             pastDate
+          />
+        </div>
+        <div>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={formData.replyLink}
+                onChange={event => setFormData({ ...formData, replyLink: event.target.checked })}
+                name="replyLink"
+                color="primary"
+              />
+          )}
+            label="Include reply link"
           />
         </div>
         <div className="d-flex row justify-content-center">
