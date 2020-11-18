@@ -1,10 +1,13 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { Grid, Select, MenuItem, Typography, Button } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import CampaignIcon from './Campaign/CampaignIcon'
 
-export default function UserActionMenu() {
-  const [selectValue, setSelectValue] = useState('none')
-
+export default function UserActionMenu({
+  campaignCreateOption,
+  setCampaignCreateOption,
+  handleCampaignCreate
+}) {
   return (
     <Grid container>
       <Grid item style={{ display: 'flex' }}>
@@ -12,28 +15,33 @@ export default function UserActionMenu() {
         <Select
           labelId="user-action-select"
           id="user-action-select"
-          value={selectValue}
-          onChange={event => setSelectValue(event.target.value)}
+          value={campaignCreateOption}
+          onChange={event => setCampaignCreateOption(event.target.value)}
           style={{ height: '23px', marginLeft: '10px' }}
         >
           <MenuItem value="all">All</MenuItem>
+          <MenuItem value="all_on_the_page">All on this page</MenuItem>
           <MenuItem value="none">None</MenuItem>
         </Select>
       </Grid>
-      {
-        selectValue !== 'none' && (
+      {campaignCreateOption !== 'none' && (
         <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
           <Button
-            href="/"
-            color='primary'
+            onClick={handleCampaignCreate}
+            color="primary"
             startIcon={<CampaignIcon />}
-            style={{textTransform: "none"}}
+            style={{ textTransform: 'none' }}
           >
             Create Campaign
           </Button>
         </Grid>
-      )
-}
+      )}
     </Grid>
   )
+}
+
+UserActionMenu.propTypes = {
+  campaignCreateOption: PropTypes.string.isRequired,
+  setCampaignCreateOption: PropTypes.func.isRequired,
+  handleCampaignCreate: PropTypes.func.isRequired
 }
