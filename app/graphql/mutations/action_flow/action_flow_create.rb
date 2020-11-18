@@ -8,13 +8,16 @@ module Mutations
       argument :description, String, required: true
       argument :event_type, String, required: true
       argument :event_condition, String, required: false
+      argument :event_condition_query, String, required: false
       argument :event_action, GraphQL::Types::JSON, required: false
 
       field :action_flow, Types::ActionFlowType, null: false
 
       def resolve(vals)
         vals[:event_condition] = '{"==":[1,1]}' if vals[:event_condition].blank?
-        action_flow = ::ActionFlow.new(vals.merge(active: true))
+        action_flow = ::ActionFlow.new(
+          vals.merge(active: true, community: context[:site_community]),
+        )
         return { action_flow: action_flow } if action_flow.save
 
         raise GraphQL::ExecutionError, action_flow.errors.full_messages

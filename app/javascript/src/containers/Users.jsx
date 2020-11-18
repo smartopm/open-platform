@@ -289,7 +289,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for 
+                Add note for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -310,7 +310,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for 
+                Add Outgoing call answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -331,7 +331,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for 
+                Add Outgoing call not answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
