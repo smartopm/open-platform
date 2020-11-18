@@ -35,7 +35,7 @@ import { FormCreateMutation } from '../../graphql/mutations/forms'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
-  const { data, error, loading, refetch } = useQuery(FormsQuery, { fetchPolicy: 'cache-and-network' })
+  const { data, error, loading, refetch } = useQuery(FormsQuery)
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
@@ -160,13 +160,17 @@ export default function FormLinkList({ userType }) {
                   )}
                 </Grid>
               </Grid>
-              <FormMenu
-                formId={formId}
-                anchorEl={anchorEl}
-                handleClose={() => setAnchorEl(null)}
-                open={menuOpen}
-              />
             </ListItem>
+            {
+              formId === form.id && (
+                <FormMenu
+                  formId={formId}
+                  anchorEl={anchorEl}
+                  handleClose={() => setAnchorEl(null)}
+                  open={menuOpen}
+                />
+              )
+            }
           </Fragment>
         ))}
       </List>
@@ -188,7 +192,6 @@ export default function FormLinkList({ userType }) {
 
 export function FormMenu({ formId, anchorEl, handleClose, open }) {
   const history = useHistory()
-
   function routeToEdit(event){  
     event.stopPropagation()
     history.push(`/edit_form/${formId}`)
