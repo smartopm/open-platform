@@ -3,12 +3,15 @@ import PropTypes from 'prop-types'
 import { useLocation } from 'react-router';
 import { Button, Container } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon';
-import { useQuery } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import CenteredContent from '../CenteredContent'
 import GenericForm from './GenericForm';
 import { FormPropertiesQuery } from '../../graphql/queries';
 import { Spinner } from '../Loading';
 import FormPropertyCreateForm from './FormPropertyCreateForm';
+import DeleteDialogueBox from '../Business/DeleteDialogue';
+import { FormUpdateMutation } from '../../graphql/mutations/forms';
+import { formStatus } from '../../utils/constants';
 
 /**
  * @param {String} formId
@@ -17,17 +20,50 @@ import FormPropertyCreateForm from './FormPropertyCreateForm';
  */
 export default function FormBuilder({ formId }) {
   const [isAdd, setAdd] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false)
+  const [message, setMessage] = useState('')
   const { pathname } = useLocation()
   const { data, error, loading, refetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
   })
+  const [publish] = useMutation(FormUpdateMutation)
 
+  function handleConfirmPublish(){
+    setOpen(!open)
+  }
+
+  function publishForm(){
+    setIsPublishing(true)
+    publish({
+      variables: { id: formId, status: formStatus.publish }
+    })
+    .then(() => {
+      setMessage('Successfully published the form')
+      setIsPublishing(false)
+      setOpen(!open)
+    })
+    .catch(err => {
+      setMessage(err.message)
+      setIsPublishing(false)
+      setOpen(!open)
+    })
+  }
   if (loading) return <Spinner />
   if (error) return error.message
 
   return (
     <Container maxWidth="lg">
+      <DeleteDialogueBox 
+        open={open}
+        handleClose={handleConfirmPublish}
+        handleDelete={publishForm}
+        title="form"
+        action="publish"
+      />
+
+
       <br />
       <GenericForm 
         formId={formId}
@@ -53,12 +89,14 @@ export default function FormBuilder({ formId }) {
       <CenteredContent>
         {
           Boolean(data.formProperties.length) && (
-            <Button variant="outlined" color="primary" disableElevation>
-              Publish Form
+            <Button variant="outlined" color="primary" onClick={handleConfirmPublish}>
+              { isPublishing ? 'Publishing the form ...' : 'Publish Form' }
             </Button>
           )
         }
       </CenteredContent>
+      <br />
+      <p style={{ textAlign: 'center' }}>{message}</p>
     </Container>
   )
 }
