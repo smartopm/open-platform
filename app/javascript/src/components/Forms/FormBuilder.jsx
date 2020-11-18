@@ -49,6 +49,16 @@ export default function FormBuilder({ formId }) {
           {!isAdd ? 'Add Field' : 'Cancel'} 
         </Button>
       </CenteredContent>
+      <br />
+      <CenteredContent>
+        {
+          Boolean(data.formProperties.length) && (
+            <Button variant="outlined" color="primary" disableElevation>
+              Publish Form
+            </Button>
+          )
+        }
+      </CenteredContent>
     </Container>
   )
 }
