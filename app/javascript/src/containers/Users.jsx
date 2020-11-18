@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import TelegramIcon from '@material-ui/icons/Telegram'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
@@ -32,6 +31,7 @@ import UserActionMenu from '../components/UserActionMenu'
 import QueryBuilder from '../components/QueryBuilder'
 import CreateLabel from '../components/CreateLabel'
 import { dateToString } from '../utils/dateutil'
+import CampaignWarningDialog from '../components/Campaign/CampaignWarningDialog'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
@@ -59,6 +59,7 @@ export default function UsersList() {
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
+  const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -193,12 +194,7 @@ export default function UsersList() {
     setCampaignCreateOption(option)
   }
 
-  function handleCampaignCreate() {
-    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT) {
-      const goAhead = window.confirm('You are going to create a campaign for 2000+ users. We recommend using a smaller list. Do you still want to proceed?')
-      if (!goAhead) return
-    }
-
+  function createCampaign() {
     let createLimit = null
     if (campaignCreateOption === 'all_on_the_page') createLimit = limit
     campaignCreate({
@@ -214,6 +210,14 @@ export default function UsersList() {
       .catch(campaignError => {
         setError(campaignError.message)
       })
+  }
+
+  function handleCampaignCreate() {
+    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT) {
+      setOpenCampaignWarning(true)
+      return
+    }
+    createCampaign()
   }
 
   if (labelsLoading) return <Loading />
@@ -298,6 +302,7 @@ export default function UsersList() {
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
+        <CampaignWarningDialog open={openCampaignWarning} handleClose={() => setOpenCampaignWarning(false)} createCampaign={createCampaign} />
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -422,22 +427,6 @@ export default function UsersList() {
               style={{ display: 'flex', alignItems: 'flex-end' }}
             >
               {labelLoading ? <CircularProgress size={25} /> : ''}
-            </Grid>
-
-            <Grid
-              item
-              xs="auto"
-              style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.filterButton}
-                endIcon={<TelegramIcon />}
-                onClick={handleCampaignCreate}
-              >
-                Create Campaign
-              </Button>
             </Grid>
             <div className="d-flex justify-content-center row">
               <span>{labelError}</span>
