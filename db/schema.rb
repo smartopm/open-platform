@@ -157,6 +157,8 @@ ActiveRecord::Schema.define(version: 2020_11_16_104828) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
     t.string "status"
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_comments_on_community_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -503,6 +505,7 @@ ActiveRecord::Schema.define(version: 2020_11_16_104828) do
   add_foreign_key "campaign_labels", "campaigns"
   add_foreign_key "campaign_labels", "labels"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "comments", "communities"
   add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"
   add_foreign_key "discussion_users", "users"
