@@ -35,7 +35,7 @@ import { FormCreateMutation } from '../../graphql/mutations/forms'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
-  const { data, error, loading, refetch } = useQuery(FormsQuery)
+  const { data, error, loading, refetch } = useQuery(FormsQuery, { fetchPolicy: 'cache-and-network' })
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
