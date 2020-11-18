@@ -27,7 +27,7 @@ import { ModalDialog } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
-import UserActionMenu from '../components/UserActionMenu'
+import UsersActionMenu from '../components/UsersActionMenu'
 import QueryBuilder from '../components/QueryBuilder'
 import CreateLabel from '../components/CreateLabel'
 import { dateToString } from '../utils/dateutil'
@@ -457,7 +457,7 @@ export default function UsersList() {
           <Loading />
         ) : (
           <>
-            <UserActionMenu
+            <UsersActionMenu
               campaignCreateOption={campaignCreateOption}
               setCampaignCreateOption={setCampaignOption}
               handleCampaignCreate={handleCampaignCreate}
