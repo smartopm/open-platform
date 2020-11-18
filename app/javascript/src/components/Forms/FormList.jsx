@@ -15,7 +15,8 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Menu
+  Menu,
+  Snackbar
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -24,6 +25,7 @@ import { useTheme } from '@material-ui/styles'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
+import { Alert } from '@material-ui/lab'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -31,7 +33,9 @@ import ErrorPage from '../Error'
 import CenteredContent from '../CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../DatePickerDialog'
-import { FormCreateMutation } from '../../graphql/mutations/forms'
+import { FormCreateMutation, FormUpdateMutation } from '../../graphql/mutations/forms'
+import { formStatus } from '../../utils/constants'
+import DialogueBox from '../Business/DeleteDialogue'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
@@ -192,33 +196,88 @@ export default function FormLinkList({ userType }) {
 
 export function FormMenu({ formId, anchorEl, handleClose, open }) {
   const history = useHistory()
+  const [isDialogOpen, setOpen] = useState(false)
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [message, setMessage] = useState({ isError: false, detail: '' })
+
+  const [publish] = useMutation(FormUpdateMutation)
+
+  function handleConfirmPublish(){
+    setOpen(!isDialogOpen)
+    handleClose()
+  }
+
+  function handleAlertClose(){
+    setAlertOpen(false)
+  }
+
+  function publishForm(){
+    publish({
+      variables: { id: formId, status: formStatus.publish }
+    })
+    .then(() => {
+      setMessage({isError: false, detail: 'Successfully published the form'})
+      setOpen(!isDialogOpen)
+      setAlertOpen(true)
+      handleClose()
+    })
+    .catch(err => {
+      setMessage({ isError: true, detail: err.message })
+      setOpen(!isDialogOpen)
+      setAlertOpen(true)
+    })
+  }
+
   function routeToEdit(event){  
     event.stopPropagation()
     history.push(`/edit_form/${formId}`)
   }
 
   return (
-    <Menu
-      id={`long-menu-${formId}`}
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
+    <>
+      <DialogueBox 
+        open={isDialogOpen}
+        handleClose={handleConfirmPublish}
+        handleAction={publishForm}
+        title="form"
+        action="publish"
+      />
+      <Snackbar open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity={message.isError ? 'error' : 'success'}>
+          {message.detail}
+        </Alert>
+      </Snackbar>
+      <Menu
+        id={`long-menu-${formId}`}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        keepMounted={false}
+        PaperProps={{
         style: {
           width: 200
         }
       }}
-    >
-      <div>
-        <MenuItem
-          id="edit_button"
-          key="edit_form"
-          onClick={routeToEdit}
-        >
-          Edit
-        </MenuItem>
-      </div>
-    </Menu>
+      >
+ 
+        <div>
+          <MenuItem
+            id="edit_button"
+            key="edit_form"
+            onClick={routeToEdit}
+          >
+            Edit
+          </MenuItem>
+          <MenuItem
+            id="publish_button"
+            key="publish_form"
+            onClick={handleConfirmPublish}
+          >
+            Publish
+          </MenuItem>
+        </div>
+      </Menu>
+    </>
   )
 }
 
