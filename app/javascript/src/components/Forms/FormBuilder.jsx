@@ -36,18 +36,17 @@ export default function FormBuilder({ formId }) {
 
   function publishForm(){
     setIsPublishing(true)
+    setOpen(!open)
     publish({
       variables: { id: formId, status: formStatus.publish }
     })
     .then(() => {
       setMessage('Successfully published the form')
       setIsPublishing(false)
-      setOpen(!open)
     })
     .catch(err => {
       setMessage(err.message)
       setIsPublishing(false)
-      setOpen(!open)
     })
   }
   if (loading) return <Spinner />
