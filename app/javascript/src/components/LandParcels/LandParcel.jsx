@@ -79,37 +79,37 @@ export default function LandParcelPage() {
           </Typography>
         </Grid>
         <Grid xs={2}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "30px"}}>
             Address1
           </Typography>
         </Grid>
         <Grid xs={2}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "30px"}}>
             Address2
           </Typography>
         </Grid>
         <Grid xs={2}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "15px"}}>
             city
           </Typography>
         </Grid>
         <Grid xs={1}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
             Postal Code
           </Typography>
         </Grid>
         <Grid xs={1}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
             State Province
           </Typography>
         </Grid>
         <Grid xs={1}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "10px"}}>
             Country
           </Typography>
         </Grid>
         <Grid xs={1}>
-          <Typography variant="subtitle2" data-testid="label-name">
+          <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
             Parcel Type
           </Typography>
         </Grid>

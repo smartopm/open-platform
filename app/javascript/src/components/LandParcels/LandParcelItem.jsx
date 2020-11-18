@@ -23,37 +23,37 @@ export default function ParcelItem({ parcel }) {
           </Typography>
         </Grid>
         <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-users">
+          <Typography variant="subtitle1" data-testid="parcel-address1">
             {parcel.address1}
           </Typography>
         </Grid>
         <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
+          <Typography variant="subtitle1" data-testid="parcel-address2">
             {parcel.address2}
           </Typography>
         </Grid>
         <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
+          <Typography variant="subtitle1" data-testid="parcel-city">
             {parcel.city}
           </Typography>
         </Grid>
         <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
+          <Typography variant="subtitle1" data-testid="parcel-postal">
             {parcel.postalCode}
           </Typography>
         </Grid>
         <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
+          <Typography variant="subtitle1" data-testid="parcel-state">
             {parcel.stateProvince}
           </Typography>
         </Grid>
         <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
+          <Typography variant="subtitle1" data-testid="parcel-country">
             {parcel.country}
           </Typography>
         </Grid>
         <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="label-description">
+          <Typography variant="subtitle1" data-testid="parcel-type">
             {parcel.parcelType}
           </Typography>
         </Grid>
