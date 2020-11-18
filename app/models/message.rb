@@ -43,7 +43,7 @@ class Message < ApplicationRecord
     new_message = ''
     text = 'Click this link to reply to this message in our app '
     link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
+    new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
     new_message += "#{message} \n\n#{text} \n#{link}"
     Sms.send(receiver, new_message)
   end
