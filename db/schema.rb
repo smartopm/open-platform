@@ -280,6 +280,8 @@ ActiveRecord::Schema.define(version: 2020_11_16_104828) do
     t.datetime "expires_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status"
+    t.text "description"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
 
