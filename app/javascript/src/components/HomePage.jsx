@@ -22,6 +22,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import ActionIcon from '@material-ui/icons/CallToAction'
+import LandscapeIcon from '@material-ui/icons/Landscape';
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -253,6 +254,12 @@ export default function Homepage({ authState }) {
       title: 'Action Flows',
       path: '/action_flows',
       icon: <ActionIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Parcels and Properties',
+      path: '/land_parcels',
+      icon: <LandscapeIcon fontSize="large" />,
       access: ['admin']
     }
   ]
