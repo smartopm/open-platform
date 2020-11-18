@@ -35,7 +35,7 @@ describe('It should test the comment component', () => {
     }
   }
 
-  it('it should render with no error', () => {
+  it('it should render with no error', async () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider mock={mockData} addTypename={false}>
