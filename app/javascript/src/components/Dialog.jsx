@@ -117,7 +117,7 @@ export function CustomizedDialogs({
           Cancel
         </Button>
         <Button data-testid="custom-dialog-button" onClick={handleBatchFilter} color="primary" variant="contained">
-          {saveAction}
+          {saveAction || 'Save'}
         </Button>
       </DialogActions>
     </Dialog>
@@ -142,7 +142,8 @@ ModalDialog.propTypes = {
 CustomizedDialogs.defaultProps = {
   dialogHeader: '',
   subHeader: '',
-  children: {}
+  children: {},
+  saveAction: 'Save'
 }
 
 CustomizedDialogs.propTypes = {
@@ -152,7 +153,7 @@ CustomizedDialogs.propTypes = {
   handleModal: PropTypes.func.isRequired,
   dialogHeader: PropTypes.string,
   subHeader: PropTypes.string,
-  saveAction: PropTypes.string.isRequired
+  saveAction: PropTypes.string
 }
 
 ModalDialog.defaultProps = {
