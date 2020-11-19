@@ -16,6 +16,7 @@ class Community < ApplicationRecord
   has_many :accounts, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :action_flows, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   DOMAINS_COMMUNITY_MAP = {
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],

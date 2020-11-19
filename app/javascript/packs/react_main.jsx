@@ -90,6 +90,7 @@ import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 import LandParcel from '../src/containers/LandParcels/LandParcel'
+import CommentsPage from '../src/containers/Comments/CommentPage'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -349,6 +350,7 @@ const App = () => {
                               exact
                               component={PendingUsers}
                             />
+                            <Route path="/comments" exact component={CommentsPage} />
                           </Switch>
                         </AdminRoutes>
                         <Route

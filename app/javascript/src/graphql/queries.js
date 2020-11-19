@@ -449,16 +449,33 @@ export const DiscussionQuery = gql`
 export const ParcelQuery = gql`
   query LandParcel($limit: Int, $offset: Int) {
     fetchLandParcel(limit: $limit, offset: $offset) {
-     id
-     parcelNumber
-     address1
-     address2
-     city
-     postalCode
-     stateProvince
-     country
-     parcelType
-     createdAt
+      id
+      parcelNumber
+      address1
+      address2
+      city
+      postalCode
+      stateProvince
+      country
+      parcelType
+      createdAt
+    }
+  }
+`
+export const CommentsPostQuery = gql`
+  query comments($limit: Int, $offset: Int) {
+    fetchComments(limit: $limit, offset: $offset) {
+      content
+      id
+      createdAt
+      user {
+        name
+        id
+      }
+      discussion {
+        id
+        postId
+      }
     }
   }
 `
@@ -756,5 +773,11 @@ export const Flows = gql`
       eventAction
       actionType
     }
+  }
+`
+
+export const UsersCount = gql`
+  query usersCount($query: String) {
+    usersCount(query: $query)
   }
 `
