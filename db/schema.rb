@@ -157,9 +157,9 @@ ActiveRecord::Schema.define(version: 2020_11_19_092657) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.uuid "note_id"
     t.string "status"
-    t.index ["note_id"], name: "index_comments_on_note_id"
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_comments_on_community_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -283,7 +283,7 @@ ActiveRecord::Schema.define(version: 2020_11_19_092657) do
     t.datetime "expires_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "status"
+    t.integer "status", default: 0
     t.text "description"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
@@ -382,9 +382,9 @@ ActiveRecord::Schema.define(version: 2020_11_19_092657) do
     t.uuid "assigned_to"
     t.uuid "community_id"
     t.text "description"
-    t.uuid "form_user_id"
     t.datetime "reminder_time"
     t.string "reminder_job_id"
+    t.uuid "form_user_id"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
   end
 
