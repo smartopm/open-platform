@@ -4,7 +4,9 @@
   "scripts": {
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
     "test": "NODE_ENV=test jest",
-    "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx"
+    "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx",
+    "storybook": "start-storybook -p 6006 --no-dll",
+    "build-storybook": "build-storybook --no-dll"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",
@@ -28,6 +30,7 @@
     "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.16",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "babel-runtime": "^6.26.0",
     "bootstrap": "^4.3.1",
     "date-fns": "^2.11.1",
     "dompurify": "^2.0.12",
@@ -65,11 +68,16 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@storybook/addon-actions": "^6.0.28",
+    "@storybook/addon-essentials": "^6.0.28",
+    "@storybook/addon-links": "^6.0.28",
+    "@storybook/react": "^6.0.28",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^10.0.3",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
-    "canvas": "^2.6.1",
+    "babel-loader": "^8.2.1",
     "eslint": "7.2.0",
     "eslint-config-airbnb": "18.2.0",
     "eslint-config-prettier": "^6.9.0",
@@ -81,6 +89,7 @@
     "jest": "^24.9.0",
     "lint-staged": ">=10",
     "prettier": "^1.19.1",
+    "react-is": "^17.0.1",
     "webpack-bundle-analyzer": "^3.5.1",
     "webpack-dev-server": "^3.8.0"
   },

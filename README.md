@@ -42,7 +42,8 @@ Rather than rely on self-signed certificates, we include certificates for
 dev.dgdp.site. They are encrypted with the development.key from above, and may
 be decrypted by running `./bin/cert_setup.sh`
 
-The site is now available as https://dev.dgdp.site and https://localhost
+The site is now available as https://dev.dgdp.site and https://localhost 
+and Storybook will be available at http://localhost:6006
 
 dev.dgdp.site points to 127.0.0.1, if your development server is somewhere else
 please update /etc/hosts to point dev.dgdp.site to the appropriate IP address.

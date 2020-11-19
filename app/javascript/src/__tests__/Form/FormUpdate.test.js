@@ -85,32 +85,6 @@ describe('Form Component', () => {
             },
             {
               formProperty: {
-                fieldName: 'Dead Line',
-                fieldType: 'signature',
-                fieldValue: null,
-                id: '3145c47e-1279-47b0-9dac-dc7e362e',
-                adminUse: false,
-                order: '4'
-              },
-              value: null,
-              imageUrl: 'https://another3_image.com',
-              fileType: 'image/jpg'
-            },
-            {
-              formProperty: {
-                fieldName: 'Sign here',
-                fieldType: 'signature',
-                fieldValue: null,
-                id: '3145c47e-1234-47b0-9dac-dc7e362e',
-                adminUse: false,
-                order: '5'
-              },
-              value: null,
-              imageUrl: null,
-              fileType: null
-            },
-            {
-              formProperty: {
                 fieldName: 'Attach a file here',
                 fieldType: 'image',
                 fieldValue: null,
@@ -178,10 +152,10 @@ describe('Form Component', () => {
           expect(
             container.queryAllByTestId('date-picker')[0]
             ).toHaveTextContent('Dead Line')
-        expect(container.queryAllByAltText('authenticated link')).toHaveLength(2)
-        expect(container.queryByText('Signature')).toBeInTheDocument()
+        expect(container.queryAllByAltText('authenticated link')).toHaveLength(1)
+        // expect(container.queryByText('Signature')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
-        expect(container.queryAllByLabelText('sign_title')[0].textContent).toContain('SIGNATURE')
+        // expect(container.queryAllByLabelText('sign_title')[0].textContent).toContain('SIGNATURE')
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByText('Would you rather?')).toBeInTheDocument()
