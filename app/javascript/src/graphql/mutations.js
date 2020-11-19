@@ -717,8 +717,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($userId: String!){
-    campaignCreateThroughUsers(userId: $userId){
+  mutation campaignCreateThroughUsers($query: String, $limit: Int){
+    campaignCreateThroughUsers(query: $query, limit: $limit){
       campaign{
         id
       }
@@ -836,8 +836,18 @@ export const FormUserStatusUpdateMutation = gql`
 `
 
 export const CreateActionFlow = gql`
-  mutation actionFlowCreate($title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventAction: JSON){
-    actionFlowCreate(title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventAction: $eventAction){
+  mutation actionFlowCreate($title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowCreate(title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+      actionFlow {
+        description
+      }
+    }
+  }
+`
+
+export const UpdateActionFlow = gql`
+  mutation actionFlowUpdate($id: ID!, $title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowUpdate(id: $id, title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
       actionFlow {
         description
       }

@@ -62,7 +62,7 @@ import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users'
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
-import UserMessages from '../src/containers/Messages/UserMessages'
+import UserMessages from '../src/containers/Messages/UserMessagePage'
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
@@ -83,11 +83,14 @@ import GeoMap from '../src/containers/GeoMap'
 import Notifications from '../src/containers/Preferences/Notifications'
 import { MuiThemeProvider } from '@material-ui/core'
 import { theme } from '../src/themes/nkwashi/theme'
-import FormLinks from '../src/containers/FormLinks'
+import FormLinks from '../src/containers/Forms/FormLinks'
 import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
 import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
+import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
+import LandParcel from '../src/containers/LandParcels/LandParcel'
+import CommentsPage from '../src/containers/Comments/CommentPage'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -314,6 +317,7 @@ const App = () => {
 
                         <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
+                        <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
 
                         <AdminRoutes>
@@ -337,7 +341,8 @@ const App = () => {
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
                             <Route path="/labels" component={Labels} />
-                            <Route path="/action_flows" component={ActionFlows} />
+                            <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} />
+                            <Route path="/land_parcels" component={LandParcel} />
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route
@@ -345,6 +350,7 @@ const App = () => {
                               exact
                               component={PendingUsers}
                             />
+                            <Route path="/comments" exact component={CommentsPage} />
                           </Switch>
                         </AdminRoutes>
                         <Route

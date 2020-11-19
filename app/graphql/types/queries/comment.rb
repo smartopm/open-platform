@@ -4,6 +4,7 @@
 module Types::Queries::Comment
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get comments for wordpress posts
     field :post_comments, [Types::CommentType], null: true do
@@ -39,7 +40,15 @@ module Types::Queries::Comment
       description 'Get a discussion for wordpress pages using postId'
       argument :post_id, String, required: true
     end
+
+    # Get all comments made on posts
+    field :fetch_comments, [Types::CommentType], null: true do
+      description 'Get all comments made on a post'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def post_comments(offset: 0, limit: 100, post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
@@ -86,5 +95,12 @@ module Types::Queries::Comment
 
     discs = context[:current_user].find_user_discussion(id, type)
     discs
+  end
+
+  def fetch_comments(offset: 0, limit: 20)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+
+    context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion)
+                            .limit(limit).offset(offset)
   end
 end

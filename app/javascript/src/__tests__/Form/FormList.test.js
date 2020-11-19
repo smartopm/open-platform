@@ -1,8 +1,9 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
+import '@testing-library/jest-dom/extend-expect'
 import Loading from '../../components/Loading'
 import FormLinkList from '../../components/Forms/FormList'
 import { FormsQuery } from '../../graphql/queries'
@@ -32,10 +33,14 @@ describe('Form List Component', () => {
         }
       }
     }
+    // needs a theme provider to use theme related functions like theme.breakpoints
+    const theme = createMuiTheme()
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
-          <FormLinkList />
+          <ThemeProvider theme={theme}>
+            <FormLinkList userType="admin" />
+          </ThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

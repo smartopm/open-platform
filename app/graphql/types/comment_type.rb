@@ -9,6 +9,7 @@ module Types
     field :content, String, null: true
     field :image_url, String, null: true
     field :user, Types::UserType, null: false
+    field :discussion, Types::DiscussionType, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 

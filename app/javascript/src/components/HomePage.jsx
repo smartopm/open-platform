@@ -16,12 +16,14 @@ import NotesIcon from '@material-ui/icons/Notes'
 import ForumIcon from '@material-ui/icons/Forum'
 import CallIcon from '@material-ui/icons/Call'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import CommentIcon from '@material-ui/icons/Comment'
 import LocalMallIcon from '@material-ui/icons/LocalMall'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import ActionIcon from '@material-ui/icons/CallToAction'
+import LandscapeIcon from '@material-ui/icons/Landscape';
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -250,9 +252,21 @@ export default function Homepage({ authState }) {
       access: ['admin']
     },
     {
+      title: 'Comments',
+      path: '/comments',
+      icon: <CommentIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
       title: 'Action Flows',
       path: '/action_flows',
       icon: <ActionIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Parcels and Properties',
+      path: '/land_parcels',
+      icon: <LandscapeIcon fontSize="large" />,
       access: ['admin']
     }
   ]

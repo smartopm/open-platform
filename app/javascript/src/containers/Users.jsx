@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
+import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import { Redirect, Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -13,11 +13,10 @@ import {
 } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import TelegramIcon from '@material-ui/icons/Telegram'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-import { UsersDetails, LabelsQuery } from '../graphql/queries'
+import { UsersDetails, LabelsQuery, UsersCount } from '../graphql/queries'
 import {
   CreateNote,
   SendOneTimePasscode,
@@ -28,14 +27,17 @@ import { ModalDialog } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
+import UsersActionMenu from '../components/UsersActionMenu'
 import QueryBuilder from '../components/QueryBuilder'
 import CreateLabel from '../components/CreateLabel'
 import { dateToString } from '../utils/dateutil'
+import CampaignWarningDialog from '../components/Campaign/CampaignWarningDialog'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
 
-const limit = 50
+const limit = 25
+const USERS_CAMPAIGN_WARNING_LIMIT = 2000
 
 export default function UsersList() {
   const classes = useStyles()
@@ -56,6 +58,8 @@ export default function UsersList() {
   const [labels, setLabels] = useState([])
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
+  const [campaignCreateOption, setCampaignCreateOption] = useState('none')
+  const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -78,6 +82,10 @@ export default function UsersList() {
     error: labelsError,
     data: labelsData
   } = useQuery(LabelsQuery)
+
+  const [fetchUsersCount, { data: usersCountData }] = useLazyQuery(UsersCount, {
+    variables: { query: searchQuery }
+  })
 
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
@@ -181,22 +189,35 @@ export default function UsersList() {
     }
   }
 
-  function handleCampaignCreate() {
-    if (userList) {
-      campaignCreate({
-        variables: { userId: userList.toString() }
+  function setCampaignOption(option) {
+    if (option === 'all') fetchUsersCount()
+    setCampaignCreateOption(option)
+  }
+
+  function createCampaign() {
+    let createLimit = null
+    if (campaignCreateOption === 'all_on_the_page') createLimit = limit
+    campaignCreate({
+      variables: { query: searchQuery, limit: createLimit }
+    })
+      .then(res => {
+        // eslint-disable-next-line no-shadow
+        const { data } = res
+        setRedirect(
+          `/campaign/${data.campaignCreateThroughUsers.campaign.id}`
+        )
       })
-        .then(res => {
-          // eslint-disable-next-line no-shadow
-          const { data } = res
-          setRedirect(
-            `/campaign/${data.campaignCreateThroughUsers.campaign.id}`
-          )
-        })
-        .catch(campaignError => {
-          setError(campaignError.message)
-        })
+      .catch(campaignError => {
+        setError(campaignError.message)
+      })
+  }
+
+  function handleCampaignCreate() {
+    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT) {
+      setOpenCampaignWarning(true)
+      return
     }
+    createCampaign()
   }
 
   if (labelsLoading) return <Loading />
@@ -281,6 +302,7 @@ export default function UsersList() {
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
+        <CampaignWarningDialog open={openCampaignWarning} handleClose={() => setOpenCampaignWarning(false)} createCampaign={createCampaign} />
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -289,7 +311,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for 
+                Add note for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -310,7 +332,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for 
+                Add Outgoing call answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -331,7 +353,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for 
+                Add Outgoing call not answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -406,22 +428,6 @@ export default function UsersList() {
             >
               {labelLoading ? <CircularProgress size={25} /> : ''}
             </Grid>
-
-            <Grid
-              item
-              xs="auto"
-              style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.filterButton}
-                endIcon={<TelegramIcon />}
-                onClick={handleCampaignCreate}
-              >
-                Create Campaign
-              </Button>
-            </Grid>
             <div className="d-flex justify-content-center row">
               <span>{labelError}</span>
             </div>
@@ -451,6 +457,11 @@ export default function UsersList() {
           <Loading />
         ) : (
           <>
+            <UsersActionMenu
+              campaignCreateOption={campaignCreateOption}
+              setCampaignCreateOption={setCampaignOption}
+              handleCampaignCreate={handleCampaignCreate}
+            />
             <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}

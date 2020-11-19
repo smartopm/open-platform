@@ -3,8 +3,9 @@ import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import Loading from '../../components/Loading'
-import Form, { propExists, addPropWithValue } from '../../components/Forms/Form'
+import Form from '../../components/Forms/Form'
 import { FormPropertiesQuery } from '../../graphql/queries'
+import { addPropWithValue, propExists } from '../../components/Forms/GenericForm'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Form Component', () => {
@@ -54,7 +55,7 @@ describe('Form Component', () => {
       }
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
-        <Form formId="caea7b44-ee95-42a6-a42f-3e530432172e" />
+        <Form formId="caea7b44-ee95-42a6-a42f-3e530432172e" pathname="form" />
       </MockedProvider>
     )
     const loader = render(<Loading />)

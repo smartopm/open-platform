@@ -90,6 +90,7 @@ module Types
     field :form_update, mutation: Mutations::Form::FormUpdate
     field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
     field :form_properties_update, mutation: Mutations::Form::FormPropertiesUpdate
+    field :form_properties_delete, mutation: Mutations::Form::FormPropertiesDelete
     field :form_user_create, mutation: Mutations::Form::FormUserCreate
     field :form_user_update, mutation: Mutations::Form::FormUserUpdate
     field :form_user_status_update, mutation: Mutations::Form::FormUserStatusUpdate
@@ -102,5 +103,6 @@ module Types
 
     # action_flow
     field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
+    field :action_flow_update, mutation: Mutations::ActionFlow::ActionFlowUpdate
   end
 end

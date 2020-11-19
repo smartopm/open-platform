@@ -20,6 +20,7 @@ const classes = useStyles()
     <>
       <ListItem
         data-testid="forms-link-building-permit"
+        style={{ marginTop: '8px' }}
         onClick={() => {
           window.open(
             'https://docs.google.com/forms/d/e/1FAIpQLSe6JmeKp9py650r7NQHFrNe--5vKhsXa9bFF9kmLAjbjYC_ag/viewform',

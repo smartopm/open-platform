@@ -506,6 +506,7 @@ ActiveRecord::Schema.define(version: 2020_11_19_092657) do
   add_foreign_key "campaign_labels", "campaigns"
   add_foreign_key "campaign_labels", "labels"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "comments", "communities"
   add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"
   add_foreign_key "discussion_users", "users"
