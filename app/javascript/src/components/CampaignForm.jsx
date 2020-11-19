@@ -30,7 +30,7 @@ const initData = {
   templateStyle: '',
   loaded: false,
   labels: [],
-  replyLink: false
+  includeReplyLink: false
 }
 export default function CampaignForm({
   authState, data, loading, refetch
@@ -94,7 +94,8 @@ export default function CampaignForm({
       labels: labels.toString(),
       subject: formData.subject,
       preHeader: formData.preHeader,
-      templateStyle: formData.templateStyle
+      templateStyle: formData.templateStyle,
+      includeReplyLink: formData.includeReplyLink
     }
     if (id) {
       return campaignUpdateOnSubmit(campaignData)
@@ -129,7 +130,7 @@ export default function CampaignForm({
     return <Redirect push to="/" />
   }
   if (!loading && !formData.loaded && data) {
-    setFormData({ ...data, loaded: true, replyLink: false })
+    setFormData({ ...data, loaded: true})
   }
   return (
     <div className="container">
@@ -268,9 +269,9 @@ export default function CampaignForm({
           <FormControlLabel
             control={(
               <Checkbox
-                checked={formData.replyLink}
-                onChange={event => setFormData({ ...formData, replyLink: event.target.checked })}
-                name="replyLink"
+                checked={formData.includeReplyLink}
+                onChange={event => setFormData({ ...formData, includeReplyLink: event.target.checked })}
+                name="includeReplyLink"
                 color="primary"
               />
           )}
