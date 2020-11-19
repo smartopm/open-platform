@@ -36,7 +36,7 @@ describe('Land Parcel Component', () => {
 
       const postalCode = container.queryByTestId('postal-code')
       fireEvent.change(postalCode, { target: { value: 123 } })
-      expect(postalCode.value).toBe(123)
+      expect(postalCode.value).toBe("123")
 
       const stateProvince = container.queryByTestId('state-province')
       fireEvent.change(stateProvince, { target: { value: "This is state province" } })
