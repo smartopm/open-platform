@@ -76,7 +76,7 @@ export default function CreateLandParcel({ refetch }) {
             autoFocus
             margin="dense"
             id="parcel-number"
-            data-testid="parcel-number"
+            inputProps={{ "data-testid": "parcel-number" }}
             label="Parcel Number"
             type="text"
             value={parcelNumber}
@@ -87,6 +87,7 @@ export default function CreateLandParcel({ refetch }) {
             margin="dense"
             id="address1"
             label="Address1"
+            inputProps={{ "data-testid": "address1" }}
             type="text"
             value={address1}
             onChange={e => setAddress1(e.target.value)}
@@ -95,6 +96,7 @@ export default function CreateLandParcel({ refetch }) {
             margin="dense"
             id="address2"
             label="Address2"
+            inputProps={{ "data-testid": "address2" }}
             type="text"
             value={address2}
             onChange={e => setAddress2(e.target.value)}
@@ -103,6 +105,7 @@ export default function CreateLandParcel({ refetch }) {
             margin="dense"
             id="city"
             label="city"
+            inputProps={{ "data-testid": "city" }}
             type="text"
             value={city}
             onChange={e => setCity(e.target.value)}
@@ -111,6 +114,7 @@ export default function CreateLandParcel({ refetch }) {
             margin="dense"
             id="state-province"
             label="State Province"
+            inputProps={{ "data-testid": "state-province" }}
             type="text"
             value={stateProvince}
             onChange={e => setStateProvince(e.target.value)}
@@ -120,6 +124,7 @@ export default function CreateLandParcel({ refetch }) {
             id="country"
             label="Country"
             type="text"
+            inputProps={{ "data-testid": "country" }}
             value={country}
             onChange={e => setCountry(e.target.value)}
           />
@@ -127,6 +132,7 @@ export default function CreateLandParcel({ refetch }) {
             margin="dense"
             id="parcel-type"
             label="Parcel Type"
+            inputProps={{ "data-testid": "parcel-type" }}
             type="text"
             value={parcelType}
             onChange={e => setParcelType(e.target.value)}
@@ -135,6 +141,7 @@ export default function CreateLandParcel({ refetch }) {
             margin="dense"
             id="postal-code"
             label="Postal Code"
+            inputProps={{ "data-testid": "postal-code" }}
             type="number"
             value={postalCode}
             onChange={e => setPostalCode(e.target.value)}
