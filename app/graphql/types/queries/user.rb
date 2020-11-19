@@ -53,6 +53,12 @@ module Types::Queries::User
     field :user_activity_point, Types::UserPointType, null: true do
       description 'Get activity-point of a user for the current week'
     end
+
+    # Get users count
+    field :users_count, Integer, null: false do
+      description 'Get users count based on a query param'
+      argument :query, String, required: false
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -170,6 +176,18 @@ module Types::Queries::User
 
     activity_point = user.activity_point_for_current_week
     activity_point || ActivityPoint.create!(user: user)
+  end
+
+  def users_count(query: nil)
+    adm = context[:current_user]
+    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
+
+    allowed_users = User.allowed_users(context[:current_user])
+    if query.present? && query.include?('date_filter')
+      allowed_users.heavy_search(query).size
+    else
+      allowed_users.search(query).size
+    end
   end
 end
 # rubocop:enable Metrics/ModuleLength

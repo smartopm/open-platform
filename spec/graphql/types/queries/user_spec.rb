@@ -382,4 +382,37 @@ RSpec.describe Types::Queries::User do
       expect(ActivityPoint.count).to eql(prev_activtity_point_count + 1)
     end
   end
+
+  describe 'users_count' do
+    let!(:admin_user) { create(:admin_user) }
+    let!(:client_user) do
+      create(:user_with_community, user_type: 'client',
+                                   community: admin_user.community)
+    end
+    let(:query) do
+      %(query usersCount($query: String) {
+        usersCount(query: $query)
+      })
+    end
+
+    it 'returns users count based on the query' do
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin_user,
+                                       },
+                                              variables: { query: 'user_type = "client"' }).as_json
+
+      expect(result.dig('data', 'usersCount')).to eq(1)
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'throws unauthorized error if current-user is not an admin' do
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: client_user,
+                                       },
+                                              variables: { query: 'user_type = "client"' }).as_json
+
+      expect(result.dig('errors')).to_not be_nil
+      expect(result.dig('errors')[0]['message']).to eql 'Unauthorized'
+    end
+  end
 end

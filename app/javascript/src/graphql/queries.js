@@ -458,7 +458,7 @@ export const ParcelQuery = gql`
       stateProvince
       country
       parcelType
-      createdAt   
+      createdAt
     }
   }
 `
@@ -773,5 +773,11 @@ export const Flows = gql`
       eventAction
       actionType
     }
+  }
+`
+
+export const UsersCount = gql`
+  query usersCount($query: String) {
+    usersCount(query: $query)
   }
 `
