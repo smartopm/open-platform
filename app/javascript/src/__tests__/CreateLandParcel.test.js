@@ -5,8 +5,8 @@ import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
 import CreateLandParcel from '../components/LandParcels/CreateLandParcel'
 
-describe('Label Item Component', () => {
-  it('it should include the label details ', () => {
+describe('Land Parcel Component', () => {
+  it('it should render add property form', () => {
       const refetch = jest.fn()
     const container = render(
       <MockedProvider>
