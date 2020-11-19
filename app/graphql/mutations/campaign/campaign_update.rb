@@ -17,6 +17,7 @@ module Mutations
       argument :subject, String, required: false
       argument :pre_header, String, required: false
       argument :template_style, String, required: false
+      argument :include_reply_link, Boolean, required: false
 
       field :campaign, Types::CampaignType, null: true
 
