@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 require 'rails_helper'
@@ -25,6 +26,7 @@ RSpec.describe Campaign, type: :model do
       expect(community.campaigns[0].subject).to eql 'This is subject'
       expect(community.campaigns[0].pre_header).to eql 'This is pre header'
       expect(community.campaigns[0].template_style).to eql 'This is template style'
+      expect(community.campaigns[0].include_reply_link).to be_falsy
       expect(community.campaigns[0].campaign_metrics[:batch_time]).to be_truthy
       expect(community.campaigns[0].campaign_metrics[:start_time]).to be_nil
       expect(community.campaigns[0].campaign_metrics[:end_time]).to be_nil
