@@ -101,6 +101,7 @@ describe('Campaign page', () => {
     const messageInput = container.queryByTestId('campaign_message')
     const idsInput = container.queryByTestId('campaign_ids')
     const nameInput = container.queryByTestId('campaign_name')
+    const checkInput = container.queryByTestId('reply_link')
 
     fireEvent.change(nameInput, { target: { value: 'new campaign' } })
     expect(nameInput.value).toBe('new campaign')
@@ -110,5 +111,8 @@ describe('Campaign page', () => {
 
     fireEvent.change(idsInput, { target: { value: '6353472323, 734923479324723, 209423423' } })
     expect(idsInput.value).toBe('6353472323, 734923479324723, 209423423')
+
+    fireEvent.change(checkInput, { target: { checked: true} })
+    expect(checkInput.checked).toBe(true)
   })
 })

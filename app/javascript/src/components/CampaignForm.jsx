@@ -272,6 +272,7 @@ export default function CampaignForm({
                 checked={formData.includeReplyLink}
                 onChange={event => setFormData({ ...formData, includeReplyLink: event.target.checked })}
                 name="includeReplyLink"
+                data-testid="reply_link"
                 color="primary"
               />
           )}
