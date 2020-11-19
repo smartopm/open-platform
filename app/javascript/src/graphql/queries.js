@@ -782,6 +782,10 @@ export const activeActionFlows = gql`
       description
       title
       eventType
+      eventCondition
+      eventConditionQuery
+      eventAction
+      actionType
       createdAt
       active
     }

@@ -32,6 +32,7 @@ import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { Footer } from './Footer'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
+import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -260,7 +261,7 @@ export default function Homepage({ authState }) {
     {
       title: 'Action Flows',
       path: '/action_flows',
-      icon: <ActionIcon fontSize="large" />,
+      icon: <ActionFlowIcon />,
       access: ['admin']
     },
     {

@@ -8,11 +8,10 @@ import ErrorPage from './Error'
 
 const useStyles = makeStyles({
   cardListWrapper: {
-   display: 'flex',
-   flexWrap: 'wrap',
-   justifyContent: 'space-between',
-   width: "1170px",
-   margin: "0 auto",
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    margin: "0 auto",
   },
 });
 

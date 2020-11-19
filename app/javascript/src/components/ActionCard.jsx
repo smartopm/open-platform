@@ -5,6 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
+import ActionFlowIcon from "./ActionFlows/ActionFlowIcon"
 
 const useStyles = makeStyles({
   root: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     padding: "15px",
-    margin: "0 5px",
+    margin: "10px 5px",
     border: "1px solid #E3E3E3",
     borderRadius: "5px",
   },
@@ -78,7 +79,9 @@ export default function ActionCard({actionFlow}) {
       >
         <MoreHorizIcon />
       </IconButton> */}
-      <Avatar className={classes.avatar} alt="Action Flow Logo" src="/images/flow_icon.svg" />
+      <Avatar className={classes.avatar}>
+        <ActionFlowIcon />
+      </Avatar>
       <CardContent>
         <Typography className={classes.title} variant="h6" component="h2" style={{ minHeight: "50px", marginBottom: "8px" }}>
           {actionFlow.title}
@@ -90,6 +93,8 @@ export default function ActionCard({actionFlow}) {
           {actionFlow.description}
         </Typography>
         <Typography className={classes.datetime} variant="body2" component="p">
+          Created: 
+          {' '}
           {`${date.getDate()} ${date.toDateString().substr(4, 3)} ${date.getFullYear()}`}
         </Typography>
         <Typography className={classes.status} style={{ color: isActive ? '#66A59A' : '#ADADAD' }}>

@@ -18,5 +18,6 @@ export default {
         lightGreen: '#F4FFFD',
         clearDay: '#EFFFFC',
         gray: '#737380',
-        dew: '#FAFFFE'
+        dew: '#FAFFFE',
+        faintGreen: '#F0FFFC',
 }

@@ -132,36 +132,38 @@ export default function ActionFlows() {
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
-      <ActionFlowModal
-        open={open}
-        closeModal={closeModal}
-        handleSave={handleSave}
-        selectedActionFlow={selectedActionFlow}
-      />
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
-      <Button
-        variant="contained"
-        onClick={() => openModal()}
-        color="primary"
-        className={`btn ${css(styles.addFlow)} `}
-      >
-        New Workflow
-      </Button>
-      {actionFlowsData.data?.actionFlows.map(flow => (
+      <div className="container">
+        <ActionFlowModal
+          open={open}
+          closeModal={closeModal}
+          handleSave={handleSave}
+          selectedActionFlow={selectedActionFlow}
+        />
+        <MessageAlert
+          type={isSuccessAlert ? 'success' : 'error'}
+          message={messageAlert}
+          open={!!messageAlert}
+          handleClose={handleMessageAlertClose}
+        />
         <Button
-          key={flow.id}
-          onClick={() => openModal(flow.id)}
-          style={{ margin: '10px' }}
+          variant="contained"
+          onClick={() => openModal()}
+          color="primary"
+          className={`btn ${css(styles.addFlow)} `}
         >
-          {flow.title}
+          New Workflow
         </Button>
-      ))}
-      <ActionFlowsList />
+        {actionFlowsData.data?.actionFlows.map(flow => (
+          <Button
+            key={flow.id}
+            onClick={() => openModal(flow.id)}
+            style={{ margin: '10px' }}
+          >
+            {flow.title}
+          </Button>
+        ))}
+        <ActionFlowsList />
+      </div>
     </>
   )
 }
