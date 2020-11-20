@@ -16,7 +16,10 @@ module Mutations
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
 
         vals = vals.merge(status_updated_by: context[:current_user])
-        create_form_user(form, vals)
+        u_form = create_form_user(form, vals)
+
+        u_form[:form_user].create_form_task(context[:site_hostname]) if u_form[:form_user].present?
+        u_form
       end
 
       def create_form_user(form, vals)

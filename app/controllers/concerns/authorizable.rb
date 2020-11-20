@@ -53,7 +53,7 @@ module Authorizable
     {
       current_user: user,
       site_community: @site_community,
-      community_hostname: current_hostname
+      site_hostname: current_hostname
     }
   end
 
