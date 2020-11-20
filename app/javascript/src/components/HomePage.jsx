@@ -22,7 +22,6 @@ import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
-import ActionIcon from '@material-ui/icons/CallToAction'
 import LandscapeIcon from '@material-ui/icons/Landscape';
 import Card, { SVGIcon } from './Card'
 
