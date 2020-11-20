@@ -4,8 +4,6 @@ module Types
   # Message Type
   class LandParcelType < Types::BaseObject
     field :id, ID, null: false
-    field :land_parcel_id, ID, null: true
-    field :account_id, ID, null: true
     field :community, Types::CommunityType, null: false
     field :parcel_number, String, null: false
     field :address1, String, null: true

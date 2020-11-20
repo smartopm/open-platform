@@ -36,7 +36,7 @@ export default ({ history }) => {
     }
   })
 
-  const { error: accountError, data: accountData, refetch: accountRefetch } = useQuery(UserAccountQuery, {
+  const { data: accountData, refetch: accountRefetch } = useQuery(UserAccountQuery, {
     variables: { id },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -57,7 +57,6 @@ export default ({ history }) => {
         data={data}
         accountData={accountData}
         accountRefetch={accountRefetch}
-        accountError={accountError}
         authState={authState}
         onLogEntry={addLogEntry}
         sendOneTimePasscode={sendOneTimePasscode}
