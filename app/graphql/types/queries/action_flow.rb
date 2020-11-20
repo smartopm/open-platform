@@ -74,6 +74,7 @@ module Types::Queries::ActionFlow
       raise GraphQL::ExecutionError, 'Invalid event type'
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def action_flows(offset: 0, limit: 10)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
