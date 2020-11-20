@@ -7,30 +7,42 @@ import {
   FormHelperText,
   MenuItem,
   Select,
+  Grid,
   InputLabel,
   FormControl,
   Snackbar,
-  Chip,Typography
+  Chip,
+  Typography
 } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import AlarmIcon from '@material-ui/icons/Alarm'
 import DatePickerDialog from '../DatePickerDialog'
-import { UpdateNote } from '../../graphql/mutations'
+import { UpdateNote , TaskReminder } from '../../graphql/mutations'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
 import { FormToggle } from '../Campaign/ToggleButton'
 import { sanitizeText } from '../../utils/helpers'
+import RemindMeLaterMenu from './RemindMeLaterMenu'
+
+import { dateToString, dateTimeToString } from '../DateContainer'
 
 const initialData = {
   user: '',
   userId: ''
 }
 
-export default function TaskForm({ users, data, assignUser, refetch }) {
+export default function TaskForm({
+  users,
+  data,
+  assignUser,
+  refetch,
+  currentUser
+}) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
@@ -42,11 +54,16 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
   const [taskUpdate] = useMutation(UpdateNote)
   const [updated, setUpdated] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
+  const [setReminder] = useMutation(TaskReminder)
+  const [reminderTime, setReminderTime] = useState(null)
 
-  const [type, setType] = useState("preview")
-    const handleType = (_event, value) => {
-        setType(value)
-    }
+  const [type, setType] = useState('preview')
+  const handleType = (_event, value) => {
+    setType(value)
+  }
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -54,20 +71,20 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
     updateTask()
   }
 
-
-  function handleTaskComplete(){
+  function handleTaskComplete() {
     // call the mutation with just the complete status
     setLoadingStatus(true)
     taskUpdate({
-      variables: { id: data.id, completed: !taskStatus}
+      variables: { id: data.id, completed: !taskStatus }
     })
-    .then(() => {
-      setLoadingStatus(false)
-      setUpdated(true)
-      refetch()
-    }).catch((err) => {
-      setErrorMessage(err)
-    })
+      .then(() => {
+        setLoadingStatus(false)
+        setUpdated(true)
+        refetch()
+      })
+      .catch(err => {
+        setErrorMessage(err)
+      })
   }
 
   function updateTask() {
@@ -81,13 +98,15 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
         flagged: true,
         userId: userData.userId
       }
-    }).then(() => {
-      setLoadingStatus(false)
-      setUpdated(true)
-      refetch()
-    }).catch((err) => {
-      setErrorMessage(err)
     })
+      .then(() => {
+        setLoadingStatus(false)
+        setUpdated(true)
+        refetch()
+      })
+      .catch(err => {
+        setErrorMessage(err)
+      })
   }
 
   function setDefaultData() {
@@ -107,14 +126,88 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
     setOpen(!autoCompleteOpen)
   }
 
+  function timeFormat(time) {
+    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`
+  }
+
+  function setTaskReminder(hour) {
+    setReminder({
+      variables: { noteId: data.id, hour }
+    })
+      .then(() => {
+        handleClose()
+        const timeScheduled = new Date(
+          Date.now() + hour * 60 * 60000
+        ).toISOString()
+        setReminderTime(timeFormat(timeScheduled))
+      })
+      .catch(err => console.log(err))
+  }
+
+  function currentActiveReminder() {
+    const timeScheduled = reminderTime || data.reminderTime
+    let formattedTime = null
+    if (
+      timeScheduled &&
+      new Date(timeScheduled).getTime() > new Date().getTime()
+    ) {
+      formattedTime = timeFormat(timeScheduled)
+    }
+
+    return formattedTime
+  }
+
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleClose() {
+    setAnchorEl(null)
+  }
+
+  function isCurrentUserAnAssignee() {
+    return data.assignees.find(assignee => assignee.id === currentUser.id)
+  }
+
   useEffect(() => {
     setDefaultData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <>
+      <Grid>
+        <RemindMeLaterMenu
+          taskId={data.id}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+          open={open}
+          setTaskReminder={setTaskReminder}
+        />
+      </Grid>
       <form onSubmit={handleSubmit}>
+        {isCurrentUserAnAssignee() && (
+          <Button
+            color="primary"
+            style={{
+              float: 'right'
+            }}
+            onClick={handleOpenMenu}
+          >
+            {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
+          </Button>
+        )}
+        {isCurrentUserAnAssignee() && currentActiveReminder() && (
+          <>
+            <Typography
+              variant="subtitle1"
+              style={{ margin: '5px 5px 10px 0', float: 'right' }}
+            >
+              {currentActiveReminder()}
+            </Typography>
+            <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
+          </>
+        )}
         <Snackbar
           open={updated}
           autoHideDuration={3000}
@@ -126,43 +219,39 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
 
         <FormToggle type={type} handleType={handleType} />
 
-        {
-            type === 'preview' ? (
-              <p>
-                <Typography variant="caption" display="block" gutterBottom>
-                  Task Body
-                </Typography>
-                <span 
-                // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{
-                  __html: sanitizeText(title)
-                }}
-                />
-              </p>
-            ) :
-            (
-              <TextField
-                name="task_body"
-                label="Task Body"
-                placeholder="Add task body here"
-                style={{ width: '100%' }}
-                onChange={e => setTitle(e.target.value)}
-                value={title}
-                multiline
-                fullWidth
-                rows={2}
-                margin="normal"
-                inputProps={{
+        {type === 'preview' ? (
+          <p>
+            <Typography variant="caption" display="block" gutterBottom>
+              Task Body
+            </Typography>
+            <span
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: sanitizeText(title)
+              }}
+            />
+          </p>
+        ) : (
+          <TextField
+            name="task_body"
+            label="Task Body"
+            placeholder="Add task body here"
+            style={{ width: '100%' }}
+            onChange={e => setTitle(e.target.value)}
+            value={title}
+            multiline
+            fullWidth
+            rows={2}
+            margin="normal"
+            inputProps={{
               'aria-label': 'task_body'
             }}
-                InputLabelProps={{
+            InputLabelProps={{
               shrink: true
             }}
-                required
-              />
-            )
-          }
-
+            required
+          />
+        )}
 
         <TextField
           name="task_description"
@@ -176,11 +265,11 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
           rows={2}
           margin="normal"
           inputProps={{
-          'aria-label': 'task_description'
-        }}
+            'aria-label': 'task_description'
+          }}
           InputLabelProps={{
-          shrink: true
-        }}
+            shrink: true
+          }}
         />
         <br />
         <FormControl fullWidth>
@@ -200,7 +289,7 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
           </Select>
         </FormControl>
         <br />
-        <FormControl fullWidth> 
+        <FormControl fullWidth>
           <div>
             {data.assignees.map(user => (
               <UserChip
@@ -209,54 +298,50 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
                 size="medium"
                 onDelete={() => assignUser(data.id, user.id)}
               />
-              ))}
+            ))}
             <Chip
               key={data.id}
               variant="outlined"
-              label={
-                  autoCompleteOpen  ? 'Close' : 'Add Assignee'
-                }
+              label={autoCompleteOpen ? 'Close' : 'Add Assignee'}
               size="medium"
-              icon={
-                  autoCompleteOpen  ? (
-                    <CancelIcon />
-                  ) : (
-                    <AddCircleIcon />
-                  )
-                }
+              icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
               onClick={event => handleOpenAutoComplete(event, data.id)}
             />
 
-            {
-              autoCompleteOpen && (
-                <Autocomplete
-                  clearOnEscape
-                  clearOnBlur
-                  open={autoCompleteOpen}
-                  onClose={() => setOpen(!autoCompleteOpen)}
-                  loading={loading}
-                  id={data.id}
-                  options={users}
-                  getOptionLabel={(option) => option.name}
-                  style={{ width: 300 }}
-                  onChange={(_evt, value) => {
-                    if (!value) {
-                      return
-                    }
-                    assignUser(data.id, value.id)
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Name of assignee" />
-                  )}
-                />
-              )
-            }
+            {autoCompleteOpen && (
+              <Autocomplete
+                clearOnEscape
+                clearOnBlur
+                open={autoCompleteOpen}
+                onClose={() => setOpen(!autoCompleteOpen)}
+                loading={loading}
+                id={data.id}
+                options={users}
+                getOptionLabel={option => option.name}
+                style={{ width: 300 }}
+                onChange={(_evt, value) => {
+                  if (!value) {
+                    return
+                  }
+                  assignUser(data.id, value.id)
+                }}
+                renderInput={params => (
+                  <TextField {...params} placeholder="Name of assignee" />
+                )}
+              />
+            )}
           </div>
         </FormControl>
         <br />
-        <UserSearch userData={userData} update={setData} /> 
+        <UserSearch userData={userData} update={setData} />
         <br />
-        <UserChip user={{ name: userData.user, id: userData.userId, imageUrl: userData.imageUrl }} />
+        <UserChip
+          user={{
+            name: userData.user,
+            id: userData.userId,
+            imageUrl: userData.imageUrl
+          }}
+        />
         <br />
         <div>
           <DatePickerDialog
@@ -278,30 +363,30 @@ export default function TaskForm({ users, data, assignUser, refetch }) {
         >
           {loading ? 'Updating a task ...' : 'Update Task'}
         </Button>
-        <Button 
-          disabled={loading} 
-          onClick={handleTaskComplete} 
-          color="primary" 
+        <Button
+          disabled={loading}
+          onClick={handleTaskComplete}
+          color="primary"
           style={{ marginLeft: 40 }}
         >
           {!taskStatus ? 'Mark as complete' : 'Mark as incomplete'}
         </Button>
-        <p className="text-center">
-          {Boolean(error.length) && error}
-        </p>
+        <p className="text-center">{Boolean(error.length) && error}</p>
       </form>
     </>
   )
 }
 
 TaskForm.defaultProps = {
- users: [],
- data: {}
+  users: [],
+  data: {}
 }
 TaskForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   assignUser: PropTypes.func.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  currentUser: PropTypes.object.isRequired
 }
