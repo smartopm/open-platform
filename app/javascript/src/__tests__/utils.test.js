@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount, checkForHtmlTags, removeNewLines, titleize } from '../utils/helpers'
+import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount, checkForHtmlTags, removeNewLines, titleize, formatError } from '../utils/helpers'
 
 const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
@@ -19,6 +19,7 @@ const fieldError = "GraphQL error: userType of type String! was provided invalid
 const requiredKeys = ["userType", "phoneNumber", "name", "email"];
 const strWithTags = "New prospective client <a>Tolulope</a> visited Nkwashi site"
 const strWitNewLines = "This is a test\nstring"
+const formatErrorMessage = "Graghql: This an error"
 
 describe('find links and replace with anchor tag', () => {
   // find link in a text and replace
@@ -47,6 +48,17 @@ describe('truncate messages', () => {
   })
   it('should return undefined when no params is given', () => {
     expect(truncateString()).toBe(undefined)
+  })
+})
+
+describe('format error', () => {
+  it('should return error message without the graphql part', () => {
+    expect(formatError(formatErrorMessage)).toBe(
+      'This an error'
+    )
+  })
+  it('should return undefined when no params is given', () => {
+    expect(formatError()).toBe(undefined)
   })
 })
 
