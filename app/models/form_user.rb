@@ -8,17 +8,11 @@ class FormUser < ApplicationRecord
   has_many :user_form_properties, dependent: :destroy
   has_one :note, dependent: :destroy
 
-  after_create :create_form_task
-
   enum status: { draft: 0, pending: 1, approved: 2, rejected: 3 }
-
-  private
-
-  # rubocop:disable Metrics/AbcSize
-  def create_form_task
+  def create_form_task(hostname)
     user.generate_note(
-      body: "<a href=\"https://#{ENV['HOST']}/user/#{user.id}\">#{user.name}</a> Submitted
-              <a href=\"https://#{ENV['HOST']}/user_form/#{form.id}/#{user.id}/#{form.name}/task\">
+      body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
+              <a href=\"https://#{hostname}/user_form/#{form.id}/#{user.id}/#{form.name}/task\">
               #{form.name}</a>",
       category: 'form',
       form_user_id: id,
@@ -26,5 +20,4 @@ class FormUser < ApplicationRecord
       completed: false,
     )
   end
-  # rubocop:enable Metrics/AbcSize
 end

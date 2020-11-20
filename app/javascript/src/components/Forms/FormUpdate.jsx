@@ -330,7 +330,7 @@ export default function FormUpdate({ formId, userId, authState }) {
       <DialogueBox
         open={openModal}
         handleClose={handleActionClick}
-        handleDelete={handleAction}
+        handleAction={handleAction}
         title="form"
         action={formAction}
       />

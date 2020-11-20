@@ -11,13 +11,18 @@ module Mutations
       field :form_user, Types::FormUsersType, null: true
       field :error, String, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:form_id])
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
 
         vals = vals.merge(status_updated_by: context[:current_user])
-        create_form_user(form, vals)
+        u_form = create_form_user(form, vals)
+
+        u_form[:form_user].create_form_task(context[:site_hostname]) if u_form[:form_user].present?
+        u_form
       end
+      # rubocop:enable Metrics/AbcSize
 
       def create_form_user(form, vals)
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)
