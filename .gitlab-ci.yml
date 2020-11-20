@@ -87,6 +87,16 @@ staging:
   only:
     - master
 
+pages:
+    stage: deploy
+    # Export storybook as a static site (to public)
+    script:
+      - npm install
+      - npm run build-storybook -- -o public
+    # Required artifact for GitLab Pages
+    artifacts:
+        paths:
+          - public
 production:
   stage: deploy
   allow_failure: false
