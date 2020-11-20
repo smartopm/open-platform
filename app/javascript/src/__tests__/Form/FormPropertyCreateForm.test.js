@@ -16,5 +16,6 @@ describe('Form that creates other forms component', () => {
     expect(container.queryByText("This field is required")).toBeInTheDocument()
     expect(container.queryByText("Only for admins")).toBeInTheDocument()
     expect(container.queryByText("Add Property")).toBeInTheDocument()
+    expect(container.queryAllByText("Order Number").length).toBe(2)
   })
 })

@@ -12,7 +12,7 @@ import { capitalize } from '../../utils/helpers'
 export default function DeleteDialogueBox({
   open,
   handleClose,
-  handleDelete,
+  handleAction,
   title,
   action
 }) {
@@ -34,7 +34,7 @@ export default function DeleteDialogueBox({
           <Button onClick={handleClose} color="secondary">
             No
           </Button>
-          <Button onClick={handleDelete} color="primary" autoFocus>
+          <Button onClick={handleAction} color="primary" autoFocus>
             Yes
           </Button>
         </DialogActions>
@@ -50,7 +50,7 @@ DeleteDialogueBox.defaultProps = {
 DeleteDialogueBox.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
+  handleAction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   action: PropTypes.string
 }

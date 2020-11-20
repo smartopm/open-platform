@@ -104,7 +104,7 @@ export default function DiscussionList({ data, refetch, isAdmin }) {
         <DeleteDialogueBox
           open={openModal}
           handleClose={handleDeleteClick}
-          handleDelete={deleteDiscussion}
+          handleAction={deleteDiscussion}
           title="discussion"
         />
       </List>

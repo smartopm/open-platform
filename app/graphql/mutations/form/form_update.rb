@@ -6,6 +6,8 @@ module Mutations
     class FormUpdate < BaseMutation
       argument :id, ID, required: true
       argument :name, String, required: false
+      argument :status, String, required: false
+      argument :description, String, required: false
       argument :expires_at, String, required: false
 
       field :form, Types::FormType, null: true

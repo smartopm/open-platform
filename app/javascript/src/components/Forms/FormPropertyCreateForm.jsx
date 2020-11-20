@@ -143,7 +143,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
             label="This field is required"
             value={propertyData.required}
             handleChange={handleRadioChange}
-          /> 
+          />
           <SwitchInput
             name="adminUse"
             label="Only for admins"
