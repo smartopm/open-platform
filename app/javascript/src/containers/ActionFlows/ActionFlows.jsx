@@ -28,7 +28,7 @@ export default function ActionFlows() {
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
 
-  const { data: actionFlowsData, error, loading, refetch } = useQuery(Flows, {
+  const { data, error, loading, refetch } = useQuery(Flows, {
     variables: { limit, offset }
   })
 
@@ -41,7 +41,7 @@ export default function ActionFlows() {
     if (locationInfo[locationInfo.length - 1] === 'edit') {
       openModal(locationInfo[locationInfo.length - 2])
     }
-  }, [actionFlowsData])
+  }, [data])
 
   function openModal(flowId = null) {
     let path = '/action_flows/new'
@@ -68,6 +68,7 @@ export default function ActionFlows() {
     return value.replace(/ /g, '_').toLowerCase()
   }
 
+  // eslint-disable-next-line no-shadow
   function handleSave(data, metaData) {
     const actionMetaData = {}
     Object.entries(metaData).forEach(([key, value]) => {
@@ -131,7 +132,7 @@ export default function ActionFlows() {
     if (!id) return {}
 
     return (
-      actionFlowsData.actionFlows.find(flow => {
+      data.actionFlows.find(flow => {
         return flow.id === id
       }) || {}
     )
@@ -171,11 +172,12 @@ export default function ActionFlows() {
             onClick={() => openModal()}
             color="primary"
             className={`btn ${css(styles.addFlow)} `}
+            data-testid='new-flow-btn'
           >
             New Workflow
           </Button>
         </div>
-        <ActionFlowsList openFlowModal={openModal} data={actionFlowsData} />
+        <ActionFlowsList openFlowModal={openModal} data={data} />
         <CenteredContent>
           <Paginate
             offSet={offset}

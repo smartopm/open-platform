@@ -32,6 +32,15 @@ RSpec.describe Types::Queries::ActionFlow do
       })
     end
 
+    let(:action_flows_query) do
+      %(query {
+            actionFlows {
+                title
+                description
+            }
+        })
+    end
+
     describe('events') do
       it 'retrieves available events' do
         result = DoubleGdpSchema.execute(events_query, context: {
@@ -114,5 +123,36 @@ RSpec.describe Types::Queries::ActionFlow do
       end
     end
     # rubocop:enable Metrics/LineLength
+
+    describe('action flows') do
+      let!(:flow1) do
+        create(:action_flow, event_type: 'task_update', title: 'Flow One',
+                             community_id: current_user.community_id)
+      end
+      let!(:flow2) do
+        create(:action_flow, event_type: 'task_update', title: 'Flow Two',
+                             community_id: current_user.community_id)
+      end
+
+      it 'retrieves all action flows' do
+        result = DoubleGdpSchema.execute(action_flows_query, context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+
+        titles = result.dig('data', 'actionFlows').map { |f| f['title'] }
+        expect(result.dig('data', 'actionFlows').length).to eql 2
+        expect(titles).to include('Flow One', 'Flow Two')
+      end
+
+      it 'throws unauthorized error if there is no current-user' do
+        result = DoubleGdpSchema.execute(events_query, context: {
+                                           current_user: nil,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'actionFields')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+    end
   end
 end
