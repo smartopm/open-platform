@@ -14,6 +14,10 @@ module Authorizable
     user_google_oauth2_omniauth_authorize_path
   end
 
+  def current_hostname
+    request.host
+  end
+
   # rubocop:disable Metrics/MethodLength
   def current_community
     community_list = { 'app.doublegdp.com' => 'Nkwashi',
@@ -49,6 +53,7 @@ module Authorizable
     {
       current_user: user,
       site_community: @site_community,
+      community_hostname: current_hostname
     }
   end
 
