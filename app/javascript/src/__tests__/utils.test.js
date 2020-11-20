@@ -54,11 +54,8 @@ describe('truncate messages', () => {
 describe('format error', () => {
   it('should return error message without the graphql part', () => {
     expect(formatError(formatErrorMessage)).toBe(
-      'This an error'
+      ' This an error'
     )
-  })
-  it('should return undefined when no params is given', () => {
-    expect(formatError()).toBe(undefined)
   })
 })
 
