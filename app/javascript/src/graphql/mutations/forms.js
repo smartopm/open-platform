@@ -46,3 +46,12 @@ export const FormPropertyDeleteMutation = gql`
     }
   }
 `
+export const FormUpdateMutation = gql`
+    mutation formUpdate($id: ID!, $status: String, $name: String, $description: String){
+      formUpdate(id: $id, status: $status, name: $name, description: $description){
+        form {
+          id
+        }
+      }
+    }
+`

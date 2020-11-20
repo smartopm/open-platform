@@ -7,13 +7,14 @@ import { ParcelQuery } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import ParcelItem from './LandParcelItem'
+import CreateLandParcel from './CreateLandParcel'
 
 
 export default function LandParcelPage() {
   const limit = 20
   const [offset, setOffset] = useState(0)
 
-  const { loading, error, data } = useQuery(ParcelQuery, {
+  const { loading, error, data, refetch } = useQuery(ParcelQuery, {
     variables: { limit, offset }
   })
 
@@ -40,6 +41,7 @@ export default function LandParcelPage() {
   return (
     <>
       <Container>
+        <CreateLandParcel refetch={refetch} />
         <ParcelPageTitle />
         <br />
         {data?.fetchLandParcel.map(parcel => (
@@ -72,43 +74,43 @@ export default function LandParcelPage() {
     // eslint-disable-next-line no-use-before-define
     const classes = useStyles()
     return (
-      <Grid container spacing={0} className={classes.labelTitle} item>
-        <Grid xs={2}>
+      <Grid container spacing={0} className={classes.labelTitle}>
+        <Grid xs={2} item>
           <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
             Parcel Number
           </Typography>
         </Grid>
-        <Grid xs={2}>
+        <Grid xs={2} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "30px"}}>
             Address1
           </Typography>
         </Grid>
-        <Grid xs={2}>
+        <Grid xs={2} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "30px"}}>
             Address2
           </Typography>
         </Grid>
-        <Grid xs={2}>
+        <Grid xs={2} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "15px"}}>
             city
           </Typography>
         </Grid>
-        <Grid xs={1}>
+        <Grid xs={1} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
             Postal Code
           </Typography>
         </Grid>
-        <Grid xs={1}>
+        <Grid xs={1} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
             State Province
           </Typography>
         </Grid>
-        <Grid xs={1}>
+        <Grid xs={1} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "10px"}}>
             Country
           </Typography>
         </Grid>
-        <Grid xs={1}>
+        <Grid xs={1} item>
           <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
             Parcel Type
           </Typography>

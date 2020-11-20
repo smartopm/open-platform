@@ -190,5 +190,7 @@ export const fieldType = {
 export const formStatus = {
   rejected: 'Rejected',
   approved: 'Approved',
-  pending: 'Pending'
+  pending: 'Pending',
+  draft: 'draft',
+  publish: 'published'
 }

@@ -346,6 +346,30 @@ export const AddPlotNumber = gql`
   }
 `
 
+export const AddNewProperty = gql`
+mutation AddNewProperty($parcelNumber: String!,
+  $address1: String,
+  $address2: String,
+  $city: String,
+  $postalCode: String,
+  $stateProvince: String,
+  $parcelType: String,
+  $country: String) {
+    PropertyCreate(parcelNumber: $parcelNumber,
+    address1: $address1,
+    address2: $address2,
+    city: $city,
+    postalCode: $postalCode,
+    stateProvince: $stateProvince,
+    parcelType: $parcelType,
+    country: $country) {
+      landParcel {
+        id
+    }
+  }
+}
+`
+
 export const EditPlotNumber = gql`
   mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
     landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {

@@ -1,9 +1,10 @@
 /* eslint-disable no-use-before-define */
 import React, { Fragment, useContext, useRef, useState } from 'react'
-import { Button, Container, Grid, IconButton, Typography } from '@material-ui/core'
+import { Button, Container, Grid, IconButton, Snackbar } from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useApolloClient, useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { Alert } from '@material-ui/lab';
 import DatePickerDialog from '../DatePickerDialog'
 import CenteredContent from '../CenteredContent'
 import { FormUserCreateMutation } from '../../graphql/mutations'
@@ -32,6 +33,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [message, setMessage] = useState({err: false, info: '', signed: false})
   const [isDeletingProperty, setDeleteLoading] = useState(false)
   const [isSubmitting, setSubmitting] = useState(false)
+  const [alertOpen, setAlertOpen] = useState(false)
   const [currentPropId, setCurrentPropertyId] = useState("")
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
@@ -45,6 +47,10 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId } = useFileUpload({
     client: useApolloClient()
   })
+
+  function handleAlertClose(){
+    setAlertOpen(false)
+  }
 
   function handleValueChange(event, propId){
     const { name, value } = event.target
@@ -76,9 +82,15 @@ function handleDeleteProperty(propId){
     })
     .then(() => {
       setDeleteLoading(false)
+      setMessage({ ...message, err: false, info: 'Deleted form property' })
+      setAlertOpen(true)
       refetch()
     })
-    .catch(error => console.log(error.message))
+    .catch(err => {
+      setMessage({ ...message, err: true, info: err.message })
+      setAlertOpen(true)
+      setDeleteLoading(false)
+    })
 }
 
   async function handleSignatureUpload(){
@@ -126,6 +138,7 @@ function handleDeleteProperty(propId){
       .then(({ data }) => {
         if (data.formUserCreate.formUser === null) {
           setMessage({ ...message, err: true, info: data.formUserCreate.error })
+          setAlertOpen(true)
           setSubmitting(false)
           return
         }
@@ -135,10 +148,12 @@ function handleDeleteProperty(propId){
           err: false,
           info: 'You have successfully submitted the form'
         })
+        setAlertOpen(true)
       })
       .catch(err => {
         setMessage({ ...message, err: true, info: err.message })
         setSubmitting(false)
+        setAlertOpen(true)
       })
   }
   function renderForm(formPropertiesData) {
@@ -258,6 +273,11 @@ function handleDeleteProperty(propId){
 
   return (
     <>
+      <Snackbar open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity={message.err ? 'error' : 'success'}>
+          {message.info}
+        </Alert>
+      </Snackbar>
       <Container>
         <form onSubmit={saveFormData}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
@@ -277,11 +297,6 @@ function handleDeleteProperty(propId){
 
             ) 
           }
-          <br />
-          <br />
-          <CenteredContent>
-            {Boolean(message.info.length) && <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}
-          </CenteredContent>
         </form>
       </Container>
     </>
