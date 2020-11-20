@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
+import { Typography, IconButton, Avatar, CardContent, Card } from '@material-ui/core'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import ActionFlowIcon from "./ActionFlows/ActionFlowIcon"
+import ActionCardMenu from './ActionCardMenu'
+import { titleize } from '../utils/helpers'
 
 const useStyles = makeStyles({
   root: {
@@ -20,7 +20,8 @@ const useStyles = makeStyles({
     borderRadius: "5px",
   },
   menuButton: {
-    float: 'right'
+    left: '45%',
+    top: '-4%'
   },
   avatar: {
     height: "70px",
@@ -47,30 +48,31 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ActionCard({actionFlow}) {
+export default function ActionCard({ actionFlow, openFlowModal }) {
   const classes = useStyles();
   const date = new Date(actionFlow.createdAt);
-  // const open = Boolean(anchorEl)
-  // const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
   function isActive() { return actionFlow.active }
 
-  // function handleClose(event) {
-  //   event.stopPropagation()
-  //   setAnchorEl(null)
-  // }
+  function handleClose(event) {
+    event.stopPropagation()
+    setAnchorEl(null)
+  }
 
-  // function handleOpenMenu(event) {
-  //   setAnchorEl(event.currentTarget)
-  // }
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
 
   return (
     <Card className={classes.root} variant="outlined">
-      {/* <ActionCardMenu
-        data={{ actionFlow }}
+      <ActionCardMenu
+        data={actionFlow}
         open={open}
         anchorEl={anchorEl}
         handleClose={handleClose}
+        openFlowModal={openFlowModal}
       />
       <IconButton
         className={classes.menuButton}
@@ -78,7 +80,7 @@ export default function ActionCard({actionFlow}) {
         dataid={actionFlow.id}
       >
         <MoreHorizIcon />
-      </IconButton> */}
+      </IconButton>
       <Avatar className={classes.avatar}>
         <ActionFlowIcon />
       </Avatar>
@@ -87,13 +89,13 @@ export default function ActionCard({actionFlow}) {
           {actionFlow.title}
         </Typography>
         <Typography className={classes.content} gutterBottom>
-          {`Event Type: ${actionFlow.eventType}`}
+          {`Event Type: On ${titleize(actionFlow.eventType)}`}
         </Typography>
         <Typography className={classes.content}>
           {actionFlow.description}
         </Typography>
         <Typography className={classes.datetime} variant="body2" component="p">
-          Created: 
+          Created:
           {' '}
           {`${date.getDate()} ${date.toDateString().substr(4, 3)} ${date.getFullYear()}`}
         </Typography>
@@ -107,10 +109,12 @@ export default function ActionCard({actionFlow}) {
 
 ActionCard.propTypes = {
   actionFlow: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     eventType: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     active: PropTypes.bool.isRequired,
     createdAt: PropTypes.string.isRequired,
   }).isRequired,
+  openFlowModal: PropTypes.func.isRequired,
 }

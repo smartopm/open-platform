@@ -1,35 +1,35 @@
 import React from 'react'
-import { useQuery } from 'react-apollo'
 import { makeStyles } from '@material-ui/core/styles';
-import { activeActionFlows } from '../graphql/queries'
+import PropTypes from 'prop-types'
 import ActionCard from './ActionCard'
-import Loading from './Loading'
-import ErrorPage from './Error'
 
 const useStyles = makeStyles({
   cardListWrapper: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    margin: "0 auto",
+    margin: "10px auto",
   },
 });
 
-export default function ActionFlowsList() {
+export default function ActionFlowsList({ openFlowModal, data }) {
   const classes = useStyles();
-  const { data, error, loading } = useQuery(activeActionFlows)
-
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error.message} />
 
   return(
     <div className={classes.cardListWrapper}>
-      { data.activeActionFlows.map((actionFlow) => (
+      { data.map((actionFlow) => (
         <ActionCard
           key={actionFlow.id}
           actionFlow={actionFlow}
+          openFlowModal={openFlowModal}
         />
       ))}
     </div>
   )
+}
+
+ActionFlowsList.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object.isRequired,
+  openFlowModal: PropTypes.func.isRequired,
 }

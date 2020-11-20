@@ -27,14 +27,9 @@ module Types::Queries::ActionFlow
       argument :event_type, String, required: true
     end
 
-    # Fetch all action flows(for now)
+    # Fetch action flows
     field :action_flows, [Types::ActionFlowType], null: false do
-      description 'Fetches all action-flows'
-    end
-
-    # Get active actionflows list
-    field :active_action_flows, [Types::ActionFlowType], null: true do
-      description 'Get list of active action flows'
+      description 'Fetches action-flows'
     end
   end
 
@@ -78,15 +73,8 @@ module Types::Queries::ActionFlow
     end
   end
 
-  # This will be removed once Suarabh's work is in, so not test
   def action_flows
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
-
-    ActionFlow.order(:created_at).all
-  end
-
-  def active_action_flows
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     ActionFlow.order(:created_at).all
   end

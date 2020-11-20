@@ -1,10 +1,14 @@
-/* eslint-disable */
 import React from 'react'
-import { Menu, MenuItem, IconButton } from '@material-ui/core'
+import { Menu, MenuItem } from '@material-ui/core'
+import PropTypes from 'prop-types'
 
-export default function ActionCardMenu({ data, open, handleClose, anchorEl }) {
-  function handleClick(event) {
+export default function ActionCardMenu({ data, open, handleClose, anchorEl, openFlowModal }) {
+  function handleClick() {
     console.log('click')
+  }
+
+  function handleEdit() {
+    openFlowModal(data.id)
   }
 
   return (
@@ -16,26 +20,27 @@ export default function ActionCardMenu({ data, open, handleClose, anchorEl }) {
       onClose={handleClose}
       PaperProps={{
         style: {
-          width: 252
+          width: 100
         }
       }}
     >
       <div>
         <MenuItem
           id="edit_button"
-          key={'edit'}
-          onClick={handleClick}
+          key="edit"
+          onClick={handleEdit}
         >
           Edit
         </MenuItem>
         <MenuItem
-          key={'activate'}
+          key="activate"
           onClick={handleClick}
         >
           Activate
         </MenuItem>
         <MenuItem
-          key={'delete'}
+          key="delete"
+          style={{ color: 'red' }}
           onClick={handleClick}
         >
           Delete
@@ -43,4 +48,15 @@ export default function ActionCardMenu({ data, open, handleClose, anchorEl }) {
       </div>
     </Menu>
   )
+}
+
+ActionCardMenu.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  openFlowModal: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  anchorEl: PropTypes.object.isRequired,
 }

@@ -11,6 +11,8 @@ import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
 import { Flows } from '../../graphql/queries'
 import ActionFlowsList from '../../components/ActionFlowsList'
+import Loading from '../../components/Loading'
+import ErrorPage from '../../components/Error'
 
 export default function ActionFlows() {
   const [open, setModalOpen] = useState(false)
@@ -22,7 +24,7 @@ export default function ActionFlows() {
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
 
-  const actionFlowsData = useQuery(Flows)
+  const { data: actionFlowsData, error, loading, refetch } = useQuery(Flows)
 
   useEffect(() => {
     const locationInfo = location.pathname.split('/')
@@ -33,7 +35,7 @@ export default function ActionFlows() {
     if (locationInfo[locationInfo.length - 1] === 'edit') {
       openModal(locationInfo[locationInfo.length - 2])
     }
-  }, [actionFlowsData.data])
+  }, [actionFlowsData])
 
   function openModal(flowId = null) {
     let path = '/action_flows/new'
@@ -102,7 +104,7 @@ export default function ActionFlows() {
     })
       .then(() => {
         closeModal()
-        actionFlowsData.refetch()
+        refetch()
         setMessageAlert('Success: Changes saved successfully')
         setIsSuccessAlert(true)
       })
@@ -123,11 +125,14 @@ export default function ActionFlows() {
     if (!id) return {}
 
     return (
-      actionFlowsData.data?.actionFlows.find(flow => {
+      actionFlowsData.actionFlows.find(flow => {
         return flow.id === id
       }) || {}
     )
   }
+
+  if (loading) return <Loading />
+  if (error) return <ErrorPage title={error.message} />
 
   return (
     <>
@@ -145,24 +150,17 @@ export default function ActionFlows() {
           open={!!messageAlert}
           handleClose={handleMessageAlertClose}
         />
-        <Button
-          variant="contained"
-          onClick={() => openModal()}
-          color="primary"
-          className={`btn ${css(styles.addFlow)} `}
-        >
-          New Workflow
-        </Button>
-        {actionFlowsData.data?.actionFlows.map(flow => (
+        <div style={{textAlign: 'right'}}>
           <Button
-            key={flow.id}
-            onClick={() => openModal(flow.id)}
-            style={{ margin: '10px' }}
+            variant="contained"
+            onClick={() => openModal()}
+            color="primary"
+            className={`btn ${css(styles.addFlow)} `}
           >
-            {flow.title}
+            New Workflow
           </Button>
-        ))}
-        <ActionFlowsList />
+        </div>
+        <ActionFlowsList openFlowModal={openModal} data={actionFlowsData.actionFlows} />
       </div>
     </>
   )
@@ -172,7 +170,6 @@ const styles = StyleSheet.create({
   addFlow: {
     boxShadow: 'none',
     margin: 5,
-    float: 'right',
     color: '#FFFFFF'
   }
 })
