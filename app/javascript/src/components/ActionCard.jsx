@@ -15,7 +15,7 @@ import { titleize } from '../utils/helpers'
 
 const useStyles = makeStyles({
   root: {
-    width: '32%',
+    width: 355,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

@@ -192,7 +192,8 @@ export default function ActionFlows() {
 const styles = StyleSheet.create({
   addFlow: {
     boxShadow: 'none',
-    margin: 5,
+    marginRight: 7,
+    marginBottom: 20,
     color: '#FFFFFF'
   }
 })
