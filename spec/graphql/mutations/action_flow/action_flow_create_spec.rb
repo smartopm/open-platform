@@ -44,7 +44,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
       }
     end
 
-    it 'creates a form' do
+    it 'creates an action flow' do
       previous_flow_count = ActionFlow.count
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {

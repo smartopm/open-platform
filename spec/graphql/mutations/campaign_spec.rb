@@ -103,10 +103,12 @@ RSpec.describe Mutations::Campaign do
     let(:query) do
       <<~GQL
         mutation campaignCreateThroughUsers(
-          $userId: String!
+          $query: String,
+          $limit: Int,
         ) {
           campaignCreateThroughUsers(
-            userId: $userId
+            query: $query,
+            limit: $limit
             ){
               campaign{
                 id
@@ -119,7 +121,7 @@ RSpec.describe Mutations::Campaign do
 
     it 'create a campaign with filters' do
       variables = {
-        userId: [user1.id, user2.id].join(','),
+        query: '', limit: 50
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

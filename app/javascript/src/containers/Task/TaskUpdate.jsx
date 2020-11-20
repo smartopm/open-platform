@@ -2,7 +2,7 @@
 import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { TaskQuery , UsersLiteQuery } from '../../graphql/queries'
+import { TaskQuery, UsersLiteQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
@@ -20,7 +20,7 @@ export default function TaskUpdate({ match }) {
   })
   const [assignUserToNote] = useMutation(AssignUser)
 
-  const  { data: liteData } = useQuery(UsersLiteQuery, {
+  const { data: liteData } = useQuery(UsersLiteQuery, {
     variables: { query: 'user_type: admin' },
     errorPolicy: 'all'
   })
@@ -35,12 +35,18 @@ export default function TaskUpdate({ match }) {
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
-  
+
   return (
     <>
       <Nav navName="Task Update" menuButton="back" backTo="/todo" />
       <div className="container">
-        <TaskUpdateForm data={data?.task} refetch={refetch} users={liteData?.usersLite} assignUser={assignUnassignUser} />
+        <TaskUpdateForm
+          data={data?.task}
+          refetch={refetch}
+          users={liteData?.usersLite}
+          assignUser={assignUnassignUser}
+          currentUser={authState.user}
+        />
         <TaskComment authState={authState} />
       </div>
     </>

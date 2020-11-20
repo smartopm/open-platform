@@ -346,6 +346,30 @@ export const AddPlotNumber = gql`
   }
 `
 
+export const AddNewProperty = gql`
+mutation AddNewProperty($parcelNumber: String!,
+  $address1: String,
+  $address2: String,
+  $city: String,
+  $postalCode: String,
+  $stateProvince: String,
+  $parcelType: String,
+  $country: String) {
+    PropertyCreate(parcelNumber: $parcelNumber,
+    address1: $address1,
+    address2: $address2,
+    city: $city,
+    postalCode: $postalCode,
+    stateProvince: $stateProvince,
+    parcelType: $parcelType,
+    country: $country) {
+      landParcel {
+        id
+    }
+  }
+}
+`
+
 export const EditPlotNumber = gql`
   mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
     landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {
@@ -713,8 +737,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($userId: String!){
-    campaignCreateThroughUsers(userId: $userId){
+  mutation campaignCreateThroughUsers($query: String, $limit: Int){
+    campaignCreateThroughUsers(query: $query, limit: $limit){
       campaign{
         id
       }
@@ -832,8 +856,18 @@ export const FormUserStatusUpdateMutation = gql`
 `
 
 export const CreateActionFlow = gql`
-  mutation actionFlowCreate($title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventAction: JSON){
-    actionFlowCreate(title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventAction: $eventAction){
+  mutation actionFlowCreate($title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowCreate(title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+      actionFlow {
+        description
+      }
+    }
+  }
+`
+
+export const UpdateActionFlow = gql`
+  mutation actionFlowUpdate($id: ID!, $title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowUpdate(id: $id, title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
       actionFlow {
         description
       }

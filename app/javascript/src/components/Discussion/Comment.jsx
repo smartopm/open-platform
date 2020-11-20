@@ -117,7 +117,7 @@ export default function Comments({ comments, refetch, discussionId }) {
       <DeleteDialogueBox
         open={openModal}
         handleClose={handleDeleteClick}
-        handleDelete={handleDeleteComment}
+        handleAction={handleDeleteComment}
         title="comment"
       />
     </List>
