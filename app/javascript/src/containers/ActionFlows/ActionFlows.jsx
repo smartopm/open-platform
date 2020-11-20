@@ -13,18 +13,24 @@ import { Flows } from '../../graphql/queries'
 import ActionFlowsList from '../../components/ActionFlowsList'
 import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
+import CenteredContent from '../../components/CenteredContent'
+import Paginate from '../../components/Paginate'
 
 export default function ActionFlows() {
+  const limit = 10
   const [open, setModalOpen] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [selectedActionFlow, setSelectedActionFlow] = useState({})
+  const [offset, setOffset] = useState(0)
   const location = useLocation()
   const history = useHistory()
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
 
-  const { data: actionFlowsData, error, loading, refetch } = useQuery(Flows)
+  const { data: actionFlowsData, error, loading, refetch } = useQuery(Flows, {
+    variables: { limit, offset }
+  })
 
   useEffect(() => {
     const locationInfo = location.pathname.split('/')
@@ -131,6 +137,15 @@ export default function ActionFlows() {
     )
   }
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return
+      setOffset(offset - limit)
+    } else if (action === 'next') {
+      setOffset(offset + limit)
+    }
+  }
+
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
@@ -150,7 +165,7 @@ export default function ActionFlows() {
           open={!!messageAlert}
           handleClose={handleMessageAlertClose}
         />
-        <div style={{textAlign: 'right'}}>
+        <div style={{ textAlign: 'right' }}>
           <Button
             variant="contained"
             onClick={() => openModal()}
@@ -160,7 +175,15 @@ export default function ActionFlows() {
             New Workflow
           </Button>
         </div>
-        <ActionFlowsList openFlowModal={openModal} data={actionFlowsData.actionFlows} />
+        <ActionFlowsList openFlowModal={openModal} data={actionFlowsData} />
+        <CenteredContent>
+          <Paginate
+            offSet={offset}
+            limit={limit}
+            active={offset >= 1}
+            handlePageChange={paginate}
+          />
+        </CenteredContent>
       </div>
     </>
   )

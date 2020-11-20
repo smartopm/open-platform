@@ -762,8 +762,8 @@ export const RuleFields = gql`
 `
 
 export const Flows = gql`
-  query actionFlows {
-    actionFlows {
+  query actionFlows($limit: Int, $offset: Int) {
+    actionFlows(limit: $limit, offset: $offset) {
       id
       description
       title

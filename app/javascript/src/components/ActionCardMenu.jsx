@@ -50,6 +50,9 @@ export default function ActionCardMenu({ data, open, handleClose, anchorEl, open
   )
 }
 
+ActionCardMenu.defaultProps = {
+  anchorEl: {}
+ }
 ActionCardMenu.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string
@@ -58,5 +61,5 @@ ActionCardMenu.propTypes = {
   handleClose: PropTypes.func.isRequired,
   openFlowModal: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  anchorEl: PropTypes.object.isRequired,
+  anchorEl: PropTypes.object,
 }

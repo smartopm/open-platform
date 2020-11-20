@@ -30,6 +30,8 @@ module Types::Queries::ActionFlow
     # Fetch action flows
     field :action_flows, [Types::ActionFlowType], null: false do
       description 'Fetches action-flows'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -73,9 +75,9 @@ module Types::Queries::ActionFlow
     end
   end
 
-  def action_flows
+  def action_flows(offset: 0, limit: 10)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    ActionFlow.order(:created_at).all
+    ActionFlow.order(:created_at).limit(limit).offset(offset)
   end
 end
