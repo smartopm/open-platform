@@ -40,7 +40,10 @@ module Mutations
             .land_parcels.create!(community_id: context[:site_community].id, parcel_number: v)
         else
           check_number.land_parcel_accounts.create!(account_id: vals[:account_id])
+          check_number
         end
+      rescue ActiveRecord::RecordNotUnique
+        raise GraphQL::ExecutionError, 'Record already exist'
       end
 
       def check_parcel_number(num)

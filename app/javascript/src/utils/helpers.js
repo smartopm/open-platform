@@ -15,6 +15,16 @@ export function sanitizeText(text) {
 
 /**
  *
+ * @param {String} errMsg
+ * @returns a string without the Graphql part
+ * @description receives an error message and returns a a message without the graphql part
+ */
+export function formatError(errMsg) {
+  return errMsg.split(":").pop()
+}
+
+/**
+ *
  * @param {String} msg
  * @returns a stringified link or mailto link
  * @description find email addresses and urls in a message and replace them with links
