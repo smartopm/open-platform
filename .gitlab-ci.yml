@@ -89,6 +89,7 @@ staging:
 
 pages:
     stage: build
+    extends: .base_db
     # Export storybook as a static site (to public)
     script:
       # - npm install
