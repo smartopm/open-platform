@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_19_092657) do
+ActiveRecord::Schema.define(version: 2020_11_22_150458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 2020_11_19_092657) do
     t.uuid "note_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "reminder_time"
+    t.string "reminder_job_id"
     t.index ["note_id"], name: "index_assignee_notes_on_note_id"
     t.index ["user_id", "note_id"], name: "index_assignee_notes_on_user_id_and_note_id", unique: true
     t.index ["user_id"], name: "index_assignee_notes_on_user_id"
@@ -382,8 +384,6 @@ ActiveRecord::Schema.define(version: 2020_11_19_092657) do
     t.uuid "assigned_to"
     t.uuid "community_id"
     t.text "description"
-    t.datetime "reminder_time"
-    t.string "reminder_job_id"
     t.uuid "form_user_id"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
   end

@@ -84,7 +84,6 @@ export const NotesFragment = {
       category
       description
       dueDate
-      reminderTime
       user {
         id
         name
@@ -98,6 +97,10 @@ export const NotesFragment = {
         id
         name
         imageUrl
+      }
+      assigneeNotes{
+        userId
+        reminderTime
       }
     }
   `
