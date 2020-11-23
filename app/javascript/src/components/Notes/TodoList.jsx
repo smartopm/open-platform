@@ -107,7 +107,7 @@ export default function TodoList({
       loadAssignees()
     }
     // load tasks on runtime when we are on my task page from notification
-    if (location !== 'todo') {
+    if (location !== 'tasks') {
       loadTasks()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,7 +119,7 @@ export default function TodoList({
       setModalOpen(true)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadTask])
+  }, [taskId])
 
   useEffect(() => {
     if (taskCountData) {
@@ -276,7 +276,7 @@ export default function TodoList({
         </Dialog>
 
         <div classes={classes.root}>
-          {location === 'todo' && (
+          {location === 'tasks' && (
             <CenteredContent>
               <FilterComponent
                 stateList={assignee}
