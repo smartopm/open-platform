@@ -43,8 +43,9 @@ class Message < ApplicationRecord
     new_message = ''
     text = 'Click this link to reply to this message in our app '
     link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
-    new_message += "#{message} \n\n#{text} \n#{link}"
+    new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
+    new_message += message
+    new_message += "\n\n#{text} \n#{link}" if include_reply_link?
     Sms.send(receiver, new_message)
   end
 
@@ -85,5 +86,11 @@ class Message < ApplicationRecord
     return if Campaign.find(campaign_id)&.update(message_count: count)
 
     raise StandardError, 'Campaign message count update failed'
+  end
+
+  def include_reply_link?
+    return false if campaign_id.nil?
+
+    Campaign.find(campaign_id).include_reply_link
   end
 end

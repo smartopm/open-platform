@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_18_202939) do
+ActiveRecord::Schema.define(version: 2020_11_19_092657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_202939) do
     t.string "template_style"
     t.integer "status", default: 0
     t.integer "message_count", default: 0
+    t.boolean "include_reply_link", default: false
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"

@@ -16,6 +16,7 @@ module Mutations
       argument :subject, String, required: false
       argument :pre_header, String, required: false
       argument :template_style, String, required: false
+      argument :include_reply_link, Boolean, required: false
 
       field :campaign, Types::CampaignType, null: true
 
@@ -34,7 +35,8 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def add_attributes(campaign, vals)
-        %w[name campaign_type message user_id_list batch_time status].each do |attr|
+        %w[name campaign_type message user_id_list batch_time
+           status include_reply_link].each do |attr|
           next if vals[attr.to_sym].blank?
 
           campaign.send("#{attr}=", vals[attr.to_sym])

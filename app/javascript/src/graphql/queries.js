@@ -385,6 +385,7 @@ export const Campaign = gql`
       subject
       preHeader
       templateStyle
+      includeReplyLink
       campaignMetrics {
         batchTime
         startTime

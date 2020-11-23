@@ -559,6 +559,7 @@ export const CampaignCreate = gql`
     $subject: String
     $preHeader: String
     $templateStyle: String
+    $includeReplyLink: Boolean
   ) {
     campaignCreate(
       name: $name
@@ -571,6 +572,7 @@ export const CampaignCreate = gql`
       subject: $subject
       preHeader: $preHeader
       templateStyle: $templateStyle
+      includeReplyLink: $includeReplyLink
     ) {
       campaign {
         name
@@ -592,6 +594,7 @@ export const CampaignUpdateMutation = gql`
     $subject: String
     $preHeader: String
     $templateStyle: String
+    $includeReplyLink: Boolean
   ) {
     campaignUpdate(
       id: $id
@@ -605,6 +608,7 @@ export const CampaignUpdateMutation = gql`
       subject: $subject
       preHeader: $preHeader
       templateStyle: $templateStyle
+      includeReplyLink: $includeReplyLink
     ) {
       campaign {
         batchTime
