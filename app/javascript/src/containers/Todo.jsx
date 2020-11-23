@@ -47,7 +47,7 @@ export default function Todo({ history }) {
 
   // remove the forward slash and do pattern match for routes and nav name
   const path = {
-    todo: 'Tasks',
+    tasks: 'Tasks',
     my_tasks: 'My Tasks'
   }
   return (
