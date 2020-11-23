@@ -35,6 +35,8 @@ module Mutations
         note = assigned_note.note
         { note: note }
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
