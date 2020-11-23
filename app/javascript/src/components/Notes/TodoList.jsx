@@ -192,7 +192,7 @@ export default function TodoList({
 
   function closeAndExit() {
     setModalOpen(false)
-    history.replace('/todo')
+    history.replace('/tasks')
   }
 
   if (isLoading || taskLoading) return <Loading />

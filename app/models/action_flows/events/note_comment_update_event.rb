@@ -36,7 +36,7 @@ module ActionFlows
       end
 
       def url_format(note_id)
-        "https://#{ENV['HOST']}/todo/#{note_id}"
+        "https://#{ENV['HOST']}/tasks/#{note_id}"
       end
     end
   end

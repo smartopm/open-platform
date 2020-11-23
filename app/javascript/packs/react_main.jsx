@@ -335,8 +335,8 @@ const App = () => {
                               component={ShowroomLogs}
                             />
                             <Route path="/notes" component={AllNotes} />
-                            <Route path="/todo/:taskId" exact component={TaskUpdate} />
-                            <Route path="/todo" component={Todo} />
+                            <Route path="/tasks/:taskId" exact component={TaskUpdate} />
+                            <Route path="/tasks" component={Todo} />
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
