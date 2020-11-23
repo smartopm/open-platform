@@ -59,7 +59,7 @@ pages:
         paths:
           - public
     only:
-      — master
+      - master
 
 test:rspec:
   extends: .base_db
