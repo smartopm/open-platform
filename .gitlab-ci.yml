@@ -45,6 +45,20 @@ image: "ruby:2.6"
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
 
+
+pages:
+    stage: build
+    extends: .base_db
+    allow_failure: false
+    # Export storybook as a static site (to public)
+    script:
+      # - npm install
+      - yarn run build-storybook -- -o public
+    # Required artifact for GitLab Pages
+    artifacts:
+        paths:
+          - public
+          
 test:rspec:
   extends: .base_db
   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
@@ -87,19 +101,6 @@ staging:
     url: https://double-gdp-staging.herokuapp.com/
   only:
     - master
-
-pages:
-    stage: build
-    extends: .base_db
-    allow_failure: false
-    # Export storybook as a static site (to public)
-    script:
-      # - npm install
-      - yarn run build-storybook -- -o public
-    # Required artifact for GitLab Pages
-    artifacts:
-        paths:
-          - public
 
 production:
   stage: deploy
