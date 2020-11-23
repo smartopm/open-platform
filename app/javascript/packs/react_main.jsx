@@ -337,6 +337,20 @@ const App = () => {
                             <Route path="/notes" component={AllNotes} />
                             <Route path="/tasks/:taskId" exact component={TaskUpdate} />
                             <Route path="/tasks" component={Todo} />
+                            <Route
+                              exact
+                              path="/todo/:taskId"
+                              render={({ match }) => (
+                                <Redirect to={`/tasks/${match.params.taskId}`} />
+                              )}
+                            />
+                            <Route
+                              exact
+                              path="/todo"
+                              render={() => (
+                                <Redirect to='/tasks' />
+                              )}
+                            />
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
