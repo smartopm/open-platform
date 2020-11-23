@@ -6,6 +6,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
   describe 'set note reminder' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:second_admin) { create(:admin_user, community_id: user.community_id) }
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
@@ -27,7 +28,8 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       GQL
     end
 
-    it 'sets a reminder time on assigned note' do
+    it 'sets a 24 hour reminder and 1 hour reminder time on assigned note for 2 assignees' do
+      # First assignee
       note.assign_or_unassign_user(admin.id)
 
       variables = {
@@ -45,6 +47,26 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       expect(assigned_note.reminder_time).not_to be_nil
       expect(assigned_note.reminder_time.to_datetime
         .strftime('%d %b %Y, %H:%M')).to eql 24.hours.from_now.strftime('%d %b %Y, %H:%M')
+      expect(result.dig('errors')).to be_nil
+
+      # Second Assignee
+      note.assign_or_unassign_user(second_admin.id)
+
+      variables = {
+        noteId: note.id,
+        hour: 1,
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: second_admin,
+                                                site_community: second_admin.community,
+                                              }).as_json
+
+      assigned_note = second_admin.assignee_notes.find_by(note: note)
+      expect(assigned_note.reminder_time).not_to be_nil
+      expect(assigned_note.reminder_time.to_datetime
+        .strftime('%d %b %Y, %H:%M')).to eql 1.hour.from_now.strftime('%d %b %Y, %H:%M')
       expect(result.dig('errors')).to be_nil
     end
 
