@@ -58,6 +58,8 @@ pages:
     artifacts:
         paths:
           - public
+    only:
+      — master
 
 test:rspec:
   extends: .base_db
