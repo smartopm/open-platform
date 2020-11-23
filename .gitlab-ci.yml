@@ -88,18 +88,18 @@ staging:
   only:
     - master
 
-#pages:
-#    stage: build
-#    extends: .base_db
-#    allow_failure: false
-#    # Export storybook as a static site (to public)
-#    script:
-#      # - npm install
-#      - yarn run build-storybook -- -o public
-#    # Required artifact for GitLab Pages
-#    artifacts:
-#        paths:
-#          - public
+pages:
+    stage: build
+    extends: .base_db
+    allow_failure: false
+    # Export storybook as a static site (to public)
+    script:
+      # - npm install
+      - yarn run build-storybook -- -o public
+    # Required artifact for GitLab Pages
+    artifacts:
+        paths:
+          - public
 
 production:
   stage: deploy
