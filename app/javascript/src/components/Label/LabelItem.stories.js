@@ -6,10 +6,12 @@ export default {
     component: LabelItem
 }
 
-export const Primary = () =>  <LabelItem
-          key='key'
-          label='label'
-          userType='admin'
-          userCount='10'
-          refetch={false}
-        />
+export const Primary = () => (
+  <LabelItem
+    key='key'
+    label='label'
+    userType='admin'
+    userCount='10'
+    refetch={false}
+  />
+)

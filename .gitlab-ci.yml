@@ -1,6 +1,5 @@
 stages:
   - build
-  - pages
   - test
   - report
   - staging
@@ -22,7 +21,7 @@ image: "ruby:2.6"
     policy: pull
   before_script:
     - gem install bundler --no-document
-    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path vendor/ruby
 
 .base_db:
   extends: .base
@@ -39,7 +38,7 @@ image: "ruby:2.6"
     - ruby -v
     - which ruby
     - gem install bundler --no-document
-    - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
+    - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}" --path vendor/ruby
     - RAILS_ENV=test bundle exec rake db:create db:schema:load
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -47,9 +46,10 @@ image: "ruby:2.6"
 
 
 pages:
-    stage: build
+    stage: staging
     extends: .base_db
     allow_failure: false
+    when: on_success
     # Export storybook as a static site (to public)
     script:
       # - npm install
@@ -58,7 +58,7 @@ pages:
     artifacts:
         paths:
           - public
-          
+
 test:rspec:
   extends: .base_db
   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
