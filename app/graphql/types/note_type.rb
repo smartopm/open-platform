@@ -9,6 +9,7 @@ module Types
     field :assigned_to, ID, null: true
     field :author, Types::UserType, null: false
     field :assignees, [Types::UserType], null: true
+    field :assignee_notes, [Types::AssigneeNoteType], null: true
     field :body, String, null: true
     field :category, String, null: true
     field :description, String, null: true
@@ -17,6 +18,5 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :due_date, GraphQL::Types::ISO8601DateTime, null: true
-    field :reminder_time, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

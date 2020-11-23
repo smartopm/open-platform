@@ -85,7 +85,10 @@ export default function Task({
   }
 
   function currentActiveReminder() {
-    const timeScheduled = reminderTime || note.reminderTime
+    const assignedNote = note.assigneeNotes
+      .find(assigneeNote => assigneeNote.userId === currentUser.id)
+    
+    const timeScheduled = reminderTime || assignedNote?.reminderTime
     let formattedTime = null
     if (
       timeScheduled &&

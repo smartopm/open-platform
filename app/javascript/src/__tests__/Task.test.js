@@ -19,7 +19,8 @@ const props = {
     user: {
       name: 'somebody'
     },
-    assignees: [{ name: 'Tester', id: '93sd45435' }]
+    assignees: [{ name: 'Tester', id: '93sd45435' }],
+    assigneeNotes: []
   },
   message: '',
   users: [],
