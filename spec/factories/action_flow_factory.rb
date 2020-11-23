@@ -2,7 +2,9 @@
 
 FactoryBot.define do
   factory :action_flow do
-    title { 'My flow' }
+    sequence :title do |n|
+      "Flow #{n}"
+    end
     description { 'Just a flow' }
     event_condition { '{"==":[1,1]}' }
     event_action do

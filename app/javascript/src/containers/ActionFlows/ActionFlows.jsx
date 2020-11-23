@@ -10,18 +10,27 @@ import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
 import { Flows } from '../../graphql/queries'
+import ActionFlowsList from '../../components/ActionFlowsList'
+import Loading from '../../components/Loading'
+import ErrorPage from '../../components/Error'
+import CenteredContent from '../../components/CenteredContent'
+import Paginate from '../../components/Paginate'
 
 export default function ActionFlows() {
+  const limit = 10
   const [open, setModalOpen] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [selectedActionFlow, setSelectedActionFlow] = useState({})
+  const [offset, setOffset] = useState(0)
   const location = useLocation()
   const history = useHistory()
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
 
-  const actionFlowsData = useQuery(Flows)
+  const { data, error, loading, refetch } = useQuery(Flows, {
+    variables: { limit, offset }
+  })
 
   useEffect(() => {
     const locationInfo = location.pathname.split('/')
@@ -32,7 +41,7 @@ export default function ActionFlows() {
     if (locationInfo[locationInfo.length - 1] === 'edit') {
       openModal(locationInfo[locationInfo.length - 2])
     }
-  }, [actionFlowsData.data])
+  }, [data])
 
   function openModal(flowId = null) {
     let path = '/action_flows/new'
@@ -59,6 +68,7 @@ export default function ActionFlows() {
     return value.replace(/ /g, '_').toLowerCase()
   }
 
+  // eslint-disable-next-line no-shadow
   function handleSave(data, metaData) {
     const actionMetaData = {}
     Object.entries(metaData).forEach(([key, value]) => {
@@ -101,7 +111,7 @@ export default function ActionFlows() {
     })
       .then(() => {
         closeModal()
-        actionFlowsData.refetch()
+        refetch()
         setMessageAlert('Success: Changes saved successfully')
         setIsSuccessAlert(true)
       })
@@ -122,44 +132,61 @@ export default function ActionFlows() {
     if (!id) return {}
 
     return (
-      actionFlowsData.data?.actionFlows.find(flow => {
+      data.actionFlows.find(flow => {
         return flow.id === id
       }) || {}
     )
   }
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return
+      setOffset(offset - limit)
+    } else if (action === 'next') {
+      setOffset(offset + limit)
+    }
+  }
+
+  if (loading) return <Loading />
+  if (error) return <ErrorPage title={error.message} />
+
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
-      <ActionFlowModal
-        open={open}
-        closeModal={closeModal}
-        handleSave={handleSave}
-        selectedActionFlow={selectedActionFlow}
-      />
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
-      <Button
-        variant="contained"
-        onClick={() => openModal()}
-        color="primary"
-        className={`btn ${css(styles.addFlow)} `}
-      >
-        New Workflow
-      </Button>
-      {actionFlowsData.data?.actionFlows.map(flow => (
-        <Button
-          key={flow.id}
-          onClick={() => openModal(flow.id)}
-          style={{ margin: '10px' }}
-        >
-          {flow.title}
-        </Button>
-      ))}
+      <div className="container">
+        <ActionFlowModal
+          open={open}
+          closeModal={closeModal}
+          handleSave={handleSave}
+          selectedActionFlow={selectedActionFlow}
+        />
+        <MessageAlert
+          type={isSuccessAlert ? 'success' : 'error'}
+          message={messageAlert}
+          open={!!messageAlert}
+          handleClose={handleMessageAlertClose}
+        />
+        <div style={{ textAlign: 'right' }}>
+          <Button
+            variant="contained"
+            onClick={() => openModal()}
+            color="primary"
+            className={`btn ${css(styles.addFlow)} `}
+            data-testid='new-flow-btn'
+          >
+            New Workflow
+          </Button>
+        </div>
+        <ActionFlowsList openFlowModal={openModal} data={data} />
+        <CenteredContent>
+          <Paginate
+            offSet={offset}
+            limit={limit}
+            active={offset >= 1}
+            handlePageChange={paginate}
+          />
+        </CenteredContent>
+      </div>
     </>
   )
 }
@@ -167,8 +194,8 @@ export default function ActionFlows() {
 const styles = StyleSheet.create({
   addFlow: {
     boxShadow: 'none',
-    margin: 5,
-    float: 'right',
+    marginRight: 7,
+    marginBottom: 20,
     color: '#FFFFFF'
   }
 })

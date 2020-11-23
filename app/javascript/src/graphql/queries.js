@@ -195,7 +195,7 @@ export const UsersDetails = gql`
       notes {
         id
       }
-      labels{
+      labels {
         id
         shortDesc
       }
@@ -204,13 +204,13 @@ export const UsersDetails = gql`
 `
 
 export const UsersLiteQuery = gql`
-  query usersLite($query: String!){
-      usersLite(query: $query) {
-        id
-        name
-        imageUrl
-        avatarUrl
-      }
+  query usersLite($query: String!) {
+    usersLite(query: $query) {
+      id
+      name
+      imageUrl
+      avatarUrl
+    }
   }
 `
 
@@ -342,7 +342,7 @@ export const lastUserTimeSheet = gql`
   }
 `
 export const allCampaigns = gql`
-  query allCampaigns($limit: Int, $offset: Int){
+  query allCampaigns($limit: Int, $offset: Int) {
     campaigns(limit: $limit, offset: $offset) {
       id
       batchTime
@@ -393,7 +393,7 @@ export const Campaign = gql`
         totalSent
         totalClicked
       }
-      labels{
+      labels {
         id
         shortDesc
       }
@@ -560,7 +560,7 @@ export const UserLabelsQuery = gql`
 `
 
 export const LabelsQuery = gql`
-query labels($limit: Int, $offset: Int){
+  query labels($limit: Int, $offset: Int) {
     labels(limit: $limit, offset: $offset) {
       id
       shortDesc
@@ -600,51 +600,51 @@ export const TaskStatsQuery = gql`
   }
 `
 
-export const TaskQuery  = gql`
-query taskDetail($taskId: ID!){
-  task(taskId: $taskId){
-   ...NoteFields
-   }
- }
- ${NotesFragment.note}
-`
-
-export const CommentQuery  = gql`
-query commentDetail($taskId: ID!){
-  taskComments(taskId: $taskId){
-    id
-    body
-    createdAt
-    user {
-      id
-      name
-      imageUrl
+export const TaskQuery = gql`
+  query taskDetail($taskId: ID!) {
+    task(taskId: $taskId) {
+      ...NoteFields
     }
   }
-}
+  ${NotesFragment.note}
 `
 
-export const HistoryQuery  = gql`
-query historyDetail($taskId: ID!){
-  taskHistories(taskId: $taskId){
-    id
-    attrChanged
-    initialValue
-    updatedValue
-    action
-    noteEntityType
-    user {
+export const CommentQuery = gql`
+  query commentDetail($taskId: ID!) {
+    taskComments(taskId: $taskId) {
       id
-      name
-      imageUrl
+      body
+      createdAt
+      user {
+        id
+        name
+        imageUrl
+      }
     }
   }
-}
+`
+
+export const HistoryQuery = gql`
+  query historyDetail($taskId: ID!) {
+    taskHistories(taskId: $taskId) {
+      id
+      attrChanged
+      initialValue
+      updatedValue
+      action
+      noteEntityType
+      user {
+        id
+        name
+        imageUrl
+      }
+    }
+  }
 `
 
 export const UserPointQuery = gql`
-  query userActivityPoint{
-    userActivityPoint{
+  query userActivityPoint {
+    userActivityPoint {
       total
       articleRead
       articleShared
@@ -667,71 +667,71 @@ export const FormsQuery = gql`
 `
 
 export const FormQuery = gql`
-query ($id: ID!){
-  form(id: $id) {
-    id
-    name
-  }
-}
-`
-
-export const FormPropertiesQuery = gql`
-query ($formId: ID!){
-  formProperties(formId: $formId){
-		id
-    fieldName
-    fieldType
-    fieldValue
-    shortDesc
-    longDesc
-    required
-    adminUse
-    order
-  }
-}
-`
-
-export const UserFormProperiesQuery = gql`
-query userFormProperties($formId: ID!, $userId: ID!) {
-  formUserProperties(formId: $formId, userId: $userId){
-    formProperty{
-      fieldName
-      fieldType
-      fieldValue
-      order
-      id
-      adminUse
-    }
-    value
-    imageUrl
-    fileType
-  }
-}
-`
-
-export const FormUserQuery = gql`
-query formUser($formId: ID!, $userId: ID!) {
-  formUser(formId: $formId, userId: $userId){
-    id
-    status
-     statusUpdatedBy {
+  query($id: ID!) {
+    form(id: $id) {
       id
       name
     }
-    updatedAt
   }
-}
+`
+
+export const FormPropertiesQuery = gql`
+  query($formId: ID!) {
+    formProperties(formId: $formId) {
+      id
+      fieldName
+      fieldType
+      fieldValue
+      shortDesc
+      longDesc
+      required
+      adminUse
+      order
+    }
+  }
+`
+
+export const UserFormProperiesQuery = gql`
+  query userFormProperties($formId: ID!, $userId: ID!) {
+    formUserProperties(formId: $formId, userId: $userId) {
+      formProperty {
+        fieldName
+        fieldType
+        fieldValue
+        order
+        id
+        adminUse
+      }
+      value
+      imageUrl
+      fileType
+    }
+  }
+`
+
+export const FormUserQuery = gql`
+  query formUser($formId: ID!, $userId: ID!) {
+    formUser(formId: $formId, userId: $userId) {
+      id
+      status
+      statusUpdatedBy {
+        id
+        name
+      }
+      updatedAt
+    }
+  }
 `
 
 export const UserNotesQuery = gql`
-query userNote($userId: ID!) {
-  userNotes(id: $userId){
-    body
-    completed
-    createdAt
-    id
+  query userNote($userId: ID!) {
+    userNotes(id: $userId) {
+      body
+      completed
+      createdAt
+      id
+    }
   }
-}
 `
 
 export const Events = gql`
@@ -747,31 +747,33 @@ export const Actions = gql`
 `
 
 export const ActionFields = gql`
-  query actionFields($action: String!){
+  query actionFields($action: String!) {
     actionFields(action: $action) {
-      name,
+      name
       type
     }
   }
 `
 
 export const RuleFields = gql`
-  query ruleFields($eventType: String!){
+  query ruleFields($eventType: String!) {
     ruleFields(eventType: $eventType)
   }
 `
 
 export const Flows = gql`
-  query actionFlows{
-    actionFlows {
+  query actionFlows($limit: Int, $offset: Int) {
+    actionFlows(limit: $limit, offset: $offset) {
       id
-      title
       description
+      title
       eventType
       eventCondition
       eventConditionQuery
       eventAction
       actionType
+      createdAt
+      active
     }
   }
 `

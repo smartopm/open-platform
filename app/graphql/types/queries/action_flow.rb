@@ -27,9 +27,11 @@ module Types::Queries::ActionFlow
       argument :event_type, String, required: true
     end
 
-    # Fetch all action flows(for now)
+    # Fetch action flows
     field :action_flows, [Types::ActionFlowType], null: false do
-      description 'Fetches all action-flows'
+      description 'Fetches action-flows'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -74,10 +76,9 @@ module Types::Queries::ActionFlow
   end
   # rubocop:enable Metrics/AbcSize
 
-  # This will be removed once Suarabh's work is in, so not test
-  def action_flows
+  def action_flows(offset: 0, limit: 10)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    ActionFlow.order(:created_at).all
+    ActionFlow.order(:created_at).limit(limit).offset(offset)
   end
 end
