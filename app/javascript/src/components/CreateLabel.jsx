@@ -12,7 +12,7 @@ export default function CreateLabel({ handleLabelSelect }) {
             <Fragment>
                 <Autocomplete
                     data-testid="userLabel-creator"
-                    style={{ width: 150, margin: 1 }}
+                    style={{ width: 250, margin: 1 }}
                     multiple
                     freeSolo
                     id="tags-filled"
@@ -26,7 +26,7 @@ export default function CreateLabel({ handleLabelSelect }) {
                             const [lastLabel] = newValue.slice(-1)
                             return handleLabelSelect(lastLabel)
                         }
-                           
+
                     }}
                     renderTags={(value, getTagProps) => {
                         return value.map((option, index) => (

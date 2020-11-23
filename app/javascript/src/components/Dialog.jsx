@@ -1,8 +1,15 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import { DialogContent, DialogActions, Button, Dialog, DialogContentText, DialogTitle } from '@material-ui/core'
+import {
+  DialogContent,
+  DialogActions,
+  Button,
+  Dialog,
+  DialogContentText,
+  DialogTitle
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles'
 
 export function ModalDialog({
   handleClose,
@@ -19,21 +26,19 @@ export function ModalDialog({
       open={open}
     >
       <DialogContent>
-        {
-          Boolean(name.length) && (
-            <p className="deny-msg">
-              Are you sure you want to 
-              {' '}
-              {action}
-              {' '}
-              access to 
-              {' '}
-              <strong>{name}</strong>
-              {' '}
-              ?
-            </p>
-          )
-        }
+        {Boolean(name.length) && (
+          <p className="deny-msg">
+            Are you sure you want to 
+            {' '}
+            {action}
+            {' '}
+            access to 
+            {' '}
+            <strong>{name}</strong>
+            {' '}
+            ?
+          </p>
+        )}
         <div>{children}</div>
       </DialogContent>
       <DialogActions>
@@ -89,36 +94,41 @@ export function CustomizedDialogs({
   handleModal,
   dialogHeader,
   subHeader,
-  saveAction
+  saveAction,
+  hideActionBtns
 }) {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
-    <Dialog 
+    <Dialog
       onClose={handleModal}
       aria-labelledby="simple-dialog-title"
       open={open}
     >
       <DialogTitle className={classes.title}>
         <div className="d-flex justify-content-between">
-          <h6 data-testid='customDialog'>{dialogHeader}</h6>
+          <h6 data-testid="customDialog">{dialogHeader}</h6>
         </div>
       </DialogTitle>
-      <DialogContent data-testid='customDialogcontent'>
-        {subHeader ? (
-          <DialogContentText>
-            {subHeader}
-          </DialogContentText>
-)
-          : null}
+      <DialogContent data-testid="customDialogcontent">
+        {subHeader ? <DialogContentText>{subHeader}</DialogContentText> : null}
         {children}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleModal} variant="outlined" color="secondary">
-          Cancel
-        </Button>
-        <Button data-testid="custom-dialog-button" onClick={handleBatchFilter} color="primary" variant="contained">
-          {saveAction || 'Save'}
-        </Button>
+        {!hideActionBtns && (
+          <>
+            <Button onClick={handleModal} variant="outlined" color="secondary">
+              Cancel
+            </Button>
+            <Button
+              data-testid="custom-dialog-button"
+              onClick={handleBatchFilter}
+              color="primary"
+              variant="contained"
+            >
+              {saveAction || 'Save'}
+            </Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   )
@@ -128,7 +138,7 @@ const useStyles = makeStyles({
   title: {
     borderBottom: '1px #b8d4d0 solid'
   }
-});
+})
 
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
@@ -143,7 +153,8 @@ CustomizedDialogs.defaultProps = {
   dialogHeader: '',
   subHeader: '',
   children: {},
-  saveAction: 'Save'
+  saveAction: 'Save',
+  hideActionBtns: false
 }
 
 CustomizedDialogs.propTypes = {
@@ -153,7 +164,8 @@ CustomizedDialogs.propTypes = {
   handleModal: PropTypes.func.isRequired,
   dialogHeader: PropTypes.string,
   subHeader: PropTypes.string,
-  saveAction: PropTypes.string
+  saveAction: PropTypes.string,
+  hideActionBtns: PropTypes.bool
 }
 
 ModalDialog.defaultProps = {
@@ -167,4 +179,3 @@ ReasonInputModal.propTypes = {
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
 }
-

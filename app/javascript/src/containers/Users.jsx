@@ -461,6 +461,7 @@ export default function UsersList() {
               campaignCreateOption={campaignCreateOption}
               setCampaignCreateOption={setCampaignOption}
               handleCampaignCreate={handleCampaignCreate}
+              handleLabelSelect={handleLabelSelect}
             />
             <UserListCard
               userData={data}
