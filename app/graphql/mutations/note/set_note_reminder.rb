@@ -13,20 +13,26 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       def resolve(note_id:, hour:)
         user = context[:current_user]
-        note = context[:site_community].notes.find(note_id)
+        assigned_note = user.assignee_notes.find_by(note: note_id)
 
-        raise GraphQL::ExecutionError, 'Unauthorized' unless user.note_assigned?(note.id)
+        # Reason: Admin is not an assignee
+        raise GraphQL::ExecutionError, 'Unauthorized' unless assigned_note
 
         time = hour.send(:hour)
 
         ActiveRecord::Base.transaction do
-          note.reminder_time = time.from_now
-          raise GraphQL::ExecutionError, note.errors.full_messages unless note.save
+          assigned_note.reminder_time = time.from_now
+          unless assigned_note.save
+            raise GraphQL::ExecutionError, assigned_note
+              .errors.full_messages
+          end
 
-          job = TaskReminderJob.set(wait: time).perform_later(note_id, user.id)
-          TaskReminderUpdateJob.perform_later(note_id, job.provider_job_id)
+          job = TaskReminderJob.set(wait: time).perform_later(assigned_note)
+          TaskReminderUpdateJob.perform_later(assigned_note, job.provider_job_id)
         end
 
+        # TODO: remove dead code note_assigned? method from user model and test
+        note = assigned_note.note
         { note: note }
       end
       # rubocop:enable Metrics/AbcSize
