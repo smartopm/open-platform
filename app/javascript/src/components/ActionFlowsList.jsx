@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ActionCard from './ActionCard'
 
-export default function ActionFlowsList({ openFlowModal, data }) {
+export default function ActionFlowsList({ openFlowModal, data, refetch }) {
   return (
     <div className="row justify-content-center">
       <div className="col-4-lg col-12-sm">
@@ -12,6 +12,7 @@ export default function ActionFlowsList({ openFlowModal, data }) {
               key={actionFlow.id}
               actionFlow={actionFlow}
               openFlowModal={openFlowModal}
+              refetch={refetch}
             />
           ))}
         </div>
@@ -23,5 +24,6 @@ export default function ActionFlowsList({ openFlowModal, data }) {
 ActionFlowsList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object.isRequired,
-  openFlowModal: PropTypes.func.isRequired
+  openFlowModal: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
 }

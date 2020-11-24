@@ -180,7 +180,7 @@ export default function ActionFlows() {
         </div>
         {data.actionFlows.length ? (
           <>
-            <ActionFlowsList openFlowModal={openModal} data={data} />
+            <ActionFlowsList openFlowModal={openModal} data={data} refetch={refetch} />
             <CenteredContent>
               <Paginate
                 offSet={offset}

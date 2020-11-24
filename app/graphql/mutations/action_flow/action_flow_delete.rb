@@ -8,8 +8,11 @@ module Mutations
 
       field :success, GraphQL::Types::Boolean, null: false
 
-      def resolve(vals)
-       
+      def resolve(id:)
+        flow_delete = context[:site_community].action_flows.find_by(id: id)
+        raise GraphQL::ExecutionError, 'Action Flow not found' if flow_delete.nil?
+
+        return { success: true } if flow_delete.update(status: 'deleted')
       end
 
       def authorized?(_vals)
