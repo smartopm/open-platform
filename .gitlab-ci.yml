@@ -17,11 +17,11 @@ image: "ruby:2.6"
     key: gems_and_packages
     paths:
       - apt-cache/
-      - vendor/ruby
+      - vendor
     policy: pull
   before_script:
     - gem install bundler --no-document
-    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor/ruby
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path vendor
 
 .base_db:
   extends: .base
@@ -45,21 +45,21 @@ image: "ruby:2.6"
     - yarn install
 
 
-#pages:
-#    stage: staging
-#    extends: .base_db
-#    allow_failure: false
-#    when: on_success
-#    # Export storybook as a static site (to public)
-#    script:
-#      # - npm install
-#      - yarn run build-storybook -- -o public
-#    # Required artifact for GitLab Pages
-#    artifacts:
-#        paths:
-#          - public
-#    only:
-#      - master
+staging:pages:
+    stage: staging
+    extends: .base_db
+    allow_failure: false
+    when: on_success
+    # Export storybook as a static site (to public)
+    script:
+      # - npm install
+      - yarn run build-storybook -- -o public
+    # Required artifact for GitLab Pages
+    artifacts:
+        paths:
+          - public
+    only:
+      - master
 
 test:rspec:
   extends: .base_db
@@ -89,7 +89,7 @@ test:jest:
     name: "Jest $CI_PIPELINE_ID Coverage Report"
     expire_in: 24 hours
 
-staging:
+staging:appdeploy:
   stage: staging
   allow_failure: false
   when: on_success
