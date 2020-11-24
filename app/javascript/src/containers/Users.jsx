@@ -8,8 +8,7 @@ import {
   Divider,
   IconButton,
   InputBase,
-  Grid,
-  CircularProgress
+  Grid
 } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
@@ -29,14 +28,13 @@ import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import UsersActionMenu from '../components/UsersActionMenu'
 import QueryBuilder from '../components/QueryBuilder'
-import CreateLabel from '../components/CreateLabel'
 import { dateToString } from '../utils/dateutil'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
 
 const limit = 25
-const USERS_CAMPAIGN_WARNING_LIMIT = 2
+const USERS_CAMPAIGN_WARNING_LIMIT = 2000
 
 export default function UsersList() {
   const classes = useStyles()
@@ -53,7 +51,6 @@ export default function UsersList() {
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const authState = useContext(AuthStateContext)
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
-  const [labelLoading, setLabelLoading] = useState(false)
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
@@ -169,18 +166,20 @@ export default function UsersList() {
   }
 
   function handleLabelSelect(labels) {
-    console.log('labellllllll', labels.flatMap((l) => l.id || []))
-    setLabelLoading(true)
+    let createLimit = null
+    if (campaignCreateOption === 'all_on_the_page') createLimit = limit
     if (userList) {
       userLabelCreate({
-        variables: { userId: userList.toString(), labelId: labels.flatMap((l) => l.id || []).toString() }
+        variables: {
+          query: searchQuery,
+          limit: createLimit,
+          labelId: labels.flatMap(l => l.id || []).toString()
+        }
       })
         .then(() => {
           refetch()
-          setLabelLoading(false)
         })
         .catch(labelErr => {
-          setLabelLoading(false)
           setError(labelErr.message)
         })
     }
@@ -315,7 +314,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                Add note for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -336,7 +335,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                Add Outgoing call answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -357,7 +356,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                Add Outgoing call not answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -418,20 +417,6 @@ export default function UsersList() {
           }}
         >
           <Grid container alignItems="center" style={{ width: '40%' }}>
-            <Grid
-              item
-              xs="auto"
-              style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}
-            >
-              <CreateLabel handleLabelSelect={handleLabelSelect} />
-            </Grid>
-            <Grid
-              item
-              xs="auto"
-              style={{ display: 'flex', alignItems: 'flex-end' }}
-            >
-              {labelLoading ? <CircularProgress size={25} /> : ''}
-            </Grid>
             <div className="d-flex justify-content-center row">
               <span>{labelError}</span>
             </div>
