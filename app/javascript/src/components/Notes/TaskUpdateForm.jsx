@@ -145,7 +145,10 @@ export default function TaskForm({
   }
 
   function currentActiveReminder() {
-    const timeScheduled = reminderTime || data.reminderTime
+    const assignedNote = data.assigneeNotes
+      .find(assigneeNote => assigneeNote.userId === currentUser.id)
+    
+    const timeScheduled = reminderTime || assignedNote?.reminderTime
     let formattedTime = null
     if (
       timeScheduled &&

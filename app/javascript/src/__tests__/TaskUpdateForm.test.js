@@ -15,6 +15,7 @@ const data = {
     { name: 'tolulope O.', id: '34543' },
     { name: 'another_user', id: '983y7r2' }
   ],
+  assigneeNotes: [],
   completed: false
 }
 const props = {
