@@ -133,7 +133,7 @@ export default function ActionFlows() {
     if (!id) return {}
 
     return (
-      data.actionFlows.find(flow => {
+      data?.actionFlows.find(flow => {
         return flow.id === id
       }) || {}
     )
