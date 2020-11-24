@@ -54,7 +54,6 @@ export default function UsersList() {
   const authState = useContext(AuthStateContext)
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
   const [labelLoading, setLabelLoading] = useState(false)
-  const [labels, setLabels] = useState([])
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
@@ -169,18 +168,15 @@ export default function UsersList() {
     }
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id, shortDesc } = lastLabel
-    console.log('labellllllll', lastLabel)
-    // return
+  function handleLabelSelect(labels) {
+    console.log('labellllllll', labels.flatMap((l) => l.id || []))
     setLabelLoading(true)
     if (userList) {
       userLabelCreate({
-        variables: { userId: userList.toString(), labelId: id }
+        variables: { userId: userList.toString(), labelId: labels.flatMap((l) => l.id || []).toString() }
       })
         .then(() => {
           refetch()
-          setLabels([...labels, shortDesc])
           setLabelLoading(false)
         })
         .catch(labelErr => {
@@ -319,7 +315,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for 
+                Add note for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -340,7 +336,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for 
+                Add Outgoing call answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -361,7 +357,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for 
+                Add Outgoing call not answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
