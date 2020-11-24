@@ -54,7 +54,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function ActionCard({ actionFlow, openFlowModal }) {
+export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
   const classes = useStyles()
   const date = new Date(actionFlow.createdAt)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -81,6 +81,7 @@ export default function ActionCard({ actionFlow, openFlowModal }) {
         anchorEl={anchorEl}
         handleClose={handleClose}
         openFlowModal={openFlowModal}
+        refetch={refetch}
       />
       <IconButton
         className={classes.menuButton}
@@ -134,5 +135,6 @@ ActionCard.propTypes = {
     active: PropTypes.bool.isRequired,
     createdAt: PropTypes.string.isRequired
   }).isRequired,
-  openFlowModal: PropTypes.func.isRequired
+  openFlowModal: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
 }

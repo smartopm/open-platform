@@ -394,6 +394,14 @@ export const DeleteLabel = gql`
   }
 `
 
+export const DeleteActionFlow = gql`
+  mutation ActionFlowDelete($id: ID!) {
+    actionFlowDelete(id: $id) {
+      success
+    }
+  }
+`
+
 export const MsgNotificationUpdate = gql`
   mutation MsgNotificationUpdate {
     messageNotificationUpdate {

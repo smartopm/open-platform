@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_24_070456) do
+ActiveRecord::Schema.define(version: 2020_11_24_080232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 2020_11_24_070456) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "community_id"
     t.string "event_condition_query"
+    t.string "status", default: "not_deleted"
     t.index ["community_id"], name: "index_action_flows_on_community_id"
   end
 
