@@ -60,7 +60,7 @@ RSpec.describe Mutations::Label do
     let(:lquery) do
       <<~GQL
         mutation {
-            userLabelCreate(userId:"#{user.id}", labelId:"#{first_label.id}"){
+            userLabelCreate(query: "", limit: 50, labelId:"#{first_label.id}"){
                 label {
                     userId
                 }
@@ -73,6 +73,7 @@ RSpec.describe Mutations::Label do
                                          current_user: admin,
                                          site_community: user.community,
                                        }).as_json
+
       expect(result.dig('data', 'userLabelCreate', 'label', 0, 'userId')).to eql user.id
       expect(result.dig('errors')).to be_nil
     end

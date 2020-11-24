@@ -8,8 +8,7 @@ import {
   Divider,
   IconButton,
   InputBase,
-  Grid,
-  CircularProgress
+  Grid
 } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
@@ -23,15 +22,13 @@ import {
   UserLabelCreate,
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
-import { ModalDialog } from '../components/Dialog'
+import { ModalDialog, WarningDialog } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import UsersActionMenu from '../components/UsersActionMenu'
 import QueryBuilder from '../components/QueryBuilder'
-import CreateLabel from '../components/CreateLabel'
 import { dateToString } from '../utils/dateutil'
-import CampaignWarningDialog from '../components/Campaign/CampaignWarningDialog'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
@@ -54,8 +51,6 @@ export default function UsersList() {
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const authState = useContext(AuthStateContext)
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
-  const [labelLoading, setLabelLoading] = useState(false)
-  const [labels, setLabels] = useState([])
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
@@ -170,20 +165,21 @@ export default function UsersList() {
     }
   }
 
-  function handleLabelSelect(lastLabel) {
-    const { id, shortDesc } = lastLabel
-    setLabelLoading(true)
+  function handleLabelSelect(labels) {
+    let createLimit = null
+    if (campaignCreateOption === 'all_on_the_page') createLimit = limit
     if (userList) {
       userLabelCreate({
-        variables: { userId: userList.toString(), labelId: id }
+        variables: {
+          query: searchQuery,
+          limit: createLimit,
+          labelId: labels.flatMap(l => l.id || []).toString()
+        }
       })
         .then(() => {
           refetch()
-          setLabels([...labels, shortDesc])
-          setLabelLoading(false)
         })
         .catch(labelErr => {
-          setLabelLoading(false)
           setError(labelErr.message)
         })
     }
@@ -203,9 +199,7 @@ export default function UsersList() {
       .then(res => {
         // eslint-disable-next-line no-shadow
         const { data } = res
-        setRedirect(
-          `/campaign/${data.campaignCreateThroughUsers.campaign.id}`
-        )
+        setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
       })
       .catch(campaignError => {
         setError(campaignError.message)
@@ -213,7 +207,10 @@ export default function UsersList() {
   }
 
   function handleCampaignCreate() {
-    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT) {
+    if (
+      campaignCreateOption === 'all' &&
+      usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT
+    ) {
       setOpenCampaignWarning(true)
       return
     }
@@ -302,7 +299,13 @@ export default function UsersList() {
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
-        <CampaignWarningDialog open={openCampaignWarning} handleClose={() => setOpenCampaignWarning(false)} createCampaign={createCampaign} />
+        <WarningDialog
+          open={openCampaignWarning}
+          handleClose={() => setOpenCampaignWarning(false)}
+          handleOnSave={createCampaign}
+          message={`You are going to create a campaign for 2000+ users. We recommend using
+          a smaller list. Do you still want to proceed?`}
+        />
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -311,7 +314,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                Add note for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -332,7 +335,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                Add Outgoing call answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -353,7 +356,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                Add Outgoing call not answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -414,20 +417,6 @@ export default function UsersList() {
           }}
         >
           <Grid container alignItems="center" style={{ width: '40%' }}>
-            <Grid
-              item
-              xs="auto"
-              style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}
-            >
-              <CreateLabel handleLabelSelect={handleLabelSelect} />
-            </Grid>
-            <Grid
-              item
-              xs="auto"
-              style={{ display: 'flex', alignItems: 'flex-end' }}
-            >
-              {labelLoading ? <CircularProgress size={25} /> : ''}
-            </Grid>
             <div className="d-flex justify-content-center row">
               <span>{labelError}</span>
             </div>
@@ -461,6 +450,8 @@ export default function UsersList() {
               campaignCreateOption={campaignCreateOption}
               setCampaignCreateOption={setCampaignOption}
               handleCampaignCreate={handleCampaignCreate}
+              handleLabelSelect={handleLabelSelect}
+              usersCountData={usersCountData}
             />
             <UserListCard
               userData={data}

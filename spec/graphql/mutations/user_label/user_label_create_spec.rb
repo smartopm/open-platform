@@ -13,8 +13,8 @@ RSpec.describe Mutations::Label::UserLabelCreate do
 
     let(:query) do
       <<~GQL
-          mutation userLabelCreate($userId: String!, $labelId: String!) {
-          userLabelCreate(userId: $userId, labelId: $labelId){
+          mutation userLabelCreate($query: String, $limit: Int, $labelId: String!) {
+          userLabelCreate(query: $query, limit: $limit, labelId: $labelId){
             label {
               userId
             }
@@ -25,15 +25,17 @@ RSpec.describe Mutations::Label::UserLabelCreate do
 
     it 'associates all the user ids with all passed labels' do
       variables = {
-        userId: "#{first_user.id},#{second_user.id}",
         labelId: "#{first_label.id},#{second_label.id}",
+        query: '',
+        limit: 50,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin_user,
                                                 site_community: admin_user.community_id,
                                               }).as_json
-      expect(result.dig('data', 'userLabelCreate', 'label').count).to eql 4
+      # 2 userlabel records each for admin_user, first_user & second_user
+      expect(result.dig('data', 'userLabelCreate', 'label').count).to eql 6
     end
   end
 end
