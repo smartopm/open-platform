@@ -48,12 +48,12 @@ image: "ruby:2.6"
 pages:
     stage: build
     extends: .base_db
-    allow_failure: true
+    allow_failure: false
     when: on_success
     # Export storybook as a static site (to public)
     script:
       # - npm install
-      - yarn run build-storybook -- -o public
+      - yarn run build-storybook -o public
     # Required artifact for GitLab Pages
     artifacts:
         paths:
