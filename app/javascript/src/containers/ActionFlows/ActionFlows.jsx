@@ -15,6 +15,7 @@ import Loading from '../../components/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../../components/CenteredContent'
 import Paginate from '../../components/Paginate'
+import { formatError } from '../../utils/helpers'
 
 export default function ActionFlows() {
   const limit = 10
@@ -116,7 +117,7 @@ export default function ActionFlows() {
         setIsSuccessAlert(true)
       })
       .catch(e => {
-        setMessageAlert(e.message)
+        setMessageAlert(formatError(e.message))
         setIsSuccessAlert(false)
       })
   }
@@ -132,7 +133,7 @@ export default function ActionFlows() {
     if (!id) return {}
 
     return (
-      data.actionFlows.find(flow => {
+      data?.actionFlows.find(flow => {
         return flow.id === id
       }) || {}
     )
@@ -172,20 +173,26 @@ export default function ActionFlows() {
             onClick={() => openModal()}
             color="primary"
             className={`btn ${css(styles.addFlow)} `}
-            data-testid='new-flow-btn'
+            data-testid="new-flow-btn"
           >
             New Workflow
           </Button>
         </div>
-        <ActionFlowsList openFlowModal={openModal} data={data} />
-        <CenteredContent>
-          <Paginate
-            offSet={offset}
-            limit={limit}
-            active={offset >= 1}
-            handlePageChange={paginate}
-          />
-        </CenteredContent>
+        {data.actionFlows.length ? (
+          <>
+            <ActionFlowsList openFlowModal={openModal} data={data} />
+            <CenteredContent>
+              <Paginate
+                offSet={offset}
+                limit={limit}
+                active={offset >= 1}
+                handlePageChange={paginate}
+              />
+            </CenteredContent>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center' }}>No Workflow found</div>
+        )}
       </div>
     </>
   )

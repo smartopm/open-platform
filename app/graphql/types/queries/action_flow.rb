@@ -79,6 +79,6 @@ module Types::Queries::ActionFlow
   def action_flows(offset: 0, limit: 10)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    ActionFlow.order(:created_at).limit(limit).offset(offset)
+    context[:site_community].action_flows.order(:created_at).limit(limit).offset(offset)
   end
 end
