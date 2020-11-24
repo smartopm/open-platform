@@ -6,7 +6,8 @@ import {
   Button,
   Dialog,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Divider
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
@@ -95,7 +96,7 @@ export function CustomizedDialogs({
   dialogHeader,
   subHeader,
   saveAction,
-  hideActionBtns
+  disableActionBtn
 }) {
   const classes = useStyles()
   return (
@@ -114,21 +115,54 @@ export function CustomizedDialogs({
         {children}
       </DialogContent>
       <DialogActions>
-        {!hideActionBtns && (
-          <>
-            <Button onClick={handleModal} variant="outlined" color="secondary">
-              Cancel
-            </Button>
-            <Button
-              data-testid="custom-dialog-button"
-              onClick={handleBatchFilter}
-              color="primary"
-              variant="contained"
-            >
-              {saveAction || 'Save'}
-            </Button>
-          </>
-        )}
+        <Button onClick={handleModal} variant="outlined" color="secondary">
+          Cancel
+        </Button>
+        <Button
+          data-testid="custom-dialog-button"
+          onClick={handleBatchFilter}
+          color="primary"
+          variant="contained"
+          disabled={disableActionBtn}
+        >
+          {saveAction || 'Save'}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+export function WarningDialog({ handleClose, open, handleOnSave, message }) {
+  const classes = useStyles()
+  return (
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="customized-dialog-title"
+      open={open}
+    >
+      <DialogTitle
+        id="customized-dialog-title"
+        onClose={handleClose}
+        className={classes.WarningDialogTitle}
+      >
+        Warning
+      </DialogTitle>
+      <DialogContent style={{ margin: '15px', textAlign: 'center' }}>
+        {message}
+      </DialogContent>
+      <Divider />
+      <DialogActions style={{ margin: '10px' }}>
+        <Button onClick={handleClose} variant="outlined" color="secondary">
+          Cancel
+        </Button>
+        <Button
+          autoFocus
+          onClick={handleOnSave}
+          variant="contained"
+          style={{ backgroundColor: '#dc402b', color: 'white' }}
+        >
+          Proceed
+        </Button>
       </DialogActions>
     </Dialog>
   )
@@ -137,8 +171,20 @@ export function CustomizedDialogs({
 const useStyles = makeStyles({
   title: {
     borderBottom: '1px #b8d4d0 solid'
+  },
+  WarningDialogTitle: {
+    backgroundColor: '#fcefef',
+    color: '#dc402b',
+    borderBottom: '1px #f1a3a2 solid'
   }
 })
+
+WarningDialog.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  handleOnSave: PropTypes.func.isRequired,
+}
 
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
@@ -154,7 +200,7 @@ CustomizedDialogs.defaultProps = {
   subHeader: '',
   children: {},
   saveAction: 'Save',
-  hideActionBtns: false
+  disableActionBtn: false
 }
 
 CustomizedDialogs.propTypes = {
@@ -165,7 +211,7 @@ CustomizedDialogs.propTypes = {
   dialogHeader: PropTypes.string,
   subHeader: PropTypes.string,
   saveAction: PropTypes.string,
-  hideActionBtns: PropTypes.bool
+  disableActionBtn: PropTypes.bool
 }
 
 ModalDialog.defaultProps = {

@@ -23,8 +23,8 @@ export default function CreateLabel({ handleLabelSelect }) {
                         // if it is a new value then it is a string otherwise it is an array
                         if (newValue.some(value => value.id != null)) {
                             // if it is an array then it is wise to get the last item of the array
-                            const [lastLabel] = newValue.slice(-1)
-                            return handleLabelSelect(lastLabel)
+                            // const [lastLabel] = newValue.slice(-1)
+                            return handleLabelSelect(newValue)
                         }
 
                     }}

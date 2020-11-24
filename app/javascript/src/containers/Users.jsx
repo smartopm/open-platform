@@ -23,7 +23,7 @@ import {
   UserLabelCreate,
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
-import { ModalDialog } from '../components/Dialog'
+import { ModalDialog, WarningDialog } from '../components/Dialog'
 import { userType } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
@@ -31,13 +31,12 @@ import UsersActionMenu from '../components/UsersActionMenu'
 import QueryBuilder from '../components/QueryBuilder'
 import CreateLabel from '../components/CreateLabel'
 import { dateToString } from '../utils/dateutil'
-import CampaignWarningDialog from '../components/Campaign/CampaignWarningDialog'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount } from '../utils/helpers'
 
 const limit = 25
-const USERS_CAMPAIGN_WARNING_LIMIT = 2000
+const USERS_CAMPAIGN_WARNING_LIMIT = 2
 
 export default function UsersList() {
   const classes = useStyles()
@@ -172,6 +171,8 @@ export default function UsersList() {
 
   function handleLabelSelect(lastLabel) {
     const { id, shortDesc } = lastLabel
+    console.log('labellllllll', lastLabel)
+    // return
     setLabelLoading(true)
     if (userList) {
       userLabelCreate({
@@ -203,9 +204,7 @@ export default function UsersList() {
       .then(res => {
         // eslint-disable-next-line no-shadow
         const { data } = res
-        setRedirect(
-          `/campaign/${data.campaignCreateThroughUsers.campaign.id}`
-        )
+        setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
       })
       .catch(campaignError => {
         setError(campaignError.message)
@@ -213,7 +212,10 @@ export default function UsersList() {
   }
 
   function handleCampaignCreate() {
-    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT) {
+    if (
+      campaignCreateOption === 'all' &&
+      usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT
+    ) {
       setOpenCampaignWarning(true)
       return
     }
@@ -302,7 +304,13 @@ export default function UsersList() {
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
-        <CampaignWarningDialog open={openCampaignWarning} handleClose={() => setOpenCampaignWarning(false)} createCampaign={createCampaign} />
+        <WarningDialog
+          open={openCampaignWarning}
+          handleClose={() => setOpenCampaignWarning(false)}
+          handleOnSave={createCampaign}
+          message={`You are going to create a campaign for 2000+ users. We recommend using
+          a smaller list. Do you still want to proceed?`}
+        />
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -311,7 +319,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                Add note for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -332,7 +340,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                Add Outgoing call answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -353,7 +361,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                Add Outgoing call not answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -462,6 +470,7 @@ export default function UsersList() {
               setCampaignCreateOption={setCampaignOption}
               handleCampaignCreate={handleCampaignCreate}
               handleLabelSelect={handleLabelSelect}
+              usersCountData={usersCountData}
             />
             <UserListCard
               userData={data}
