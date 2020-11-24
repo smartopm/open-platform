@@ -13,6 +13,6 @@ class TaskReminderJob < ApplicationJob
     template_id = user.community.templates&.dig('task_reminder_template_id')
     return unless template_id
 
-    EmailMsg.send_mail(user.email, template_id, "url": "#{ENV['HOST']}/todo/#{note_id}")
+    EmailMsg.send_mail(user.email, template_id, "url": "#{ENV['HOST']}/tasks/#{note_id}")
   end
 end

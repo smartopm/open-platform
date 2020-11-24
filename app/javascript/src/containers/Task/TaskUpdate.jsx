@@ -38,7 +38,7 @@ export default function TaskUpdate({ match }) {
 
   return (
     <>
-      <Nav navName="Task Update" menuButton="back" backTo="/todo" />
+      <Nav navName="Task Update" menuButton="back" backTo="/tasks" />
       <div className="container">
         <TaskUpdateForm
           data={data?.task}

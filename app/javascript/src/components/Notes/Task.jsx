@@ -55,7 +55,7 @@ export default function Task({
   }
 
   function routeToAction(_event, taskId) {
-    return history.push(`/todo/${taskId}`)
+    return history.push(`/tasks/${taskId}`)
   }
 
   function handleOpenMenu(event) {

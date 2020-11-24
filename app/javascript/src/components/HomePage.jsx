@@ -129,7 +129,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 8,
       title: 'Tasks',
-      path: '/todo',
+      path: '/tasks',
 
       icon: <PlaylistAddCheckIcon fontSize="large" />,
       access: ['admin']

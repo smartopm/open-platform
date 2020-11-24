@@ -11,7 +11,7 @@ export default function FormPage(){
   const authState = useContext(Context)
   const isFormFilled = pathname.includes('user_form')
   // eslint-disable-next-line no-nested-ternary
-  const backTo = isFormFilled && type ? `/todo` : isFormFilled && !type ? `/user/${userId}` : '/forms'
+  const backTo = isFormFilled && type ? `/tasks` : isFormFilled && !type ? `/user/${userId}` : '/forms'
     return (
       <>
         <Nav navName={formName} menuButton="back" backTo={backTo} />

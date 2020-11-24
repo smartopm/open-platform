@@ -22,6 +22,6 @@ class AssigneeNote < ApplicationRecord
   end
 
   def mail_data
-    { "url": "#{ENV['HOST']}/todo/#{note.id}" }
+    { "url": "#{ENV['HOST']}/tasks/#{note.id}" }
   end
 end

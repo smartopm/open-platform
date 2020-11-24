@@ -40,7 +40,7 @@ module ActionFlows
       end
 
       def url_format(id)
-        "https://#{ENV['HOST']}/todo/#{id}"
+        "https://#{ENV['HOST']}/tasks/#{id}"
       end
     end
   end
