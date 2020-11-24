@@ -41,9 +41,9 @@ class Message < ApplicationRecord
     return if receiver.nil?
 
     new_message = ''
-    text = 'Click this link to reply to this message in our app '
-    link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
+    text = 'Click Here' # 'Click this link to reply to this message in our app '
+    link = 'https://mail.google.com/mail/u/0/#inbox' # "https://#{ENV['HOST']}/message/#{user_id}"
+    new_message = 'We Said:' if add_prefix # "#{sender[:name]} from Nkwashi said: \n"
     new_message += message
     new_message += "\n\n#{text} \n#{link}" if include_reply_link?
     Sms.send(receiver, new_message)
