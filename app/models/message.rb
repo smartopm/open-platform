@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'host_env'
 # Messages being sent out
 class Message < ApplicationRecord
   include NoteHistoryRecordable
@@ -37,17 +38,19 @@ class Message < ApplicationRecord
     update(is_read: true, read_at: DateTime.now) unless is_read
   end
 
+  # rubocop:disable Metrics/AbcSize
   def send_sms(add_prefix: true)
     return if receiver.nil?
 
     new_message = ''
     text = 'Click this link to reply to this message in our app '
-    link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
+    link = "https://#{HostEnv.base_url(user.community)}/message/#{user_id}"
+    new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
     new_message += message
     new_message += "\n\n#{text} \n#{link}" if include_reply_link?
     Sms.send(receiver, new_message)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def create_message_task(body = nil)
     msg_obj = {

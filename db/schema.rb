@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 2020_11_24_080232) do
     t.string "timezone"
     t.string "default_users", default: [], array: true
     t.json "templates"
+    t.string "hostname"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
