@@ -45,10 +45,10 @@ image: "ruby:2.6"
     - yarn install
 
 
-build:pages:
-    stage: build
+staging:pages:
+    stage: staging
     extends: .base_db
-    allow_failure: false
+    allow_failure: true
     when: always
     # Export storybook as a static site (to public)
     script:
@@ -58,8 +58,8 @@ build:pages:
     artifacts:
         paths:
           - public
-    # only:
-    #   - master
+     only:
+       - master
 
 test:rspec:
   extends: .base_db
