@@ -48,7 +48,7 @@ image: "ruby:2.6"
 staging:pages:
     stage: staging
     extends: .base_db
-    allow_failure: false
+    allow_failure: true
     when: always
     # Export storybook as a static site (to public)
     script:
