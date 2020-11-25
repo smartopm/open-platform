@@ -45,8 +45,8 @@ image: "ruby:2.6"
     - yarn install
 
 
-pages:
-    stage: build
+staging:pages:
+    stage: staging
     extends: .base_db
     allow_failure: false
     when: always
@@ -58,8 +58,8 @@ pages:
     artifacts:
         paths:
           - public
-  #  only:
-  #    - master
+    only:
+      - master
 
 test:rspec:
   extends: .base_db
