@@ -23,7 +23,7 @@ import {
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
 import { ModalDialog, WarningDialog } from '../components/Dialog'
-import { userType } from '../utils/constants'
+import { userType, subStatus } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
 import UsersActionMenu from '../components/UsersActionMenu'
@@ -266,6 +266,16 @@ export default function UsersList() {
         type: 'date',
         valueSources: ['value'],
         excludeOperators: ['not_equal']
+      },
+      subStatus: {
+        label: 'Sub Status',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(subStatus).map(([key, val]) => {
+            return { value: key, title: val }
+          })
+        }
       }
     }
   }
@@ -292,7 +302,8 @@ export default function UsersList() {
     role: 'user_type',
     label: 'labels',
     phoneNumber: 'phone_number',
-    loginAfter: 'date_filter'
+    loginAfter: 'date_filter',
+    subStatus: 'sub_status'
   }
 
   return (

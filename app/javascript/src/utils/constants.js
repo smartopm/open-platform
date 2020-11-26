@@ -62,6 +62,19 @@ export const userSubStatus = {
   ready_for_construction: 'Ready for Construction',
 }
 
+export const subStatus = {
+  0: 'Applied',
+  1: 'Architecture Reviewed',
+  2: 'Approved',
+  3: 'Contracted',
+  4: 'Built',
+  5: 'In Construction',
+  6: 'Interested',
+  7: 'Moved-In',
+  8: 'Paying',
+  9: 'Ready for Construction',
+}
+
 export const entryReason = [
   'Client',
   'Prospective Client',
