@@ -74,9 +74,6 @@ module Types::Queries::User
   # rubocop:disable Metrics/AbcSize
   def users(offset: 0, limit: 50, query: nil)
     adm = context[:current_user]
-    puts "#############################"
-    puts query
-    puts "#############################"
     raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
 
     if query.present? && query.include?('date_filter')
