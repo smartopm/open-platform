@@ -17,9 +17,9 @@ module Mutations
         campaign = campaign_object
         campaign.name = I18n.t('campaign.default_name')
         campaign.user_id_list = if user_list.present?
-                                  user_list.split(',')
+                                  user_list
                                 else
-                                  list_of_user_ids(query, limit)
+                                  list_of_user_ids(query, limit).join(',')
                                 end
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
