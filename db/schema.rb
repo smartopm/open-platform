@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_27_145204) do
+ActiveRecord::Schema.define(version: 2020_11_27_155926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -420,6 +420,8 @@ ActiveRecord::Schema.define(version: 2020_11_27_145204) do
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_post_tags_on_community_id"
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -550,6 +552,7 @@ ActiveRecord::Schema.define(version: 2020_11_27_145204) do
   add_foreign_key "notifications", "users"
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
+  add_foreign_key "post_tags", "communities"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"
