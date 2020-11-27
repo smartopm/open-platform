@@ -51,7 +51,9 @@ RSpec.describe Mutations::Label do
 
   describe 'creating a user label' do
     let!(:user) { create(:user_with_community) }
+    let!(:user2) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin2) { create(:admin_user, community_id: user2.community_id) }
 
     let!(:first_label) do
       create(:label, community_id: user.community_id)
@@ -73,6 +75,24 @@ RSpec.describe Mutations::Label do
         }
       GQL
     end
+
+    let(:query_by_user_list) do
+      <<~GQL
+        mutation {
+            userLabelCreate(
+              query: "",
+              limit: 50,
+              labelId:"#{first_label.id}",
+              userList: "#{user2.id}"
+            ){
+                label {
+                    userId
+                }
+          }
+        }
+      GQL
+    end
+
     it 'returns a created userLabel' do
       result = DoubleGdpSchema.execute(lquery, context: {
                                          current_user: admin,
@@ -80,6 +100,16 @@ RSpec.describe Mutations::Label do
                                        }).as_json
 
       expect(result.dig('data', 'userLabelCreate', 'label', 0, 'userId')).to eql user.id
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'returns a created userLabel through user list' do
+      result = DoubleGdpSchema.execute(query_by_user_list, context: {
+                                         current_user: admin2,
+                                         site_community: user2.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'userLabelCreate', 'label', 0, 'userId')).to eql user2.id
       expect(result.dig('errors')).to be_nil
     end
   end
