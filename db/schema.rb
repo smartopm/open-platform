@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_27_143608) do
+ActiveRecord::Schema.define(version: 2020_11_27_145204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -460,6 +460,16 @@ ActiveRecord::Schema.define(version: 2020_11_27_143608) do
     t.index ["user_id"], name: "index_user_labels_on_user_id"
   end
 
+  create_table "user_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "post_tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_tag_id"], name: "index_user_tags_on_post_tag_id"
+    t.index ["user_id", "post_tag_id"], name: "index_user_tags_on_user_id_and_post_tag_id", unique: true
+    t.index ["user_id"], name: "index_user_tags_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -543,4 +553,6 @@ ActiveRecord::Schema.define(version: 2020_11_27_143608) do
   add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
+  add_foreign_key "user_tags", "post_tags"
+  add_foreign_key "user_tags", "users"
 end
