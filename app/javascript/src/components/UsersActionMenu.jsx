@@ -126,8 +126,8 @@ UsersActionMenu.propTypes = {
   handleCampaignCreate: PropTypes.func.isRequired,
   handleLabelSelect: PropTypes.func.isRequired,
   setSelectAllOption: PropTypes.func.isRequired,
-  selectedUsers: PropTypes.arrayOf(PropTypes.number).isRequired,
-  userList: PropTypes.arrayOf(PropTypes.number).isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  userList: PropTypes.arrayOf(PropTypes.string).isRequired,
   usersCountData: PropTypes.shape({
     usersCount: PropTypes.number.isRequired
   }).isRequired

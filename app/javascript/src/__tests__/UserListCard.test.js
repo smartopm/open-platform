@@ -27,7 +27,9 @@ describe('It displays the user list and interactions', () => {
       ]
     },
     sendOneTimePasscode: jest.fn(),
-    currentUserType: 'Admin'
+    handleUserSelect: jest.fn(),
+    currentUserType: 'Admin',
+    selectedUsers: ['uuid123-4']
   }
   it('it mounts component without error', () => {
     const container = render(

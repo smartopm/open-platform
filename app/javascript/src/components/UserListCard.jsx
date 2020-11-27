@@ -33,5 +33,5 @@ UserListCard.propTypes = {
   currentUserType: PropTypes.string.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
-  selectedUsers: PropTypes.arrayOf(PropTypes.number).isRequired
+  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
 }
