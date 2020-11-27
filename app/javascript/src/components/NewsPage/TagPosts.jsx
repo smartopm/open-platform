@@ -3,13 +3,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Chip from '@material-ui/core/Chip';
-import { Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types'
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch } from '../../utils/customHooks'
 import PostItem from './PostItem'
 import { dateToString } from '../DateContainer'
+import Tag from './Tag';
 
 export default function TagPosts({ open, handleClose, tagName }) {
   const classes = useStyles();
@@ -30,6 +30,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
         open={open}
         onClose={handleClose}
         className={classes.root}
+        onOpen={() => console.log('')}
       >
         <div
           className={classes.list}
@@ -39,7 +40,10 @@ export default function TagPosts({ open, handleClose, tagName }) {
             <Typography variant='body1' color='textSecondary'>
               Related Posts
             </Typography>
-            <Chip size="small" label={tagName} />
+            <div>
+              <Tag tag={tagName || ''} />
+              <Button color="primary" style={{ float: 'right' }}>Follow Tag</Button>
+            </div>
           </div>
           {response.posts?.map((post) => (
             // eslint-disable-next-line jsx-a11y/no-static-element-interactions
