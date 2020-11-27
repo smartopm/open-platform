@@ -406,6 +406,16 @@ ActiveRecord::Schema.define(version: 2020_11_27_145204) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "post_tag_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "post_tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_tag_id"], name: "index_post_tag_users_on_post_tag_id"
+    t.index ["user_id", "post_tag_id"], name: "index_post_tag_users_on_user_id_and_post_tag_id", unique: true
+    t.index ["user_id"], name: "index_post_tag_users_on_user_id"
+  end
+
   create_table "post_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
@@ -458,16 +468,6 @@ ActiveRecord::Schema.define(version: 2020_11_27_145204) do
     t.index ["label_id"], name: "index_user_labels_on_label_id"
     t.index ["user_id", "label_id"], name: "index_user_labels_on_user_id_and_label_id", unique: true
     t.index ["user_id"], name: "index_user_labels_on_user_id"
-  end
-
-  create_table "user_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "post_tag_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_tag_id"], name: "index_user_tags_on_post_tag_id"
-    t.index ["user_id", "post_tag_id"], name: "index_user_tags_on_user_id_and_post_tag_id", unique: true
-    t.index ["user_id"], name: "index_user_tags_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -548,11 +548,11 @@ ActiveRecord::Schema.define(version: 2020_11_27_145204) do
   add_foreign_key "notes", "form_users"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
+  add_foreign_key "post_tag_users", "post_tags"
+  add_foreign_key "post_tag_users", "users"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
-  add_foreign_key "user_tags", "post_tags"
-  add_foreign_key "user_tags", "users"
 end
