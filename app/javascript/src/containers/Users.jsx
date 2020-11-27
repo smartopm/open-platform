@@ -3,13 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import { Redirect, Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Button,
-  Divider,
-  IconButton,
-  InputBase,
-  Grid
-} from '@material-ui/core'
+import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../components/Nav'
@@ -55,6 +49,7 @@ export default function UsersList() {
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
   const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
+  const [selectedUsers, setSelectedUsers] = useState([])
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -173,7 +168,8 @@ export default function UsersList() {
         variables: {
           query: searchQuery,
           limit: createLimit,
-          labelId: labels.flatMap(l => l.id || []).toString()
+          labelId: labels.flatMap(l => l.id || []).toString(),
+          userList: selectedUsers.toString()
         }
       })
         .then(() => {
@@ -188,13 +184,39 @@ export default function UsersList() {
   function setCampaignOption(option) {
     if (option === 'all') fetchUsersCount()
     setCampaignCreateOption(option)
+    if (option !== 'none') setSelectedUsers([])
+  }
+
+  function setSelectAll() {
+    if (
+      !!selectedUsers.length &&
+      !!userList.length &&
+      selectedUsers.length === userList.length
+    ) {
+      setSelectedUsers([])
+    } else {
+      setSelectedUsers(userList)
+      setCampaignCreateOption('none')
+    }
+  }
+
+  function handleUserSelect(user) {
+    if (selectedUsers.length === 0) setCampaignCreateOption('none')
+
+    let newSelected = []
+    if (selectedUsers.includes(user.id)) {
+      newSelected = selectedUsers.filter(id => id !== user.id)
+    } else {
+      newSelected = selectedUsers.concat(user.id)
+    }
+    setSelectedUsers(newSelected)
   }
 
   function createCampaign() {
     let createLimit = null
     if (campaignCreateOption === 'all_on_the_page') createLimit = limit
     campaignCreate({
-      variables: { query: searchQuery, limit: createLimit }
+      variables: { query: searchQuery, limit: createLimit, userList: selectedUsers.toString() }
     })
       .then(res => {
         // eslint-disable-next-line no-shadow
@@ -449,6 +471,9 @@ export default function UsersList() {
             <UsersActionMenu
               campaignCreateOption={campaignCreateOption}
               setCampaignCreateOption={setCampaignOption}
+              selectedUsers={selectedUsers}
+              userList={userList}
+              setSelectAllOption={setSelectAll}
               handleCampaignCreate={handleCampaignCreate}
               handleLabelSelect={handleLabelSelect}
               usersCountData={usersCountData}
@@ -458,6 +483,8 @@ export default function UsersList() {
               handleNoteModal={handleNoteModal}
               currentUserType={authState.user.userType}
               sendOneTimePasscode={sendOneTimePasscode}
+              handleUserSelect={handleUserSelect}
+              selectedUsers={selectedUsers}
             />
             <Grid
               container

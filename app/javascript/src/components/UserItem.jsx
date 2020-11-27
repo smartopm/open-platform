@@ -11,7 +11,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Hidden
+  Hidden,
+  Checkbox
 } from '@material-ui/core'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -27,7 +28,9 @@ import CenteredContent from './CenteredContent'
 export default function UserItem({
   user,
   currentUserType,
-  sendOneTimePasscode
+  sendOneTimePasscode,
+  handleUserSelect,
+  selectedUsers
 }) {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -101,6 +104,14 @@ export default function UserItem({
         onClick={showUserDetails}
       >
         <Grid container alignItems="center">
+          <Checkbox
+            checked={selectedUsers.includes(user.id)}
+            onChange={() => handleUserSelect(user)}
+            name="includeReplyLink"
+            data-testid="reply_link"
+            color="primary"
+            style={{padding: '0px', marginRight: '15px'}}
+          />
           <ListItemAvatar className={classes.avatarList}>
             <Avatar user={user} />
           </ListItemAvatar>
@@ -143,7 +154,7 @@ export default function UserItem({
                   key={user.id}
                 >
                   <Typography component="span" variant="subtitle1">
-                    <strong> 
+                    <strong>
                       {' '}
                       {user.name}
                       {' '}
@@ -239,7 +250,9 @@ UserItem.propTypes = {
     labels: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired
+  sendOneTimePasscode: PropTypes.func.isRequired,
+  handleUserSelect: PropTypes.func.isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.number).isRequired
 }
 
 const useStyles = makeStyles(() => ({

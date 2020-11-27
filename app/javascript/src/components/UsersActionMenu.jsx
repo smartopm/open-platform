@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { Grid, Select, MenuItem, Typography, Button } from '@material-ui/core'
+import {
+  Grid,
+  Select,
+  MenuItem,
+  Typography,
+  Button,
+  Checkbox
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import LabelIcon from '@material-ui/icons/Label'
 import CampaignIcon from './Campaign/CampaignIcon'
@@ -10,9 +17,12 @@ const USERS_LABEL_WARNING_LIMIT = 2000
 export default function UsersActionMenu({
   campaignCreateOption,
   setCampaignCreateOption,
+  setSelectAllOption,
   handleCampaignCreate,
   handleLabelSelect,
-  usersCountData
+  usersCountData,
+  selectedUsers,
+  userList
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false)
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
@@ -31,6 +41,14 @@ export default function UsersActionMenu({
       return
     }
     handleLabelSelect(selectedLabels)
+  }
+
+  function isAllSelected() {
+    return (
+      !!selectedUsers.length &&
+      !!userList.length &&
+      selectedUsers.length === userList.length
+    )
   }
 
   return (
@@ -53,20 +71,32 @@ export default function UsersActionMenu({
           a smaller list. Do you still want to proceed?`}
       />
       <Grid item style={{ display: 'flex' }}>
+        <Grid>
+          <Checkbox
+            checked={isAllSelected()}
+            onChange={setSelectAllOption}
+            name="includeReplyLink"
+            data-testid="reply_link"
+            color="primary"
+            style={{ padding: '0px', marginRight: '15px' }}
+          />
+        </Grid>
         <Typography> Select </Typography>
-        <Select
-          labelId="user-action-select"
-          id="user-action-select"
-          value={campaignCreateOption}
-          onChange={event => setCampaignCreateOption(event.target.value)}
-          style={{ height: '23px', marginLeft: '10px' }}
-        >
-          <MenuItem value="all">All</MenuItem>
-          <MenuItem value="all_on_the_page">All on this page</MenuItem>
-          <MenuItem value="none">None</MenuItem>
-        </Select>
+        <Grid>
+          <Select
+            labelId="user-action-select"
+            id="user-action-select"
+            value={campaignCreateOption}
+            onChange={event => setCampaignCreateOption(event.target.value)}
+            style={{ height: '23px', marginLeft: '10px' }}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="all_on_the_page">All on this page</MenuItem>
+            <MenuItem value="none">None</MenuItem>
+          </Select>
+        </Grid>
       </Grid>
-      {campaignCreateOption !== 'none' && (
+      {(campaignCreateOption !== 'none' || selectedUsers.length > 0) && (
         <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
           <Button
             onClick={openLabelSelectModal}
@@ -95,7 +125,10 @@ UsersActionMenu.propTypes = {
   setCampaignCreateOption: PropTypes.func.isRequired,
   handleCampaignCreate: PropTypes.func.isRequired,
   handleLabelSelect: PropTypes.func.isRequired,
+  setSelectAllOption: PropTypes.func.isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.number).isRequired,
+  userList: PropTypes.arrayOf(PropTypes.number).isRequired,
   usersCountData: PropTypes.shape({
-    usersCount: PropTypes.number.isRequired,
+    usersCount: PropTypes.number.isRequired
   }).isRequired
 }

@@ -8,14 +8,19 @@ module Mutations
 
       argument :query, String, required: false
       argument :limit, Integer, required: false
+      argument :user_list, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 
       # TODO: Move campaign create process to a background job
-      def resolve(query:, limit:)
+      def resolve(query:, limit:, user_list:)
         campaign = campaign_object
         campaign.name = I18n.t('campaign.default_name')
-        campaign.user_id_list = list_of_user_ids(query, limit)
+        campaign.user_id_list = if user_list.present?
+                                  user_list.split(',')
+                                else
+                                  list_of_user_ids(query, limit)
+                                end
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
         { campaign: campaign }

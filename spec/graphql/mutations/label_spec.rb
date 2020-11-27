@@ -60,7 +60,12 @@ RSpec.describe Mutations::Label do
     let(:lquery) do
       <<~GQL
         mutation {
-            userLabelCreate(query: "", limit: 50, labelId:"#{first_label.id}"){
+            userLabelCreate(
+              query: "",
+              limit: 50,
+              labelId:"#{first_label.id}",
+              userList: ""
+            ){
                 label {
                     userId
                 }

@@ -6,7 +6,9 @@ import UserItem from './UserItem'
 export default function UserListCard({
   userData,
   currentUserType,
-  sendOneTimePasscode
+  sendOneTimePasscode,
+  handleUserSelect,
+  selectedUsers
 }) {
   return (
     <List>
@@ -16,6 +18,8 @@ export default function UserListCard({
           user={user}
           currentUserType={currentUserType}
           sendOneTimePasscode={sendOneTimePasscode}
+          handleUserSelect={handleUserSelect}
+          selectedUsers={selectedUsers}
         />
       ))}
     </List>
@@ -24,8 +28,10 @@ export default function UserListCard({
 
 UserListCard.propTypes = {
   userData: PropTypes.shape({
-    users: PropTypes.arrayOf(PropTypes.object),
+    users: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
+  handleUserSelect: PropTypes.func.isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.number).isRequired
 }
