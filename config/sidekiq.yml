@@ -8,3 +8,8 @@
     class: CheckUnsubscribedUsersJob
     args: ['Nkwashi']
     description: "This checks users who have unsubscribed from email at end of the week"
+  community_post_tags:
+    cron: '0 2 * * * Africa/Lusaka'
+    class: CommunityPostTagsJob
+    args: ['Nkwashi']
+    description: "Check if there is new tags in wordpress and update our db"
