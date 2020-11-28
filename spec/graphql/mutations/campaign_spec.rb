@@ -115,6 +115,7 @@ RSpec.describe Mutations::Campaign do
               campaign{
                 id
                 name
+                userIdList
               }
             }
           }
@@ -122,6 +123,23 @@ RSpec.describe Mutations::Campaign do
     end
 
     it 'create a campaign with filters' do
+      variables = {
+        query: '', limit: 50, userList: user2.id.to_s
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'userIdList'))
+        .to eq(user2.id.to_s)
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
+        .to eql 'Default Campaign Name'
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'create a campaign through user_list' do
       variables = {
         query: '', limit: 50, userList: ''
       }
