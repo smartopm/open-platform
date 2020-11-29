@@ -6,26 +6,49 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  InputBase,
+  Divider,
+  IconButton,
   Grid,
   Button
 } from '@material-ui/core'
+import FilterListIcon from '@material-ui/icons/FilterList'
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { StyleSheet, css } from 'aphrodite'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo'
 import { useParams, useHistory } from 'react-router'
+import { Redirect } from 'react-router-dom'
 import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../graphql/queries'
 import { AssignUser } from '../../graphql/mutations'
 import TaskForm from './TaskForm'
 import ErrorPage from '../Error'
 import Paginate from '../Paginate'
 import CenteredContent from '../CenteredContent'
-import FilterComponent from '../FilterComponent'
 import Task from './Task'
 import TaskDashboard from './TaskDashboard'
 import { futureDateAndTimeToString } from '../DateContainer'
 import DatePickerDialog from '../DatePickerDialog'
 import Loading from '../Loading'
+import QueryBuilder from '../QueryBuilder'
 import { ModalDialog } from '../Dialog'
+import { pluralizeCount } from '../../utils/helpers'
+
+function useDebounce(value, delay){
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -47,11 +70,16 @@ export default function TodoList({
   const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false)
   const [loadingMutation, setMutationLoading] = useState(false)
   const [message, setErrorMessage] = useState('')
-  const [assignee, setAssignee] = useState([])
   const [query, setQuery] = useState('')
   const [currentTile, setCurrentTile] = useState('')
+  const [redirect, setRedirect] = useState(false)
+  const [displayBuilder, setDisplayBuilder] = useState('none')
+  const [filterCount, setFilterCount] = useState(0)
+  const [filterQuery, setFilterQuery] = useState('')
   const { taskId } = useParams()
   const history = useHistory()
+  const [userNameSearchTerm, setUserNameSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(userNameSearchTerm, 3000);
 
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -78,10 +106,8 @@ export default function TodoList({
     // fetchPolicy: 'cache-and-network'
   })
 
-  // TODO: simplify this: @olivier
-  const assignees = assignee.map((q) => `assignees = "${q}"`).join(' OR ')
   // eslint-disable-next-line no-nested-ternary
-  const qr = query.length ? query : location === 'my_tasks' ? currentUser.name : assignees
+  const qr = query.length ? query : location === 'my_tasks' ? `assignees: '${currentUser.name}'` : ''
   const [loadTasks, {
     loading: isLoading, error: tasksError, data, refetch, called
   }] = useLazyQuery(
@@ -90,7 +116,7 @@ export default function TodoList({
       variables: {
         offset,
         limit,
-        query: `${qr} ${assignees.length ? `AND ${assignees}` : ''}`
+        query: `${qr} ${filterQuery ? `AND ${filterQuery}` : ''}`
       },
       fetchPolicy: 'network-only'
     }
@@ -127,6 +153,13 @@ export default function TodoList({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location])
+
+  useEffect(() => {
+    if(debouncedSearchTerm){
+      setFilterQuery(`${debouncedSearchTerm}`)
+      loadTasks()
+    }
+  }, [debouncedSearchTerm, loadTasks])
 
   function handleRefetch(){
     refetch()
@@ -172,12 +205,6 @@ export default function TodoList({
     }
   }
 
-  function handleAssigneeInputChange(event) {
-    setAssignee(event.target.value)
-    loadTasks()
-    setOpenFilter(!filterOpen)
-  }
-
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return
     setCurrentTile(key)
@@ -186,17 +213,118 @@ export default function TodoList({
     loadTasks()
   }
 
-  function handleSelect() {
-    setOpenFilter(!filterOpen)
-  }
-
   function closeAndExit() {
     setModalOpen(false)
     history.replace('/tasks')
   }
 
-  if (isLoading || taskLoading) return <Loading />
+  function inputToSearch() {
+    setRedirect('/search')
+  }
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none')
+    } else {
+      setDisplayBuilder('')
+    }
+    setOpenFilter(!filterOpen)
+  }
+
+  function handleQueryOnChange(selectedOptions) {
+    if(selectedOptions){
+      const andConjugate = selectedOptions.logic?.and
+      const orConjugate = selectedOptions.logic?.or
+      const availableConjugate = andConjugate || orConjugate
+
+      if(availableConjugate){
+        const conjugate = andConjugate ? 'AND' : 'OR'
+        let property = ''
+        let value = null
+        const queryText = availableConjugate.map(option => {
+          let operator = Object.keys(option)[0]
+          const [inputFilterProperty, inputFilterValue] = option[operator]
+          
+          property = filterFields[inputFilterProperty.var]
+          value = inputFilterValue
+          operator = property === 'assignees' ? '=' : ':'
+          
+          return `${property}${operator} '${value}'`
+        })
+        .join(` ${conjugate} `)
+
+        // debounce only for user's Name
+        if(property === 'user') {
+          setUserNameSearchTerm(queryText)
+          setFilterCount(availableConjugate.length)
+        }
+
+        if(property === 'assignees' && value){
+          setFilterQuery(queryText)
+          setFilterCount(availableConjugate.length)
+        }
+      }
+    }
+  }
+
+  const InitialConfig = MaterialConfig
+  const queryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      assignee: {
+        label: 'Assignee',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: liteData?.usersLite.map(u => {
+            return { value: u.name, title: u.name }
+          })
+        }
+      },
+      userName: {
+        label: 'User\'s Name',
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+    }
+  }
+
+  const queryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'assignee',
+          operator: 'select_equals',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['select']
+        }
+      }
+    }
+  }
+
+  const filterFields = {
+    assignee: 'assignees',
+    userName: 'user',
+  }
+
   if (tasksError) return <ErrorPage error={tasksError.message} />
+  if (redirect) {
+    return (
+      <Redirect
+        push
+        to={{
+          pathname: redirect,
+          state: { from: `/${location}` }
+        }}
+      />
+    )
+  }
 
   return (
     <>
@@ -274,71 +402,111 @@ export default function TodoList({
             }
           </DialogContent>
         </Dialog>
-
-        <div classes={classes.root}>
-          {location === 'tasks' && (
-            <CenteredContent>
-              <FilterComponent
-                stateList={assignee}
-                list={liteData?.usersLite || []}
-                handleInputChange={handleAssigneeInputChange}
-                classes={classes}
-                resetFilter={() => setAssignee([])}
-                type="assignee"
-                filterOpen={filterOpen}
-                handleOpenSelect={handleSelect}
-              />
-            </CenteredContent>
-          )}
-          <br />
-          <Grid container spacing={3}>
-            <TaskDashboard taskData={taskCountData} filterTasks={handleTaskFilter} currentTile={currentTile} />
-          </Grid>
-          <br />
-          {data?.flaggedNotes.length ? data?.flaggedNotes.map((note) => (
-            <Task
-              key={note.id}
-              note={note}
-              message={message}
-              users={liteData?.usersLite || []}
-              handleCompleteNote={handleCompleteNote}
-              assignUnassignUser={assignUnassignUser}
-              loaded={loaded}
-              handleDelete={handleDelete}
-              handleModal={handleModal}
-              loading={loading}
-              loadingMutation={loadingMutation}
-              handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-              isAssignTaskOpen={isAssignTaskOpen}
-              currentUser={currentUser}
+        
+        <div className={classes.root}>
+          <>
+            <InputBase
+              className={classes.input}
+              type="text"
+              placeholder="Search User"
+              onFocus={inputToSearch}
+              inputProps={{ 'aria-label': 'search user' }}
             />
+            <Divider className={classes.divider} orientation="vertical" />
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+              onClick={toggleFilterMenu}
+            >
+              <FilterListIcon />
+            </IconButton>
+            <div style={{ margin: '10px 19px 10px 0' }}>
+              {filterCount
+                ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}`
+                : 'Filter'}
+            </div>
+          </>
+        </div> 
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            position: 'relative'
+          }}
+        >
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              display: displayBuilder
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={handleQueryOnChange}
+              builderConfig={queryBuilderConfig}
+              initialQueryValue={queryBuilderInitialValue}
+              addRuleLabel="Add filter"
+            />
+          </Grid>
+        </div>
+        <br />
+        {isLoading || taskLoading ? 
+        (<Loading />)  : (
+          <>
+            <Grid container spacing={3}>
+              <TaskDashboard taskData={taskCountData} filterTasks={handleTaskFilter} currentTile={currentTile} />
+            </Grid>
+            <br />
+            {data?.flaggedNotes.length ? data?.flaggedNotes.map((note) => (
+              <Task
+                key={note.id}
+                note={note}
+                message={message}
+                users={liteData?.usersLite || []}
+                handleCompleteNote={handleCompleteNote}
+                assignUnassignUser={assignUnassignUser}
+                loaded={loaded}
+                handleDelete={handleDelete}
+                handleModal={handleModal}
+                loading={loading}
+                loadingMutation={loadingMutation}
+                handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+                isAssignTaskOpen={isAssignTaskOpen}
+                currentUser={currentUser}
+              />
           )) : (
             <CenteredContent>Click a card above to filter</CenteredContent>
             )}
-        </div>
-        <br />
-        <CenteredContent>
-          <Paginate
-            offSet={offset}
-            limit={limit}
-            active
-            handlePageChange={paginate}
-          />
-        </CenteredContent>
-        <Fab
-          variant="extended"
-          onClick={openModal}
-          color="primary"
-          className={`btn ${css(styles.taskButton)} `}
-        >
-          Create task
-        </Fab>
+            <br />
+            <CenteredContent>
+              <Paginate
+                offSet={offset}
+                limit={limit}
+                active
+                handlePageChange={paginate}
+              />
+            </CenteredContent>
+            <Fab
+              variant="extended"
+              onClick={openModal}
+              color="primary"
+              className={`btn ${css(styles.taskButton)} `}
+            >
+              Create task
+            </Fab>
+          </>
+)}
       </div>
     </>
   )
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     padding: '2px 4px',
     display: 'flex',
@@ -350,8 +518,18 @@ const useStyles = makeStyles({
     minWidth: 160,
     maxWidth: 300
   },
-
-})
+  iconButton: {
+    padding: 10
+  },
+  divider: {
+    height: 28,
+    margin: 4
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1
+  },
+}))
 
 const styles = StyleSheet.create({
   taskButton: {

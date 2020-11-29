@@ -7,6 +7,15 @@ class Note < ApplicationRecord
 
   search_scope :search do
     attributes :created_at, :completed, :due_date, :flagged, :category
+  end
+
+  search_scope :search_user do
+    attributes :created_at, :completed, :due_date, :flagged, :category
+    attributes user: 'user.name'
+  end
+
+  search_scope :search_assignee do
+    attributes :created_at, :completed, :due_date, :flagged, :category
     attributes assignees: ['assignees.name']
   end
 
