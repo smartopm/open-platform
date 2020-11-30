@@ -13,8 +13,13 @@ RSpec.describe Mutations::Label::UserLabelCreate do
 
     let(:query) do
       <<~GQL
-          mutation userLabelCreate($query: String, $limit: Int, $labelId: String!) {
-          userLabelCreate(query: $query, limit: $limit, labelId: $labelId){
+          mutation userLabelCreate(
+            $query: String,
+            $limit: Int,
+            $labelId: String!,
+            $userList: String
+          ) {
+          userLabelCreate(query: $query, limit: $limit, labelId: $labelId, userList: $userList){
             label {
               userId
             }
@@ -28,6 +33,7 @@ RSpec.describe Mutations::Label::UserLabelCreate do
         labelId: "#{first_label.id},#{second_label.id}",
         query: '',
         limit: 50,
+        userList: '',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

@@ -16,7 +16,7 @@ class User < ApplicationRecord
   include SearchCop
 
   search_scope :search do
-    attributes :name, :phone_number, :user_type, :email
+    attributes :name, :phone_number, :user_type, :email, :sub_status
     attributes labels: ['labels.short_desc']
   end
 
