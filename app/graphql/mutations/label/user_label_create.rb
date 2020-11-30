@@ -7,12 +7,13 @@ module Mutations
       argument :query, String, required: false
       argument :limit, Integer, required: false
       argument :label_id, String, required: true
+      argument :user_list, String, required: false
 
       field :label, [Types::UserLabelType], null: true
 
       # TODO: move create label operations to background job : Saurabh
-      def resolve(query:, limit:, label_id:)
-        user_ids = list_of_user_ids(query, limit)
+      def resolve(query:, limit:, label_id:, user_list:)
+        user_ids = (user_list.present? ? user_list.split(',') : list_of_user_ids(query, limit))
         label_ids = label_id.split(',')
         labels = []
         user_ids.each do |u_id|

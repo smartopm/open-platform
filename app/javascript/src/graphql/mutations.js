@@ -714,8 +714,8 @@ export const LabelCreate = gql`
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-    mutation userLabelCreate($query: String, $limit: Int, $labelId: String!){
-       userLabelCreate(query: $query, limit: $limit, labelId: $labelId){
+    mutation userLabelCreate($query: String, $limit: Int, $labelId: String!, $userList: String,){
+       userLabelCreate(query: $query, limit: $limit, labelId: $labelId, userList: $userList){
          label {
            labelId
          }
@@ -749,8 +749,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($query: String, $limit: Int){
-    campaignCreateThroughUsers(query: $query, limit: $limit){
+  mutation campaignCreateThroughUsers($query: String, $limit: Int, $userList: String){
+    campaignCreateThroughUsers(query: $query, limit: $limit, userList: $userList){
       campaign{
         id
       }
