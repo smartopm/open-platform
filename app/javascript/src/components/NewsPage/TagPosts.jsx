@@ -22,6 +22,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [isAlertOpen, setAlertOpen] = useState(false)
+  const [mutationLoading, setMutationLoading] = useState(false)
   const [loadUserTags, {  called, loading, data, error: lazyError, refetch } ] = useLazyQuery(PostTagUser)
   const [followTag] = useMutation(FollowPostTag)
 
@@ -41,19 +42,22 @@ export default function TagPosts({ open, handleClose, tagName }) {
   }
 
   function handleFollowTag(){
-    setIsSuccessAlert(true)
+    setMutationLoading(true)
     followTag({
       variables: { tagName }
     })
     .then(() => {
+      setIsSuccessAlert(true)
       setMessageAlert(`You are ${!data.userTags ? 'now' : 'no longer'} following ${tagName}`)
       setAlertOpen(true)
+      setMutationLoading(false)
       refetch()
     })
     .catch(err => {
       setMessageAlert(err.message)
       setAlertOpen(true)
       setIsSuccessAlert(true)
+      setMutationLoading(false)
     })
   }
 
@@ -77,7 +81,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
         onClose={handleClose}
         className={classes.root}
         // TODO: handle this properly
-        onOpen={() => console.log('')}
+        onOpen={() => {}}
       >
         <div
           className={classes.list}
@@ -89,7 +93,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
             </Typography>
             <div>
               <Tag tag={tagName || ''} />
-              <Button onClick={handleFollowTag} color="primary" style={{ float: 'right' }}>
+              <Button onClick={handleFollowTag} disabled={mutationLoading} color="primary" style={{ float: 'right' }}>
                 {
                   // eslint-disable-next-line no-nested-ternary
                   called && loading ? <Spinner /> : called && data?.userTags !== null ? 'Unfollow Tag' : 'Follow Tag'
