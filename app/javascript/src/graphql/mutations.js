@@ -686,6 +686,16 @@ export const DiscussionMutation = gql`
   }
 `
 
+export const FollowPostTag = gql`
+    mutation followPostTag($tagName: String!){
+      followPostTag(tagName: $tagName){
+        postTagUser {
+          id
+        }
+      }
+    }
+`
+
 export const DiscussionSubscription = gql`
   mutation discussionUserCreate(
     $discussionId: ID!

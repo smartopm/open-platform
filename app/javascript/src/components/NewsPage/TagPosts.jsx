@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types'
-import { useLazyQuery } from 'react-apollo';
+import { useLazyQuery, useMutation } from 'react-apollo';
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch } from '../../utils/customHooks'
 import PostItem from './PostItem'
@@ -14,13 +14,16 @@ import Tag from './Tag';
 import MessageAlert from '../MessageAlert';
 import { PostTagUser } from '../../graphql/queries';
 import { Spinner } from '../Loading'
+import { FollowPostTag } from '../../graphql/mutations';
 
 export default function TagPosts({ open, handleClose, tagName }) {
   const classes = useStyles();
   const { response, error } = useFetch(`${wordpressEndpoint}/posts/?tag=${tagName}`)
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [loadUserTags, {  called, loading, data, error: lazyError } ] = useLazyQuery(PostTagUser)
+  const [isAlertOpen, setAlertOpen] = useState(false)
+  const [loadUserTags, {  called, loading, data, error: lazyError, refetch } ] = useLazyQuery(PostTagUser)
+  const [followTag] = useMutation(FollowPostTag)
 
   useEffect(() => {
       if (open && tagName) {
@@ -37,22 +40,35 @@ export default function TagPosts({ open, handleClose, tagName }) {
     window.location.href = `/news/post/${postId}`
   }
 
-  function followTag(){
+  function handleFollowTag(){
     setIsSuccessAlert(true)
+    followTag({
+      variables: { tagName }
+    })
+    .then(() => {
+      setMessageAlert(`You are ${!data.userTags ? 'now' : 'no longer'} following ${tagName}`)
+      setAlertOpen(true)
+      refetch()
+    })
+    .catch(err => {
+      setMessageAlert(err.message)
+      setAlertOpen(true)
+      setIsSuccessAlert(true)
+    })
   }
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
       return
     }
-    setMessageAlert('')
+    setAlertOpen(false)
   }
   return (
     <>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
-        open={!!messageAlert}
+        open={isAlertOpen}
         handleClose={handleMessageAlertClose}
       />
       <SwipeableDrawer
@@ -73,7 +89,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
             </Typography>
             <div>
               <Tag tag={tagName || ''} />
-              <Button onClick={followTag} color="primary" style={{ float: 'right' }}>
+              <Button onClick={handleFollowTag} color="primary" style={{ float: 'right' }}>
                 {
                   // eslint-disable-next-line no-nested-ternary
                   called && loading ? <Spinner /> : called && data?.userTags !== null ? 'Unfollow Tag' : 'Follow Tag'
