@@ -2,18 +2,20 @@
 
 # PostTag, tags from wordpress
 class PostTag < ApplicationRecord
-    belongs_to :community
-    has_many :post_tag_users, dependent: :destroy
-    has_many :users, through: :post_tag_users
-    validates :title, presence: true, uniqueness: true
+  belongs_to :community
+  belongs_to :user
+  has_many :post_tag_users, dependent: :destroy
+  has_many :users, through: :post_tag_users
 
-    def follow_or_unfollow_tag(user_id)
-        tag = PostTagUser.find_by(user_id: user_id, post_tag_id: self[:id])
+  validates :title, presence: true, uniqueness: true
 
-        if tag.present?
-          tag.delete
-        else
-          PostTagUser.create!(user_id: user_id, post_tag_id: self[:id])
-        end
+  def follow_or_unfollow_tag(user_id)
+    tag = PostTagUser.find_by(user_id: user_id, post_tag_id: self[:id])
+
+    if tag.present?
+      tag.delete
+    else
+      PostTagUser.create!(user_id: user_id, post_tag_id: self[:id])
     end
+  end
 end

@@ -9,15 +9,13 @@ class CommunityPostTagsJob < ApplicationJob
 
   def perform(community_name)
     community = Community.find_by(name: community_name)
-    return unless community.present?
-    
+    return if community.blank?
+
     tags = fetch_wordpress_tags
     tags.each do |tag|
-        begin
-          community.post_tags.create(title: tag['name'])
-        rescue => exception
-          next
-        end
+      community.post_tags.create(title: tag['name'])
+    rescue StandardError => e
+      next
     end
   end
 
@@ -32,6 +30,6 @@ class CommunityPostTagsJob < ApplicationJob
     request.body = '{}'
     response = http.request(request)
     res = JSON.parse(response.read_body)
-    res["tags"]
+    res['tags']
   end
 end
