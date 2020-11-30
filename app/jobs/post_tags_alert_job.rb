@@ -1,27 +1,29 @@
 # frozen_string_literal: true
+
 require 'nokogiri'
 require 'json'
 require 'net/http'
 require 'email_msg'
 
-# fetch and save tags from wordpress
+# alert user if there is new posts related to the the tag a user is subscribed to
 class PostTagsAlertJob < ApplicationJob
   queue_as :default
-
+  # rubocop:disable  Metrics/AbcSize
   def perform(comm_name)
     return unless Rails.env.production?
 
     comm = Community.find_by(name: comm_name)
-    tags = comm.post_tags
+    temp_id = comm.templates['post_alert_template_id']
     comm.users.find_each do |user|
-        # check if there is a new post for this post
-        user.post_tags.each do |tag|
-            post_id = scrape(tag.slug)
-            published_date = post_detail(post_id)
-            return send_email(user.email, post_id, comm_name, comm.templates['post_alert_template_id']) if published_today?(published_date)
-        end
+      # check if there is a new post for this post
+      user.post_tags.each do |tag|
+        post_id = scrape(tag.slug)
+        pub_date = post_detail(post_id)
+        return send_email(user.email, post_id, comm_name, temp_id) if published_today?(pub_date)
+      end
     end
   end
+  # rubocop:enable  Metrics/AbcSize
 
   private
 
@@ -58,13 +60,13 @@ class PostTagsAlertJob < ApplicationJob
   end
 
   def send_email(email, post_id, community_name, template)
-      EmailMsg.send_mail(email, template, mail_data(post_id, community_name))
+    EmailMsg.send_mail(email, template, mail_data(post_id, community_name))
   end
 
   def mail_data(post_id, community_name)
-      {
-          "post_id": post_id,
-          "community_name": community_name
-      }
+    {
+      "post_id": post_id,
+      "community_name": community_name,
+    }
   end
 end
