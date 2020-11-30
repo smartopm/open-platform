@@ -489,6 +489,15 @@ export const PostDiscussionQuery = gql`
     }
   }
 `
+
+export const PostTagUser = gql`
+  query userTags($tagName: String!) {
+    userTags(tagName: $tagName) {
+      id
+    }
+  }
+`
+
 export const discussionUserQuery = gql`
   query discussionUser($disucssionId: String!) {
     discussionUser(disucssionId: $disucssionId) {
