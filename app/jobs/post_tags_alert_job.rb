@@ -16,9 +16,9 @@ class PostTagsAlertJob < ApplicationJob
     comm.users.find_each do |user|
         # check if there is a new post for this post
         user.post_tags.each do |tag|
-            post_id = scrape(tag.name)
+            post_id = scrape(tag.slug)
             published_date = post_detail(post_id)
-            return send_email(user.email, post_id, comm_name) if published_today?(published_date)
+            return send_email(user.email, post_id, comm_name, comm.templates['post_alert_template_id']) if published_today?(published_date)
         end
     end
   end
@@ -57,8 +57,8 @@ class PostTagsAlertJob < ApplicationJob
     date > Time.zone.now.beginning_of_day
   end
 
-  def send_email(email, post_id, community_name)
-      EmailMsg.send_mail(email, template['post_alert_template_id'], mail_data())
+  def send_email(email, post_id, community_name, template)
+      EmailMsg.send_mail(email, template, mail_data(post_id, community_name))
   end
 
   def mail_data(post_id, community_name)
