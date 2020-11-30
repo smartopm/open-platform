@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-use-before-define */
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { Button, Typography } from '@material-ui/core';
@@ -10,10 +10,13 @@ import { useFetch } from '../../utils/customHooks'
 import PostItem from './PostItem'
 import { dateToString } from '../DateContainer'
 import Tag from './Tag';
+import MessageAlert from '../MessageAlert';
 
 export default function TagPosts({ open, handleClose, tagName }) {
   const classes = useStyles();
   const { response, error } = useFetch(`${wordpressEndpoint}/posts/?tag=${tagName}`)
+  const [messageAlert, setMessageAlert] = useState('saved')
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
 
   if (error) {
     return error.message
@@ -23,13 +26,31 @@ export default function TagPosts({ open, handleClose, tagName }) {
     window.location.href = `/news/post/${postId}`
   }
 
+  function followTag(){
+    setIsSuccessAlert(true)
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
+  }
+
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <SwipeableDrawer
         anchor='right'
         open={open}
         onClose={handleClose}
         className={classes.root}
+        // TODO: handle this properly
         onOpen={() => console.log('')}
       >
         <div
@@ -42,7 +63,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
             </Typography>
             <div>
               <Tag tag={tagName || ''} />
-              <Button color="primary" style={{ float: 'right' }}>Follow Tag</Button>
+              <Button onClick={followTag} color="primary" style={{ float: 'right' }}>Follow Tag</Button>
             </div>
           </div>
           {response.posts?.map((post) => (
