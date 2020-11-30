@@ -156,6 +156,8 @@ class User < ApplicationRecord
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
     user.assign_default_community(site_community)
+    # test jobs here
+    CommunityPostTagsJob.perform_now(site_community.name)
     user.save!
     user
   end

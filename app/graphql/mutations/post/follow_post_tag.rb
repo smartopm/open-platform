@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(vals)
         user_id = context[:current_user].id
-        tag = context[:site_community].post_tags.find_by(title: vals[:tag_name])
+        tag = context[:site_community].post_tags.find_by(name: vals[:tag_name])
         raise GraphQL::ExecutionError, 'Tag not found' if tag.blank?
 
         return { post_tag_user: tag } if tag.follow_or_unfollow_tag(user_id)

@@ -16,7 +16,7 @@ class PostTagsAlertJob < ApplicationJob
     comm.users.find_each do |user|
         # check if there is a new post for this post
         user.post_tags.each do |tag|
-            post_id = scrape(tag.title)
+            post_id = scrape(tag.name)
             published_date = post_detail(post_id)
             return send_email(user.email, post_id, comm_name) if published_today?(published_date)
         end

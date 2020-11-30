@@ -13,8 +13,9 @@ class CommunityPostTagsJob < ApplicationJob
 
     tags = fetch_wordpress_tags
     tags.each do |tag|
-      community.post_tags.create(title: tag['name'])
+      community.post_tags.create!(name: tag['name'], slug: tag['slug'])
     rescue StandardError => e
+      Rails.logger.info e
       next
     end
   end

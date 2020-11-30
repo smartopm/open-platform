@@ -417,7 +417,8 @@ ActiveRecord::Schema.define(version: 2020_11_27_155926) do
   end
 
   create_table "post_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title"
+    t.string "name"
+    t.string "slug"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "community_id"
