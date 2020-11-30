@@ -16,6 +16,7 @@ module Types
     include Types::Queries::Form
     include Types::Queries::ActionFlow
     include Types::Queries::LandParcel
+    include Types::Queries::PostTag
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
