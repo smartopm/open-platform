@@ -1,23 +1,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import TagPosts from '../components/NewsPage/Tags'
 import '@testing-library/jest-dom/extend-expect'
+import Tag from '../components/NewsPage/Tag'
 
 describe('Tags Component', () => {
-  const tags = {
-    tag1: {
-      sample: 'sample'
-    },
-    tag2: {
-      sample: 'sample'
-    }
-  }
-
   it('render without error', () => {
-    render(
-      <TagPosts
-        tags={tags}
-      />
-    )
+    const container = render(<Tag tag="Architecture"  />)
+    expect(container.queryByText('Architecture')).toBeInTheDocument()
   })
 })
