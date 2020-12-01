@@ -45,7 +45,7 @@ image: "ruby:2.6"
     - yarn install
 
 
-staging:pages:
+pages:
     stage: staging
     extends: .base_db
     allow_failure: true
