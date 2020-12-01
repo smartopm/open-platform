@@ -91,6 +91,7 @@ import UsersImport from '../src/containers/UsersImport'
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 import LandParcel from '../src/containers/LandParcels/LandParcel'
 import CommentsPage from '../src/containers/Comments/CommentPage'
+import CommunitySettings from '../src/containers/Settings/CommunitySettings'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -337,6 +338,7 @@ const App = () => {
                             <Route path="/notes" component={AllNotes} />
                             <Route path="/tasks/:taskId" exact component={TaskUpdate} />
                             <Route path="/tasks" component={Todo} />
+                            <Route path="/community_settings" component={CommunitySettings} />
                             <Route
                               exact
                               path="/todo/:taskId"

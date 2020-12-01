@@ -13,6 +13,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import MessageIcon from '@material-ui/icons/Message'
 import NotesIcon from '@material-ui/icons/Notes'
+import SettingsIcon from '@material-ui/icons/Settings';
 import ForumIcon from '@material-ui/icons/Forum'
 import CallIcon from '@material-ui/icons/Call'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
@@ -267,6 +268,12 @@ export default function Homepage({ authState }) {
       title: 'Parcels and Properties',
       path: '/land_parcels',
       icon: <LandscapeIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Community Settings',
+      path: '/community_settings',
+      icon: <SettingsIcon fontSize="large" />,
       access: ['admin']
     }
   ]
