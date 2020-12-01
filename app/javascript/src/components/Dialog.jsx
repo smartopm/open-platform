@@ -192,7 +192,7 @@ ActionDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
-  type: PropTypes.string,
+  type: PropTypes.oneOf(['warning', 'confirm']),
   handleOnSave: PropTypes.func.isRequired,
 }
 

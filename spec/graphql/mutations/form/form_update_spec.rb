@@ -10,8 +10,8 @@ RSpec.describe Mutations::Form::FormUpdate do
 
     let(:mutation) do
       <<~GQL
-        mutation formUpdate($id: ID!, $name: String!) {
-          formUpdate(id: $id, name: $name){
+        mutation formUpdate($id: ID!, $name: String, $status: String) {
+          formUpdate(id: $id, name: $name, status: $status){
             form {
               id
               name
@@ -33,6 +33,22 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  }).as_json
       expect(result.dig('data', 'formUpdate', 'form', 'name')).to eql 'Updated Name'
       expect(result.dig('errors')).to be_nil
+    end
+
+    it 'updates form status, coould be published or deleted' do
+      variables = {
+        id: form.id,
+        status: 'deleted',
+      }
+      expect(user.community.forms.count).to eql 1
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: admin,
+                                                   site_community: user.community,
+                                                 }).as_json
+      expect(result.dig('data', 'formUpdate', 'form', 'id')).to_not be_nil
+      expect(result.dig('errors')).to be_nil
+      expect(user.community.forms.count).to eql 0
     end
 
     it 'throws unauthorized error when user is not admin' do
