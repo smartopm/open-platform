@@ -10,7 +10,7 @@ import {
 import PropTypes from 'prop-types'
 import LabelIcon from '@material-ui/icons/Label'
 import CampaignIcon from './Campaign/CampaignIcon'
-import { CustomizedDialogs, WarningDialog } from './Dialog'
+import { CustomizedDialogs, ActionDialog } from './Dialog'
 import CreateLabel from './CreateLabel'
 
 const USERS_LABEL_WARNING_LIMIT = 2000
@@ -63,7 +63,7 @@ export default function UsersActionMenu({
       >
         <CreateLabel handleLabelSelect={labels => setSelectedLabels(labels)} />
       </CustomizedDialogs>
-      <WarningDialog
+      <ActionDialog
         open={labelAssignWarningOpen}
         handleClose={() => setLabelAssignWarningOpen(false)}
         handleOnSave={() => handleLabelSelect(selectedLabels)}

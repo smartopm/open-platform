@@ -16,7 +16,6 @@ import {
   IconButton,
   MenuItem,
   Menu,
-  Snackbar
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -25,7 +24,6 @@ import { useTheme } from '@material-ui/styles'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
-import { Alert } from '@material-ui/lab'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -35,7 +33,8 @@ import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../DatePickerDialog'
 import { FormCreateMutation, FormUpdateMutation } from '../../graphql/mutations/forms'
 import { formStatus } from '../../utils/constants'
-import { WarningDialog } from '../Dialog'
+import { ActionDialog } from '../Dialog'
+import MessageAlert from '../MessageAlert'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
@@ -240,24 +239,20 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
   return (
     <>
 
-      <WarningDialog
+      <ActionDialog
         open={isDialogOpen}
         handleClose={() => handleConfirm('')}
         handleOnSave={updateForm}
         message={`Are you sure to ${actionType} this form`}
+        type={actionType === 'delete' ? 'warning' : 'confirm'}
       />
-      {/* <DialogueBox 
-        open={isDialogOpen}
-        handleClose={() => handleConfirm('')}
-        handleAction={updateForm}
-        title="form"
-        action="publish"
-      /> */}
-      <Snackbar open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={message.isError ? 'error' : 'success'}>
-          {message.detail}
-        </Alert>
-      </Snackbar>
+
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={handleAlertClose}
+      />
       <Menu
         id={`long-menu-${formId}`}
         anchorEl={anchorEl}
