@@ -40,6 +40,9 @@
     <link href="/images/home_192.png" rel="apple-touch-icon" sizes="192x192" />
     <link href="/images/home_72.png" type="image/png" rel="icon" sizes="72x72" />
 
+    <%= favicon_link_tag asset_path('home_512.png') %>
+    <%= favicon_link_tag asset_path('home_512.png'), rel: 'icon' %>
+
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
   </head>
