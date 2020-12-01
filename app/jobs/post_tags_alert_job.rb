@@ -8,7 +8,7 @@ require 'email_msg'
 # alert user if there is new posts related to the the tag a user is subscribed to
 class PostTagsAlertJob < ApplicationJob
   queue_as :default
-
+  # rubocop:disable  Metrics/AbcSize
   def perform(comm_name)
     return unless Rails.env.production?
 
@@ -23,6 +23,7 @@ class PostTagsAlertJob < ApplicationJob
       end
     end
   end
+  # rubocop:enable  Metrics/AbcSize
 
   private
 
