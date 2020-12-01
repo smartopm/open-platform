@@ -8,5 +8,7 @@ module Types
     field :name, String, null: false
     field :logo_url, String, null: true
     field :timezone, String, null: true
+    field :support_number, GraphQL::Types::JSON, null: true
+    field :support_email, GraphQL::Types::JSON, null: true
   end
 end
