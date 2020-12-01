@@ -18,8 +18,8 @@ class PostTagsAlertJob < ApplicationJob
       # check if there is a new post for this post
       user.post_tags.each do |tag|
         post_id = scrape(tag.slug)
-        pub_date = post_detail(post_id)
-        return send_email(user.email, post_id, comm_name, temp_id) if published_today?(pub_date)
+        pub_date = post_published_date(post_id)
+        next send_email(user.email, post_id, comm_name, temp_id) if published_today?(pub_date)
       end
     end
   end
@@ -41,7 +41,7 @@ class PostTagsAlertJob < ApplicationJob
     post_id
   end
 
-  def post_detail(post_id)
+  def post_published_date(post_id)
     wp_link = 'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts'
 
     url = URI("#{wp_link}/#{post_id}/")

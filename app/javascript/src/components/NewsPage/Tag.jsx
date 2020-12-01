@@ -22,8 +22,6 @@ export default function Tag({ tag, handleTagOpen }){
     tag:  PropTypes.string.isRequired,
     handleTagOpen: PropTypes.func,
   }
-  
-
 
 const useStyles = makeStyles({
     tagButton: {
