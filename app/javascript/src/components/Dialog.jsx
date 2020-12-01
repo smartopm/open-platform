@@ -143,7 +143,8 @@ export function WarningDialog({ handleClose, open, handleOnSave, message }) {
       <DialogTitle
         id="customized-dialog-title"
         onClose={handleClose}
-        className={classes.WarningDialogTitle}
+        // className={classes.WarningDialogTitle}
+        className={classes.confirmDialogTitle}
       >
         Warning
       </DialogTitle>
@@ -176,7 +177,12 @@ const useStyles = makeStyles({
     backgroundColor: '#fcefef',
     color: '#dc402b',
     borderBottom: '1px #f1a3a2 solid'
-  }
+  },
+  confirmDialogTitle: {
+    backgroundColor: '#69ABA4',
+    color: '#dc402b',
+    borderBottom: '1px #f1a3a2 solid'
+  },
 })
 
 WarningDialog.propTypes = {
