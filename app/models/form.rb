@@ -9,6 +9,9 @@ class Form < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :expires_at, presence: true
+
+  default_scope { where('status != ?', 2) }
+
   scope :by_user_type, lambda { |user|
     where('expires_at > ?', Time.zone.now).where(status: 1) if user.user_type != 'admin'
   }
