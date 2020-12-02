@@ -92,7 +92,7 @@ class Message < ApplicationRecord
   end
 
   def include_reply_link?
-    return false if campaign_id.nil?
+    return true if campaign_id.nil?
 
     Campaign.find(campaign_id).include_reply_link
   end
