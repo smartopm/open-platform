@@ -117,7 +117,8 @@ export default function TodoList({
       variables: {
         offset,
         limit,
-        query: `${qr} ${filterQuery ? `AND ${filterQuery}` : `AND ${searchInputQuery}`}`
+        // eslint-disable-next-line no-nested-ternary
+        query: `${qr} ${filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''}`
       },
       fetchPolicy: 'network-only'
     }
@@ -404,6 +405,7 @@ export default function TodoList({
         <div className={classes.root}>
           <>
             <InputBase
+              data-testid="search_input"
               className={classes.input}
               type="text"
               placeholder="Search Tasks"
@@ -413,6 +415,7 @@ export default function TodoList({
             />
             <Divider className={classes.divider} orientation="vertical" />
             <IconButton
+              data-testid="toggle_filter_btn"
               type="submit"
               className={classes.iconButton}
               aria-label="search"
