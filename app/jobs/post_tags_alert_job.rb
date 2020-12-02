@@ -17,9 +17,9 @@ class PostTagsAlertJob < ApplicationJob
     comm.users.find_each do |user|
       # check if there is a new post for this post
       user.post_tags.each do |tag|
-        post_id = scrape(tag.slug)
-        pub_date = post_published_date(post_id)
-        next send_email(user.email, post_id, comm_name, temp_id) if published_today?(pub_date)
+        post_ids = scrape(tag.slug)
+        pub_date = post_published_date(post_ids[0])
+        next send_email(user.email, post_ids[0], comm_name, temp_id) if published_today?(pub_date)
       end
     end
   end
@@ -31,14 +31,15 @@ class PostTagsAlertJob < ApplicationJob
     url = "https://doublegdp.wpcomstaging.com/tag/#{tag}/"
     html = URI.open(url)
     content = Nokogiri::HTML(html)
-    post_id = ''
-    content.css('[id^=post]').each do |post_container|
+    post_ids = []
+    posts = content.css('[id^=post]').map do |post_container|
       # each post article contains an post id in this form "post-post_id" e.g: post-901
       article = post_container['id']
       # get title of the article
       post_id = article.split('-')[1]
+      post_id
     end
-    post_id
+    posts
   end
 
   def post_published_date(post_id)
