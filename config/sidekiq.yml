@@ -9,12 +9,12 @@
     args: ['Nkwashi']
     description: "This checks users who have unsubscribed from email at end of the week"
   community_post_tags:
-    cron: '0 2 * * * Africa/Lusaka'
+    cron: '0 0 * * * Africa/Lusaka'
     class: CommunityPostTagsJob
     args: ['Nkwashi']
     description: "Check if there is new tags in wordpress and update our db"
   post_tags_alert:
-    cron: '0 2 * * * Africa/Lusaka'
+    cron: '10 0 * * * Africa/Lusaka'
     class: PostTagsAlertJob
     args: ['Nkwashi']
     description: "Check if there are new posts in wordpress related to the tags user is following"

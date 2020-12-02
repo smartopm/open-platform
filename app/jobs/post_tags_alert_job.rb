@@ -27,6 +27,8 @@ class PostTagsAlertJob < ApplicationJob
 
   private
 
+  # look for all post related a tag and return the newest post
+  # posts are published everyday so it is unlikely to have multiple post of same tag in a day.
   def scrape(tag)
     url = "https://doublegdp.wpcomstaging.com/tag/#{tag}/"
     html = URI.open(url)
