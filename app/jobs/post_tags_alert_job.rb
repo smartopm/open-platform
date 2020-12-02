@@ -31,7 +31,6 @@ class PostTagsAlertJob < ApplicationJob
     url = "https://doublegdp.wpcomstaging.com/tag/#{tag}/"
     html = URI.open(url)
     content = Nokogiri::HTML(html)
-    post_ids = []
     posts = content.css('[id^=post]').map do |post_container|
       # each post article contains an post id in this form "post-post_id" e.g: post-901
       article = post_container['id']
