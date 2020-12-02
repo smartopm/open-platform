@@ -231,6 +231,7 @@ RSpec.describe Types::QueryType do
   describe 'To-dos and notes in general' do
     let!(:admin) { create(:user_with_community, user_type: 'admin') }
     let!(:current_user) { create(:user, community_id: admin.community_id) }
+    let!(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
     let!(:notes) do
       admin.community.notes.create!(
         body: 'This is a note',
@@ -262,11 +263,14 @@ RSpec.describe Types::QueryType do
     end
 
     let(:flagged_query) do
-      %(query {
-            flaggedNotes {
+      %(query($offset: Int, $limit: Int, $query: String) {
+            flaggedNotes(offset: $offset, limit: $limit, query: $query) {
               body
               createdAt
               id
+              user {
+                name
+              }
             }
         })
     end
@@ -326,6 +330,47 @@ RSpec.describe Types::QueryType do
 
       expect(result.dig('data', 'flaggedNotes')).not_to be_nil
       expect(result.dig('data', 'flaggedNotes').length).to eql 2
+    end
+
+    it 'should search all to-dos by user\'s name' do
+      admin.tasks.create!(
+        body: "Note created for #{searchable_user.name}",
+        user_id: searchable_user.id,
+        author_id: admin.id,
+        flagged: true,
+        community_id: admin.community_id,
+        due_date: 10.days.from_now,
+        completed: false,
+      )
+
+      variables = {
+        query: "user: 'Henry'",
+      }
+
+      result = DoubleGdpSchema.execute(flagged_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }, variables: variables).as_json
+
+      expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+      expect(result.dig('data', 'flaggedNotes').length).to eql 1
+
+      filtered_note = Note.search_user("user: 'Henry'").first
+      expect(filtered_note.user).to eq searchable_user
+    end
+
+    it 'should search all to-dos by assignees' do
+      variables = {
+        query: "assignees: #{admin.name}",
+      }
+
+      result = DoubleGdpSchema.execute(flagged_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }, variables: variables).as_json
+
+      filtered_note = result.dig('data', 'flaggedNotes').select { |n| n['id'] == admin_tasks.id }
+      expect(filtered_note.length).to eql 1
     end
 
     it 'should query all notes' do
