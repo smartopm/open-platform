@@ -32,22 +32,7 @@ import Loading from '../Loading'
 import QueryBuilder from '../QueryBuilder'
 import { ModalDialog } from '../Dialog'
 import { pluralizeCount } from '../../utils/helpers'
-
-function useDebounce(value, delay){
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
-
-  return debouncedValue
-}
+import useDebounce from '../../utils/useDebounce'
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
