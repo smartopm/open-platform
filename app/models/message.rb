@@ -44,7 +44,7 @@ class Message < ApplicationRecord
 
     new_message = ''
     text = 'Click this link to reply to this message in our app '
-    link = "https://#{HostEnv.base_url(user.community)}/message/#{user_id}"
+    link = "https://#{HostEnv.base_url(user.community)}/message/#{id}"
     new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
     new_message += message
     new_message += "\n\n#{text} \n#{link}" if include_reply_link?
@@ -92,7 +92,7 @@ class Message < ApplicationRecord
   end
 
   def include_reply_link?
-    return false if campaign_id.nil?
+    return true if campaign_id.nil?
 
     Campaign.find(campaign_id).include_reply_link
   end

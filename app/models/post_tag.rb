@@ -11,11 +11,8 @@ class PostTag < ApplicationRecord
 
   def follow_or_unfollow_tag(user_id)
     tag = PostTagUser.find_by(user_id: user_id, post_tag_id: self[:id])
+    return tag.delete if tag.present?
 
-    if tag.present?
-      tag.delete
-    else
-      PostTagUser.create!(user_id: user_id, post_tag_id: self[:id])
-    end
+    PostTagUser.create!(user_id: user_id, post_tag_id: self[:id])
   end
 end
