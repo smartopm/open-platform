@@ -45,5 +45,18 @@ RSpec.describe Mutations::Post::FollowPostTag do
                                               }).as_json
       expect(result.dig('data', 'followPostTag', 'postTagUser', 'id')).to be_nil
     end
+
+    it 'should throw an error when no proper variable is provided' do
+      variables = {
+        tagName: 1,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result.dig('data', 'followPostTag', 'postTagUser', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'String! was provided invalid value'
+    end
   end
 end
