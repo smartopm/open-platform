@@ -17,39 +17,62 @@ export default function CommunitySettingsPage() {
     phone_number: '',
     category: ''
   }
+  const emails = {
+    email: '',
+    category: ''
+  }
 
   const [numberOptions, setNumberOptions] = useState([numbers])
-  const [emailOptions, setEmailOptions] = useState([])
+  const [emailOptions, setEmailOptions] = useState([emails])
   const classes = useStyles()
 
   function handleAddNumberOption() {
     setNumberOptions([...numberOptions, numbers])
   }
 
-  function updateItem(index, newValue) {
-      setNumberOptions([
-        ...numberOptions.slice(0, index),
-        { ...numberOptions[index], ...newValue},
-        ...numberOptions.slice(index + 1)
+  function handleAddEmailOption() {
+    setEmailOptions([...emailOptions, emails])
+  }
+
+
+  function updateOptions(index, newValue, options, type) {
+    if (type === 'email') {
+      setEmailOptions([
+        ...options.slice(0, index),
+        { ...options[index], ...newValue },
+        ...options.slice(index + 1)
       ])
+      return
+    }
+    setNumberOptions([
+      ...options.slice(0, index),
+      { ...options[index], ...newValue },
+      ...options.slice(index + 1)
+    ])
+  }
+  
+  function handleEmailChange(event, index){
+    updateOptions(index, { [event.target.name]: event.target.value }, emailOptions, 'email')
   }
   function handleNumberRemove(id) {
     const values = numberOptions
-    // radio buttons should have at least one choice
     if (values.length !== 1) {
       values.splice(id, 1)
     }
     setNumberOptions([...values])
   }
 
-  function handleAddEmailOption() {
-    setEmailOptions([...emailOptions, ''])
+  function handleEmailRemoveRow(id) {
+    const values = emailOptions
+    if (values.length !== 1) {
+      values.splice(id, 1)
+    }
+    setEmailOptions([...values])
   }
 
   function handleNumberChange(event, index) {
-    updateItem(index, { [event.target.name]: event.target.value })
+    updateOptions(index, { [event.target.name]: event.target.value }, numberOptions, 'phone_number')
   }
-  console.log(numberOptions)
   return (
     <Container>
       <Typography variant="h6">Community Logo</Typography>
@@ -83,38 +106,13 @@ export default function CommunitySettingsPage() {
         <Typography variant="caption">
           Make changes to your contact information here.
         </Typography>
-        {numberOptions.map((val, i) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <div className={classes.textField} key={i}>
-            <TextField
-              id="input"
-              label="Phone Number"
-              onChange={event => handleNumberChange(event, i)}
-              value={numberOptions[i].phone_number}
-              type="number"
-              name="phone_number"
-            />
-            <TextField
-              id="select-category"
-              style={{ width: '200px', marginLeft: '40px' }}
-              select
-              label="Select Category"
-              value={val.category}
-              onChange={event => handleNumberChange(event, i)}
-              name="category"
-            >
-              <MenuItem value="sales">Sales</MenuItem>
-              <MenuItem value="customer_care">Customer Care</MenuItem>
-            </TextField>
-            <IconButton
-              style={{ marginTop: 13 }}
-              onClick={() => handleNumberRemove(i)}
-              aria-label="remove"
-            >
-              <DeleteOutline />
-            </IconButton>
-          </div>
-        ))}
+
+        <ContactOptions 
+          options={numberOptions} 
+          handleChange={handleNumberChange} 
+          handleRemoveRow={handleNumberRemove} 
+          data={{ label: "Phone Number", name: "phone_number" }}
+        />
         <div
           className={classes.addIcon}
           role="button"
@@ -131,24 +129,12 @@ export default function CommunitySettingsPage() {
         </div>
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
-        {/* {
-          Object.entries(data.supportEmail).map(([key, val]) => (
-            <div className={classes.textField} key={val}>
-              <TextField id="input" label="Email Address" value={val} type="email" />
-              <TextField
-                id="select-category"
-                style={{width: '200px', marginLeft: '40px'}}
-                select
-                label="Select Category"
-                value={key}
-                onChange={handleChange}
-              >
-                <MenuItem value="sales">Sales</MenuItem>
-                <MenuItem value="customer_care">Customer Care</MenuItem>
-              </TextField>
-            </div>
-          ))
-        } */}
+        <ContactOptions 
+          options={emailOptions} 
+          handleChange={handleEmailChange} 
+          handleRemoveRow={handleEmailRemoveRow} 
+          data={{ label: "Email", name: "email" }}
+        />
         <div
           className={classes.addIcon}
           role="button"
@@ -171,6 +157,48 @@ export default function CommunitySettingsPage() {
       </div>
     </Container>
   )
+}
+
+// Phone Number
+// phone_number
+export function ContactOptions({
+  options,
+  handleChange,
+  handleRemoveRow,
+  data
+}) {
+  const classes = useStyles()
+  return options.map((val, i) => (
+    // eslint-disable-next-line react/no-array-index-key
+    <div className={classes.textField} key={i}>
+      <TextField
+        id={`${i}-${data.label}-value-input`}
+        label={data.label}
+        onChange={event => handleChange(event, i)}
+        value={options[i][data.name]}
+        name={data.name}
+      />
+      <TextField
+        id={`${i}-select-category`}
+        style={{ width: '200px', marginLeft: '40px' }}
+        select
+        label="Select Category"
+        value={val.category}
+        onChange={event => handleChange(event, i)}
+        name="category"
+      >
+        <MenuItem value="sales">Sales</MenuItem>
+        <MenuItem value="customer_care">Customer Care</MenuItem>
+      </TextField>
+      <IconButton
+        style={{ marginTop: 13 }}
+        onClick={() => handleRemoveRow(i)}
+        aria-label="remove"
+      >
+        <DeleteOutline />
+      </IconButton>
+    </div>
+  ))
 }
 
 const useStyles = makeStyles({
