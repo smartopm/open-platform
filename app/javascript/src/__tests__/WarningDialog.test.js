@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { WarningDialog } from '../components/Dialog'
+import { ActionDialog } from '../components/Dialog'
 import '@testing-library/jest-dom/extend-expect'
 
 const props = {
@@ -9,9 +9,9 @@ const props = {
   handleOnSave: jest.fn(),
   message: 'Wait what are you doing!??'
 }
-describe('WarningDialog component', () => {
+describe('ActionDialog component', () => {
   it('should render necessary elements', () => {
-    const container = render(<WarningDialog {...props} />)
+    const container = render(<ActionDialog {...props} />)
 
     expect(
       container.queryByText('Wait what are you doing!??')

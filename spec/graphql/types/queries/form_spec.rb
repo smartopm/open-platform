@@ -7,6 +7,7 @@ RSpec.describe Types::Queries::Form do
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:current_user) { create(:user_with_community) }
     let!(:form) { create(:form, community_id: current_user.community_id) }
+    let!(:another_form) { create(:form, community_id: current_user.community_id, status: 2) }
     let!(:form_property_text) { create(:form_property, form: form, field_type: 'text') }
     let!(:form_property_date) { create(:form_property, form: form, field_type: 'date') }
     let!(:form_user) { create(:form_user, form: form, user: current_user) }
