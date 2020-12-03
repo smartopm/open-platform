@@ -36,7 +36,6 @@ export default function CommunitySettingsPage() {
     setEmailOptions([...emailOptions, emails])
   }
 
-
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
       setEmailOptions([
