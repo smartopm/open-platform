@@ -11,6 +11,8 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 // import PropTypes from 'prop-types'
 import { Container, IconButton } from '@material-ui/core'
 import { DeleteOutline } from '@material-ui/icons'
+import { useMutation } from 'react-apollo'
+import { CommunityUpdateMutation } from '../../graphql/mutations/community'
 
 export default function CommunitySettingsPage() {
   const numbers = {
@@ -21,7 +23,7 @@ export default function CommunitySettingsPage() {
     email: '',
     category: ''
   }
-
+  const [communityUpdate] = useMutation(CommunityUpdateMutation)
   const [numberOptions, setNumberOptions] = useState([numbers])
   const [emailOptions, setEmailOptions] = useState([emails])
   const classes = useStyles()
@@ -75,8 +77,14 @@ export default function CommunitySettingsPage() {
   }
 
   function updateCommunity(){
-    console.log(numberOptions)
-    console.log(emailOptions)
+    communityUpdate({
+      variables: { 
+        supportNumber: numberOptions,
+        supportEmail: emailOptions
+       }
+    })
+    .then(() => console.log('all went well'))
+    .catch(error => console.log(error.message))
   }
 
   return (

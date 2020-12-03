@@ -12,8 +12,6 @@ module Mutations
   
         def resolve(vals)
           community = context[:site_community].update(vals)
-          puts "=============community==============="
-          puts community
           return { updated: community} if community
   
           raise GraphQL::ExecutionError, community.errors.full_messages
