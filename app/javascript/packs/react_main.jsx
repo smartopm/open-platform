@@ -92,6 +92,8 @@ import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 import LandParcel from '../src/containers/LandParcels/LandParcel'
 import CommentsPage from '../src/containers/Comments/CommentPage'
 import CommunitySettings from '../src/containers/Settings/CommunitySettings'
+import { Settings } from '@material-ui/icons'
+import CommunitySettingsPage from '../src/components/Community/CommunitySettingsPage'
 
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -204,7 +206,7 @@ const App = () => {
                     <Route path="/logout" component={Logout} />
                     <Route path="/google/:token" component={MainAuthCallback} />
                     <Route path="/facebook/:token" component={MainAuthCallback} />
-
+   
                     {/* Spike page */}
                     <Route path="/news/post/:id" exact component={PostPage} />
 
@@ -320,7 +322,7 @@ const App = () => {
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
                         <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
-
+                        
                         <AdminRoutes>
                           <Switch>
                             <Route
@@ -367,6 +369,7 @@ const App = () => {
                               component={PendingUsers}
                             />
                             <Route path="/comments" exact component={CommentsPage} />
+                            <Route path="/community" component={CommunitySettingsPage}  />
                           </Switch>
                         </AdminRoutes>
                         <Route
