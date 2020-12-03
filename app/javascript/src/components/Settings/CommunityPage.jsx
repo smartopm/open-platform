@@ -1,8 +1,7 @@
-/* eslint-disable react/forbid-prop-types */
-import React from 'react'
+/* eslint-disable */
+import React, { useState } from 'react'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import { useApolloClient } from 'react-apollo'
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,17 +10,41 @@ import Avatar from '@material-ui/core/Avatar';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types'
 import { useFileUpload } from '../../graphql/useFileUpload'
+import ImageCropper from './ImageCropper'
 
 export default function CommunityPage({ data }){
   const classes = useStyles();
+  const [blob, setBlob] = useState(null)
+  const [inputImg, setInputImg] = useState('')
+
+  function getBlob(blobb) {
+    // pass blob up from the ImageCropper component
+    setBlob(blobb)
+  }
+
   const {
     onChange, status, url, signedBlobId
   } = useFileUpload({
     client: useApolloClient()
   })
+
   function handleChange(e){
     console.log(e.target.value)
   }
+
+  async function onInputChange(file) {
+    // convert image file to base64 string
+    const reader = await new FileReader()
+
+    reader.addEventListener('load', () => {
+      setInputImg(reader.result)
+    }, false)
+
+    if (file) {
+      reader.readAsDataURL(file)
+    }
+}
+
   return (
     <>
       <Typography variant='h6'>Community Logo</Typography>
@@ -39,13 +62,13 @@ export default function CommunityPage({ data }){
               <input
                 type="file"
                 hidden
-                onChange={event => onChange(event.target.files[0])}
+                onChange={event => onInputChange(event.target.files[0])}
                 accept="image/*"
               />
             </Button>
           </div>
         </div>
-        <Divider style={{color: 'blue'}} />
+        {inputImg && <ImageCropper getBlob={getBlob} inputImg={inputImg} />}
       </div>
       <div className={classes.information} style={{marginTop: '40px'}}>
         <Typography variant='h6'>Support Contact Information</Typography>
@@ -102,7 +125,7 @@ export default function CommunityPage({ data }){
           <Button variant='contained' color='primary'>UPDATE COMMUNITY SETTINGS</Button>
         </div>
       </div>
-      {console.log(status, url, signedBlobId)}
+      {console.log(inputImg)}
     </>
   )
 }
