@@ -41,7 +41,7 @@ export default function CommunityPage({ data }){
       <div className={classes.information} style={{marginTop: '40px'}}>
         <Typography variant='h6'>Support Contact Information</Typography>
         <Typography variant='caption'>Make changes to your contact information here.</Typography>
-        {
+        {data?.supportNumber ?
           Object.entries(data.supportNumber).map(([key, val]) => (
             <div className={classes.textField} key={val}>
               <TextField id="input" label="Phone Number" value={val} type="number" />
@@ -57,8 +57,21 @@ export default function CommunityPage({ data }){
                 <MenuItem value="customer_care">Customer Care</MenuItem>
               </TextField>
             </div>
-          ))
-        }
+          )) : (
+            <div>
+              <TextField id="input" label="Phone Number" type="number" />
+              <TextField
+                id="select-category"
+                style={{width: '200px', marginLeft: '40px'}}
+                select
+                label="Select Category"
+                onChange={handleChange}
+              >
+                <MenuItem value="sales">Sales</MenuItem>
+                <MenuItem value="customer_care">Customer Care</MenuItem>
+              </TextField>
+            </div>
+          )}
         <div className={classes.addIcon}>
           <AddCircleOutlineIcon />
           <div style={{marginLeft: '10px', color: 'secondary'}}>
@@ -67,7 +80,7 @@ export default function CommunityPage({ data }){
         </div>
       </div>
       <div className={classes.information} style={{marginTop: '40px'}}>
-        {
+        {data?.supportEmail ?
           Object.entries(data.supportEmail).map(([key, val]) => (
             <div className={classes.textField} key={val}>
               <TextField id="input" label="Email Address" value={val} type="email" />
@@ -83,8 +96,21 @@ export default function CommunityPage({ data }){
                 <MenuItem value="customer_care">Customer Care</MenuItem>
               </TextField>
             </div>
-          ))
-        }
+          )) : (
+            <div>
+              <TextField id="input" label="Phone Number" type="number" />
+              <TextField
+                id="select-category"
+                style={{width: '200px', marginLeft: '40px'}}
+                select
+                label="Select Category"
+                onChange={handleChange}
+              >
+                <MenuItem value="sales">Sales</MenuItem>
+                <MenuItem value="customer_care">Customer Care</MenuItem>
+              </TextField>
+            </div>
+          )}
         <div className={classes.addIcon}>
           <AddCircleOutlineIcon />
           <div style={{marginLeft: '10px', color: 'secondary'}}>
