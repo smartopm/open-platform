@@ -73,6 +73,12 @@ export default function CommunitySettingsPage() {
   function handleNumberChange(event, index) {
     updateOptions(index, { [event.target.name]: event.target.value }, numberOptions, 'phone_number')
   }
+
+  function updateCommunity(){
+    console.log(numberOptions)
+    console.log(emailOptions)
+  }
+
   return (
     <Container>
       <Typography variant="h6">Community Logo</Typography>
@@ -150,7 +156,7 @@ export default function CommunitySettingsPage() {
           </div>
         </div>
         <div className={classes.button}>
-          <Button disableElevation variant="contained" color="primary">
+          <Button disableElevation variant="contained" color="primary" onClick={updateCommunity}>
             UPDATE COMMUNITY SETTINGS
           </Button>
         </div>
@@ -159,8 +165,7 @@ export default function CommunitySettingsPage() {
   )
 }
 
-// Phone Number
-// phone_number
+
 export function ContactOptions({
   options,
   handleChange,
