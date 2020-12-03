@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
@@ -11,8 +11,9 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 // import PropTypes from 'prop-types'
 import { Container, IconButton } from '@material-ui/core'
 import { DeleteOutline } from '@material-ui/icons'
-import { useMutation } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { CommunityUpdateMutation } from '../../graphql/mutations/community'
+import { CurrentCommunityQuery } from '../../graphql/queries/community'
 
 export default function CommunitySettingsPage() {
   const numbers = {
@@ -24,6 +25,7 @@ export default function CommunitySettingsPage() {
     category: ''
   }
   const [communityUpdate] = useMutation(CommunityUpdateMutation)
+  const community = useQuery(CurrentCommunityQuery)
   const [numberOptions, setNumberOptions] = useState([numbers])
   const [emailOptions, setEmailOptions] = useState([emails])
   const classes = useStyles()
@@ -51,9 +53,14 @@ export default function CommunitySettingsPage() {
       ...options.slice(index + 1)
     ])
   }
-  
-  function handleEmailChange(event, index){
-    updateOptions(index, { [event.target.name]: event.target.value }, emailOptions, 'email')
+
+  function handleEmailChange(event, index) {
+    updateOptions(
+      index,
+      { [event.target.name]: event.target.value },
+      emailOptions,
+      'email'
+    )
   }
   function handleNumberRemove(id) {
     const values = numberOptions
@@ -72,20 +79,39 @@ export default function CommunitySettingsPage() {
   }
 
   function handleNumberChange(event, index) {
-    updateOptions(index, { [event.target.name]: event.target.value }, numberOptions, 'phone_number')
+    updateOptions(
+      index,
+      { [event.target.name]: event.target.value },
+      numberOptions,
+      'phone_number'
+    )
   }
 
-  function updateCommunity(){
+  function updateCommunity() {
     communityUpdate({
-      variables: { 
+      variables: {
         supportNumber: numberOptions,
         supportEmail: emailOptions
-       }
+      }
     })
-    .then(() => console.log('all went well'))
-    .catch(error => console.log(error.message))
+      .then(() => console.log('all went well'))
+      .catch(error => console.log(error.message))
+  }
+  useEffect(() => {
+    if (!community.loading || (!community.error && community.data)) {
+      setEmailOptions(community.data.currentCommunity.supportEmail)
+      setNumberOptions(community.data.currentCommunity.supportNumber)
+    }
+  }, [community.data])
+
+  if (community.loading) {
+    return 'loading ..'
+  }
+  if (community.error) {
+    return 'error'
   }
 
+  console.log(numberOptions)
   return (
     <Container>
       <Typography variant="h6">Community Logo</Typography>
@@ -120,11 +146,11 @@ export default function CommunitySettingsPage() {
           Make changes to your contact information here.
         </Typography>
 
-        <ContactOptions 
-          options={numberOptions} 
-          handleChange={handleNumberChange} 
-          handleRemoveRow={handleNumberRemove} 
-          data={{ label: "Phone Number", name: "phone_number" }}
+        <ContactOptions
+          options={numberOptions}
+          handleChange={handleNumberChange}
+          handleRemoveRow={handleNumberRemove}
+          data={{ label: 'Phone Number', name: 'phone_number' }}
         />
         <div
           className={classes.addIcon}
@@ -142,11 +168,11 @@ export default function CommunitySettingsPage() {
         </div>
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
-        <ContactOptions 
-          options={emailOptions} 
-          handleChange={handleEmailChange} 
-          handleRemoveRow={handleEmailRemoveRow} 
-          data={{ label: "Email", name: "email" }}
+        <ContactOptions
+          options={emailOptions}
+          handleChange={handleEmailChange}
+          handleRemoveRow={handleEmailRemoveRow}
+          data={{ label: 'Email', name: 'email' }}
         />
         <div
           className={classes.addIcon}
@@ -163,7 +189,12 @@ export default function CommunitySettingsPage() {
           </div>
         </div>
         <div className={classes.button}>
-          <Button disableElevation variant="contained" color="primary" onClick={updateCommunity}>
+          <Button
+            disableElevation
+            variant="contained"
+            color="primary"
+            onClick={updateCommunity}
+          >
             UPDATE COMMUNITY SETTINGS
           </Button>
         </div>
@@ -171,7 +202,6 @@ export default function CommunitySettingsPage() {
     </Container>
   )
 }
-
 
 export function ContactOptions({
   options,
