@@ -205,5 +205,6 @@ export const formStatus = {
   approved: 'Approved',
   pending: 'Pending',
   draft: 'draft',
-  publish: 'published'
+  publish: 'published',
+  delete: 'deleted'
 }

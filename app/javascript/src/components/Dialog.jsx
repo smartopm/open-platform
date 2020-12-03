@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import { titleize } from '../utils/helpers'
 
 export function ModalDialog({
   handleClose,
@@ -132,7 +133,7 @@ export function CustomizedDialogs({
   )
 }
 
-export function WarningDialog({ handleClose, open, handleOnSave, message }) {
+export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
   const classes = useStyles()
   return (
     <Dialog
@@ -143,9 +144,9 @@ export function WarningDialog({ handleClose, open, handleOnSave, message }) {
       <DialogTitle
         id="customized-dialog-title"
         onClose={handleClose}
-        className={classes.WarningDialogTitle}
+        className={type === 'warning' ? classes.ActionDialogTitle  : classes.confirmDialogTitle}
       >
-        Warning
+        { titleize(type) }
       </DialogTitle>
       <DialogContent style={{ margin: '15px', textAlign: 'center' }}>
         {message}
@@ -159,7 +160,7 @@ export function WarningDialog({ handleClose, open, handleOnSave, message }) {
           autoFocus
           onClick={handleOnSave}
           variant="contained"
-          style={{ backgroundColor: '#dc402b', color: 'white' }}
+          style={{ backgroundColor: type === 'warning' ? '#dc402b' : '#69ABA4', color: 'white' }}
         >
           Proceed
         </Button>
@@ -172,17 +173,26 @@ const useStyles = makeStyles({
   title: {
     borderBottom: '1px #b8d4d0 solid'
   },
-  WarningDialogTitle: {
+  ActionDialogTitle: {
     backgroundColor: '#fcefef',
     color: '#dc402b',
     borderBottom: '1px #f1a3a2 solid'
-  }
+  },
+  confirmDialogTitle: {
+    color: '#69ABA4',
+    borderBottom: '1px #69ABA4 solid'
+  },
 })
 
-WarningDialog.propTypes = {
+ActionDialog.defaultProps = {
+  type: 'warning'
+}
+
+ActionDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(['warning', 'confirm']),
   handleOnSave: PropTypes.func.isRequired,
 }
 

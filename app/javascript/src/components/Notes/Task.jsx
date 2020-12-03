@@ -215,6 +215,7 @@ export default function Task({
             }}
           >
             <EditIcon
+              data-testid="edit_due_date_btn"
               style={{
                 cursor: 'pointer',
                 margin: '5px 4px 0 0',

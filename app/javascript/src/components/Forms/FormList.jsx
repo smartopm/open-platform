@@ -16,7 +16,6 @@ import {
   IconButton,
   MenuItem,
   Menu,
-  Snackbar
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -25,7 +24,6 @@ import { useTheme } from '@material-ui/styles'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
-import { Alert } from '@material-ui/lab'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../../graphql/queries'
 import Loading from '../Loading'
@@ -35,7 +33,8 @@ import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../DatePickerDialog'
 import { FormCreateMutation, FormUpdateMutation } from '../../graphql/mutations/forms'
 import { formStatus } from '../../utils/constants'
-import DialogueBox from '../Business/DeleteDialogue'
+import { ActionDialog } from '../Dialog'
+import MessageAlert from '../MessageAlert'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
@@ -172,6 +171,7 @@ export default function FormLinkList({ userType }) {
                   anchorEl={anchorEl}
                   handleClose={() => setAnchorEl(null)}
                   open={menuOpen}
+                  refetch={refetch}
                 />
               )
             }
@@ -194,32 +194,35 @@ export default function FormLinkList({ userType }) {
   )
 }
 
-export function FormMenu({ formId, anchorEl, handleClose, open }) {
+export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
   const history = useHistory()
   const [isDialogOpen, setOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
+  const [actionType, setActionType] = useState('')
   const [message, setMessage] = useState({ isError: false, detail: '' })
 
   const [publish] = useMutation(FormUpdateMutation)
 
-  function handleConfirmPublish(){
+  function handleConfirm(type){
     setOpen(!isDialogOpen)
     handleClose()
+    setActionType(type)
   }
 
   function handleAlertClose(){
     setAlertOpen(false)
   }
 
-  function publishForm(){
+  function updateForm(){
     publish({
-      variables: { id: formId, status: formStatus.publish }
+      variables: { id: formId, status: formStatus[actionType] }
     })
     .then(() => {
-      setMessage({isError: false, detail: 'Successfully published the form'})
+      setMessage({isError: false, detail: `Successfully ${formStatus[actionType]} the form`})
       setOpen(!isDialogOpen)
       setAlertOpen(true)
       handleClose()
+      refetch()
     })
     .catch(err => {
       setMessage({ isError: true, detail: err.message })
@@ -235,18 +238,21 @@ export function FormMenu({ formId, anchorEl, handleClose, open }) {
 
   return (
     <>
-      <DialogueBox 
+
+      <ActionDialog
         open={isDialogOpen}
-        handleClose={handleConfirmPublish}
-        handleAction={publishForm}
-        title="form"
-        action="publish"
+        handleClose={() => handleConfirm('')}
+        handleOnSave={updateForm}
+        message={`Are you sure to ${actionType} this form`}
+        type={actionType === 'delete' ? 'warning' : 'confirm'}
       />
-      <Snackbar open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={message.isError ? 'error' : 'success'}>
-          {message.detail}
-        </Alert>
-      </Snackbar>
+
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={handleAlertClose}
+      />
       <Menu
         id={`long-menu-${formId}`}
         anchorEl={anchorEl}
@@ -271,9 +277,16 @@ export function FormMenu({ formId, anchorEl, handleClose, open }) {
           <MenuItem
             id="publish_button"
             key="publish_form"
-            onClick={handleConfirmPublish}
+            onClick={() => handleConfirm('publish')}
           >
             Publish
+          </MenuItem>
+          <MenuItem
+            id="delete_button"
+            key="delete_form"
+            onClick={() => handleConfirm('delete')}
+          >
+            Delete
           </MenuItem>
         </div>
       </Menu>
@@ -288,6 +301,7 @@ FormMenu.propTypes = {
   formId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object
 }

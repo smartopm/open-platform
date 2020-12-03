@@ -16,7 +16,7 @@ import {
   UserLabelCreate,
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
-import { ModalDialog, WarningDialog } from '../components/Dialog'
+import { ModalDialog, ActionDialog } from '../components/Dialog'
 import { userType, subStatus } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
@@ -332,7 +332,7 @@ export default function UsersList() {
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
-        <WarningDialog
+        <ActionDialog
           open={openCampaignWarning}
           handleClose={() => setOpenCampaignWarning(false)}
           handleOnSave={createCampaign}

@@ -45,4 +45,25 @@ RSpec.describe Note, type: :model do
     it { is_expected.to have_many(:note_comments) }
     it { is_expected.to have_many(:note_histories) }
   end
+
+  describe 'search scope' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin_note) do
+      admin.notes.create(
+        body: 'This is a note',
+        user_id: current_user.id,
+        community_id: current_user.community_id,
+      )
+    end
+
+    it 'should allow search by user' do
+      notes = described_class.search_user("user: #{admin.name}")
+      expect(notes).not_to be_nil
+    end
+    it 'should allow search by assignees' do
+      notes = described_class.search_assignee("assignees = #{admin.name}")
+      expect(notes).not_to be_nil
+    end
+  end
 end
