@@ -8,6 +8,9 @@ class FormUser < ApplicationRecord
   has_many :user_form_properties, dependent: :destroy
   has_one :note, dependent: :destroy
 
+  after_create :log_create_event
+  after_update :log_update_event
+
   enum status: { draft: 0, pending: 1, approved: 2, rejected: 3 }
   def create_form_task(hostname)
     user.generate_note(
@@ -19,5 +22,15 @@ class FormUser < ApplicationRecord
       flagged: true,
       completed: false,
     )
+  end
+
+  private
+
+  def log_create_event
+    user.generate_events('form_submit', self)
+  end
+
+  def log_update_event
+    user.generate_events('form_submit_update', self)
   end
 end
