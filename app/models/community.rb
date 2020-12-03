@@ -23,6 +23,10 @@ class Community < ApplicationRecord
     'Femoza': ['doublegdp.com', 'femoza.com'],
   }.freeze
 
+  IMAGE_ATTACHMENTS = {
+    image_blob_id: :image,
+  }.freeze
+
   def label_exists?(label_name)
     label = labels.find_by(short_desc: label_name)
     return false if label.nil?
