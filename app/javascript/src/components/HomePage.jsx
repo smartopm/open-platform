@@ -272,7 +272,7 @@ export default function Homepage({ authState }) {
     },
     {
       title: 'Community Settings',
-      path: '/community_settings',
+      path: '/community',
       icon: <SettingsIcon fontSize="large" />,
       access: ['admin']
     }
