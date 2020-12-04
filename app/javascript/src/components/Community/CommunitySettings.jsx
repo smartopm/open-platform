@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -162,8 +164,6 @@ export default function CommunitySettings({ data }) {
           className={classes.addIcon}
           role="button"
           onClick={handleAddNumberOption}
-          onKeyDown={() => {}}
-          tabIndex={0}
           data-testid="add_number"
         >
           <AddCircleOutlineIcon />
@@ -185,8 +185,6 @@ export default function CommunitySettings({ data }) {
           className={classes.addIcon}
           role="button"
           onClick={handleAddEmailOption}
-          onKeyDown={handleAddEmailOption}
-          tabIndex={0}
         >
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
