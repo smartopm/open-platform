@@ -49,8 +49,5 @@ describe('Community settings page ', () => {
     expect(container.queryAllByLabelText('remove')).toHaveLength(4)
     fireEvent.click(container.queryAllByLabelText('remove')[0])
     expect(container.queryAllByLabelText('remove')).toHaveLength(3)
-
-    fireEvent.click(container.queryByTestId('update_community'))
-    expect(container.queryByText('UPDATE COMMUNITY SETTINGS')).toBeDisabled()
   })
 })
