@@ -11,7 +11,7 @@ module Mutations
       # Prop Values should be passed in this format
       # propValues: {
       #   user_form_properties: [
-      #     { 
+      #     {
       #       form_property_id: "xxxxxxxxxxxxxxxxxxxx"
       #       value: "Value",
       #     },

@@ -31,6 +31,14 @@ class FormUser < ApplicationRecord
   end
 
   def log_update_event
-    user.generate_events('form_submit_update', self)
+    if saved_changes.key?('status')
+      user.generate_events(
+        'form_submit_update', self,
+        from_status: saved_changes['status'].first,
+        to_status: saved_changes['status'].last
+      )
+    else
+      user.generate_events('form_submit_update', self)
+    end
   end
 end

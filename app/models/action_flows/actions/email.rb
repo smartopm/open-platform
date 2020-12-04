@@ -29,7 +29,7 @@ module ActionFlows
 
       def self.mail_data(data, field_config)
         hash = {}
-        (field_config.keys - ["email", "template"]).each do |var|
+        (field_config.keys - %w[email template]).each do |var|
           hash[var.to_sym] = process_vars(var, data, field_config)
         end
         hash

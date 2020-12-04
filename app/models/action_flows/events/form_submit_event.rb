@@ -33,7 +33,7 @@ module ActionFlows
 
       def preload_data(eventlog)
         form_user = eventlog.ref_type.constantize.find eventlog.ref_id
-        reviewers_email = 'minza@doublegdp.com'
+        reviewers_email = '' # to be initialized with comma separated emails
         load_data(
           { 'FormUser' => form_user },
           'form_name' => form_user.form.name,
@@ -44,7 +44,7 @@ module ActionFlows
         )
       end
 
-      def url_format(id)
+      def url_format(_id)
         "https://#{ENV['HOST']}/forms"
       end
     end

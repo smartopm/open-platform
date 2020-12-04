@@ -24,7 +24,7 @@ class EventLog < ApplicationRecord
                       user_active user_feedback showroom_entry user_update user_temp
                       shift_start shift_end user_referred post_read post_shared
                       task_create task_update note_comment_create note_comment_update
-                      form_create form_update form_publish form_submit].freeze
+                      form_create form_update form_publish form_submit form_update_submit].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
