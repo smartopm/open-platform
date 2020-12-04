@@ -16,19 +16,9 @@ module Types
     include Types::Queries::Form
     include Types::Queries::ActionFlow
     include Types::Queries::LandParcel
+    include Types::Queries::Community
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
-
-    field :community, CommunityType, null: true do
-      description 'Find a community by ID'
-      argument :id, ID, required: true
-    end
-
-    def community(id:)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-
-      Community.find(id)
-    end
 
     field :entry_search, [EntryRequestType], null: true do
       description 'Find an entry by user'
