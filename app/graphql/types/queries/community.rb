@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# label queries
+# community queries
 module Types::Queries::Community
     extend ActiveSupport::Concern
   
@@ -10,22 +10,12 @@ module Types::Queries::Community
         description 'Find a community by ID'
         argument :id, GraphQL::Types::ID, required: true
       end
-      # current community
-      field :current_community, Types::CommunityType, null: true do
-        description 'community a user is in'
-      end
     end
   
     def community(id:)
         raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
   
         Community.find(id)
-    end
-
-    def current_community
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
-  
-        context[:site_community]
     end
 end
   
