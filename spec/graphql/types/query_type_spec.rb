@@ -373,14 +373,17 @@ RSpec.describe Types::QueryType do
       expect(filtered_note.length).to eql 1
     end
 
-    it 'should query all notes' do
+    it 'should query all notes without tasks' do
       result = DoubleGdpSchema.execute(notes_query, context: {
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'allNotes')).not_to be_nil
-      expect(result.dig('data', 'allNotes').length).to eql 3
+      expect(result.dig('data', 'allNotes').length).to eql 1
+
+      tasks = result.dig('data', 'allNotes').select { |n| n['id'] == admin_tasks.id }
+      expect(tasks.length).to eql 0
     end
 
     it 'should query notes for the user' do
