@@ -8,11 +8,11 @@ module Mutations
       argument :support_number, GraphQL::Types::JSON, required: false
       argument :support_email, GraphQL::Types::JSON, required: false
 
-      field :updated, Boolean, null: true
+      field :community, Types::CommunityType, null: true
 
       def resolve(vals)
-        community = context[:site_community].update(vals)
-        return { updated: community } if community
+        comm_u = context[:site_community].update(vals)
+        return { community: context[:site_community] } if comm_u
 
         raise GraphQL::ExecutionError, community.errors.full_messages
       end

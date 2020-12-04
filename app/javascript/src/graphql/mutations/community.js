@@ -4,7 +4,9 @@ import gql from 'graphql-tag'
 export const CommunityUpdateMutation = gql`
 mutation communityUpdate($name: String, $supportNumber: JSON, $supportEmail: JSON){
     communityUpdate(name: $name, supportNumber: $supportNumber, supportEmail: $supportEmail){
-      updated
+      community {
+        id
+      }
     }
   }
 `
