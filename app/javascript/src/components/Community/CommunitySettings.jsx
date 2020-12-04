@@ -10,8 +10,9 @@ import { Container } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import { CommunityUpdateMutation } from '../../graphql/mutations/community'
 import DynamicContactFields from './DynamicContactFields'
+import MessageAlert from '../MessageAlert'
 
-export default function CommunitySettingsPage({ data }) {
+export default function CommunitySettings({ data }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -23,6 +24,10 @@ export default function CommunitySettingsPage({ data }) {
   const [communityUpdate] = useMutation(CommunityUpdateMutation)
   const [numberOptions, setNumberOptions] = useState([numbers])
   const [emailOptions, setEmailOptions] = useState([emails])
+  const [message, setMessage] = useState({ isError: false, detail: '' })
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [mutationLoading, setCallMutation] = useState(false)
+
   const classes = useStyles()
 
   function handleAddNumberOption() {
@@ -83,14 +88,23 @@ export default function CommunitySettingsPage({ data }) {
   }
 
   function updateCommunity() {
+    setCallMutation(true)
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
         supportEmail: emailOptions
       }
     })
-      .then(() => console.log('all went well'))
-      .catch(error => console.log(error.message))
+      .then(() => {
+        setMessage({isError: false, detail: `Successfully updated the community`})
+        setAlertOpen(true)
+        setCallMutation(false)
+      })
+      .catch(error => {
+        setMessage({ isError: true, detail: error.message })
+        setAlertOpen(true)
+        setCallMutation(false)
+      })
   }
   useEffect(() => {
     setEmailOptions(data.supportEmail || [emails])
@@ -100,6 +114,12 @@ export default function CommunitySettingsPage({ data }) {
 
   return (
     <Container>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={() => setAlertOpen(false)}
+      />
       <Typography variant="h6">Community Logo</Typography>
       <Typography variant="caption">
         You can change your community logo here
@@ -144,6 +164,7 @@ export default function CommunitySettingsPage({ data }) {
           onClick={handleAddNumberOption}
           onKeyDown={() => {}}
           tabIndex={0}
+          data-testid="add_number"
         >
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
@@ -179,7 +200,9 @@ export default function CommunitySettingsPage({ data }) {
             disableElevation
             variant="contained"
             color="primary"
+            disabled={mutationLoading}
             onClick={updateCommunity}
+            data-testid="update_community"
           >
             UPDATE COMMUNITY SETTINGS
           </Button>
@@ -190,7 +213,7 @@ export default function CommunitySettingsPage({ data }) {
 }
 
 
-CommunitySettingsPage.propTypes = {
+CommunitySettings.propTypes = {
   data: PropTypes.shape({
     logoUrl: PropTypes.string,
     supportNumber: PropTypes.arrayOf(PropTypes.object),
