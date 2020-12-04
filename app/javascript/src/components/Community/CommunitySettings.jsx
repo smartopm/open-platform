@@ -242,7 +242,8 @@ const useStyles = makeStyles({
   addIcon: {
     display: 'flex',
     marginTop: '20px',
-    color: '#6CAA9F'
+    color: '#6CAA9F',
+    cursor: 'pointer'
   },
   button: {
     marginTop: '15px'
