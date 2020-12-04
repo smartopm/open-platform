@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -94,8 +93,9 @@ export default function CommunitySettingsPage({ data }) {
       .catch(error => console.log(error.message))
   }
   useEffect(() => {
-    setEmailOptions(data.supportEmail)
-    setNumberOptions(data.supportNumber)
+    setEmailOptions(data.supportEmail || [emails])
+    setNumberOptions(data.supportNumber || [numbers] )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   return (
@@ -193,8 +193,8 @@ export default function CommunitySettingsPage({ data }) {
 CommunitySettingsPage.propTypes = {
   data: PropTypes.shape({
     logoUrl: PropTypes.string,
-    supportNumber: PropTypes.array,
-    supportEmail: PropTypes.array
+    supportNumber: PropTypes.arrayOf(PropTypes.object),
+    supportEmail: PropTypes.arrayOf(PropTypes.object)
   }).isRequired
 }
 
