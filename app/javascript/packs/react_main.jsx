@@ -369,7 +369,7 @@ const App = () => {
                               component={PendingUsers}
                             />
                             <Route path="/comments" exact component={CommentsPage} />
-                            <Route path="/community" component={CommunitySettingsPage}  />
+                            <Route path="/community" component={CommunitySettings}  />
                           </Switch>
                         </AdminRoutes>
                         <Route

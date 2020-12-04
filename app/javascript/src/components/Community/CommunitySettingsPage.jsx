@@ -3,19 +3,16 @@ import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
-// import Avatar from '@material-ui/core/Avatar'
+import Avatar from '@material-ui/core/Avatar'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-// import PropTypes from 'prop-types'
-import { Container, IconButton } from '@material-ui/core'
-import { DeleteOutline } from '@material-ui/icons'
-import { useMutation, useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
+import { Container } from '@material-ui/core'
+import { useMutation } from 'react-apollo'
 import { CommunityUpdateMutation } from '../../graphql/mutations/community'
-import { CurrentCommunityQuery } from '../../graphql/queries/community'
+import DynamicContactFields from './DynamicContactFields'
 
-export default function CommunitySettingsPage() {
+export default function CommunitySettingsPage({ data }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -25,7 +22,6 @@ export default function CommunitySettingsPage() {
     category: ''
   }
   const [communityUpdate] = useMutation(CommunityUpdateMutation)
-  const community = useQuery(CurrentCommunityQuery)
   const [numberOptions, setNumberOptions] = useState([numbers])
   const [emailOptions, setEmailOptions] = useState([emails])
   const classes = useStyles()
@@ -98,20 +94,10 @@ export default function CommunitySettingsPage() {
       .catch(error => console.log(error.message))
   }
   useEffect(() => {
-    if (!community.loading || (!community.error && community.data)) {
-      setEmailOptions(community.data.currentCommunity.supportEmail)
-      setNumberOptions(community.data.currentCommunity.supportNumber)
-    }
-  }, [community.data])
+    setEmailOptions(data.supportEmail)
+    setNumberOptions(data.supportNumber)
+  }, [data])
 
-  if (community.loading) {
-    return 'loading ..'
-  }
-  if (community.error) {
-    return 'error'
-  }
-
-  console.log(numberOptions)
   return (
     <Container>
       <Typography variant="h6">Community Logo</Typography>
@@ -119,11 +105,11 @@ export default function CommunitySettingsPage() {
         You can change your community logo here
       </Typography>
       <div className={classes.avatar}>
-        {/* <Avatar
+        <Avatar
           alt="avatar-image"
           src={data.logoUrl}
           style={{ height: '70px', width: '70px' }}
-        /> */}
+        />
         <div className={classes.upload}>
           <Typography
             variant="caption"
@@ -146,7 +132,7 @@ export default function CommunitySettingsPage() {
           Make changes to your contact information here.
         </Typography>
 
-        <ContactOptions
+        <DynamicContactFields
           options={numberOptions}
           handleChange={handleNumberChange}
           handleRemoveRow={handleNumberRemove}
@@ -168,7 +154,7 @@ export default function CommunitySettingsPage() {
         </div>
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
-        <ContactOptions
+        <DynamicContactFields
           options={emailOptions}
           handleChange={handleEmailChange}
           handleRemoveRow={handleEmailRemoveRow}
@@ -203,44 +189,13 @@ export default function CommunitySettingsPage() {
   )
 }
 
-export function ContactOptions({
-  options,
-  handleChange,
-  handleRemoveRow,
-  data
-}) {
-  const classes = useStyles()
-  return options.map((val, i) => (
-    // eslint-disable-next-line react/no-array-index-key
-    <div className={classes.textField} key={i}>
-      <TextField
-        id={`${i}-${data.label}-value-input`}
-        label={data.label}
-        onChange={event => handleChange(event, i)}
-        value={options[i][data.name]}
-        name={data.name}
-      />
-      <TextField
-        id={`${i}-select-category`}
-        style={{ width: '200px', marginLeft: '40px' }}
-        select
-        label="Select Category"
-        value={val.category}
-        onChange={event => handleChange(event, i)}
-        name="category"
-      >
-        <MenuItem value="sales">Sales</MenuItem>
-        <MenuItem value="customer_care">Customer Care</MenuItem>
-      </TextField>
-      <IconButton
-        style={{ marginTop: 13 }}
-        onClick={() => handleRemoveRow(i)}
-        aria-label="remove"
-      >
-        <DeleteOutline />
-      </IconButton>
-    </div>
-  ))
+
+CommunitySettingsPage.propTypes = {
+  data: PropTypes.shape({
+    logoUrl: PropTypes.string,
+    supportNumber: PropTypes.array,
+    supportEmail: PropTypes.array
+  }).isRequired
 }
 
 const useStyles = makeStyles({
@@ -272,12 +227,3 @@ const useStyles = makeStyles({
     marginTop: '15px'
   }
 })
-
-// CommunityPage.propTypes = {
-//     data: PropTypes.shape({
-//         id: PropTypes.string,
-//         logoUrl: PropTypes.string,
-//         supportEmail: PropTypes.object,
-//         supportNumber: PropTypes.object
-//     }).isRequired
-//   }

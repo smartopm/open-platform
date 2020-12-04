@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
+import CommunitySettingsPage from '../../components/Community/CommunitySettingsPage'
 import Nav from '../../components/Nav'
-import CommunityPage from '../../components/Settings/CommunityPage'
+// import CommunityPage from '../../components/Settings/CommunityPage'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 
 export default function CommunitySettings(){
@@ -13,7 +14,8 @@ export default function CommunitySettings(){
         backTo='/'
       />
       <div className="container">
-        <CommunityPage data={authState.user.community} />
+        <CommunitySettingsPage data={authState.user.community} /> 
+        {/* // <CommunityPage data={authState.user.community} /> */}
       </div>
     </>
   )
