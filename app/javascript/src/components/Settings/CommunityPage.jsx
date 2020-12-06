@@ -3,38 +3,34 @@ import React, { useState } from 'react'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { useApolloClient } from 'react-apollo'
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import { useApolloClient } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { useFileUpload } from '../../graphql/useFileUpload'
 import ImageCropper from './ImageCropper'
+import { useFileUpload } from '../../graphql/useFileUpload'
 
 export default function CommunityPage({ data }){
   const classes = useStyles();
   const [blob, setBlob] = useState(null)
   const [inputImg, setInputImg] = useState('')
+  const [fileName, setFileName] = useState('')
 
   function getBlob(blobb) {
-    // pass blob up from the ImageCropper component
+    // pass blobb up from the ImageCropper component
     setBlob(blobb)
   }
-
-  const {
-    onChange, status, url, signedBlobId
-  } = useFileUpload({
-    client: useApolloClient()
-  })
 
   function handleChange(e){
     console.log(e.target.value)
   }
 
-  async function onInputChange(file) {
+  function onInputChange(file) {
+    setFileName(file.name)
     // convert image file to base64 string
-    const reader = await new FileReader()
+    const reader = new FileReader()
 
     reader.addEventListener('load', () => {
       setInputImg(reader.result)
@@ -43,7 +39,13 @@ export default function CommunityPage({ data }){
     if (file) {
       reader.readAsDataURL(file)
     }
-}
+  }
+
+  const {
+    onChange, status, url, signedBlobId
+  } = useFileUpload({
+    client: useApolloClient()
+  })
 
   return (
     <>
@@ -68,8 +70,12 @@ export default function CommunityPage({ data }){
             </Button>
           </div>
         </div>
-        {inputImg && <ImageCropper getBlob={getBlob} inputImg={inputImg} />}
       </div>
+      <div style={{position: 'relative'}}>
+        {status !== 'DONE' && inputImg && <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />}
+      </div>
+      {status !== 'DONE' && blob && <Button variant='contained' style={{margin: '10px'}} onClick={() => onChange(blob)}>Upload</Button>}
+      {console.log(status)}
       <div className={classes.information} style={{marginTop: '40px'}}>
         <Typography variant='h6'>Support Contact Information</Typography>
         <Typography variant='caption'>Make changes to your contact information here.</Typography>
@@ -125,7 +131,6 @@ export default function CommunityPage({ data }){
           <Button variant='contained' color='primary'>UPDATE COMMUNITY SETTINGS</Button>
         </div>
       </div>
-      {console.log(inputImg)}
     </>
   )
 }
