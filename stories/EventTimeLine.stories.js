@@ -13,15 +13,18 @@ export const TimeLine = TimeLineTemplate.bind({})
 const data = [
   {
     sentence: 'Profile for user 2 updated',
-    createdAt: startOfToday()
+    createdAt: startOfToday(),
+    id: "234234sdfs"
   },
   {
     sentence: 'User2 invited another user',
-    createdAt: startOfYesterday()
+    createdAt: startOfYesterday(),
+    id: "2342sdsdf34sdfs"
   },
   {
     sentence: 'User got created',
-    createdAt: startOfWeek()
+    createdAt: startOfWeek(new Date()),
+    id: "234s934sdfs"
   }
 ]
 

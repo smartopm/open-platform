@@ -28,7 +28,7 @@ export default function EventTimeLine({ data }) {
             <Typography variant="subtitle1" component="p">
               {item.sentence}
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" data-testid="date">
               {dateFormatter(item.createdAt)}
             </Typography>
           </TimelineContent>
@@ -51,7 +51,10 @@ EventTimeLine.propTypes = {
       /**
        * The date when the event was created(important)
        */
-      createdAt: PropTypes.string.isRequired
+      createdAt: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.instanceOf(Date)
+      ])
     })
   ).isRequired
 }
