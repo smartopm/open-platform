@@ -2,6 +2,8 @@
 
 # A Community is a city, or organization under which members/citizens exist
 class Community < ApplicationRecord
+  has_one_attached :image
+
   has_many :users, dependent: :destroy
   has_many :roles, dependent: :destroy
   has_many :event_logs, dependent: :destroy
@@ -23,6 +25,16 @@ class Community < ApplicationRecord
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
     'Femoza': ['doublegdp.com', 'femoza.com'],
   }.freeze
+
+  IMAGE_ATTACHMENTS = {
+    image_blob_id: :image,
+  }.freeze
+
+  def attach_image(vals)
+    IMAGE_ATTACHMENTS.each_pair do |key, attr|
+      send(attr).attach(vals[key]) if vals[key]
+    end
+  end
 
   def label_exists?(label_name)
     label = labels.find_by(short_desc: label_name)

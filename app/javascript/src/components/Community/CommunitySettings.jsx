@@ -3,18 +3,19 @@
 import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
-import Avatar from '@material-ui/core/Avatar'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import PropTypes from 'prop-types'
 import { Container } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
+import { useMutation, useApolloClient } from 'react-apollo'
 import { CommunityUpdateMutation } from '../../graphql/mutations/community'
 import DynamicContactFields from './DynamicContactFields'
 import MessageAlert from '../MessageAlert'
+import { useFileUpload } from '../../graphql/useFileUpload'
+import ImageCropper from './ImageCropper'
+import ImageAuth from '../ImageAuth'
 
-export default function CommunitySettings({ data }) {
+export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -29,11 +30,24 @@ export default function CommunitySettings({ data }) {
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [alertOpen, setAlertOpen] = useState(false)
   const [mutationLoading, setCallMutation] = useState(false)
+  const [blob, setBlob] = useState(null)
+  const [inputImg, setInputImg] = useState('')
+  const [fileName, setFileName] = useState('')
+  const [showCropper, setShowCropper] = useState(false)
+  const {
+    onChange, signedBlobId
+  } = useFileUpload({
+    client: useApolloClient()
+  })
 
   const classes = useStyles()
 
   function handleAddNumberOption() {
     setNumberOptions([...numberOptions, numbers])
+  }
+
+  function getBlob(blobb) {
+    setBlob(blobb)
   }
 
   function handleAddEmailOption() {
@@ -80,6 +94,20 @@ export default function CommunitySettings({ data }) {
     setEmailOptions([...values])
   }
 
+  function onInputChange(file) {
+    setFileName(file.name)
+    // convert image file to base64 string
+    const reader = new FileReader()
+
+    reader.addEventListener('load', () => {
+      setInputImg(reader.result)
+    }, false)
+
+    if (file) {
+      reader.readAsDataURL(file)
+    }
+  }
+
   function handleNumberChange(event, index) {
     updateOptions(
       index,
@@ -89,18 +117,32 @@ export default function CommunitySettings({ data }) {
     )
   }
 
+  function uploadLogo(img) {
+    onChange(img)
+    setShowCropper(false)
+    setMessage({isError: false, detail: `Logo uploaded successfully`})
+    setAlertOpen(true)
+  }
+
+  function selectLogoOnchange(img) {
+    onInputChange(img)
+    setShowCropper(true)
+  }
+
   function updateCommunity() {
     setCallMutation(true)
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
-        supportEmail: emailOptions
+        supportEmail: emailOptions,
+        imageBlobId: signedBlobId
       }
     })
       .then(() => {
         setMessage({isError: false, detail: `Successfully updated the community`})
         setAlertOpen(true)
         setCallMutation(false)
+        refetch()
       })
       .catch(error => {
         setMessage({ isError: true, detail: error.message })
@@ -127,27 +169,34 @@ export default function CommunitySettings({ data }) {
         You can change your community logo here
       </Typography>
       <div className={classes.avatar}>
-        <Avatar
-          alt="avatar-image"
-          src={data.logoUrl}
-          style={{ height: '70px', width: '70px' }}
+        <ImageAuth 
+          imageLink={data.imageUrl} 
+          token={token} 
+          className="img-responsive img-thumbnail"
+          style={{height: '70px', width: '70px'}}
         />
         <div className={classes.upload}>
-          <Typography
-            variant="caption"
-            style={{ fontWeight: 'bold', marginLeft: '10px' }}
-          >
-            Upload new logo
-          </Typography>
+          <Typography variant='caption' style={{fontWeight: 'bold', marginLeft: '10px'}}>Upload new logo</Typography>
           <div>
-            <Button variant="contained" component="label">
+            <Button
+              variant="contained"
+              component="label"
+            >
               Choose File
-              <input type="file" hidden />
+              <input
+                type="file"
+                hidden
+                onChange={event => selectLogoOnchange(event.target.files[0])}
+                accept="image/*"
+              />
             </Button>
           </div>
         </div>
-        <Divider style={{ color: 'blue' }} />
       </div>
+      <div style={{position: 'relative'}}>
+        {showCropper && inputImg && <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />}
+      </div>
+      {showCropper && blob && <Button variant='contained' style={{margin: '10px'}} onClick={() => uploadLogo(blob)}>Upload</Button>}
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <Typography variant="h6">Support Contact Information</Typography>
         <Typography variant="caption">
@@ -215,8 +264,11 @@ CommunitySettings.propTypes = {
   data: PropTypes.shape({
     logoUrl: PropTypes.string,
     supportNumber: PropTypes.arrayOf(PropTypes.object),
-    supportEmail: PropTypes.arrayOf(PropTypes.object)
-  }).isRequired
+    supportEmail: PropTypes.arrayOf(PropTypes.object),
+    imageUrl: PropTypes.string
+  }).isRequired,
+  token: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles({

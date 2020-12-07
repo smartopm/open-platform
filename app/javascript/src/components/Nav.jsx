@@ -7,7 +7,6 @@ import { StyleSheet, css } from 'aphrodite'
 import Avatar from '@material-ui/core/Avatar'
 import MenuIcon from '@material-ui/icons/Menu'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider.js'
-import logoUrl from '../../../assets/images/nkwashi_white_logo_transparent.png'
 import Drawer from '@material-ui/core/Drawer'
 import { SideList } from './SideList.jsx'
 import { safeAvatarLink } from './Avatar.jsx'
@@ -16,6 +15,7 @@ import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import { useQuery } from 'react-apollo';
 import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries.js';
 import NotificationBell from './NotificationBell'
+import ImageAuth from './ImageAuth'
 
 export default withRouter(function Nav({
   children,
@@ -144,7 +144,11 @@ export function Component({
     }
     return (
       <Link to="/">
-        <img src={logoUrl} className={css(styles.logo)} alt="community logo" />
+        <ImageAuth 
+          imageLink={authState.user.community.imageUrl} 
+          token={authState.token} 
+          className={css(styles.logo)}
+        />
       </Link>
     )
   }
