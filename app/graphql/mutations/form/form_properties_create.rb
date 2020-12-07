@@ -21,14 +21,13 @@ module Mutations
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
 
         form_property = form.form_properties.new(vals)
-        data = {
-          action: 'added',
-          field_name: vals[:field_name]
-        }
+        data = { action: 'added', field_name: vals[:field_name] }
 
-        context[:current_user].generate_events('form_update', form, data)
-
-        return { form_property: form_property } if form_property.save
+        if form_property.save
+          context[:current_user].generate_events('form_update', form, data)
+          
+          return { form_property: form_property }
+        end
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
