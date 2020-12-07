@@ -16,6 +16,7 @@ module Mutations
 
       field :form_property, Types::FormPropertiesType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:form_id])
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
@@ -25,12 +26,13 @@ module Mutations
 
         if form_property.save
           context[:current_user].generate_events('form_update', form, data)
-          
+
           return { form_property: form_property }
         end
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         current_user = context[:current_user]

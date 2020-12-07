@@ -14,8 +14,8 @@ module Mutations
         form = context[:site_community].forms.new(vals)
         if form.save
           context[:current_user].generate_events('form_create', form)
-          
-          return { form: form } 
+
+          return { form: form }
         end
 
         raise GraphQL::ExecutionError, form.errors.full_messages

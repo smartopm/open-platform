@@ -18,7 +18,7 @@ module Mutations
         check_form_user(vals[:form_id])
         form_property = form.form_properties.find(vals[:form_property_id])
 
-        data = {action: 'removed',field_name: form_property.field_name}
+        data = { action: 'removed', field_name: form_property.field_name }
         if form_property.delete
           context[:current_user].generate_events('form_update', form, data)
           return { form_property: form_property }

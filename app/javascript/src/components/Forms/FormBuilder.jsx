@@ -74,8 +74,8 @@ export default function FormBuilder({ formId }) {
       })
   }
   if (loading || formLogs.loading) return <Spinner />
-  if (error || formLogs.error) return error.message || formLogs.error.message
-  console.log(formLogs.data)
+  if (error || formLogs.error) return error?.message || formLogs?.error.message
+  
   return (
     <Container maxWidth="md">
       <DeleteDialogueBox
