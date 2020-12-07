@@ -11,23 +11,24 @@ const TimeLineTemplate = args => <EventTimeLine {...args} />
 
 export const TimeLine = TimeLineTemplate.bind({})
 const data = [
-    {
-        sentence: 'Profile for user 2 updated',
-        createdAt: startOfToday()
-    },
-    {
-        sentence: 'User2 invited another user',
-        createdAt: startOfYesterday()
-    },
-    {
-        sentence: 'User got created',
-        createdAt: startOfWeek()
-    }
+  {
+    sentence: 'Profile for user 2 updated',
+    createdAt: startOfToday()
+  },
+  {
+    sentence: 'User2 invited another user',
+    createdAt: startOfYesterday()
+  },
+  {
+    sentence: 'User got created',
+    createdAt: startOfWeek()
+  }
 ]
+
 TimeLine.args = { data }
 
 export const EmptyTimeLine = TimeLineTemplate.bind({})
 
 EmptyTimeLine.args = {
-    data: []
+  data: []
 }
