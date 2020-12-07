@@ -2,61 +2,34 @@
 import React from 'react'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import EditIcon from '@material-ui/icons/Edit'
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import PropTypes from 'prop-types'
+import { titleize } from '../../utils/helpers';
 
-// TODO: Reuse the toggler
-export default function CampaignCreate({ campaignType, handleCampaignType }) {
+export default function Toggler({ type, handleType, data }) {
   return (
-    <>
-      <ToggleButtonGroup
-        value={campaignType}
-        exclusive
-        onChange={handleCampaignType}
-        aria-label="text alignment"
-        style={{ marginBottom: '10px' }}
-      >
-        <ToggleButton value="draft" aria-label="campaign draft">
-          Draft
-        </ToggleButton>
-        <ToggleButton value="scheduled" aria-label="campaign schedule">
-          Schedule
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </>
+    <ToggleButtonGroup
+      value={type}
+      exclusive
+      onChange={handleType}
+      aria-label="toggle different modes"
+      style={{ marginBottom: '10px' }}
+    >
+      <ToggleButton value={data.type} aria-label={data.type}>
+        {titleize(data.type)}
+      </ToggleButton>
+      <ToggleButton value={data.antiType} aria-label={data.antiType}>
+        {titleize(data.antiType)}
+      </ToggleButton>
+    </ToggleButtonGroup>
   )
 }
 
-export function FormToggle({ type, handleType }) {
-  return (
-    <>
-      <ToggleButtonGroup
-        value={type}
-        exclusive
-        onChange={handleType}
-        aria-label="text alignment"
-        style={{ marginBottom: '10px' }}
-      >
-        <ToggleButton value="preview" aria-label="preview">
-          <VisibilityIcon />
-        </ToggleButton>
-        <ToggleButton value="edit" aria-label="edit">
-          <EditIcon />
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </>
-    )
-}
-
-CampaignCreate.propTypes = {
-  campaignType: PropTypes.string.isRequired,
-  handleCampaignType: PropTypes.func.isRequired
-}
-
-FormToggle.propTypes = {
+Toggler.propTypes = {
   type: PropTypes.string.isRequired,
-  handleType: PropTypes.func.isRequired
+  handleType: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    antiType: PropTypes.string.isRequired
+  }).isRequired
 }
 
-  
