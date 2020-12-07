@@ -25,8 +25,7 @@ export default function CommunitySettings(){
         backTo='/'
       />
       <div className="container">
-        {console.log(data)}
-        <CommunitySettingsPage data={data} refetch={refetch} /> 
+        <CommunitySettingsPage data={data.community} refetch={refetch} token={authState.token} /> 
       </div>
     </>
   )

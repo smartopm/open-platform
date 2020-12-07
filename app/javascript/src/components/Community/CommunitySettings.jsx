@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
-import Avatar from '@material-ui/core/Avatar'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import PropTypes from 'prop-types'
 import { Container } from '@material-ui/core'
@@ -14,8 +13,9 @@ import DynamicContactFields from './DynamicContactFields'
 import MessageAlert from '../MessageAlert'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import ImageCropper from './ImageCropper'
+import ImageAuth from '../ImageAuth'
 
-export default function CommunitySettings({ data }) {
+export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -120,6 +120,8 @@ export default function CommunitySettings({ data }) {
   function uploadLogo(img) {
     onChange(img)
     setShowCropper(false)
+    setMessage({isError: false, detail: `Logo uploaded successfully`})
+    setAlertOpen(true)
   }
 
   function selectLogoOnchange(img) {
@@ -140,6 +142,7 @@ export default function CommunitySettings({ data }) {
         setMessage({isError: false, detail: `Successfully updated the community`})
         setAlertOpen(true)
         setCallMutation(false)
+        refetch()
       })
       .catch(error => {
         setMessage({ isError: true, detail: error.message })
@@ -157,7 +160,7 @@ export default function CommunitySettings({ data }) {
     <Container>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
-        message={message.detail}
+        message={message.detail || status === 'DONE'}
         open={alertOpen}
         handleClose={() => setAlertOpen(false)}
       />
@@ -166,7 +169,12 @@ export default function CommunitySettings({ data }) {
         You can change your community logo here
       </Typography>
       <div className={classes.avatar}>
-        <Avatar alt="avatar-image" src={data.logoUrl} style={{height: '70px', width: '70px'}} />
+        <ImageAuth 
+          imageLink={data.imageUrl} 
+          token={token} 
+          className="img-responsive img-thumbnail"
+          style={{height: '70px', width: '70px'}}
+        />
         <div className={classes.upload}>
           <Typography variant='caption' style={{fontWeight: 'bold', marginLeft: '10px'}}>Upload new logo</Typography>
           <div>
@@ -189,8 +197,6 @@ export default function CommunitySettings({ data }) {
         {showCropper && inputImg && <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />}
       </div>
       {showCropper && blob && <Button variant='contained' style={{margin: '10px'}} onClick={() => uploadLogo(blob)}>Upload</Button>}
-      {console.log(data)}
-      {console.log(status)}
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <Typography variant="h6">Support Contact Information</Typography>
         <Typography variant="caption">
@@ -258,8 +264,11 @@ CommunitySettings.propTypes = {
   data: PropTypes.shape({
     logoUrl: PropTypes.string,
     supportNumber: PropTypes.arrayOf(PropTypes.object),
-    supportEmail: PropTypes.arrayOf(PropTypes.object)
-  }).isRequired
+    supportEmail: PropTypes.arrayOf(PropTypes.object),
+    imageUrl: PropTypes.string
+  }).isRequired,
+  token: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles({

@@ -16,6 +16,7 @@ import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import { useQuery } from 'react-apollo';
 import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries.js';
 import NotificationBell from './NotificationBell'
+import ImageAuth from './ImageAuth'
 
 export default withRouter(function Nav({
   children,
@@ -144,7 +145,12 @@ export function Component({
     }
     return (
       <Link to="/">
-        <img src={logoUrl} className={css(styles.logo)} alt="community logo" />
+        {/* <img src={logoUrl} className={css(styles.logo)} alt="community logo" /> */}
+        <ImageAuth 
+          imageLink={authState.user.community.imageUrl} 
+          token={authState.token} 
+          className={css(styles.logo)}
+        />
       </Link>
     )
   }
@@ -207,7 +213,8 @@ Component.defaultProps = {
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px'
+    height: '25px',
+    backgroundColor: 'transparent'
   },
   topNav: {
     width: '100%',

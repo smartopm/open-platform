@@ -79,25 +79,6 @@ export function truncateString(message, count) {
 
 /**
  *
- * @param {String} dataUrl
- * @param {String} fileName
- * @description returns a object of an image file
- */
-
-export function dataURLtoFile(dataUrl, fileName) {
-let arr = dataurl.split(','),
-          mime = arr[0].match(/:(.*?);/)[1],
-          bstr = atob(arr[1]), 
-          n = bstr.length, 
-          u8arr = new Uint8Array(n);
-  while(n--){
-    u8arr[n] = bstr.charCodeAt(n);
-  }   
-  return new File([u8arr], filename, {type:mime});
-}
-
-/**
- *
  * @param {string} word string to be uppercased
  * @description makes the first letter of a string to uppercase
  */

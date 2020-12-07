@@ -36,6 +36,7 @@ const QUERY = gql`
         timezone
         supportNumber
         supportEmail
+        imageUrl
       }
     }
   }

@@ -169,6 +169,6 @@ export const getCroppedImg = async (imageSrc, crop) => {
   return new Promise((resolve) => {
       canvas.toBlob((blob) => {
           resolve(blob)
-      }, 'image/jpeg')
+      }, 'image/png')
   })
 }
