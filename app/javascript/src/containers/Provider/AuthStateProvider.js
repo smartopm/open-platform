@@ -76,7 +76,7 @@ export const Context = AuthStateContext
 function getCurrentUser(client) {
   return client.query({
     query: QUERY,
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
 }
