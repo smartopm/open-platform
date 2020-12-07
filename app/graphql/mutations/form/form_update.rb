@@ -15,7 +15,7 @@ module Mutations
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:id])
 
-        context[:current_user].generate_events('form_updated', form)
+        context[:current_user].generate_events('form_publish', form, { action: vals[:status] })
         return { form: form } if form.update(vals.except(:id))
 
         raise GraphQL::ExecutionError, form.errors.full_messages

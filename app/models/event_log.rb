@@ -121,15 +121,16 @@ class EventLog < ApplicationRecord
   # form_create form_update form_publish
 
   def form_create_to_sentence
-    "#{acting_user_name} created this form"
+    "#{acting_user_name} created the form"
   end
 
   def form_update_to_sentence
-    "#{acting_user_name} edited this form"
+    "#{acting_user_name} #{data['action']} #{data['field_name']} field"
   end
 
   def form_publish_to_sentence
-    "#{acting_user_name} published this form"
+    # publised or deleted
+    "#{acting_user_name} #{data['action']} the form"
   end
 
   def user_enrolled_to_sentence

@@ -44,6 +44,7 @@ export default function FormBuilder({ formId }) {
 
   function handleType(_event, value) {
     setType(value)
+    formLogs.refetch()
   }
   function handleConfirmPublish() {
     setOpen(!open)
