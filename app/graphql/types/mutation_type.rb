@@ -107,5 +107,8 @@ module Types
     field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
     field :action_flow_update, mutation: Mutations::ActionFlow::ActionFlowUpdate
     field :action_flow_delete, mutation: Mutations::ActionFlow::ActionFlowDelete
+
+    # community
+    field :community_update, mutation: Mutations::Community::CommunityUpdate
   end
 end
