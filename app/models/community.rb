@@ -26,12 +26,12 @@ class Community < ApplicationRecord
   }.freeze
 
   IMAGE_ATTACHMENTS = {
-    image_blob_id: :image
+    image_blob_id: :image,
   }.freeze
 
   def attach_image(vals)
-    IMAGE_ATTACHMENTS.each_pair do |_key, attr|
-      self.send(attr).attach(vals[_key]) if vals[_key]
+    IMAGE_ATTACHMENTS.each_pair do |key, attr|
+      send(attr).attach(vals[key]) if vals[key]
     end
   end
 

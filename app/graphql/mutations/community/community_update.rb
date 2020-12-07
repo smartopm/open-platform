@@ -13,7 +13,7 @@ module Mutations
 
       def resolve(vals)
         community = context[:site_community].update(vals.except(:image_blob_id))
-        
+
         context[:site_community].attach_image(vals) if vals[:image_blob_id].present?
 
         return { community: context[:site_community] } if community
