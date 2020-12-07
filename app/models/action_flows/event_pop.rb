@@ -39,9 +39,7 @@ module ActionFlows
         'user_name' => '',
         'user_email' => '',
         'status' => '',
-        # 'user_form_id' => '',
-        # 'from_status' => '',
-        # 'to_status' => '',
+        'has_status_changed' => '',
       },
     }.freeze
 
