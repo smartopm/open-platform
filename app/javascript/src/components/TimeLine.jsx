@@ -12,7 +12,7 @@ import { dateFormatter } from './DateContainer'
 
 export default function FormTimeline({ data }) {
   return (
-    <Timeline>
+    <Timeline style={{ marginLeft: '-99%' }}>
       {data.map(item => (
         <TimelineItem key={item.id}>
           <TimelineSeparator>

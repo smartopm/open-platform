@@ -119,7 +119,6 @@ class EventLog < ApplicationRecord
   end
 
   # form_create form_update form_publish
-
   def form_create_to_sentence
     "#{acting_user_name} created the form"
   end
@@ -129,7 +128,7 @@ class EventLog < ApplicationRecord
   end
 
   def form_publish_to_sentence
-    # publised or deleted
+    # published or deleted
     "#{acting_user_name} #{data['action']} the form"
   end
 
