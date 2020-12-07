@@ -13,6 +13,17 @@
               guess_uncaught_frames: true
             }
           }
+        },
+        checkIgnore: function(_isUncaught, _args, payload) {
+          if (
+            payload.body.trace.exception.message.match(
+              /Cannot read property 'length' of undefined/i
+            ) &&
+            payload.request.url.endsWith('/scan')
+          ) {
+            return true
+          }
+          return false
         }
       };
       // Rollbar Snippet
