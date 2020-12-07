@@ -31,7 +31,7 @@ class Community < ApplicationRecord
 
   def attach_image(vals)
     IMAGE_ATTACHMENTS.each_pair do |_key, attr|
-      self.send(attr).attach(vals['image_blob_id'])
+      self.send(attr).attach(vals[_key]) if vals[_key]
     end
   end
 
