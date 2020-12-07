@@ -1,9 +1,7 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import Cropper from 'react-easy-crop'
+import PropTypes from 'prop-types'
 import { getCroppedImg } from '../../utils/imageResizer'
-
-
 
 export default function ImageCropper({ getBlob, inputImg, fileName }){
   const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -32,4 +30,10 @@ export default function ImageCropper({ getBlob, inputImg, fileName }){
       </div>
     </>
   )
+}
+
+ImageCropper.propTypes = {
+  fileName: PropTypes.string.isRequired,
+  inputImg: PropTypes.string.isRequired,
+  getBlob: PropTypes.func.isRequired
 }
