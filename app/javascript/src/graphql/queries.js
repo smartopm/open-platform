@@ -416,6 +416,18 @@ export const PostCommentsQuery = gql`
   }
 `
 
+// Discussions and comments
+export const CommunityQuery = gql`
+  query communityQuery($id: ID!) {
+    community(id: $id) {
+      imageUrl
+      id
+      supportNumber
+      supportEmail
+    }
+  }
+`
+
 export const DiscussionCommentsQuery = gql`
   query discussComments($id: ID!, $limit: Int, $offset: Int) {
     discussComments(id: $id, limit: $limit, offset: $offset) {

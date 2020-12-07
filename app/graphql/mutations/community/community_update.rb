@@ -7,12 +7,16 @@ module Mutations
       argument :name, String, required: false
       argument :support_number, GraphQL::Types::JSON, required: false
       argument :support_email, GraphQL::Types::JSON, required: false
+      argument :image_blob_id, String, required: false
 
       field :community, Types::CommunityType, null: true
 
       def resolve(vals)
-        comm_u = context[:site_community].update(vals)
-        return { community: context[:site_community] } if comm_u
+        community = context[:site_community].update(vals.except(:image_blob_id))
+        
+        context[:site_community].attach_image(vals) if vals[:image_blob_id].present?
+
+        return { community: context[:site_community] } if community
 
         raise GraphQL::ExecutionError, community.errors.full_messages
       end
