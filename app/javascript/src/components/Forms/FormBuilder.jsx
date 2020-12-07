@@ -10,11 +10,11 @@ import GenericForm from './GenericForm'
 import { AllEventLogsQuery, FormPropertiesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import FormPropertyCreateForm from './FormPropertyCreateForm'
-import DeleteDialogueBox from '../Business/DeleteDialogue'
 import { FormUpdateMutation } from '../../graphql/mutations/forms'
 import { formStatus } from '../../utils/constants'
 import Toggler from '../Campaign/ToggleButton'
 import FormTimeline from '../TimeLine'
+import { ActionDialog } from '../Dialog'
 
 /**
  * @param {String} formId
@@ -78,12 +78,12 @@ export default function FormBuilder({ formId }) {
   
   return (
     <Container maxWidth="md">
-      <DeleteDialogueBox
+      <ActionDialog
         open={open}
         handleClose={handleConfirmPublish}
-        handleAction={publishForm}
-        title="form"
-        action="publish"
+        handleOnSave={publishForm}
+        message="Are you sure to publish this form"
+        type="confirm"
       />
 
       <Snackbar
