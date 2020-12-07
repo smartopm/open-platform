@@ -5,7 +5,6 @@ import { useWindowDimensions } from '../utils/customHooks'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
 export default function ImageAuth({ imageLink, token, className, type }) {
-  console.log('got here')
     const [response, setData] = useState('')
     const { width } = useWindowDimensions()
     // eslint-disable-next-line no-unused-vars

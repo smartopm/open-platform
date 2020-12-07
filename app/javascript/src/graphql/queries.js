@@ -416,7 +416,7 @@ export const PostCommentsQuery = gql`
   }
 `
 
-// Discussions and comments
+// Community Query
 export const CommunityQuery = gql`
   query communityQuery($id: ID!) {
     community(id: $id) {

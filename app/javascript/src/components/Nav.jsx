@@ -145,7 +145,6 @@ export function Component({
     }
     return (
       <Link to="/">
-        {/* <img src={logoUrl} className={css(styles.logo)} alt="community logo" /> */}
         <ImageAuth 
           imageLink={authState.user.community.imageUrl} 
           token={authState.token} 
@@ -213,8 +212,7 @@ Component.defaultProps = {
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px',
-    backgroundColor: 'transparent'
+    height: '25px'
   },
   topNav: {
     width: '100%',

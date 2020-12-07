@@ -35,7 +35,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [fileName, setFileName] = useState('')
   const [showCropper, setShowCropper] = useState(false)
   const {
-    onChange, status, signedBlobId
+    onChange, signedBlobId
   } = useFileUpload({
     client: useApolloClient()
   })
@@ -160,7 +160,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     <Container>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
-        message={message.detail || status === 'DONE'}
+        message={message.detail}
         open={alertOpen}
         handleClose={() => setAlertOpen(false)}
       />
