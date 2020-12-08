@@ -15,8 +15,6 @@ import Loading from '../../components/Loading'
 import { AllEventLogsQuery } from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
-import newUserIcon from '../../../../assets/images/new.svg'
-import gateIcon from '../../../../assets/images/bar.svg'
 import { userType } from '../../utils/constants'
 import useDebounce from '../../utils/useDebounce'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
@@ -27,6 +25,7 @@ import {
   a11yProps
 } from '../../components/Tabs'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
+import FloatButton from '../../components/FloatButton'
 
 export default ({ history, match }) => AllEventLogs(history, match)
 
@@ -297,8 +296,9 @@ export function IndexComponent({
           aria-label="simple tabs example"
           centered
         >
-          <StyledTab icon={<img alt="" src={gateIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(0)} />
-          <StyledTab icon={<img alt="" src={newUserIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(1)} />
+          <StyledTab label="All Visits" {...a11yProps(0)} />
+          <StyledTab label="New Visits" {...a11yProps(1)} />
+          <StyledTab label="Upcoming" />
         </StyledTabs>
         <TabPanel value={tabValue} index={0}>
           <>{logs(filteredEvents)}</>
@@ -336,6 +336,13 @@ export function IndexComponent({
             </Fragment>
           ))}
         </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          Upcoming Visits
+        </TabPanel>    
+        <FloatButton 
+          title="New Visit Request"
+          handleClick={() => {}}
+        />
       </div>
 
       <div className="d-flex justify-content-center">

@@ -4,7 +4,8 @@ import DateFnsUtils from '@date-io/date-fns'
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-  KeyboardDateTimePicker
+  KeyboardDateTimePicker,
+  TimePicker
 } from '@material-ui/pickers'
 import { checkPastDate } from "../utils/dateutil"
 
@@ -49,4 +50,19 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
       />
     </MuiPickersUtilsProvider>
   );
+}
+
+
+export function ThemedTimePicker({ handleTimeChange, time, label }){
+  return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <TimePicker
+        autoOk
+        clearable
+        label={label}
+        value={time}
+        onChange={handleTimeChange}
+      />
+    </MuiPickersUtilsProvider>
+  )
 }
