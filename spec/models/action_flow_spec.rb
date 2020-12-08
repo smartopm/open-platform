@@ -27,7 +27,7 @@ RSpec.describe ActionFlow, type: :model do
       end
 
       ActionFlows::EventPop.event_list.each do |event|
-        expect(event.new).to respond_to(:preload_data, :url_format)
+        expect(event.new).to respond_to(:preload_data)
       end
     end
   end

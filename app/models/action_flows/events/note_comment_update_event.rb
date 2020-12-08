@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module ActionFlows
   module Events
     # Task Update Event to handle related action
@@ -31,12 +33,8 @@ module ActionFlows
         load_data(
           { 'NoteComment' => note_comment },
           'assignees_emails' => assignees_email,
-          'url' => url_format(note_comment.note.id),
+          'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note_comment.note.id}",
         )
-      end
-
-      def url_format(note_id)
-        "https://#{ENV['HOST']}/tasks/#{note_id}"
       end
     end
   end
