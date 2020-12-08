@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link , useLocation} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
@@ -64,6 +64,19 @@ export default function UsersList() {
   if (data) {
     userList = data.users.map(user => user.id)
   }
+
+  function getQuery() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return new URLSearchParams(useLocation().search);
+  }
+
+  const querry = getQuery()
+
+  useEffect(() => {
+    const offsetParams = querry.get('offset')
+    setOffset(Number(offsetParams))
+  }, [])
+
 
   // TODO: @dennis, add pop up for notes
   const [userLabelCreate] = useMutation(UserLabelCreate)
@@ -496,6 +509,7 @@ export default function UsersList() {
               sendOneTimePasscode={sendOneTimePasscode}
               handleUserSelect={handleUserSelect}
               selectedUsers={selectedUsers}
+              offset={offset}
             />
             <Grid
               container

@@ -8,7 +8,8 @@ export default function UserListCard({
   currentUserType,
   sendOneTimePasscode,
   handleUserSelect,
-  selectedUsers
+  selectedUsers,
+  offset
 }) {
   return (
     <List>
@@ -20,6 +21,7 @@ export default function UserListCard({
           sendOneTimePasscode={sendOneTimePasscode}
           handleUserSelect={handleUserSelect}
           selectedUsers={selectedUsers}
+          offset={offset}
         />
       ))}
     </List>
@@ -33,5 +35,6 @@ UserListCard.propTypes = {
   currentUserType: PropTypes.string.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
+  offset: PropTypes.number.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
 }

@@ -30,7 +30,8 @@ export default function UserItem({
   currentUserType,
   sendOneTimePasscode,
   handleUserSelect,
-  selectedUsers
+  selectedUsers,
+  offset
 }) {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -70,7 +71,10 @@ export default function UserItem({
 
   function showUserDetails(event) {
     if (event.target.tagName === 'DIV') {
-      history.push(`/user/${user.id}`)
+      history.push({
+        pathname: `/user/${user.id}`,
+        state: { from: 'users', offset }
+      })
     }
   }
 
@@ -150,7 +154,7 @@ export default function UserItem({
               >
                 <Link
                   style={{ color: 'black' }}
-                  to={`/user/${user.id}`}
+                  to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
                   key={user.id}
                 >
                   <Typography component="span" variant="subtitle1">
@@ -250,6 +254,7 @@ UserItem.propTypes = {
     labels: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
+  offset: PropTypes.number.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
