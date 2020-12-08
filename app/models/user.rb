@@ -79,6 +79,8 @@ class User < ApplicationRecord
   has_many :activity_points, dependent: :destroy
   has_many :user_form_properties, dependent: :destroy
   has_many :form_users, dependent: :destroy
+  has_many :post_tag_users, dependent: :destroy
+  has_many :post_tags, through: :post_tag_users
   has_one_attached :avatar
   has_one_attached :document
 

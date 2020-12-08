@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import Avatar from '@material-ui/core/Avatar'
 import { useWindowDimensions } from '../utils/customHooks'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
@@ -30,6 +31,9 @@ export default function ImageAuth({ imageLink, token, className, type }) {
   }, [])
   if (type === 'image') {
     return <img src={response.url} className={className} alt="authenticated link" />
+  }
+  if (type === 'imageAvatar') {
+    return <Avatar alt="avatar-image" src={response.url}  />
   }
   return <iframe height={600} width={width < 550 ? width - 20 : 600} title="attachment" src={response.url} />
 }

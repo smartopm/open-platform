@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import CommunitySettings from '../../components/Community/CommunitySettings'
 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Community settings page ', () => {
   it('should have input field and a remove button', () => {
     const data = {

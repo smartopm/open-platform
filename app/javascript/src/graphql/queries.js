@@ -416,6 +416,18 @@ export const PostCommentsQuery = gql`
   }
 `
 
+// Community Query
+export const CommunityQuery = gql`
+  query communityQuery($id: ID!) {
+    community(id: $id) {
+      imageUrl
+      id
+      supportNumber
+      supportEmail
+    }
+  }
+`
+
 export const DiscussionCommentsQuery = gql`
   query discussComments($id: ID!, $limit: Int, $offset: Int) {
     discussComments(id: $id, limit: $limit, offset: $offset) {
@@ -489,6 +501,15 @@ export const PostDiscussionQuery = gql`
     }
   }
 `
+
+export const PostTagUser = gql`
+  query userTags($tagName: String!) {
+    userTags(tagName: $tagName) {
+      id
+    }
+  }
+`
+
 export const discussionUserQuery = gql`
   query discussionUser($disucssionId: String!) {
     discussionUser(disucssionId: $disucssionId) {

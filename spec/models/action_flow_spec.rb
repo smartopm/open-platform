@@ -19,4 +19,16 @@ RSpec.describe ActionFlow, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
   end
+
+  describe 'Actionflow event' do
+    it 'defines all required methods' do
+      ActionFlows::EventPop.event_list.each do |event|
+        expect(event).to respond_to(:event_metadata, :event_description, :event_type)
+      end
+
+      ActionFlows::EventPop.event_list.each do |event|
+        expect(event.new).to respond_to(:preload_data, :url_format)
+      end
+    end
+  end
 end

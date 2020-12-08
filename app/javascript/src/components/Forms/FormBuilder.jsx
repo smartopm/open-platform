@@ -18,7 +18,7 @@ import { ActionDialog } from '../Dialog'
 
 /**
  * @param {String} formId
- * @description puts form related components together and allow user to dynamically create different form properties
+ * @description puts form related components(fields) together and allow user to dynamically create different form properties
  * @returns {Node}
  */
 export default function FormBuilder({ formId }) {
