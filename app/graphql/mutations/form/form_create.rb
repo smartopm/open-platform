@@ -12,7 +12,11 @@ module Mutations
 
       def resolve(vals)
         form = context[:site_community].forms.new(vals)
-        return { form: form } if form.save
+        if form.save
+          context[:current_user].generate_events('form_create', form)
+
+          return { form: form }
+        end
 
         raise GraphQL::ExecutionError, form.errors.full_messages
       end

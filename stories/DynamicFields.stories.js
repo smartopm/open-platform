@@ -53,7 +53,7 @@ PhoneNumber.args = {
 export const SingleOption = SingleOptionTemplate.bind({})
 
 SingleOption.args = {
-  id: '1',
+  id: 1,
   option: ['', ''],
   actions: {
     handleRemoveOption: () => {},

@@ -23,7 +23,8 @@ class EventLog < ApplicationRecord
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update user_temp
                       shift_start shift_end user_referred post_read post_shared
-                      task_create task_update note_comment_create note_comment_update].freeze
+                      task_create task_update note_comment_create note_comment_update
+                      form_create form_update form_publish].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -115,6 +116,20 @@ class EventLog < ApplicationRecord
 
   def post_shared_to_sentence
     "Post #{data['post_id']} was shared by #{acting_user_name}"
+  end
+
+  # form_create form_update form_publish
+  def form_create_to_sentence
+    "#{acting_user_name} created the form"
+  end
+
+  def form_update_to_sentence
+    "#{acting_user_name} #{data['action']} #{data['field_name']} field"
+  end
+
+  def form_publish_to_sentence
+    # published or deleted
+    "#{acting_user_name} #{data['action']} the form"
   end
 
   def user_enrolled_to_sentence

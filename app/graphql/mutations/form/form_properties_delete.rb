@@ -17,7 +17,12 @@ module Mutations
 
         check_form_user(vals[:form_id])
         form_property = form.form_properties.find(vals[:form_property_id])
-        return { form_property: form_property } if form_property.delete
+
+        data = { action: 'removed', field_name: form_property.field_name }
+        if form_property.delete
+          context[:current_user].generate_events('form_update', form, data)
+          return { form_property: form_property }
+        end
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages
       end

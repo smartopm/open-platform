@@ -25,10 +25,9 @@ import { UpdateNote , TaskReminder } from '../../graphql/mutations'
 import { UserChip } from '../UserChip'
 import { NotesCategories } from '../../utils/constants'
 import UserSearch from '../User/UserSearch'
-import { FormToggle } from '../Campaign/ToggleButton'
+import Toggler from '../Campaign/ToggleButton'
 import { sanitizeText } from '../../utils/helpers'
 import RemindMeLaterMenu from './RemindMeLaterMenu'
-
 import { dateToString, dateTimeToString } from '../DateContainer'
 
 const initialData = {
@@ -220,7 +219,14 @@ export default function TaskForm({
           message="Task updated successfully"
         />
 
-        <FormToggle type={type} handleType={handleType} />
+        <Toggler
+          type={type}
+          handleType={handleType}
+          data={{
+            type: 'preview',
+            antiType: 'edit'
+          }}
+        />
 
         {type === 'preview' ? (
           <p>
