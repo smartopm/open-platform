@@ -8,6 +8,20 @@ module Mutations
       argument :user_id, ID, required: true
       argument :prop_values, GraphQL::Types::JSON, required: true
 
+      # Prop Values should be passed in this format
+      # propValues: {
+      #   user_form_properties: [
+      #     {
+      #       form_property_id: "xxxxxxxxxxxxxxxxxxxx"
+      #       value: "Value",
+      #     },
+      #     {
+      #       form_property_id: "xxxxxxxxxxxxxxxxxxxx",
+      #       value: "Val",
+      #     },
+      #   ]
+      # }
+
       field :form_user, Types::FormUsersType, null: true
       field :error, String, null: true
 

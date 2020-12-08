@@ -32,6 +32,10 @@ module ActionFlows
       def setup_data(user_data)
         load_data('User' => user_data)
       end
+
+      def preload_data; end
+
+      def url_format; end
     end
   end
 end

@@ -15,7 +15,7 @@ import {
 } from '../graphql/mutations'
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
-import CampaignToggle from './Campaign/ToggleButton'
+import Toggler from './Campaign/ToggleButton'
 
 const initData = {
   id: '',
@@ -143,7 +143,14 @@ export default function CampaignForm({
         message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
       />
       <form onSubmit={handleSubmit} aria-label="campaign-form">
-        <CampaignToggle campaignType={campaignType} handleCampaignType={handleCampaignType} />
+        <Toggler
+          type={campaignType}
+          handleType={handleCampaignType}
+          data={{
+            type: 'draft',
+            antiType: 'scheduled'
+          }}
+        />
         <TextField
           label="Campaign Type"
           name="campaignType"

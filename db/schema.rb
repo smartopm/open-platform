@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_01_113450) do
+ActiveRecord::Schema.define(version: 2020_12_08_114031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +39,6 @@ ActiveRecord::Schema.define(version: 2020_12_01_113450) do
     t.string "event_type"
     t.string "event_condition"
     t.json "event_action"
-    t.boolean "active", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "community_id"
@@ -408,6 +407,25 @@ ActiveRecord::Schema.define(version: 2020_12_01_113450) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "post_tag_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "post_tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_tag_id"], name: "index_post_tag_users_on_post_tag_id"
+    t.index ["user_id", "post_tag_id"], name: "index_post_tag_users_on_user_id_and_post_tag_id", unique: true
+    t.index ["user_id"], name: "index_post_tag_users_on_user_id"
+  end
+
+  create_table "post_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_post_tags_on_community_id"
+  end
+
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "userId"
     t.string "name"
@@ -534,6 +552,9 @@ ActiveRecord::Schema.define(version: 2020_12_01_113450) do
   add_foreign_key "notes", "form_users"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
+  add_foreign_key "post_tag_users", "post_tags"
+  add_foreign_key "post_tag_users", "users"
+  add_foreign_key "post_tags", "communities"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"

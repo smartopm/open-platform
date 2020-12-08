@@ -31,6 +31,16 @@ module ActionFlows
         'assignees_emails' => '',
         'url' => '',
       },
+      'FormUser' => {
+        'id' => '',
+        'url' => '',
+        'reviewers_email' => '',
+        'form_name' => '',
+        'user_name' => '',
+        'user_email' => '',
+        'status' => '',
+        'has_status_changed' => '',
+      },
     }.freeze
 
     attr_accessor :data_set
