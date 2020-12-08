@@ -15,6 +15,7 @@ import { formStatus } from '../../utils/constants'
 import Toggler from '../Campaign/ToggleButton'
 import FormTimeline from '../TimeLine'
 import { ActionDialog } from '../Dialog'
+import { formatError } from '../../utils/helpers'
 
 /**
  * @param {String} formId
@@ -68,7 +69,7 @@ export default function FormBuilder({ formId }) {
         setAlertOpen(true)
       })
       .catch(err => {
-        setMessage({ isError: true, detail: err.message })
+        setMessage({ isError: true, detail: formatError(err.message) })
         setIsPublishing(false)
         setAlertOpen(true)
       })
