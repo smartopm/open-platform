@@ -23,7 +23,7 @@ export default function RequestForm({ path }) {
   const [isSubmitted, setSubmitted] = useState(false)
   const [isModalOpen, setModal] = useState(false)
   const [visitDate, setVisitDate] = useState(new Date())
-  const [visitTime, setVisitTime] = useState(new Date())
+  const [startTime, setVisitTime] = useState(new Date())
   const [endTime, setEndTime] = useState(new Date())
 
   function handleSubmit() {
@@ -33,8 +33,10 @@ export default function RequestForm({ path }) {
       vehiclePlate: vehicle.value,
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
-      reason: business.value === 'Other' ? reason.value : business.value
-      
+      reason: business.value === 'Other' ? reason.value : business.value,
+      // visitDate,
+      // startTime,
+      // endTime
     }
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
@@ -49,7 +51,7 @@ export default function RequestForm({ path }) {
     if (business.value === 'Other') {
       setModal(!isModalOpen)
     }
-    // /* eslint-disable */-next-line react-hooks/exhaustive-deps
+   /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [business.value])
 
   return (
@@ -149,7 +151,7 @@ export default function RequestForm({ path }) {
                 label="Date of Visit"
               />
               <ThemedTimePicker
-                time={visitTime}
+                time={startTime}
                 handleTimeChange={date => setVisitTime(date)}
                 label="Start Time"
               />

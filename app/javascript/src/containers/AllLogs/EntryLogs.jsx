@@ -298,7 +298,7 @@ export function IndexComponent({
         >
           <StyledTab label="All Visits" {...a11yProps(0)} />
           <StyledTab label="New Visits" {...a11yProps(1)} />
-          <StyledTab label="Upcoming" />
+          <StyledTab label="Upcoming Visits" />
         </StyledTabs>
         <TabPanel value={tabValue} index={0}>
           <>{logs(filteredEvents)}</>
@@ -337,7 +337,7 @@ export function IndexComponent({
           ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          Upcoming Visits
+          Upcoming
         </TabPanel>    
         <FloatButton 
           title="New Visit Request"
