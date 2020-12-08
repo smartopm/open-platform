@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_01_113450) do
+ActiveRecord::Schema.define(version: 2020_12_08_114031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,7 +39,6 @@ ActiveRecord::Schema.define(version: 2020_12_01_113450) do
     t.string "event_type"
     t.string "event_condition"
     t.json "event_action"
-    t.boolean "active", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "community_id"

@@ -31,6 +31,7 @@ module ActionFlows
         super
       end
 
+      # rubocop:disable Metrics/MethodLength
       def preload_data(eventlog)
         form_user = eventlog.ref_type.constantize.find eventlog.ref_id
         reviewers_email = '' # to be initialized with comma separated emails
@@ -41,8 +42,10 @@ module ActionFlows
           'user_email' => form_user.user.email,
           'reviewers_email' => reviewers_email,
           'url' => url_format(form_user.id),
+          'has_status_changed' => false,
         )
       end
+      # rubocop:enable Metrics/MethodLength
 
       def url_format(_id)
         "https://#{ENV['HOST']}/forms"
