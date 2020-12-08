@@ -61,9 +61,15 @@ const AllEventLogs = (history, match) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const logsQuery = {
+    0: subjects,
+    1: 'user_enrolled',
+    2: 'visit_request'
+  }
+
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: value === 0 ? subjects : 'user_enrolled',
+      subject: logsQuery[value],
       refId,
       refType: null,
       offset,
@@ -95,7 +101,7 @@ const AllEventLogs = (history, match) => {
   function handleChange(_event, newValue) {
     setvalue(newValue)
   }
-
+ console.log(data.result)
   return (
     <IndexComponent
       data={data}

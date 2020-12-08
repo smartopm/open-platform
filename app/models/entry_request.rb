@@ -130,10 +130,10 @@ class EntryRequest < ApplicationRecord
   def log_entry_start
     EventLog.create(
       acting_user: user, community: user.community,
-      subject: 'visitor_entry',
+      subject: self[:visitation_date] ? 'visit_request' : 'visitor_entry',
       ref_id: self[:id], ref_type: 'EntryRequest',
       data: {
-        action: 'started',
+        action: self[:visitation_date] ? 'requested' : 'started',
         ref_name: self[:name],
         type: user.user_type,
       }
