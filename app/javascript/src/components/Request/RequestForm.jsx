@@ -23,6 +23,8 @@ export default function RequestForm({ path }) {
   const [isSubmitted, setSubmitted] = useState(false)
   const [isModalOpen, setModal] = useState(false)
   const [visitDate, setVisitDate] = useState(new Date())
+  const [visitTime, setVisitTime] = useState(new Date())
+  const [endTime, setEndTime] = useState(new Date())
 
   function handleSubmit() {
     setSubmitted(!isSubmitted)
@@ -32,7 +34,7 @@ export default function RequestForm({ path }) {
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
       reason: business.value === 'Other' ? reason.value : business.value
-
+      
     }
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
@@ -147,14 +149,14 @@ export default function RequestForm({ path }) {
                 label="Date of Visit"
               />
               <ThemedTimePicker
-                time={visitDate}
-                handleTimeChange={date => setVisitDate(date)}
+                time={visitTime}
+                handleTimeChange={date => setVisitTime(date)}
                 label="Start Time"
               />
               <span style={{ marginLeft: 20 }}>
                 <ThemedTimePicker
-                  time={visitDate}
-                  handleTimeChange={date => setVisitDate(date)}
+                  time={endTime}
+                  handleTimeChange={date => setEndTime(date)}
                   label="End Time"
                 />
               </span>
