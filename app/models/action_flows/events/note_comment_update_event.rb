@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module ActionFlows
   module Events
     # Task Update Event to handle related action
