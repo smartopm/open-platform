@@ -31,7 +31,7 @@ module ActionFlows
         load_data(
           { 'NoteComment' => note_comment },
           'assignees_emails' => assignees_email,
-          'url' => "https://#{ENV['HOST']}/tasks/#{note_comment.note.id}",
+          'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note_comment.note.id}",
         )
       end
     end
