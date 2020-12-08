@@ -28,13 +28,13 @@ export default function UserFilledForms({ userFormsFilled, userId }) {
           key={userForm.id}
           button
           data-testid="form_item"
-          onClick={() => handleViewForm(userForm.form.id, userForm.form.name)}
+          onClick={() => handleViewForm(userForm.form?.id, userForm.form?.name)}
         >
           <ListItemText
             primary={(
               <>
                 <span className="nz_msg_owner">
-                  {userForm.form.name}
+                  {userForm.form?.name}
                   <Badge
                     color="secondary"
                     badgeContent={<span>{userForm.status}</span>}
