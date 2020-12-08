@@ -31,12 +31,8 @@ module ActionFlows
         load_data(
           { 'NoteComment' => note_comment },
           'assignees_emails' => assignees_email,
-          'url' => url_format(note_comment.note.id),
+          'url' => "https://#{ENV['HOST']}/tasks/#{note_comment.note.id}",
         )
-      end
-
-      def url_format(note_id)
-        "https://#{ENV['HOST']}/tasks/#{note_id}"
       end
     end
   end

@@ -35,12 +35,10 @@ module ActionFlows
         note = eventlog.ref_type.constantize.find eventlog.ref_id
         assignees_email = note.assignees.map(&:email).join(',')
         load_data(
-          { 'Note' => note }, 'assignees_emails' => assignees_email, 'url' => url_format(note.id)
+          { 'Note' => note },
+          'assignees_emails' => assignees_email,
+          'url' => "https://#{ENV['HOST']}/tasks/#{note.id}",
         )
-      end
-
-      def url_format(id)
-        "https://#{ENV['HOST']}/tasks/#{id}"
       end
     end
   end

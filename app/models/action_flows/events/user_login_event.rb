@@ -29,13 +29,10 @@ module ActionFlows
         EVENT_TYPE
       end
 
-      def setup_data(user_data)
-        load_data('User' => user_data)
+      def preload_data(event_log)
+        user = event_log.ref_type.constantize.find(event_log.ref_id)
+        load_data('User' => user)
       end
-
-      def preload_data; end
-
-      def url_format; end
     end
   end
 end
