@@ -51,7 +51,9 @@ export default ({ history }) => {
   }
   return (
     <>
-      {history.location.state?.from === 'logs' ? <Nav navName="Identification" menuButton="cancel" backTo={`/entry_logs?offset=${history.location.state?.offset}`} />
+      {console.log(history.location.state)}
+      {history.location.state?.from 
+        ? <Nav navName="Identification" menuButton="cancel" backTo={`/${history.location.state.from}?offset=${history.location.state.offset}`} />
         : <Nav navName="Identification" menuButton="cancel" backTo="/" />}
       <UserInformation
         data={data}

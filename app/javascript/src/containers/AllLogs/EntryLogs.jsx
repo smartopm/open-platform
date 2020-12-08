@@ -132,12 +132,12 @@ export function IndexComponent({
     if (eventLog.refType === 'EntryRequest') {
       router.push({
         pathname: `/request/${eventLog.refId}`,
-        state: { from: 'logs', offset }
+        state: { from: 'entry_logs', offset }
       })
     } if (eventLog.refType === 'User') {
       router.push({
         pathname: `/user/${eventLog.refId}`,
-        state: { from: 'logs', offset }
+        state: { from: 'entry_logs', offset }
       })
     }
   }
