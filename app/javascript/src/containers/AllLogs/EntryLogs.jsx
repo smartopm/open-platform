@@ -101,7 +101,6 @@ const AllEventLogs = (history, match) => {
   function handleChange(_event, newValue) {
     setvalue(newValue)
   }
- console.log(data.result)
   return (
     <IndexComponent
       data={data}
