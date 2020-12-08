@@ -341,7 +341,7 @@ export function IndexComponent({
         </TabPanel>    
         <FloatButton 
           title="New Visit Request"
-          handleClick={() => {}}
+          handleClick={() => router.push('/visit_request')}
         />
       </div>
 

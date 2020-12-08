@@ -22,7 +22,7 @@ export default function RequestForm({ path }) {
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [isSubmitted, setSubmitted] = useState(false)
   const [isModalOpen, setModal] = useState(false)
-  const [visitDate, setVisitDate] = useState(new Date())
+  const [visitationDate, setVisitDate] = useState(new Date())
   const [startTime, setVisitTime] = useState(new Date())
   const [endTime, setEndTime] = useState(new Date())
 
@@ -34,9 +34,9 @@ export default function RequestForm({ path }) {
       phoneNumber: phoneNumber.value,
       nrc: nrc.value,
       reason: business.value === 'Other' ? reason.value : business.value,
-      // visitDate,
-      // startTime,
-      // endTime
+      visitationDate,
+      startTime,
+      endTime
     }
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
@@ -146,7 +146,7 @@ export default function RequestForm({ path }) {
           {path.includes('visit_request') && (
             <>
               <DatePickerDialog
-                selectedDate={visitDate}
+                selectedDate={visitationDate}
                 handleDateChange={date => setVisitDate(date)}
                 label="Date of Visit"
               />
