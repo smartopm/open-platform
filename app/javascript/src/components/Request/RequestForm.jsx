@@ -40,10 +40,13 @@ export default function RequestForm({ path }) {
     }
 
     createEntryRequest({ variables: userData }).then(({ data }) => {
-      // Send them to the wait page
-      history.push(`/request/${data.result.entryRequest.id}`, {
-        from: 'entry_request'
-      })
+      // Send them to the wait page if it is an entry request
+      if(path.includes('entry_request')){
+        history.push(`/request/${data.result.entryRequest.id}`, {
+          from: 'entry_request'
+        })
+      }
+      history.push('/entry_logs')
     })
   }
 
