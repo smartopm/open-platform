@@ -82,7 +82,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
   }
-
+  
   return (
     <Card className={classes.root} variant="outlined">
       <ActionCardMenu
@@ -129,7 +129,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
           className={classes.status}
           style={{ color: isActive ? '#66A59A' : '#ADADAD' }}
         >
-          {currentStatus}
+          {currentStatus()}
         </Typography>
       </CardContent>
     </Card>
