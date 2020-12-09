@@ -79,7 +79,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
   }
-  
+
   return (
     <Card className={classes.root} variant="outlined">
       <ActionCardMenu
@@ -124,9 +124,9 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
         </Typography>
         <Typography
           className={classes.status}
-          style={{ color: isActive ? '#66A59A' : '#ADADAD' }}
+          style={{ color: isActive() ? '#66A59A' : '#ADADAD' }}
         >
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive() ? 'Active' : 'Inactive'}
         </Typography>
       </CardContent>
     </Card>
@@ -139,7 +139,7 @@ ActionCard.propTypes = {
     eventType: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
+    // status: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired
   }).isRequired,
   openFlowModal: PropTypes.func.isRequired,

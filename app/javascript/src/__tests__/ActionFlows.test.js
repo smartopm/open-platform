@@ -26,7 +26,6 @@ const mocks = {
           eventAction: 'email',
           actionType: '',
           createdAt: '2020-06-25T11:58:22.573Z',
-          active: true,
           __typename: 'ActionFlows'
         }
       ]
