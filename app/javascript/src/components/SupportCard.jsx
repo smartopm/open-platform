@@ -6,7 +6,6 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { salesSupport, customerCare } from '../utils/constants'
 
 const icons = {
   mail: <MailOutlineIcon />,
@@ -46,6 +45,26 @@ export default function SupportCard({ handleSendMessage, user }) {
   // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
   const history = useHistory()
 
+  function supports() {
+    const sales = []
+    const customerCare = []
+    user.community.supportNumber.forEach((nSupport) => {
+      if (nSupport.category === 'sales') sales.push({contact: nSupport.phone_number, type: 'phone'})
+      if (nSupport.category === 'customer_care') customerCare.push({contact: nSupport.phone_number, type: 'phone'})
+    })
+    customerCare.push({ contact: '+260 974 624243', type: 'whatsapp'})
+
+    user.community.supportEmail.forEach((eSupport) => {
+      if (eSupport.category === 'sales') sales.push({contact: eSupport.email, type: 'mail'})
+      if (eSupport.category === 'customer_care') customerCare.push({contact: eSupport.email, type: 'mail'})
+    })
+
+    return {
+      sales,
+      customerCare
+    }
+  }
+
   return (
     <>
       <div className="justify-content-center align-items-center container">
@@ -75,9 +94,14 @@ export default function SupportCard({ handleSendMessage, user }) {
               Sales Support
             </Typography>
             {
-              salesSupport.map((support) => (
+              supports().sales.length ?
+              supports().sales.map((support) => (
                 <SupportContact key={support.contact} classes={classes} support={support} />
-              ))
+              )) : (
+                <Typography paragraph variant="body1" color="textSecondary" align="center">
+                  Contacts not available at the moment
+                </Typography>
+)
             }
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -86,9 +110,15 @@ export default function SupportCard({ handleSendMessage, user }) {
             </Typography>
 
             {
-              customerCare.map((support) => (
+              supports().customerCare.length ?
+              supports().customerCare.map((support) => (
                 <SupportContact key={support.contact} classes={classes} support={support} />
-              ))
+              )) :
+              (
+                <Typography paragraph variant="body1" color="textSecondary" align="center">
+                  Contacts not available at the moment
+                </Typography>
+              )
             }
           </Grid>
         </Grid>
@@ -157,7 +187,9 @@ SupportContact.propTypes = {
 }
 SupportCard.propTypes = {
   user: PropTypes.shape({
-    userType: PropTypes.string
+    userType: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+    community: PropTypes.object,
   }).isRequired,
   handleSendMessage: PropTypes.func.isRequired
 }
