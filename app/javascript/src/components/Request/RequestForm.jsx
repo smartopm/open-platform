@@ -87,6 +87,7 @@ export default function RequestForm({ path }) {
               name="_name"
               required
               autoCapitalize="words"
+              data-testid="name"
             />
           </div>
           <div className="form-group">
@@ -98,6 +99,7 @@ export default function RequestForm({ path }) {
               {...phoneNumber}
               name="phoneNumber"
               type="number"
+              data-testid="phone_number"
             />
            
           </div>
@@ -113,6 +115,7 @@ export default function RequestForm({ path }) {
                   {...nrc}
                   name="nrc"
                   required
+                  data-testid="nrc"
                 />
                 
               </div>
@@ -125,6 +128,7 @@ export default function RequestForm({ path }) {
                   type="text"
                   {...vehicle}
                   name="vehicle"
+                  data-testid="vehicle"
                 />
                 
               </div>
@@ -175,6 +179,7 @@ export default function RequestForm({ path }) {
               className={`btn ${css(styles.logButton)}`}
               onClick={handleSubmit}
               disabled={isSubmitted}
+              data-testid="submit_button"
             >
               {isSubmitted ? 'Submitting ...' : ' Submit'}
             </Button>

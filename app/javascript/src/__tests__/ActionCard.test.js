@@ -8,7 +8,7 @@ import '@testing-library/jest-dom/extend-expect'
 const props = {
   openFlowModal: jest.fn(),
   actionFlow: {
-    id: 'uuid000120',
+    id: 'uuid00120',
     eventType: 'task_update',
     description: 'Some description',
     title: 'A workflow',
