@@ -9,6 +9,7 @@ image: "ruby:2.6"
 
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
 
 .base_minimal:
   image: alpine:latest
