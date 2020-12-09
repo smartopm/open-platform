@@ -11,7 +11,6 @@ module Types
     field :event_condition_query, String, null: true
     field :event_action, GraphQL::Types::JSON, null: true
     field :action_type, String, null: true
-    field :active, GraphQL::Types::Boolean, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 
     def action_type
