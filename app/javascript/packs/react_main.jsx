@@ -366,6 +366,7 @@ const App = () => {
                             />
                             <Route path="/comments" exact component={CommentsPage} />
                             <Route path="/community" component={CommunitySettings}  />
+                            <Route path="/visit_request" component={EntryRequest} />
                           </Switch>
                         </AdminRoutes>
                         <Route

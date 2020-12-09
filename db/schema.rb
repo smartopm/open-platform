@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_08_114031) do
+ActiveRecord::Schema.define(version: 2020_12_08_152139) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -234,6 +234,9 @@ ActiveRecord::Schema.define(version: 2020_12_08_114031) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "source"
     t.boolean "acknowledged"
+    t.datetime "visitation_date"
+    t.string "start_time"
+    t.string "end_time"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

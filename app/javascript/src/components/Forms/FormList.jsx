@@ -7,7 +7,6 @@ import {
   Divider,
   Typography,
   Box,
-  Fab,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -35,6 +34,7 @@ import { FormCreateMutation, FormUpdateMutation } from '../../graphql/mutations/
 import { formStatus } from '../../utils/constants'
 import { ActionDialog } from '../Dialog'
 import MessageAlert from '../MessageAlert'
+import FloatButton from '../FloatButton'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
@@ -180,15 +180,10 @@ export default function FormLinkList({ userType }) {
       </List>
 
       {userType === 'admin' && (
-        <Fab
-          variant="extended"
-          onClick={() => setOpen(!open)}
-          color="primary"
-          // eslint-disable-next-line no-use-before-define
-          className={`btn ${css(styles.formButton)} `}
-        >
-          Create a Form
-        </Fab>
+        <FloatButton 
+          title="Create a Form"
+          handleClick={() => setOpen(!open)}
+        />
       )}
     </div>
   )
@@ -311,15 +306,6 @@ FormLinkList.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  formButton: {
-    height: 51,
-    boxShadow: 'none',
-    position: 'fixed',
-    bottom: 20,
-    right: 57,
-    marginLeft: '30%',
-    color: '#FFFFFF'
-  },
   menuButton: {
     float: 'right'
   }
