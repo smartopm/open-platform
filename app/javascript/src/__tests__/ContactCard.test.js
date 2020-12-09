@@ -20,7 +20,7 @@ describe('Contact page', () => {
     setToken: jest.fn(),
     user: {
       avatarUrl: null,
-      community: { name: 'Nkwashi' },
+      community: { name: 'Nkwashi', supportNumber: [], supportEmail: [] },
       email: '9753942',
       expiresAt: null,
       id: '11cdad78',
