@@ -61,7 +61,17 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
   const open = Boolean(anchorEl)
 
   function isActive() {
-    return actionFlow.active
+    if (actionFlow.status === 'active') {
+      return true
+    }
+    return false
+  }
+
+  function currentStatus() {
+    if (actionFlow.status === 'active') {
+      return 'Active'
+    }
+    return 'Inactive'
   }
 
   function handleClose(event) {
@@ -119,7 +129,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
           className={classes.status}
           style={{ color: isActive ? '#66A59A' : '#ADADAD' }}
         >
-          {actionFlow.active ? 'Active' : 'Inactive'}
+          {currentStatus}
         </Typography>
       </CardContent>
     </Card>
@@ -132,7 +142,7 @@ ActionCard.propTypes = {
     eventType: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
+    status: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired
   }).isRequired,
   openFlowModal: PropTypes.func.isRequired,

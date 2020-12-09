@@ -795,7 +795,7 @@ export const Flows = gql`
       eventAction
       actionType
       createdAt
-      active
+      status
     }
   }
 `
