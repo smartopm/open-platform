@@ -310,39 +310,10 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-
-          {data.result.map((user) => (
-            <Fragment key={user.id}>
-              <div className="container">
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {dateToString(user.createdAt)}
-                    </span>
-                  </div>
-                </div>
-                <br />
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {dateTimeToString(new Date(user.createdAt))}
-                    </span>
-                  </div>
-                </div>
-                <br />
-                <div className="border-top my-3" />
-              </div>
-            </Fragment>
-          ))}
+          {data.result.map((user) => <LogView key={user.id} user={user} /> )}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          Upcoming
+          {data.result.map((log) => <LogView key={log.id} user={log} /> )}
         </TabPanel>    
         <FloatButton 
           title="New Visit Request"
@@ -375,6 +346,39 @@ export function IndexComponent({
     </div>
   )
 }
+
+export function LogView({ user }){
+  return (
+    <>
+      <div className="container">
+        <div className="row justify-content-between">
+          <div className="col-xs-8">
+            <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
+          </div>
+          <div className="col-xs-4">
+            <span className={css(styles.subTitle)}>
+              {dateToString(user.createdAt)}
+            </span>
+          </div>
+        </div>
+        <br />
+        <div className="row justify-content-between">
+          <div className="col-xs-8">
+            <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
+          </div>
+          <div className="col-xs-4">
+            <span className={css(styles.subTitle)}>
+              {dateTimeToString(new Date(user.createdAt))}
+            </span>
+          </div>
+        </div>
+        <br />
+        <div className="border-top my-3" />
+      </div>
+    </>
+  )
+}
+
 
 const styles = StyleSheet.create({
   logTitle: {

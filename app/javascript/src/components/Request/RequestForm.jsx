@@ -22,7 +22,7 @@ export default function RequestForm({ path }) {
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [isSubmitted, setSubmitted] = useState(false)
   const [isModalOpen, setModal] = useState(false)
-  const [visitationDate, setVisitDate] = useState(new Date())
+  const [visitationDate, setVisitDate] = useState(null)
   const [startTime, setVisitTime] = useState(new Date())
   const [endTime, setEndTime] = useState(new Date())
 
