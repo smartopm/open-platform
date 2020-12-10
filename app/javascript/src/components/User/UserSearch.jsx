@@ -1,12 +1,13 @@
 /* eslint-disable */
-import React from 'react'
+import React, { Fragment } from 'react'
 import {
   TextField,
   FormControlLabel,
   Radio,
   FormLabel,
   FormControl,
-  RadioGroup
+  RadioGroup,
+  Typography
 } from '@material-ui/core'
 import { useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
@@ -35,22 +36,28 @@ export default function UserSearch({ userData, update }) {
   return (
     <>
       {!isLoading && !queryErrors ? (
-        <TextField
-          name="task user"
-          label="Find a User"
-          placeholder="Type the user name here"
-          style={{ width: '100%' }}
-          onChange={handleSearchUser}
-          value={userData.user}
-          fullWidth
-          margin="normal"
-          inputProps={{
-            'aria-label': 'user'
-          }}
-          InputLabelProps={{
-            shrink: true
-          }}
-        />
+        <Fragment>
+          <TextField
+            name="task user"
+            label="Find a User"
+            placeholder="Type the user name here"
+            style={{ width: '100%' }}
+            onChange={handleSearchUser}
+            value={userData.user}
+            fullWidth
+            margin="normal"
+            inputProps={{
+              'aria-label': 'user'
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+          <Typography variant="subtitle2" color="textSecondary">
+            The account selected will be deleted from the system and
+            merged into the profile you are currently on
+          </Typography>
+        </Fragment>
       ) : (
         <Spinner />
       )}
