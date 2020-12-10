@@ -61,7 +61,17 @@ export default function ActionFlows() {
     setModalOpen(false)
   }
 
-  function isMetaDataAVariable(value) {
+  /** whitelist some metadata fields that are not variables but contain whitespace
+  e.g "message" field used by the notification action **/
+  const metaDataVariableWhiteList = Object.freeze({
+      message: 'string'
+    })
+
+  function isMetaDataAVariable({key, value}) {
+    if(key in metaDataVariableWhiteList){
+      return false
+    }
+
     return value.indexOf(' ') >= 0
   }
 
@@ -75,10 +85,10 @@ export default function ActionFlows() {
     Object.entries(metaData).forEach(([key, value]) => {
       actionMetaData[key] = {
         name: key,
-        value: isMetaDataAVariable(value)
+        value: isMetaDataAVariable({key, value})
           ? metaDataVariableValue(value)
           : value,
-        type: isMetaDataAVariable(value) ? 'variable' : 'string'
+        type: isMetaDataAVariable({key, value}) ? 'variable' : 'string'
       }
     })
 
@@ -151,6 +161,7 @@ export default function ActionFlows() {
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
+  console.log('data', data)
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
