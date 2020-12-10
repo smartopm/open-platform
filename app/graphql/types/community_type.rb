@@ -15,7 +15,10 @@ module Types
     def image_url
       return nil unless object.image.attached?
 
-      "https://#{HostEnv.base_url(object)}#{Rails.application.routes.url_helpers.rails_blob_path(object.image)}"
+      "https://#{HostEnv.base_url(object)}#{Rails
+      .application
+      .routes.url_helpers
+      .rails_blob_path(object.image)}"
     end
   end
 end
