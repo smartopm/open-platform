@@ -145,7 +145,7 @@ export function Component({
     return (
       <Link to="/">
         <ImageAuth 
-          imageLink={authState.user.community.imageUrl} 
+          imageLink={authState.user?.community.imageUrl} 
           token={authState.token} 
           className={css(styles.logo)}
         />
