@@ -22,10 +22,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
 
   function handleRemoveOption(index){
     const values = options
-    // radio buttons should have at least one choice 
-    if (values.length !== 1) {
-      values.splice(index, 1)
-    }
+    values.splice(index, 1)
     setOptions([...values])
   }
   return (

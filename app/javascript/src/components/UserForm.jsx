@@ -28,7 +28,8 @@ const initialValues = {
   state: '',
   signedBlobId: '',
   imageUrl: '',
-  subStatus: ''
+  subStatus: '',
+  address: '',
 }
 
 export default function UserForm() {
@@ -39,7 +40,9 @@ export default function UserForm() {
   const previousRoute = location.state && location.state.from
   const isFromRef = previousRoute === 'ref' || false
   const [data, setData] = React.useState(initialValues)
-  const [options, setOptions] = React.useState([""])
+  const [phoneNumbers, setPhoneNumbers] = React.useState([])
+  const [emails, setEmails] = React.useState([])
+  const [address, setAddress] = React.useState([])
   // const [isModalOpen, setDenyModal] = React.useState(false)
   // const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
@@ -169,19 +172,6 @@ export default function UserForm() {
           />
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="form-control"
-            name="email"
-            type="email"
-            onChange={handleInputChange}
-            value={data.email || ''}
-            required
-          />
-        </div>
-        <div className="form-group">
           <label className="bmd-label-static" htmlFor="phoneNumber">
             Primary Phone Number
           </label>
@@ -196,8 +186,46 @@ export default function UserForm() {
         </div>
         <FormOptionInput 
           label="Secondary Phone number"
-          options={options}
-          setOptions={setOptions}
+          options={phoneNumbers}
+          setOptions={setPhoneNumbers}
+        />
+        <div className="form-group">
+          <label className="bmd-label-static" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="form-control"
+            name="email"
+            type="email"
+            onChange={handleInputChange}
+            value={data.email || ''}
+            required
+          />
+        </div>
+        <FormOptionInput 
+          label="Secondary Email Address"
+          options={emails}
+          setOptions={setEmails}
+        />
+
+        <div className="form-group">
+          <label className="bmd-label-static" htmlFor="address">
+            Primary Address
+          </label>
+          <input
+            className="form-control"
+            name="address"
+            type="text"
+            onChange={handleInputChange}
+            value={data.address || ''}
+            required
+          />
+        </div>
+
+        <FormOptionInput 
+          label="Secondary Address"
+          options={address}
+          setOptions={setAddress}
         />
         {!isFromRef && (
           <>
