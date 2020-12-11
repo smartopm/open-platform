@@ -109,6 +109,7 @@ export default function FormBuilder({ formId }) {
           antiType: 'updates'
         }}
       />
+      <br />
       {type === 'form' ? (
         <>
           <GenericForm

@@ -1,76 +1,162 @@
-/* eslint-disable */
-import React, { useContext} from 'react'
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
-import { reasons, userState, userSubStatus, userType } from '../utils/constants'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
-import { FormContext } from '../containers/UserEdit'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { Button, Typography } from '@material-ui/core'
+import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
+import { reasons, userState, userSubStatus, userType } from '../utils/constants'
 import DatePickerDialog from './DatePickerDialog'
-import {useLocation} from "react-router-dom"
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
-import {Button} from "@material-ui/core";
-import { Typography } from '@material-ui/core'
+import { UserQuery } from '../graphql/queries'
+import { CreateUserMutation, UpdateUserMutation } from '../graphql/mutations'
+import { useFileUpload } from '../graphql/useFileUpload'
+import crudHandler from '../graphql/crud_handler'
+import Loading from './Loading'
+import FormOptionInput from './Forms/FormOptionInput'
+
+
+const initialValues = {
+  name: '',
+  email: '',
+  phoneNumber: '',
+  requestReason: '',
+  userType: '',
+  state: '',
+  signedBlobId: '',
+  imageUrl: '',
+  subStatus: '',
+  address: '',
+}
 
 export default function UserForm() {
-  let location = useLocation();
+  const location = useLocation()
+  const { id } = useParams()
+  const history = useHistory()
   const authState = React.useContext(AuthStateContext)
   const previousRoute = location.state && location.state.from
-  const isFromRef = previousRoute === "ref" || false;
-  const {
-    values,
-    handleInputChange,
-    handleDateChange,
-    handleFileUpload,
-    selectedDate,
-    imageUrl,
-    status, handleSubmit
-  } = useContext(FormContext)
-  if(isFromRef){
-    values.userType = 'prospective_client'
+  const isFromRef = previousRoute === 'ref' || false
+  const [data, setData] = React.useState(initialValues)
+  const [phoneNumbers, setPhoneNumbers] = React.useState([])
+  const [emails, setEmails] = React.useState([])
+  const [address, setAddress] = React.useState([])
+  // const [isModalOpen, setDenyModal] = React.useState(false)
+  // const [modalAction, setModalAction] = React.useState('grant')
+  const [msg, setMsg] = React.useState('')
+  const [selectedDate, handleDateChange] = React.useState(null)
+  const [showResults, setShowResults] = React.useState(false)
+  const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
+    typeName: 'user',
+    readLazyQuery: useLazyQuery(UserQuery),
+    updateMutation: useMutation(UpdateUserMutation),
+    createMutation: useMutation(CreateUserMutation)
+  })
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+
+  function handleSubmit(event) {
+    event.preventDefault()
+
+    const values = {
+      ...data,
+      name: data.name.trim(),
+      phoneNumber: data.phoneNumber?.replace(/ /g, ''),
+      avatarBlobId: signedBlobId,
+      expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
+    }
+
+    if (isFromRef) {
+      setTimeout(() => {
+        window.location.reload(false)
+      }, 3000)
+    }
+    createOrUpdate(values)
+      // eslint-disable-next-line no-shadow
+      .then(({ data }) => {
+        // setSubmitting(false);
+        if (isFromRef) {
+          setShowResults(true)
+        } else {
+          history.push(`/user/${data.result.user.id}`)
+        }
+      })
+      .catch(err => {
+        setMsg(err.message)
+      })
+  }
+
+  function handleInputChange(event) {
+    const { name, value } = event.target
+    setData({
+      ...data,
+      [name]: value
+    })
+  }
+
+  if (id) {
+    if (isLoading) {
+      return <Loading />
+    } if (!result.id && !error) {
+      loadRecord({ variables: { id } })
+    } else if (!data.dataLoaded && result.id) {
+      setData({
+        ...result,
+        dataLoaded: true
+      })
+
+      handleDateChange(result.expiresAt)
+    }
+  }
+
+  if (isFromRef) {
+    data.userType = 'prospective_client'
   }
   return (
     <div className="container">
-      <form onSubmit={e=> handleSubmit(e, values)}>
-        {!isFromRef&&(
+      <form onSubmit={handleSubmit}>
+        {!isFromRef && (
           <div className="form-group">
-          {status === 'DONE' ? (
-            <img
-              src={imageUrl}
-              alt="uploaded picture"
-              className={`${css(styles.uploadedImage)}`}
-            />
-          ) : (
+            {status === 'DONE' ? (
+              <img
+                src={url}
+                alt="uploaded file"
+                className={`${css(styles.uploadedImage)}`}
+              />
+            ) : (
               <div className={`${css(styles.photoUpload)}`}>
                 <input
                   type="file"
                   accepts="image/*"
                   capture
                   id="file"
-                  onChange={event => handleFileUpload(event.target.files[0])}
+                  onChange={event => onChange(event.target.files[0])}
                   className={`${css(styles.fileInput)}`}
                 />
                 <PhotoCameraIcon />
                 <label htmlFor="file">Take a photo</label>
               </div>
             )}
-        </div>
+          </div>
         )}
-        {isFromRef&&(
+        {isFromRef && (
           <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">
-           Client Name
-          </label>
-          <input
-            className="form-control"
-            type="text"
-            onChange={handleInputChange}
-            value={authState.user.name || ''}
-            disabled={true}
-            name="name"
-            required
-          />
-        </div>
+            <label className="bmd-label-static" htmlFor="firstName">
+              Client Name
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              onChange={handleInputChange}
+              value={authState.user.name || ''}
+              disabled
+              name="name"
+              required
+            />
+          </div>
         )}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
@@ -80,11 +166,29 @@ export default function UserForm() {
             className="form-control"
             type="text"
             onChange={handleInputChange}
-            value={values.name || ''}
+            value={data.name || ''}
             name="name"
             required
           />
         </div>
+        <div className="form-group">
+          <label className="bmd-label-static" htmlFor="phoneNumber">
+            Primary Phone Number
+          </label>
+          <input
+            className="form-control"
+            type="text"
+            onChange={handleInputChange}
+            defaultValue={data.phoneNumber || ''}
+            name="phoneNumber"
+            required
+          />
+        </div>
+        <FormOptionInput 
+          label="Secondary Phone number"
+          options={phoneNumbers}
+          setOptions={setPhoneNumbers}
+        />
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
             Email
@@ -94,137 +198,155 @@ export default function UserForm() {
             name="email"
             type="email"
             onChange={handleInputChange}
-            value={values.email || ''}
+            value={data.email || ''}
             required
           />
         </div>
+        <FormOptionInput 
+          label="Secondary Email Address"
+          options={emails}
+          setOptions={setEmails}
+        />
+
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="phoneNumber">
-            Phone Number
+          <label className="bmd-label-static" htmlFor="address">
+            Primary Address
           </label>
           <input
             className="form-control"
+            name="address"
             type="text"
             onChange={handleInputChange}
-            defaultValue={values.phoneNumber || ''}
-            name="phoneNumber"
+            value={data.address || ''}
             required
           />
         </div>
-      {!isFromRef&&(
-               <>
-                   <div className="form-group">
-                <TextField
-                  id="reason"
-                  select
-                  label="Reason"
-                  name="requestReason"
-                  value={values.requestReason || ''}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {reasons.map(reason => (
-                    <MenuItem key={reason} value={reason}>
-                      {reason}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="form-group">
-                <TextField
-                  id="userType"
-                  select
-                  label="User Type"
-                  value={values.userType || ''}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  name="userType"
-                  required
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {Object.entries(userType).map(([key, val]) => (
-                    <MenuItem key={key} value={key}>
-                      {val}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
 
-              <div className="form-group">
-                <TextField
-                  id="state"
-                  select
-                  label="State"
-                  value={values.state || ''}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  name="state"
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {Object.entries(userState).map(([key, val]) => (
-                    <MenuItem key={key} value={key}>
-                      {val}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="form-group">
-                <TextField
-                  id="sub-status"
-                  select
-                  label="Substatus"
-                  value={values.subStatus || ''}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  name="subStatus"
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {Object.entries(userSubStatus).map(([key, val]) => (
-                    <MenuItem key={key} value={key}>
-                      {val}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div >
-                  <DatePickerDialog selectedDate={selectedDate} label="Expiration Date" handleDateChange={handleDateChange} />
-              </div>
+        <FormOptionInput 
+          label="Secondary Address"
+          options={address}
+          setOptions={setAddress}
+        />
+        {!isFromRef && (
+          <>
+            <div className="form-group">
+              <TextField
+                id="reason"
+                select
+                label="Reason"
+                name="requestReason"
+                value={data.requestReason || ''}
+                onChange={handleInputChange}
+                margin="normal"
+                className={`${css(styles.selectInput)}`}
+              >
+                {reasons.map(reason => (
+                  <MenuItem key={reason} value={reason}>
+                    {reason}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="form-group">
+              <TextField
+                id="userType"
+                select
+                label="User Type"
+                value={data.userType || ''}
+                onChange={handleInputChange}
+                margin="normal"
+                name="userType"
+                required
+                className={`${css(styles.selectInput)}`}
+              >
+                {Object.entries(userType).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
 
-          <div className="form-group">
-          <div className={`${css(styles.photoUpload)} ${css(styles.idUpload)}`}>
-            <input
-              type="file"
-              accepts="image/*"
-              capture
-              id="file"
-              onChange={handleFileUpload}
-              className={`${css(styles.fileInput)}`}
-            />
-            <PhotoCameraIcon />
-            <label htmlFor="file">Take a photo of your ID</label>
-          </div>
-        </div>
-               </>
-      )}
-      {isFromRef&&(
+            <div className="form-group">
+              <TextField
+                id="state"
+                select
+                label="State"
+                value={data.state || ''}
+                onChange={handleInputChange}
+                margin="normal"
+                name="state"
+                className={`${css(styles.selectInput)}`}
+              >
+                {Object.entries(userState).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="form-group">
+              <TextField
+                id="sub-status"
+                select
+                label="Substatus"
+                value={data.subStatus || ''}
+                onChange={handleInputChange}
+                margin="normal"
+                name="subStatus"
+                className={`${css(styles.selectInput)}`}
+              >
+                {Object.entries(userSubStatus).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div>
+              <DatePickerDialog
+                selectedDate={selectedDate}
+                label="Expiration Date"
+                handleDateChange={handleDateChange}
+              />
+            </div>
+          </>
+        )}
 
-        <div className='d-flex row justify-content-center' >
-       <div className="col-8 p-0 justify-content-center" style={{ width: 256, marginRight: "10%" }}>
-       <Typography color="textSecondary" variant="body2" style={{ fontSize: 13 }}>
-         Nkwashi values its community and believes our community starts with you! Referring your friends and family members
-           to Nkwashi gives you a chance to pick your future neighbors, so start referring today.
-        </Typography>
-      </div>
         <Button
-        variant="contained"
-        type = "submit"
-        className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-      >
-        <span>Refer</span>
-      </Button>
-        </div>
-      )}
+          variant="contained"
+          type="submit"
+          className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+        >
+          Submit
+        </Button>
+
+        {isFromRef && (
+          <div className="d-flex row justify-content-center">
+            <div
+              className="col-8 p-0 justify-content-center"
+              style={{ width: 256, marginRight: '10%' }}
+            >
+              <Typography
+                color="textSecondary"
+                variant="body2"
+                style={{ fontSize: 13 }}
+              >
+                Nkwashi values its community and believes our community starts
+                with you! Referring your friends and family members to Nkwashi
+                gives you a chance to pick your future neighbors, so start
+                referring today.
+              </Typography>
+            </div>
+            <Button
+              variant="contained"
+              type="submit"
+              className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+            >
+              <span>Refer</span>
+            </Button>
+          </div>
+        )}
       </form>
     </div>
   )
@@ -232,13 +354,13 @@ export default function UserForm() {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
-    width: "30%",
+    backgroundColor: '#69ABA4',
+    color: '#FFF',
+    width: '30%',
     height: 51,
-    boxShadow: "none",
+    boxShadow: 'none',
     marginTop: 50,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   selectInput: {
     width: '100%'
