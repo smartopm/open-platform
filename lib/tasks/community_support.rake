@@ -14,11 +14,16 @@ namespace :community_support do
       { phone_number: '+260 760 635024', category: 'sales' },
       { phone_number: '+260 976 261199', category: 'customer_care' },
       { phone_number: '+260 974 624243', category: 'customer_care' },
-
     ]
 
+    support_whatsapp = [{ whatsapp: '+260 974 624243', category: 'customer_care' }]
+
     nkwashi_comm = Community.find_by(name: 'Nkwashi')
-    nkwashi_comm.update!(support_email: support_email, support_number: support_number)
+    nkwashi_comm.update!(
+      support_email: support_email,
+      support_number: support_number,
+      support_whatsapp: support_whatsapp,
+    )
     puts 'Done!'
   end
 end
