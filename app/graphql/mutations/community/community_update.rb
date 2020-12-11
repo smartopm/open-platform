@@ -7,6 +7,7 @@ module Mutations
       argument :name, String, required: false
       argument :support_number, GraphQL::Types::JSON, required: false
       argument :support_email, GraphQL::Types::JSON, required: false
+      argument :support_whatsapp, GraphQL::Types::JSON, required: false
       argument :image_blob_id, String, required: false
 
       field :community, Types::CommunityType, null: true

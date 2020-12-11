@@ -24,9 +24,14 @@ export default function CommunitySettings({ data, token, refetch }) {
     email: '',
     category: ''
   }
+  const whatsapps = {
+    whatsapp: '',
+    category: ''
+  }
   const [communityUpdate] = useMutation(CommunityUpdateMutation)
   const [numberOptions, setNumberOptions] = useState([numbers])
   const [emailOptions, setEmailOptions] = useState([emails])
+  const [whatsappOptions, setWhatsappOptions] = useState([whatsapps])
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [alertOpen, setAlertOpen] = useState(false)
   const [mutationLoading, setCallMutation] = useState(false)
@@ -54,16 +59,22 @@ export default function CommunitySettings({ data, token, refetch }) {
     setEmailOptions([...emailOptions, emails])
   }
 
+  function handleAddWhatsappOption() {
+    setWhatsappOptions([...whatsappOptions, whatsapps])
+  }
+
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
-      setEmailOptions([
-        ...options.slice(0, index),
-        { ...options[index], ...newValue },
-        ...options.slice(index + 1)
-      ])
-      return
+      handleSetOptions(setEmailOptions, index, newValue, options)
+    } else if (type === 'whatsapp') {
+      handleSetOptions(setWhatsappOptions, index, newValue, options)
+    } else {
+      handleSetOptions(setNumberOptions, index, newValue, options)
     }
-    setNumberOptions([
+  }
+
+  function handleSetOptions(handler, index, newValue, options) {
+    handler([
       ...options.slice(0, index),
       { ...options[index], ...newValue },
       ...options.slice(index + 1)
@@ -78,6 +89,16 @@ export default function CommunitySettings({ data, token, refetch }) {
       'email'
     )
   }
+
+  function handleWhatsappChange(event, index) {
+    updateOptions(
+      index,
+      { [event.target.name]: event.target.value },
+      whatsappOptions,
+      'whatsapp'
+    )
+  }
+
   function handleNumberRemove(id) {
     const values = numberOptions
     if (values.length !== 1) {
@@ -92,6 +113,14 @@ export default function CommunitySettings({ data, token, refetch }) {
       values.splice(id, 1)
     }
     setEmailOptions([...values])
+  }
+
+  function handleWhatsappRemoveRow(id) {
+    const values = whatsappOptions
+    if (values.length !== 1) {
+      values.splice(id, 1)
+    }
+    setWhatsappOptions([...values])
   }
 
   function onInputChange(file) {
@@ -135,6 +164,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       variables: {
         supportNumber: numberOptions,
         supportEmail: emailOptions,
+        supportWhatsapp: whatsappOptions,
         imageBlobId: signedBlobId
       }
     })
@@ -153,6 +183,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   useEffect(() => {
     setEmailOptions(data.supportEmail || [emails])
     setNumberOptions(data.supportNumber || [numbers] )
+    setWhatsappOptions(data.supportWhatsapp || [whatsapps])
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
@@ -169,9 +200,9 @@ export default function CommunitySettings({ data, token, refetch }) {
         You can change your community logo here
       </Typography>
       <div className={classes.avatar}>
-        <ImageAuth 
-          imageLink={data.imageUrl} 
-          token={token} 
+        <ImageAuth
+          imageLink={data.imageUrl}
+          token={token}
           className="img-responsive img-thumbnail"
           style={{height: '70px', width: '70px'}}
         />
@@ -225,6 +256,26 @@ export default function CommunitySettings({ data, token, refetch }) {
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <DynamicContactFields
+          options={whatsappOptions}
+          handleChange={handleWhatsappChange}
+          handleRemoveRow={handleWhatsappRemoveRow}
+          data={{ label: 'WhatsApp', name: 'whatsapp' }}
+        />
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddWhatsappOption}
+        >
+          <AddCircleOutlineIcon />
+          <div style={{ marginLeft: '10px', color: 'secondary' }}>
+            <Typography align="center" variant="caption">
+              Add New Whatsapp Number
+            </Typography>
+          </div>
+        </div>
+      </div>
+      <div className={classes.information} style={{ marginTop: '40px' }}>
+        <DynamicContactFields
           options={emailOptions}
           handleChange={handleEmailChange}
           handleRemoveRow={handleEmailRemoveRow}
@@ -265,6 +316,7 @@ CommunitySettings.propTypes = {
     logoUrl: PropTypes.string,
     supportNumber: PropTypes.arrayOf(PropTypes.object),
     supportEmail: PropTypes.arrayOf(PropTypes.object),
+    supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     imageUrl: PropTypes.string
   }).isRequired,
   token: PropTypes.string.isRequired,
