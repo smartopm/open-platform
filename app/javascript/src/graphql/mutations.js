@@ -8,7 +8,7 @@ export const CreateUserMutation = gql`
     $email: String
     $phoneNumber: String!
     $userType: String!
-    $address: String!
+    $address: String
     $state: String
     $vehicle: String
     $requestReason: String
@@ -32,12 +32,12 @@ export const CreateUserMutation = gql`
       secondaryInfo: $secondaryInfo
     ) {
       user {
-        ...UserFields
+       id
       }
     }
   }
-  ${UserFragment.publicFields}
-`
+  `
+  // ${UserFragment.publicFields}
 
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(

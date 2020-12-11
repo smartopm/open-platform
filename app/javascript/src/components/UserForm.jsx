@@ -19,6 +19,7 @@ import Loading from './Loading'
 import FormOptionInput from './Forms/FormOptionInput'
 import { saniteError } from '../utils/helpers'
 import { ModalDialog } from './Dialog'
+import CenteredContent from './CenteredContent'
 
 
 const initialValues = {
@@ -222,11 +223,15 @@ export default function UserForm() {
             required
           />
         </div>
-        <FormOptionInput 
-          label="Secondary Phone number"
-          options={phoneNumbers}
-          setOptions={setPhoneNumbers}
-        />
+        {
+          !isFromRef && (
+            <FormOptionInput 
+              label="Secondary Phone number"
+              options={phoneNumbers}
+              setOptions={setPhoneNumbers}
+            />
+          )
+        }
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
             Email
@@ -240,33 +245,34 @@ export default function UserForm() {
             required
           />
         </div>
-        <FormOptionInput 
-          label="Secondary Email Address"
-          options={emails}
-          setOptions={setEmails}
-        />
 
-        <div className="form-group">
-          <label className="bmd-label-static" htmlFor="address">
-            Primary Address
-          </label>
-          <input
-            className="form-control"
-            name="address"
-            type="text"
-            onChange={handleInputChange}
-            value={data.address || ''}
-            required
-          />
-        </div>
-
-        <FormOptionInput 
-          label="Secondary Address"
-          options={address}
-          setOptions={setAddress}
-        />
         {!isFromRef && (
           <>
+            <FormOptionInput 
+              label="Secondary Email Address"
+              options={emails}
+              setOptions={setEmails}
+            />
+
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="address">
+                Primary Address
+              </label>
+              <input
+                className="form-control"
+                name="address"
+                type="text"
+                onChange={handleInputChange}
+                value={data.address || ''}
+                required
+              />
+            </div>
+
+            <FormOptionInput 
+              label="Secondary Address"
+              options={address}
+              setOptions={setAddress}
+            />
             <div className="form-group">
               <TextField
                 id="reason"
@@ -348,16 +354,17 @@ export default function UserForm() {
                 handleDateChange={handleDateChange}
               />
             </div>
+            <CenteredContent>
+              <Button
+                variant="contained"
+                type="submit"
+                className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+              >
+                Submit
+              </Button>
+            </CenteredContent>
           </>
         )}
-
-        <Button
-          variant="contained"
-          type="submit"
-          className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
-        >
-          Submit
-        </Button>
 
         {Boolean(msg.length) && !isFromRef && (
         <p className="text-danger text-center">
@@ -395,10 +402,11 @@ export default function UserForm() {
           <div className="d-flex row justify-content-center">
             <p>Thank you for your referral. We will reach out to them soon.</p>
           </div>
-      ) : (
+      ) :
+       (
         Boolean(msg.length) && (
           <p className="text-danger text-center">
-            This user already exists in the system.
+            {msg}
           </p>
         )
       )}
