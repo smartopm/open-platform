@@ -234,7 +234,7 @@ export default function UserForm() {
         }
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
-            Email
+            Primary email address
           </label>
           <input
             className="form-control"

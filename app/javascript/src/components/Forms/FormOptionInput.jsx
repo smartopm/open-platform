@@ -52,7 +52,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
           </div>
         ))
       }
-      <IconButton onClick={handleAddOption} aria-label="add">
+      <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }}>
         <AddCircleOutline /> 
         <Typography color="primary" style={{ marginLeft: 10 }}>
           { `  Add ${label}` }
