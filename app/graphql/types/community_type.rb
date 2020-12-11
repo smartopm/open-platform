@@ -10,6 +10,7 @@ module Types
     field :timezone, String, null: true
     field :support_number, GraphQL::Types::JSON, null: true
     field :support_email, GraphQL::Types::JSON, null: true
+    field :support_whatsapp, GraphQL::Types::JSON, null: true
     field :image_url, String, null: true
 
     def image_url

@@ -14,6 +14,12 @@ describe('Community settings page ', () => {
           category: 'sales'
         }
       ],
+      supportWhatsapp: [
+        {
+          whatsapp: '260920000748',
+          category: 'sales'
+        }
+      ],
       supportEmail: [
         {
           email: 'abc@gmail.com',
@@ -38,17 +44,19 @@ describe('Community settings page ', () => {
     expect(container.queryByText('Make changes to your contact information here.')).toBeInTheDocument()
     expect(container.queryByText('Add New Phone Number')).toBeInTheDocument()
     expect(container.queryByText('Add New Email Address')).toBeInTheDocument()
+    expect(container.queryByText('Add New WhatsApp Number')).toBeInTheDocument()
     expect(container.queryByText('UPDATE COMMUNITY SETTINGS')).toBeInTheDocument()
     expect(container.queryByText('UPDATE COMMUNITY SETTINGS')).not.toBeDisabled()
     expect(container.queryAllByLabelText('Email')).toHaveLength(2)
     expect(container.queryByLabelText('Phone Number')).toBeInTheDocument()
+    expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument()
 
-    expect(container.queryAllByLabelText('remove')).toHaveLength(3)
+    expect(container.queryAllByLabelText('remove')).toHaveLength(4)
 
     fireEvent.click(container.queryAllByTestId('add_number')[0])
 
-    expect(container.queryAllByLabelText('remove')).toHaveLength(4)
+    expect(container.queryAllByLabelText('remove')).toHaveLength(5)
     fireEvent.click(container.queryAllByLabelText('remove')[0])
-    expect(container.queryAllByLabelText('remove')).toHaveLength(3)
+    expect(container.queryAllByLabelText('remove')).toHaveLength(4)
   })
 })

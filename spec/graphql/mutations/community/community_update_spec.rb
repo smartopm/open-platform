@@ -9,11 +9,13 @@ RSpec.describe Mutations::Community::CommunityUpdate do
 
     let(:update_community) do
       <<~GQL
-        mutation communityUpdate($name: String, $supportNumber: JSON, $supportEmail: JSON){
-          communityUpdate(name: $name, supportNumber: $supportNumber, supportEmail: $supportEmail){
+        mutation communityUpdate($name: String, $supportNumber: JSON, $supportEmail: JSON, $supportWhatsapp: JSON){
+          communityUpdate(name: $name, supportNumber: $supportNumber, supportEmail: $supportEmail, supportWhatsapp: $supportWhatsapp){
             community {
                 id
                 name
+                supportEmail
+                supportWhatsapp
             }
           }
         }
@@ -22,17 +24,26 @@ RSpec.describe Mutations::Community::CommunityUpdate do
 
     it 'updates a community' do
       email = [{ email: 'abs@g.c', category: 'sales' }]
+      whatsapp = [{ whatsapp: '09034567823', category: 'customer_care' }]
       variables = {
         name: 'Awesome Name',
         supportEmail: email.to_json,
+        supportWhatsapp: whatsapp.to_json,
       }
       result = DoubleGdpSchema.execute(update_community, variables: variables,
                                                          context: {
                                                            current_user: admin,
                                                            site_community: user.community,
                                                          }).as_json
+
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to_not be_nil
       expect(result.dig('data', 'communityUpdate', 'community', 'name')).to include 'Awesome Name'
+      expect(result.dig('data', 'communityUpdate', 'community', 'supportEmail')).to eq(
+        email.to_json,
+      )
+      expect(result.dig('data', 'communityUpdate', 'community', 'supportWhatsapp')).to eq(
+        whatsapp.to_json,
+      )
       expect(result.dig('errors')).to be_nil
     end
 

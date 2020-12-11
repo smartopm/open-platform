@@ -6,7 +6,6 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { salesSupport, customerCare } from '../utils/constants'
 
 const icons = {
   mail: <MailOutlineIcon />,
@@ -16,19 +15,21 @@ const icons = {
 
 const linkType = {
   phone: 'tel',
-  mail: 'mailto',
+  mail: 'mailto'
 }
 
 export function SupportContact({ classes, support }) {
   const number = support.contact.replace(/\s/g, '')
   const whatsappLink = `https://api.whatsapp.com/send?phone=${number}`
-  const link = `${support.type === 'whatsapp' ? whatsappLink : `${linkType[support.type]}:${number}`}`
+  const link = `${
+    support.type === 'whatsapp'
+      ? whatsappLink
+      : `${linkType[support.type]}:${number}`
+  }`
 
   return (
     <Grid container direction="row" className={classes.root}>
-      <Grid item>
-        {icons[support.type]}
-      </Grid>
+      <Grid item>{icons[support.type]}</Grid>
 
       <Grid item>
         <Typography className={classes.pos} color="textSecondary">
@@ -42,9 +43,51 @@ export function SupportContact({ classes, support }) {
 export default function SupportCard({ handleSendMessage, user }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles()
-  // hard coding CSM number
-  // TODO: @olivier ==> Find a better to get numbers && ids for CSM dynamically
   const history = useHistory()
+
+  function supports() {
+    let result = handlePopulateSupports([], [], 'supportNumber', 'phone')
+    result = handlePopulateSupports(
+      result.sales,
+      result.customerCare,
+      'supportWhatsapp',
+      'whatsapp'
+    )
+    result = handlePopulateSupports(
+      result.sales,
+      result.customerCare,
+      'supportEmail',
+      'mail'
+    )
+
+    return {
+      sales: result.sales,
+      customerCare: result.customerCare
+    }
+  }
+
+  function handlePopulateSupports(sales, customerCare, supportName, type) {
+    let supportType = type
+    if (type === 'phone') supportType = 'phone_number'
+    if (type === 'mail') supportType = 'email'
+    // eslint-disable-next-line no-unused-expressions
+    user.community[supportName]?.forEach(support => {
+      if (support.category === 'sales')
+        sales.push({
+          contact: support[supportType],
+          type
+        })
+      if (support.category === 'customer_care')
+        customerCare.push({
+          contact: support[supportType],
+          type
+        })
+    })
+    return {
+      sales,
+      customerCare
+    }
+  }
 
   return (
     <>
@@ -71,25 +114,61 @@ export default function SupportCard({ handleSendMessage, user }) {
       <div className="justify-content-center align-items-center container">
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Typography variant="h6" align="center" gutterBottom color="textSecondary">
+            <Typography
+              variant="h6"
+              align="center"
+              gutterBottom
+              color="textSecondary"
+            >
               Sales Support
             </Typography>
-            {
-              salesSupport.map((support) => (
-                <SupportContact key={support.contact} classes={classes} support={support} />
+            {supports().sales.length ? (
+              supports().sales.map(support => (
+                <SupportContact
+                  key={support.contact}
+                  classes={classes}
+                  support={support}
+                />
               ))
-            }
+            ) : (
+              <Typography
+                paragraph
+                variant="body1"
+                color="textSecondary"
+                align="center"
+              >
+                Contacts not available at the moment
+              </Typography>
+            )}
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="h6" align="center" gutterBottom color="textSecondary">
+            <Typography
+              variant="h6"
+              align="center"
+              gutterBottom
+              color="textSecondary"
+            >
               Customer Care
             </Typography>
 
-            {
-              customerCare.map((support) => (
-                <SupportContact key={support.contact} classes={classes} support={support} />
+            {supports().customerCare.length ? (
+              supports().customerCare.map(support => (
+                <SupportContact
+                  key={support.contact}
+                  classes={classes}
+                  support={support}
+                />
               ))
-            }
+            ) : (
+              <Typography
+                paragraph
+                variant="body1"
+                color="textSecondary"
+                align="center"
+              >
+                Contacts not available at the moment
+              </Typography>
+            )}
           </Grid>
         </Grid>
 
@@ -142,7 +221,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               Explore
             </Button>
           </Grid>
-          ) : null}
+        ) : null}
       </div>
     </>
   )
@@ -151,13 +230,15 @@ export default function SupportCard({ handleSendMessage, user }) {
 SupportContact.propTypes = {
   support: PropTypes.shape({
     contact: PropTypes.string,
-    type: PropTypes.string,
+    type: PropTypes.string
   }).isRequired,
   classes: PropTypes.objectOf(PropTypes.object).isRequired
 }
 SupportCard.propTypes = {
   user: PropTypes.shape({
-    userType: PropTypes.string
+    userType: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    community: PropTypes.object
   }).isRequired,
   handleSendMessage: PropTypes.func.isRequired
 }
