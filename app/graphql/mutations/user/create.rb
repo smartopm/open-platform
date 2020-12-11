@@ -12,6 +12,7 @@ module Mutations
       argument :name, String, required: true
       argument :email, String, required: false
       argument :phone_number, String, required: true
+      argument :address, String, required: true
       argument :user_type, String, required: true
       argument :state, String, required: false
       argument :request_reason, String, required: false

@@ -7,6 +7,7 @@ module Types
     field :community, Types::CommunityType, null: false
     field :email, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :name, String, null: false
+    field :address, String, null: true
     field :image_url, String, null: true
     field :user_type, String, null: true
     field :vehicle, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
