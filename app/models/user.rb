@@ -133,6 +133,8 @@ class User < ApplicationRecord
   OAUTH_FIELDS_MAP = {
     email: ->(auth) { auth.info.email },
     name: ->(auth) { auth.info.name },
+    phone_number: ->(auth) { auth.info.phone_number },
+    address: ->(auth) { auth.info.address },
     provider: ->(auth) { auth.provider },
     uid: ->(auth) { auth.uid },
     image_url: ->(auth) { auth.info.image },
@@ -195,7 +197,7 @@ class User < ApplicationRecord
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
     return enrolled_user unless enrolled_user.save
 
-    record_secondary_info(enrolled_user, vals[:secondary_info]) if enrolled_user.valid?
+    record_secondary_info(enrolled_user, vals[:secondary_info])
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)
     enrolled_user
@@ -205,6 +207,8 @@ class User < ApplicationRecord
   # rubocop:enable MethodLength
 
   def record_secondary_info(user, secondary_contact_data)
+    return unless secondary_contact_data.present? && user.valid?
+
     JSON.parse(secondary_contact_data).each do |key, values|
       values.each { |val| user.contact_infos.create(contact_type: key, info: val) }
     end

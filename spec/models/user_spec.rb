@@ -17,6 +17,10 @@ RSpec.describe User, type: :model do
       should define_enum_for(:sub_status)
         .with_values(User.sub_statuses)
     }
+    # it { should validate_uniqueness_of(:email) }
+    it { should validate_presence_of(:email) }
+    # it { should validate_uniqueness_of(:phone_number) }
+    it { should validate_presence_of(:phone_number) }
   end
 
   describe 'Creating a user from a oauth authentication callback' do
@@ -28,6 +32,7 @@ RSpec.describe User, type: :model do
         name: 'Mark',
         email: 'mark@doublegdp.com',
         image: 'https://mypic.com/image.png',
+        phone_number: '1234567890',
       ),
       credentials: OpenStruct.new(
         token: '12345',
@@ -190,6 +195,7 @@ RSpec.describe User, type: :model do
         email: 'mark@doublegdp.com',
         request_reason: 'Resident',
         vehicle: nil,
+        phone_number: '1234567890',
       }
       @nuser = @admin.enroll_user(vals)
       expect(@nuser.community_id).to be @admin.community_id
