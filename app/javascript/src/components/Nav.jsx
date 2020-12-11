@@ -10,7 +10,7 @@ import { Context as AuthStateContext } from '../containers/Provider/AuthStatePro
 import Drawer from '@material-ui/core/Drawer'
 import { SideList } from './SideList.jsx'
 import { safeAvatarLink } from './Avatar.jsx'
-import { FormContext } from '../containers/UserEdit.jsx'
+// import { FormContext } from '../containers/UserEdit.jsx'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
 import { useQuery } from 'react-apollo';
 import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries.js';
@@ -51,7 +51,7 @@ export function Component({
   backTo
 }) {
   const [state, setState] = React.useState(false)
-  const { values, handleSubmit } = useContext(FormContext)
+  // const { values, handleSubmit } = useContext(FormContext)
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' })
   const { data: messageCount } = useQuery(messageCountQuery,
                                           {fetchPolicy: 'cache-and-network',
@@ -84,23 +84,24 @@ export function Component({
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </span>
       )
-    } else if (menuButton === 'edit') {
-      return (
-        <Fragment>
-          <span
-            className={css(styles.buttonLeft)}
-            onClick={() => history.push(backTo)}
-          >
-            <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-          </span>
-          <span onClick={e => handleSubmit(e, values)}>
-            <i className={`material-icons ${css(styles.rightSideIcon)}`}>
-              check
-            </i>
-          </span>
-        </Fragment>
-      )
-    }
+    } 
+    // else if (menuButton === 'edit') {
+    //   return (
+    //     <Fragment>
+    //       <span
+    //         className={css(styles.buttonLeft)}
+    //         onClick={() => history.push(backTo)}
+    //       >
+    //         <i className={`material-icons ${css(styles.icon)}`}>clear</i>
+    //       </span>
+    //       <span onClick={e => handleSubmit(e, values)}>
+    //         <i className={`material-icons ${css(styles.rightSideIcon)}`}>
+    //           check
+    //         </i>
+    //       </span>
+    //     </Fragment>
+    //   )
+    // }
 
     return (
       <Fragment>

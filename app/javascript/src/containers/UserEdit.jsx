@@ -22,36 +22,19 @@ const initialValues = {
   state: '',
   signedBlobId: '',
   imageUrl: '',
-  subStatus: '',
+  subStatus: ''
 }
-
-export const FormContext = React.createContext({
-  values: initialValues,
-  handleInputChange: () => {}
-})
-
 export default function FormContainer({ match, history, location }) {
-  const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
-    typeName: 'user',
-    readLazyQuery: useLazyQuery(UserQuery),
-    updateMutation: useMutation(UpdateUserMutation),
-    createMutation: useMutation(CreateUserMutation)
-  })
   const previousRoute = location.state && location.state.from
-  const isFromRef = previousRoute === "ref" || false;
-  let title = 'New User'
-  if (result && result.id) {
-    title = 'Editing User'
-  }else if (isFromRef){
-    title = 'Referrals'
-  }
+  const isFromRef = previousRoute === 'ref' || false
 
-  const [data, setData] = React.useState(initialValues)
-  const [isModalOpen, setDenyModal] = React.useState(false)
-  const [modalAction, setModalAction] = React.useState('grant')
-  const [msg, setMsg] = React.useState('')
-  const [selectedDate, handleDateChange] = React.useState(null)
-  const [showResults, setShowResults] = React.useState(false)
+  // let title = 'New User'
+  // if (result && result.id) {
+  //   title = 'Editing User'
+  // } else if (isFromRef) {
+  //   title = 'Referrals'
+  // }
+
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
@@ -78,105 +61,41 @@ export default function FormContainer({ match, history, location }) {
       })
   }
 
-  function handleSubmit(event) {
-    event.preventDefault()
-
-    const values = {
-      ...data,
-      name: data.name.trim(),
-      phoneNumber: data.phoneNumber?.replace(/ /g, '',),
-      avatarBlobId: signedBlobId,
-      expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
-    }
-
-    if(isFromRef){
-      setTimeout(() => {
-        window.location.reload(false)
-      }, 3000);
-    }
-    createOrUpdate(values)
-      .then(({ data }) => {
-        // setSubmitting(false);
-        if(isFromRef){
-          setShowResults(true)
-          return
-        }else{
-        history.push(`/user/${data.result.user.id}`)
-        }
-      })
-      .catch(err => {
-        setMsg(err.message)
-      })
-
-  }
-  function handleInputChange(event) {
-    const { name, value } = event.target
-    setData({
-      ...data,
-      [name]: value
-    })
-  }
-
-
-  // If we are in an edit flow and haven't loaded the data,
-  // load the user data
-
-  // If we are in an edit flow and have data loaded,
-  // and it hasn't been merged with values, then
-  // merge the result with the form 'data'
-  //
-  if (match.params.id) {
-    if (isLoading) {
-      return <Loading />
-    } else if (!result.id && !error) {
-      loadRecord({ variables: { id: match.params.id } })
-    } else if (!data.dataLoaded && result.id) {
-      setData({
-        ...result,
-        dataLoaded: true
-      })
-
-      handleDateChange(result.expiresAt)
-    }
-  }
-
   return (
-    <FormContext.Provider
-      value={{
-        values: data || data,
-        imageUrl: url,
-        handleInputChange,
-        handleSubmit,
-        selectedDate,
-        handleDateChange,
-        handleFileUpload: onChange,
-        status
-      }}
-    >
+    <>
       <Nav
-        navName={title}
-        menuButton="edit"
-        backTo={ match.params.id ? `/user/${match.params.id}` : '/'}
+        navName={'user edit'} //TODO: @olivier ==> change this to a dynamica title
+        menuButton="back"
+        backTo={match.params.id ? `/user/${match.params.id}` : '/'}
       />
 
-      <ModalDialog
+      {/* <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
         open={isModalOpen}
         imageURL={result.avatarUrl}
         action={modalAction}
         name={data.name}
-      />
+      /> */}
       <br />
-      {(Boolean(msg.length) && !isFromRef)&& <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>}
+      {/* {Boolean(msg.length) && !isFromRef && (
+        <p className="text-danger text-center">
+          {saniteError(requiredFields, msg)}
+        </p>
+      )} */}
       <UserForm />
-      { showResults ?
-        <div className='d-flex row justify-content-center'>
+      {/* {showResults ? (
+        <div className="d-flex row justify-content-center">
           <p>Thank you for your referral. We will reach out to them soon.</p>
         </div>
-        : Boolean(msg.length) && <p className="text-danger text-center">This user already exists in the system.</p>  }
-
-    </FormContext.Provider>
+      ) : (
+        Boolean(msg.length) && (
+          <p className="text-danger text-center">
+            This user already exists in the system.
+          </p>
+        )
+      )} */}
+    </>
   )
 }
 

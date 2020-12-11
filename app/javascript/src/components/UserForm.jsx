@@ -1,43 +1,123 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext } from 'react'
+import React from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
-import { useLocation } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { Button, Typography } from '@material-ui/core'
+import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
 import { reasons, userState, userSubStatus, userType } from '../utils/constants'
-// eslint-disable-next-line import/no-cycle
-import { FormContext } from '../containers/UserEdit'
 import DatePickerDialog from './DatePickerDialog'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
+import { UserQuery } from '../graphql/queries'
+import { CreateUserMutation, UpdateUserMutation } from '../graphql/mutations'
+import { useFileUpload } from '../graphql/useFileUpload'
+import crudHandler from '../graphql/crud_handler'
+import Loading from './Loading'
+
+
+const initialValues = {
+  name: '',
+  email: '',
+  phoneNumber: '',
+  requestReason: '',
+  userType: '',
+  state: '',
+  signedBlobId: '',
+  imageUrl: '',
+  subStatus: ''
+}
 
 export default function UserForm() {
   const location = useLocation()
+  const { id } = useParams()
+  const history = useHistory()
   const authState = React.useContext(AuthStateContext)
   const previousRoute = location.state && location.state.from
   const isFromRef = previousRoute === 'ref' || false
-  const {
-    values,
-    handleInputChange,
-    handleDateChange,
-    handleFileUpload,
-    selectedDate,
-    imageUrl,
-    status,
-    handleSubmit
-  } = useContext(FormContext)
+  const [data, setData] = React.useState(initialValues)
+  // const [isModalOpen, setDenyModal] = React.useState(false)
+  // const [modalAction, setModalAction] = React.useState('grant')
+  const [msg, setMsg] = React.useState('')
+  const [selectedDate, handleDateChange] = React.useState(null)
+  const [showResults, setShowResults] = React.useState(false)
+  const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
+    typeName: 'user',
+    readLazyQuery: useLazyQuery(UserQuery),
+    updateMutation: useMutation(UpdateUserMutation),
+    createMutation: useMutation(CreateUserMutation)
+  })
+  const { onChange, status, url, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  })
+
+  function handleSubmit(event) {
+    event.preventDefault()
+
+    const values = {
+      ...data,
+      name: data.name.trim(),
+      phoneNumber: data.phoneNumber?.replace(/ /g, ''),
+      avatarBlobId: signedBlobId,
+      expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
+    }
+
+    if (isFromRef) {
+      setTimeout(() => {
+        window.location.reload(false)
+      }, 3000)
+    }
+    createOrUpdate(values)
+      // eslint-disable-next-line no-shadow
+      .then(({ data }) => {
+        // setSubmitting(false);
+        if (isFromRef) {
+          setShowResults(true)
+        } else {
+          history.push(`/user/${data.result.user.id}`)
+        }
+      })
+      .catch(err => {
+        setMsg(err.message)
+      })
+  }
+
+  function handleInputChange(event) {
+    const { name, value } = event.target
+    setData({
+      ...data,
+      [name]: value
+    })
+  }
+
+  if (id) {
+    if (isLoading) {
+      return <Loading />
+    } if (!result.id && !error) {
+      loadRecord({ variables: { id } })
+    } else if (!data.dataLoaded && result.id) {
+      setData({
+        ...result,
+        dataLoaded: true
+      })
+
+      handleDateChange(result.expiresAt)
+    }
+  }
+
   if (isFromRef) {
-    values.userType = 'prospective_client'
+    data.userType = 'prospective_client'
   }
   return (
     <div className="container">
-      <form onSubmit={e => handleSubmit(e, values)}>
+      <form onSubmit={handleSubmit}>
         {!isFromRef && (
           <div className="form-group">
             {status === 'DONE' ? (
               <img
-                src={imageUrl}
+                src={url}
                 alt="uploaded file"
                 className={`${css(styles.uploadedImage)}`}
               />
@@ -48,7 +128,7 @@ export default function UserForm() {
                   accepts="image/*"
                   capture
                   id="file"
-                  onChange={event => handleFileUpload(event.target.files[0])}
+                  onChange={event => onChange(event.target.files[0])}
                   className={`${css(styles.fileInput)}`}
                 />
                 <PhotoCameraIcon />
@@ -81,7 +161,7 @@ export default function UserForm() {
             className="form-control"
             type="text"
             onChange={handleInputChange}
-            value={values.name || ''}
+            value={data.name || ''}
             name="name"
             required
           />
@@ -95,23 +175,25 @@ export default function UserForm() {
             name="email"
             type="email"
             onChange={handleInputChange}
-            value={values.email || ''}
+            value={data.email || ''}
             required
           />
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="phoneNumber">
-            Phone Number
+            Primary Phone Number
           </label>
           <input
             className="form-control"
             type="text"
             onChange={handleInputChange}
-            defaultValue={values.phoneNumber || ''}
+            defaultValue={data.phoneNumber || ''}
             name="phoneNumber"
             required
           />
         </div>
+        
+
         {!isFromRef && (
           <>
             <div className="form-group">
@@ -120,7 +202,7 @@ export default function UserForm() {
                 select
                 label="Reason"
                 name="requestReason"
-                value={values.requestReason || ''}
+                value={data.requestReason || ''}
                 onChange={handleInputChange}
                 margin="normal"
                 className={`${css(styles.selectInput)}`}
@@ -137,7 +219,7 @@ export default function UserForm() {
                 id="userType"
                 select
                 label="User Type"
-                value={values.userType || ''}
+                value={data.userType || ''}
                 onChange={handleInputChange}
                 margin="normal"
                 name="userType"
@@ -157,7 +239,7 @@ export default function UserForm() {
                 id="state"
                 select
                 label="State"
-                value={values.state || ''}
+                value={data.state || ''}
                 onChange={handleInputChange}
                 margin="normal"
                 name="state"
@@ -175,7 +257,7 @@ export default function UserForm() {
                 id="sub-status"
                 select
                 label="Substatus"
-                value={values.subStatus || ''}
+                value={data.subStatus || ''}
                 onChange={handleInputChange}
                 margin="normal"
                 name="subStatus"
@@ -197,6 +279,14 @@ export default function UserForm() {
             </div>
           </>
         )}
+
+        <Button
+          variant="contained"
+          type="submit"
+          className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+        >
+          Submit
+        </Button>
 
         {isFromRef && (
           <div className="d-flex row justify-content-center">
