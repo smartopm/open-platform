@@ -49,14 +49,16 @@ class Notifier
   def self.community_id(label, user_id)
     return nil if label.blank? && user_id.blank?
 
-    community_id = label(label).community[:id] || user(user_id).community[:id]
+    community_id = label(label)&.community&.id || user(user_id)&.community&.id
 
     community_id
   end
 
   def self.user(user_id)
+    return nil if user_id.blank?
+
     User.where(id: user_id)
-        .includes(:user, :community).first
+        .includes(:community).first
   end
 
   # rubocop:disable Metrics/MethodLength
