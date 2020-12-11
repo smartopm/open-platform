@@ -8,7 +8,7 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { Button, Typography } from '@material-ui/core'
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
-import { reasons, userState, userSubStatus, userType } from '../utils/constants'
+import { reasons, requiredFields, userState, userSubStatus, userType } from '../utils/constants'
 import DatePickerDialog from './DatePickerDialog'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import { UserQuery } from '../graphql/queries'
@@ -17,6 +17,8 @@ import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
 import Loading from './Loading'
 import FormOptionInput from './Forms/FormOptionInput'
+import { saniteError } from '../utils/helpers'
+import { ModalDialog } from './Dialog'
 
 
 const initialValues = {
@@ -43,8 +45,8 @@ export default function UserForm() {
   const [phoneNumbers, setPhoneNumbers] = React.useState([])
   const [emails, setEmails] = React.useState([])
   const [address, setAddress] = React.useState([])
-  // const [isModalOpen, setDenyModal] = React.useState(false)
-  // const [modalAction, setModalAction] = React.useState('grant')
+  const [isModalOpen, setDenyModal] = React.useState(false)
+  const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
   const [selectedDate, handleDateChange] = React.useState(null)
   const [showResults, setShowResults] = React.useState(false)
@@ -118,11 +120,41 @@ export default function UserForm() {
     }
   }
 
+  function handleModal(type) {
+    if (type === 'grant') {
+      setModalAction('grant')
+    } else {
+      setModalAction('deny')
+    }
+    setDenyModal(!isModalOpen)
+  }
+
+  function handleModalConfirm() {
+    createOrUpdate({
+      id: result.id,
+      state: modalAction === 'grant' ? 'valid' : 'banned'
+    })
+      .then(() => {
+        setDenyModal(!isModalOpen)
+      })
+      .then(() => {
+        history.push('/pending')
+      })
+  }
+
   if (isFromRef) {
     data.userType = 'prospective_client'
   }
   return (
     <div className="container">
+      <ModalDialog
+        handleClose={handleModal}
+        handleConfirm={handleModalConfirm}
+        open={isModalOpen}
+        imageURL={result.avatarUrl}
+        action={modalAction}
+        name={data.name}
+      />
       <form onSubmit={handleSubmit}>
         {!isFromRef && (
           <div className="form-group">
@@ -327,6 +359,11 @@ export default function UserForm() {
           Submit
         </Button>
 
+        {Boolean(msg.length) && !isFromRef && (
+        <p className="text-danger text-center">
+          {saniteError(requiredFields, msg)}
+        </p>
+      )}
         {isFromRef && (
           <div className="d-flex row justify-content-center">
             <div
@@ -353,6 +390,18 @@ export default function UserForm() {
             </Button>
           </div>
         )}
+
+        {showResults ? (
+          <div className="d-flex row justify-content-center">
+            <p>Thank you for your referral. We will reach out to them soon.</p>
+          </div>
+      ) : (
+        Boolean(msg.length) && (
+          <p className="text-danger text-center">
+            This user already exists in the system.
+          </p>
+        )
+      )}
       </form>
     </div>
   )
