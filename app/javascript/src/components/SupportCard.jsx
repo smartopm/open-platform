@@ -70,7 +70,8 @@ export default function SupportCard({ handleSendMessage, user }) {
     let supportType = type
     if (type === 'phone') supportType = 'phone_number'
     if (type === 'mail') supportType = 'email'
-    user.community[supportName].forEach(support => {
+    // eslint-disable-next-line no-unused-expressions
+    user.community[supportName]?.forEach(support => {
       if (support.category === 'sales')
         sales.push({
           contact: support[supportType],

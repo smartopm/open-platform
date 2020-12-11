@@ -269,7 +269,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
-              Add New Whatsapp Number
+              Add New WhatsApp Number
             </Typography>
           </div>
         </div>
