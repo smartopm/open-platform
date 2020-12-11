@@ -10,6 +10,7 @@ describe("Support card loads component", () => {
     community: {
       supportNumber: [{phone_number: '+260 966 194383', category: 'sales'}],
       supportEmail: [{email: 'support@doublegdp.com', category: 'customer_care'}],
+      supportWhatsapp: [{whatsapp: '+2347065834175', category: 'customer_care'}],
     }
   }
   it('should render support card', () => {
@@ -22,6 +23,7 @@ describe("Support card loads component", () => {
     expect(container.queryByText('Sales Support')).toBeInTheDocument()
     expect(container.queryByText('Customer Care')).toBeInTheDocument()
     expect(container.queryByText('+260 966 194383')).toBeInTheDocument()
+    expect(container.queryByText('+2347065834175')).toBeInTheDocument()
     expect(container.queryByText('Support Chat')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).not.toBeDisabled()
@@ -32,7 +34,8 @@ describe("Support card loads component", () => {
       userType: "client",
       community: {
         supportNumber: [],
-        supportEmail: [],
+        supportEmail: [{email: 'support@doublegdp.com', category: 'customer_care'}],
+        supportWhatsapp: [],
       }
     }
     const container = render(
