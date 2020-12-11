@@ -195,7 +195,7 @@ export default function UserForm() {
           />
         </div>
         <FormOptionInput 
-          label="Phone Number"
+          label="Secondary Phone number"
           options={options}
           setOptions={setOptions}
         />

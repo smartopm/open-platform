@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { IconButton, TextField } from '@material-ui/core'
+import { IconButton, TextField, Typography } from '@material-ui/core'
 import { AddCircleOutline, DeleteOutline } from '@material-ui/icons'
 
 /**
@@ -38,6 +38,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
               label={`${label} ${i}`}
               variant="outlined"
               size="small"
+              style={{ width: 300 }}
               value={options[i]}
               onChange={event => handleOptionChange(event, i)}
               margin="normal"
@@ -55,7 +56,10 @@ export default function FormOptionInput({ options, setOptions, label }) {
         ))
       }
       <IconButton onClick={handleAddOption} aria-label="add">
-        <AddCircleOutline />
+        <AddCircleOutline /> 
+        <Typography color="primary" style={{ marginLeft: 10 }}>
+          { `  Add ${label}` }
+        </Typography>
       </IconButton>
     </div>
   )
