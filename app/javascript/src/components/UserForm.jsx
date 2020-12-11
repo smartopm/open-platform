@@ -60,13 +60,18 @@ export default function UserForm() {
 
   function handleSubmit(event) {
     event.preventDefault()
-
+    const secondaryInfo = {
+      phone: phoneNumbers,
+      email: emails,
+      address,
+    }
     const values = {
       ...data,
       name: data.name.trim(),
       phoneNumber: data.phoneNumber?.replace(/ /g, ''),
       avatarBlobId: signedBlobId,
-      expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null
+      expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
+      secondaryInfo: JSON.stringify(secondaryInfo)
     }
 
     if (isFromRef) {
@@ -74,6 +79,7 @@ export default function UserForm() {
         window.location.reload(false)
       }, 3000)
     }
+
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {

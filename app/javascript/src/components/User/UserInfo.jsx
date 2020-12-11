@@ -33,7 +33,7 @@ export default function UserInfo({ data, userType }) {
       </div>
       <div className="form-group">
         <label className="bmd-label-static" htmlFor="phoneNumber">
-          Phone Number
+          Primary phone number
         </label>
         <input
           className="form-control"
@@ -46,7 +46,7 @@ export default function UserInfo({ data, userType }) {
       </div>
       <div className="form-group">
         <label className="bmd-label-static" htmlFor="email">
-          Email
+          Primary email address
         </label>
         <input
           className="form-control"
@@ -54,6 +54,19 @@ export default function UserInfo({ data, userType }) {
           defaultValue={data.user.email}
           name="email"
           aria-label="user_email"
+          disabled
+        />
+      </div>
+      <div className="form-group">
+        <label className="bmd-label-static" htmlFor="email">
+          Primary address
+        </label>
+        <input
+          className="form-control"
+          type="text"
+          defaultValue={data.user.address}
+          name="address"
+          aria-label="address"
           disabled
         />
       </div>

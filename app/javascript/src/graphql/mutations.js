@@ -8,12 +8,14 @@ export const CreateUserMutation = gql`
     $email: String
     $phoneNumber: String!
     $userType: String!
+    $address: String!
     $state: String
     $vehicle: String
     $requestReason: String
     $avatarBlobId: String
     $documentBlobId: String
     $subStatus: String
+    $secondaryInfo: JSON
   ) {
     result: userCreate(
       name: $name
@@ -26,6 +28,8 @@ export const CreateUserMutation = gql`
       avatarBlobId: $avatarBlobId
       documentBlobId: $documentBlobId
       subStatus: $subStatus
+      address: $address
+      secondaryInfo: $secondaryInfo
     ) {
       user {
         ...UserFields
