@@ -1,77 +1,91 @@
+# frozen_string_literal: true
+
 # class helper to handle sending of notifications in the app
 class Notifier
-	class NotifierError < StandardError; end
-	
-	# public interface used by the notification action in action_flows
-	def self.send_from_action(message_body, data = {})
-		label = data[:label]
-		user_id = data[:user_id]
+  class UninitializedError < StandardError; end
+  class NotifierError < StandardError; end
 
-		return if label.blank? && user_id.blank?
+  # rubocop:disable Metrics/MethodLength
+  # public interface used by the notification action in action_flows
+  def self.send_from_action(message_body, data = {})
+    label = data[:label]
+    user_id = data[:user_id]
 
-		user_group =  user_list_from_label(label)
-		users_to_notify = user_group || [user_id]
-		
-		return if users_to_notify.blank?
+    return if label.blank? && user_id.blank?
 
-		short_desc = 'Notification sent from Action Flow'
-		community_id = community_id(label, user_id)
+    users_to_notify = user_list_from_label(label) || [user_id]
 
-		users_to_notify.each do |_user_id|
-			send_in_app_notification(_user_id, message_body, short_desc, community_id)
-		end
-	end
+    return if users_to_notify.blank?
 
-	private
+    short_desc = 'Notification sent from Action Flow'
+    community_id = community_id(label, user_id)
 
-	def user_list_from_label(short_desc)
-		label = label(short_desc)
+    users_to_notify.each do |user|
+      send_in_app_notification(
+        user,
+        message_body: message_body,
+        short_desc: short_desc,
+        community_id: community_id,
+      )
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
 
-		return label.users.pluck(:id) if label
+  def self.user_list_from_label(short_desc)
+    label = label(short_desc)
 
-		nil
-	end
+    return label.users.pluck(:id) if label
 
-	def label(short_desc)
-		return nil if short_desc.blank?
+    nil
+  end
 
-		Label.where(short_desc: short_desc)
-					.includes(:users, :community).first
-	end
+  def self.label(short_desc)
+    return nil if short_desc.blank?
 
-	def community_id(label, user_id)
-		return nil if label.blank? && user_id.blank?
-		
-		community_id = label(label).community[:id] || user(user_id).community[:id]
+    Label.where(short_desc: short_desc)
+         .includes(:users, :community).first
+  end
 
-		community_id
-	end
-	
-	def user(user_id)
-		User.where(id: user_id)
-				.includes(:community).first
-	end
+  def self.community_id(label, user_id)
+    return nil if label.blank? && user_id.blank?
 
-	def send_in_app_notification(user, data = {})
-		return if user.blank? || data[:community_id].nil?
+    community_id = label(label).community[:id] || user(user_id).community[:id]
 
-		ActiveRecord::Base.transaction do
-			new_message = Message.create(
-					user_id: user,
-					message: data[:message] || ''
-			)
-			
-			Notification.create(
-					notifable_id: new_message[:id],
-					notifable_type: 'Message',
-					user_id: user,
-					description: data[:short_desc] || '',
-					community_id: data[:community_id]
-			)
+    community_id
+  end
 
-			# fail gracefully
-		rescue StandardError => e
-			Rails.logger.warn e.full_message
-		end
-	end
+  def self.user(user_id)
+    User.where(id: user_id)
+        .includes(:user, :community).first
+  end
+
+  # rubocop:disable Metrics/MethodLength
+  def self.send_in_app_notification(user, data = {})
+    return if user.blank? || data[:community_id].nil?
+
+    ActiveRecord::Base.transaction do
+      # TODO: we might need to create a category for notifications instead of 'sms' - @Nicolas
+      # TODO: we might also need a bot user account to serve as 'sender', whenever notifications
+      # are sent from within the app - @Nicolas
+      new_message = Message.create!(
+        user_id: user,
+        message: data[:message_body] || '',
+        category: 'sms',
+        sender_id: user,
+      )
+
+      Notification.create!(
+        notifable_id: new_message[:id],
+        notifable_type: 'Message',
+        user_id: user,
+        description: data[:short_desc] || '',
+        community_id: data[:community_id],
+      )
+
+      # fail gracefully
+    rescue StandardError => e
+      Rails.logger.warn e.full_message
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
 end

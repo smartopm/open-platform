@@ -36,7 +36,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [metaData, setMetaData] = useState({})
 
   const [loadLabelsLite, {
-    loading: labelsLiteLoading,
     data: labelsLiteData
   }] = useLazyQuery(LabelsQuery, 
     {
@@ -90,7 +89,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     const { name, value } = event.target
     
     if(data.eventType && value === 'notification') {
-      console.log('fire labelloadlit here')
       loadLabelsLite()
     }
 
@@ -127,6 +125,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   function isEdit() {
     return Object.keys(selectedActionFlow).length > 0
   }
+
+  // console.log('eventdata', eventData)
+  // console.log('actiondata', actionData)
+  // console.log('actionFieldsData', actionFieldsData)
+  // console.log('ruleFieldsData', ruleFieldsData)
 
   return (
     <Dialog
@@ -174,6 +177,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             <Select
               labelId="select-event"
               id="select-event"
+              data-testid="select-event-type"
               name="eventType"
               value={data.eventType || ''}
               fullWidth
@@ -204,6 +208,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             <Select
               labelId="select-action"
               id="select-action"
+              data-testid="select-action-type"
               name="actionType"
               value={data.actionType?.toLowerCase() || ''}
               onChange={handleInputChange}
@@ -236,7 +241,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }}
             options={ruleFieldsData.data?.ruleFields.map((option) => titleize(option)) || []}
             renderInput={(params) => {
-              if(actionField.type === 'text' && actionField.name === 'label') {
+              if(actionField.type === 'select' && actionField.name === 'label') {
                 return (
                   <FormControl fullWidth>
                     <InputLabel id={`select-${actionField.name}`}>{`Select ${capitalize(actionField.name)}`}</InputLabel>
@@ -258,14 +263,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 )
               }
               return (
-              <TextField
-                {...params}
-                label={capitalize(actionField.name)}
-                name={actionField.name}
-                margin="normal"
-                variant="outlined"
-                multiline
-              />
+                <TextField
+                  {...params}
+                  label={capitalize(actionField.name)}
+                  name={actionField.name}
+                  margin="normal"
+                  variant="outlined"
+                  multiline
+                />
             )}}
           />
         ))}

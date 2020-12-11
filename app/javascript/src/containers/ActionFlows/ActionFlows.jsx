@@ -62,7 +62,7 @@ export default function ActionFlows() {
   }
 
   /** whitelist some metadata fields that are not variables but contain whitespace
-  e.g "message" field used by the notification action **/
+  e.g "message" field used by the notification action * */
   const metaDataVariableWhiteList = Object.freeze({
       message: 'string'
     })
@@ -161,7 +161,6 @@ export default function ActionFlows() {
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
-  console.log('data', data)
   return (
     <>
       <Nav navName="Workflow" menuButton="back" backTo="/" />
