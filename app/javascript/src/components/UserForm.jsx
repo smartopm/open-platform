@@ -16,6 +16,7 @@ import { CreateUserMutation, UpdateUserMutation } from '../graphql/mutations'
 import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
 import Loading from './Loading'
+import FormOptionInput from './Forms/FormOptionInput'
 
 
 const initialValues = {
@@ -38,6 +39,7 @@ export default function UserForm() {
   const previousRoute = location.state && location.state.from
   const isFromRef = previousRoute === 'ref' || false
   const [data, setData] = React.useState(initialValues)
+  const [options, setOptions] = React.useState([""])
   // const [isModalOpen, setDenyModal] = React.useState(false)
   // const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
@@ -192,8 +194,11 @@ export default function UserForm() {
             required
           />
         </div>
-        
-
+        <FormOptionInput 
+          label="Phone Number"
+          options={options}
+          setOptions={setOptions}
+        />
         {!isFromRef && (
           <>
             <div className="form-group">
