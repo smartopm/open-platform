@@ -17,7 +17,7 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
-      argument :secondary_info, GraphQL::Types::JSON, required: false
+      argument :secondary_info, [GraphQL::Types::JSON], required: false
 
       field :user, Types::UserType, null: true
 
@@ -44,8 +44,12 @@ module Mutations
       def update_secondary_info(user, contact_info)
         return if contact_info.nil?
 
-        JSON.parse(contact_info).each do |_key, value|
-          user.contact_infos.find(value.first)&.update(info: value.last)
+        contact_info.each do |value|
+          if value['id'].nil?
+            user.contact_infos.create(contact_type: value['contact_type'], info: value['info'])
+          else
+            user.contact_infos.find(value['id'])&.update(info: value['info'])
+          end
         end
       end
 
