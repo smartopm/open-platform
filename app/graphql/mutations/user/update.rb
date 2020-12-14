@@ -8,6 +8,7 @@ module Mutations
       argument :name, String, required: false
       argument :email, String, required: false
       argument :phone_number, String, required: false
+      argument :address, String, required: false
       argument :user_type, String, required: true
       argument :state, String, required: false
       argument :request_reason, String, required: false
@@ -16,6 +17,7 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
+      argument :secondary_info, GraphQL::Types::JSON, required: false
 
       field :user, Types::UserType, null: true
 
@@ -24,8 +26,8 @@ module Mutations
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
         attach_avatars(user, vals)
-
         log_user_update(user)
+        update_secondary_info(user, vals.delete(:secondary_info))
         return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
         raise GraphQL::ExecutionError, user.errors.full_messages
@@ -34,6 +36,12 @@ module Mutations
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
           user.send(attr).attach(vals[key]) if vals[key]
+        end
+      end
+
+      def update_secondary_info(user, contact_info)
+        JSON.parse(contact_info).each do |_key, value|
+          user.contact_infos.find(value.first)&.update(info: value.last)
         end
       end
 
