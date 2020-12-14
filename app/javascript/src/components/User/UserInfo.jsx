@@ -57,7 +57,10 @@ UserInfo.propTypes = {
 }
 
 
+Contact.defaultProps = {
+  value: ""
+}
 Contact.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   label: PropTypes.string.isRequired
 }
