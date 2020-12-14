@@ -1,14 +1,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react'
+import React, { useEffect } from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
-import { Button, Typography } from '@material-ui/core'
+import { Button, IconButton, Typography } from '@material-ui/core'
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
-import { reasons, requiredFields, userState, userSubStatus, userType } from '../utils/constants'
+import { AddCircleOutline } from '@material-ui/icons'
+import {
+  reasons,
+  requiredFields,
+  userState,
+  userSubStatus,
+  userType
+} from '../utils/constants'
 import DatePickerDialog from './DatePickerDialog'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import { UserQuery } from '../graphql/queries'
@@ -16,11 +23,12 @@ import { CreateUserMutation, UpdateUserMutation } from '../graphql/mutations'
 import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
 import Loading from './Loading'
-import FormOptionInput from './Forms/FormOptionInput'
+import FormOptionInput, {
+  FormOptionWithOwnActions
+} from './Forms/FormOptionInput'
 import { saniteError } from '../utils/helpers'
 import { ModalDialog } from './Dialog'
 import CenteredContent from './CenteredContent'
-
 
 const initialValues = {
   name: '',
@@ -33,6 +41,7 @@ const initialValues = {
   imageUrl: '',
   subStatus: '',
   address: '',
+  contactInfos: []
 }
 
 export default function UserForm() {
@@ -41,6 +50,7 @@ export default function UserForm() {
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
   const previousRoute = location.state && location.state.from
+  const isEditing = location.pathname.includes('edit')
   const isFromRef = previousRoute === 'ref' || false
   const [data, setData] = React.useState(initialValues)
   const [phoneNumbers, setPhoneNumbers] = React.useState([])
@@ -60,13 +70,14 @@ export default function UserForm() {
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
+  const contInfo = { info: '', id: '', contactType: '' }
 
   function handleSubmit(event) {
     event.preventDefault()
     const secondaryInfo = {
       phone: phoneNumbers,
       email: emails,
-      address,
+      address
     }
     const values = {
       ...data,
@@ -109,18 +120,17 @@ export default function UserForm() {
   if (id) {
     if (isLoading) {
       return <Loading />
-    } if (!result.id && !error) {
+    }
+    if (!result.id && !error) {
       loadRecord({ variables: { id } })
     } else if (!data.dataLoaded && result.id) {
       setData({
         ...result,
         dataLoaded: true
       })
-
       handleDateChange(result.expiresAt)
     }
   }
-
   function handleModal(type) {
     if (type === 'grant') {
       setModalAction('grant')
@@ -141,6 +151,40 @@ export default function UserForm() {
       .then(() => {
         history.push('/pending')
       })
+  }
+  function handleOptionChange(event, contactId, index) {
+    const info = event.target.value
+    const emailRegex = /\S+@\S+\.\S+/;
+    const type = emailRegex.test(info)
+    const newValue = {id: contactId, info, contactType: type ? 'email' : 'phone'}
+    const opts = data.contactInfos
+
+    setData({
+      ...data,
+      contactInfos: [
+        ...opts.slice(0, index),
+        { ...opts[index], ...newValue },
+        ...opts.slice(index + 1)
+      ]
+    })
+  }
+
+  function handleAddOption() {
+    const v = data.contactInfos
+    v.push(contInfo)
+    setData({
+      ...data,
+      contactInfos: v
+    })
+  }
+
+  function handleRemoveOption(index) {
+    const values = data.contactInfos
+    values.splice(index, 1)
+    setData({
+      ...data,
+      contactInfos: values
+    })
   }
 
   if (isFromRef) {
@@ -223,6 +267,23 @@ export default function UserForm() {
             required
           />
         </div>
+        {!isFromRef &&
+          data.contactInfos.map((contact, i) => (
+            <FormOptionWithOwnActions
+              // eslint-disable-next-line react/no-array-index-key
+              key={i}
+              id={i + 1}
+              value={contact.info}
+              actions={{
+                handleRemoveOption: () => handleRemoveOption(i),
+                handleOptionChange: event => handleOptionChange(event, contact.id, i)
+              }}
+            />
+          ))}
+        {/* <IconButton onClick={handleAddOption} aria-label="add">
+          <AddCircleOutline />
+        </IconBuxtton> */}
+
         {
           !isFromRef && (
             <FormOptionInput 
@@ -248,7 +309,7 @@ export default function UserForm() {
 
         {!isFromRef && (
           <>
-            <FormOptionInput 
+            <FormOptionInput
               label="Secondary Email Address"
               options={emails}
               setOptions={setEmails}
@@ -268,7 +329,7 @@ export default function UserForm() {
               />
             </div>
 
-            <FormOptionInput 
+            <FormOptionInput
               label="Secondary Address"
               options={address}
               setOptions={setAddress}
@@ -367,10 +428,10 @@ export default function UserForm() {
         )}
 
         {Boolean(msg.length) && !isFromRef && (
-        <p className="text-danger text-center">
-          {saniteError(requiredFields, msg)}
-        </p>
-      )}
+          <p className="text-danger text-center">
+            {saniteError(requiredFields, msg)}
+          </p>
+        )}
         {isFromRef && (
           <div className="d-flex row justify-content-center">
             <div
@@ -402,14 +463,11 @@ export default function UserForm() {
           <div className="d-flex row justify-content-center">
             <p>Thank you for your referral. We will reach out to them soon.</p>
           </div>
-      ) :
-       (
-        Boolean(msg.length) && (
-          <p className="text-danger text-center">
-            {msg}
-          </p>
-        )
-      )}
+        ) : (
+          Boolean(msg.length) && (
+            <p className="text-danger text-center">{msg}</p>
+          )
+        )}
       </form>
     </div>
   )

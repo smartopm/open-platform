@@ -36,7 +36,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
               variant="outlined"
               size="small"
               style={{ width: 300 }}
-              value={options[i]}
+              value={options[i].info}
               onChange={event => handleOptionChange(event, i)}
               margin="normal"
               autoFocus
@@ -62,6 +62,32 @@ export default function FormOptionInput({ options, setOptions, label }) {
   )
 }
 
+export function FormOptionWithOwnActions({ actions, value, id }) {
+  return (
+    <div>
+      <TextField
+        label={`option ${id}`}
+        variant="outlined"
+        size="small"
+        defaultValue={value}
+        onChange={actions.handleOptionChange}
+        margin="normal"
+        autoFocus
+        required
+        style={{ width: 300 }}
+      />
+      <IconButton
+        style={{ marginTop: 13 }}
+        onClick={actions.handleRemoveOption}
+        aria-label="remove"
+      >
+        <DeleteOutline />
+      </IconButton>
+    </div>
+
+  )
+}
+
 FormOptionInput.propTypes = {
   /**
    * an array of string, that show different option fields
@@ -76,4 +102,13 @@ FormOptionInput.propTypes = {
    * Description of a field being updated
    */
   label: PropTypes.string.isRequired
+}
+
+FormOptionWithOwnActions.propTypes = {
+  actions: PropTypes.shape({
+    handleRemoveOption: PropTypes.func,
+    handleOptionChange: PropTypes.func
+  }).isRequired,
+  value: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired
 }
