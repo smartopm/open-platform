@@ -1,73 +1,63 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
+import PropTypes from 'prop-types'
 import CaptureTemp from '../CaptureTemp'
 
-export default function UserInfo({ data, userType }) {
+export default function UserInfo({ user, userType }) {
   return (
     <div className="container">
-      <div className="form-group">
-        <label className="bmd-label-static" htmlFor="name">
-          Name
-        </label>
-        <input
-          className="form-control"
-          type="text"
-          defaultValue={data.user.name}
-          name="name"
-          aria-label="user_name"
-          disabled
-        />
-      </div>
-      <div className="form-group">
-        <label className="bmd-label-static" htmlFor="Accounts">
-          Accounts
-        </label>
-        <input
-          className="form-control"
-          type="text"
-          defaultValue={data.user.name}
-          name="accounts"
-          aria-label="user_account"
-          disabled
-        />
-      </div>
-      <div className="form-group">
-        <label className="bmd-label-static" htmlFor="phoneNumber">
-          Phone Number
-        </label>
-        <input
-          className="form-control"
-          type="text"
-          defaultValue={data.user.phoneNumber}
-          name="phoneNumber"
-          aria-label="user_number"
-          disabled
-        />
-      </div>
-      <div className="form-group">
-        <label className="bmd-label-static" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="form-control"
-          type="email"
-          defaultValue={data.user.email}
-          name="email"
-          aria-label="user_email"
-          disabled
-        />
-      </div>
+      <Contact value={user.name} label="Name" />
+      <Contact value={user.name} label="Accounts" />
+      <Contact value={user.phoneNumber} label="Phone Number" />
+      <Contact value={user.email} label="email" />
+      <br />
+      <span>Social: </span> 
+      {' '}
       <br />
       {userType === 'security_guard' && (
         <div className="container row d-flex justify-content-between">
-          <span>Social: </span> <br />
           <CaptureTemp
-            refId={data.user.id}
-            refName={data.user.name}
+            refId={user.id}
+            refName={user.name}
             refType="User"
           />
         </div>
       )}
     </div>
   )
+}
+
+
+export function Contact({ value, label }){
+  return (
+    <div className="form-group">
+      <label className="bmd-label-static">
+        {label}
+      </label>
+      <input
+        className="form-control"
+        type="text"
+        defaultValue={value}
+        name="email"
+        aria-label="user_email"
+        disabled
+      />
+    </div>
+  )
+}
+
+UserInfo.propTypes = {
+  user: PropTypes.shape({
+    email: PropTypes.string,
+    name: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    id: PropTypes.string,
+  }).isRequired,
+  userType: PropTypes.string.isRequired
+}
+
+
+Contact.propTypes = {
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
 }

@@ -114,7 +114,7 @@ export default function UserInformation({
           })
         })
   }
-
+console.log(data.user)
   return (
     <div>
       <>
@@ -186,7 +186,7 @@ export default function UserInformation({
 
         <TabPanel value={tabValue} index="Contacts">
           {/* userinfo */}
-          <UserInfo data={data} userType={authState.user.userType} />
+          <UserInfo user={data.user} userType={authState.user.userType} />
         </TabPanel>
         {['admin'].includes(userType) && (
           <>
