@@ -72,6 +72,10 @@ export default function UserForm() {
   })
   const contInfo = { info: '', id: '', contactType: '' }
 
+  function formatType(value, type){
+    return { id: '', contactType: type, info: value}
+  }
+
   function handleSubmit(event) {
     event.preventDefault()
     const secondaryInfo = {
@@ -79,6 +83,14 @@ export default function UserForm() {
       email: emails,
       address
     }
+    // if editing then restructure the phoneNumbers and emails
+    const phones = phoneNumbers.map(value => formatType(value, 'phone'))
+    const email = emails.map(value => formatType(value, 'email'))
+
+     const vals = data.contactInfos
+     vals.push(...phones, ...email)
+
+
     const values = {
       ...data,
       name: data.name.trim(),
@@ -280,10 +292,6 @@ export default function UserForm() {
               }}
             />
           ))}
-        {/* <IconButton onClick={handleAddOption} aria-label="add">
-          <AddCircleOutline />
-        </IconBuxtton> */}
-
         {
           !isFromRef && (
             <FormOptionInput 
