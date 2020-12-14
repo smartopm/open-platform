@@ -63,12 +63,11 @@ export default function ActionFlows() {
 
   /** whitelist some metadata fields that are not variables but contain whitespace
   e.g "message" field used by the notification action * */
-  const metaDataVariableWhiteList = Object.freeze({
-      message: 'string'
-    })
+  // TODO: Revisit this and remove potential complexity @Nurudeen and @Victor
+  const metaDataVariableWhiteList = Object.freeze(['message'])
 
   function isMetaDataAVariable({key, value}) {
-    if(key in metaDataVariableWhiteList){
+    if(metaDataVariableWhiteList.indexOf(key) >= 0){
       return false
     }
 

@@ -23,9 +23,9 @@ module ActionFlows
       end
 
       def self.execute_action(data, field_config)
-        label = process_vars('label', data, field_config) || ''
-        user_id = process_vars('user_id', data, field_config) || ''
-        message = process_vars('message', data, field_config) || ''
+        label = process_vars('label', data, field_config)
+        user_id = process_vars('user_id', data, field_config)
+        message = process_vars('message', data, field_config)
 
         Notifier.send_from_action(message, label: label, user_id: user_id)
       end

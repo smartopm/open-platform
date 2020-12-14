@@ -126,11 +126,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     return Object.keys(selectedActionFlow).length > 0
   }
 
-  // console.log('eventdata', eventData)
-  // console.log('actiondata', actionData)
-  // console.log('actionFieldsData', actionFieldsData)
-  // console.log('ruleFieldsData', ruleFieldsData)
-
   return (
     <Dialog
       open={open}
