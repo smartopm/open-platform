@@ -11,7 +11,7 @@ module Mutations
 
       def resolve(user_id:, id:)
         user = context[:site_community].users.find(user_id)
-        return {success: false} if user.nil?
+        return { success: false } if user.nil?
 
         info = user.contact_infos.find(id)
         return { success: true } if info.destroy
