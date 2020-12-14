@@ -73,7 +73,7 @@ export default function UserForm() {
   const contInfo = { info: '', id: '', contactType: '' }
 
   function formatType(value, type){
-    return { id: '', contactType: type, info: value}
+    return { contactType: type, info: value}
   }
 
   function handleSubmit(event) {
@@ -90,21 +90,20 @@ export default function UserForm() {
      const vals = data.contactInfos
      vals.push(...phones, ...email)
 
-
     const values = {
       ...data,
       name: data.name.trim(),
       phoneNumber: data.phoneNumber?.replace(/ /g, ''),
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
-      secondaryInfo: JSON.stringify(secondaryInfo)
+      secondaryInfo: JSON.stringify(isEditing ? vals : secondaryInfo)  
     }
 
-    if (isFromRef) {
-      setTimeout(() => {
-        window.location.reload(false)
-      }, 3000)
-    }
+    // if (isFromRef) {
+    //   setTimeout(() => {
+    //     window.location.reload(false)
+    //   }, 3000)
+    // }
 
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
@@ -113,10 +112,13 @@ export default function UserForm() {
         if (isFromRef) {
           setShowResults(true)
         } else {
-          history.push(`/user/${data.result.user.id}`)
+          console.log('I happened')
+          console.log(data)
+          // history.push(`/user/${data.result.user.id}`)
         }
       })
       .catch(err => {
+        console.log(err.message)
         setMsg(err.message)
       })
   }
