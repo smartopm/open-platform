@@ -111,8 +111,8 @@ class User < ApplicationRecord
   validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
   validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
   validates :name, presence: true
-  validates :phone_number, presence: true, uniqueness: true
-  validates :email, presence: true, uniqueness: true
+  # validates :phone_number, presence: true, uniqueness: true
+  # validates :email, presence: true, uniqueness: true
   validate :phone_number_valid?
   after_create :add_notification_preference
   before_save :ensure_default_state

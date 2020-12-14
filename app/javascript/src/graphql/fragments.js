@@ -51,6 +51,11 @@ export const UserFragment = {
           name
         }
       }
+      contactInfos {
+        id
+        info
+        contactType
+      }
     }
   `
 }
