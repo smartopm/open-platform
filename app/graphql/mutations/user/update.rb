@@ -21,6 +21,7 @@ module Mutations
 
       field :user, Types::UserType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless user
@@ -32,6 +33,7 @@ module Mutations
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
@@ -40,6 +42,8 @@ module Mutations
       end
 
       def update_secondary_info(user, contact_info)
+        return if contact_info.nil?
+
         JSON.parse(contact_info).each do |_key, value|
           user.contact_infos.find(value.first)&.update(info: value.last)
         end
