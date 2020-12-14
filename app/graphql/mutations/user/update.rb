@@ -45,7 +45,11 @@ module Mutations
         return if contact_info.nil?
 
         contact_info.each do |value|
-          user.contact_infos.find(value['id'])&.update(info: value['info'])
+          if value['id'].nil?
+            user.contact_infos.create(contact_type: value['contact_type'], info: value['info'])
+          else
+            user.contact_infos.find(value['id'])&.update(info: value['info'])
+          end
         end
       end
 
