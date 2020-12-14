@@ -424,6 +424,7 @@ export const CommunityQuery = gql`
       id
       supportNumber
       supportEmail
+      supportWhatsapp
     }
   }
 `

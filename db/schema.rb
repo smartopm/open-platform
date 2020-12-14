@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(version: 2020_12_11_105925) do
     t.string "hostname"
     t.json "support_number"
     t.json "support_email"
+    t.json "support_whatsapp"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
