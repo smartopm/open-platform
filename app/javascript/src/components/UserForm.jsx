@@ -44,14 +44,9 @@ const initialValues = {
 }
 
 export default function UserForm({ isEditing, isFromRef, isAdmin }) {
-  // const location = useLocation()
-  console.log(isAdmin)
   const { id } = useParams()
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
-  // const previousRoute = location.state && location.state.from
-  // const isEditing = location.pathname.includes('edit')
-  // const isFromRef = previousRoute === 'ref' || false
   const [data, setData] = React.useState(initialValues)
   const [phoneNumbers, setPhoneNumbers] = React.useState([])
   const [emails, setEmails] = React.useState([])
@@ -120,6 +115,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         }
       })
       .catch(err => {
+        setSubmitting(false)
         setMsg(err.message)
       })
   }
@@ -278,6 +274,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             defaultValue={data.phoneNumber || ''}
             name="phoneNumber"
             data-testid="phoneNumber"
+            disabled={!isAdmin}
             required
           />
         </div>
@@ -313,6 +310,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             onChange={handleInputChange}
             value={data.email || ''}
             data-testid="email"
+            disabled={!isAdmin}
           />
         </div>
 
@@ -343,99 +341,105 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               options={address}
               setOptions={setAddress}
             />
-            <div className="form-group">
-              <TextField
-                id="reason"
-                select
-                label="Reason"
-                name="requestReason"
-                value={data.requestReason || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                inputProps={
-                  { 'aria-label': 'requestReason' }
-                }
-                className={`${css(styles.selectInput)}`}
-              >
-                {reasons.map(reason => (
-                  <MenuItem key={reason} value={reason}>
-                    {reason}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className="form-group">
-              <TextField
-                id="userType"
-                select
-                label="User Type"
-                value={data.userType || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                name="userType"
-                inputProps={
-                  { 'aria-label': 'User Type' }
-                }
-                required
-                className={`${css(styles.selectInput)}`}
-              >
-                {Object.entries(userType).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
+            {
+              isAdmin && (
+                <>
+                  <div className="form-group">
+                    <TextField
+                      id="reason"
+                      select
+                      label="Reason"
+                      name="requestReason"
+                      value={data.requestReason || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      inputProps={{ 'aria-label': 'requestReason' }}
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        reasons.map(reason => (
+                          <MenuItem key={reason} value={reason}>
+                            {reason}
+                          </MenuItem>
+                        ))
+                      }
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="userType"
+                      select
+                      label="User Type"
+                      value={data.userType || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="userType"
+                      inputProps={{ 'aria-label': 'User Type' }}
+                      required
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        Object.entries(userType).map(([key, val]) => (
+                          <MenuItem key={key} value={key}>
+                            {val}
+                          </MenuItem>
+                          ))
+                        }
+                    </TextField>
+                  </div>
 
-            <div className="form-group">
-              <TextField
-                id="state"
-                select
-                label="State"
-                value={data.state || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                name="state"
-                inputProps={
-                  { 'aria-label': 'state' }
-                }
-                className={`${css(styles.selectInput)}`}
-              >
-                {Object.entries(userState).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className="form-group">
-              <TextField
-                id="sub-status"
-                select
-                label="Substatus"
-                value={data.subStatus || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                name="subStatus"
-                inputProps={
-                  { 'aria-label': 'subStatus' }
-                }
-                className={`${css(styles.selectInput)}`}
-              >
-                {Object.entries(userSubStatus).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <DatePickerDialog
-                selectedDate={selectedDate}
-                label="Expiration Date"
-                handleDateChange={handleDateChange}
-              />
-            </div>
+                  <div className="form-group">
+                    <TextField
+                      id="state"
+                      select
+                      label="State"
+                      value={data.state || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="state"
+                      inputProps={{ 'aria-label': 'state' }}
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        Object.entries(userState).map(([key, val]) => (
+                          <MenuItem key={key} value={key}>
+                            {val}
+                          </MenuItem>
+                        ))
+                        }
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="sub-status"
+                      select
+                      label="Substatus"
+                      value={data.subStatus || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="subStatus"
+                      inputProps={{ 'aria-label': 'subStatus' }}
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        Object.entries(userSubStatus).map(([key, val]) => (
+                          <MenuItem key={key} value={key}>
+                            {val}
+                          </MenuItem>
+                        ))
+                        }
+                    </TextField>
+                  </div>
+                  <div>
+                    <DatePickerDialog
+                      selectedDate={selectedDate}
+                      label="Expiration Date"
+                      handleDateChange={handleDateChange}
+                    />
+                  </div>
+                </>
+              )
+            }
             <CenteredContent>
               <Button
                 variant="contained"
