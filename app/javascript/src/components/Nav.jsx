@@ -50,7 +50,6 @@ export function Component({
   backTo
 }) {
   const [state, setState] = React.useState(false)
-  // const { values, handleSubmit } = useContext(FormContext)
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' })
   const { data: messageCount } = useQuery(messageCountQuery,
                                           {fetchPolicy: 'cache-and-network',

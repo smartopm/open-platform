@@ -10,7 +10,7 @@ module Mutations
       field :success, GraphQL::Types::Boolean, null: false
 
       def resolve(user_id:, id:)
-        user = context[:site_community].users.find(user_id)
+        user = context[:site_community].users.find_by(id: user_id)
         return { success: false } if user.nil?
 
         info = user.contact_infos.find(id)
