@@ -1,37 +1,84 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import CenteredContent from '../CenteredContent'
 import { CustomizedDialogs } from '../Dialog'
 import { UserLandParcel } from '../../graphql/queries'
+import { InvoiceCreate } from '../../graphql/mutations'
 import DatePickerDialog from '../DatePickerDialog'
+import MessageAlert from "../MessageAlert"
+import Loading from '../Loading'
+import ErrorPage from '../Error'
+import { formatError } from '../../utils/helpers'
 
 export default function AddInvoices({ userId }){
   const classes = useStyles();
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState({})
+  const [createInvoice] = useMutation(InvoiceCreate)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
   const {
-    loading, error, data, refetch
+    loading, error, data
   } = useQuery(UserLandParcel, {
     variables: { userId },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   })
 
+  const handleSubmit = event => {
+    event.preventDefault()
+    createInvoice({
+      variables: { 
+        landParcelId: inputValue.parcelId,
+        description: inputValue.description,
+        note: inputValue.note,
+        amount: inputValue.amount,
+        dueDate: inputValue.selectedDate,
+        status: inputValue.status
+      }
+    }).then(() => {
+      setMessageAlert('Property added successfully')
+      setIsSuccessAlert(true)
+      setOpen(false)
+    }).catch((err) => {
+      setOpen(false);
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+    })
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
+  }
+
+  if (loading) return <Loading />
+  if (error) return <ErrorPage error={error.message} />
+
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <CenteredContent>
         <Button variant="contained" color="primary" onClick={() => setOpen(true)}>Create Invoice</Button>
         <CustomizedDialogs 
           open={open} 
           handleModal={() => setOpen(false)}
           dialogHeader='Add a New Invoice'
-          handleBatchFilter={() => setOpen(false)}
+          handleBatchFilter={handleSubmit}
         >
           <div className={classes.root}>
             <div className={classes.input}>
@@ -69,6 +116,7 @@ export default function AddInvoices({ userId }){
                 type='number'
                 className={classes.amount}
                 value={inputValue.amount}
+                required
                 onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
                 InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -118,7 +166,6 @@ export default function AddInvoices({ userId }){
             </div>
           </div>
         </CustomizedDialogs>
-        
       </CenteredContent>
     </>
   )
@@ -156,3 +203,7 @@ const useStyles = makeStyles({
     width: '170px'
   }
 });
+
+AddInvoices.propTypes = {
+  userId: PropTypes.string.isRequired
+}

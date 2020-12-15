@@ -551,7 +551,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
   add_foreign_key "campaigns", "communities"
   add_foreign_key "comments", "communities"
   add_foreign_key "contact_infos", "users"
-  add_foreign_key "custom_mail_templates", "communities"
   add_foreign_key "discussion_users", "discussions"
   add_foreign_key "discussion_users", "users"
   add_foreign_key "discussions", "communities"
