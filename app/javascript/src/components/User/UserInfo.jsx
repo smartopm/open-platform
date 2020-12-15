@@ -10,7 +10,7 @@ const type = {
 }
 
 // list contactInfo by contactType in reverse order
-function sortByType(prev, next){
+export function sortByType(prev, next){
   if (prev.contactType < next.contactType) {
     return 1;
   }
@@ -24,9 +24,9 @@ export default function UserInfo({ user, userType }) {
     <div className="container">
       <Contact value={user.name} label="Name" />
       <Contact value={user.name} label="Accounts" />
-      <Contact value={user.phoneNumber} label="Primary Phone Number" />
+      <Contact value={user.phoneNumber} label="Primary phone number" />
       <Contact value={user.email} label="Primary email" />
-      
+
       {user.contactInfos?.sort(sortByType).map(contact => (
         <Contact
           key={contact.id}
