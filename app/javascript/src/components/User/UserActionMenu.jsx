@@ -34,13 +34,6 @@ export default function UserActionMenu({
           {['admin'].includes(userType) && (
             <>
               <MenuItem
-                id="edit_button"
-                key={'edit_user'}
-                onClick={() => router.push(`/user/${data.user.id}/edit`)}
-              >
-                Edit
-              </MenuItem>
-              <MenuItem
                 key={'merge'}
                 onClick={OpenMergeDialog}
               >
@@ -84,6 +77,13 @@ export default function UserActionMenu({
           )}
           {['admin', 'client', 'resident'].includes(userType) && (
             <>
+              <MenuItem
+                id="edit_button"
+                key={'edit_user'}
+                onClick={() => router.push(`/user/${data.user.id}/edit`)}
+              >
+                Edit
+              </MenuItem>
               <MenuItem key={'message_support'}>
                 <Link
                   to={{
