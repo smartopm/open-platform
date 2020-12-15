@@ -44,13 +44,9 @@ const initialValues = {
 }
 
 export default function UserForm({ isEditing, isFromRef }) {
-  // const location = useLocation()
   const { id } = useParams()
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
-  // const previousRoute = location.state && location.state.from
-  // const isEditing = location.pathname.includes('edit')
-  // const isFromRef = previousRoute === 'ref' || false
   const [data, setData] = React.useState(initialValues)
   const [phoneNumbers, setPhoneNumbers] = React.useState([])
   const [emails, setEmails] = React.useState([])
