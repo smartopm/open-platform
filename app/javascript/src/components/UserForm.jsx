@@ -1,14 +1,12 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
-import { Button, IconButton, Typography } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
-import { AddCircleOutline } from '@material-ui/icons'
 import {
   reasons,
   requiredFields,
@@ -71,10 +69,9 @@ export default function UserForm() {
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
-  const contInfo = { info: '', id: '', contactType: '' }
 
-  function formatType(value, type){
-    return { contactType: type, info: value}
+  function formatType(value, type) {
+    return { contactType: type, info: value }
   }
 
   function handleSubmit(event) {
@@ -90,9 +87,9 @@ export default function UserForm() {
     const email = emails.map(value => formatType(value, 'email'))
     const homeAddress = address.map(value => formatType(value, 'address'))
 
-     const vals = data.contactInfos
+    const vals = data.contactInfos
     //  get existing secondaryInfo and add newly created ones with no ids
-     vals.push(...phones, ...email, ...homeAddress)
+    vals.push(...phones, ...email, ...homeAddress)
 
     const values = {
       ...data,
@@ -101,7 +98,7 @@ export default function UserForm() {
       address: data.primaryAddress,
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
-      secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)  
+      secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)
     }
 
     if (isFromRef) {
@@ -109,7 +106,7 @@ export default function UserForm() {
         window.location.reload(false)
       }, 3000)
     }
-    
+
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
@@ -171,9 +168,13 @@ export default function UserForm() {
   }
   function handleOptionChange(event, contactId, index) {
     const info = event.target.value
-    const emailRegex = /\S+@\S+\.\S+/;
+    const emailRegex = /\S+@\S+\.\S+/
     const type = emailRegex.test(info)
-    const newValue = {id: contactId, info, contactType: type ? 'email' : 'phone'}
+    const newValue = {
+      id: contactId,
+      info,
+      contactType: type ? 'email' : 'phone'
+    }
     const opts = data.contactInfos
 
     setData({
@@ -284,19 +285,18 @@ export default function UserForm() {
               value={contact.info}
               actions={{
                 handleRemoveOption: () => handleRemoveOption(i),
-                handleOptionChange: event => handleOptionChange(event, contact.id, i)
+                handleOptionChange: event =>
+                  handleOptionChange(event, contact.id, i)
               }}
             />
           ))}
-        {
-          !isFromRef && (
-            <FormOptionInput 
-              label="Secondary Phone number"
-              options={phoneNumbers}
-              setOptions={setPhoneNumbers}
-            />
-          )
-        }
+        {!isFromRef && (
+          <FormOptionInput
+            label="Secondary Phone number"
+            options={phoneNumbers}
+            setOptions={setPhoneNumbers}
+          />
+        )}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
             Primary email address
@@ -424,7 +424,7 @@ export default function UserForm() {
                 className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
                 disabled={submitting}
               >
-                { !submitting ? 'Submit' : 'Submitting ...' }
+                {!submitting ? 'Submit' : 'Submitting ...'}
               </Button>
             </CenteredContent>
           </>
