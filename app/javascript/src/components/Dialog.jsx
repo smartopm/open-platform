@@ -227,7 +227,7 @@ CustomizedDialogs.propTypes = {
 ModalDialog.defaultProps = {
   name: '',
   action: 'Save',
-  children: {}
+  children: <span />
 }
 
 ReasonInputModal.propTypes = {

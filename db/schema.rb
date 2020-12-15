@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_11_070438) do
+ActiveRecord::Schema.define(version: 2020_12_11_105925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -508,6 +508,7 @@ ActiveRecord::Schema.define(version: 2020_12_11_070438) do
     t.string "id_number"
     t.datetime "followup_at"
     t.integer "sub_status"
+    t.string "address"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true

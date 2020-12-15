@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { Button, IconButton, TextField } from '@material-ui/core'
-import { AddCircleOutline } from '@material-ui/icons'
+import { Button, TextField } from '@material-ui/core'
 import { FormPropertyCreateMutation } from '../../graphql/mutations/forms'
 import CenteredContent from '../CenteredContent'
 import FormPropertySelector from './FormPropertySelector'
@@ -75,25 +74,6 @@ export default function FormPropertyCreateForm({ formId, refetch }){
       })
     }
   
-    function handleOptionChange(event, index){
-        const values = options
-        values[index] = event.target.value
-        setOptions(values)
-    }
-  
-    function handleAddOption(){
-      setOptions([...options, ""])
-    }
-  
-    function handleRemoveOption(id){
-      const values = options
-      // radio buttons should have at least one choice 
-      if (values.length !== 1) {
-        values.splice(id, 1)
-      }
-      setOptions([...values])
-    }
-  
     return (
       <form onSubmit={saveFormProperty}>
         <TextField
@@ -116,25 +96,12 @@ export default function FormPropertyCreateForm({ formId, refetch }){
           options={fieldTypes}
         />
         {
-          propertyData.fieldType === 'radio' && 
-          options.map((option, i) => (
-            <FormOptionInput 
-              // eslint-disable-next-line react/no-array-index-key
-              key={i} 
-              id={i+1}
-              option={option}
-              actions={{
-                handleRemoveOption: () => handleRemoveOption(i),
-                handleOptionChange: event => handleOptionChange(event, i)
-              }} 
-            />
-          ))
-        }
-        {
           propertyData.fieldType === 'radio' && (
-            <IconButton onClick={handleAddOption} aria-label="add">
-              <AddCircleOutline />
-            </IconButton>
+            <FormOptionInput 
+              label="Option"
+              options={options}
+              setOptions={setOptions}
+            />
           )
         }
         <div style={{ marginTop: 20 }}>

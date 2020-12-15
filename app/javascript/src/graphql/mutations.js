@@ -8,12 +8,14 @@ export const CreateUserMutation = gql`
     $email: String
     $phoneNumber: String!
     $userType: String!
+    $address: String
     $state: String
     $vehicle: String
     $requestReason: String
     $avatarBlobId: String
     $documentBlobId: String
     $subStatus: String
+    $secondaryInfo: JSON
   ) {
     result: userCreate(
       name: $name
@@ -26,14 +28,16 @@ export const CreateUserMutation = gql`
       avatarBlobId: $avatarBlobId
       documentBlobId: $documentBlobId
       subStatus: $subStatus
+      address: $address
+      secondaryInfo: $secondaryInfo
     ) {
       user {
-        ...UserFields
+       id
       }
     }
   }
-  ${UserFragment.publicFields}
-`
+  `
+  // ${UserFragment.publicFields}
 
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
@@ -49,6 +53,8 @@ export const UpdateUserMutation = gql`
     $documentBlobId: String
     $expiresAt: String
     $subStatus: String
+    $address: String
+    $secondaryInfo: [JSON!]
   ) {
     result: userUpdate(
       id: $id
@@ -63,6 +69,8 @@ export const UpdateUserMutation = gql`
       documentBlobId: $documentBlobId
       expiresAt: $expiresAt
       subStatus: $subStatus
+      address: $address
+      secondaryInfo: $secondaryInfo
     ) {
       user {
         ...UserFields
