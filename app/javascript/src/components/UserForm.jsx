@@ -43,7 +43,9 @@ const initialValues = {
   contactInfos: []
 }
 
-export default function UserForm({ isEditing, isFromRef }) {
+export default function UserForm({ isEditing, isFromRef, isAdmin }) {
+  // const location = useLocation()
+  console.log(isAdmin)
   const { id } = useParams()
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
@@ -543,5 +545,6 @@ const styles = StyleSheet.create({
 
 UserForm.propTypes = {
   isEditing: PropTypes.bool.isRequired,
-  isFromRef: PropTypes.bool.isRequired
+  isFromRef: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 }
