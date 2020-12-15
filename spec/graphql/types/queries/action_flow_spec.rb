@@ -17,9 +17,18 @@ RSpec.describe Types::Queries::ActionFlow do
         })
     end
 
-    let(:action_fields_query) do
+    let(:email_action_fields_query) do
       %(query {
         actionFields(action: "email") {
+            name
+            type
+          }
+        })
+    end
+
+    let(:notification_action_fields_query) do
+      %(query {
+        actionFields(action: "notification") {
             name
             type
           }
@@ -69,6 +78,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actions')).to include('Email')
+        expect(result.dig('data', 'actions')).to include('Notification')
       end
 
       it 'throws unauthorized error if there is no current-user' do
@@ -82,13 +92,22 @@ RSpec.describe Types::Queries::ActionFlow do
     end
 
     describe('action fields') do
-      it 'retrieves fields for an action' do
-        result = DoubleGdpSchema.execute(action_fields_query, context: {
+      it 'retrieves fields for email action' do
+        result = DoubleGdpSchema.execute(email_action_fields_query, context: {
                                            current_user: current_user,
                                            site_community: current_user.community,
                                          }).as_json
         available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
         expect(available_fields).to include('email', 'template')
+      end
+
+      it 'retrieves fields for notification action' do
+        result = DoubleGdpSchema.execute(notification_action_fields_query, context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+        available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
+        expect(available_fields).to include('label', 'user_id', 'message')
       end
 
       it 'throws unauthorized error if there is no current-user' do
@@ -102,7 +121,7 @@ RSpec.describe Types::Queries::ActionFlow do
     end
 
     # rubocop:disable Metrics/LineLength
-    describe('action fields') do
+    describe('rule fields') do
       it 'retrieves rule fields' do
         result = DoubleGdpSchema.execute(rule_fields_query, context: {
                                            current_user: current_user,
