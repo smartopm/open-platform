@@ -4,11 +4,11 @@ import Nav from '../components/Nav'
 import UserForm from '../components/UserForm'
 
 export default function FormContainer() {
-  const { state } = useLocation()
+  const { state, pathname } = useLocation()
   const { id } = useParams()
   const previousRoute = state && state.from
   const isFromRef = previousRoute === 'ref' || false
-
+  const isEditing = pathname.includes('edit') 
   // Todo: Restructure 
   let title = 'New User'
   if (id) {
@@ -25,7 +25,7 @@ export default function FormContainer() {
         backTo={id ? `/user/${id}` : '/'}
       />
       <br />
-      <UserForm />
+      <UserForm isEditing={isEditing} isFromRef={isFromRef} />
     </>
   )
 }

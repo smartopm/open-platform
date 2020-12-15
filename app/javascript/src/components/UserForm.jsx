@@ -4,9 +4,10 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { StyleSheet, css } from 'aphrodite'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Button, Typography } from '@material-ui/core'
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
+import PropTypes from 'prop-types'
 import {
   reasons,
   requiredFields,
@@ -42,14 +43,14 @@ const initialValues = {
   contactInfos: []
 }
 
-export default function UserForm() {
-  const location = useLocation()
+export default function UserForm({ isEditing, isFromRef }) {
+  // const location = useLocation()
   const { id } = useParams()
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
-  const previousRoute = location.state && location.state.from
-  const isEditing = location.pathname.includes('edit')
-  const isFromRef = previousRoute === 'ref' || false
+  // const previousRoute = location.state && location.state.from
+  // const isEditing = location.pathname.includes('edit')
+  // const isFromRef = previousRoute === 'ref' || false
   const [data, setData] = React.useState(initialValues)
   const [phoneNumbers, setPhoneNumbers] = React.useState([])
   const [emails, setEmails] = React.useState([])
@@ -243,9 +244,10 @@ export default function UserForm() {
               className="form-control"
               type="text"
               onChange={handleInputChange}
-              value={authState.user.name || ''}
+              value={authState.user?.name || ''}
               disabled
               name="name"
+              data-testid="clientName"
               required
             />
           </div>
@@ -260,6 +262,7 @@ export default function UserForm() {
             onChange={handleInputChange}
             value={data.name || ''}
             name="name"
+            data-testid="username"
             required
           />
         </div>
@@ -273,6 +276,7 @@ export default function UserForm() {
             onChange={handleInputChange}
             defaultValue={data.phoneNumber || ''}
             name="phoneNumber"
+            data-testid="phoneNumber"
             required
           />
         </div>
@@ -307,6 +311,7 @@ export default function UserForm() {
             type="email"
             onChange={handleInputChange}
             value={data.email || ''}
+            data-testid="email"
           />
         </div>
 
@@ -328,6 +333,7 @@ export default function UserForm() {
                 type="text"
                 onChange={handleInputChange}
                 value={data.primaryAddress || ''}
+                data-testid="address"
               />
             </div>
 
@@ -345,6 +351,9 @@ export default function UserForm() {
                 value={data.requestReason || ''}
                 onChange={handleInputChange}
                 margin="normal"
+                inputProps={
+                  { 'aria-label': 'requestReason' }
+                }
                 className={`${css(styles.selectInput)}`}
               >
                 {reasons.map(reason => (
@@ -363,6 +372,9 @@ export default function UserForm() {
                 onChange={handleInputChange}
                 margin="normal"
                 name="userType"
+                inputProps={
+                  { 'aria-label': 'User Type' }
+                }
                 required
                 className={`${css(styles.selectInput)}`}
               >
@@ -383,6 +395,9 @@ export default function UserForm() {
                 onChange={handleInputChange}
                 margin="normal"
                 name="state"
+                inputProps={
+                  { 'aria-label': 'state' }
+                }
                 className={`${css(styles.selectInput)}`}
               >
                 {Object.entries(userState).map(([key, val]) => (
@@ -401,6 +416,9 @@ export default function UserForm() {
                 onChange={handleInputChange}
                 margin="normal"
                 name="subStatus"
+                inputProps={
+                  { 'aria-label': 'subStatus' }
+                }
                 className={`${css(styles.selectInput)}`}
               >
                 {Object.entries(userSubStatus).map(([key, val]) => (
@@ -423,6 +441,7 @@ export default function UserForm() {
                 type="submit"
                 className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
                 disabled={submitting}
+                data-testid="submit_btn"
               >
                 {!submitting ? 'Submit' : 'Submitting ...'}
               </Button>
@@ -445,6 +464,7 @@ export default function UserForm() {
                 color="textSecondary"
                 variant="body2"
                 style={{ fontSize: 13 }}
+                data-testid="referralText"
               >
                 Nkwashi values its community and believes our community starts
                 with you! Referring your friends and family members to Nkwashi
@@ -456,6 +476,7 @@ export default function UserForm() {
               variant="contained"
               type="submit"
               className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+              data-testid="referralBtn"
             >
               <span>Refer</span>
             </Button>
@@ -523,3 +544,8 @@ const styles = StyleSheet.create({
     borderRadius: 8
   }
 })
+
+UserForm.propTypes = {
+  isEditing: PropTypes.bool.isRequired,
+  isFromRef: PropTypes.bool.isRequired
+}
