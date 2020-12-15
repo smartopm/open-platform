@@ -53,6 +53,7 @@ export const UpdateUserMutation = gql`
     $documentBlobId: String
     $expiresAt: String
     $subStatus: String
+    $address: String
     $secondaryInfo: [JSON!]
   ) {
     result: userUpdate(
@@ -68,6 +69,7 @@ export const UpdateUserMutation = gql`
       documentBlobId: $documentBlobId
       expiresAt: $expiresAt
       subStatus: $subStatus
+      address: $address
       secondaryInfo: $secondaryInfo
     ) {
       user {

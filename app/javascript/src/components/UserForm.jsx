@@ -40,7 +40,7 @@ const initialValues = {
   signedBlobId: '',
   imageUrl: '',
   subStatus: '',
-  address: '',
+  primaryAddress: '',
   contactInfos: []
 }
 
@@ -61,6 +61,7 @@ export default function UserForm() {
   const [msg, setMsg] = React.useState('')
   const [selectedDate, handleDateChange] = React.useState(null)
   const [showResults, setShowResults] = React.useState(false)
+  const [submitting, setSubmitting] = React.useState(false)
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: 'user',
     readLazyQuery: useLazyQuery(UserQuery),
@@ -78,6 +79,7 @@ export default function UserForm() {
 
   function handleSubmit(event) {
     event.preventDefault()
+    setSubmitting(true)
     const secondaryInfo = {
       phone: phoneNumbers,
       email: emails,
@@ -96,6 +98,7 @@ export default function UserForm() {
       ...data,
       name: data.name.trim(),
       phoneNumber: data.phoneNumber?.replace(/ /g, ''),
+      address: data.primaryAddress,
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
       secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)  
@@ -106,11 +109,11 @@ export default function UserForm() {
         window.location.reload(false)
       }, 3000)
     }
-
+    
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
-        // setSubmitting(false);
+        setSubmitting(false)
         if (isFromRef) {
           setShowResults(true)
         } else {
@@ -139,6 +142,7 @@ export default function UserForm() {
     } else if (!data.dataLoaded && result.id) {
       setData({
         ...result,
+        primaryAddress: result.address,
         dataLoaded: true
       })
       handleDateChange(result.expiresAt)
@@ -303,7 +307,6 @@ export default function UserForm() {
             type="email"
             onChange={handleInputChange}
             value={data.email || ''}
-            required
           />
         </div>
 
@@ -316,16 +319,15 @@ export default function UserForm() {
             />
 
             <div className="form-group">
-              <label className="bmd-label-static" htmlFor="address">
+              <label className="bmd-label-static" htmlFor="primaryAddress">
                 Primary Address
               </label>
               <input
                 className="form-control"
-                name="address"
+                name="primaryAddress"
                 type="text"
                 onChange={handleInputChange}
-                value={data.address || ''}
-                required
+                value={data.primaryAddress || ''}
               />
             </div>
 
@@ -420,8 +422,9 @@ export default function UserForm() {
                 variant="contained"
                 type="submit"
                 className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+                disabled={submitting}
               >
-                Submit
+                { !submitting ? 'Submit' : 'Submitting ...' }
               </Button>
             </CenteredContent>
           </>

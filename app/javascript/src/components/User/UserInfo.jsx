@@ -24,16 +24,18 @@ export default function UserInfo({ user, userType }) {
     <div className="container">
       <Contact value={user.name} label="Name" />
       <Contact value={user.name} label="Accounts" />
-      <Contact value={user.phoneNumber} label="Phone Number" />
-      <Contact value={user.email} label="email" />
+      <Contact value={user.phoneNumber} label="Primary Phone Number" />
+      <Contact value={user.email} label="Primary email" />
+      
       {user.contactInfos?.sort(sortByType).map(contact => (
         <Contact
           key={contact.id}
           value={contact.info}
           label={type[contact.contactType]}
         />
-      ))}
+        ))}
       <br />
+      <Contact value={user.address} label="Primary Address" />
       <span>Social: </span>
       <br />
       {userType === 'security_guard' && (
@@ -65,6 +67,7 @@ UserInfo.propTypes = {
     email: PropTypes.string,
     name: PropTypes.string,
     phoneNumber: PropTypes.string,
+    address: PropTypes.string,
     id: PropTypes.string,
     contactInfos: PropTypes.arrayOf(
       PropTypes.shape({
