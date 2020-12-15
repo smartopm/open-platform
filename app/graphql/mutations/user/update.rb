@@ -28,8 +28,6 @@ module Mutations
 
         attach_avatars(user, vals)
         log_user_update(user)
-        puts "somejsndjfnjs===================================="
-        puts vals.delete(:secondary_info)
         update_secondary_info(user, vals.delete(:secondary_info))
         return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
@@ -44,7 +42,9 @@ module Mutations
       end
 
       def update_secondary_info(user, contact_info)
+        puts "============="
         return if contact_info.nil?
+        puts "somejsndjfnjs===================================="
 
         contact_info.each do |value|
           if value['id'].nil?

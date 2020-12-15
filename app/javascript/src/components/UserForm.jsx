@@ -88,6 +88,7 @@ export default function UserForm() {
     const email = emails.map(value => formatType(value, 'email'))
 
      const vals = data.contactInfos
+    //  get existing secondaryInfo and add newly created ones with no ids
      vals.push(...phones, ...email)
 
     const values = {
@@ -96,14 +97,14 @@ export default function UserForm() {
       phoneNumber: data.phoneNumber?.replace(/ /g, ''),
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
-      secondaryInfo: JSON.stringify(isEditing ? vals : secondaryInfo)  
+      secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)  
     }
 
-    // if (isFromRef) {
-    //   setTimeout(() => {
-    //     window.location.reload(false)
-    //   }, 3000)
-    // }
+    if (isFromRef) {
+      setTimeout(() => {
+        window.location.reload(false)
+      }, 3000)
+    }
 
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
@@ -112,13 +113,10 @@ export default function UserForm() {
         if (isFromRef) {
           setShowResults(true)
         } else {
-          console.log('I happened')
-          console.log(data)
-          // history.push(`/user/${data.result.user.id}`)
+          history.push(`/user/${data.result.user.id}`)
         }
       })
       .catch(err => {
-        console.log(err.message)
         setMsg(err.message)
       })
   }
@@ -180,15 +178,6 @@ export default function UserForm() {
         { ...opts[index], ...newValue },
         ...opts.slice(index + 1)
       ]
-    })
-  }
-
-  function handleAddOption() {
-    const v = data.contactInfos
-    v.push(contInfo)
-    setData({
-      ...data,
-      contactInfos: v
     })
   }
 
