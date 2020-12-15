@@ -9,12 +9,12 @@ import {
 } from '@material-ui/pickers'
 import { checkPastDate } from "../utils/dateutil"
 
-export default function DatePickerDialog({ selectedDate, handleDateChange, label }) {
+export default function DatePickerDialog({ selectedDate, handleDateChange, label, width }) {
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
           data-testid='date-picker'
-          style={{ width: '100%' }}
+          style={{ width: `${width || '100%'}` }}
           clearable
           margin="normal"
           id="date-picker-dialog"
