@@ -14,7 +14,7 @@ export default function UserInfo({ user, userType }) {
       <Contact value={user.name} label="Accounts" />
       <Contact value={user.phoneNumber} label="Phone Number" />
       <Contact value={user.email} label="email" />
-      {user.contactInfos.map(contact => (
+      {user.contactInfos?.map(contact => (
         <Contact
           key={contact.id}
           value={contact.info}
@@ -42,7 +42,7 @@ export function Contact({ value, label }) {
         type="text"
         defaultValue={value}
         name="email"
-        aria-label="user_email"
+        aria-label="label"
         disabled
       />
     </div>

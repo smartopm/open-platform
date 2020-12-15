@@ -28,6 +28,8 @@ module Mutations
 
         attach_avatars(user, vals)
         log_user_update(user)
+        puts "somejsndjfnjs===================================="
+        puts vals.delete(:secondary_info)
         update_secondary_info(user, vals.delete(:secondary_info))
         return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
@@ -48,7 +50,8 @@ module Mutations
           if value['id'].nil?
             user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
           else
-            user.contact_infos.find(value['id'])&.update(info: value['info'])
+            contact = user.contact_infos.find(value['id'])
+            contact.update(info: value['info']) unless contact.info.eql?(value['info'])
           end
         end
       end
