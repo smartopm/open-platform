@@ -9,13 +9,13 @@ const type = {
   address: 'Secondary Address'
 }
 
-// list contactInfo by contactType
+// list contactInfo by contactType in reverse order
 function sortByType(prev, next){
   if (prev.contactType < next.contactType) {
-    return -1;
+    return 1;
   }
   if (prev.contactType > next.contactType) {
-    return 1;
+    return -1;
   }
   return 0
 }
