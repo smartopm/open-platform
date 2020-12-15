@@ -42,9 +42,7 @@ module Mutations
       end
 
       def update_secondary_info(user, contact_info)
-        puts "============="
         return if contact_info.nil?
-        puts "somejsndjfnjs===================================="
 
         contact_info.each do |value|
           if value['id'].nil?

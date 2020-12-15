@@ -5,7 +5,8 @@ import CaptureTemp from '../CaptureTemp'
 
 const type = {
   email: 'Secondary email address',
-  phone: 'Secondary phone number'
+  phone: 'Secondary phone number',
+  address: 'Secondary Address'
 }
 
 // list contactInfo by contactType
@@ -52,8 +53,7 @@ export function Contact({ value, label }) {
         className="form-control"
         type="text"
         defaultValue={value}
-        name="email"
-        aria-label="label"
+        aria-label={label}
         disabled
       />
     </div>

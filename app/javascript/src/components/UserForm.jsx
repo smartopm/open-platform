@@ -86,10 +86,11 @@ export default function UserForm() {
     // if editing then restructure the phoneNumbers and emails
     const phones = phoneNumbers.map(value => formatType(value, 'phone'))
     const email = emails.map(value => formatType(value, 'email'))
+    const homeAddress = address.map(value => formatType(value, 'address'))
 
      const vals = data.contactInfos
     //  get existing secondaryInfo and add newly created ones with no ids
-     vals.push(...phones, ...email)
+     vals.push(...phones, ...email, ...homeAddress)
 
     const values = {
       ...data,
