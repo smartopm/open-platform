@@ -33,7 +33,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
-      # rubocop:enable Metrics/AbcSize
 
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
@@ -54,6 +53,7 @@ module Mutations
         end
       end
 
+      # rubocop:enable Metrics/AbcSize
       def log_user_update(user)
         ::EventLog.create(acting_user_id: context[:current_user].id,
                           community_id: user.community_id, subject: 'user_update',
