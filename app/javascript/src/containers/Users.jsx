@@ -154,30 +154,27 @@ export default function UsersList() {
     setRedirect('/search')
   }
 
+  function checkUserList(){
+    if (
+      !!selectedUsers.length &&
+      !!userList.length &&
+      selectedUsers.length === userList.length
+    ) {
+      setSelectedUsers([])
+      setCampaignCreateOption('none')
+    }
+  }
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
         return
       }
       setOffset(offset - limit)
-      if (
-        !!selectedUsers.length &&
-        !!userList.length &&
-        selectedUsers.length === userList.length
-      ) {
-        setSelectedUsers([])
-        setCampaignCreateOption('none')
-      }
+      checkUserList()
     } else {
       setOffset(offset + limit)
-      if (
-        !!selectedUsers.length &&
-        !!userList.length &&
-        selectedUsers.length === userList.length
-      ) {
-        setSelectedUsers([])
-        setCampaignCreateOption('none')
-      }
+      checkUserList()
     }
   }
 
@@ -234,11 +231,13 @@ export default function UsersList() {
       selectedUsers.length === userList.length
     ) {
       setSelectedUsers([])
+      setCampaignCreateOption('none')
     } else if (selectCheckBox) {
       setSelectCheckBox(false)
+      setCampaignCreateOption('none')
     } else {
       setSelectedUsers(userList)
-      setCampaignCreateOption('none')
+      setCampaignCreateOption('all_on_the_page')
     }
   }
 
