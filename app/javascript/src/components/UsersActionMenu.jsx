@@ -44,21 +44,6 @@ export default function UsersActionMenu({
     handleLabelSelect(selectedLabels)
   }
 
-  // // eslint-disable-next-line consistent-return
-  // function isAllSelected() {
-  //   if (
-  //     !!selectedUsers.length &&
-  //     !!userList.length &&
-  //     selectedUsers.length === userList.length
-  //   ) {
-  //     setCampaignCreateOption('all_on_the_page')
-  //     return true
-  //   // eslint-disable-next-line no-else-return
-  //   } else {
-  //     setCampaignCreateOption('none')
-  //   }
-  // }
-
   function isAllSelected() {
     return (
       !!selectedUsers.length &&
