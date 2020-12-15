@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom'
 import Avatar from './Avatar.jsx'
 import { Footer } from './Footer.jsx'
 import PrivacyPolicy from '../components/PrivacyPolicy/PrivacyPolicy'
+import { Person } from '@material-ui/icons'
 
 export const SideList = ({ toggleDrawer, user, authState }) => {
   return (
@@ -59,6 +60,16 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
             </>
           )
         }
+        <Link to={`/myaccount/${authState.user.id}`} className={`${css(styles.link)}`}>
+          <ListItem button>
+            <ListItemIcon>
+              <Person />
+            </ListItemIcon>
+
+            <ListItemText primary="Profile" />
+
+          </ListItem>
+        </Link>
         <Link to="/contact" className={`${css(styles.link)}`}>
           <ListItem button>
             <ListItemIcon>
