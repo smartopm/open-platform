@@ -3,17 +3,17 @@ import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
-import UserForm from '../components/UserForm'
+import UserForm, { formatContactType } from '../components/UserForm'
 import { AuthStateProvider } from '../containers/Provider/AuthStateProvider'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('UserForm Component', () => {
   it('it should render correct with form properties when creating and editing', () => {
-    const props = { isEditing: true, isFromRef: false }
+    const props = { isEditing: true, isFromRef: false,  }
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
-          <UserForm isEditing={props.isEditing} isFromRef={props.isFromRef} />
+          <UserForm isEditing={props.isEditing} isFromRef={props.isFromRef} isAdmin />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -90,5 +90,6 @@ describe('UserForm Component', () => {
     expect(container.queryByTestId('referralText')).toHaveTextContent('Nkwashi values its community and believes')
     expect(container.queryByTestId('referralBtn')).not.toBeDisabled()
     expect(container.queryByTestId('referralBtn')).toHaveTextContent('Refer')
+    expect(formatContactType('0233082', 'phone')).toMatchObject({ contactType: 'phone', info: '0233082' })
   })
 })
