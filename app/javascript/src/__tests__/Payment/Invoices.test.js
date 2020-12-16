@@ -38,10 +38,6 @@ describe('It should test the invoice component', () => {
     fireEvent.change(parcelInput, { target: { value: '1234' } })
     expect(parcelInput.value).toBe('1234')
 
-    const amountInput = container.queryByTestId('amount')
-    fireEvent.change(amountInput, { target: { value: '1000' } })
-    expect(amountInput.value).toBe('1000')
-
     const statusInput = container.queryByTestId('status')
     fireEvent.change(statusInput, { target: { value: 'paid' } })
     expect(statusInput.value).toBe('paid')
