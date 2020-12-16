@@ -80,6 +80,29 @@ export const UpdateUserMutation = gql`
   ${UserFragment.publicFields}
 `
 
+
+export const NonAdminUpdateMutation = gql`
+mutation UpdateUserMutation(
+  $id: ID!
+  $name: String
+  $avatarBlobId: String
+  $address: String
+  $secondaryInfo: [JSON!]
+) {
+  result: userUpdate(
+    id: $id
+    name: $name
+    avatarBlobId: $avatarBlobId
+    address: $address
+    secondaryInfo: $secondaryInfo
+  ) {
+    user {
+      id
+    }
+  }
+}
+`
+
 export const CreatePendingUserMutation = gql`
   mutation CreatePendingUserMutation(
     $name: String!
