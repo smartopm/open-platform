@@ -10,8 +10,8 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
 
     let(:query) do
       <<~GQL
-        mutation invoiceCreate($landParcelId: ID!, $amount: Int!, $dueDate: String!) {
-          invoiceCreate(landParcelId: $landParcelId, amount: $amount, dueDate: $dueDate){
+        mutation invoiceCreate($landParcelId: ID!, $amount: String!, $dueDate: String!, $status: String!) {
+          invoiceCreate(landParcelId: $landParcelId, amount: $amount, dueDate: $dueDate, status: $status){
             invoice {
               id
               landParcel {
@@ -26,8 +26,9 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
     it 'creates a an invoice associated to land parcel' do
       variables = {
         landParcelId: land_parcel.id,
-        amount: rand * 100,
+        amount: (rand * 100).to_s,
         dueDate: (rand * 10).to_i.day.from_now.to_s,
+        status: %w[in_progress late paid cancelled].sample,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
