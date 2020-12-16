@@ -31,7 +31,8 @@ export default function UserItem({
   sendOneTimePasscode,
   handleUserSelect,
   selectedUsers,
-  offset
+  offset,
+  selectCheckBox
 }) {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -109,7 +110,7 @@ export default function UserItem({
       >
         <Grid container alignItems="center">
           <Checkbox
-            checked={selectedUsers.includes(user.id)}
+            checked={selectedUsers.includes(user.id) || selectCheckBox}
             onChange={() => handleUserSelect(user)}
             name="includeReplyLink"
             data-testid="reply_link"
@@ -254,6 +255,7 @@ UserItem.propTypes = {
     labels: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
+  selectCheckBox: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
   handleUserSelect: PropTypes.func.isRequired,

@@ -22,7 +22,8 @@ export default function UsersActionMenu({
   handleLabelSelect,
   usersCountData,
   selectedUsers,
-  userList
+  userList,
+  selectCheckBox
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false)
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
@@ -73,7 +74,7 @@ export default function UsersActionMenu({
       <Grid item style={{ display: 'flex' }}>
         <Grid>
           <Checkbox
-            checked={isAllSelected()}
+            checked={isAllSelected() || selectCheckBox}
             onChange={setSelectAllOption}
             name="includeReplyLink"
             data-testid="reply_link"
@@ -128,6 +129,7 @@ UsersActionMenu.propTypes = {
   setSelectAllOption: PropTypes.func.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
   userList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectCheckBox: PropTypes.bool.isRequired,
   usersCountData: PropTypes.shape({
     usersCount: PropTypes.number.isRequired
   }).isRequired

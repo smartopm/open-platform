@@ -50,6 +50,7 @@ export default function UsersList() {
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
   const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectCheckBox, setSelectCheckBox] = useState(false)
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -73,9 +74,13 @@ export default function UsersList() {
   const querry = getQuery()
 
   useEffect(() => {
-    const offsetParams = querry.get('offset')
-    setOffset(Number(offsetParams))
-  }, [])
+    if (filterCount !== 0) {
+      setOffset(0)
+    } else {
+      const offsetParams = querry.get('offset')
+      setOffset(Number(offsetParams))
+    }
+  }, [filterCount])
 
 
   // TODO: @dennis, add pop up for notes
@@ -149,21 +154,29 @@ export default function UsersList() {
     setRedirect('/search')
   }
 
+  function checkUserList(){
+    if (
+      !!selectedUsers.length &&
+      !!userList.length &&
+      selectedUsers.length === userList.length
+    ) {
+      setSelectedUsers([])
+      setCampaignCreateOption('none')
+    }
+  }
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
         return
       }
       setOffset(offset - limit)
+      checkUserList()
     } else {
       setOffset(offset + limit)
+      checkUserList()
     }
   }
-
-  // reset pagination when the filter changes
-  useEffect(() => {
-    setOffset(0)
-  }, [])
 
   function toggleFilterMenu() {
     if (displayBuilder === '') {
@@ -195,9 +208,20 @@ export default function UsersList() {
   }
 
   function setCampaignOption(option) {
-    if (option === 'all') fetchUsersCount()
     setCampaignCreateOption(option)
-    if (option !== 'none') setSelectedUsers([])
+    if (option === 'all') {
+      fetchUsersCount()
+      setSelectedUsers([])
+      setSelectCheckBox(true)
+    }
+    if (option === 'all_on_the_page') {
+      setSelectCheckBox(false)
+      setSelectedUsers(userList)
+    }
+    if (option === 'none') {
+      setSelectCheckBox(false)
+      setSelectedUsers([])
+    }  
   }
 
   function setSelectAll() {
@@ -207,9 +231,13 @@ export default function UsersList() {
       selectedUsers.length === userList.length
     ) {
       setSelectedUsers([])
+      setCampaignCreateOption('none')
+    } else if (selectCheckBox) {
+      setSelectCheckBox(false)
+      setCampaignCreateOption('none')
     } else {
       setSelectedUsers(userList)
-      setCampaignCreateOption('none')
+      setCampaignCreateOption('all_on_the_page')
     }
   }
 
@@ -501,6 +529,7 @@ export default function UsersList() {
               handleCampaignCreate={handleCampaignCreate}
               handleLabelSelect={handleLabelSelect}
               usersCountData={usersCountData}
+              selectCheckBox={selectCheckBox}
             />
             <UserListCard
               userData={data}
@@ -510,6 +539,7 @@ export default function UsersList() {
               handleUserSelect={handleUserSelect}
               selectedUsers={selectedUsers}
               offset={offset}
+              selectCheckBox={selectCheckBox}
             />
             <Grid
               container
