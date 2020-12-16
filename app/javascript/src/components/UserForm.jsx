@@ -18,7 +18,7 @@ import {
 import DatePickerDialog from './DatePickerDialog'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import { UserQuery } from '../graphql/queries'
-import { CreateUserMutation, UpdateUserMutation } from '../graphql/mutations'
+import { CreateUserMutation, NonAdminUpdateMutation, UpdateUserMutation } from '../graphql/mutations'
 import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
 import Loading from './Loading'
@@ -62,7 +62,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: 'user',
     readLazyQuery: useLazyQuery(UserQuery),
-    updateMutation: useMutation(UpdateUserMutation),
+    updateMutation: useMutation(isAdmin ? UpdateUserMutation : NonAdminUpdateMutation),
     createMutation: useMutation(CreateUserMutation)
   })
   const { onChange, status, url, signedBlobId } = useFileUpload({

@@ -22,7 +22,7 @@ module Mutations
 
     def check_permitted(values, keys)
       values.each_pair do |key, _val|
-        raise MutationArgumentError, 'Unauthorized Arguments' unless keys.include(key)
+        raise MutationArgumentError, 'Unauthorized Arguments' unless keys.include?(key)
       end
     end
 
