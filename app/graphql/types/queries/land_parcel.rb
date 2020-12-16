@@ -28,6 +28,6 @@ module Types::Queries::LandParcel
   def user_land_parcel(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].users.find(user_id)&.land_parcels 
-  end 
+    context[:site_community].users.find(user_id)&.land_parcels
+  end
 end
