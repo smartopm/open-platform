@@ -28,6 +28,7 @@ RSpec.describe User, type: :model do
         name: 'Mark',
         email: 'mark@doublegdp.com',
         image: 'https://mypic.com/image.png',
+        phone_number: '1234567890',
       ),
       credentials: OpenStruct.new(
         token: '12345',
@@ -190,6 +191,7 @@ RSpec.describe User, type: :model do
         email: 'mark@doublegdp.com',
         request_reason: 'Resident',
         vehicle: nil,
+        phone_number: '1234567890',
       }
       @nuser = @admin.enroll_user(vals)
       expect(@nuser.community_id).to be @admin.community_id

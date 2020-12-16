@@ -8,6 +8,7 @@ module Mutations
       argument :name, String, required: false
       argument :email, String, required: false
       argument :phone_number, String, required: false
+      argument :address, String, required: false
       argument :user_type, String, required: true
       argument :state, String, required: false
       argument :request_reason, String, required: false
@@ -16,16 +17,18 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
+      argument :secondary_info, [GraphQL::Types::JSON], required: false
 
       field :user, Types::UserType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
         attach_avatars(user, vals)
-
         log_user_update(user)
+        update_secondary_info(user, vals.delete(:secondary_info))
         return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
         raise GraphQL::ExecutionError, user.errors.full_messages
@@ -37,6 +40,20 @@ module Mutations
         end
       end
 
+      def update_secondary_info(user, contact_info)
+        return if contact_info.nil?
+
+        contact_info.each do |value|
+          if value['id'].nil?
+            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
+          else
+            contact = user.contact_infos.find(value['id'])
+            contact.update(info: value['info']) unless contact.info.eql?(value['info'])
+          end
+        end
+      end
+
+      # rubocop:enable Metrics/AbcSize
       def log_user_update(user)
         ::EventLog.create(acting_user_id: context[:current_user].id,
                           community_id: user.community_id, subject: 'user_update',

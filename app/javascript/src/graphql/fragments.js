@@ -16,6 +16,7 @@ export const UserFragment = {
       expiresAt
       email
       subStatus
+      address
       accounts {
         id
         updatedAt
@@ -49,6 +50,11 @@ export const UserFragment = {
           id
           name
         }
+      }
+      contactInfos {
+        id
+        info
+        contactType
       }
     }
   `

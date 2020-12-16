@@ -46,6 +46,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         phoneNumber: '26923422232',
         userType: 'client',
+        email: 'dummy@email.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -65,6 +66,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         phoneNumber: '26923422232',
         userType: 'client',
+        email: 'dummy@email.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -97,6 +99,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         phoneNumber: '26923422232',
         userType: nil,
+        email: 'dummy@email.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -133,6 +136,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         phoneNumber: '26913422232',
         userType: 'client',
+        email: 'dummy@email.com',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -386,7 +390,8 @@ RSpec.describe Mutations::User do
         mutation CreateUserMutation(
             $name: String!,
             $reason: String!,
-            $vehicle: String
+            $vehicle: String,
+            $email: String
             $avatarBlobId: String
             $phoneNumber: String!
             $userType: String!
@@ -396,7 +401,8 @@ RSpec.describe Mutations::User do
               requestReason: $reason,
               vehicle: $vehicle,
               avatarBlobId: $avatarBlobId,
-              phoneNumber: $phoneNumber
+              phoneNumber: $phoneNumber,
+              email: $email,
               userType: $userType
             ) {
             user {
@@ -446,6 +452,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
         phoneNumber: '26923422232',
+        email: 'name@email.com',
         userType: 'resident',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,

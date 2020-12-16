@@ -78,14 +78,14 @@ module Types::Queries::User
 
     if query.present? && query.include?('date_filter')
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels)
+          .eager_load(:notes, :accounts, :labels, :contact_infos)
           .heavy_search(query)
           .order(name: :asc)
           .limit(limit)
           .offset(offset).with_attached_avatar
     else
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels)
+          .eager_load(:notes, :accounts, :labels, :contact_infos)
           .search(query)
           .order(name: :asc)
           .limit(limit)
@@ -102,21 +102,21 @@ module Types::Queries::User
 
     if query.present? && query.include?('date_filter')
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels)
+          .eager_load(:notes, :accounts, :labels, :contact_infos)
           .heavy_search(query)
           .order(name: :asc)
           .limit(limit)
           .offset(offset).with_attached_avatar
     elsif query.present? && query.include?('plot_no')
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels)
+          .eager_load(:notes, :accounts, :labels, :contact_infos)
           .plot_number(query)
           .order(name: :asc)
           .limit(limit)
           .offset(offset).with_attached_avatar
     else
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels)
+          .eager_load(:notes, :accounts, :labels, :contact_infos)
           .search(query)
           .order(name: :asc)
           .limit(limit)
@@ -136,7 +136,7 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
     User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels)
+        .eager_load(:notes, :accounts, :labels, :contact_infos)
         .where(state: 'pending',
                community_id: context[:current_user].community_id).with_attached_avatar
   end
@@ -145,7 +145,7 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
     User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels)
+        .eager_load(:notes, :accounts, :labels, :contact_infos)
         .where(
           community_id: context[:current_user].community_id,
           user_type: 'security_guard',

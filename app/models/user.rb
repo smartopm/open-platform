@@ -131,6 +131,7 @@ class User < ApplicationRecord
   OAUTH_FIELDS_MAP = {
     email: ->(auth) { auth.info.email },
     name: ->(auth) { auth.info.name },
+    address: ->(auth) { auth.info.address },
     provider: ->(auth) { auth.provider },
     uid: ->(auth) { auth.uid },
     image_url: ->(auth) { auth.info.image },
@@ -184,7 +185,7 @@ class User < ApplicationRecord
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def enroll_user(vals)
-    enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
+    enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys).except(:secondary_info))
     enrolled_user.community_id = community_id
     enrolled_user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
     ATTACHMENTS.each_pair do |key, attr|
@@ -193,6 +194,7 @@ class User < ApplicationRecord
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
     return enrolled_user unless enrolled_user.save
 
+    record_secondary_info(enrolled_user, vals[:secondary_info])
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)
     enrolled_user
@@ -200,6 +202,15 @@ class User < ApplicationRecord
 
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
+
+  def record_secondary_info(user, secondary_contact_data)
+    return unless secondary_contact_data.present? && user.valid?
+
+    JSON.parse(secondary_contact_data).each do |key, values|
+      values.each { |val| user.contact_infos.create(contact_type: key, info: val) }
+    end
+  end
+
   def process_referral(enrolled_user, data)
     return unless user_type != 'admin'
 
