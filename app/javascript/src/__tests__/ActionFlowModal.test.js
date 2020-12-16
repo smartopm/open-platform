@@ -1,8 +1,10 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import ActionFlowModal from '../containers/ActionFlows/ActionFlowModal'
+import { Events, Actions, ActionFields, RuleFields } from '../graphql/queries'
+
 import '@testing-library/jest-dom/extend-expect'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -64,3 +66,97 @@ describe('ActionFlowModal', () => {
     expect(container.queryByText('New Workflow')).toBeInTheDocument()
   })
 })
+
+describe('render eventType, actionTypes, actionFields, ruleFields', () => {
+  const newProps = {
+    ...props,
+    selectedActionFlow: {}
+  }
+  const mocks = [
+    {
+      request: {
+        query: Events,
+        variables: {}
+      },
+      result: {
+        data: {
+          events: [
+            "task_update",
+            "note_comment_create",
+            "form_update_submit",
+            "user_login",
+            "form_submit",
+            "note_comment_update"
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: Actions,
+        variables: {}
+      },
+      result: {
+        data: {
+          actions: ['Email', 'Notification']
+        }
+      }
+    }, 
+    {
+      request: {
+        query: ActionFields,
+        variables: {
+          action: 'notification'
+        }
+      },
+      result: {
+        data: {
+          actionFields: [
+            {name: "label", type: "select"},
+            {name: "user_id", type: "text"},
+            {name: "message", type: "text"}
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: RuleFields,
+        variables: {
+          eventType: 'task_update'
+        }
+      },
+      result: {
+        data: {
+          ruleFields: [
+            "note_id",
+            "note_user_id",
+            "note_author_id",
+            "note_body",
+            "note_assignees_emails",
+            "note_url"
+          ]
+        }
+      }
+    }
+  ]
+
+  it('should display element to customize action flow', async () => {
+    let container;
+    await act(async () => {
+      container = render(
+        <MockedProvider
+          mocks={mocks}
+          addTypename={false}
+        >
+          <ActionFlowModal {...newProps} />
+        </MockedProvider>
+      )
+    })
+
+    const eventTypeSelector = container.queryByTestId('select-event-type')
+    expect(eventTypeSelector).toBeTruthy()
+    const actionTypeSelector = container.queryByTestId('select-action-type')
+    expect(actionTypeSelector).toBeTruthy()
+  });
+});

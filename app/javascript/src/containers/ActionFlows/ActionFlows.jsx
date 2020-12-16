@@ -61,7 +61,16 @@ export default function ActionFlows() {
     setModalOpen(false)
   }
 
-  function isMetaDataAVariable(value) {
+  /** whitelist some metadata fields that are not variables but contain whitespace
+  e.g "message" field used by the notification action * */
+  // TODO: Revisit this and remove potential complexity @Nurudeen and @Victor
+  const metaDataVariableWhiteList = Object.freeze(['message'])
+
+  function isMetaDataAVariable({key, value}) {
+    if(metaDataVariableWhiteList.indexOf(key) >= 0){
+      return false
+    }
+
     return value.indexOf(' ') >= 0
   }
 
@@ -75,10 +84,10 @@ export default function ActionFlows() {
     Object.entries(metaData).forEach(([key, value]) => {
       actionMetaData[key] = {
         name: key,
-        value: isMetaDataAVariable(value)
+        value: isMetaDataAVariable({key, value})
           ? metaDataVariableValue(value)
           : value,
-        type: isMetaDataAVariable(value) ? 'variable' : 'string'
+        type: isMetaDataAVariable({key, value}) ? 'variable' : 'string'
       }
     })
 

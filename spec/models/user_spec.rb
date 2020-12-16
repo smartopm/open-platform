@@ -17,7 +17,6 @@ RSpec.describe User, type: :model do
       should define_enum_for(:sub_status)
         .with_values(User.sub_statuses)
     }
-    it { should validate_presence_of(:email) }
   end
 
   describe 'Creating a user from a oauth authentication callback' do
