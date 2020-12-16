@@ -9,6 +9,7 @@ module Mutations
       argument :note, String, required: false
       argument :amount, Integer, required: true
       argument :due_date, String, required: true
+      argument :status, String, required: false
 
       field :invoice, Types::InvoiceType, null: true
 
