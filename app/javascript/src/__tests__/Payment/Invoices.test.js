@@ -27,12 +27,31 @@ describe('It should test the invoice component', () => {
 
     const invoiceButton = container.getByTestId("invoice-button")
     fireEvent.click(invoiceButton)
-    
-    
+
     expect(container.getByTestId("parcel-number")).toBeInTheDocument()
     expect(container.getByTestId("amount")).toBeInTheDocument()
     expect(container.getByTestId("status")).toBeInTheDocument()
     expect(container.getByTestId("description")).toBeInTheDocument()
     expect(container.getByTestId("note")).toBeInTheDocument()
+
+    const parcelInput = container.queryByTestId('parcel-number')
+    fireEvent.change(parcelInput, { target: { value: '1234' } })
+    expect(parcelInput.value).toBe('1234')
+
+    const amountInput = container.queryByTestId('amount')
+    fireEvent.change(amountInput, { target: { value: '1000' } })
+    expect(amountInput.value).toBe('1000')
+
+    const statusInput = container.queryByTestId('status')
+    fireEvent.change(statusInput, { target: { value: 'paid' } })
+    expect(statusInput.value).toBe('paid')
+
+    const descriptionInput = container.queryByTestId('description')
+    fireEvent.change(descriptionInput, { target: { value: 'description' } })
+    expect(descriptionInput.value).toBe('description')
+
+    const noteInput = container.queryByTestId('note')
+    fireEvent.change(noteInput, { target: { value: 'note' } })
+    expect(noteInput.value).toBe('note')
   });
 });
