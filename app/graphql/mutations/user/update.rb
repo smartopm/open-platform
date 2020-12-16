@@ -64,10 +64,15 @@ module Mutations
                           })
       end
 
+      def own_user?(vals)
+        context[:current_user].id == vals[:id]
+      end
+
       def authorized?(vals)
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
         user_record = ::User.find(vals[:id])
         current_user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.admin? || own_user?(vals)
         raise GraphQL::ExecutionError, 'Unauthorized' unless user_record.community_id ==
                                                              current_user.community_id
 
