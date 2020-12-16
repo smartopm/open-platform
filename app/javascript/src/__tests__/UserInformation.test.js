@@ -65,8 +65,8 @@ describe("User information component loads",()=>{
         expect(getByText('Payments')).toBeInTheDocument()
         expect(getByText('Contact')).toBeInTheDocument()
     })
-    it('should render Comming soon',()=>{
-        const {getByText} = render(
+    it('should render invoice button',()=>{
+        const {queryByTestId} = render(
           <MockedProvider mock={data}>
             <BrowserRouter>
               <UserInformation
@@ -77,7 +77,7 @@ describe("User information component loads",()=>{
             </BrowserRouter>
           </MockedProvider>
         )
-        expect(getByText('Coming soon')).toBeInTheDocument()
+        expect(queryByTestId('invoice-button')).toBeInTheDocument()
     })
     it('should render Menue',()=>{
         const {getByText} = render(

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -44,8 +43,9 @@ export default function AddInvoices({ userId }){
         status: inputValue.status
       }
     }).then(() => {
-      setMessageAlert('Property added successfully')
+      setMessageAlert('Invoice added successfully')
       setIsSuccessAlert(true)
+      setInputValue({})
       setOpen(false)
     }).catch((err) => {
       setOpen(false);
@@ -73,97 +73,79 @@ export default function AddInvoices({ userId }){
         handleClose={handleMessageAlertClose}
       />
       <CenteredContent>
-        <Button variant="contained" color="primary" onClick={() => setOpen(true)}>Create Invoice</Button>
+        <Button variant="contained" data-testid="invoice-button" color="primary" onClick={() => setOpen(true)}>Create Invoice</Button>
         <CustomizedDialogs 
           open={open} 
           handleModal={() => setOpen(false)}
           dialogHeader='Add a New Invoice'
           handleBatchFilter={handleSubmit}
         >
-          <div className={classes.root}>
-            <div className={classes.input}>
-              <Typography variant="body2" style={{marginTop: '10px'}}>
-                Plot No:
-              </Typography>
-              <TextField
-                className={classes.plotNumber}
-                value={inputValue.parcelId}
-                required
-                onChange={(event) => setInputValue({...inputValue, parcelId: event.target.value})}
-                select
-              >
-                {data?.userLandParcel.map(land => (
-                  <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className={classes.dueDate}>
-              <Typography variant="body2" style={{margin: '20px 20px 0 0'}}>
-                Due Date:
-              </Typography>
-              <DatePickerDialog 
-                selectedDate={inputValue.selectedDate}
-                handleDateChange={(date) => setInputValue({...inputValue, selectedDate: date})}
-                width='55%'
-              />
-            </div>
-            <div style={{display: 'flex'}}>
-              <Typography variant="body2" style={{marginTop: '10px'}}>
-                Amount:
-              </Typography>
-              <TextField
-                id="standard-start-adornment"
-                type='number'
-                className={classes.amount}
-                value={inputValue.amount}
-                required
-                onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
-                InputProps={{
+          <div className={classes.invoiceForm}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="parcel-number"
+              inputProps={{ "data-testid": "parcel-number" }}
+              label="Plot No"
+              value={inputValue.parcelId}
+              onChange={(event) => setInputValue({...inputValue, parcelId: event.target.value})}
+              required
+              select
+            >
+              {data?.userLandParcel.map(land => (
+                <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
+              ))}
+            </TextField>
+            <DatePickerDialog 
+              selectedDate={inputValue.selectedDate}
+              handleDateChange={(date) => setInputValue({...inputValue, selectedDate: date})}
+              label='Due Date'
+              required
+            />
+            <TextField
+              margin="dense"
+              id="amount"
+              label="Amount"
+              type='number'
+              value={inputValue.amount}
+              onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
+              InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                "data-testid": "amount"
               }}
-              />
-            </div>
-            <div style={{display: 'flex', marginTop: '5px'}}>
-              <Typography variant="body2" style={{marginTop: '10px'}}>
-                Status:
-              </Typography>
-              <TextField
-                className={classes.status}
-                value={inputValue.status}
-                required
-                onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
-                select
-              >
-                <MenuItem value='in_progress'>In progress</MenuItem>
-                <MenuItem value='paid'>Paid</MenuItem>
-                <MenuItem value='late'>Late</MenuItem>
-                <MenuItem value='cancelled'>Cancelled</MenuItem>
-              </TextField>
-            </div>
-            <div style={{display: 'flex'}}>
-              <Typography variant="body2" style={{marginTop: '10px'}}>
-                Description:
-              </Typography>
-              <TextField
-                id="description"
-                className={classes.description}
-                value={inputValue.description}
-                multiline
-                onChange={(event) => setInputValue({...inputValue, description: event.target.value})}
-              />
-            </div>
-            <div style={{display: 'flex'}}>
-              <Typography variant="body2" style={{marginTop: '10px'}}>
-                Note:
-              </Typography>
-              <TextField
-                id="note"
-                className={classes.note}
-                value={inputValue.note}
-                multiline
-                onChange={(event) => setInputValue({...inputValue, note: event.target.value})}
-              />
-            </div>
+              required
+            />
+            <TextField
+              margin="dense"
+              id="status"
+              inputProps={{ "data-testid": "status" }}
+              label="Status"
+              value={inputValue.status}
+              onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
+              required
+              select
+            >
+              <MenuItem value='in_progress'>In progress</MenuItem>
+              <MenuItem value='paid'>Paid</MenuItem>
+              <MenuItem value='late'>Late</MenuItem>
+              <MenuItem value='cancelled'>Cancelled</MenuItem>
+            </TextField>
+            <TextField
+              margin="dense"
+              id="description"
+              label="Description"
+              value={inputValue.description}
+              onChange={(event) => setInputValue({...inputValue, description: event.target.value})}
+              multiline
+            />
+            <TextField
+              margin="dense"
+              id="note"
+              label="Note"
+              value={inputValue.note}
+              onChange={(event) => setInputValue({...inputValue, note: event.target.value})}
+              multiline
+            />
           </div>
         </CustomizedDialogs>
       </CenteredContent>
@@ -172,35 +154,10 @@ export default function AddInvoices({ userId }){
 }
 
 const useStyles = makeStyles({
-  root: {
-    paddingLeft: '35px'
-  },
-  input: {
-    display: 'flex',
-    width: '300px'
-  },
-  plotNumber: {
-    marginLeft: '30px',
-    width: '170px'
-  },
-  dueDate: {
-    display: 'flex'
-  },
-  amount: {
-    width: '170px',
-    marginLeft: '30px',
-  },
-  status: {
-    width: '170px',
-    marginLeft: '38px',
-  },
-  description: {
-    marginLeft: '5px',
-    width: '170px'
-  },
-  note: {
-    marginLeft: '45px',
-    width: '170px'
+  invoiceForm: {
+    display: 'flex', 
+    flexDirection: 'column',
+    width: '400px'
   }
 });
 

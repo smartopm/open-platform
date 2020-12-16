@@ -9,7 +9,7 @@ import {
 } from '@material-ui/pickers'
 import { checkPastDate } from "../utils/dateutil"
 
-export default function DatePickerDialog({ selectedDate, handleDateChange, label, width }) {
+export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required }) {
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
@@ -23,6 +23,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           placeholder="YYYY-MM-DD"
           value={selectedDate}
           name={label}
+          required={required}
           onChange={date => handleDateChange(date)}
           KeyboardButtonProps={{
                         'aria-label': 'change date',

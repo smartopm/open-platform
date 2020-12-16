@@ -705,7 +705,7 @@ export const InvoiceCreate = gql`
     $landParcelId: ID!
     $description: String
     $note: String
-    $amount: Integer!
+    $amount: String!
     $dueDate: String!
     $status: String!
   ) {
@@ -715,6 +715,7 @@ export const InvoiceCreate = gql`
       note: $note
       amount: $amount
       dueDate: $dueDate
+      status: $status
     ) {
       invoice {
         id

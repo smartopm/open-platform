@@ -7,9 +7,9 @@ module Mutations
       argument :land_parcel_id, ID, required: true
       argument :description, String, required: false
       argument :note, String, required: false
-      argument :amount, Integer, required: true
+      argument :amount, String, required: true
       argument :due_date, String, required: true
-      argument :status, String, required: false
+      argument :status, String, required: true
 
       field :invoice, Types::InvoiceType, null: true
 
