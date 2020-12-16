@@ -159,11 +159,9 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.uuid "note_id"
     t.string "status"
     t.uuid "community_id"
     t.index ["community_id"], name: "index_comments_on_community_id"
-    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 

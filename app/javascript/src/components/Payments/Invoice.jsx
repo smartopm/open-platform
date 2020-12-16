@@ -1,35 +1,25 @@
 import React, { useState } from 'react'
+import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
-import { useQuery, useMutation } from 'react-apollo'
 import CenteredContent from '../CenteredContent'
 import { CustomizedDialogs } from '../Dialog'
-import { UserLandParcel } from '../../graphql/queries'
 import { InvoiceCreate } from '../../graphql/mutations'
 import DatePickerDialog from '../DatePickerDialog'
 import MessageAlert from "../MessageAlert"
-import Loading from '../Loading'
-import ErrorPage from '../Error'
 import { formatError } from '../../utils/helpers'
 
-export default function AddInvoices({ userId }){
+export default function AddInvoices({ data }){
   const classes = useStyles();
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState({})
   const [createInvoice] = useMutation(InvoiceCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-  const {
-    loading, error, data
-  } = useQuery(UserLandParcel, {
-    variables: { userId },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network'
-  })
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -61,9 +51,6 @@ export default function AddInvoices({ userId }){
     setMessageAlert('')
   }
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
-
   return (
     <>
       <MessageAlert
@@ -92,7 +79,7 @@ export default function AddInvoices({ userId }){
               required
               select
             >
-              {data?.userLandParcel.map(land => (
+              {data.map(land => (
                 <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
               ))}
             </TextField>
@@ -134,6 +121,7 @@ export default function AddInvoices({ userId }){
               margin="dense"
               id="description"
               label="Description"
+              inputProps={{ "data-testid": "description" }}
               value={inputValue.description}
               onChange={(event) => setInputValue({...inputValue, description: event.target.value})}
               multiline
@@ -142,6 +130,7 @@ export default function AddInvoices({ userId }){
               margin="dense"
               id="note"
               label="Note"
+              inputProps={{ "data-testid": "note" }}
               value={inputValue.note}
               onChange={(event) => setInputValue({...inputValue, note: event.target.value})}
               multiline
@@ -162,5 +151,8 @@ const useStyles = makeStyles({
 });
 
 AddInvoices.propTypes = {
-  userId: PropTypes.string.isRequired
+  data: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    parcelNumber: PropTypes.string.isRequired
+  })).isRequired
 }
