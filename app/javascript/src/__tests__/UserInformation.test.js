@@ -1,5 +1,5 @@
 import React from 'react'
-import { render} from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
@@ -33,7 +33,7 @@ describe("User information component loads",()=>{
             userType : "admin"
         }
     }
-    it('should render user name on contacts tab',()=>{
+    it('should render user name on contacts tab', async ()=>{
         const {getByText} = render(
           <MockedProvider mock={data}>
             <BrowserRouter>
@@ -45,10 +45,13 @@ describe("User information component loads",()=>{
             </BrowserRouter>
           </MockedProvider>
         )
-        expect(getByText('Yoram')).toBeInTheDocument()
-        expect(getByText('Valid')).toBeInTheDocument()
+        await waitFor(
+          () => { expect(getByText('Yoram')).toBeInTheDocument()
+                  expect(getByText('Valid')).toBeInTheDocument() },
+          { timeout: 1000 }
+        )
     })
-    it('should render tab elemets',()=>{
+    it('should render tab elemets', async ()=>{
         const {getByText} = render(
           <MockedProvider mock={data}>
             <BrowserRouter>
@@ -60,26 +63,17 @@ describe("User information component loads",()=>{
             </BrowserRouter>
           </MockedProvider>
         )
-        expect(getByText('Plots')).toBeInTheDocument()
-        expect(getByText('Communication')).toBeInTheDocument()
-        expect(getByText('Payments')).toBeInTheDocument()
-        expect(getByText('Contact')).toBeInTheDocument()
-    })
-    it('should render invoice button',()=>{
-        const {queryByTestId} = render(
-          <MockedProvider mock={data}>
-            <BrowserRouter>
-              <UserInformation
-                data={data}
-                authState={authstate}
-                accountData={accountData}
-              />
-            </BrowserRouter>
-          </MockedProvider>
+
+        await waitFor(
+          () => { expect(getByText('Plots')).toBeInTheDocument()
+          expect(getByText('Communication')).toBeInTheDocument()
+          expect(getByText('Payments')).toBeInTheDocument()
+          expect(getByText('Contact')).toBeInTheDocument() },
+          { timeout: 1000 }
         )
-        expect(queryByTestId('invoice-button')).toBeInTheDocument()
     })
-    it('should render Menue',()=>{
+
+    it('should render Menue', async ()=>{
         const {getByText} = render(
           <MockedProvider mock={data}>
             <BrowserRouter>
@@ -91,9 +85,14 @@ describe("User information component loads",()=>{
             </BrowserRouter>
           </MockedProvider>
         )
-        expect(getByText('Print')).toBeInTheDocument()
-        expect(getByText('Send One Time Passcode')).toBeInTheDocument()
-        expect(getByText('Message Support')).toBeInTheDocument()
+
+        await waitFor(
+          () => { expect(getByText('Print')).toBeInTheDocument()
+          expect(getByText('Send One Time Passcode')).toBeInTheDocument()
+          expect(getByText('Message Support')).toBeInTheDocument() },
+          { timeout: 1000 }
+        )
+        
     })
 
 })
