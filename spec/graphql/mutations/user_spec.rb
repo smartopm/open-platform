@@ -240,24 +240,28 @@ RSpec.describe Mutations::User do
     let!(:user) { create(:user_with_community) }
     let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
+    let!(:client) { create(:pending_user, community_id: admin.community_id, user_type: 'client') }
 
     let(:query) do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
-            $userType: String!
+            $userType: String
             $vehicle: String
+            $name: String
           ) {
           userUpdate(
               id: $id,
               userType: $userType,
               vehicle: $vehicle,
+              name: $name
             ) {
             user {
               id
               userType
               roleName
               vehicle
+              name
             }
           }
         }
@@ -287,6 +291,50 @@ RSpec.describe Mutations::User do
                                               }).as_json
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'roleName')).to eql 'Security Guard'
+      expect(result.dig('errors')).to be_nil
+    end
+
+    it 'should not update with restricted field' do
+      variables = {
+        id: pending_user.id,
+        userType: 'visitor',
+        name: 'Some nice name',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: client,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized Arguments'
+    end
+
+    it 'should not update when is client and record isnt theirs' do
+      variables = {
+        id: pending_user.id,
+        name: 'Some nice name',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: client,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should update when it is user updating their own' do
+      variables = {
+        id: client.id,
+        name: 'Some nice name',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: client,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(result.dig('data', 'userUpdate', 'user', 'name')).to eql 'Some nice name'
       expect(result.dig('errors')).to be_nil
     end
 
