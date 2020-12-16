@@ -43,6 +43,10 @@ const initialValues = {
   contactInfos: []
 }
 
+export function formatContactType(value, type) {
+  return { contactType: type, info: value }
+}
+
 export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   // const location = useLocation()
   console.log(isAdmin)
@@ -69,10 +73,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     client: useApolloClient()
   })
 
-  function formatType(value, type) {
-    return { contactType: type, info: value }
-  }
-
   function handleSubmit(event) {
     event.preventDefault()
     setSubmitting(true)
@@ -82,9 +82,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       address
     }
     // if editing then restructure the phoneNumbers and emails
-    const phones = phoneNumbers.map(value => formatType(value, 'phone'))
-    const email = emails.map(value => formatType(value, 'email'))
-    const homeAddress = address.map(value => formatType(value, 'address'))
+    const phones = phoneNumbers.map(value => formatContactType(value, 'phone'))
+    const email = emails.map(value => formatContactType(value, 'email'))
+    const homeAddress = address.map(value => formatContactType(value, 'address'))
 
     const vals = data.contactInfos
     //  get existing secondaryInfo and add newly created ones with no ids
