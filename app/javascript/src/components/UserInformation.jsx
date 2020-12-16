@@ -11,7 +11,7 @@ import {
   DialogContent,
 } from '@material-ui/core'
 import { css, StyleSheet } from 'aphrodite'
-import { useMutation, useQuery } from 'react-apollo'
+import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import ReactGA from 'react-ga';
 import { CreateNote } from '../graphql/mutations'
@@ -30,13 +30,11 @@ import { TabPanel } from './Tabs'
 import UserFilledForms from "./User/UserFilledForms"
 import UserMessages from './Messaging/UserMessages'
 import AddInvoice from './Payments/Invoice'
-import { UserLandParcel } from '../graphql/queries'
-import Loading from './Loading'
-import ErrorPage from './Error'
 
 
 export default function UserInformation({
   data,
+  parcelData,
   onLogEntry,
   authState,
   sendOneTimePasscode,
@@ -64,14 +62,6 @@ export default function UserInformation({
       form.reset()
     })
   }
-
-  const {
-    loading, error, data: parcelData
-  } = useQuery(UserLandParcel, {
-    variables: { userId },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network'
-  })
   
   const open = Boolean(anchorEl)
   const userType = authState.user.userType.toLowerCase()
@@ -126,8 +116,6 @@ export default function UserInformation({
           })
         })
   }
-  if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
   return (
     <div>
       <>
@@ -252,7 +240,7 @@ export default function UserInformation({
           )
         }
         <TabPanel value={tabValue} index="Payments">
-          <AddInvoice data={parcelData?.userLandParcel} />
+          <AddInvoice data={parcelData} />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
@@ -300,7 +288,11 @@ UserInformation.propTypes = {
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   accountData: PropTypes.shape({ user: User }).isRequired,
-  accountRefetch: PropTypes.func.isRequired
+  accountRefetch: PropTypes.func.isRequired,
+  parcelData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    parcelNumber: PropTypes.string.isRequired
+  })).isRequired
 }
 
 

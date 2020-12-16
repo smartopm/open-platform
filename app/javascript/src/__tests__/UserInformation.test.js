@@ -16,6 +16,13 @@ describe("User information component loads",()=>{
         }
     }
 
+    const parcelData = [
+      {
+        id: 'hiuwkeh',
+        parcelNumber: 'ho2ij3'
+      }
+  ]
+
     const accountData = {
       user : {
         accounts : [{
@@ -41,6 +48,7 @@ describe("User information component loads",()=>{
                 data={data}
                 authState={authstate}
                 accountData={accountData}
+                parcelData={parcelData}
               />
             </BrowserRouter>
           </MockedProvider>
@@ -59,6 +67,7 @@ describe("User information component loads",()=>{
                 data={data}
                 authState={authstate}
                 accountData={accountData}
+                parcelData={parcelData}
               />
             </BrowserRouter>
           </MockedProvider>
@@ -81,6 +90,7 @@ describe("User information component loads",()=>{
                 data={data}
                 authState={authstate}
                 accountData={accountData}
+                parcelData={parcelData}
               />
             </BrowserRouter>
           </MockedProvider>
