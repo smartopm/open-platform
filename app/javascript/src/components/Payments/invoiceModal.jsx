@@ -11,14 +11,17 @@ import DatePickerDialog from '../DatePickerDialog'
 import { formatError } from '../../utils/helpers'
 import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
+import PaymentModal from './PaymentModal'
 
-export default function InvoiceModal({ open, handleModalClose, data, userId }) {
+export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState({})
   const [createInvoice] = useMutation(InvoiceCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [openPayment, setOpenPayment] = useState(false)
+  const [invoiceData, setInvoiceData] = useState(null)
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -31,12 +34,19 @@ export default function InvoiceModal({ open, handleModalClose, data, userId }) {
         dueDate: inputValue.selectedDate,
         status: inputValue.status
       }
-    }).then(() => {
+    }).then((res) => {
       setMessageAlert('Invoice added successfully')
       setIsSuccessAlert(true)
       setInputValue({})
-      handleModalClose()
-      history.push(`/user/${userId}`)
+      if (paymentOpen) {
+        handleModalClose()
+        setInvoiceData(res.data.invoiceCreate.invoice)
+        setOpenPayment(true)
+        history.push(`/user/${userId}/invoices/${res.data.invoiceCreate.invoice.id}/add_payment`)
+      } else {
+        handleModalClose()
+        history.push(`/user/${userId}`)
+      }
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
@@ -136,6 +146,11 @@ export default function InvoiceModal({ open, handleModalClose, data, userId }) {
           />
         </div>
       </CustomizedDialogs>
+      <PaymentModal 
+        open={openPayment} 
+        handleModalClose={() => setOpenPayment(false)} 
+        invoiceData={invoiceData}
+      />
     </>
   )
 }
@@ -150,7 +165,7 @@ const useStyles = makeStyles({
 
 InvoiceModal.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     parcelNumber: PropTypes.string.isRequired
   })).isRequired,
   userId: PropTypes.string.isRequired,
