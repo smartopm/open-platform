@@ -16,7 +16,13 @@ export default function Categories() {
     if (!response || !response.found) {
         return <Spinner />
     }
-    const cats = response.categories.filter(cat => cat.slug !== 'private' && cat.name !== "Uncategorized" && cat.name !== "news")
+    // const cats = response.categories.filter(cat => cat.slug !== 'private' && cat.name !== "Uncategorized" && cat.name !== "news")
+    const cats = response.categories.filter(function(cat) {
+      // eslint-disable-next-line react/no-this-in-sfc
+      return this.indexOf(cat.name) < 0;
+    },
+        ['Private', 'Uncategorized', 'news', 'Nkwashi Digest']
+    );
     return (
       <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
         <Grid>
