@@ -31,6 +31,11 @@ class User < ApplicationRecord
     attributes plot_no: ['land_parcels.parcel_number']
   end
 
+  search_scope :search_by_contact_info do
+    attributes :phone_number, :email
+    attributes contact_infos: ['contact_infos.info']
+  end
+
   search_scope :search_lite do
     attributes :name, :phone_number, :user_type, :email
   end
