@@ -294,6 +294,7 @@ RSpec.describe Types::Queries::User do
   describe 'user_search' do
     before :each do
       @user = create(:user_with_community, name: 'Joe Test')
+      @user2 = create(:user_with_community, name: 'Doe Test', community: @user.community)
       @admin_user = create(:user_with_community,
                            user_type: 'admin',
                            community_id: @user.community_id)
@@ -316,6 +317,20 @@ RSpec.describe Types::Queries::User do
                                                variables: { query: 'Joe' }).as_json
 
       expect(result.dig('data', 'userSearch').length).to eql 1
+      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Joe Test'
+    end
+
+    it 'searches by contact info' do
+      @user2.contact_infos.create(contact_type: 'phone', info: '09056783452')
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @current_user,
+                                       },
+                                               variables: {
+                                                 query: 'contact_info: 09056783452',
+                                               }).as_json
+
+      expect(result.dig('data', 'userSearch').length).to eql 1
+      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Doe Test'
     end
 
     it 'should fail if no logged in' do
