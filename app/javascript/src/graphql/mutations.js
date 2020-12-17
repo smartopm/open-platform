@@ -742,6 +742,11 @@ export const InvoiceCreate = gql`
     ) {
       invoice {
         id
+        amount
+        landParcel {
+          id
+          parcelNumber
+        }
       }
     }
   }
