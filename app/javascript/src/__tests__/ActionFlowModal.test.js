@@ -98,7 +98,7 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
       },
       result: {
         data: {
-          actions: ['Email', 'Notification']
+          actions: ['Email', 'Notification', 'Task']
         }
       }
     }, 

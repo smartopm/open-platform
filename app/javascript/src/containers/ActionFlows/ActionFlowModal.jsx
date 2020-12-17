@@ -14,13 +14,17 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormControl
+  FormControl,
+  FormHelperText,
 } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import DatePickerDialog from '../../components/DatePickerDialog'
+import { UserChip } from '../../components/UserChip'
 import colors from '../../themes/nkwashi/colors'
-import { Events, Actions, ActionFields, RuleFields, LabelsQuery } from '../../graphql/queries'
+import { Events, Actions, ActionFields, RuleFields, LabelsQuery, UsersLiteQuery } from '../../graphql/queries'
 import QueryBuilder from '../../components/QueryBuilder'
-import { titleize, capitalize } from '../../utils/helpers'
+import { titleize, capitalize, sentencizeAction } from '../../utils/helpers'
+import { NotesCategories } from '../../utils/constants'
 
 const { primary, dew } = colors
 const initialData = {
@@ -34,6 +38,8 @@ const initialData = {
 export default function ActionFlowModal({ open, closeModal, handleSave, selectedActionFlow }) {
   const [data, setData] = useState(initialData)
   const [metaData, setMetaData] = useState({})
+  const [selectedDate, setDate] = useState(new Date())
+  const [assignees, setAssignees] = useState([])
 
   const [loadLabelsLite, {
     data: labelsLiteData
@@ -41,6 +47,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     {
       fetchPolicy: 'cache-and-network'
     })
+  const [loadAssignees, { data: assigneesLiteData }] = useLazyQuery(UsersLiteQuery, {
+    variables: { query: 'user_type = admin' },
+    errorPolicy: 'all'
+  })
 
   const eventData = useQuery(Events)
   const actionData = useQuery(Actions)
@@ -60,6 +70,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         actionFieldsValues[key] = (val.value.includes('_') ? titleize(val.value) : val.value)
       })
       setMetaData(actionFieldsValues)
+      loadLabelsLite()
+      loadAssignees()
     }
     return () => {
       setData(initialData)
@@ -92,15 +104,22 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       loadLabelsLite()
     }
 
+    if(data.eventType && value === 'task') {
+      loadAssignees()
+    }
+
+    // Reset the array of assignees when a new eventType/action is selected
+    if(assignees.length) setAssignees([])
+
     setData({
       ...data,
       [name]: value
     })
   }
 
-  function handleSelectLabel(event) {
+  function handleSelect(event) {
     const { name, value } = event.target
-
+    
     setMetaData({
       ...metaData,
       [name]: value
@@ -109,6 +128,44 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     setData({
       ...data,
       [name]: value
+    })
+  }
+
+  function handleDateChange(params) {
+    const { name, value } = params
+
+    setDate(value)
+
+    setMetaData({
+      ...metaData,
+      [name]: value.toISOString()
+    })
+
+    setData({
+      ...data,
+      [name]: value.toISOString()
+    })
+  }
+
+  function getAssigneeIds(user){
+    return user.map(u => u.id).join(',')
+  }
+
+  function handleChooseAssignees(event){
+    const { name, value: user } = event.target
+
+    setAssignees([...user])
+
+    const assigneeIds = getAssigneeIds(user)
+
+    setMetaData({
+      ...metaData,
+      [name]: assigneeIds
+    })
+
+    setData({
+      ...data,
+      [name]:assigneeIds
     })
   }
 
@@ -212,7 +269,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               {actionData.data.actions.map((action, index) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <MenuItem key={index} value={action.toLowerCase()}>
-                  {`Send ${action}`}
+                  {sentencizeAction(action)}
                 </MenuItem>
               ))}
             </Select>
@@ -245,7 +302,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       id={`${actionField.name}-id-section`}
                       name={actionField.name}
                       value={data[actionField.name] || ''}
-                      onChange={handleSelectLabel}
+                      onChange={handleSelect}
                       fullWidth
                     >
                       {labelsLiteData?.labels.map(({ id, shortDesc}) => (
@@ -254,6 +311,72 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl>
+                )
+              }
+              if(actionField.type === 'select' && actionField.name === 'category') {
+                return (
+                  <FormControl fullWidth>
+                    <InputLabel id={`select-${actionField.name}`}>{`Select ${capitalize(actionField.name)}`}</InputLabel>
+                    <Select
+                      labelId={`select-${actionField.name}`}
+                      id={`${actionField.name}-id-section`}
+                      name={actionField.name}
+                      value={data[actionField.name] || ''}
+                      onChange={handleSelect}
+                      fullWidth
+                    >
+                      {Object.entries(NotesCategories).map(([key, val]) => (
+                        <MenuItem key={key} value={key}>
+                          {val}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )
+              }
+              if(actionField.type === 'select' && actionField.name === 'assignees') {
+                return (
+                  <FormControl fullWidth>
+                    <FormHelperText>Assign this task to users</FormHelperText>
+                    <Select
+                      labelId={`select-${actionField.name}`}
+                      id={`${actionField.name}-id-section`}
+                      name={actionField.name}
+                      value={assignees}
+                      onChange={handleChooseAssignees}
+                      fullWidth
+                      multiple
+                      renderValue={selected => (
+                        <div>
+                          {selected.map((value, i) => (
+                            <UserChip
+                              user={value}
+                              key={i}
+                              label={value.name}
+                              size="medium"
+                            />
+                          ))}
+                        </div>
+                      )}
+                    >
+                      {assigneesLiteData?.usersLite.map(user => (
+                        <MenuItem key={user.id} value={user}>
+                          {user.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )
+              }
+              if(actionField.type === 'date' && actionField.name === 'due_date') {
+                return (
+                  <FormControl fullWidth>
+                    <FormHelperText>Pick a due date</FormHelperText>
+                    <DatePickerDialog
+                      handleDateChange={date => handleDateChange({name: actionField.name, value: date })}
+                      selectedDate={selectedDate}
+                    />
                   </FormControl>
                 )
               }

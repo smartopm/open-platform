@@ -35,6 +35,15 @@ RSpec.describe Types::Queries::ActionFlow do
         })
     end
 
+    let(:task_action_fields_query) do
+      %(query {
+        actionFields(action: "task") {
+            name
+            type
+          }
+        })
+    end
+
     let(:rule_fields_query) do
       %(query {
         ruleFields(eventType: "task_update")
@@ -79,6 +88,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                          }).as_json
         expect(result.dig('data', 'actions')).to include('Email')
         expect(result.dig('data', 'actions')).to include('Notification')
+        expect(result.dig('data', 'actions')).to include('Task')
       end
 
       it 'throws unauthorized error if there is no current-user' do
@@ -108,6 +118,18 @@ RSpec.describe Types::Queries::ActionFlow do
                                          }).as_json
         available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
         expect(available_fields).to include('label', 'user_id', 'message')
+      end
+
+      it 'retrieves fields for task action' do
+        result = DoubleGdpSchema.execute(task_action_fields_query, context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+        available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
+        expect(available_fields).to include('body', 'description',
+                                            'category', 'assignees',
+                                            'user_id', 'due_date',
+                                            'author_id')
       end
 
       it 'throws unauthorized error if there is no current-user' do
