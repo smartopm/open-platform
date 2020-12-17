@@ -100,28 +100,24 @@ module Types::Queries::User
   def user_search(query: '', offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-    if query.present? && query.include?('date_filter')
-      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels, :contact_infos)
-          .heavy_search(query)
-          .order(name: :asc)
-          .limit(limit)
-          .offset(offset).with_attached_avatar
-    elsif query.present? && query.include?('plot_no')
-      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels, :contact_infos)
-          .plot_number(query)
-          .order(name: :asc)
-          .limit(limit)
-          .offset(offset).with_attached_avatar
-    else
-      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels, :contact_infos)
-          .search(query)
-          .order(name: :asc)
-          .limit(limit)
-          .offset(offset).with_attached_avatar
+    search_method = 'search'
+
+    if query.include?('date_filter')
+      search_method = 'heavy_search'
+    elsif query.include?('plot_no')
+      search_method = 'plot_number'
+      query = query.split(' ').last
+    elsif query.include?('contact_info')
+      search_method = 'search_by_contact_info'
+      query = query.split(' ').last
     end
+
+    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+        .eager_load(:notes, :accounts, :labels, :contact_infos)
+        .send(search_method, query)
+        .order(name: :asc)
+        .limit(limit)
+        .offset(offset).with_attached_avatar
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
