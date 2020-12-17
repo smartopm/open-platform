@@ -47,6 +47,7 @@ export default function PostsList() {
         return <Spinner />
     }
     const totalPosts = response.found
+    const publicPosts = totalPosts && response.posts.filter(post => post.categories.Private == null)
     return (
       <>
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
@@ -60,7 +61,7 @@ export default function PostsList() {
           <Divider light variant="middle" />
           <br />
           <Grid container direction="row" justify="center">
-            {totalPosts ? response.posts.map(post => (
+            {totalPosts ? publicPosts.map(post => (
               <Grid item key={post.ID}>
                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
                   <div
