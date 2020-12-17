@@ -58,6 +58,7 @@ class User < ApplicationRecord
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
                                     dependent: :destroy, inverse_of: :user
 
+  has_many :payments, dependent: :destroy
   has_many :notes, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :note_comments, dependent: :destroy
