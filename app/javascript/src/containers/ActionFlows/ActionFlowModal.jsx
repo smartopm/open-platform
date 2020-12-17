@@ -339,7 +339,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 return (
                   <FormControl fullWidth>
                     <FormHelperText>Assign this task to users</FormHelperText>
-                    {/* <InputLabel id={`select-${actionField.name}`}>{`Select ${capitalize(actionField.name)}`}</InputLabel> */}
                     <Select
                       labelId={`select-${actionField.name}`}
                       id={`${actionField.name}-id-section`}
