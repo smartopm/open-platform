@@ -102,4 +102,20 @@ RSpec.describe Notifier do
 
     expect(Notifier).not_to receive(:send_in_app_notification)
   end
+
+  it '#send_from_action should call send notification' do
+    data = {
+      label: 'com_news_sms',
+      user_id: user.id,
+    }
+
+    user.user_labels.create!(label_id: label.id)
+    expect do
+      Notifier.send_from_action('Message', data)
+    end.to change { Message.count }.by(1)
+
+    expect do
+      Notifier.send_from_action('Message', data)
+    end.to change { Notification.count }.by(1)
+  end
 end
