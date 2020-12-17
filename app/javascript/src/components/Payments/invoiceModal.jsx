@@ -170,5 +170,6 @@ InvoiceModal.propTypes = {
   })).isRequired,
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
-  handleModalClose: PropTypes.func.isRequired
+  handleModalClose: PropTypes.func.isRequired,
+  paymentOpen: PropTypes.bool.isRequired
 }
