@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { CustomizedDialogs } from '../Dialog'
 
-export default function PaymentModal({ open, handleModalClose, handleSubmit, invoiceData }){
+export default function PaymentModal({ open, handleModalClose, invoiceData }){
   const classes = useStyles();
   const [inputValue, setInputValue] = useState({})
 
+  function handleSubmit() {
+    console.log('submit')
+  }
   useEffect(() => {
     setInputValue({amount: invoiceData?.amount})
   }, [open])
@@ -62,3 +66,14 @@ const useStyles = makeStyles({
     width: '400px'
   }
 });
+
+PaymentModal.propTypes = {
+  invoiceData: PropTypes.shape({
+    amount: PropTypes.string,
+    landParcel: PropTypes.shape({
+      parcelNumber: PropTypes.string
+    })
+  }).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleModalClose: PropTypes.func.isRequired,
+}
