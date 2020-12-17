@@ -3,10 +3,10 @@ import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import Invoices from '../../components/Payments/Invoice'
+import InvoiceModal from '../../components/Payments/invoiceModal'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
-describe('It should test the invoice component', () => {
+describe('It should test the invoice modal component', () => {
   const data = [
       {
         id: 'hiuwkeh',
@@ -14,21 +14,20 @@ describe('It should test the invoice component', () => {
       }
   ]
 
+  const open = true
+
+  const handleModalClose = jest.fn
+
   const userId = 'jwuifhwef'
 
   it('it should render invoice modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <Invoices data={data} userId={userId} />
+          <InvoiceModal open={open} data={data} userId={userId} handleModalClose={handleModalClose} />
         </MockedProvider>
       </BrowserRouter>
     )
-
-    expect(container.getByTestId("invoice-button")).toBeInTheDocument()
-
-    const invoiceButton = container.getByTestId("invoice-button")
-    fireEvent.click(invoiceButton)
 
     expect(container.getByTestId("parcel-number")).toBeInTheDocument()
     expect(container.getByTestId("amount")).toBeInTheDocument()
