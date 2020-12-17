@@ -113,5 +113,7 @@ module Types
 
     # contact_info
     field :contact_info_delete, mutation: Mutations::ContactInfo::Delete
+    # invoice
+    field :invoice_create, mutation: Mutations::Invoice::InvoiceCreate
   end
 end

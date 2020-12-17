@@ -29,10 +29,12 @@ import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
 import UserFilledForms from "./User/UserFilledForms"
 import UserMessages from './Messaging/UserMessages'
+import AddInvoice from './Payments/Invoice'
 
 
 export default function UserInformation({
   data,
+  parcelData,
   onLogEntry,
   authState,
   sendOneTimePasscode,
@@ -238,7 +240,7 @@ export default function UserInformation({
           )
         }
         <TabPanel value={tabValue} index="Payments">
-          <h4 className="text-center">Coming soon</h4>
+          <AddInvoice data={parcelData} userId={userId} />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
@@ -286,7 +288,11 @@ UserInformation.propTypes = {
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   accountData: PropTypes.shape({ user: User }).isRequired,
-  accountRefetch: PropTypes.func.isRequired
+  accountRefetch: PropTypes.func.isRequired,
+  parcelData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    parcelNumber: PropTypes.string.isRequired
+  })).isRequired
 }
 
 

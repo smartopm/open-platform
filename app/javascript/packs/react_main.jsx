@@ -280,7 +280,7 @@ const App = () => {
                           component={UserLogs}
                         />{' '}
                         {/* Still admin route */}
-                        <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                        <Route path={["/user/:id/:tm?/:dg?", "/user/:id/invoices/new"]} component={UserShow} />
                         <Route
                           path="/timesheet"
                           exact

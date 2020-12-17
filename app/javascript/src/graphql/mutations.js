@@ -723,6 +723,30 @@ export const DiscussionMutation = gql`
   }
 `
 
+export const InvoiceCreate = gql`
+  mutation InvoiceCreate(
+    $landParcelId: ID!
+    $description: String
+    $note: String
+    $amount: String!
+    $dueDate: String!
+    $status: String!
+  ) {
+    invoiceCreate(
+      landParcelId: $landParcelId
+      description: $description
+      note: $note
+      amount: $amount
+      dueDate: $dueDate
+      status: $status
+    ) {
+      invoice {
+        id
+      }
+    }
+  }
+`
+
 export const FollowPostTag = gql`
     mutation followPostTag($tagName: String!){
       followPostTag(tagName: $tagName){

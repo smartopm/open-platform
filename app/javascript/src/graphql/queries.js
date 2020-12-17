@@ -332,6 +332,15 @@ export const TimeSheetLogsQuery = gql`
   }
 `
 
+export const UserLandParcel = gql`
+  query userLandParcel($userId: ID!) {
+    userLandParcel(userId: $userId) {
+      id
+      parcelNumber
+    }
+  }
+`
+
 export const lastUserTimeSheet = gql`
   query userLastShift($userId: ID!) {
     userLastShift(userId: $userId) {

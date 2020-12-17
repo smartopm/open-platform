@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_11_105925) do
+ActiveRecord::Schema.define(version: 2020_12_15_085053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -299,6 +299,20 @@ ActiveRecord::Schema.define(version: 2020_12_11_105925) do
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
 
+  create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "land_parcel_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "due_date"
+    t.integer "amount"
+    t.integer "status"
+    t.string "description"
+    t.string "note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_invoices_on_community_id"
+    t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
+  end
+
   create_table "labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "short_desc"
     t.uuid "community_id", null: false
@@ -546,6 +560,8 @@ ActiveRecord::Schema.define(version: 2020_12_11_105925) do
   add_foreign_key "form_users", "users"
   add_foreign_key "form_users", "users", column: "status_updated_by_id"
   add_foreign_key "forms", "communities"
+  add_foreign_key "invoices", "communities"
+  add_foreign_key "invoices", "land_parcels"
   add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
