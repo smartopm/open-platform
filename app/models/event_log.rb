@@ -158,7 +158,8 @@ class EventLog < ApplicationRecord
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def execute_action_flows
-    action_flows = ActionFlow.where(event_type: subject, status: 'active').map do |f|
+    # include (status: 'active') once the active/inactive functionality is implemented
+    action_flows = ActionFlow.where(event_type: subject).map do |f|
       ActionFlows::ActionFlow.new(f.description, f.event_type,
                                   f.event_condition, f.event_action)
     end
