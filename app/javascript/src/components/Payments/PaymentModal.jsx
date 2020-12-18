@@ -107,6 +107,9 @@ const useStyles = makeStyles({
   }
 });
 
+PaymentModal.defaultProps = {
+  invoiceData: null
+}
 PaymentModal.propTypes = {
   invoiceData: PropTypes.shape({
     amount: PropTypes.string,
@@ -114,7 +117,7 @@ PaymentModal.propTypes = {
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string
     })
-  }).isRequired,
+  }),
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
