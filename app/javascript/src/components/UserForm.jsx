@@ -48,8 +48,6 @@ export function formatContactType(value, type) {
 }
 
 export default function UserForm({ isEditing, isFromRef, isAdmin }) {
-  // const location = useLocation()
-  console.log(isAdmin)
   const { id } = useParams()
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
