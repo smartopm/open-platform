@@ -30,7 +30,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
         landParcelId: inputValue.parcelId,
         description: inputValue.description,
         note: inputValue.note,
-        amount: inputValue.amount,
+        amount: parseFloat(inputValue.amount),
         dueDate: inputValue.selectedDate,
         status: inputValue.status,
         userId
@@ -70,6 +70,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
 
   return (
     <>
+      {console.log(inputValue.amount)}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
@@ -108,12 +109,13 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
             margin="dense"
             id="amount"
             label="Amount"
-            type='number'
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                "data-testid": "amount"
+                "data-testid": "amount",
+                type: "number",
+                step: '0.01'
               }}
             required
           />

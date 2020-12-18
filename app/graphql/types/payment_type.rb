@@ -6,7 +6,7 @@ module Types
     field :id, ID, null: false
     field :payment_status, String, null: true
     field :amount, String, null: true
-    field :payment_type, String, null: true
+    field :payment_type, Float, null: true
     field :user, Types::UserType, null: false
     field :invoice, Types::InvoiceType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false

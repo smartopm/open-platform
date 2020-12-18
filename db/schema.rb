@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_18_111940) do
+ActiveRecord::Schema.define(version: 2020_12_18_160729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -301,7 +301,7 @@ ActiveRecord::Schema.define(version: 2020_12_18_111940) do
     t.uuid "land_parcel_id", null: false
     t.uuid "community_id", null: false
     t.datetime "due_date"
-    t.integer "amount"
+    t.float "amount"
     t.integer "status"
     t.string "description"
     t.string "note"
@@ -429,7 +429,7 @@ ActiveRecord::Schema.define(version: 2020_12_18_111940) do
     t.uuid "user_id", null: false
     t.uuid "invoice_id", null: false
     t.string "payment_type"
-    t.integer "amount"
+    t.float "amount"
     t.integer "payment_status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
