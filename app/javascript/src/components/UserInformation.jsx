@@ -240,7 +240,7 @@ export default function UserInformation({
           )
         }
         <TabPanel value={tabValue} index="Payments">
-          <AddInvoice data={parcelData} userId={userId} />
+          <AddInvoice data={parcelData} userId={userId} userType={userType} />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
