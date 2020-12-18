@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { TaskQuery, UsersLiteQuery } from '../../graphql/queries'
+import { TaskQuery, UsersLiteQuery, HistoryQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
@@ -12,9 +12,11 @@ import TaskComment from '../../components/Notes/TaskComment'
 import { AssignUser } from '../../graphql/mutations'
 
 export default function TaskUpdate({ match }) {
+  const { taskId } = useParams()
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
-    variables: { taskId: match.params.taskId },
+    // variables: { taskId: match.params.taskId },
+    variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
@@ -22,6 +24,12 @@ export default function TaskUpdate({ match }) {
 
   const { data: liteData } = useQuery(UsersLiteQuery, {
     variables: { query: 'user_type: admin' },
+    errorPolicy: 'all'
+  })
+
+  const { data: taskHistoryData, error: historyError, refetch: historyRefetch } = useQuery(HistoryQuery, {
+    variables: { taskId },
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
 
@@ -46,6 +54,7 @@ export default function TaskUpdate({ match }) {
           users={liteData?.usersLite}
           assignUser={assignUnassignUser}
           currentUser={authState.user}
+          historyData={taskHistoryData?.taskHistories}
         />
         <TaskComment authState={authState} />
       </div>

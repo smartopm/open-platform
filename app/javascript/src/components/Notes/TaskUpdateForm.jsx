@@ -28,6 +28,7 @@ import UserSearch from '../User/UserSearch'
 import Toggler from '../Campaign/ToggleButton'
 import { sanitizeText } from '../../utils/helpers'
 import RemindMeLaterMenu from './RemindMeLaterMenu'
+import TaskUpdateList from './TaskUpdateList'
 import { dateToString, dateTimeToString } from '../DateContainer'
 
 const initialData = {
@@ -40,7 +41,8 @@ export default function TaskForm({
   data,
   assignUser,
   refetch,
-  currentUser
+  currentUser,
+  historyData,
 }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -56,7 +58,7 @@ export default function TaskForm({
   const [setReminder] = useMutation(TaskReminder)
   const [reminderTime, setReminderTime] = useState(null)
 
-  const [type, setType] = useState('preview')
+  const [type, setType] = useState('task')
   const handleType = (_event, value) => {
     setType(value)
   }
@@ -223,14 +225,15 @@ export default function TaskForm({
           type={type}
           handleType={handleType}
           data={{
-            type: 'preview',
-            antiType: 'edit'
+            type: 'task',
+            antiType: 'updates'
           }}
         />
 
-        {type === 'preview' ? (
+        {type === 'task' ? (
+          <>
           <p>
-            <Typography variant="caption" display="block" gutterBottom>
+            {/* <Typography variant="caption" display="block" gutterBottom>
               Task Body
             </Typography>
             <span
@@ -238,9 +241,8 @@ export default function TaskForm({
               dangerouslySetInnerHTML={{
                 __html: sanitizeText(title)
               }}
-            />
+            /> */}
           </p>
-        ) : (
           <TextField
             name="task_body"
             label="Task Body"
@@ -260,7 +262,6 @@ export default function TaskForm({
             }}
             required
           />
-        )}
 
         <TextField
           name="task_description"
@@ -381,6 +382,9 @@ export default function TaskForm({
           {!taskStatus ? 'Mark as complete' : 'Mark as incomplete'}
         </Button>
         <p className="text-center">{Boolean(error.length) && error}</p>
+        </>) : (
+          <TaskUpdateList data={historyData.taskHistories} />
+        )}
       </form>
     </>
   )
@@ -388,7 +392,8 @@ export default function TaskForm({
 
 TaskForm.defaultProps = {
   users: [],
-  data: {}
+  data: {},
+  historyData: [],
 }
 TaskForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -397,5 +402,8 @@ TaskForm.propTypes = {
   assignUser: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  currentUser: PropTypes.object.isRequired
+  currentUser: PropTypes.object.isRequired,
+  historyData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string
+  }))
 }

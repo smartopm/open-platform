@@ -19,11 +19,12 @@ export default function TaskUpdateList({ data }) {
 
   return(
     <>
-      {!data || data.length === 0 ? (
-        <div>
-          <p>No update available</p>
-        </div>
-      ) : (
+      {
+      // !data || data.length === 0 ? (
+      //   <div>
+      //     <p>No update available</p>
+      //   </div>
+      // ) : (
         data.map(history => (
           <div key={history.id}>
             {history.action === 'create' && history.noteEntityType === 'NoteComment' && (
@@ -91,7 +92,8 @@ export default function TaskUpdateList({ data }) {
             )}
           </div>
         ))
-      )}
+      // )
+      }
     </>
   )
 }
