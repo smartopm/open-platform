@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button'
 import CenteredContent from '../CenteredContent'
 import InvoiceModal from './invoiceModal'
 
-export default function AddInvoices({ data, userId, userType }){
+export default function AddInvoices({ data, userId, user }){
   const history = useHistory()
   const [open, setOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(true)
@@ -28,7 +28,7 @@ export default function AddInvoices({ data, userId, userType }){
 
   return (
     <>
-      {userType === 'admin' && (
+      {user.userType === 'admin' && (
         <CenteredContent>
           <Button variant="contained" data-testid="invoice-button" color="primary" onClick={handleModalOpen}>Create Invoice</Button>
           <Button 
@@ -42,7 +42,14 @@ export default function AddInvoices({ data, userId, userType }){
           </Button>
         </CenteredContent>
       )}
-      <InvoiceModal open={open} handleModalClose={handleModalClose} data={data} userId={userId} paymentOpen={paymentOpen} />
+      <InvoiceModal 
+        open={open} 
+        handleModalClose={handleModalClose} 
+        data={data} 
+        paymentOpen={paymentOpen}
+        userId={userId}
+        creatorId={user.id}
+      />
     </>
   )
 }
@@ -53,5 +60,8 @@ AddInvoices.propTypes = {
     parcelNumber: PropTypes.string.isRequired
   })).isRequired,
   userId: PropTypes.string.isRequired,
-  userType: PropTypes.string.isRequired
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    userType: PropTypes.string
+  }).isRequired
 }
