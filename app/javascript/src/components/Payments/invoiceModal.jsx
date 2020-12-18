@@ -13,10 +13,17 @@ import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import PaymentModal from './PaymentModal'
 
+const initialValues = {
+  status: '',
+  parcelId: '',
+  selectedDate: new Date(),
+  amount: '',
+  note: ''
+}
 export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen, creatorId }) {
   const classes = useStyles();
   const history = useHistory()
-  const [inputValue, setInputValue] = useState({})
+  const [inputValue, setInputValue] = useState(initialValues)
   const [createInvoice] = useMutation(InvoiceCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
