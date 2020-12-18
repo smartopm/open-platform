@@ -113,6 +113,8 @@ SideList.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string.isRequired,
     phoneNumber: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    userType: PropTypes.string.isRequired
   }).isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({
