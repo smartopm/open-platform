@@ -13,7 +13,7 @@ import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import PaymentModal from './PaymentModal'
 
-export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen }) {
+export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen, creatorId }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState({})
@@ -32,7 +32,8 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
         note: inputValue.note,
         amount: inputValue.amount,
         dueDate: inputValue.selectedDate,
-        status: inputValue.status
+        status: inputValue.status,
+        userId
       }
     }).then((res) => {
       setMessageAlert('Invoice added successfully')
@@ -53,6 +54,11 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
       setIsSuccessAlert(false)
       history.push(`/user/${userId}`)
     })
+  }
+
+  function handlePaymentModalClose(){
+    setOpenPayment(false)
+    history.push(`/user/${userId}`)
   }
 
   function handleMessageAlertClose(_event, reason) {
@@ -148,8 +154,10 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
       </CustomizedDialogs>
       <PaymentModal 
         open={openPayment} 
-        handleModalClose={() => setOpenPayment(false)} 
+        handleModalClose={handlePaymentModalClose} 
         invoiceData={invoiceData}
+        userId={userId}
+        creatorId={creatorId}
       />
     </>
   )
@@ -171,5 +179,6 @@ InvoiceModal.propTypes = {
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  paymentOpen: PropTypes.bool.isRequired
+  paymentOpen: PropTypes.bool.isRequired,
+  creatorId: PropTypes.string.isRequired
 }

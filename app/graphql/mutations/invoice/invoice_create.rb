@@ -10,6 +10,7 @@ module Mutations
       argument :amount, String, required: true
       argument :due_date, String, required: true
       argument :status, String, required: true
+      argument :user_id, ID, required: true
 
       field :invoice, Types::InvoiceType, null: true
 

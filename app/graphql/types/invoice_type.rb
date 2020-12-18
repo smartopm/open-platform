@@ -10,6 +10,7 @@ module Types
     field :description, String, null: true
     field :community, Types::CommunityType, null: false
     field :land_parcel, Types::LandParcelType, null: false
+    field :user, Types::UserType, null: false
     field :due_date, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
