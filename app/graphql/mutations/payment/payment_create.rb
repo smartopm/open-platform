@@ -14,7 +14,7 @@ module Mutations
       def resolve(vals)
         user = context[:site_community].users.find(vals[:user_id])
         payment = user.payments.create(vals.except(:user_id))
-        payment.payment_status = 0 if vals[:payment_type] == "cash"
+        payment.payment_status = 0 if vals[:payment_type] == 'cash'
         return { payment: payment } if payment.persisted?
 
         raise GraphQL::ExecutionError, payment.errors.full_messages

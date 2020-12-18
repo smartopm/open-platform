@@ -171,6 +171,10 @@ const useStyles = makeStyles({
   }
 });
 
+InvoiceModal.defaultProps = {
+  paymentOpen: null
+}
+
 InvoiceModal.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
@@ -179,6 +183,6 @@ InvoiceModal.propTypes = {
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  paymentOpen: PropTypes.bool.isRequired,
+  paymentOpen: PropTypes.string,
   creatorId: PropTypes.string.isRequired
 }

@@ -8,7 +8,7 @@ import InvoiceModal from './invoiceModal'
 export default function AddInvoices({ data, userId, user }){
   const history = useHistory()
   const [open, setOpen] = useState(false)
-  const [paymentOpen, setPaymentOpen] = useState(true)
+  const [paymentOpen, setPaymentOpen] = useState(null)
 
   function handleModalOpen(){
     history.push(`/user/${userId}/invoices/new`)
@@ -18,12 +18,13 @@ export default function AddInvoices({ data, userId, user }){
   function handlePaymentOpen(){
     history.push(`/user/${userId}/invoices/new`)
     setOpen(true)
-    setPaymentOpen(true)
+    setPaymentOpen('open')
   }
 
   function handleModalClose(){
     history.push(`/user/${userId}`)
     setOpen(false)
+    setPaymentOpen(null)
   }
 
   return (
