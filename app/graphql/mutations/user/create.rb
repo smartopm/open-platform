@@ -27,6 +27,8 @@ module Mutations
       ALLOWED_PARAMS_FOR_ROLES = {
         admin: {}, # Everything
         security_guard: { except: %i[state user_type] },
+        client: { except: %i[state user_type phone_number email] },
+        resident: { except: %i[state user_type phone_number email] },
       }.freeze
 
       def resolve(vals)

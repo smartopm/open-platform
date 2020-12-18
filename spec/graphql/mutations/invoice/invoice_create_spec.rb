@@ -28,7 +28,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
         landParcelId: land_parcel.id,
         amount: (rand * 100).to_s,
         dueDate: (rand * 10).to_i.day.from_now.to_s,
-        status: %w[in_progress paid late cancelled].sample,
+        status: %w[in_progress late paid cancelled].sample,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

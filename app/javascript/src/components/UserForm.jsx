@@ -18,7 +18,7 @@ import {
 import DatePickerDialog from './DatePickerDialog'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import { UserQuery } from '../graphql/queries'
-import { CreateUserMutation, UpdateUserMutation } from '../graphql/mutations'
+import { CreateUserMutation, NonAdminUpdateMutation, UpdateUserMutation } from '../graphql/mutations'
 import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
 import Loading from './Loading'
@@ -43,7 +43,11 @@ const initialValues = {
   contactInfos: []
 }
 
-export default function UserForm({ isEditing, isFromRef }) {
+export function formatContactType(value, type) {
+  return { contactType: type, info: value }
+}
+
+export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const { id } = useParams()
   const history = useHistory()
   const authState = React.useContext(AuthStateContext)
@@ -60,16 +64,12 @@ export default function UserForm({ isEditing, isFromRef }) {
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: 'user',
     readLazyQuery: useLazyQuery(UserQuery),
-    updateMutation: useMutation(UpdateUserMutation),
+    updateMutation: useMutation(isAdmin ? UpdateUserMutation : NonAdminUpdateMutation),
     createMutation: useMutation(CreateUserMutation)
   })
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
-
-  function formatType(value, type) {
-    return { contactType: type, info: value }
-  }
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -80,9 +80,9 @@ export default function UserForm({ isEditing, isFromRef }) {
       address
     }
     // if editing then restructure the phoneNumbers and emails
-    const phones = phoneNumbers.map(value => formatType(value, 'phone'))
-    const email = emails.map(value => formatType(value, 'email'))
-    const homeAddress = address.map(value => formatType(value, 'address'))
+    const phones = phoneNumbers.map(value => formatContactType(value, 'phone'))
+    const email = emails.map(value => formatContactType(value, 'email'))
+    const homeAddress = address.map(value => formatContactType(value, 'address'))
 
     const vals = data.contactInfos
     //  get existing secondaryInfo and add newly created ones with no ids
@@ -115,6 +115,7 @@ export default function UserForm({ isEditing, isFromRef }) {
         }
       })
       .catch(err => {
+        setSubmitting(false)
         setMsg(err.message)
       })
   }
@@ -273,6 +274,7 @@ export default function UserForm({ isEditing, isFromRef }) {
             defaultValue={data.phoneNumber || ''}
             name="phoneNumber"
             data-testid="phoneNumber"
+            disabled={!isAdmin}
             required
           />
         </div>
@@ -308,6 +310,7 @@ export default function UserForm({ isEditing, isFromRef }) {
             onChange={handleInputChange}
             value={data.email || ''}
             data-testid="email"
+            disabled={!isAdmin}
           />
         </div>
 
@@ -338,99 +341,105 @@ export default function UserForm({ isEditing, isFromRef }) {
               options={address}
               setOptions={setAddress}
             />
-            <div className="form-group">
-              <TextField
-                id="reason"
-                select
-                label="Reason"
-                name="requestReason"
-                value={data.requestReason || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                inputProps={
-                  { 'aria-label': 'requestReason' }
-                }
-                className={`${css(styles.selectInput)}`}
-              >
-                {reasons.map(reason => (
-                  <MenuItem key={reason} value={reason}>
-                    {reason}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className="form-group">
-              <TextField
-                id="userType"
-                select
-                label="User Type"
-                value={data.userType || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                name="userType"
-                inputProps={
-                  { 'aria-label': 'User Type' }
-                }
-                required
-                className={`${css(styles.selectInput)}`}
-              >
-                {Object.entries(userType).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
+            {
+              isAdmin && (
+                <>
+                  <div className="form-group">
+                    <TextField
+                      id="reason"
+                      select
+                      label="Reason"
+                      name="requestReason"
+                      value={data.requestReason || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      inputProps={{ 'aria-label': 'requestReason' }}
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        reasons.map(reason => (
+                          <MenuItem key={reason} value={reason}>
+                            {reason}
+                          </MenuItem>
+                        ))
+                      }
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="userType"
+                      select
+                      label="User Type"
+                      value={data.userType || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="userType"
+                      inputProps={{ 'aria-label': 'User Type' }}
+                      required
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        Object.entries(userType).map(([key, val]) => (
+                          <MenuItem key={key} value={key}>
+                            {val}
+                          </MenuItem>
+                          ))
+                        }
+                    </TextField>
+                  </div>
 
-            <div className="form-group">
-              <TextField
-                id="state"
-                select
-                label="State"
-                value={data.state || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                name="state"
-                inputProps={
-                  { 'aria-label': 'state' }
-                }
-                className={`${css(styles.selectInput)}`}
-              >
-                {Object.entries(userState).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className="form-group">
-              <TextField
-                id="sub-status"
-                select
-                label="Substatus"
-                value={data.subStatus || ''}
-                onChange={handleInputChange}
-                margin="normal"
-                name="subStatus"
-                inputProps={
-                  { 'aria-label': 'subStatus' }
-                }
-                className={`${css(styles.selectInput)}`}
-              >
-                {Object.entries(userSubStatus).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <DatePickerDialog
-                selectedDate={selectedDate}
-                label="Expiration Date"
-                handleDateChange={handleDateChange}
-              />
-            </div>
+                  <div className="form-group">
+                    <TextField
+                      id="state"
+                      select
+                      label="State"
+                      value={data.state || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="state"
+                      inputProps={{ 'aria-label': 'state' }}
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        Object.entries(userState).map(([key, val]) => (
+                          <MenuItem key={key} value={key}>
+                            {val}
+                          </MenuItem>
+                        ))
+                        }
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="sub-status"
+                      select
+                      label="Substatus"
+                      value={data.subStatus || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="subStatus"
+                      inputProps={{ 'aria-label': 'subStatus' }}
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      {
+                        Object.entries(userSubStatus).map(([key, val]) => (
+                          <MenuItem key={key} value={key}>
+                            {val}
+                          </MenuItem>
+                        ))
+                        }
+                    </TextField>
+                  </div>
+                  <div>
+                    <DatePickerDialog
+                      selectedDate={selectedDate}
+                      label="Expiration Date"
+                      handleDateChange={handleDateChange}
+                    />
+                  </div>
+                </>
+              )
+            }
             <CenteredContent>
               <Button
                 variant="contained"
@@ -543,5 +552,6 @@ const styles = StyleSheet.create({
 
 UserForm.propTypes = {
   isEditing: PropTypes.bool.isRequired,
-  isFromRef: PropTypes.bool.isRequired
+  isFromRef: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 }

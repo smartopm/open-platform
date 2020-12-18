@@ -9,7 +9,7 @@ module Mutations
       argument :email, String, required: false
       argument :phone_number, String, required: false
       argument :address, String, required: false
-      argument :user_type, String, required: true
+      argument :user_type, String, required: false
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
@@ -64,10 +64,15 @@ module Mutations
                           })
       end
 
+      def own_user?(vals)
+        context[:current_user].id == vals[:id]
+      end
+
       def authorized?(vals)
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
         user_record = ::User.find(vals[:id])
         current_user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.admin? || own_user?(vals)
         raise GraphQL::ExecutionError, 'Unauthorized' unless user_record.community_id ==
                                                              current_user.community_id
 

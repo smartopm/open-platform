@@ -34,6 +34,7 @@ import AddInvoice from './Payments/Invoice'
 
 export default function UserInformation({
   data,
+  parcelData,
   onLogEntry,
   authState,
   sendOneTimePasscode,
@@ -239,7 +240,7 @@ export default function UserInformation({
           )
         }
         <TabPanel value={tabValue} index="Payments">
-          <AddInvoice userId={userId} />
+          <AddInvoice data={parcelData} userId={userId} />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
@@ -287,7 +288,11 @@ UserInformation.propTypes = {
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   accountData: PropTypes.shape({ user: User }).isRequired,
-  accountRefetch: PropTypes.func.isRequired
+  accountRefetch: PropTypes.func.isRequired,
+  parcelData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    parcelNumber: PropTypes.string.isRequired
+  })).isRequired
 }
 
 

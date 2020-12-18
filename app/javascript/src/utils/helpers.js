@@ -225,6 +225,24 @@ export function titleize(string) {
   }).join(' ')
 }
 
+/**
+ * @param {String} action
+ * @description return the sentence form for ActionFlow actions
+ * @returns {String}
+ */
+export function sentencizeAction(action){
+  const sendActions = ['email', 'notification']
+  const createActions = ['task']
+
+  if(sendActions.indexOf(action.toLowerCase()) >= 0) {
+    return `Send ${action}`
+  }
+
+  if(createActions.indexOf(action.toLowerCase()) >= 0) {
+    return `Create ${action}`
+  }
+}
+
 
 export async function convertBase64ToFile(data){
   const res = await fetch(data)

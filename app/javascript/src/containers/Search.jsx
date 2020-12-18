@@ -95,17 +95,10 @@ export default function SearchContainer({ location }) {
     setName(value)
   }
 
-  function specifyQuery(queryName) {
-    if (Number(queryName)) {
-      return `plot_no = ${queryName}`
-    }
-    return queryName
-  }
-
   function handleSearch(event){
     if(event.keyCode === 13 && name.trim().length > 0){
       loadGQL({
-        variables: { query: specifyQuery(name), limit, offset },
+        variables: { query: name, limit, offset },
         errorPolicy: 'all'
       })
     }
