@@ -10,7 +10,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
 
     let(:query) do
       <<~GQL
-        mutation invoiceCreate($landParcelId: ID!, $amount: String!, $dueDate: String!, $status: String!, $userId: ID!) {
+        mutation invoiceCreate($landParcelId: ID!, $amount: Float!, $dueDate: String!, $status: String!, $userId: ID!) {
           invoiceCreate(landParcelId: $landParcelId, amount: $amount, dueDate: $dueDate, status: $status, userId: $userId){
             invoice {
               id
@@ -27,7 +27,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
       variables = {
         userId: user.id,
         landParcelId: land_parcel.id,
-        amount: (rand * 100).to_s,
+        amount: (rand * 100).to_f,
         dueDate: (rand * 10).to_i.day.from_now.to_s,
         status: %w[in_progress late paid cancelled].sample,
       }

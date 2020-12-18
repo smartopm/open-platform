@@ -25,7 +25,7 @@ module Mutations
 
       def payment_status_update(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
-        inv.update(status: 1) if inv.amount.to_i == amount.to_i
+        inv.update(status: 1) if inv.amount.to_f == amount.to_f
       end
 
       def authorized?(_vals)

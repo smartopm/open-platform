@@ -70,7 +70,6 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
 
   return (
     <>
-      {console.log(inputValue.amount)}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
