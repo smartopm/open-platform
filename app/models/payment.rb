@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
+# Payment Record
 class Payment < ApplicationRecord
   belongs_to :user
   belongs_to :invoice
 
-  VALID_TYPES = %w[cash]
+  VALID_TYPES = %w[cash].freeze
 
   validates :payment_type, inclusion: { in: VALID_TYPES, allow_nil: false }
 
