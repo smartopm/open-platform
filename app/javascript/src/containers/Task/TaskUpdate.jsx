@@ -56,7 +56,7 @@ export default function TaskUpdate({ match }) {
           currentUser={authState.user}
           historyData={taskHistoryData?.taskHistories}
         />
-        <TaskComment authState={authState} />
+        {/* <TaskComment authState={authState} /> */}
       </div>
     </>
   )
