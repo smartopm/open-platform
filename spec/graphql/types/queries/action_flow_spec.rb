@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::ActionFlow do
   describe 'actionflow queries' do
     let!(:current_user) { create(:user_with_community) }
+    let!(:admin) { create(:user_with_community, user_type: 'admin') }
 
     let(:events_query) do
       %(query {
@@ -60,19 +61,28 @@ RSpec.describe Types::Queries::ActionFlow do
     end
 
     describe('events') do
-      it 'retrieves available events' do
+      it 'retrieves available events when user is admin' do
         result = DoubleGdpSchema.execute(events_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
         expect(result.dig('data', 'events')).to include(
           'note_comment_create', 'note_comment_update', 'task_update', 'user_login'
         )
       end
 
-      it 'throws unauthorized error if there is no current-user' do
+      it 'throws login error if there is no current-user' do
         result = DoubleGdpSchema.execute(events_query, context: {
                                            current_user: nil,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'events')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+      end
+
+      it 'throws unauthorized error if current-user is not admin' do
+        result = DoubleGdpSchema.execute(events_query, context: {
+                                           current_user: current_user,
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'events')).to be_nil
@@ -81,19 +91,28 @@ RSpec.describe Types::Queries::ActionFlow do
     end
 
     describe('actions') do
-      it 'retrieves available actions' do
+      it 'retrieves available actions when user is admin' do
         result = DoubleGdpSchema.execute(actions_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
         expect(result.dig('data', 'actions')).to include('Email')
         expect(result.dig('data', 'actions')).to include('Notification')
         expect(result.dig('data', 'actions')).to include('Task')
       end
 
-      it 'throws unauthorized error if there is no current-user' do
+      it 'throws login error if there is no current-user' do
         result = DoubleGdpSchema.execute(events_query, context: {
                                            current_user: nil,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'actions')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+      end
+
+      it 'throws unauthorized error if current-user is not admin' do
+        result = DoubleGdpSchema.execute(events_query, context: {
+                                           current_user: current_user,
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actions')).to be_nil
@@ -102,28 +121,28 @@ RSpec.describe Types::Queries::ActionFlow do
     end
 
     describe('action fields') do
-      it 'retrieves fields for email action' do
+      it 'retrieves fields for email action when user is admin' do
         result = DoubleGdpSchema.execute(email_action_fields_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
         available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
         expect(available_fields).to include('email', 'template')
       end
 
-      it 'retrieves fields for notification action' do
+      it 'retrieves fields for notification action when user is admin' do
         result = DoubleGdpSchema.execute(notification_action_fields_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
         available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
         expect(available_fields).to include('label', 'user_id', 'message')
       end
 
-      it 'retrieves fields for task action' do
+      it 'retrieves fields for task action when user is admin' do
         result = DoubleGdpSchema.execute(task_action_fields_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
         available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
         expect(available_fields).to include('body', 'description',
@@ -132,9 +151,18 @@ RSpec.describe Types::Queries::ActionFlow do
                                             'author_id')
       end
 
-      it 'throws unauthorized error if there is no current-user' do
+      it 'throws login error if there is no current-user' do
         result = DoubleGdpSchema.execute(events_query, context: {
                                            current_user: nil,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'actionFields')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+      end
+
+      it 'throws unauthorized error if current-user is not admin' do
+        result = DoubleGdpSchema.execute(events_query, context: {
+                                           current_user: current_user,
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actionFields')).to be_nil
@@ -144,19 +172,28 @@ RSpec.describe Types::Queries::ActionFlow do
 
     # rubocop:disable Metrics/LineLength
     describe('rule fields') do
-      it 'retrieves rule fields' do
+      it 'retrieves rule fields when user is admin' do
         result = DoubleGdpSchema.execute(rule_fields_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
         expect(result.dig('data', 'ruleFields')).to include(
           'note_id', 'note_user_id', 'note_author_id', 'note_body', 'note_assignees_emails', 'note_url'
         )
       end
 
-      it 'throws unauthorized error if there is no current-user' do
+      it 'throws lgoin error if there is no current-user' do
         result = DoubleGdpSchema.execute(events_query, context: {
                                            current_user: nil,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'ruleFields')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+      end
+
+      it 'throws unauthorized error if current-user is not admin' do
+        result = DoubleGdpSchema.execute(events_query, context: {
+                                           current_user: current_user,
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'ruleFields')).to be_nil
@@ -168,17 +205,17 @@ RSpec.describe Types::Queries::ActionFlow do
     describe('action flows') do
       let!(:flow1) do
         create(:action_flow, event_type: 'task_update', title: 'Flow One',
-                             community_id: current_user.community_id)
+                             community_id: admin.community_id)
       end
       let!(:flow2) do
         create(:action_flow, event_type: 'task_update', title: 'Flow Two',
-                             community_id: current_user.community_id)
+                             community_id: admin.community_id)
       end
 
-      it 'retrieves all action flows' do
+      it 'retrieves all action flows when user is admin' do
         result = DoubleGdpSchema.execute(action_flows_query, context: {
-                                           current_user: current_user,
-                                           site_community: current_user.community,
+                                           current_user: admin,
+                                           site_community: admin.community,
                                          }).as_json
 
         titles = result.dig('data', 'actionFlows').map { |f| f['title'] }
@@ -186,9 +223,18 @@ RSpec.describe Types::Queries::ActionFlow do
         expect(titles).to include('Flow One', 'Flow Two')
       end
 
-      it 'throws unauthorized error if there is no current-user' do
+      it 'throws login error if there is no current-user' do
         result = DoubleGdpSchema.execute(events_query, context: {
                                            current_user: nil,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'actionFields')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+      end
+
+      it 'throws unauthorized error if current-user is not admin' do
+        result = DoubleGdpSchema.execute(events_query, context: {
+                                           current_user: current_user,
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actionFields')).to be_nil
