@@ -77,7 +77,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'events')).to be_nil
-        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+        expect(result.dig('errors', 0, 'message')).to match(/Must be logged in/i)
       end
 
       it 'throws unauthorized error if current-user is not admin' do
@@ -107,7 +107,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actions')).to be_nil
-        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+        expect(result.dig('errors', 0, 'message')).to match(/Must be logged in/i)
       end
 
       it 'throws unauthorized error if current-user is not admin' do
@@ -157,7 +157,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actionFields')).to be_nil
-        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+        expect(result.dig('errors', 0, 'message')).to match(/Must be logged in/i)
       end
 
       it 'throws unauthorized error if current-user is not admin' do
@@ -188,7 +188,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'ruleFields')).to be_nil
-        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+        expect(result.dig('errors', 0, 'message')).to match(/Must be logged in/i)
       end
 
       it 'throws unauthorized error if current-user is not admin' do
@@ -229,7 +229,7 @@ RSpec.describe Types::Queries::ActionFlow do
                                            site_community: current_user.community,
                                          }).as_json
         expect(result.dig('data', 'actionFields')).to be_nil
-        expect(result.dig('errors', 0, 'message')).to match /Must be logged in/i
+        expect(result.dig('errors', 0, 'message')).to match(/Must be logged in/i)
       end
 
       it 'throws unauthorized error if current-user is not admin' do
