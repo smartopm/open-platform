@@ -64,6 +64,7 @@ class User < ApplicationRecord
                                     dependent: :destroy, inverse_of: :user
 
   has_many :payments, dependent: :destroy
+  has_many :invoices, dependent: :destroy
   has_many :notes, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :note_comments, dependent: :destroy

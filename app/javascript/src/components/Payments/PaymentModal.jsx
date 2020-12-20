@@ -25,7 +25,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
       variables: { 
         userId: creatorId,
         invoiceId: invoiceData.id,
-        amount: inputValue.amount,
+        amount: parseFloat(inputValue.amount),
         paymentType: inputValue.transactionType
       }
     }).then(() => {
@@ -77,7 +77,8 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                "data-testid": "amount"
+                "data-testid": "amount",
+                step: 0.01
               }}
             required
           />

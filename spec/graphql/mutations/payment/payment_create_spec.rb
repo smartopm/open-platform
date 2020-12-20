@@ -8,7 +8,7 @@ RSpec.describe Mutations::Payment::PaymentCreate do
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:invoice) do
-      create(:invoice, land_parcel: land_parcel, community_id: user.community_id)
+      create(:invoice, land_parcel: land_parcel, community_id: user.community_id, user_id: user.id)
     end
 
     let(:mutation) do
@@ -16,16 +16,14 @@ RSpec.describe Mutations::Payment::PaymentCreate do
         mutation paymentCreate (
           $invoiceId: ID!,
           $userId: ID!,
-          $amount: String!,
-          $paymentType: String!,
-          $paymentStatus: String!
+          $amount: Float!,
+          $paymentType: String!
         ) {
           paymentCreate(
             invoiceId: $invoiceId,
             userId: $userId,
             amount: $amount,
-            paymentType: $paymentType,
-            paymentStatus: $paymentStatus,
+            paymentType: $paymentType
           ){
             payment {
               id
@@ -39,9 +37,8 @@ RSpec.describe Mutations::Payment::PaymentCreate do
       variables = {
         invoiceId: invoice.id,
         userId: user.id,
-        amount: (rand * 100).to_s,
+        amount: (rand * 100).to_f,
         paymentType: Payment::VALID_TYPES.sample,
-        paymentStatus: Payment.payment_statuses.keys.sample,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
