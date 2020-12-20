@@ -15,7 +15,7 @@ module Mutations
       def resolve(vals)
         user = context[:site_community].users.find(vals[:user_id])
         payment = user.payments.create(vals.except(:user_id))
-        payment.payment_status = 0 if vals[:payment_type] == 'cash'
+        payment.settled! if vals[:payment_type] == 'cash'
         payment_status_update(vals[:invoice_id], vals[:amount])
         return { payment: payment } if payment.persisted?
 
@@ -25,7 +25,7 @@ module Mutations
 
       def payment_status_update(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
-        inv.update(status: 1) if inv.amount.to_f == amount.to_f
+        inv.paid! if inv.amount == amount
       end
 
       def authorized?(_vals)
