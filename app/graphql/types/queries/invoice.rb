@@ -14,8 +14,16 @@ module Types::Queries::Invoice
 
     # Get invoice by id
     field :invoice, Types::InvoiceType, null: true do
-      description 'Get nvoice by its id'
+      description 'Get invoice by its id'
       argument :id, GraphQL::Types::ID, required: true
+    end
+
+    # Get invoice by for a user
+    field :user_invoices, [Types::InvoiceType], null: true do
+      description 'Get invoice for a user'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -32,5 +40,15 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
 
     context[:site_community].invoices.find(id)
+  end
+
+  def user_invoices(user_id:, offset: 0, limit: 100)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
+
+    user = User.allowed_users(context[:current_user]).find(user_id)
+
+    raise GraphQL::ExecutionError, 'User not found' unless user.present?
+
+    user.invoices.eager_load(:land_parcel).limit(limit).offset(offset)
   end
 end
