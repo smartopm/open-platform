@@ -8,14 +8,12 @@ import Loading from '../../components/Loading'
 import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
-import TaskComment from '../../components/Notes/TaskComment'
 import { AssignUser } from '../../graphql/mutations'
 
-export default function TaskUpdate({ match }) {
+export default function TaskUpdate() {
   const { taskId } = useParams()
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
-    // variables: { taskId: match.params.taskId },
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -27,7 +25,7 @@ export default function TaskUpdate({ match }) {
     errorPolicy: 'all'
   })
 
-  const { data: taskHistoryData, error: historyError, refetch: historyRefetch } = useQuery(HistoryQuery, {
+  const { data: taskHistoryData, refetch: historyRefetch } = useQuery(HistoryQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -55,8 +53,10 @@ export default function TaskUpdate({ match }) {
           assignUser={assignUnassignUser}
           currentUser={authState.user}
           historyData={taskHistoryData?.taskHistories}
+          historyRefetch={historyRefetch}
+          authState={authState}
+          taskId={taskId}
         />
-        {/* <TaskComment authState={authState} /> */}
       </div>
     </>
   )

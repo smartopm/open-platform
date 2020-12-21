@@ -307,6 +307,42 @@ RSpec.describe Types::QueryType do
       )
     end
 
+    let(:task_histories_query) do
+      %(query {
+        taskHistories(taskId: "#{notes.id}") {
+          id
+          attrChanged
+          initialValue
+          updatedValue
+          action
+          noteEntityType
+          createdAt
+          user {
+            id
+            name
+            imageUrl
+          }
+        }
+      }
+    )
+    end
+
+    let(:task_comments_query) do
+      %(query {
+        taskComments(taskId: "#{notes.id}") {
+          id
+          body
+          createdAt
+          user {
+            id
+            name
+            imageUrl
+          }
+        }
+      }
+    )
+    end
+
     let(:task_query) do
       %(query {
         task(taskId: "#{other_notes.id}") {
@@ -416,6 +452,61 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'taskStats', 'tasksOpenAndOverdue')).to eql 2
       expect(result.dig('data', 'taskStats', 'overdueTasks')).to eql 2
       expect(result.dig('data', 'taskStats', 'tasksWithNoDueDate')).to eql 0
+    end
+
+    it 'should query task histories' do
+      notes.note_histories.create!(
+        note_id: notes.id,
+        user_id: admin.id,
+        attr_changed: 'description',
+        initial_value: 'initial description',
+        updated_value: 'updated description',
+        action: 'update',
+        note_entity_type: 'Note',
+        note_entity_id: notes.id,
+      )
+
+      result = DoubleGdpSchema.execute(task_histories_query, context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+
+      expect(result.dig('errors')).to be_nil
+
+      history_data = result.dig('data', 'taskHistories')
+      expect(history_data.length).not_to eq 0
+
+      update_history = history_data.select do |h|
+        h['initialValue'] == 'initial description' && h['noteEntityType'] == 'Note'
+      end
+
+      expect(update_history.length).not_to eq 0
+      expect(update_history[0].dig('action')).to eq 'update'
+      expect(update_history[0].dig('user', 'id')).to eq admin.id
+    end
+
+    it 'should query task comments' do
+      notes.note_comments.create!(
+        user_id: admin.id,
+        body: 'New Comment',
+        status: 'active',
+      )
+
+      result = DoubleGdpSchema.execute(task_comments_query, context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+
+      expect(result.dig('errors')).to be_nil
+
+      task_comments = result.dig('data', 'taskComments')
+      expect(task_comments.length).not_to eq 0
+
+      task_comment = task_comments.select { |h| h['body'] == 'New Comment' }
+
+      expect(task_comment.length).not_to eq 0
+      expect(task_comment[0].dig('createdAt')).not_to be_nil
+      expect(task_comment[0].dig('user', 'id')).to eq admin.id
     end
 
     it 'query individual task' do
