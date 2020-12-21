@@ -29,11 +29,11 @@ import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
 import UserFilledForms from "./User/UserFilledForms"
 import UserMessages from './Messaging/UserMessages'
-import AddInvoice from './Payments/Invoice'
-
+import InvoiceList from './Payments/InvoiceList'
 
 export default function UserInformation({
   data,
+  // eslint-disable-next-line no-unused-vars
   parcelData,
   onLogEntry,
   authState,
@@ -240,7 +240,8 @@ export default function UserInformation({
           )
         }
         <TabPanel value={tabValue} index="Payments">
-          <AddInvoice data={parcelData} userId={userId} user={authState.user} />
+          {/* <AddInvoice data={parcelData} userId={userId} user={authState.user} /> */}
+          <InvoiceList invoices={accountData?.user.invoices} />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">

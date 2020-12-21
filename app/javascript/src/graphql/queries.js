@@ -23,6 +23,16 @@ export const UserAccountQuery = gql`
           parcelNumber
         }
       }
+      invoices {
+        id
+        amount
+        status
+        description
+        dueDate
+        landParcel {
+          parcelNumber
+        }
+      }
     }
   }
 `
