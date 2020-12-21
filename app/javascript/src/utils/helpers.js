@@ -1,5 +1,6 @@
 /* eslint-disable */
 import dompurify from 'dompurify';
+import { useLocation } from 'react-router';
 
 // keep string methods [helpers]
 
@@ -264,4 +265,8 @@ export function sortPropertyOrder(field1, field2){
     return Number(field1.formProperty.order) - Number(field2.formProperty.order)
   }
   return Number(field1.order) - Number(field2.order)
+}
+
+export function useParamsQuery() {
+  return new URLSearchParams(useLocation().search)
 }

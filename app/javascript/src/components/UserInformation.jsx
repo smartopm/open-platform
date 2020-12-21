@@ -30,10 +30,7 @@ import { TabPanel } from './Tabs'
 import UserFilledForms from "./User/UserFilledForms"
 import UserMessages from './Messaging/UserMessages'
 import InvoiceList from './Payments/InvoiceList'
-
-function useParamsQuery() {
-  return new URLSearchParams(useLocation().search)
-}
+import { useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
   data,
@@ -248,7 +245,12 @@ export default function UserInformation({
         }
         <TabPanel value={tabValue} index="Payments">
           {/* <AddInvoice data={parcelData} userId={userId} user={authState.user} /> */}
-          <InvoiceList invoices={accountData?.user.invoices} />
+          <InvoiceList 
+            invoices={accountData?.user.invoices}
+            data={parcelData}
+            userId={userId}
+            creatorId={authState.user.id}
+          />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
