@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import CommentCard from './CommentCard'
 import { TaskComment } from '../../graphql/mutations'
 
-export default function CommentTextField({ data, refetch, authState, taskId, historyRefetch }) {
+export default function CommentTextField({ data, refetch, authState, taskId }) {
   const classes = useStyles();
   const [commentCreate] = useMutation(TaskComment)
   const [body, setBody] = useState('')
@@ -24,7 +24,6 @@ export default function CommentTextField({ data, refetch, authState, taskId, his
     }}).then(() => {
       setBody('')
       refetch()
-      historyRefetch()
     }).catch((err) => setErrorMessage(err))
   }
   return(
@@ -83,6 +82,5 @@ CommentTextField.defaultProps = {
    data: PropTypes.object,
    authState: PropTypes.object,
    refetch: PropTypes.func.isRequired,
-   historyRefetch: PropTypes.func.isRequired,
    taskId: PropTypes.string,
  }

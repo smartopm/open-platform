@@ -665,6 +665,7 @@ export const HistoryQuery = gql`
       updatedValue
       action
       noteEntityType
+      createdAt
       user {
         id
         name
