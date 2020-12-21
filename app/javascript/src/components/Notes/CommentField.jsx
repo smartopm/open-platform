@@ -82,6 +82,5 @@ CommentTextField.defaultProps = {
    data: PropTypes.object,
    authState: PropTypes.object,
    refetch: PropTypes.func.isRequired,
-  //  historyRefetch: PropTypes.func.isRequired,
    taskId: PropTypes.string,
  }
