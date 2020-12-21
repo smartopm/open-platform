@@ -31,6 +31,10 @@ import UserFilledForms from "./User/UserFilledForms"
 import UserMessages from './Messaging/UserMessages'
 import InvoiceList from './Payments/InvoiceList'
 
+function useParamsQuery() {
+  return new URLSearchParams(useLocation().search)
+}
+
 export default function UserInformation({
   data,
   // eslint-disable-next-line no-unused-vars
@@ -45,7 +49,9 @@ export default function UserInformation({
   accountRefetch
 }) {
   const CSMNumber = '260974624243'
-  const [tabValue, setValue] = useState('Contacts')
+  const path = useParamsQuery()
+  const tab = path.get('tab')
+  const [tabValue, setValue] = useState(tab || 'Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
   const [isDialogOpen, setDialogOpen] = useState(false)
 
@@ -67,6 +73,7 @@ export default function UserInformation({
   const userType = authState.user.userType.toLowerCase()
 
   const handleChange = (_event, newValue) => {
+    router.push(`/user/${userId}?tab=${newValue}`)
     setValue(newValue)
     const pages = {
       Contacts: 'Contacts',
