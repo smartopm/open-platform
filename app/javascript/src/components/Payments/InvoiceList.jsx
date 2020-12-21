@@ -14,13 +14,17 @@ import CenteredContent from '../CenteredContent'
 export default function InvoiceList({ userId, data, creatorId }) {
   const history = useHistory()
   const path = useParamsQuery()
+  const limit = 2
   const tab = path.get('invoices')
+  const page = path.get('page')
+  // eslint-disable-next-line no-unused-vars
+  const [offset, setOffset] = useState(Number(page) || 0)
   const [open, setOpen] = useState(!!tab)
   const [paymentOpen, setPaymentOpen] = useState(null)
   const { loading, data: invoicesData, error, refetch } = useQuery(
     UserInvoicesQuery,
     {
-      variables: { userId }
+      variables: { userId, limit, offset }
     }
   )
 
