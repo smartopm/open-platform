@@ -41,6 +41,10 @@ describe("User information component loads",()=>{
         }
     }
     it('should render user name on contacts tab', async ()=>{
+      const mock = jest.fn()
+      const routeMock = {
+        push: mock
+      }
         const {getByText} = render(
           <MockedProvider mock={data}>
             <BrowserRouter>
@@ -49,6 +53,12 @@ describe("User information component loads",()=>{
                 authState={authstate}
                 accountData={accountData}
                 parcelData={parcelData}
+                onLogEntry={mock}
+                sendOneTimePasscode={mock}
+                refetch={mock}
+                userId={data.user.id}
+                router={routeMock}
+                accountRefetch={mock}
               />
             </BrowserRouter>
           </MockedProvider>

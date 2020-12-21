@@ -30,7 +30,6 @@ import { useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
   data,
-  // eslint-disable-next-line no-unused-vars
   parcelData,
   onLogEntry,
   authState,

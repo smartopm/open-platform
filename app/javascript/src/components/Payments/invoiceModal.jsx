@@ -167,7 +167,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
           />
           <FormControlLabel
             control={<Checkbox checked={pay} onChange={handleChange} name="pay" />}
-            label="Save and Pay"
+            label="Make payment now"
           />
         </div>
       </CustomizedDialogs>

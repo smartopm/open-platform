@@ -22,13 +22,14 @@ export default function InvoiceItem({ invoice }) {
         primary={invoice.description}
         secondary={(
           <Grid container spacing={10} style={{ color: '#808080' }}>
-            <Grid xs item>{`$${invoice.amount}`}</Grid>
-            <Grid xs item>{invoice.landParcel?.parcelNumber}</Grid>
-            <Grid xs item>{`due at ${dateToString(invoice.dueDate)}`}</Grid>
+            <Grid xs item data-testid="amount">{`k${invoice.amount}`}</Grid>
+            <Grid xs item data-testid="landparcel">{invoice.landParcel?.parcelNumber}</Grid>
+            <Grid xs item data-testid="duedate">{`due at ${dateToString(invoice.dueDate)}`}</Grid>
           </Grid>
             )}
       />
-      <ListItemSecondaryAction>
+      {/* In the future we can put an action button here */}
+      <ListItemSecondaryAction data-testid="status">
         {
           isAfter(new Date(), new Date(invoice.dueDate)) ? 'Late' : InvoiceStatus[invoice.status]
         }

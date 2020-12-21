@@ -24,7 +24,7 @@ describe('It should test the invoice component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <Invoices data={data} userId={userId} user={user} />
+          <Invoices data={data} userId={userId} user={user} refetch={jest.fn()} />
         </MockedProvider>
       </BrowserRouter>
     )
