@@ -240,7 +240,7 @@ export default function UserInformation({
           )
         }
         <TabPanel value={tabValue} index="Payments">
-          <AddInvoice data={parcelData} userId={userId} />
+          <AddInvoice data={parcelData} userId={userId} user={authState.user} />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
@@ -290,7 +290,7 @@ UserInformation.propTypes = {
   accountData: PropTypes.shape({ user: User }).isRequired,
   accountRefetch: PropTypes.func.isRequired,
   parcelData: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     parcelNumber: PropTypes.string.isRequired
   })).isRequired
 }

@@ -113,7 +113,11 @@ module Types
 
     # contact_info
     field :contact_info_delete, mutation: Mutations::ContactInfo::Delete
+
     # invoice
     field :invoice_create, mutation: Mutations::Invoice::InvoiceCreate
+
+    # payments
+    field :payment_create, mutation: Mutations::Payment::PaymentCreate
   end
 end

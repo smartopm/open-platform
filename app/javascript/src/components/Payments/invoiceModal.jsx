@@ -11,14 +11,17 @@ import DatePickerDialog from '../DatePickerDialog'
 import { formatError } from '../../utils/helpers'
 import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
+import PaymentModal from './PaymentModal'
 
-export default function InvoiceModal({ open, handleModalClose, data, userId }) {
+export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen, creatorId }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState({})
   const [createInvoice] = useMutation(InvoiceCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [openPayment, setOpenPayment] = useState(false)
+  const [invoiceData, setInvoiceData] = useState(null)
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -27,22 +30,35 @@ export default function InvoiceModal({ open, handleModalClose, data, userId }) {
         landParcelId: inputValue.parcelId,
         description: inputValue.description,
         note: inputValue.note,
-        amount: inputValue.amount,
+        amount: parseFloat(inputValue.amount),
         dueDate: inputValue.selectedDate,
-        status: inputValue.status
+        status: inputValue.status,
+        userId
       }
-    }).then(() => {
+    }).then((res) => {
       setMessageAlert('Invoice added successfully')
       setIsSuccessAlert(true)
       setInputValue({})
-      handleModalClose()
-      history.push(`/user/${userId}`)
+      if (paymentOpen) {
+        handleModalClose()
+        setInvoiceData(res.data.invoiceCreate.invoice)
+        setOpenPayment(true)
+        history.push(`/user/${userId}/invoices/${res.data.invoiceCreate.invoice.id}/add_payment`)
+      } else {
+        handleModalClose()
+        history.push(`/user/${userId}`)
+      }
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
       history.push(`/user/${userId}`)
     })
+  }
+
+  function handlePaymentModalClose(){
+    setOpenPayment(false)
+    history.push(`/user/${userId}`)
   }
 
   function handleMessageAlertClose(_event, reason) {
@@ -92,12 +108,13 @@ export default function InvoiceModal({ open, handleModalClose, data, userId }) {
             margin="dense"
             id="amount"
             label="Amount"
-            type='number'
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                "data-testid": "amount"
+                "data-testid": "amount",
+                type: "number",
+                step: '0.01'
               }}
             required
           />
@@ -136,6 +153,13 @@ export default function InvoiceModal({ open, handleModalClose, data, userId }) {
           />
         </div>
       </CustomizedDialogs>
+      <PaymentModal 
+        open={openPayment} 
+        handleModalClose={handlePaymentModalClose} 
+        invoiceData={invoiceData}
+        userId={userId}
+        creatorId={creatorId}
+      />
     </>
   )
 }
@@ -148,12 +172,18 @@ const useStyles = makeStyles({
   }
 });
 
+InvoiceModal.defaultProps = {
+  paymentOpen: null
+}
+
 InvoiceModal.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     parcelNumber: PropTypes.string.isRequired
   })).isRequired,
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
-  handleModalClose: PropTypes.func.isRequired
+  handleModalClose: PropTypes.func.isRequired,
+  paymentOpen: PropTypes.string,
+  creatorId: PropTypes.string.isRequired
 }

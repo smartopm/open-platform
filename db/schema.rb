@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_15_085053) do
+ActiveRecord::Schema.define(version: 2020_12_18_160729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -159,11 +159,9 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.uuid "note_id"
     t.string "status"
     t.uuid "community_id"
     t.index ["community_id"], name: "index_comments_on_community_id"
-    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -303,14 +301,16 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
     t.uuid "land_parcel_id", null: false
     t.uuid "community_id", null: false
     t.datetime "due_date"
-    t.integer "amount"
+    t.float "amount"
     t.integer "status"
     t.string "description"
     t.string "note"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "user_id"
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
   create_table "labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -423,6 +423,18 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
     t.index ["community_id"], name: "index_notifications_on_community_id"
     t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "invoice_id", null: false
+    t.string "payment_type"
+    t.float "amount"
+    t.integer "payment_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invoice_id"], name: "index_payments_on_invoice_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
   create_table "post_tag_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -562,6 +574,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
   add_foreign_key "forms", "communities"
   add_foreign_key "invoices", "communities"
   add_foreign_key "invoices", "land_parcels"
+  add_foreign_key "invoices", "users"
   add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
@@ -573,6 +586,8 @@ ActiveRecord::Schema.define(version: 2020_12_15_085053) do
   add_foreign_key "notes", "form_users"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
+  add_foreign_key "payments", "invoices"
+  add_foreign_key "payments", "users"
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"

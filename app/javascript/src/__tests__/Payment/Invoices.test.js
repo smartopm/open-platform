@@ -15,12 +15,16 @@ describe('It should test the invoice component', () => {
   ]
 
   const userId = 'jwuifhwef'
+  const user = {
+    id: 'yjfefe',
+    userType: 'admin'
+  }
 
   it('it should render invoice modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <Invoices data={data} userId={userId} />
+          <Invoices data={data} userId={userId} user={user} />
         </MockedProvider>
       </BrowserRouter>
     )

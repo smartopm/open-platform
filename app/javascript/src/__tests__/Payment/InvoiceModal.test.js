@@ -20,11 +20,13 @@ describe('It should test the invoice modal component', () => {
 
   const userId = 'jwuifhwef'
 
+  const userType = 'admin'
+
   it('it should render invoice modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <InvoiceModal open={open} data={data} userId={userId} handleModalClose={handleModalClose} />
+          <InvoiceModal open={open} data={data} userId={userId} handleModalClose={handleModalClose} userType={userType} />
         </MockedProvider>
       </BrowserRouter>
     )

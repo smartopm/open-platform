@@ -728,9 +728,10 @@ export const InvoiceCreate = gql`
     $landParcelId: ID!
     $description: String
     $note: String
-    $amount: String!
+    $amount: Float!
     $dueDate: String!
     $status: String!
+    $userId: ID!
   ) {
     invoiceCreate(
       landParcelId: $landParcelId
@@ -739,8 +740,34 @@ export const InvoiceCreate = gql`
       amount: $amount
       dueDate: $dueDate
       status: $status
+      userId: $userId
     ) {
       invoice {
+        id
+        amount
+        landParcel {
+          id
+          parcelNumber
+        }
+      }
+    }
+  }
+`
+
+export const PaymentCreate = gql`
+  mutation PaymentCreate(
+    $userId: ID!
+    $invoiceId: ID!
+    $amount: Float!
+    $paymentType: String!
+  ) {
+    paymentCreate(
+      userId: $userId
+      invoiceId: $invoiceId
+      amount: $amount
+      paymentType: $paymentType
+    ) {
+      payment {
         id
       }
     }
