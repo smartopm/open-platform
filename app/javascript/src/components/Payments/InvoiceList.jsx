@@ -78,6 +78,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
       </CenteredContent>
       
       <FloatButton
+        data-testid="invoice_btn"
         title="Add an Invoice"
         handleClick={handleModalOpen}
       />

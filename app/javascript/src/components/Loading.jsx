@@ -27,7 +27,7 @@ const ColorCircularProgress = withStyles({
 export function Spinner(){
   return (
     <CenteredContent>
-      <ColorCircularProgress size={30} thickness={5} />
+      <ColorCircularProgress size={30} thickness={5} data-testid="loader" />
     </CenteredContent>
   )
 }
