@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import { Fab } from '@material-ui/core'
 import { css, StyleSheet } from 'aphrodite'
 
-export default function FloatButton({ title, handleClick }) {
+export default function FloatButton({ title, handleClick, extraStyles }) {
   return (
     <Fab
       variant="extended"
       onClick={handleClick}
       color="primary"
+      style={extraStyles}
       // eslint-disable-next-line no-use-before-define
       className={`btn ${css(styles.formButton)} `}
     >
@@ -16,9 +17,15 @@ export default function FloatButton({ title, handleClick }) {
     </Fab>
   )
 }
+
+FloatButton.defaultProps = {
+  extraStyles: {}
+}
 FloatButton.propTypes = {
   title: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  extraStyles: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

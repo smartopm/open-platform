@@ -22,9 +22,9 @@ export default function InvoiceItem({ invoice }) {
         primary={invoice.description}
         secondary={(
           <Grid container spacing={10} style={{ color: '#808080' }}>
-            <Grid item>{`$${invoice.amount}`}</Grid>
-            <Grid item>{invoice.landParcel?.parcelNumber}</Grid>
-            <Grid item>{`due at ${dateToString(invoice.dueDate)}`}</Grid>
+            <Grid xs item>{`$${invoice.amount}`}</Grid>
+            <Grid xs item>{invoice.landParcel?.parcelNumber}</Grid>
+            <Grid xs item>{`due at ${dateToString(invoice.dueDate)}`}</Grid>
           </Grid>
             )}
       />

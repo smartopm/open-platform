@@ -19,11 +19,11 @@ export default function InvoiceList({ invoices, userId, data, creatorId }) {
     setOpen(true)
   }
 
-//   function handlePaymentOpen() {
-//     history.push(`/user/${userId}/invoices/new`)
-//     setOpen(true)
-//     setPaymentOpen('open')
-//   }
+  function handlePaymentOpen() {
+    history.push(`/user/${userId}?tab=Payments&invoices=new`)
+    setOpen(true)
+    setPaymentOpen('open')
+  }
 
   function handleModalClose() {
     history.push(`/user/${userId}?tab=Payments`)
@@ -45,7 +45,9 @@ export default function InvoiceList({ invoices, userId, data, creatorId }) {
           <InvoiceItem key={invoice.id} invoice={invoice} />
         ))}
       </List>
-      <FloatButton title="Add an Invoice" handleClick={handleModalOpen} />
+
+      <FloatButton title="Add an Invoice" handleClick={handleModalOpen} extraStyles={{marginBottom: 60 }} />
+      <FloatButton title="Add an Invoice and Pay" handleClick={handlePaymentOpen} />
     </>
   )
 }
