@@ -47,7 +47,7 @@ module Types::Queries::Invoice
 
     user = User.allowed_users(context[:current_user]).find(user_id)
 
-    raise GraphQL::ExecutionError, 'User not found' unless user.present?
+    raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     user.invoices.eager_load(:land_parcel).limit(limit).offset(offset)
   end

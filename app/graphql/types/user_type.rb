@@ -42,7 +42,7 @@ module Types
     field :contact_infos, [Types::ContactInfoType], null: true, visible: { roles: %i[admin],
                                                                            user: :id }
     field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin],
-                                                                           user: :id }
+                                                                  user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?
