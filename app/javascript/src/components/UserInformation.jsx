@@ -233,7 +233,7 @@ export default function UserInformation({
           <>
             <TabPanel value={tabValue} index="Plots">
               <UserPlotInfo
-                account={accountData?.user.accounts}
+                account={accountData?.user.accounts || []}
                 userId={data.user.id}
                 refetch={accountRefetch}
                 userType={userType}

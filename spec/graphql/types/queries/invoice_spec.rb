@@ -38,6 +38,17 @@ RSpec.describe Types::Queries::Invoice do
       GQL
     end
 
+    let(:user_invoice_query) do
+      <<~GQL
+        query userInvoices($userId: ID!, $limit: Int, $offset: Int) {
+          userInvoices(userId: $userId, limit: $limit, offset: $offset) {
+            id
+            amount
+          }
+        }
+      GQL
+    end
+
     it 'should retrieve list of invoices' do
       result = DoubleGdpSchema.execute(invoices_query, context: {
                                          current_user: user,
@@ -54,6 +65,20 @@ RSpec.describe Types::Queries::Invoice do
                                                         site_community: user.community,
                                                       }).as_json
       expect(result.dig('data', 'invoice', 'id')).to eql invoice_one.id
+    end
+
+    it 'should retrieve list of invoices for a user' do
+      variables = {
+        userId: user.id,
+        limit: 20,
+        offset: 0,
+      }
+      result = DoubleGdpSchema.execute(user_invoice_query, variables: variables, context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('data', 'userInvoices').length).to eql 2
+      expect(result.dig('errors', 0, 'message')).to be_nil
     end
   end
 end
