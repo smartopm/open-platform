@@ -15,7 +15,7 @@ import Paginate from '../Paginate'
 export default function InvoiceList({ userId, data, creatorId }) {
   const history = useHistory()
   const path = useParamsQuery()
-  const limit = 4
+  const limit = 20
   const tab = path.get('invoices')
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
@@ -61,8 +61,8 @@ export default function InvoiceList({ userId, data, creatorId }) {
         refetch={refetch}
       />
       <List>
-        {invoicesData.userInvoices.length
-          ? invoicesData.userInvoices.map(invoice => (
+        {invoicesData?.userInvoices.length
+          ? invoicesData?.userInvoices.map(invoice => (
             <InvoiceItem key={invoice.id} invoice={invoice} />
             ))
           : <CenteredContent>No Invoices Yet</CenteredContent>}
