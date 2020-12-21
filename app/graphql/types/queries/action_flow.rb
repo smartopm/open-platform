@@ -36,13 +36,13 @@ module Types::Queries::ActionFlow
   end
 
   def events
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     ActionFlows::EventPop.event_list.map { |event| event::EVENT_TYPE }
   end
 
   def actions
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     ActionFlows::Actions.constants.select do |c|
       ActionFlows::Actions.const_get(c).is_a?(Class)
@@ -50,7 +50,7 @@ module Types::Queries::ActionFlow
   end
 
   def action_fields(action:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     begin
       fields = "ActionFlows::Actions::#{action.camelize}::ACTION_FIELDS".constantize
@@ -60,9 +60,8 @@ module Types::Queries::ActionFlow
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def rule_fields(event_type:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     begin
       event_class = "ActionFlows::Events::#{event_type.camelize}Event".constantize
@@ -74,10 +73,9 @@ module Types::Queries::ActionFlow
       raise GraphQL::ExecutionError, 'Invalid event type'
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def action_flows(offset: 0, limit: 10)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     context[:site_community].action_flows.order(created_at: :desc).limit(limit).offset(offset)
   end
