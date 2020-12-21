@@ -10,11 +10,12 @@ import { useParamsQuery } from '../../utils/helpers'
 import { UserInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
+import Paginate from '../Paginate'
 
 export default function InvoiceList({ userId, data, creatorId }) {
   const history = useHistory()
   const path = useParamsQuery()
-  const limit = 2
+  const limit = 4
   const tab = path.get('invoices')
   const page = path.get('page')
   // eslint-disable-next-line no-unused-vars
@@ -45,6 +46,17 @@ export default function InvoiceList({ userId, data, creatorId }) {
     setPaymentOpen(null)
   }
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return
+      setOffset(offset - limit)
+      history.push(`/user/${userId}?tab=Payments&page=${offset - limit}`)
+    } else if (action === 'next') {
+      setOffset(offset + limit)
+      history.push(`/user/${userId}?tab=Payments&page=${offset + limit}`)
+    }
+  }
+
   if (loading) return <Spinner />
   if (error) return <CenteredContent>{error.message}</CenteredContent>
   return (
@@ -66,6 +78,15 @@ export default function InvoiceList({ userId, data, creatorId }) {
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
 
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={paginate}
+        />
+      </CenteredContent>
+      
       <FloatButton
         title="Add an Invoice"
         handleClick={handleModalOpen}
