@@ -23,16 +23,6 @@ export const UserAccountQuery = gql`
           parcelNumber
         }
       }
-      invoices {
-        id
-        amount
-        status
-        description
-        dueDate
-        landParcel {
-          parcelNumber
-        }
-      }
     }
   }
 `
@@ -822,5 +812,21 @@ export const Flows = gql`
 export const UsersCount = gql`
   query usersCount($query: String) {
     usersCount(query: $query)
+  }
+`
+
+export const UserInvoicesQuery = gql`
+  query userInvoices($userId: ID!) {
+    userInvoices(userId: $userId) {
+      id
+      amount
+      status
+      description
+      dueDate
+      landParcel {
+        id
+        parcelNumber
+      }
+    }
   }
 `

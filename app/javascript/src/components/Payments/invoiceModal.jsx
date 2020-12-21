@@ -20,7 +20,7 @@ const initialValues = {
   amount: '',
   note: ''
 }
-export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen, creatorId }) {
+export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen, creatorId, refetch }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -46,6 +46,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
       setMessageAlert('Invoice added successfully')
       setIsSuccessAlert(true)
       setInputValue({})
+      refetch()
       if (paymentOpen) {
         handleModalClose()
         setInvoiceData(res.data.invoiceCreate.invoice)
@@ -192,5 +193,6 @@ InvoiceModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   paymentOpen: PropTypes.string,
-  creatorId: PropTypes.string.isRequired
+  creatorId: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired,
 }

@@ -1,18 +1,28 @@
 import React, { useState } from 'react'
 import List from '@material-ui/core/List'
+import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import InvoiceItem from './InvoiceItem'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
 import { useParamsQuery } from '../../utils/helpers'
+import { UserInvoicesQuery } from '../../graphql/queries'
+import { Spinner } from '../Loading'
+import CenteredContent from '../CenteredContent'
 
-export default function InvoiceList({ invoices, userId, data, creatorId }) {
+export default function InvoiceList({ userId, data, creatorId }) {
   const history = useHistory()
   const path = useParamsQuery()
   const tab = path.get('invoices')
   const [open, setOpen] = useState(!!tab)
   const [paymentOpen, setPaymentOpen] = useState(null)
+  const { loading, data: invoicesData, error, refetch } = useQuery(
+    UserInvoicesQuery,
+    {
+      variables: { userId }
+    }
+  )
 
   function handleModalOpen() {
     history.push(`/user/${userId}?tab=Payments&invoices=new`)
@@ -30,6 +40,9 @@ export default function InvoiceList({ invoices, userId, data, creatorId }) {
     setOpen(false)
     setPaymentOpen(null)
   }
+
+  if (loading) return <Spinner />
+  if (error) return <CenteredContent>{error.message}</CenteredContent>
   return (
     <>
       <InvoiceModal
@@ -39,21 +52,30 @@ export default function InvoiceList({ invoices, userId, data, creatorId }) {
         paymentOpen={paymentOpen}
         userId={userId}
         creatorId={creatorId}
+        refetch={refetch}
       />
       <List>
-        {invoices.map(invoice => (
-          <InvoiceItem key={invoice.id} invoice={invoice} />
-        ))}
+        {invoicesData.userInvoices.length
+          ? invoicesData.userInvoices.map(invoice => (
+            <InvoiceItem key={invoice.id} invoice={invoice} />
+            ))
+          : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
 
-      <FloatButton title="Add an Invoice" handleClick={handleModalOpen} extraStyles={{marginBottom: 60 }} />
-      <FloatButton title="Add an Invoice and Pay" handleClick={handlePaymentOpen} />
+      <FloatButton
+        title="Add an Invoice"
+        handleClick={handleModalOpen}
+        extraStyles={{ marginBottom: 60 }}
+      />
+      <FloatButton
+        title="Add an Invoice and Pay"
+        handleClick={handlePaymentOpen}
+      />
     </>
   )
 }
 
 InvoiceList.propTypes = {
-  invoices: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
