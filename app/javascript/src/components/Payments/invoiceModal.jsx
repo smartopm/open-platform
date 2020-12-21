@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { CustomizedDialogs } from '../Dialog'
 import DatePickerDialog from '../DatePickerDialog'
 import { formatError } from '../../utils/helpers'
@@ -20,7 +21,7 @@ const initialValues = {
   amount: '',
   note: ''
 }
-export default function InvoiceModal({ open, handleModalClose, data, userId, paymentOpen, creatorId, refetch }) {
+export default function InvoiceModal({ open, handleModalClose, data, userId, creatorId, refetch }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -28,6 +29,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [openPayment, setOpenPayment] = useState(false)
+  const [pay, setPay] = useState(false)
   const [invoiceData, setInvoiceData] = useState(null)
 
   const handleSubmit = event => {
@@ -47,7 +49,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
       setIsSuccessAlert(true)
       setInputValue({})
       refetch()
-      if (paymentOpen) {
+      if (pay) {
         handleModalClose()
         setInvoiceData(res.data.invoiceCreate.invoice)
         setOpenPayment(true)
@@ -74,6 +76,10 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
       return
     }
     setMessageAlert('')
+  }
+
+  function handleChange(event){
+    setPay(event.target.checked)
   }
 
   return (
@@ -159,6 +165,10 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, pay
             onChange={(event) => setInputValue({...inputValue, note: event.target.value})}
             multiline
           />
+          <FormControlLabel
+            control={<Checkbox checked={pay} onChange={handleChange} name="pay" />}
+            label="Save and Pay"
+          />
         </div>
       </CustomizedDialogs>
       <PaymentModal 
@@ -180,10 +190,6 @@ const useStyles = makeStyles({
   }
 });
 
-InvoiceModal.defaultProps = {
-  paymentOpen: null
-}
-
 InvoiceModal.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
@@ -192,7 +198,6 @@ InvoiceModal.propTypes = {
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  paymentOpen: PropTypes.string,
   creatorId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
 }

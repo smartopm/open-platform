@@ -18,10 +18,8 @@ export default function InvoiceList({ userId, data, creatorId }) {
   const limit = 4
   const tab = path.get('invoices')
   const page = path.get('page')
-  // eslint-disable-next-line no-unused-vars
   const [offset, setOffset] = useState(Number(page) || 0)
   const [open, setOpen] = useState(!!tab)
-  const [paymentOpen, setPaymentOpen] = useState(null)
   const { loading, data: invoicesData, error, refetch } = useQuery(
     UserInvoicesQuery,
     {
@@ -34,16 +32,9 @@ export default function InvoiceList({ userId, data, creatorId }) {
     setOpen(true)
   }
 
-  function handlePaymentOpen() {
-    history.push(`/user/${userId}?tab=Payments&invoices=new`)
-    setOpen(true)
-    setPaymentOpen('open')
-  }
-
   function handleModalClose() {
     history.push(`/user/${userId}?tab=Payments`)
     setOpen(false)
-    setPaymentOpen(null)
   }
 
   function paginate(action) {
@@ -65,7 +56,6 @@ export default function InvoiceList({ userId, data, creatorId }) {
         open={open}
         handleModalClose={handleModalClose}
         data={data}
-        paymentOpen={paymentOpen}
         userId={userId}
         creatorId={creatorId}
         refetch={refetch}
@@ -90,11 +80,6 @@ export default function InvoiceList({ userId, data, creatorId }) {
       <FloatButton
         title="Add an Invoice"
         handleClick={handleModalOpen}
-        extraStyles={{ marginBottom: 60 }}
-      />
-      <FloatButton
-        title="Add an Invoice and Pay"
-        handleClick={handlePaymentOpen}
       />
     </>
   )
