@@ -16,7 +16,7 @@ const data = {
     { name: 'tolulope O.', id: '34543' },
     { name: 'another_user', id: '983y7r2' }
   ],
-  assigneeNotes: [{ action: 'create', noteEntityType: 'NoteComment', user: {name: 'name'}}],
+  assigneeNotes: [],
   completed: false
 }
 const props = {
@@ -25,7 +25,7 @@ const props = {
   refetch: jest.fn(),
   users: [],
   currentUser: { name: 'tester', id: '6523gvhvg' },
-  historyData: [],
+  historyData: [{ action: 'create', noteEntityType: 'NoteComment', user: {name: 'name'}}],
   historyRefetch: jest.fn(),
   authState: {},
   taskId: ''
