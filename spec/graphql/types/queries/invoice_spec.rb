@@ -7,10 +7,10 @@ RSpec.describe Types::Queries::Invoice do
     let!(:user) { create(:user_with_community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:invoice_one) do
-      create(:invoice, community_id: user.community_id, land_parcel: land_parcel)
+      create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id)
     end
     let!(:invoice_two) do
-      create(:invoice, community_id: user.community_id, land_parcel: land_parcel)
+      create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id)
     end
 
     let(:invoices_query) do
