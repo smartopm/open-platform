@@ -23,7 +23,8 @@ export default function InvoiceList({ userId, data, creatorId }) {
   const { loading, data: invoicesData, error, refetch } = useQuery(
     UserInvoicesQuery,
     {
-      variables: { userId, limit, offset }
+      variables: { userId, limit, offset },
+      errorPolicy: 'ignore'
     }
   )
 
@@ -49,7 +50,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
   }
 
   if (loading) return <Spinner />
-  if (error) return <CenteredContent>{error.message}</CenteredContent>
+  if (error && !invoicesData) return <CenteredContent>{error.message}</CenteredContent>
   return (
     <>
       <InvoiceModal
@@ -62,9 +63,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
       />
       <List>
         {invoicesData?.userInvoices.length
-          ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem key={invoice.id} invoice={invoice} />
-            ))
+          ? invoicesData?.userInvoices.map(invoice => invoice ? <InvoiceItem key={invoice.id} invoice={invoice} /> : null)
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
 
