@@ -154,7 +154,6 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
             value={inputValue.description}
             onChange={(event) => setInputValue({...inputValue, description: event.target.value})}
             multiline
-            required
           />
           <TextField
             margin="dense"
