@@ -30,8 +30,7 @@ describe('Invoice Item Component', () => {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 parcelNumber: 'Plot-1343'
               },
-              payments: [
-                {
+              payments: {
                   id: 'jncmdm',
                   amount: 1000,
                   paymentType: 'cash',
@@ -40,8 +39,7 @@ describe('Invoice Item Component', () => {
                     id: 'jndk',
                     name: 'tolulope'
                   }
-                }
-              ]
+              }
             },
             {
               id: '95e3c5f3-6757-48c1-837c-1dd3e',
@@ -53,8 +51,7 @@ describe('Invoice Item Component', () => {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 parcelNumber: 'Plot-1343'
               },
-              payments: [
-                {
+              payments: {
                   id: 'jncmdm',
                   amount: 1000,
                   paymentType: 'cash',
@@ -63,8 +60,7 @@ describe('Invoice Item Component', () => {
                     id: 'jndk',
                     name: 'tolulope'
                   }
-                }
-              ]
+              }
             }
           ]
         }
