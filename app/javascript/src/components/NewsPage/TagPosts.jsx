@@ -34,7 +34,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
   }, [tagName, open])
 
   if (error || lazyError) {
-    return error.message || lazyError?.message
+    return error?.message || lazyError?.message
   }
 
   function loadPostPage(postId) {
@@ -104,7 +104,7 @@ export default function TagPosts({ open, handleClose, tagName }) {
           {response.posts?.map((post) => (
             // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div key={post.ID} onClick={() => loadPostPage(post.ID)}>
-              <PostItem 
+              <PostItem
                 key={post.ID}
                 title={post.title}
                 imageUrl={post?.featured_image}
