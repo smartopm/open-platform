@@ -24,7 +24,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
     UserInvoicesQuery,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'ignore'
+      errorPolicy: 'all'
     }
   )
 
@@ -73,6 +73,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
+          count={invoicesData?.userInvoices.length}
         />
       </CenteredContent>
       
