@@ -31,6 +31,7 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
 
     context[:site_community].invoices
+                            .eager_load(:land_parcel, :user)
                             .order(due_date: :desc)
                             .limit(limit)
                             .offset(offset)
