@@ -30,16 +30,18 @@ describe('Invoice Item Component', () => {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 parcelNumber: 'Plot-1343'
               },
-              payments: {
-                  id: 'jncmdm',
-                  amount: 1000,
-                  paymentType: 'cash',
-                  paymentStatus: 'settled',
-                  user: {
-                    id: 'jndk',
-                    name: 'tolulope'
-                  }
-              }
+              payments: [
+                {
+                    id: '233b1634-bf08-4ece-a213-b3f120a1e009',
+                    amount: 1000,
+                    paymentType: 'cash',
+                    paymentStatus: 'settled',
+                    user: {
+                      id: '95e3c5f3-6757-48c1-837c-1dd3e',
+                      name: 'tolulope'
+                    }
+                }
+              ]
             },
             {
               id: '95e3c5f3-6757-48c1-837c-1dd3e',
@@ -51,16 +53,16 @@ describe('Invoice Item Component', () => {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 parcelNumber: 'Plot-1343'
               },
-              payments: {
-                  id: 'jncmdm',
-                  amount: 1000,
+              payments: [{
+                  id: '95e3c5f3-6757-48c1-837c-1d',
+                  amount: 100,
                   paymentType: 'cash',
                   paymentStatus: 'settled',
                   user: {
-                    id: 'jndk',
+                    id: '95e3c5f3-6757-48c1-837c-1dd',
                     name: 'tolulope'
                   }
-              }
+              }]
             }
           ]
         }
