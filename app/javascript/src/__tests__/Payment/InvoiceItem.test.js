@@ -24,7 +24,7 @@ describe('Invoice Item Component', () => {
           <InvoiceItem invoice={invoiceMock} />
         </MockedProvider>
       </BrowserRouter>)
-    expect(container.queryByTestId('amount').textContent).toContain('Invoice amount: k50')
+    expect(container.queryByTestId('amount').textContent).toContain('Invoice amount: k200')
     expect(container.queryByTestId('duedate').textContent).toContain('Due at: 2020-09-12')
     expect(container.queryByTestId('landparcel').textContent).toContain('Parcel number: Plot-123')
     expect(
