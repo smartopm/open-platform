@@ -47,7 +47,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       expect(assigned_note.reminder_time).not_to be_nil
       expect(assigned_note.reminder_time.to_datetime
         .strftime('%d %b %Y, %H:%M')).to eql 24.hours.from_now.strftime('%d %b %Y, %H:%M')
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       # Second Assignee
       note.assign_or_unassign_user(second_admin.id)
@@ -67,7 +67,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       expect(assigned_note.reminder_time).not_to be_nil
       expect(assigned_note.reminder_time.to_datetime
         .strftime('%d %b %Y, %H:%M')).to eql 1.hour.from_now.strftime('%d %b %Y, %H:%M')
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws authorization error if not an admin' do
@@ -82,7 +82,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
                                                 current_user: user,
                                                 site_community: admin.community,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
     end
 
@@ -96,7 +96,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
                                                 current_user: admin,
                                                 site_community: admin.community,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
     end
 

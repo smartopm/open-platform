@@ -68,13 +68,13 @@ module ActionFlows
 
     # rubocop:disable Metrics/AbcSize
     def load_data(data, overwrite_hash = {})
-      data.keys.each do |key|
+      data.each_key do |key|
         obj_val = self.class.event_metadata[key.to_s]
-        obj_val.keys.each do |co|
+        obj_val.each_key do |co|
           if overwrite_hash.present? && overwrite_hash.keys.include?(co)
             @data_set["#{key.underscore}_#{co}".to_sym] = overwrite_hash[co]
           else
-            @data_set["#{key.underscore}_#{co}".to_sym] = data.dig(key).send(co)
+            @data_set["#{key.underscore}_#{co}".to_sym] = data[key].send(co)
           end
         end
       end
@@ -96,6 +96,7 @@ module ActionFlows
     def self.inherited(klass)
       @descendants ||= []
       @descendants << klass
+      super
     end
 
     def self.descendants

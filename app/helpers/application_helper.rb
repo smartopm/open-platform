@@ -38,14 +38,14 @@ module ApplicationHelper # rubocop:disable Style/Documentation
 
   private
 
-  # rubocop:disable Metrics/LineLength:
+  # rubocop:disable Layout/LineLength:
   def wordpress_post(post_id)
     res = Net::HTTP.get_response(URI.parse("https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts/#{post_id}"))
     JSON.parse(res.body)
   rescue StandardError
     nil
   end
-  # rubocop:enable Metrics/LineLength:
+  # rubocop:enable Layout/LineLength:
 
   def post_id(current_path)
     path_info = current_path.split('/').reject(&:blank?)

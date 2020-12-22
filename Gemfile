@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '>=2.6.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0'
+gem 'rails', '6.0.3.1'
 # Use sqlite3 as the database for Active Record
 gem 'pg', '~> 1.1.4'
 # Use Puma as the app server
@@ -56,7 +56,7 @@ gem "sidekiq-scheduler", "~> 3.0"
 gem 'serviceworker-rails'
 
 # GraphQL
-gem 'graphql', '~> 1.9'
+gem 'graphql'
 gem 'graphiql-rails', group: :development
 gem 'graphql-guard'
 
@@ -86,17 +86,17 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
-  gem "rubocop", "~> 0.74.0"
-  gem "pronto", git: 'https://github.com/prontolabs/pronto'
+  gem "rubocop", "~> 0.77"
+  gem "pronto", "~> 0.10.0"
   gem "rubocop-rails", "~> 2.3"
 
   # RSpec
   # TODO: @mdp figure out why this needs bundle run twice
-  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: '4-0-dev'
-  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core'
-  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations'
-  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks'
-  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support'
+  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: 'main'
+  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core', branch: 'main'
+  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations', branch: 'main'
+  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks', branch: 'main'
+  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support', branch: 'main'
   gem 'rails-controller-testing'
 end
 

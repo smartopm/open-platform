@@ -59,7 +59,7 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0)).not_to be_nil
       expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc'))
         .to eql 'label 1'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'fails to create campaign without campaign type' do
@@ -136,7 +136,7 @@ RSpec.describe Mutations::Campaign do
         .to eq(user2.id.to_s)
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
         .to eql 'Default Campaign Name'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'create a campaign through user_list' do
@@ -152,7 +152,7 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
         .to eql 'Default Campaign Name'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 
@@ -224,7 +224,7 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'message')).to eql 'Visiting Update'
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc'))
         .to eql 'label 3'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       other_variables = {
         campaignId: campaign.id,
@@ -238,7 +238,7 @@ RSpec.describe Mutations::Campaign do
                                                                    current_user.community,
                                                                  }).as_json
       expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
-      expect(other_result.dig('errors')).to be_nil
+      expect(other_result['errors']).to be_nil
     end
   end
 
@@ -278,7 +278,7 @@ RSpec.describe Mutations::Campaign do
                                                      }).as_json
       expect(result.dig('data', 'campaignDelete', 'campaign', 'id')).to eql campaign_for_delete.id
       expect(result.dig('data', 'campaignDelete', 'campaign', 'status')).to eql 'deleted'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

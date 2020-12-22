@@ -38,7 +38,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                                                  }).as_json
       expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).not_to be_nil
       expect(form.form_properties.count).to eql 0
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'deleting a form property from a submitted form errors' do

@@ -170,7 +170,7 @@ RSpec.describe Types::Queries::ActionFlow do
       end
     end
 
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     describe('rule fields') do
       it 'retrieves rule fields when user is admin' do
         result = DoubleGdpSchema.execute(rule_fields_query, context: {
@@ -200,7 +200,7 @@ RSpec.describe Types::Queries::ActionFlow do
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end
     end
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
 
     describe('action flows') do
       let!(:flow1) do

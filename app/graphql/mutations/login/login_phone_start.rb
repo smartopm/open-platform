@@ -7,10 +7,11 @@ module Mutations
       argument :phone_number, String, required: true
 
       field :user, Types::UserType, null: true
+      field :errors, String, null: false
 
       def resolve(vals)
         user = context[:site_community].users.find_any_via_phone_number(vals[:phone_number])
-        raise ActiveRecord::RecordNotFound.new('User not found', ::User) unless user
+        raise GraphQL::ExecutionError, 'User not found' unless user
 
         user&.send_phone_token
 

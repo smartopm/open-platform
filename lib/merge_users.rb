@@ -78,7 +78,7 @@ class MergeUsers
     end
 
     # Update user in ActivityLog
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     update_user = "UPDATE activity_logs SET user_id = '#{duplicate_id}' WHERE user_id = '#{user_id}'"
     ActiveRecord::Base.connection.exec_query(update_user)
     find_logs_query = "SELECT * FROM activity_logs WHERE user_id = '#{user_id}'"
@@ -93,7 +93,7 @@ class MergeUsers
     logs_by_reporting_user = Array(ActiveRecord::Base.connection.exec_query(find_logs_query))
     raise StandardError, 'Update Failed' if logs_by_reporting_user.any?
 
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
 
     %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
        DiscussionUser Discussion EntryRequest Feedback FormUser Message

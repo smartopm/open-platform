@@ -30,7 +30,7 @@ module Types
     def entry_search(name:)
       raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
-      context[:site_community].entry_requests.where('name ILIKE ?', '%' + name + '%').limit(20)
+      context[:site_community].entry_requests.where('name ILIKE ?', "%#{name}%").limit(20)
     end
 
     # feedback
@@ -56,8 +56,7 @@ module Types
     def campaigns(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      campaign = context[:site_community].campaigns.existing.offset(offset).limit(limit)
-      campaign
+      context[:site_community].campaigns.existing.offset(offset).limit(limit)
     end
 
     field :campaign, Types::CampaignType, null: true do
@@ -68,8 +67,7 @@ module Types
     def campaign(id:)
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      campaign = context[:site_community].campaigns.find_by(id: id)
-      campaign
+      context[:site_community].campaigns.find_by(id: id)
     end
 
     def admin_or_self(id)

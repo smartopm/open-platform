@@ -35,7 +35,7 @@ RSpec.describe Mutations::Form::FormCreate do
       expect(EventLog.first.subject).to include 'form_create'
       expect(result.dig('data', 'formCreate', 'form', 'id')).not_to be_nil
       expect(result.dig('data', 'formCreate', 'form', 'name')).to eql 'Form Name'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is not admin' do

@@ -5,9 +5,7 @@ module ActionFlows
   class ActionFlow
     #  ActionFlows::ActionFlow
     attr_accessor :description
-    attr_accessor :event_type
-    attr_accessor :event_condition
-    attr_accessor :event_action
+    attr_accessor :event_type, :event_condition, :event_action
 
     def initialize(description, event_type, event_condition, event_action)
       @event_type = event_type

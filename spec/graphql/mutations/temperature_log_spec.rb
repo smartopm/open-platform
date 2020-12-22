@@ -37,7 +37,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'refId')).to eql admin.id
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'sentence')).not_to be_nil
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should not record temperature when not authorized' do
@@ -71,11 +71,11 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
                                               }).as_json
 
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'refId')).to eql entry_request.id
-      # rubocop:disable LineLength
+      # rubocop:disable Layout/LineLength
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'sentence')).to eql "Temperature for #{variables[:refName]} was recorded by #{admin.name}"
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data', 'ref_name')).to eql 'oljm'
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data', 'note')).to eql '40'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should not record temperature when an entry request does not exist' do
@@ -94,7 +94,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'sentence')).to be_nil
       expect(result.dig('data', 'temperatureUpdate', 'eventLog', 'data')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql "For some reason, I can't process your request"
-      # rubocop:enable LineLength
+      # rubocop:enable Layout/LineLength
     end
   end
 end

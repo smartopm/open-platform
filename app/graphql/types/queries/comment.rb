@@ -50,7 +50,7 @@ module Types::Queries::Comment
   end
   # rubocop:enable Metrics/BlockLength
 
-  def post_comments(offset: 0, limit: 100, post_id:)
+  def post_comments(post_id:, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     discs = community_discussions(post_id, 'post')
@@ -59,7 +59,7 @@ module Types::Queries::Comment
     discs.comments.by_not_deleted.limit(limit).offset(offset).with_attached_image
   end
 
-  def discuss_comments(offset: 0, limit: 100, id:)
+  def discuss_comments(id:, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     discs = community_discussions(id, 'discuss')
@@ -71,30 +71,26 @@ module Types::Queries::Comment
   def discussions(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussions = context[:site_community].discussions.where(post_id: nil)
-                                          .limit(limit).offset(offset)
-    discussions
+    context[:site_community].discussions.where(post_id: nil)
+                            .limit(limit).offset(offset)
   end
 
   def discussion(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussion = community_discussions(id, 'discuss')
-    discussion
+    community_discussions(id, 'discuss')
   end
 
   def post_discussion(post_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    discussion = community_discussions(post_id, 'post')
-    discussion
+    community_discussions(post_id, 'post')
   end
 
   def community_discussions(id, type)
     return if id.nil?
 
-    discs = context[:current_user].find_user_discussion(id, type)
-    discs
+    context[:current_user].find_user_discussion(id, type)
   end
 
   def fetch_comments(offset: 0, limit: 20)

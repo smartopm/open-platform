@@ -74,7 +74,7 @@ RSpec.describe Mutations::Note do
                                                      }).as_json
       expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'note', 'category')).to eql 'email'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'does not return a created note with the right category' do
@@ -88,7 +88,7 @@ RSpec.describe Mutations::Note do
                                                        current_user: admin,
                                                        site_community: user.community,
                                                      }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'result', 'note', 'id')).to be_nil
       expect(result.dig('data', 'result', 'note', 'category')).to be_nil
     end
@@ -104,7 +104,7 @@ RSpec.describe Mutations::Note do
                                                        site_community: user.community,
                                                      }).as_json
       expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       variable_updates = {
         id: result.dig('data', 'result', 'note', 'id'),
@@ -119,7 +119,7 @@ RSpec.describe Mutations::Note do
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'noteUpdate', 'note', 'body')).to include 'modified'
       expect(NoteHistory.count).to eql 2
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
                                                      context: {
@@ -146,7 +146,7 @@ RSpec.describe Mutations::Note do
       expect(result.dig('data', 'noteAssign', 'assigneeNote')).not_to be_nil
       expect(result.dig('data', 'noteAssign', 'assigneeNote')).to include 'success'
       expect(NoteHistory.count).to eql 1
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

@@ -17,10 +17,6 @@ module ActionFlows
         #  UserLoginEvent.event_metadata.values.map{|v| v.values }
       end
 
-      def initialize
-        super
-      end
-
       def self.event_description
         EVENT_DESC
       end

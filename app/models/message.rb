@@ -38,7 +38,6 @@ class Message < ApplicationRecord
     update(is_read: true, read_at: DateTime.now) unless is_read
   end
 
-  # rubocop:disable Metrics/AbcSize
   def send_sms(add_prefix: true)
     return if receiver.nil?
 
@@ -50,7 +49,6 @@ class Message < ApplicationRecord
     new_message += "\n\n#{text} \n#{link}" if include_reply_link?
     Sms.send(receiver, new_message)
   end
-  # rubocop:enable Metrics/AbcSize
 
   def create_message_task(body = nil)
     msg_obj = {

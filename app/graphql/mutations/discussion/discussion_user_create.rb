@@ -10,10 +10,10 @@ module Mutations
 
       def resolve(vals)
         user_id = context[:current_user]
-        # rubocop:disable LineLength
+        # rubocop:disable Layout/LineLength
         discussion_user = context[:site_community].discussions.find(vals[:discussion_id])
                                                   .follow_or_unfollow_discussion(user_id, vals[:discussion_id])
-        # rubocop:enable LineLength
+        # rubocop:enable Layout/LineLength
         return { discussion_user: discussion_user } if discussion_user.errors.blank?
 
         raise GraphQL::ExecutionError, discussion_user.errors.full_messages

@@ -44,7 +44,7 @@ RSpec.describe Mutations::Community::CommunityUpdate do
       expect(result.dig('data', 'communityUpdate', 'community', 'supportWhatsapp')).to eq(
         whatsapp.to_json,
       )
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is not admin' do

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
   describe 'create actionflows' do
     let!(:user) { create(:user_with_community) }
@@ -53,7 +53,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  }).as_json
 
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to eq('Just a flow')
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(ActionFlow.count).to eq(previous_flow_count + 1)
     end
 
@@ -79,4 +79,4 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
     end
   end
 end
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength

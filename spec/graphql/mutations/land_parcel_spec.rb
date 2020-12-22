@@ -69,7 +69,7 @@ RSpec.describe Mutations::LandParcel do
                                               }).as_json
 
       expect(result.dig('data', 'landParcel', 'landParcel', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns a updated landParcel' do
@@ -86,7 +86,7 @@ RSpec.describe Mutations::LandParcel do
 
       expect(result.dig('data', 'landParcelUpdate', 'landParcelUpdate')).not_to be_nil
       expect(result.dig('data', 'landParcelUpdate', 'landParcelUpdate')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns a created property' do
@@ -108,7 +108,7 @@ RSpec.describe Mutations::LandParcel do
                                                       }).as_json
 
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

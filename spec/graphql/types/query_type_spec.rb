@@ -216,7 +216,7 @@ RSpec.describe Types::QueryType do
                                          site_community: @current_user.community,
                                        }).as_json
       expect(result.dig('data', 'usersFeedback')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should fails if not logged in' do
@@ -516,7 +516,7 @@ RSpec.describe Types::QueryType do
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'task')).not_to be_nil
       expect(result.dig('data', 'task', 'id')).to eql other_notes.id
     end
@@ -527,7 +527,7 @@ RSpec.describe Types::QueryType do
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'myTasksCount')).not_to be_nil
       expect(result.dig('data', 'myTasksCount')).to eql 1
     end

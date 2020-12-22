@@ -36,7 +36,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       expect(
         result.dig('data', 'formPropertiesUpdate', 'formProperty', 'fieldName'),
       ).to eql 'Updated Name'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is not admin' do

@@ -30,11 +30,11 @@ RSpec.describe Mutations::Label do
                                            }).as_json
       expect(result.dig('data', 'labelCreate', 'label', 'id')).not_to be_nil
       expect(result.dig('data', 'labelCreate', 'label', 'shortDesc')).to eql 'green'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       expect(dub_result.dig('data', 'labelCreate', 'label', 'id')).to be_nil
       expect(dub_result.dig('data', 'labelCreate', 'label', 'shortDesc')).to be_nil
-      expect(dub_result.dig('errors')).not_to be_nil
+      expect(dub_result['errors']).not_to be_nil
       expect(dub_result.dig('errors', 0, 'message')).to include 'Duplicate label'
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Mutations::Label do
                                        context: {
                                          current_user: user,
                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'result', 'labelCreate', 'label', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
@@ -100,7 +100,7 @@ RSpec.describe Mutations::Label do
                                        }).as_json
 
       expect(result.dig('data', 'userLabelCreate', 'label', 0, 'userId')).to eql user.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns a created userLabel through user list' do
@@ -110,7 +110,7 @@ RSpec.describe Mutations::Label do
                                        }).as_json
 
       expect(result.dig('data', 'userLabelCreate', 'label', 0, 'userId')).to eql user2.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
   # unassign a label from a user
@@ -182,7 +182,7 @@ RSpec.describe Mutations::Label do
       # community labels should remain untouched after unassigning from a user
       expect(labels.dig('data', 'labels').length).to eql 4
       expect(result.dig('data', 'userLabelUpdate', 'label', 'userId')).to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 
@@ -209,7 +209,7 @@ RSpec.describe Mutations::Label do
                                          site_community: user.community,
                                        }).as_json
       expect(result.dig('data', 'labelUpdate', 'label', 'shortDesc')).to eql 'green'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns error when user is not admin' do
@@ -217,7 +217,7 @@ RSpec.describe Mutations::Label do
                                        context: {
                                          current_user: user,
                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
@@ -243,7 +243,7 @@ RSpec.describe Mutations::Label do
                                          site_community: user.community,
                                        }).as_json
       expect(result.dig('data', 'labelDelete', 'labelDelete')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns error when user is not admin' do
@@ -251,7 +251,7 @@ RSpec.describe Mutations::Label do
                                        context: {
                                          current_user: user,
                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
@@ -278,7 +278,7 @@ RSpec.describe Mutations::Label do
                                          site_community: user.community,
                                        }).as_json
       expect(result.dig('data', 'labelMerge', 'success')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns error when user is not admin' do
@@ -286,7 +286,7 @@ RSpec.describe Mutations::Label do
                                        context: {
                                          current_user: user,
                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end

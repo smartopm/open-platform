@@ -4,7 +4,8 @@
 class DoubleGdpSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)
-  use GraphQL::Guard.new(policy_object: GraphqlPolicy)
+  # Commenting unused policy since it is causing error with upgraded rails version : Saurabh
+  # use GraphQL::Guard.new(policy_object: GraphqlPolicy)
   use(GraphQL::Tracing::NewRelicTracing)
 
   rescue_from(User::PhoneTokenResultInvalid,

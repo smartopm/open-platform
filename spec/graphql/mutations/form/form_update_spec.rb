@@ -32,7 +32,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                    site_community: user.community,
                                                  }).as_json
       expect(result.dig('data', 'formUpdate', 'form', 'name')).to eql 'Updated Name'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'updates form status, coould be published or deleted' do
@@ -47,7 +47,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                    site_community: user.community,
                                                  }).as_json
       expect(result.dig('data', 'formUpdate', 'form', 'id')).to_not be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(user.community.forms.count).to eql 0
     end
 

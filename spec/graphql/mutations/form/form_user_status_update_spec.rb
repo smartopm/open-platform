@@ -37,7 +37,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
                                                  }).as_json
       expect(result.dig('data', 'formUserStatusUpdate', 'formUser', 'id')).to eql form_user.id
       expect(result.dig('data', 'formUserStatusUpdate', 'formUser', 'status')).to eql 'approved'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is not admin' do
@@ -65,7 +65,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
-      expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
+      expect(result.dig('errors', 0, 'message')).to eql 'Record not found'
     end
   end
 end

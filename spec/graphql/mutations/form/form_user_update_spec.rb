@@ -48,7 +48,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                                                  }).as_json
       expect(result.dig('data', 'formUserUpdate', 'formUser', 'id')).not_to be_nil
       expect(result.dig('data', 'formUserUpdate', 'formUser', 'form', 'id')).to eql form.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should err when form provided is not valid' do
@@ -71,7 +71,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                                                    site_community: current_user.community,
                                                  }).as_json
 
-      expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
+      expect(result.dig('errors', 0, 'message')).to eql 'Record not found'
     end
 
     it 'should err when user not admin and user_id is different' do

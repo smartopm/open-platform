@@ -39,7 +39,7 @@ RSpec.describe Mutations::Form::UserFormPropertiesCreate do
       expect(
         result.dig('data', 'userFormPropertiesCreate', 'userFormProperty', 'id'),
       ).to_not be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is different' do
