@@ -43,13 +43,17 @@ module Types::Queries::Invoice
     context[:site_community].invoices.find(id)
   end
 
+  # rubocop:disable Metrics/AbcSize
   def user_invoices(user_id:, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
 
     user = User.allowed_users(context[:current_user]).find(user_id)
-
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
+
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
+                                                         context[:current_user].admin?
 
     user.invoices.eager_load(:land_parcel).limit(limit).offset(offset)
   end
+  # rubocop:enable Metrics/AbcSize
 end

@@ -6,7 +6,7 @@ import { useHistory } from 'react-router'
 import InvoiceItem from './InvoiceItem'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
-import { useParamsQuery } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 import { UserInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
@@ -24,7 +24,6 @@ export default function InvoiceList({ userId, data, creatorId }) {
     UserInvoicesQuery,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'all'
     }
   )
 
@@ -50,7 +49,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
   }
 
   if (loading) return <Spinner />
-  if (error && !invoicesData) return <CenteredContent>{error.message}</CenteredContent>
+  if (error && !invoicesData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <>
       <InvoiceModal
