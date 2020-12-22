@@ -16,11 +16,11 @@ describe('Request Form Component', () => {
         const name = container.queryByTestId('name')
         fireEvent.change(name, { target: { value: 'Some User Nam' } })
         expect(name.value).toBe('Some User Nam')
-        
+
         const phoneNumber = container.queryByTestId('phone_number')
         fireEvent.change(phoneNumber, { target: { value: '837485735' } })
         expect(phoneNumber.value).toBe('837485735')
-        
+
         const nrc = container.queryByTestId('nrc')
         fireEvent.change(nrc, { target: { value: '1000/10/1' } })
         expect(nrc.value).toBe('1000/10/1')

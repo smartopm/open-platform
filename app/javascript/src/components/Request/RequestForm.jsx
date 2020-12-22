@@ -101,7 +101,7 @@ export default function RequestForm({ path }) {
               {...name}
               name="_name"
               autoCapitalize="words"
-              data-testid="name"
+              inputProps={{ 'data-testid': 'name' }}
               helperText={inputValidationMsg.name}
             />
           </div>
@@ -129,7 +129,7 @@ export default function RequestForm({ path }) {
                   error={!!inputValidationMsg.nrc}
                   {...nrc}
                   name="nrc"
-                  data-testid="nrc"
+                  inputProps={{ 'data-testid': 'nrc' }}
                   helperText={inputValidationMsg.nrc}
                 />
               </div>
