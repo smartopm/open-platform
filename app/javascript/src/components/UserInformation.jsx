@@ -107,7 +107,6 @@ export default function UserInformation({
         })
       })
       .catch(() => {
-        // alert('Make sure the user has a phone number')
         router.push('/otp_sent', {
           url: 'The user has no Phone number added',
           user: data.user.name,
@@ -180,7 +179,6 @@ export default function UserInformation({
               <ShiftButtons userId={userId} />
             )}
         </div>
-        {/* tabValue, handleChange, userType, data  */}
         <UserStyledTabs
           tabValue={tabValue}
           handleChange={handleChange}
@@ -248,9 +246,7 @@ export default function UserInformation({
           </>
         )}
         <TabPanel value={tabValue} index="Payments">
-          {/* <AddInvoice data={parcelData} userId={userId} user={authState.user} /> */}
           <InvoiceList
-            // invoices={accountData?.user.invoices}
             data={parcelData}
             userId={userId}
             creatorId={authState.user.id}
