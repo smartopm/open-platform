@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::Invoice do
   describe 'Invoice queries' do
     let!(:user) { create(:user_with_community) }
+    let!(:another_user) { create(:user_with_community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id)
@@ -79,6 +80,20 @@ RSpec.describe Types::Queries::Invoice do
                                        }).as_json
       expect(result.dig('data', 'userInvoices').length).to eql 2
       expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should retrieve list of invoices for a user' do
+      variables = {
+        userId: user.id,
+        limit: 20,
+        offset: 0,
+      }
+      result = DoubleGdpSchema.execute(user_invoice_query, variables: variables, context: {
+                                         current_user: another_user,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('data', 'userInvoices')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end
