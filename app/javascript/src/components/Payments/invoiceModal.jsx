@@ -125,7 +125,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                startAdornment: <InputAdornment position="start">k</InputAdornment>,
                 "data-testid": "amount",
                 type: "number",
                 step: '0.01'
@@ -177,6 +177,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
         invoiceData={invoiceData}
         userId={userId}
         creatorId={creatorId}
+        refetch={refetch}
       />
     </>
   )
