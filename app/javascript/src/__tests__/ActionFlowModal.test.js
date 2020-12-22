@@ -101,7 +101,7 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
           actions: ['Email', 'Notification', 'Task']
         }
       }
-    }, 
+    },
     {
       request: {
         query: ActionFields,
@@ -156,7 +156,5 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
 
     const eventTypeSelector = container.queryByTestId('select-event-type')
     expect(eventTypeSelector).toBeTruthy()
-    const actionTypeSelector = container.queryByTestId('select-action-type')
-    expect(actionTypeSelector).toBeTruthy()
   });
 });
