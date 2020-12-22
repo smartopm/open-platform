@@ -61,7 +61,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
         refetch={refetch}
       />
       <List>
-        {invoicesData?.userInvoices.lengt
+        {invoicesData?.userInvoices.length
           ? invoicesData?.userInvoices.map(invoice => (
             <InvoiceItem key={invoice.id} invoice={invoice} userId={userId} creatorId={creatorId} refetch={refetch} />
             ))
