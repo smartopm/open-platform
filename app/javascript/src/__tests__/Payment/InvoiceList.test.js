@@ -53,8 +53,7 @@ describe('Invoice Item Component', () => {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 parcelNumber: 'Plot-1343'
               },
-              payments:
-              [ 
+              payments: [
                 {
                   id: 'jncmdm',
                   amount: 1000,
@@ -65,8 +64,8 @@ describe('Invoice Item Component', () => {
                     name: 'tolulope'
                   }
                 }
-              [
-            },
+              ]
+            }
           ]
         }
       }
