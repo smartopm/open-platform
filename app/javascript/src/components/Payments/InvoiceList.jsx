@@ -6,7 +6,7 @@ import { useHistory } from 'react-router'
 import InvoiceItem from './InvoiceItem'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
-import { useParamsQuery } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 import { UserInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
@@ -23,7 +23,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
   const { loading, data: invoicesData, error, refetch } = useQuery(
     UserInvoicesQuery,
     {
-      variables: { userId, limit, offset }
+      variables: { userId, limit, offset },
     }
   )
 
@@ -49,7 +49,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
   }
 
   if (loading) return <Spinner />
-  if (error) return <CenteredContent>{error.message}</CenteredContent>
+  if (error && !invoicesData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <>
       <InvoiceModal
@@ -62,9 +62,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
       />
       <List>
         {invoicesData?.userInvoices.length
-          ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem key={invoice.id} invoice={invoice} />
-            ))
+          ? invoicesData?.userInvoices.map(invoice => invoice ? <InvoiceItem key={invoice.id} invoice={invoice} /> : null)
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
 
@@ -74,6 +72,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
+          count={invoicesData?.userInvoices.length}
         />
       </CenteredContent>
       
