@@ -9,12 +9,15 @@ describe('Comment Card Component', () => {
   const data = [
     {
       id: 'jkfer',
-      action: 'ckjer'
+      action: 'create',
+      noteEntityType: 'NoteComment',
+      user: { name: 'John' },
+      createdAt: new Date()
     }
   ]
   
 
-  it('render without error', () => {
+  it('render updates without error', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
@@ -25,4 +28,18 @@ describe('Comment Card Component', () => {
       </MockedProvider>
     )
   })
+
+  it('should render \'updates not available\' when no task updates', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <TaskUpdateList
+            data={[]}
+          />
+        </BrowserRouter>
+      </MockedProvider>
+    )
+
+    expect(container.queryByText(/no update/i)).toBeTruthy();
+  });
 })
