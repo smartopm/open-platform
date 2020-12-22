@@ -25,8 +25,23 @@ export default function RequestForm({ path }) {
   const [visitationDate, setVisitDate] = useState(null)
   const [startTime, setVisitTime] = useState(new Date())
   const [endTime, setEndTime] = useState(new Date())
+  const [inputValidationMsg, setInputValidationMsg] = useState({})
 
   function handleSubmit() {
+    const errors = {}
+    if (!name.value) {
+      errors.name = 'Name cannot be empty'
+    }
+
+    if (!nrc.value) {
+      errors.nrc = 'NRC cannot be empty'
+    }
+
+    if (!name.value || !nrc.value) {
+      setInputValidationMsg(errors)
+      return
+    }
+
     setSubmitted(!isSubmitted)
     const userData = {
       name: name.value,
@@ -80,14 +95,14 @@ export default function RequestForm({ path }) {
             <label className="bmd-label-static" htmlFor="_name">
               NAME
             </label>
-            <input
+            <TextField
               className="form-control"
-              type="text"
+              error={!!inputValidationMsg.name}
               {...name}
               name="_name"
-              required
               autoCapitalize="words"
-              data-testid="name"
+              inputProps={{ 'data-testid': 'name' }}
+              helperText={inputValidationMsg.name}
             />
           </div>
           <div className="form-group">
@@ -101,7 +116,7 @@ export default function RequestForm({ path }) {
               type="number"
               data-testid="phone_number"
             />
-           
+
           </div>
           {path.includes('entry_request') && (
             <>
@@ -109,15 +124,14 @@ export default function RequestForm({ path }) {
                 <label className="bmd-label-static" htmlFor="nrc">
                   NRC
                 </label>
-                <input
+                <TextField
                   className="form-control"
-                  type="text"
+                  error={!!inputValidationMsg.nrc}
                   {...nrc}
                   name="nrc"
-                  required
-                  data-testid="nrc"
+                  inputProps={{ 'data-testid': 'nrc' }}
+                  helperText={inputValidationMsg.nrc}
                 />
-                
               </div>
               <div className="form-group">
                 <label className="bmd-label-static" htmlFor="vehicle">
@@ -130,7 +144,6 @@ export default function RequestForm({ path }) {
                   name="vehicle"
                   data-testid="vehicle"
                 />
-                
               </div>
             </>
           )}
