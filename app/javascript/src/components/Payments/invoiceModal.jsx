@@ -47,7 +47,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
     }).then((res) => {
       setMessageAlert('Invoice added successfully')
       setIsSuccessAlert(true)
-      setInputValue({})
+      setInputValue(initialValues)
       refetch()
       if (pay) {
         handleModalClose()
@@ -81,7 +81,6 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
   function handleChange(event){
     setPay(event.target.checked)
   }
-
   return (
     <>
       <MessageAlert
@@ -155,6 +154,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
             value={inputValue.description}
             onChange={(event) => setInputValue({...inputValue, description: event.target.value})}
             multiline
+            required
           />
           <TextField
             margin="dense"
