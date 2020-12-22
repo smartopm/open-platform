@@ -62,8 +62,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
       <ListItemSecondaryAction data-testid="status">
         {
           invoice.status === ('paid' || 'cancelled') ? InvoiceStatus[invoice.status] 
-            : (<Button variant='contained' color='primary' onClick={handleOpenPayment}>make payment</Button>)
-          // isAfter(new Date(), new Date(invoice.dueDate)) ? 'Late' : InvoiceStatus[invoice.status]
+            : (<Button variant='contained' data-testid="pay-button" color='primary' onClick={handleOpenPayment}>make payment</Button>)
         }
       </ListItemSecondaryAction>
       <PaymentModal 
