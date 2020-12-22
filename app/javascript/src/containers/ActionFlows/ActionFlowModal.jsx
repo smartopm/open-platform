@@ -43,7 +43,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
   const [loadLabelsLite, {
     data: labelsLiteData
-  }] = useLazyQuery(LabelsQuery, 
+  }] = useLazyQuery(LabelsQuery,
     {
       fetchPolicy: 'cache-and-network'
     })
@@ -99,7 +99,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
   function handleInputChange(event) {
     const { name, value } = event.target
-    
+
     if(data.eventType && value === 'notification') {
       loadLabelsLite()
     }
@@ -119,7 +119,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
   function handleSelect(event) {
     const { name, value } = event.target
-    
+
     setMetaData({
       ...metaData,
       [name]: value
@@ -254,7 +254,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           />
         </div>
         <FormControl fullWidth>
-          {actionData.data && (
+          {data.eventType && actionData.data && (
           <>
             <InputLabel id="select-action">Select an action</InputLabel>
             <Select
