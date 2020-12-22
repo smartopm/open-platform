@@ -815,3 +815,19 @@ export const UsersCount = gql`
     usersCount(query: $query)
   }
 `
+
+export const UserInvoicesQuery = gql`
+  query userInvoices($userId: ID!, $limit: Int, $offset: Int) {
+    userInvoices(userId: $userId, limit: $limit, offset: $offset) {
+      id
+      amount
+      status
+      description
+      dueDate
+      landParcel {
+        id
+        parcelNumber
+      }
+    }
+  }
+`

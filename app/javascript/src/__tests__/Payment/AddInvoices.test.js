@@ -3,15 +3,15 @@ import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import Invoices from '../../components/Payments/Invoice'
+import Invoices from '../../components/Payments/AddInvoices'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the invoice component', () => {
   const data = [
-      {
-        id: 'hiuwkeh',
-        parcelNumber: 'ho2ij3'
-      }
+    {
+      id: 'hiuwkeh',
+      parcelNumber: 'ho2ij3'
+    }
   ]
 
   const userId = 'jwuifhwef'
@@ -24,21 +24,21 @@ describe('It should test the invoice component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <Invoices data={data} userId={userId} user={user} />
+          <Invoices data={data} userId={userId} user={user} refetch={jest.fn()} />
         </MockedProvider>
       </BrowserRouter>
     )
 
-    expect(container.getByTestId("invoice-button")).toBeInTheDocument()
+    expect(container.getByTestId('invoice-button')).toBeInTheDocument()
 
-    const invoiceButton = container.getByTestId("invoice-button")
+    const invoiceButton = container.getByTestId('invoice-button')
     fireEvent.click(invoiceButton)
 
-    expect(container.getByTestId("parcel-number")).toBeInTheDocument()
-    expect(container.getByTestId("amount")).toBeInTheDocument()
-    expect(container.getByTestId("status")).toBeInTheDocument()
-    expect(container.getByTestId("description")).toBeInTheDocument()
-    expect(container.getByTestId("note")).toBeInTheDocument()
+    expect(container.getByTestId('parcel-number')).toBeInTheDocument()
+    expect(container.getByTestId('amount')).toBeInTheDocument()
+    expect(container.getByTestId('status')).toBeInTheDocument()
+    expect(container.getByTestId('description')).toBeInTheDocument()
+    expect(container.getByTestId('note')).toBeInTheDocument()
 
     const parcelInput = container.queryByTestId('parcel-number')
     fireEvent.change(parcelInput, { target: { value: '1234' } })
@@ -55,5 +55,5 @@ describe('It should test the invoice component', () => {
     const noteInput = container.queryByTestId('note')
     fireEvent.change(noteInput, { target: { value: 'note' } })
     expect(noteInput.value).toBe('note')
-  });
-});
+  })
+})

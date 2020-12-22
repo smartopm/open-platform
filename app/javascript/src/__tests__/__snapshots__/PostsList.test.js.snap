@@ -10,6 +10,7 @@ Object {
       >
         <div
           class="MuiCircularProgress-root WithStyles(ForwardRef(CircularProgress))-root-1 MuiCircularProgress-colorPrimary MuiCircularProgress-indeterminate"
+          data-testid="loader"
           role="progressbar"
           style="width: 30px; height: 30px;"
         >
@@ -36,6 +37,7 @@ Object {
     >
       <div
         class="MuiCircularProgress-root WithStyles(ForwardRef(CircularProgress))-root-1 MuiCircularProgress-colorPrimary MuiCircularProgress-indeterminate"
+        data-testid="loader"
         role="progressbar"
         style="width: 30px; height: 30px;"
       >
