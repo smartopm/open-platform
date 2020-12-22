@@ -828,6 +828,16 @@ export const UserInvoicesQuery = gql`
         id
         parcelNumber
       }
+      payments {
+        id
+        amount
+        paymentType
+        paymentStatus
+        user {
+          id
+          name
+        }
+      }
     }
   }
 `

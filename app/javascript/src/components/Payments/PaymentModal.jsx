@@ -11,7 +11,7 @@ import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import { formatError } from '../../utils/helpers'
 
-export default function PaymentModal({ open, handleModalClose, invoiceData, userId, creatorId }){
+export default function PaymentModal({ open, handleModalClose, invoiceData, userId, creatorId, refetch }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState({})
@@ -32,6 +32,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
       setMessageAlert('Payment made successfully')
       setIsSuccessAlert(true)
       handleModalClose()
+      refetch()
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
@@ -122,5 +123,6 @@ PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
-  creatorId: PropTypes.string.isRequired
+  creatorId: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired
 }
