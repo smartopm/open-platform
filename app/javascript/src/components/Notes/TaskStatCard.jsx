@@ -3,7 +3,7 @@ import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
 import colors from '../../themes/nkwashi/colors'
 
-export default function AnalyticsCard({ count, title, filterTasks, isCurrent }) {
+export default function AnalyticsCard({ count, title, filter, isCurrent }) {
   const { lightGray, jungleMist } = colors
   const isNotClickable = title === 'Tasks with no due date'
   let backgroundColor = isNotClickable && lightGray
@@ -11,7 +11,7 @@ export default function AnalyticsCard({ count, title, filterTasks, isCurrent }) 
 
   return (
     <Card
-      onClick={filterTasks}
+      onClick={filter}
       style={{
         backgroundColor,
         cursor: isNotClickable ? 'not-allowed' : 'pointer'

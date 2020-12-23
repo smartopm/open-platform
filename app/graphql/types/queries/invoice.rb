@@ -60,7 +60,7 @@ module Types::Queries::Invoice
     user.invoices.eager_load(:land_parcel, :payments)
         .order(created_at: :desc).limit(limit).offset(offset)
   end
-  # rubocop:enable Metrics/AbcSize
+
 
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
@@ -73,4 +73,5 @@ module Types::Queries::Invoice
       cancelled: invoinces.by_status('cancelled').count,
     }
   end
+  # rubocop:enable Metrics/AbcSize
 end

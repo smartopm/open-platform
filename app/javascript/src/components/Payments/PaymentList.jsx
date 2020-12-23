@@ -57,15 +57,17 @@ export default function PaymentList() {
       history.push(`/payments?page=${pageNumber + limit}&status=${status}`)
     }
   }
-  if (error && !invoicesData)
+  if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  }
+    
   return (
     <Container>
       <br />
       <Grid container spacing={3}>
         <InvoiceTiles
-          taskData={invoiceStats || []}
-          filterTasks={handleFilter}
+          invoiceData={invoiceStats || []}
+          filter={handleFilter}
           currentTile={currentTile}
         />
       </Grid>

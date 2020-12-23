@@ -6,8 +6,8 @@ import { InvoiceStatus } from '../../utils/helpers'
 import AnalyticsCard from '../Notes/TaskStatCard'
 
 
-export default function InvoiceTiles({ taskData, filterTasks, currentTile }) {
-  if (taskData.loading || taskData.error) {
+export default function InvoiceTiles({ invoiceData, filter, currentTile }) {
+  if (invoiceData.loading || invoiceData.error) {
     return (
       <CenteredContent>
         <Typography
@@ -21,15 +21,14 @@ export default function InvoiceTiles({ taskData, filterTasks, currentTile }) {
       </CenteredContent>
     )
   }
-  // use extra white space
   return Object.entries(InvoiceStatus).map(([key, val]) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
       {
           key === 'in_progress' ? null : (
             <AnalyticsCard
-              filterTasks={evt => filterTasks(evt, key)}
+              filter={evt => filter(evt, key)}
               title={val}
-              count={taskData.data?.invoiceStats[key]}
+              count={invoiceData.data?.invoiceStats[key]}
               isCurrent={key === currentTile}
             />
           )
@@ -39,7 +38,7 @@ export default function InvoiceTiles({ taskData, filterTasks, currentTile }) {
 }
 
 InvoiceTiles.propTypes = {
-  taskData: PropTypes.shape({
+  invoiceData: PropTypes.shape({
     data: PropTypes.shape({
     invoiceStats: PropTypes.shape({
         late: PropTypes.number,
@@ -49,6 +48,6 @@ InvoiceTiles.propTypes = {
       })
     })
   }).isRequired,
-  filterTasks: PropTypes.func.isRequired,
+  filter: PropTypes.func.isRequired,
   currentTile: PropTypes.string.isRequired
 }

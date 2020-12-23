@@ -35,7 +35,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
   return Object.entries(tiles).map(([key, val]) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
       <TaskStatCard
-        filterTasks={evt => filterTasks(evt, key)}
+        filter={evt => filterTasks(evt, key)}
         title={val}
         count={taskData.data?.taskStats[key]}
         isCurrent={key === currentTile}
