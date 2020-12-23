@@ -14,7 +14,7 @@ import Paginate from '../Paginate'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 
 
-export default function InvoiceList({ userId, data, creatorId }) {
+export default function InvoiceList({ userId, data, user }) {
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
@@ -60,7 +60,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
         handleModalClose={handleModalClose}
         data={data}
         userId={userId}
-        creatorId={creatorId}
+        creatorId={user.id}
         refetch={refetch}
       />
       <List>
@@ -70,7 +70,7 @@ export default function InvoiceList({ userId, data, creatorId }) {
               key={invoice.id} 
               invoice={invoice} 
               userId={userId} 
-              creatorId={creatorId} 
+              creatorId={user.id} 
               refetch={refetch} 
               userType={authState.user.userType}
             />
@@ -109,5 +109,8 @@ InvoiceList.propTypes = {
     })
   ).isRequired,
   userId: PropTypes.string.isRequired,
-  creatorId: PropTypes.string.isRequired
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    userType: PropTypes.string
+  }).isRequired
 }
