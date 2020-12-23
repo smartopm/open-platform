@@ -12,7 +12,7 @@ import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 
-export default function InvoiceList({ userId, data, creatorId }) {
+export default function InvoiceList({ userId, data, user }) {
   const history = useHistory()
   const path = useParamsQuery()
   const limit = 15
@@ -57,13 +57,13 @@ export default function InvoiceList({ userId, data, creatorId }) {
         handleModalClose={handleModalClose}
         data={data}
         userId={userId}
-        creatorId={creatorId}
+        creatorId={user.id}
         refetch={refetch}
       />
       <List>
         {invoicesData?.userInvoices.length
           ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem key={invoice.id} invoice={invoice} userId={userId} creatorId={creatorId} refetch={refetch} />
+            <InvoiceItem key={invoice.id} invoice={invoice} userId={userId} creatorId={user.id} refetch={refetch} />
             ))
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
@@ -77,12 +77,13 @@ export default function InvoiceList({ userId, data, creatorId }) {
           count={invoicesData?.userInvoices.length}
         />
       </CenteredContent>
-      
-      <FloatButton
-        data-testid="invoice_btn"
-        title="Add an Invoice"
-        handleClick={handleModalOpen}
-      />
+      {user.userType === 'admin' && (
+        <FloatButton
+          data-testid="invoice_btn"
+          title="Add an Invoice"
+          handleClick={handleModalOpen}
+        />
+      )}
     </>
   )
 }
@@ -95,5 +96,8 @@ InvoiceList.propTypes = {
     })
   ).isRequired,
   userId: PropTypes.string.isRequired,
-  creatorId: PropTypes.string.isRequired
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    userType: PropTypes.string
+  }).isRequired
 }
