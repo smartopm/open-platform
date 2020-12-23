@@ -843,8 +843,8 @@ export const UserInvoicesQuery = gql`
 `
 
 export const InvoicesQuery = gql`
-  query invoices($limit: Int, $offset: Int) {
-    invoices(limit: $limit, offset: $offset) {
+  query invoices($limit: Int, $offset: Int, $status: String) {
+    invoices(limit: $limit, offset: $offset, status: $status) {
       id
       amount
       status

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-    Container,
+  Container,
   Grid,
   List,
   ListItem,
@@ -12,7 +12,7 @@ import { useQuery } from 'react-apollo'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
-import Loading from '../Loading'
+import { Spinner } from '../Loading'
 import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
@@ -21,42 +21,58 @@ import InvoiceTiles from './InvoiceTiles'
 export default function PaymentList() {
   const history = useHistory()
   const path = useParamsQuery()
-  const limit = 10
+  const limit = 3
   const page = path.get('page')
-  const [offset, setOffset] = useState(Number(page) || 0)
-  const { loading, data: invoicesData, error } = useQuery(
+  const status = path.get('status')
+  const pageNumber = Number(page)
+  const [currentTile, setCurrentTile] = useState(status || '')
+  const { loading, data: invoicesData, error, refetch } = useQuery(
     InvoicesQuery,
     {
-      variables: { limit, offset },
+      variables: { limit, offset: pageNumber, status },
       errorPolicy: 'all'
     }
   )
-  const invoicesStats = useQuery(InvoiceStatsQuery)
+  const invoiceStats = useQuery(InvoiceStatsQuery, {
+    fetchPolicy: 'cache-first'
+  })
 
-  function handleFilter(){
-
+  function handleFilter(_evt, key) {
+    setCurrentTile(key)
+    const state = key === 'inProgress' ? 'in_progress' : key
+    history.push(`/payments?page=0&status=${state}`)
   }
+
+  useEffect(() => {
+    refetch({ status, offset: pageNumber })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, page])
 
   function paginate(action) {
     if (action === 'prev') {
-      if (offset < limit) return
-      setOffset(offset - limit)
-      history.push(`/payments?page=${offset - limit}`)
+      if (pageNumber < limit) return
+      history.push(`/payments?page=${pageNumber - limit}&status=${status}`)
     } else if (action === 'next') {
-      setOffset(offset + limit)
-      history.push(`/payments?page=${offset + limit}`)
+      if (invoicesData?.invoices.length < limit) return
+      history.push(`/payments?page=${pageNumber + limit}&status=${status}`)
     }
   }
-  if (loading) return <Loading />
-  if (error && !invoicesData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-    return (
-      <Container>
-        <br />
-        <Grid container spacing={3}>
-          <InvoiceTiles taskData={invoicesStats || []} filterTasks={handleFilter} currentTile="late" />
-        </Grid>
-        <List>
-          {invoicesData?.invoices.length ? (
+  if (error && !invoicesData)
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  return (
+    <Container>
+      <br />
+      <Grid container spacing={3}>
+        <InvoiceTiles
+          taskData={invoiceStats || []}
+          filterTasks={handleFilter}
+          currentTile={currentTile}
+        />
+      </Grid>
+      <List>
+        {
+        // eslint-disable-next-line no-nested-ternary
+        loading ? <Spinner /> : invoicesData?.invoices.length ? (
           invoicesData?.invoices.map(invoice => (
             <ListItem key={invoice.id}>
               <ListItemText
@@ -65,11 +81,7 @@ export default function PaymentList() {
                 secondary={(
                   <div>
                     <Grid container spacing={10} style={{ color: '#808080' }}>
-                      <Grid
-                        xs
-                        item
-                        data-testid="amount"
-                      >
+                      <Grid xs item data-testid="amount">
                         {`Invoice amount: k${invoice.amount}`}
                       </Grid>
                       <Grid xs item data-testid="landparcel">
@@ -77,11 +89,7 @@ export default function PaymentList() {
                         {' '}
                         {invoice.landParcel?.parcelNumber}
                       </Grid>
-                      <Grid
-                        xs
-                        item
-                        data-testid="duedate"
-                      >
+                      <Grid xs item data-testid="duedate">
                         {`Due at: ${dateToString(invoice.dueDate)}`}
                       </Grid>
                     </Grid>
@@ -102,18 +110,19 @@ export default function PaymentList() {
           ))
         ) : (
           <CenteredContent>No Invoices Yet</CenteredContent>
-        )}
-        </List>
+        )
+        }
+      </List>
 
-        <CenteredContent>
-          <Paginate
-            offSet={offset}
-            limit={limit}
-            active={offset >= 1}
-            handlePageChange={paginate}
-            count={invoicesData?.invoices.length}
-          />
-        </CenteredContent>
-      </Container>
+      <CenteredContent>
+        <Paginate
+          offSet={pageNumber}
+          limit={limit}
+          active={pageNumber >= 1}
+          handlePageChange={paginate}
+          count={invoicesData?.invoices.length}
+        />
+      </CenteredContent>
+    </Container>
   )
 }
