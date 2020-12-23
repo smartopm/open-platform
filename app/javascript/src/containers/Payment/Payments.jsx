@@ -5,7 +5,7 @@ import PaymentList from '../../components/Payments/PaymentList'
 export default function Payments(){
     return (
       <>
-        <Nav navName="Payments" backTo="/" />
+        <Nav navName="Payments" backTo="/" menuButton="back" />
         <PaymentList />
       </>
     )
