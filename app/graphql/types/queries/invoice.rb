@@ -61,7 +61,6 @@ module Types::Queries::Invoice
         .order(created_at: :desc).limit(limit).offset(offset)
   end
 
-
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
