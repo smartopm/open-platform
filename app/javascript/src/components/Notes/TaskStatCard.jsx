@@ -1,6 +1,6 @@
-/* eslint-disable */
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import colors from '../../themes/nkwashi/colors'
 
 export default function AnalyticsCard({ count, title, filter, isCurrent }) {
@@ -32,4 +32,11 @@ export default function AnalyticsCard({ count, title, filter, isCurrent }) {
       </CardContent>
     </Card>
   )
+}
+
+AnalyticsCard.propTypes = {
+  count: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  filter: PropTypes.func.isRequired,
+  isCurrent: PropTypes.bool.isRequired,
 }
