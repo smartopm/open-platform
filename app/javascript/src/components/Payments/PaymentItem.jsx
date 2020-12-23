@@ -1,6 +1,7 @@
 import React from 'react'
 import { Typography, Grid } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 export default function PaymentItem({ paymentData }) {
   return (
@@ -9,7 +10,7 @@ export default function PaymentItem({ paymentData }) {
         <Typography variant="subtitle1" data-testid="name">
           Payment made by: 
           {' '}
-          {paymentData.user.name}
+          <Link to={`/user/${paymentData.user.id}?tab=Payments`}>{paymentData.user.name}</Link>
         </Typography>
       </Grid>
       <Grid item>
@@ -43,6 +44,7 @@ PaymentItem.propTypes = {
     amount: PropTypes.number,
     paymentStatus: PropTypes.string,
     user: PropTypes.shape({
+      id: PropTypes.string,
       name: PropTypes.string
     })
   }).isRequired
