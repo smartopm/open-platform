@@ -281,14 +281,14 @@ export default function UserInformation({
   )
 }
 
-const User = {
+const User = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  userType: PropTypes.string.isRequired,
-  state: PropTypes.string.isRequired,
-  accounts: PropTypes.array,
-  formUsers: PropTypes.array
-}
-
+  name: PropTypes.string,
+  userType: PropTypes.string,
+  state: PropTypes.string,
+  accounts: PropTypes.arrayOf(PropTypes.object),
+  formUsers: PropTypes.arrayOf(PropTypes.object)
+})
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
   onLogEntry: PropTypes.func.isRequired,
