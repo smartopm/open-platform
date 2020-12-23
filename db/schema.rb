@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.string "event_condition_query"
     t.string "status", default: "not_deleted"
     t.index ["community_id"], name: "index_action_flows_on_community_id"
+    t.index ["title"], name: "index_action_flows_on_title", unique: true
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -159,9 +160,11 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
+    t.uuid "note_id"
     t.string "status"
     t.uuid "community_id"
     t.index ["community_id"], name: "index_comments_on_community_id"
+    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -190,6 +193,7 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["contact_type", "user_id"], name: "index_contact_infos_on_contact_type_and_user_id", unique: true
     t.index ["user_id"], name: "index_contact_infos_on_user_id"
   end
 
@@ -296,6 +300,7 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.integer "status", default: 0
     t.text "description"
     t.index ["community_id"], name: "index_forms_on_community_id"
+    t.index ["name"], name: "index_forms_on_name", unique: true
   end
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -309,7 +314,9 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
+    t.uuid "created_by_id"
     t.index ["community_id"], name: "index_invoices_on_community_id"
+    t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
@@ -455,6 +462,7 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "community_id"
     t.index ["community_id"], name: "index_post_tags_on_community_id"
+    t.index ["name"], name: "index_post_tags_on_name", unique: true
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -15,6 +15,7 @@ module Mutations
       field :invoice, Types::InvoiceType, null: true
 
       def resolve(vals)
+        vals = vals.merge(created_by: context[:current_user])
         invoice = context[:site_community].invoices.create(vals)
         return { invoice: invoice } if invoice.persisted?
 
