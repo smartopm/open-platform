@@ -9,13 +9,13 @@ import { Spinner } from '../../components/Loading'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
-describe.skip('Invoice Item Component', () => {
+describe('Invoice Item Component', () => {
   it('should render the invoice item component', async () => {
     const userId = "162f7517-7cc8-42f9-b2d0-a83a16d59569"
     const invoiceMock = {
       request: {
         query: UserInvoicesQuery,
-        variables: { userId, limit: 20, offset: 0 }
+        variables: { userId, limit: 15, offset: 0 }
       },
       result: {
         data: {
@@ -78,8 +78,8 @@ describe.skip('Invoice Item Component', () => {
           container.queryByText('Final Payment')
         ).toBeInTheDocument()
         expect(
-          container.queryAllByTestId('pay-button')
-        ).toBeInTheDocument()
+          container.queryAllByTestId('pay-button')[0].textContent
+        ).toContain('make payment')
       },
       { timeout: 500 }
     )

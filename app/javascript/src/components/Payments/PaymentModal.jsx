@@ -50,6 +50,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
 
   useEffect(() => {
     setInputValue({amount: invoiceData?.amount})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   return(

@@ -2,9 +2,9 @@ import React from 'react'
 import { Typography, Grid } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function PaymentList({ paymentData }) {
+export default function PaymentItem({ paymentData }) {
   return (
-    <Grid container spacing={10} key={paymentData.id}>
+    <Grid container spacing={10} key={paymentData.id} style={{ marginLeft: 20 }}>
       <Grid item>
         <Typography variant="subtitle1" data-testid="name">
           Payment made by: 
@@ -36,7 +36,7 @@ export default function PaymentList({ paymentData }) {
   )
 }
 
-PaymentList.propTypes = {
+PaymentItem.propTypes = {
   paymentData: PropTypes.shape({
     paymentType: PropTypes.string,
     id: PropTypes.string,
