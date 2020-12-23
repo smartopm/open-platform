@@ -10,6 +10,7 @@ module Types::Queries::Invoice
       description 'Get all invoices'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :status, String, required: false
     end
 
     # Get invoice by id
@@ -27,10 +28,11 @@ module Types::Queries::Invoice
     end
   end
 
-  def invoices(offset: 0, limit: 100)
+  def invoices(status: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].invoices
+                            .by_status(status)
                             .eager_load(:land_parcel, :user, :payments)
                             .order(due_date: :desc)
                             .limit(limit)
