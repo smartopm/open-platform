@@ -18,13 +18,16 @@ module Types::Queries::Invoice
       description 'Get invoice by its id'
       argument :id, GraphQL::Types::ID, required: true
     end
-
     # Get invoice by for a user
     field :user_invoices, [Types::InvoiceType], null: true do
       description 'Get invoice for a user'
       argument :user_id, GraphQL::Types::ID, required: true
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+    end
+
+    field :invoice_stats, Types::InvoiceStatType, null: false do
+      description 'return stats based on status of invoices'
     end
   end
 
@@ -58,4 +61,16 @@ module Types::Queries::Invoice
         .order(created_at: :desc).limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/AbcSize
+
+  def invoice_stats
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    invoinces = context[:site_community].invoices
+    {
+      late: invoinces.by_status('late').count,
+      paid: invoinces.by_status('paid').count,
+      in_progress: invoinces.by_status('in_progress').count,
+      cancelled: invoinces.by_status('cancelled').count,
+    }
+  end
 end
