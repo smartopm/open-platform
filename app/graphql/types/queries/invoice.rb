@@ -28,10 +28,10 @@ module Types::Queries::Invoice
   end
 
   def invoices(offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user]&.admin?
 
     context[:site_community].invoices
-                            .eager_load(:land_parcel, :user)
+                            .eager_load(:land_parcel, :user, :payments)
                             .order(due_date: :desc)
                             .limit(limit)
                             .offset(offset)

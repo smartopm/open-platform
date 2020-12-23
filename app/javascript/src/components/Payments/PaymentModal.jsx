@@ -114,7 +114,7 @@ PaymentModal.defaultProps = {
 }
 PaymentModal.propTypes = {
   invoiceData: PropTypes.shape({
-    amount: PropTypes.string,
+    amount: PropTypes.number,
     id: PropTypes.string,
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string

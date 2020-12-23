@@ -34,6 +34,14 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
   }
   return (
     <ListItem className={classes.invoiceList}>
+      <PaymentModal 
+        open={open} 
+        handleModalClose={handleModalClose}
+        invoiceData={invoice}
+        userId={userId}
+        creatorId={creatorId}
+        refetch={refetch}
+      />
       <ListItemText
         disableTypography
         primary={invoice.description}
@@ -48,10 +56,10 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
               </Grid>
               <Grid xs item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
             </Grid>
-            {invoice.payments?.map((pay) => (
-              <div key={pay.id}>
+            {invoice.payments?.map((payment) => (
+              <div key={payment.id}>
                 <i>
-                  <PaymentItem paymentData={pay} />
+                  <PaymentItem paymentData={payment} />
                 </i>
               </div>
             ))}
@@ -62,17 +70,9 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
       <ListItemSecondaryAction data-testid="status">
         {
           invoice.status === ('paid' || 'cancelled') ? InvoiceStatus[invoice.status] 
-            : (<Button variant='contained' data-testid="pay-button" color='primary' onClick={handleOpenPayment}>make payment</Button>)
+            : (<Button variant='text' data-testid="pay-button" color='primary' onClick={handleOpenPayment}>make payment</Button>)
         }
       </ListItemSecondaryAction>
-      <PaymentModal 
-        open={open} 
-        handleModalClose={handleModalClose}
-        invoiceData={invoice}
-        userId={userId}
-        creatorId={creatorId}
-        refetch={refetch}
-      />
     </ListItem>
   )
 }
