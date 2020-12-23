@@ -21,7 +21,7 @@ import InvoiceTiles from './InvoiceTiles'
 export default function PaymentList() {
   const history = useHistory()
   const path = useParamsQuery()
-  const limit = 3
+  const limit = 50
   const page = path.get('page')
   const status = path.get('status')
   const pageNumber = Number(page)
