@@ -870,3 +870,14 @@ export const InvoicesQuery = gql`
     }
   }
 `
+
+export const InvoiceStatsQuery = gql`
+  query stats {
+    invoiceStats {
+      late
+      paid
+      inProgress
+      cancelled
+    }
+  }
+`

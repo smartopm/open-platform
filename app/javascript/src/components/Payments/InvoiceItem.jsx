@@ -10,13 +10,7 @@ import PropTypes from 'prop-types'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 import PaymentModal from './PaymentModal'
-
-export const InvoiceStatus = {
-  in_progress: 'In-Progress',
-  paid: 'Paid',
-  late: 'Late',
-  cancelled: 'Cancelled'
-}
+import { InvoiceStatus } from '../../utils/helpers'
 
 export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
   const classes = useStyles();

@@ -9,14 +9,14 @@ import {
 } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import { useQuery } from 'react-apollo'
-import { InvoiceStatus } from './InvoiceItem'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
-import { InvoicesQuery } from '../../graphql/queries'
+import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
 import Loading from '../Loading'
-import { formatError, useParamsQuery } from '../../utils/helpers'
+import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
+import InvoiceTiles from './InvoiceTiles'
 
 export default function PaymentList() {
   const history = useHistory()
@@ -31,6 +31,11 @@ export default function PaymentList() {
       errorPolicy: 'all'
     }
   )
+  const invoicesStats = useQuery(InvoiceStatsQuery)
+
+  function handleFilter(){
+
+  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -46,6 +51,10 @@ export default function PaymentList() {
   if (error && !invoicesData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
     return (
       <Container>
+        <br />
+        <Grid container spacing={3}>
+          <InvoiceTiles taskData={invoicesStats || []} filterTasks={handleFilter} currentTile="late" />
+        </Grid>
         <List>
           {invoicesData?.invoices.length ? (
           invoicesData?.invoices.map(invoice => (

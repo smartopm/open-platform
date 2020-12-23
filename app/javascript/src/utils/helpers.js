@@ -270,3 +270,12 @@ export function sortPropertyOrder(field1, field2){
 export function useParamsQuery() {
   return new URLSearchParams(useLocation().search)
 }
+
+
+export const InvoiceStatus = {
+  inProgress: 'In-Progress',
+  paid: 'Paid',
+  late: 'Late',
+  cancelled: 'Cancelled',
+  in_progress: 'In-Progress',
+}
