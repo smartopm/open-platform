@@ -14,14 +14,16 @@ import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { InvoicesQuery } from '../../graphql/queries'
 import Loading from '../Loading'
-import { formatError } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 
 export default function PaymentList() {
   const history = useHistory()
+  const path = useParamsQuery()
   const limit = 10
-  const [offset, setOffset] = useState(0)
+  const page = path.get('page')
+  const [offset, setOffset] = useState(Number(page) || 0)
   const { loading, data: invoicesData, error } = useQuery(
     InvoicesQuery,
     {
