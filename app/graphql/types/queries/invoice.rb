@@ -64,12 +64,12 @@ module Types::Queries::Invoice
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    invoinces = context[:site_community].invoices
+    invoices = context[:site_community].invoices
     {
-      late: invoinces.by_status('late').count,
-      paid: invoinces.by_status('paid').count,
-      in_progress: invoinces.by_status('in_progress').count,
-      cancelled: invoinces.by_status('cancelled').count,
+      late: invoices.late.count,
+      paid: invoices.paid.count,
+      in_progress: invoices.in_progress.count,
+      cancelled: invoices.cancelled.count,
     }
   end
   # rubocop:enable Metrics/AbcSize
