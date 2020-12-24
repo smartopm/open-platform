@@ -177,5 +177,5 @@ export const formStatus = {
 }
 
 export const currencies = {
-  zambian_kwacha: 'K'
+  zambian_kwacha: 'k'
 }

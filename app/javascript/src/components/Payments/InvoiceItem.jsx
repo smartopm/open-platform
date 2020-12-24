@@ -12,7 +12,7 @@ import PaymentItem from './PaymentItem'
 import PaymentModal from './PaymentModal'
 import { InvoiceStatus } from '../../utils/helpers'
 
-export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType }) {
+export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType, currency }) {
   const classes = useStyles();
   const history = useHistory()
   const [open, setOpen] = useState(false)
@@ -27,8 +27,8 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
   }
   return (
     <ListItem className={classes.invoiceList}>
-      <PaymentModal 
-        open={open} 
+      <PaymentModal
+        open={open}
         handleModalClose={handleModalClose}
         invoiceData={invoice}
         userId={userId}
@@ -41,7 +41,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         secondary={(
           <div>
             <Grid container spacing={10} style={{ color: '#808080' }}>
-              <Grid xs item data-testid="amount">{`Invoice amount: k${invoice.amount}`}</Grid>
+              <Grid xs item data-testid="amount">{`Invoice amount: ${currency}${invoice.amount}`}</Grid>
               <Grid xs item data-testid="landparcel">
                 Parcel number:
                 {' '}
@@ -52,7 +52,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
             {invoice.payments?.map((payment) => (
               <div key={payment.id}>
                 <i>
-                  <PaymentItem paymentData={payment} />
+                  <PaymentItem paymentData={payment} currency={currency} />
                 </i>
               </div>
             ))}
@@ -62,13 +62,13 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
       {/* In the future we can put an action button here */}
       <ListItemSecondaryAction data-testid="status">
         {
-          userType === 'admin' && invoice.status === ('paid' || 'cancelled') 
+          userType === 'admin' && invoice.status === ('paid' || 'cancelled')
            ? InvoiceStatus[invoice.status]
            :  userType === 'admin' && (
-             <Button 
-               variant='text' 
-               data-testid="pay-button" 
-               color='primary' 
+             <Button
+               variant='text'
+               data-testid="pay-button"
+               color='primary'
                onClick={handleOpenPayment}
              >
                make payment
@@ -76,7 +76,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
             )
         }
         {userType !== 'admin' && InvoiceStatus[invoice.status]}
-        
+
       </ListItemSecondaryAction>
     </ListItem>
   )
@@ -95,7 +95,8 @@ InvoiceItem.propTypes = {
   userId: PropTypes.string.isRequired,
   creatorId: PropTypes.string.isRequired,
   userType: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired 
+  refetch: PropTypes.func.isRequired,
+  currency: PropTypes.string.isRequired
 }
 
 const useStyles = makeStyles(() => ({

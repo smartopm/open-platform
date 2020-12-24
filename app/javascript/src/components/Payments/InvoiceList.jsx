@@ -12,7 +12,7 @@ import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-
+import { currencies } from '../../utils/constants'
 
 export default function InvoiceList({ userId, data, user }) {
   const history = useHistory()
@@ -29,6 +29,7 @@ export default function InvoiceList({ userId, data, user }) {
       variables: { userId, limit, offset },
     }
   )
+  const currency = currencies[user.community.currency]
 
   function handleModalOpen() {
     history.push(`/user/${userId}?tab=Payments&invoices=new`)
@@ -62,17 +63,19 @@ export default function InvoiceList({ userId, data, user }) {
         userId={userId}
         creatorId={user.id}
         refetch={refetch}
+        currency={currency}
       />
       <List>
         {invoicesData?.userInvoices.length
           ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem 
-              key={invoice.id} 
-              invoice={invoice} 
-              userId={userId} 
-              creatorId={user.id} 
-              refetch={refetch} 
+            <InvoiceItem
+              key={invoice.id}
+              invoice={invoice}
+              userId={userId}
+              creatorId={user.id}
+              refetch={refetch}
               userType={authState.user?.userType}
+              currency={currency}
             />
             ))
           : <CenteredContent>No Invoices Yet</CenteredContent>}
@@ -87,7 +90,7 @@ export default function InvoiceList({ userId, data, user }) {
           count={invoicesData?.userInvoices.length}
         />
       </CenteredContent>
-      
+
       {
           authState.user?.userType === 'admin' && (
             <FloatButton
@@ -111,6 +114,9 @@ InvoiceList.propTypes = {
   userId: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
-    userType: PropTypes.string
+    userType: PropTypes.string,
+    community: PropTypes.shape({
+      currency: PropTypes.string
+    }).isRequired
   }).isRequired
 }
