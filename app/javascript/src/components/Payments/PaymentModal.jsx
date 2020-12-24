@@ -11,7 +11,7 @@ import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import { formatError } from '../../utils/helpers'
 
-export default function PaymentModal({ open, handleModalClose, invoiceData, userId, creatorId, refetch }){
+export default function PaymentModal({ open, handleModalClose, invoiceData, userId, creatorId, refetch, currency }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState({})
@@ -22,7 +22,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
   function handleSubmit(event) {
     event.preventDefault()
     createPayment({
-      variables: { 
+      variables: {
         userId: creatorId,
         invoiceId: invoiceData.id,
         amount: parseFloat(inputValue.amount),
@@ -62,7 +62,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
         handleClose={handleMessageAlertClose}
       />
       <CustomizedDialogs
-        open={open} 
+        open={open}
         handleModal={handleModalClose}
         dialogHeader='Make a Payment'
         handleBatchFilter={handleSubmit}
@@ -78,7 +78,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
                 "data-testid": "amount",
                 step: 0.01
               }}
@@ -104,7 +104,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
 
 const useStyles = makeStyles({
   invoiceForm: {
-    display: 'flex', 
+    display: 'flex',
     flexDirection: 'column',
     width: '400px'
   }
@@ -125,5 +125,6 @@ PaymentModal.propTypes = {
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   creatorId: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  currency: PropTypes.string.isRequired
 }

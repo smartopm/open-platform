@@ -38,6 +38,7 @@ const QUERY = gql`
         supportEmail
         supportWhatsapp
         imageUrl
+        currency
       }
     }
   }

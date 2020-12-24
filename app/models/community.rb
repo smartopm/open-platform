@@ -22,6 +22,10 @@ class Community < ApplicationRecord
   has_many :post_tags, dependent: :destroy
   has_many :invoices, dependent: :destroy
 
+  VALID_CURRENCIES = %w[zambian_kwacha].freeze
+
+  validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
+
   DOMAINS_COMMUNITY_MAP = {
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
     'Femoza': ['doublegdp.com', 'femoza.com'],

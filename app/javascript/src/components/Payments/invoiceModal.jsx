@@ -21,7 +21,7 @@ const initialValues = {
   amount: '',
   note: ''
 }
-export default function InvoiceModal({ open, handleModalClose, data, userId, creatorId, refetch }) {
+export default function InvoiceModal({ open, handleModalClose, data, userId, creatorId, refetch, currency }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -35,7 +35,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
   const handleSubmit = event => {
     event.preventDefault()
     createInvoice({
-      variables: { 
+      variables: {
         landParcelId: inputValue.parcelId,
         description: inputValue.description,
         note: inputValue.note,
@@ -89,8 +89,8 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <CustomizedDialogs 
-        open={open} 
+      <CustomizedDialogs
+        open={open}
         handleModal={handleModalClose}
         dialogHeader='Add a New Invoice'
         handleBatchFilter={handleSubmit}
@@ -111,7 +111,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
               <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
               ))}
           </TextField>
-          <DatePickerDialog 
+          <DatePickerDialog
             selectedDate={inputValue.selectedDate}
             handleDateChange={(date) => setInputValue({...inputValue, selectedDate: date})}
             label='Due Date'
@@ -124,7 +124,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
-                startAdornment: <InputAdornment position="start">k</InputAdornment>,
+            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
                 "data-testid": "amount",
                 type: "number",
                 step: '0.01'
@@ -170,13 +170,14 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
           />
         </div>
       </CustomizedDialogs>
-      <PaymentModal 
-        open={openPayment} 
-        handleModalClose={handlePaymentModalClose} 
+      <PaymentModal
+        open={openPayment}
+        handleModalClose={handlePaymentModalClose}
         invoiceData={invoiceData}
         userId={userId}
         creatorId={creatorId}
         refetch={refetch}
+        currency={currency}
       />
     </>
   )
@@ -184,7 +185,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
 
 const useStyles = makeStyles({
   invoiceForm: {
-    display: 'flex', 
+    display: 'flex',
     flexDirection: 'column',
     width: '400px'
   }
@@ -200,4 +201,5 @@ InvoiceModal.propTypes = {
   handleModalClose: PropTypes.func.isRequired,
   creatorId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
+  currency: PropTypes.string.isRequired,
 }

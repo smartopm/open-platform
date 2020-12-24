@@ -37,7 +37,10 @@ describe("User information component loads",()=>{
     }
     const authstate = {
         user:{
-            userType : "admin"
+            userType : "admin",
+            community: {
+              currency: 'zambian_kwacha'
+            }
         }
     }
     it('should render user name on contacts tab', async ()=>{
@@ -112,7 +115,7 @@ describe("User information component loads",()=>{
           expect(getByText('Message Support')).toBeInTheDocument() },
           { timeout: 1000 }
         )
-        
+
     })
 
 })

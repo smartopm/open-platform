@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
+import { Button, TextField, MenuItem , Container } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import PropTypes from 'prop-types'
-import { Container } from '@material-ui/core'
+
 import { useMutation, useApolloClient } from 'react-apollo'
 import { CommunityUpdateMutation } from '../../graphql/mutations/community'
 import DynamicContactFields from './DynamicContactFields'
@@ -14,6 +14,7 @@ import MessageAlert from '../MessageAlert'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import ImageCropper from './ImageCropper'
 import ImageAuth from '../ImageAuth'
+import { currencies } from '../../utils/constants'
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -38,10 +39,9 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [blob, setBlob] = useState(null)
   const [inputImg, setInputImg] = useState('')
   const [fileName, setFileName] = useState('')
+  const [currency, setCurrency] = useState('')
   const [showCropper, setShowCropper] = useState(false)
-  const {
-    onChange, signedBlobId
-  } = useFileUpload({
+  const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
 
@@ -128,9 +128,13 @@ export default function CommunitySettings({ data, token, refetch }) {
     // convert image file to base64 string
     const reader = new FileReader()
 
-    reader.addEventListener('load', () => {
-      setInputImg(reader.result)
-    }, false)
+    reader.addEventListener(
+      'load',
+      () => {
+        setInputImg(reader.result)
+      },
+      false
+    )
 
     if (file) {
       reader.readAsDataURL(file)
@@ -149,7 +153,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   function uploadLogo(img) {
     onChange(img)
     setShowCropper(false)
-    setMessage({isError: false, detail: `Logo uploaded successfully`})
+    setMessage({ isError: false, detail: `Logo uploaded successfully` })
     setAlertOpen(true)
   }
 
@@ -165,11 +169,15 @@ export default function CommunitySettings({ data, token, refetch }) {
         supportNumber: numberOptions,
         supportEmail: emailOptions,
         supportWhatsapp: whatsappOptions,
-        imageBlobId: signedBlobId
+        imageBlobId: signedBlobId,
+        currency
       }
     })
       .then(() => {
-        setMessage({isError: false, detail: `Successfully updated the community`})
+        setMessage({
+          isError: false,
+          detail: `Successfully updated the community`
+        })
         setAlertOpen(true)
         setCallMutation(false)
         refetch()
@@ -182,9 +190,10 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
   useEffect(() => {
     setEmailOptions(data.supportEmail || [emails])
-    setNumberOptions(data.supportNumber || [numbers] )
+    setNumberOptions(data.supportNumber || [numbers])
     setWhatsappOptions(data.supportWhatsapp || [whatsapps])
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setCurrency(data.currency)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   return (
@@ -204,15 +213,17 @@ export default function CommunitySettings({ data, token, refetch }) {
           imageLink={data.imageUrl}
           token={token}
           className="img-responsive img-thumbnail"
-          style={{height: '70px', width: '70px'}}
+          style={{ height: '70px', width: '70px' }}
         />
         <div className={classes.upload}>
-          <Typography variant='caption' style={{fontWeight: 'bold', marginLeft: '10px'}}>Upload new logo</Typography>
+          <Typography
+            variant="caption"
+            style={{ fontWeight: 'bold', marginLeft: '10px' }}
+          >
+            Upload new logo
+          </Typography>
           <div>
-            <Button
-              variant="contained"
-              component="label"
-            >
+            <Button variant="contained" component="label">
               Choose File
               <input
                 type="file"
@@ -224,10 +235,24 @@ export default function CommunitySettings({ data, token, refetch }) {
           </div>
         </div>
       </div>
-      <div style={{position: 'relative'}}>
-        {showCropper && inputImg && <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />}
+      <div style={{ position: 'relative' }}>
+        {showCropper && inputImg && (
+          <ImageCropper
+            getBlob={getBlob}
+            inputImg={inputImg}
+            fileName={fileName}
+          />
+        )}
       </div>
-      {showCropper && blob && <Button variant='contained' style={{margin: '10px'}} onClick={() => uploadLogo(blob)}>Upload</Button>}
+      {showCropper && blob && (
+        <Button
+          variant="contained"
+          style={{ margin: '10px' }}
+          onClick={() => uploadLogo(blob)}
+        >
+          Upload
+        </Button>
+      )}
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <Typography variant="h6">Support Contact Information</Typography>
         <Typography variant="caption">
@@ -293,23 +318,40 @@ export default function CommunitySettings({ data, token, refetch }) {
             </Typography>
           </div>
         </div>
-        <div className={classes.button}>
-          <Button
-            disableElevation
-            variant="contained"
-            color="primary"
-            disabled={mutationLoading}
-            onClick={updateCommunity}
-            data-testid="update_community"
-          >
-            UPDATE COMMUNITY SETTINGS
-          </Button>
-        </div>
+      </div>
+      <div style={{ marginTop: '40px' }}>
+        <Typography variant="h6">Community Transactions</Typography>
+        <TextField
+          style={{ width: '200px' }}
+          select
+          label="Set Currency"
+          value={currency}
+          onChange={event => setCurrency(event.target.value)}
+          name="currency"
+        >
+          {Object.entries(currencies).map(([key, val]) => (
+            <MenuItem key={key} value={key}>
+              {val}
+            </MenuItem>
+          ))}
+        </TextField>
+      </div>
+
+      <div className={classes.button}>
+        <Button
+          disableElevation
+          variant="contained"
+          color="primary"
+          disabled={mutationLoading}
+          onClick={updateCommunity}
+          data-testid="update_community"
+        >
+          UPDATE COMMUNITY SETTINGS
+        </Button>
       </div>
     </Container>
   )
 }
-
 
 CommunitySettings.propTypes = {
   data: PropTypes.shape({
@@ -317,7 +359,8 @@ CommunitySettings.propTypes = {
     supportNumber: PropTypes.arrayOf(PropTypes.object),
     supportEmail: PropTypes.arrayOf(PropTypes.object),
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
-    imageUrl: PropTypes.string
+    imageUrl: PropTypes.string,
+    currency: PropTypes.string
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired

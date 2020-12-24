@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import { useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
@@ -17,8 +18,9 @@ import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 import InvoiceTiles from './InvoiceTiles'
+import { currencies } from '../../utils/constants'
 
-export default function PaymentList() {
+export default function PaymentList({ authState }) {
   const history = useHistory()
   const path = useParamsQuery()
   const limit = 50
@@ -36,6 +38,7 @@ export default function PaymentList() {
   const invoiceStats = useQuery(InvoiceStatsQuery, {
     fetchPolicy: 'cache-first'
   })
+  const currency = currencies[authState.user?.community.currency]
 
   function handleFilter(_evt, key) {
     setCurrentTile(key)
@@ -60,7 +63,7 @@ export default function PaymentList() {
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>
   }
-    
+
   return (
     <Container>
       <br />
@@ -84,10 +87,10 @@ export default function PaymentList() {
                   <div>
                     <Grid container spacing={10} style={{ color: '#808080' }}>
                       <Grid xs item data-testid="amount">
-                        {`Invoice amount: k${invoice.amount}`}
+                        {`Invoice amount: ${currency}${invoice.amount}`}
                       </Grid>
                       <Grid xs item data-testid="landparcel">
-                        Parcel number: 
+                        Parcel number:
                         {' '}
                         {invoice.landParcel?.parcelNumber}
                       </Grid>
@@ -127,4 +130,9 @@ export default function PaymentList() {
       </CenteredContent>
     </Container>
   )
+}
+
+PaymentList.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  authState: PropTypes.object.isRequired
 }

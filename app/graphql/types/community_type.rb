@@ -12,6 +12,7 @@ module Types
     field :support_email, GraphQL::Types::JSON, null: true
     field :support_whatsapp, GraphQL::Types::JSON, null: true
     field :image_url, String, null: true
+    field :currency, String, null: true
 
     def image_url
       return nil unless object.image.attached?
