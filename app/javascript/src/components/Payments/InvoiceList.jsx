@@ -72,7 +72,7 @@ export default function InvoiceList({ userId, data, user }) {
               userId={userId} 
               creatorId={user.id} 
               refetch={refetch} 
-              userType={authState.user.userType}
+              userType={authState.user?.userType}
             />
             ))
           : <CenteredContent>No Invoices Yet</CenteredContent>}
@@ -89,7 +89,7 @@ export default function InvoiceList({ userId, data, user }) {
       </CenteredContent>
       
       {
-          authState.user.userType === 'admin' && (
+          authState.user?.userType === 'admin' && (
             <FloatButton
               data-testid="invoice_btn"
               title="Add an Invoice"

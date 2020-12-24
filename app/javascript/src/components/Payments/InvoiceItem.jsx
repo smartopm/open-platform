@@ -10,13 +10,7 @@ import PropTypes from 'prop-types'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 import PaymentModal from './PaymentModal'
-
-export const InvoiceStatus = {
-  in_progress: 'In-Progress',
-  paid: 'Paid',
-  late: 'Late',
-  cancelled: 'Cancelled'
-}
+import { InvoiceStatus } from '../../utils/helpers'
 
 export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType }) {
   const classes = useStyles();
@@ -33,6 +27,14 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
   }
   return (
     <ListItem className={classes.invoiceList}>
+      <PaymentModal 
+        open={open} 
+        handleModalClose={handleModalClose}
+        invoiceData={invoice}
+        userId={userId}
+        creatorId={creatorId}
+        refetch={refetch}
+      />
       <ListItemText
         disableTypography
         primary={invoice.description}
@@ -47,10 +49,10 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
               </Grid>
               <Grid xs item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
             </Grid>
-            {invoice.payments?.map((pay) => (
-              <div key={pay.id}>
+            {invoice.payments?.map((payment) => (
+              <div key={payment.id}>
                 <i>
-                  <PaymentItem paymentData={pay} />
+                  <PaymentItem paymentData={payment} />
                 </i>
               </div>
             ))}
@@ -64,7 +66,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
            ? InvoiceStatus[invoice.status]
            :  userType === 'admin' && (
              <Button 
-               variant='contained' 
+               variant='text' 
                data-testid="pay-button" 
                color='primary' 
                onClick={handleOpenPayment}
@@ -76,14 +78,6 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         {userType !== 'admin' && InvoiceStatus[invoice.status]}
         
       </ListItemSecondaryAction>
-      <PaymentModal 
-        open={open} 
-        handleModalClose={handleModalClose}
-        invoiceData={invoice}
-        userId={userId}
-        creatorId={creatorId}
-        refetch={refetch}
-      />
     </ListItem>
   )
 }

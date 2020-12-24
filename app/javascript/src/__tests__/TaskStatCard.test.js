@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
@@ -8,7 +7,8 @@ describe('Task card to display metrics', () => {
   const props = {
     count: 3,
     title: 'Tasks with date',
-    filterTasks: jest.fn()
+    filter: jest.fn(),
+    isCurrent: true
   }
 
   it('It should render the component with no errors', () => {

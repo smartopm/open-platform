@@ -24,6 +24,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import LandscapeIcon from '@material-ui/icons/Landscape';
+import PaymentIcon from '@material-ui/icons/Payment';
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -268,6 +269,12 @@ export default function Homepage({ authState }) {
       title: 'Parcels and Properties',
       path: '/land_parcels',
       icon: <LandscapeIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Payments',
+      path: '/payments',
+      icon: <PaymentIcon fontSize="large" />,
       access: ['admin']
     },
     {

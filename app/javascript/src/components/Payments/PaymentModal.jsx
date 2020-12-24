@@ -50,6 +50,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
 
   useEffect(() => {
     setInputValue({amount: invoiceData?.amount})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   return(
@@ -114,7 +115,7 @@ PaymentModal.defaultProps = {
 }
 PaymentModal.propTypes = {
   invoiceData: PropTypes.shape({
-    amount: PropTypes.string,
+    amount: PropTypes.number,
     id: PropTypes.string,
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string

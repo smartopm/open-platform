@@ -841,3 +841,43 @@ export const UserInvoicesQuery = gql`
     }
   }
 `
+
+export const InvoicesQuery = gql`
+  query invoices($limit: Int, $offset: Int, $status: String) {
+    invoices(limit: $limit, offset: $offset, status: $status) {
+      id
+      amount
+      status
+      description
+      dueDate
+      user {
+        id
+      }
+      landParcel {
+        id
+        parcelNumber
+      }
+      payments {
+        id
+        amount
+        paymentType
+        paymentStatus
+        user {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const InvoiceStatsQuery = gql`
+  query stats {
+    invoiceStats {
+      late
+      paid
+      inProgress
+      cancelled
+    }
+  }
+`
