@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import { useHistory } from 'react-router-dom'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -25,6 +24,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
     setOpen(false)
     history.push(`/user/${userId}?tab=Payments`)
   }
+
   return (
     <ListItem className={classes.invoiceList}>
       <PaymentModal
@@ -40,14 +40,15 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         primary={invoice.description}
         secondary={(
           <div>
-            <Grid container spacing={10} style={{ color: '#808080' }}>
-              <Grid xs item data-testid="amount">{`Invoice amount: ${currency}${invoice.amount}`}</Grid>
-              <Grid xs item data-testid="landparcel">
+            <Grid container spacing={15} style={{ color: '#808080' }}>
+              <Grid xs={3} item data-testid="amount">{`Invoice amount: k${invoice.amount}`}</Grid>
+              <Grid xs={3} item data-testid="landparcel">
                 Parcel number:
                 {' '}
                 {invoice.landParcel?.parcelNumber}
               </Grid>
-              <Grid xs item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
+              <Grid xs={3} item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
+              <Grid xs={3} item data-testid="createdBy">{`Created by: ${invoice.createdBy.name}`}</Grid>
             </Grid>
             {invoice.payments?.map((payment) => (
               <div key={payment.id}>
@@ -60,7 +61,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         )}
       />
       {/* In the future we can put an action button here */}
-      <ListItemSecondaryAction data-testid="status">
+      <Grid xs={3} data-testid="status">
         {
           userType === 'admin' && invoice.status === ('paid' || 'cancelled')
            ? InvoiceStatus[invoice.status]
@@ -75,9 +76,15 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
              </Button>
             )
         }
-        {userType !== 'admin' && InvoiceStatus[invoice.status]}
-
-      </ListItemSecondaryAction>
+      </Grid>
+      <PaymentModal 
+        open={open}
+        handleModalClose={handleModalClose}
+        invoiceData={invoice}
+        userId={userId}
+        creatorId={creatorId}
+        refetch={refetch}
+      />
     </ListItem>
   )
 }
@@ -90,6 +97,7 @@ InvoiceItem.propTypes = {
     dueDate: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     landParcel: PropTypes.shape({ parcelNumber: PropTypes.string.isRequired }),
+    createdBy: PropTypes.shape({ name: PropTypes.string.isRequired }),
     payments: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired }))
   }).isRequired,
   userId: PropTypes.string.isRequired,
