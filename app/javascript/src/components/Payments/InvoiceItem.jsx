@@ -47,15 +47,33 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         primary={invoice.description}
         secondary={(
           <div>
-            <Grid container spacing={15} style={{ color: '#808080' }}>
-              <Grid xs={3} item data-testid="amount">{`Invoice amount: k${invoice.amount}`}</Grid>
-              <Grid xs={3} item data-testid="landparcel">
+            <Grid container spacing={10} style={{ color: '#808080' }}>
+              <Grid xs item data-testid="amount">{`Invoice amount: k${invoice.amount}`}</Grid>
+              <Grid xs item data-testid="landparcel">
                 Parcel number:
                 {' '}
                 {invoice.landParcel?.parcelNumber}
               </Grid>
-              <Grid xs={3} item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
-              <Grid xs={3} item data-testid="createdBy">{`Created by: ${createdBy()}`}</Grid>
+              <Grid xs item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
+              <Grid xs item data-testid="createdBy">{`Created by: ${createdBy()}`}</Grid>
+              <Grid xs item data-testid="status">
+                {
+                    // eslint-disable-next-line no-nested-ternary
+                    userType === 'admin' && invoice.status === ('paid' || 'cancelled') 
+                    ? InvoiceStatus[invoice.status]
+                    :  userType === 'admin' ? (
+                      <Button 
+                        variant='text' 
+                        data-testid="pay-button" 
+                        color='primary' 
+                        onClick={handleOpenPayment}
+                      >
+                        make payment
+                      </Button>
+                      )
+                      : InvoiceStatus[invoice.status]
+                }
+              </Grid>
             </Grid>
             {invoice.payments?.map((payment) => (
               <div key={payment.id}>
@@ -67,23 +85,6 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
           </div>
         )}
       />
-      {/* In the future we can put an action button here */}
-      <Grid xs={3} data-testid="status">
-        {
-          userType === 'admin' && invoice.status === ('paid' || 'cancelled')
-           ? InvoiceStatus[invoice.status]
-           :  userType === 'admin' && (
-             <Button
-               variant='text'
-               data-testid="pay-button"
-               color='primary'
-               onClick={handleOpenPayment}
-             >
-               make payment
-             </Button>
-            )
-        }
-      </Grid>
       <PaymentModal 
         open={open}
         handleModalClose={handleModalClose}

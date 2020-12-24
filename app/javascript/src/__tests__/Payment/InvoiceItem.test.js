@@ -16,6 +16,10 @@ describe('Invoice Item Component', () => {
       status: 'in_progress',
       landParcel: {
         parcelNumber: 'Plot-123'
+      },
+      createdBy: {
+        id: '9485rjdsfiu34',
+        name: 'Some name'
       }
     }
     const container = render(
