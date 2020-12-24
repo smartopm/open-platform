@@ -12,11 +12,10 @@ import PaymentItem from './PaymentItem'
 import PaymentModal from './PaymentModal'
 import { InvoiceStatus } from '../../utils/helpers'
 
-export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
+export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType }) {
   const classes = useStyles();
   const history = useHistory()
   const [open, setOpen] = useState(false)
-
   function handleOpenPayment(){
     setOpen(true)
     history.push(`/user/${userId}/invoices/${invoice.id}/add_payment`)
@@ -63,9 +62,21 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch }) {
       {/* In the future we can put an action button here */}
       <ListItemSecondaryAction data-testid="status">
         {
-          invoice.status === ('paid' || 'cancelled') ? InvoiceStatus[invoice.status] 
-            : (<Button variant='text' data-testid="pay-button" color='primary' onClick={handleOpenPayment}>make payment</Button>)
+          userType === 'admin' && invoice.status === ('paid' || 'cancelled') 
+           ? InvoiceStatus[invoice.status]
+           :  userType === 'admin' && (
+             <Button 
+               variant='text' 
+               data-testid="pay-button" 
+               color='primary' 
+               onClick={handleOpenPayment}
+             >
+               make payment
+             </Button>
+            )
         }
+        {userType !== 'admin' && InvoiceStatus[invoice.status]}
+        
       </ListItemSecondaryAction>
     </ListItem>
   )
@@ -83,6 +94,7 @@ InvoiceItem.propTypes = {
   }).isRequired,
   userId: PropTypes.string.isRequired,
   creatorId: PropTypes.string.isRequired,
+  userType: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired 
 }
 

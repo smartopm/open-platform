@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import List from '@material-ui/core/List'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
@@ -11,10 +11,13 @@ import { UserInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 
-export default function InvoiceList({ userId, data, creatorId }) {
+
+export default function InvoiceList({ userId, data, user }) {
   const history = useHistory()
   const path = useParamsQuery()
+  const authState = useContext(AuthStateContext)
   const limit = 15
   const tab = path.get('invoices')
   const page = path.get('page')
@@ -57,13 +60,20 @@ export default function InvoiceList({ userId, data, creatorId }) {
         handleModalClose={handleModalClose}
         data={data}
         userId={userId}
-        creatorId={creatorId}
+        creatorId={user.id}
         refetch={refetch}
       />
       <List>
         {invoicesData?.userInvoices.length
           ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem key={invoice.id} invoice={invoice} userId={userId} creatorId={creatorId} refetch={refetch} />
+            <InvoiceItem 
+              key={invoice.id} 
+              invoice={invoice} 
+              userId={userId} 
+              creatorId={user.id} 
+              refetch={refetch} 
+              userType={authState.user?.userType}
+            />
             ))
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
@@ -78,11 +88,15 @@ export default function InvoiceList({ userId, data, creatorId }) {
         />
       </CenteredContent>
       
-      <FloatButton
-        data-testid="invoice_btn"
-        title="Add an Invoice"
-        handleClick={handleModalOpen}
-      />
+      {
+          authState.user?.userType === 'admin' && (
+            <FloatButton
+              data-testid="invoice_btn"
+              title="Add an Invoice"
+              handleClick={handleModalOpen}
+            />
+          )
+        }
     </>
   )
 }
@@ -95,5 +109,8 @@ InvoiceList.propTypes = {
     })
   ).isRequired,
   userId: PropTypes.string.isRequired,
-  creatorId: PropTypes.string.isRequired
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    userType: PropTypes.string
+  }).isRequired
 }

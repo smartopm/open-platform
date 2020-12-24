@@ -249,7 +249,7 @@ export default function UserInformation({
           <InvoiceList
             data={parcelData}
             userId={userId}
-            creatorId={authState.user.id}
+            user={authState.user}
           />
         </TabPanel>
 
