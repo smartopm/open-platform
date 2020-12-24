@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Container,
   Grid,
@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import { useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
@@ -17,13 +18,11 @@ import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 import InvoiceTiles from './InvoiceTiles'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
 
-export default function PaymentList() {
+export default function PaymentList({ authState }) {
   const history = useHistory()
   const path = useParamsQuery()
-  const authState = useContext(AuthStateContext)
   const limit = 50
   const page = path.get('page')
   const status = path.get('status')
@@ -39,7 +38,7 @@ export default function PaymentList() {
   const invoiceStats = useQuery(InvoiceStatsQuery, {
     fetchPolicy: 'cache-first'
   })
-  const currency = currencies[authState.user.community.currency]
+  const currency = currencies[authState.user?.community.currency]
 
   function handleFilter(_evt, key) {
     setCurrentTile(key)
@@ -131,4 +130,9 @@ export default function PaymentList() {
       </CenteredContent>
     </Container>
   )
+}
+
+PaymentList.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  authState: PropTypes.object.isRequired
 }

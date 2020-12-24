@@ -54,14 +54,22 @@ describe('Invoice Item Component', () => {
         parcelNumber: 'ho2ij3'
       }
     ]
+
+    const user = {
+      id: "939453bef34-f3",
+      community: {
+        currency: "zambian_kwacha"
+      }
+    }
+
     const container = render(
       <MockedProvider mocks={[invoiceMock]} addTypename={false}>
         <AuthStateProvider>
           <BrowserRouter>
-            <InvoiceList 
-              userId={userId} 
-              data={data} 
-              user={{ id: "939453bef34-f3"}}
+            <InvoiceList
+              userId={userId}
+              data={data}
+              user={user}
               userType='admin'
             />
           </BrowserRouter>

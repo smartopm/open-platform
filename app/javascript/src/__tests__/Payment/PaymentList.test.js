@@ -72,10 +72,18 @@ describe('Invoice Item Component', () => {
       }
     ]
 
+    const authState = {
+      user: {
+        community: {
+          currency: 'zambian_kwacha'
+        }
+      }
+    }
+
     const container = render(
       <MockedProvider mocks={invoiceMock} addTypename={false}>
         <BrowserRouter>
-          <PaymentList />
+          <PaymentList authState={authState} />
         </BrowserRouter>
       </MockedProvider>
     )

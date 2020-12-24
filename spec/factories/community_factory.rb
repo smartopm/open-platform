@@ -7,6 +7,6 @@ FactoryBot.define do
 
   factory :community do
     name { generate(:community_name) }
-    currency { "zambian_kwacha" }
+    currency { 'zambian_kwacha' }
   end
 end
