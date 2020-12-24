@@ -29,8 +29,8 @@ export default function PaymentItem({ paymentData, currency }) {
       </Grid>
       <Grid item>
         <Typography variant="subtitle1" data-testid="amount">
-          Amount paid: k
-          {paymentData.amount}
+          Amount paid:
+          {`${currency}${paymentData.amount}`}
         </Typography>
       </Grid>
     </Grid>

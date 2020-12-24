@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   Container,
   Grid,
@@ -17,10 +17,13 @@ import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 import InvoiceTiles from './InvoiceTiles'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { currencies } from '../../utils/constants'
 
 export default function PaymentList() {
   const history = useHistory()
   const path = useParamsQuery()
+  const authState = useContext(AuthStateContext)
   const limit = 50
   const page = path.get('page')
   const status = path.get('status')
@@ -36,6 +39,7 @@ export default function PaymentList() {
   const invoiceStats = useQuery(InvoiceStatsQuery, {
     fetchPolicy: 'cache-first'
   })
+  const currency = currencies[authState.user.community.currency]
 
   function handleFilter(_evt, key) {
     setCurrentTile(key)
@@ -60,7 +64,7 @@ export default function PaymentList() {
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>
   }
-    
+
   return (
     <Container>
       <br />
@@ -84,10 +88,10 @@ export default function PaymentList() {
                   <div>
                     <Grid container spacing={10} style={{ color: '#808080' }}>
                       <Grid xs item data-testid="amount">
-                        {`Invoice amount: k${invoice.amount}`}
+                        {`Invoice amount: ${currency}${invoice.amount}`}
                       </Grid>
                       <Grid xs item data-testid="landparcel">
-                        Parcel number: 
+                        Parcel number:
                         {' '}
                         {invoice.landParcel?.parcelNumber}
                       </Grid>
