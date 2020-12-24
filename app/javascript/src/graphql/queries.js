@@ -825,12 +825,9 @@ export const UserInvoicesQuery = gql`
       status
       description
       dueDate
-<<<<<<< HEAD
-=======
       createdBy {
         name
       }
->>>>>>> added created by column to the UI
       landParcel {
         id
         parcelNumber

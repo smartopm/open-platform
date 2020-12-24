@@ -25,6 +25,13 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
     history.push(`/user/${userId}?tab=Payments`)
   }
 
+  function createdBy() {
+    if (invoice.createdBy === null) {
+      return 'Not Available'
+    }
+    return invoice.createdBy.name
+  }
+
   return (
     <ListItem className={classes.invoiceList}>
       <PaymentModal
@@ -48,7 +55,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
                 {invoice.landParcel?.parcelNumber}
               </Grid>
               <Grid xs={3} item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
-              <Grid xs={3} item data-testid="createdBy">{`Created by: ${invoice.createdBy.name}`}</Grid>
+              <Grid xs={3} item data-testid="createdBy">{`Created by: ${createdBy()}`}</Grid>
             </Grid>
             {invoice.payments?.map((payment) => (
               <div key={payment.id}>
@@ -92,7 +99,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
 InvoiceItem.propTypes = {
   invoice: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     amount: PropTypes.number.isRequired,
     dueDate: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
