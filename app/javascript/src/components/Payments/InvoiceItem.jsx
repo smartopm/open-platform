@@ -29,7 +29,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
     if (invoice.createdBy === null) {
       return 'Not Available'
     }
-    return invoice.createdBy.name
+    return invoice.createdBy?.name
   }
 
   return (
