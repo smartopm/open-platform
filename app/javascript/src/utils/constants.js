@@ -175,3 +175,7 @@ export const formStatus = {
   publish: 'published',
   delete: 'deleted'
 }
+
+export const currencies = {
+  zambian_kwacha: 'K'
+}

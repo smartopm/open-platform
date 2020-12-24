@@ -434,6 +434,7 @@ export const CommunityQuery = gql`
       supportNumber
       supportEmail
       supportWhatsapp
+      currency
     }
   }
 `
