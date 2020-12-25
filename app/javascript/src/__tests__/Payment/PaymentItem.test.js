@@ -15,16 +15,16 @@ describe('Invoice Item Component', () => {
       },
       paymentType: 'cash',
       paymentStatus: 'settled',
-      amount: '1000'
+      amount: 1000
     }
     const container = render(
       <BrowserRouter>
-        <PaymentItem paymentData={paymentData} />
+        <PaymentItem paymentData={paymentData} currency="k" />
       </BrowserRouter>
     )
     expect(container.queryByTestId('name').textContent).toContain('tolulope')
     expect(container.queryByTestId('type').textContent).toContain('cash')
     expect(container.queryByTestId('status').textContent).toContain('settled')
-    expect(container.queryByTestId('amount').textContent).toContain('1000')
+    expect(container.queryByTestId('amount').textContent).toContain('k1000')
   })
 })

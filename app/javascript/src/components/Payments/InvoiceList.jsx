@@ -29,7 +29,7 @@ export default function InvoiceList({ userId, data, user }) {
       variables: { userId, limit, offset },
     }
   )
-  const currency = currencies[user.community.currency]
+  const currency = currencies[user.community.currency] || ''
 
   function handleModalOpen() {
     history.push(`/user/${userId}?tab=Payments&invoices=new`)

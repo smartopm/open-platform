@@ -38,7 +38,7 @@ export default function PaymentList({ authState }) {
   const invoiceStats = useQuery(InvoiceStatsQuery, {
     fetchPolicy: 'cache-first'
   })
-  const currency = currencies[authState.user?.community.currency]
+  const currency = currencies[authState.user?.community.currency] || ''
 
   function handleFilter(_evt, key) {
     setCurrentTile(key)
@@ -101,7 +101,7 @@ export default function PaymentList({ authState }) {
                     {invoice.payments?.map(payment => (
                       <div key={payment.id}>
                         <i>
-                          <PaymentItem paymentData={payment} />
+                          <PaymentItem paymentData={payment} currency={currency} />
                         </i>
                       </div>
                     ))}
