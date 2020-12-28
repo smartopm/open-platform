@@ -27,6 +27,10 @@ describe('Invoice Item Component', () => {
               status: 'late',
               description: 'Final Payment',
               dueDate: '2020-12-28',
+              createdBy: {
+                id: '233b1634-bf08-4ece-a213-b3f120a1e009',
+                name: 'Some User'
+              },
               landParcel: {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 parcelNumber: 'Plot-1343'

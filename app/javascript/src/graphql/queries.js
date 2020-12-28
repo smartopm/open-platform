@@ -825,6 +825,10 @@ export const UserInvoicesQuery = gql`
       status
       description
       dueDate
+      createdBy {
+        id
+        name
+      }
       landParcel {
         id
         parcelNumber

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import { useHistory } from 'react-router-dom'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
@@ -25,6 +24,14 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
     setOpen(false)
     history.push(`/user/${userId}?tab=Payments`)
   }
+
+  function createdBy() {
+    if (invoice.createdBy === null) {
+      return 'Not Available'
+    }
+    return invoice.createdBy?.name
+  }
+
   return (
     <ListItem className={classes.invoiceList}>
       <PaymentModal
@@ -41,13 +48,32 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         secondary={(
           <div>
             <Grid container spacing={10} style={{ color: '#808080' }}>
-              <Grid xs item data-testid="amount">{`Invoice amount: ${currency}${invoice.amount}`}</Grid>
+              <Grid xs item data-testid="amount">{`Invoice amount: k${invoice.amount}`}</Grid>
               <Grid xs item data-testid="landparcel">
                 Parcel number:
                 {' '}
                 {invoice.landParcel?.parcelNumber}
               </Grid>
               <Grid xs item data-testid="duedate">{`Due at: ${dateToString(invoice.dueDate)}`}</Grid>
+              <Grid xs item data-testid="createdBy">{`Created by: ${createdBy()}`}</Grid>
+              <Grid xs item data-testid="status">
+                {
+                    // eslint-disable-next-line no-nested-ternary
+                    userType === 'admin' && invoice.status === ('paid' || 'cancelled') 
+                    ? InvoiceStatus[invoice.status]
+                    :  userType === 'admin' ? (
+                      <Button 
+                        variant='text' 
+                        data-testid="pay-button" 
+                        color='primary' 
+                        onClick={handleOpenPayment}
+                      >
+                        make payment
+                      </Button>
+                      )
+                      : InvoiceStatus[invoice.status]
+                }
+              </Grid>
             </Grid>
             {invoice.payments?.map((payment) => (
               <div key={payment.id}>
@@ -59,25 +85,14 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
           </div>
         )}
       />
-      {/* In the future we can put an action button here */}
-      <ListItemSecondaryAction data-testid="status">
-        {
-          userType === 'admin' && invoice.status === ('paid' || 'cancelled')
-           ? InvoiceStatus[invoice.status]
-           :  userType === 'admin' && (
-             <Button
-               variant='text'
-               data-testid="pay-button"
-               color='primary'
-               onClick={handleOpenPayment}
-             >
-               make payment
-             </Button>
-            )
-        }
-        {userType !== 'admin' && InvoiceStatus[invoice.status]}
-
-      </ListItemSecondaryAction>
+      <PaymentModal 
+        open={open}
+        handleModalClose={handleModalClose}
+        invoiceData={invoice}
+        userId={userId}
+        creatorId={creatorId}
+        refetch={refetch}
+      />
     </ListItem>
   )
 }
@@ -85,11 +100,12 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
 InvoiceItem.propTypes = {
   invoice: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     amount: PropTypes.number.isRequired,
     dueDate: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     landParcel: PropTypes.shape({ parcelNumber: PropTypes.string.isRequired }),
+    createdBy: PropTypes.shape({ name: PropTypes.string.isRequired }),
     payments: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired }))
   }).isRequired,
   userId: PropTypes.string.isRequired,
