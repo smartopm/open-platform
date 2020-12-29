@@ -18,12 +18,16 @@ RSpec.describe Mutations::Payment::PaymentCreate do
           $userId: ID!,
           $amount: Float!,
           $paymentType: String!
+          $bankName: String!
+          $chequeNumber: String!
         ) {
           paymentCreate(
             invoiceId: $invoiceId,
             userId: $userId,
             amount: $amount,
             paymentType: $paymentType
+            bankName: $bankName
+            chequeNumber: $chequeNumber
           ){
             payment {
               id
@@ -39,6 +43,8 @@ RSpec.describe Mutations::Payment::PaymentCreate do
         userId: user.id,
         amount: (rand * 100).to_f,
         paymentType: Payment::VALID_TYPES.sample,
+        bankName: 'Bank Name',
+        chequeNumber: (rand * 10000000).floor.to_s,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {

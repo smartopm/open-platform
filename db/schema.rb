@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_24_082055) do
+ActiveRecord::Schema.define(version: 2020_12_29_112402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -439,6 +439,8 @@ ActiveRecord::Schema.define(version: 2020_12_24_082055) do
     t.integer "payment_status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "bank_name"
+    t.string "cheque_number"
     t.index ["invoice_id"], name: "index_payments_on_invoice_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end

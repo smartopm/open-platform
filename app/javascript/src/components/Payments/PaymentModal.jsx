@@ -95,6 +95,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
             select
           >
             <MenuItem value='cash'>Cash</MenuItem>
+            <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
           </TextField>
         </div>
       </CustomizedDialogs>
