@@ -64,7 +64,7 @@ describe('UserForm Component', () => {
         {/* use it as a mock for authState */}
         <AuthStateProvider>
           <BrowserRouter>
-            <UserForm isEditing={props.isEditing} isFromRef={props.isFromRef} />
+            <UserForm isEditing={props.isEditing} isFromRef={props.isFromRef} isAdmin={false} />
           </BrowserRouter>
         </AuthStateProvider>
       </MockedProvider>
@@ -75,6 +75,8 @@ describe('UserForm Component', () => {
     expect(container.queryByTestId('clientName')).toBeDisabled()
     expect(container.queryByText('Name')).toBeInTheDocument()
     expect(container.queryByText('Primary Phone Number')).toBeInTheDocument()
+    expect(container.queryByTestId('phoneNumber')).not.toBeDisabled()
+    expect(container.queryByTestId('email')).not.toBeDisabled()
 
     fireEvent.change(container.queryByTestId('username'), {
         target: { value: 'My New Name' }
