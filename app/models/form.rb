@@ -2,6 +2,8 @@
 
 # Form Record
 class Form < ApplicationRecord
+  include FormRecordsDeletable
+
   belongs_to :community
 
   has_many :form_properties, dependent: :destroy

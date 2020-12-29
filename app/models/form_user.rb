@@ -11,7 +11,10 @@ class FormUser < ApplicationRecord
   after_create :log_create_event
   after_update :log_update_event
 
-  enum status: { draft: 0, pending: 1, approved: 2, rejected: 3 }
+  default_scope { where('status != ?', 4) }
+
+  enum status: { draft: 0, pending: 1, approved: 2, rejected: 3, deleted: 4 }
+
   def create_form_task(hostname)
     user.generate_note(
       body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
