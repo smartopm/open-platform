@@ -197,6 +197,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   if (isFromRef) {
     data.userType = 'prospective_client'
   }
+
   return (
     <div className="container">
       <ModalDialog
@@ -274,7 +275,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             defaultValue={data.phoneNumber || ''}
             name="phoneNumber"
             data-testid="phoneNumber"
-            disabled={!isAdmin}
+            disabled={!isFromRef && !isAdmin}
             required
           />
         </div>
@@ -310,7 +311,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             onChange={handleInputChange}
             value={data.email || ''}
             data-testid="email"
-            disabled={!isAdmin}
+            disabled={!isFromRef && !isAdmin}
           />
         </div>
 
