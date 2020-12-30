@@ -41,6 +41,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         userId={userId}
         creatorId={creatorId}
         refetch={refetch}
+        currency={currency}
       />
       <ListItemText
         disableTypography
@@ -84,14 +85,6 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
             ))}
           </div>
         )}
-      />
-      <PaymentModal 
-        open={open}
-        handleModalClose={handleModalClose}
-        invoiceData={invoice}
-        userId={userId}
-        creatorId={creatorId}
-        refetch={refetch}
       />
     </ListItem>
   )
