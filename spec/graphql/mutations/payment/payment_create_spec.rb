@@ -44,7 +44,7 @@ RSpec.describe Mutations::Payment::PaymentCreate do
         amount: (rand * 100).to_f,
         paymentType: Payment::VALID_TYPES.sample,
         bankName: 'Bank Name',
-        chequeNumber: (rand * 10000000).floor.to_s,
+        chequeNumber: (rand * 10_000_000).floor.to_s,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
