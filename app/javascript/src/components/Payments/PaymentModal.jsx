@@ -11,14 +11,23 @@ import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import { formatError } from '../../utils/helpers'
 
+
+const initialValues = {
+  amount: '',
+  transactionType: '',
+  paymentStatus: 'pending',
+  bankName: '',
+  chequeNumber: '',
+}
+
 export default function PaymentModal({ open, handleModalClose, invoiceData, userId, creatorId, refetch, currency }){
   const classes = useStyles();
   const history = useHistory()
-  const [inputValue, setInputValue] = useState({})
+  const [inputValue, setInputValue] = useState(initialValues)
   const [createPayment] = useMutation(PaymentCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-
+  
   function handleSubmit(event) {
     event.preventDefault()
     createPayment({
@@ -26,7 +35,10 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
         userId: creatorId,
         invoiceId: invoiceData.id,
         amount: parseFloat(inputValue.amount),
-        paymentType: inputValue.transactionType
+        paymentType: inputValue.transactionType,
+        paymentStatus: inputValue.paymentStatus || 'pending',
+        bankName: inputValue.bankName,
+        chequeNumber: inputValue.chequeNumber,
       }
     }).then(() => {
       setMessageAlert('Payment made successfully')
@@ -49,7 +61,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
   }
 
   useEffect(() => {
-    setInputValue({amount: invoiceData?.amount})
+    setInputValue({...inputValue ,amount: invoiceData?.amount})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
@@ -95,7 +107,44 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
             select
           >
             <MenuItem value='cash'>Cash</MenuItem>
+            <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
           </TextField>
+          {
+            inputValue.transactionType === 'cheque/cashier_cheque' && (
+              <>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="bank-name"
+                  label="Bank Name"
+                  type='string'
+                  value={inputValue.bankName}
+                  onChange={(event) => setInputValue({...inputValue, bankName: event.target.value})}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="cheque-number"
+                  label="Cheque Number"
+                  type='string'
+                  value={inputValue.chequeNumber}
+                  onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
+                />
+                <TextField
+                  margin="dense"
+                  id="payment-status"
+                  inputProps={{ "data-testid": "payment-status" }}
+                  value={inputValue.paymentStatus}
+                  onChange={(event) => setInputValue({...inputValue, paymentStatus: event.target.value})}
+                  name="paymentStatus"
+                  select
+                >
+                  <MenuItem value='pending'>Pending</MenuItem>
+                  <MenuItem value='settled'>Settled</MenuItem>
+                </TextField>
+              </>
+            )
+          }
         </div>
       </CustomizedDialogs>
     </>

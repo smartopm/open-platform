@@ -8,6 +8,9 @@ module Mutations
       argument :invoice_id, ID, required: true
       argument :amount, Float, required: true
       argument :payment_type, String, required: true
+      argument :bank_name, String, required: false
+      argument :cheque_number, String, required: false
+      argument :payment_status, String, required: false
 
       field :payment, Types::PaymentType, null: true
 
