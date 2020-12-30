@@ -17,7 +17,7 @@ export default function PaymentItem({ paymentData, currency }) {
         <Typography variant="subtitle1" data-testid="type">
           Payment type:
           {' '}
-          {paymentData.paymentType}
+          {paymentData.paymentType === 'cash' ? "Cash" : "Cheque/CashierCheque"}
         </Typography>
       </Grid>
       <Grid item>
