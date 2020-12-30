@@ -134,7 +134,6 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
                   margin="dense"
                   id="payment-status"
                   inputProps={{ "data-testid": "payment-status" }}
-                  // label="Payment Status"
                   value={inputValue.paymentStatus}
                   onChange={(event) => setInputValue({...inputValue, paymentStatus: event.target.value})}
                   name="paymentStatus"
