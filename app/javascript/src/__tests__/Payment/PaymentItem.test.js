@@ -23,7 +23,7 @@ describe('Invoice Item Component', () => {
       </BrowserRouter>
     )
     expect(container.queryByTestId('name').textContent).toContain('tolulope')
-    expect(container.queryByTestId('type').textContent).toContain('cash')
+    expect(container.queryByTestId('type').textContent).toContain('Cash')
     expect(container.queryByTestId('status').textContent).toContain('settled')
     expect(container.queryByTestId('amount').textContent).toContain('k1000')
   })
