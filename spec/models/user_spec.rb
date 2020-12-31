@@ -308,7 +308,7 @@ RSpec.describe User, type: :model do
         expect(EmailMsg).to receive(:send_mail_from_db).with(
           user.email,
           email_template,
-          [{ key: '%login_url%', value: ENV['HOST'] }],
+          [{ key: '%login_url%', value: '' }],
         )
         user.send_email_msg
       end

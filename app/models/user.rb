@@ -458,7 +458,7 @@ class User < ApplicationRecord
     template = community.email_templates.find_by(name: 'welcome')
     return unless template
 
-    template_data = [{ key: '%login_url%', value: ENV['HOST'] }]
+    template_data = [{ key: '%login_url%', value: ENV['HOST'] || '' }]
     EmailMsg.send_mail_from_db(self[:email], template, template_data)
   end
 
