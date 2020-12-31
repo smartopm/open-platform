@@ -296,4 +296,32 @@ RSpec.describe User, type: :model do
       expect(user.note_assigned?(note.id)).to eq(false)
     end
   end
+
+  describe '#send_email_msg' do
+    let!(:user) { create(:user_with_community) }
+    let!(:email_template) do
+      create(:email_template, community: user.community, name: 'welcome')
+    end
+
+    context 'when welcome template is available' do
+      it 'fires EmailMsg.send_mail_from_db' do
+        expect(EmailMsg).to receive(:send_mail_from_db).with(
+          user.email,
+          email_template,
+          [{ key: '%login_url%', value: ENV['HOST'] }],
+        )
+        user.send_email_msg
+      end
+    end
+
+    context 'when welcome template is not available' do
+      let!(:email_template) do
+        create(:email_template, community: user.community, name: 'no-name')
+      end
+      it 'does not fire' do
+        expect(EmailMsg).not_to receive(:send_mail_from_db)
+        user.send_email_msg
+      end
+    end
+  end
 end
