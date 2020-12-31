@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import InvoiceModal from '../../components/Payments/invoiceModal'
+import { generateId } from '../../utils/helpers'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the invoice modal component', () => {
@@ -18,15 +19,17 @@ describe('It should test the invoice modal component', () => {
 
   const handleModalClose = jest.fn
 
-  const userId = 'jwuifhwef'
-
-  const userType = 'admin'
+  const userId = generateId()
+  const user = {
+    userId,
+    userType: 'admin'
+  }
 
   it('it should render invoice modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <InvoiceModal open={open} data={data} userId={userId} handleModalClose={handleModalClose} userType={userType} />
+          <InvoiceModal open={open} data={data} userId={user.userId} handleModalClose={handleModalClose} userType={user.userType} />
         </MockedProvider>
       </BrowserRouter>
     )

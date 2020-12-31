@@ -1,11 +1,25 @@
-/* eslint-disable */
-import { findLinkAndReplace, truncateString, saniteError, invertArray, forceLinkHttps, getJustLabels, capitalize, pluralizeCount, checkForHtmlTags, removeNewLines, titleize, formatError } from '../utils/helpers'
+import {
+  findLinkAndReplace,
+  truncateString,
+  saniteError,
+  invertArray,
+  forceLinkHttps,
+  getJustLabels,
+  capitalize,
+  pluralizeCount,
+  checkForHtmlTags,
+  removeNewLines,
+  titleize,
+  formatError,
+  generateId
+} from '../utils/helpers'
 
-const message = "Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/"
+const message =
+  'Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/'
 const messageWithEmail = `Please share your feedback with this 30 seconds survey ekosurveyyo.crb@outlook.com
                          Juilie  Juiliebosbsd@gmail.com https://double-gdp-staging.herokuapp.com/
                         denisharelan@yahoo.com https://dev.dgdp.site/users`
-const simpleMsgEmail = "Please share this email Juiliebosbsd@gmail.com"
+const simpleMsgEmail = 'Please share this email Juiliebosbsd@gmail.com'
 const count = 40
 
 // example errors
@@ -13,13 +27,15 @@ const allFieldsError = `GraphQL error: name of type String! was provided invalid
                         Variable phoneNumber of type String! was provided invalid value GraphQL error:
                         Variable userType of type String! was provided invalid value`
 
-const duplicateError = "GraphQL error: Duplicate Email"
+const duplicateError = 'GraphQL error: Duplicate Email'
 
-const fieldError = "GraphQL error: userType of type String! was provided invalid value"
-const requiredKeys = ["userType", "phoneNumber", "name", "email"];
-const strWithTags = "New prospective client <a>Tolulope</a> visited Nkwashi site"
-const strWitNewLines = "This is a test\nstring"
-const formatErrorMessage = "Graghql: This an error"
+const fieldError =
+  'GraphQL error: userType of type String! was provided invalid value'
+const requiredKeys = ['userType', 'phoneNumber', 'name', 'email']
+const strWithTags =
+  'New prospective client <a>Tolulope</a> visited Nkwashi site'
+const strWitNewLines = 'This is a test\nstring'
+const formatErrorMessage = 'Graghql: This an error'
 
 describe('find links and replace with anchor tag', () => {
   // find link in a text and replace
@@ -53,25 +69,19 @@ describe('truncate messages', () => {
 
 describe('format error', () => {
   it('should return error message without the graphql part', () => {
-    expect(formatError(formatErrorMessage)).toBe(
-      ' This an error'
-    )
+    expect(formatError(formatErrorMessage)).toBe(' This an error')
   })
 })
 
 describe('Remove new lines', () => {
   it('should remove new line in a string', () => {
-    expect(removeNewLines(strWitNewLines)).toBe(
-      'This is a teststring'
-    )
+    expect(removeNewLines(strWitNewLines)).toBe('This is a teststring')
   })
 })
 
 describe('Check HTML tags', () => {
   it('should return true if html tags are present', () => {
-    expect(checkForHtmlTags(strWithTags)).toBe(
-      true
-    )
+    expect(checkForHtmlTags(strWithTags)).toBe(true)
   })
 })
 
@@ -89,14 +99,14 @@ describe('sanitize GraphQL errors', () => {
   // check for one field missing
   it('should return cleaned error when one field is missing', () => {
     expect(saniteError(requiredKeys, fieldError)).toBe(
-      "User Type value is blank"
+      'User Type value is blank'
     )
   })
 
   // check for multiple fields missing
   it('should return cleaned error when multiple fields are missing', () => {
     expect(saniteError(requiredKeys, allFieldsError)).toBe(
-      "User Type or Phone Number or name value is blank"
+      'User Type or Phone Number or name value is blank'
     )
   })
 })
@@ -104,7 +114,7 @@ describe('sanitize GraphQL errors', () => {
 describe('array methods', () => {
   it('should return an inverted array ', () => {
     const arr = [1, 2, 3, 4, 5]
-    const arr2 = [ ...arr ] // since splice mutate the original array, good to copy for us to better tests other cases
+    const arr2 = [...arr] // since splice mutate the original array, good to copy for us to better tests other cases
     expect(invertArray(arr, 0, 1)).toStrictEqual([2, 1, 3, 4, 5])
     expect(invertArray(arr2, 1, 2)).toStrictEqual([1, 3, 2, 4, 5])
   })
@@ -112,22 +122,32 @@ describe('array methods', () => {
   it('should replace http with https in links that are not secure', () => {
     const link = 'http://doubglegdp.com/some_image_link.jpg'
     const httpsLink = 'https://doubglegdp.com/some_https_image_link.jpg'
-    expect(forceLinkHttps(link)).toBe('https://doubglegdp.com/some_image_link.jpg')
+    expect(forceLinkHttps(link)).toBe(
+      'https://doubglegdp.com/some_image_link.jpg'
+    )
     expect(forceLinkHttps(httpsLink)).toBe(httpsLink)
   })
   // merge items
   it('should just pick label description despite some being in an object', () => {
     const labels = [
-      { shortDesc: 'blue', id: '23'},
+      { shortDesc: 'blue', id: '23' },
       'red',
       { shortDesc: 'green', id: '33' },
       'white'
     ]
-    expect(getJustLabels(labels)).toStrictEqual(['blue', 'red', 'green', 'white'])
+    expect(getJustLabels(labels)).toStrictEqual([
+      'blue',
+      'red',
+      'green',
+      'white'
+    ])
     expect(getJustLabels([])).toStrictEqual([])
   })
   it('capitalizes the first letter of the word', () => {
     expect(capitalize('testing')).toBe('Testing')
+  })
+  it('should generate random string', () => {
+    expect(generateId()).toBeTruthy()
   })
 })
 
@@ -138,19 +158,19 @@ describe('pluralizeCount', () => {
   it("should not add 's' if count is not > 1", () => {
     expect(pluralizeCount(1, 'Point')).toBe('Point')
   })
-  it("should use the provided suffix if available", () => {
+  it('should use the provided suffix if available', () => {
     expect(pluralizeCount(5, 'Child', 'ren')).toBe('Children')
   })
 })
 
 describe('titleize', () => {
-  it("Captilize each word and remove hyphens", () => {
+  it('Captilize each word and remove hyphens', () => {
     expect(titleize('artists-in-residence')).toBe('Artists In Residence')
   })
   it("should just capitalize if it's a single word", () => {
     expect(titleize('policy')).toBe('Policy')
   })
-  it("should return as it is, if already ok", () => {
+  it('should return as it is, if already ok', () => {
     expect(titleize('Posts')).toBe('Posts')
   })
 })

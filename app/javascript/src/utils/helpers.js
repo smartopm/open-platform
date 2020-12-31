@@ -279,3 +279,7 @@ export const InvoiceStatus = {
   cancelled: 'Cancelled',
   in_progress: 'In-Progress',
 }
+
+export function generateId() {
+  return  Math.random().toString(16).substr(-10)
+}

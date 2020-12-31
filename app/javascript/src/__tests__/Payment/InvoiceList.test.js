@@ -7,12 +7,13 @@ import InvoiceList from '../../components/Payments/InvoiceList'
 import { UserInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../../components/Loading'
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider'
+import { generateId } from '../../utils/helpers'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
 describe('Invoice Item Component', () => {
   it('should render the invoice item component', async () => {
-    const userId = "162f7517-7cc8-42f9-b2d0-a83a16d59569"
+    const userId = generateId()
     const invoiceMock = {
       request: {
         query: UserInvoicesQuery,
