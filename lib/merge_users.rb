@@ -77,27 +77,16 @@ class MergeUsers
       end
     end
 
-    # Update user in ActivityLog
-    # rubocop:disable Layout/LineLength
-    update_user = "UPDATE activity_logs SET user_id = '#{duplicate_id}' WHERE user_id = '#{user_id}'"
-    ActiveRecord::Base.connection.exec_query(update_user)
-    find_logs_query = "SELECT * FROM activity_logs WHERE user_id = '#{user_id}'"
-    logs_by_user = Array(ActiveRecord::Base.connection.exec_query(find_logs_query))
-    raise StandardError, 'Update Failed' if logs_by_user.any?
-
     # Update reporting_user_id in ActivityLog
-    update_reporting_user = "UPDATE activity_logs SET reporting_user_id = '#{duplicate_id}' WHERE
-                            reporting_user_id = '#{user_id}'"
-    ActiveRecord::Base.connection.exec_query(update_reporting_user)
-    find_logs_query = "SELECT * FROM activity_logs WHERE user_id = '#{user_id}'"
-    logs_by_reporting_user = Array(ActiveRecord::Base.connection.exec_query(find_logs_query))
-    raise StandardError, 'Update Failed' if logs_by_reporting_user.any?
-
-    # rubocop:enable Layout/LineLength
+    logs = ActivityLog.where(reporting_user_id: user_id)
+    logs.each do |log|
+      log.update(reporting_user_id: duplicate_id)
+    end
+    raise StandardError, 'Update Failed' if EventLog.where(acting_user_id: user_id).any?
 
     %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
        DiscussionUser Discussion EntryRequest Feedback FormUser Message
-       NoteComment NoteHistory Note TimeSheet UserFormProperty].each do |table_name|
+       NoteComment NoteHistory Note TimeSheet UserFormProperty ActivityLog].each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
       raise StandardError, 'Update Failed'
