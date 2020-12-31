@@ -54,7 +54,11 @@ export function PostItemGrid({ data }) {
       >
         {data.length
         && data.map((tile) => (
-          <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
+          <GridListTile 
+            key={tile.ID} 
+            onClick={() => routeToPost(tile.ID)}
+            style={{ cursor: 'pointer' }}
+          >
             <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
             <GridListTileBar
               title={(
