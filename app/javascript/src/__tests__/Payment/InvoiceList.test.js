@@ -13,7 +13,7 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
 describe('Invoice Item Component', () => {
   it('should render the invoice item component', async () => {
-    const userId = generateId()
+    const userId = generateId()[1]
     const invoiceMock = {
       request: {
         query: UserInvoicesQuery,

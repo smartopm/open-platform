@@ -19,7 +19,7 @@ describe('It should test the invoice modal component', () => {
 
   const handleModalClose = jest.fn
 
-  const userId = generateId()
+  const userId = generateId()[2]
   const user = {
     userId,
     userType: 'admin'

@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import Invoices from '../../components/Payments/AddInvoices'
-import { generateId } from '../../utils/helpers'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the invoice component', () => {
@@ -15,17 +14,16 @@ describe('It should test the invoice component', () => {
     }
   ]
 
-  const userId = generateId()
   const user = {
     id: 'yjfefe',
-    userType: 'admin'
+    userType: 'admin',
   }
 
   it('it should render invoice modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <Invoices data={data} userId={userId} user={user} refetch={jest.fn()} />
+          <Invoices data={data} userId={user.id} user={user} refetch={jest.fn()} />
         </MockedProvider>
       </BrowserRouter>
     )

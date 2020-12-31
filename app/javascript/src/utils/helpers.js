@@ -281,5 +281,9 @@ export const InvoiceStatus = {
 }
 
 export function generateId() {
-  return  Math.random().toString(16).substr(-10)
+  if (!window.crypto) {
+    return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']
+  }
+  const array = new Uint32Array(10)
+  return window.crypto.getRandomValues(array)
 }

@@ -148,6 +148,7 @@ describe('array methods', () => {
   })
   it('should generate random string', () => {
     expect(generateId()).toBeTruthy()
+    expect(generateId()).toBeInstanceOf(Array)
   })
 })
 
