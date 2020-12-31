@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_31_080854) do
+ActiveRecord::Schema.define(version: 2020_12_31_104258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -216,6 +216,16 @@ ActiveRecord::Schema.define(version: 2020_12_31_080854) do
     t.index ["community_id"], name: "index_discussions_on_community_id"
     t.index ["status"], name: "index_discussions_on_status"
     t.index ["user_id"], name: "index_discussions_on_user_id"
+  end
+
+  create_table "email_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "subject"
+    t.text "body"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_email_templates_on_community_id"
   end
 
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -576,6 +586,7 @@ ActiveRecord::Schema.define(version: 2020_12_31_080854) do
   add_foreign_key "discussion_users", "users"
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
+  add_foreign_key "email_templates", "communities"
   add_foreign_key "form_properties", "forms"
   add_foreign_key "form_users", "forms"
   add_foreign_key "form_users", "users"

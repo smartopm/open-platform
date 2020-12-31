@@ -455,15 +455,11 @@ class User < ApplicationRecord
   def send_email_msg
     return if self[:email].nil?
 
-    template = community.templates || {}
-    EmailMsg.send_mail(self[:email], template['welcome_template_id'], welcome_mail_data)
-  end
+    template = community.email_templates.find_by(name: 'welcome')
+    return unless template
 
-  def welcome_mail_data
-    {
-      "community": community,
-      "name": name,
-    }
+    template_data = [{ key: '%login_url%', value: ENV['HOST'] }]
+    EmailMsg.send_mail_from_db(self[:email], template, template_data)
   end
 
   # catch exceptions in here to be caught in the mutation

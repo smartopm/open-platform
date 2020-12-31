@@ -6,6 +6,7 @@ require 'uri'
 require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
+# rubocop:disable Metrics/ClassLength
 class EmailMsg
   include SendGrid
 
@@ -26,6 +27,22 @@ class EmailMsg
     personalization.add_dynamic_template_data(template_data)
     mail.add_personalization(personalization)
     mail.template_id = template_id
+    client.mail._('send').post(request_body: mail.to_json)
+  end
+
+  # We should rename this to send_mail by the time we get rid of the send_mail() above
+  def self.send_mail_from_db(user_email, template, template_data = [{}])
+    return if Rails.env.test?
+    raise EmailMsgError, 'Email must be provided' if user_email.blank?
+
+    mail = SendGrid::Mail.new
+    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
+    personalization = Personalization.new
+    personalization.add_to(SendGrid::Email.new(email: user_email))
+    template_data.each { |data| personalization.add_substitution(Substitution.new(data)) }
+    personalization.subject = template.subject
+    mail.add_personalization(personalization)
+    mail.add_content(Content.new(type: 'text/html', value: template.body))
     client.mail._('send').post(request_body: mail.to_json)
   end
 
@@ -141,3 +158,4 @@ class EmailMsg
   # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/ClassLength
