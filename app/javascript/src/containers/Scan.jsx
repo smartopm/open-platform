@@ -19,7 +19,10 @@ export default function QRScan() {
 
   useEffect(() => {
     const video = document.querySelector('video')
-
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+      setError("This browser does not support camera API")
+      return
+    }
     navigator.mediaDevices
       .getUserMedia({
         video: {
