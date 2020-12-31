@@ -191,7 +191,6 @@ ActiveRecord::Schema.define(version: 2020_12_31_080854) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["contact_type", "user_id"], name: "index_contact_infos_on_contact_type_and_user_id", unique: true
     t.index ["user_id"], name: "index_contact_infos_on_user_id"
   end
 
