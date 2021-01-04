@@ -12,7 +12,6 @@ class ActivityPointsJob < ApplicationJob
     post_shared: :article_shared,
   }.freeze
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def perform(user_id, action)
     user = User.find(user_id)
@@ -30,7 +29,6 @@ class ActivityPointsJob < ApplicationJob
       ActivityPoint.create!(user: user, ACTIONS[action.to_sym] => point)
     end
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   private

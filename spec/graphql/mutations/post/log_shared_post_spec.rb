@@ -28,7 +28,7 @@ RSpec.describe Mutations::Post::LogSharedPost do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'logSharedPost', 'eventLog', 'id')).not_to be_nil
       expect(result.dig('data', 'logSharedPost', 'eventLog', 'data', 'post_id')).to eql('111')
       expect(EventLog.count).to eql(prev_log_count + 1)
@@ -42,7 +42,7 @@ RSpec.describe Mutations::Post::LogSharedPost do
                                               context: {
                                                 current_user: nil,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
     end
   end

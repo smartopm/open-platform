@@ -9,7 +9,7 @@ module Types::Queries::EventLog
       description 'Get event logs for the community'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-      argument :subject, [String, null: true], required: false
+      argument :subject, [String, { null: true }], required: false
       argument :ref_id, GraphQL::Types::ID, required: false
       argument :ref_type, String, required: false
       argument :name, String, required: false
@@ -19,13 +19,13 @@ module Types::Queries::EventLog
       description 'Get event logs for actions a user performed'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-      argument :subject, [String, null: true], required: false
+      argument :subject, [String, { null: true }], required: false
       argument :user_id, GraphQL::Types::ID, required: true
     end
   end
   # rubocop:disable Metrics/ParameterLists
 
-  def all_event_logs(offset: 0, limit: 100, subject:, ref_id:, ref_type:, name: nil)
+  def all_event_logs(subject:, ref_id:, ref_type:, offset: 0, limit: 100, name: nil)
     authorized = context[:current_user]&.role?(%i[security_guard admin custodian])
     raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
 
@@ -40,7 +40,7 @@ module Types::Queries::EventLog
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def all_event_logs_for_user(offset: 0, limit: 100, subject:, user_id:)
+  def all_event_logs_for_user(subject:, user_id:, offset: 0, limit: 100)
     current_user = context[:current_user]
     authorized = current_user&.role?(%i[security_guard admin custodian])
     raise GraphQL::ExecutionError, 'Unauthorized' unless authorized

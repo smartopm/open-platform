@@ -18,8 +18,8 @@ module Mutations
         message.category = 'sms'
         message.save
         message.send_sms
-        if check_ids(message[:sender_id], vals[:user_id])
-          message.create_message_task unless check_default_user_empty?
+        if check_ids(message[:sender_id], vals[:user_id]) && !check_default_user_empty?
+          message.create_message_task
         end
         raise GraphQL::ExecutionError, message.errors.full_messages unless message.persisted?
 

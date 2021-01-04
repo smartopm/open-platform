@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # TODO: @mdp break this class up
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 
 require 'email_msg'
 require 'merge_users'
@@ -160,7 +160,7 @@ class User < ApplicationRecord
   def self.from_omniauth(auth, site_community)
     # Either create a User record or update it based on the provider (Google) and the UID
     user = find_or_initialize_from_oauth(auth, site_community)
-    OAUTH_FIELDS_MAP.keys.each do |param|
+    OAUTH_FIELDS_MAP.each_key do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
     user.assign_default_community(site_community)
@@ -190,7 +190,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def enroll_user(vals)
     enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys).except(:secondary_info))
     enrolled_user.community_id = community_id
@@ -208,7 +208,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 
   def record_secondary_info(user, secondary_contact_data)
     return unless secondary_contact_data.present? && user.valid?
@@ -260,7 +260,7 @@ class User < ApplicationRecord
                       data: data)
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def generate_note(vals)
     community.notes.create(
       # give the note to the author if no other user
@@ -293,7 +293,7 @@ class User < ApplicationRecord
       timesheet
     end
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 
   def construct_message(vals)
     mess = messages.new(vals)
@@ -312,7 +312,10 @@ class User < ApplicationRecord
 
   def user_form(form_id, user_id)
     if admin?
-      community.forms.find(form_id).form_users.find_by(user_id: user_id)
+      forms = community.forms.find_by(id: form_id)
+      return if forms.nil?
+
+      forms.form_users.find_by(user_id: user_id)
     else
       form_users.find_by(form_id: form_id)
     end
@@ -501,7 +504,7 @@ class User < ApplicationRecord
   def phone_number_valid?
     return nil if self[:phone_number].nil? || self[:phone_number].blank?
 
-    unless self[:phone_number].match(/\A[0-9\+\s\-]+\z/)
+    unless self[:phone_number].match(/\A[0-9+\s\-]+\z/)
       errors.add(:phone_number, "can only contain 0-9, '-', '+' and space")
     end
 
@@ -519,4 +522,4 @@ class User < ApplicationRecord
     end
   end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 RSpec.describe Mutations::User::Import do
   describe 'Import' do
     let!(:non_admin) { create(:user_with_community) }
@@ -71,7 +71,7 @@ RSpec.describe Mutations::User::Import do
                                               context: {
                                                 current_user: nil,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
     end
 
@@ -83,9 +83,9 @@ RSpec.describe Mutations::User::Import do
                                               context: {
                                                 current_user: non_admin,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eq('Unauthorized')
     end
   end
 end
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength

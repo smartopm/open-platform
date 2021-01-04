@@ -11,7 +11,7 @@ task create_business_form: :environment do
     name: 'Nkwashi Business Registration',
     expires_at: 10.days.from_now,
   )
-  # rubocop:disable Metrics/LineLength
+  # rubocop:disable Layout/LineLength
   properties = [
     {
       field_name: 'Full Business Name',
@@ -171,7 +171,7 @@ task create_business_form: :environment do
       order: '13',
     },
   ]
-  # rubocop:enable Metrics/LineLength
+  # rubocop:enable Layout/LineLength
 
   begin
     puts 'adding form properties to the form ...'

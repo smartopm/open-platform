@@ -49,7 +49,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
       expect(result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
       expect(result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
       expect(current_user.notes.count).to eql 1
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should err when form not provided' do

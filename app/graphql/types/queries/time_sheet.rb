@@ -74,7 +74,7 @@ module Types::Queries::TimeSheet
   private
 
   def get_allow_user(user_id)
-    return context[:site_community].users.find(user_id) if admin_or_custodian
+    return context[:site_community].users.find_by(id: user_id) if admin_or_custodian
 
     context[:current_user]
   end

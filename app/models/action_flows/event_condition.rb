@@ -3,8 +3,7 @@
 module ActionFlows
   # Class to run JSONLogic with passed rules and data
   class EventCondition
-    attr_reader :json_condition
-    attr_reader :json_data
+    attr_reader :json_condition, :json_data
 
     def initialize(json_data)
       @json_data = json_data

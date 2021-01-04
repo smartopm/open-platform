@@ -50,9 +50,8 @@ class EntryRequest < ApplicationRecord
   end
 
   def assign_task(note_id)
-    assign = user.community.notes.find(note_id)
-                 .assign_or_unassign_user(user.community.default_community_users[0].id)
-    assign
+    user.community.notes.find(note_id)
+        .assign_or_unassign_user(user.community.default_community_users[0].id)
   end
 
   def granted?
@@ -96,9 +95,9 @@ class EntryRequest < ApplicationRecord
     feedback_link = "https://#{ENV['HOST']}/feedback"
     Rails.logger.info "Phone number to send #{number}"
     # disabled rubocop to keep the structure of the message
-    # rubocop:disable LineLength
+    # rubocop:disable Layout/LineLength
     Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
-    # rubocop:enable LineLength
+    # rubocop:enable Layout/LineLength
   end
 
   def notify_client(number)

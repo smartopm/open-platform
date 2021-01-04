@@ -35,7 +35,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowDelete do
                                                  }).as_json
 
       expect(result.dig('data', 'actionFlowDelete', 'success')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is not admin' do

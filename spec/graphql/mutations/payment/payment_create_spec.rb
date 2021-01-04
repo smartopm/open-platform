@@ -52,7 +52,7 @@ RSpec.describe Mutations::Payment::PaymentCreate do
                                                    site_community: user.community,
                                                  }).as_json
       expect(result.dig('data', 'paymentCreate', 'payment', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

@@ -36,7 +36,7 @@ RSpec.describe Mutations::Discussion do
                         'userId')).to eql current_user.id
       expect(result.dig('data', 'discussionUserCreate', 'discussionUser',
                         'discussionId')).to eql user_discussion.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns error when not supplied properly' do
@@ -48,11 +48,11 @@ RSpec.describe Mutations::Discussion do
                                               context: {
                                                 current_user: current_user,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'result', 'discussionUserCreate', 'discussionUser',
                         'id')).to be_nil
       expect(result.dig('errors', 0, 'message'))
-        .to eql 'Variable discussionId of type ID! was provided invalid value'
+        .to eql 'Variable $discussionId of type ID! was provided invalid value'
     end
   end
 end

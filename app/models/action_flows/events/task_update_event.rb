@@ -29,10 +29,6 @@ module ActionFlows
         EVENT_TYPE
       end
 
-      def initialize
-        super
-      end
-
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
         assignees_email = note.assignees.map(&:email).join(',')

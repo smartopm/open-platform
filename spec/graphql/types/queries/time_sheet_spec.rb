@@ -137,7 +137,7 @@ RSpec.describe Types::Queries::TimeSheet do
                                          current_user: custodian,
                                          site_community: custodian.community,
                                        }).as_json
-      expect(result.dig('data', 'userTimeSheetLogs')).to be_nil
+      expect(result.dig('data', 'userTimeSheetLogs').length).to eql 0
     end
 
     it 'can retrieve last timesheet log for an employee' do

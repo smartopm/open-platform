@@ -41,7 +41,7 @@ RSpec.describe Mutations::Form::UserFormPropertiesUpdate do
                                                    site_community: admin.community,
                                                  }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(
         result.dig('data', 'userFormPropertiesUpdate', 'userFormProperty', 'id'),
       ).to_not be_nil

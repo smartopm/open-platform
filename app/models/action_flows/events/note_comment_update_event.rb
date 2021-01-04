@@ -15,10 +15,6 @@ module ActionFlows
         }
       end
 
-      def initialize
-        super
-      end
-
       def self.event_description
         EVENT_DESC
       end

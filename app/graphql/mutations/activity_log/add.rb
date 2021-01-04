@@ -37,9 +37,9 @@ module Mutations
         return if number.nil?
 
         # disabled rubocop to keep the structure of the message
-        # rubocop:disable LineLength
+        # rubocop:disable Layout/LineLength
         Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
-        # rubocop:enable LineLength
+        # rubocop:enable Layout/LineLength
       end
 
       # TODO: Better auth here

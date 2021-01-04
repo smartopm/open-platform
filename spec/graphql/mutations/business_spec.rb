@@ -41,7 +41,7 @@ RSpec.describe Mutations::Business do
       expect(result.dig('data', 'businessCreate', 'business', 'id')).not_to be_nil
       expect(result.dig('data', 'businessCreate', 'business', 'name')).to include 'Named 21'
       expect(result.dig('data', 'businessCreate', 'business', 'userId')).to eql non_admin.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'doesnt create a business when user is not admin' do
@@ -97,7 +97,7 @@ RSpec.describe Mutations::Business do
                                                 }).as_json
 
         expect(result.dig('data', 'businessDelete', 'businessDelete')).to eql true
-        expect(result.dig('errors')).to be_nil
+        expect(result['errors']).to be_nil
       end
     end
   end

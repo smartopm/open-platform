@@ -27,10 +27,6 @@ module ActionFlows
         EVENT_TYPE
       end
 
-      def initialize
-        super
-      end
-
       # rubocop:disable Metrics/MethodLength
       def preload_data(eventlog)
         form_user = eventlog.ref_type.constantize.find eventlog.ref_id

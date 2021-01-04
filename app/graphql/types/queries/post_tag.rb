@@ -12,7 +12,6 @@ module Types::Queries::PostTag
     end
   end
 
-  # rubocop:disable  Metrics/AbcSize
   def user_tags(tag_name:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
@@ -21,5 +20,4 @@ module Types::Queries::PostTag
 
     PostTagUser.find_by(user_id: context[:current_user].id, post_tag_id: tag.id)
   end
-  # rubocop:enable  Metrics/AbcSize
 end

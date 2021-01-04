@@ -40,7 +40,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'landParcel', 'id'),
       ).to eql land_parcel.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

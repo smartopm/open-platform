@@ -6,7 +6,6 @@ require 'email_msg'
 class CheckUnsubscribedUsersJob < ApplicationJob
   queue_as :default
 
-  # rubocop:disable Metrics/AbcSize
   def perform(community)
     # get list of users who unsubscribed
     start_time = Time.zone.now.beginning_of_week.to_i
@@ -16,5 +15,4 @@ class CheckUnsubscribedUsersJob < ApplicationJob
     label_id = community.labels.find_by(short_desc: 'com_news_email')&.id
     UserLabel.where(label_id: label_id, user_id: unsubscribed_users.pluck(:id)).delete_all
   end
-  # rubocop:enable Metrics/AbcSize
 end

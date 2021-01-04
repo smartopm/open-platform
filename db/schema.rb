@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_29_112402) do
+ActiveRecord::Schema.define(version: 2020_12_31_080854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -191,7 +191,6 @@ ActiveRecord::Schema.define(version: 2020_12_29_112402) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["contact_type", "user_id"], name: "index_contact_infos_on_contact_type_and_user_id", unique: true
     t.index ["user_id"], name: "index_contact_infos_on_user_id"
   end
 
@@ -353,6 +352,7 @@ ActiveRecord::Schema.define(version: 2020_12_29_112402) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
+    t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
   end
 
   create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

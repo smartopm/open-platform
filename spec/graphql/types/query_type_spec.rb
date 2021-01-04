@@ -216,7 +216,7 @@ RSpec.describe Types::QueryType do
                                          site_community: @current_user.community,
                                        }).as_json
       expect(result.dig('data', 'usersFeedback')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should fails if not logged in' do
@@ -471,7 +471,7 @@ RSpec.describe Types::QueryType do
                                          site_community: admin.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       history_data = result.dig('data', 'taskHistories')
       expect(history_data.length).not_to eq 0
@@ -481,7 +481,7 @@ RSpec.describe Types::QueryType do
       end
 
       expect(update_history.length).not_to eq 0
-      expect(update_history[0].dig('action')).to eq 'update'
+      expect(update_history[0]['action']).to eq 'update'
       expect(update_history[0].dig('user', 'id')).to eq admin.id
     end
 
@@ -497,7 +497,7 @@ RSpec.describe Types::QueryType do
                                          site_community: admin.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       task_comments = result.dig('data', 'taskComments')
       expect(task_comments.length).not_to eq 0
@@ -505,7 +505,7 @@ RSpec.describe Types::QueryType do
       task_comment = task_comments.select { |h| h['body'] == 'New Comment' }
 
       expect(task_comment.length).not_to eq 0
-      expect(task_comment[0].dig('createdAt')).not_to be_nil
+      expect(task_comment[0]['createdAt']).not_to be_nil
       expect(task_comment[0].dig('user', 'id')).to eq admin.id
     end
 
@@ -516,7 +516,7 @@ RSpec.describe Types::QueryType do
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'task')).not_to be_nil
       expect(result.dig('data', 'task', 'id')).to eql other_notes.id
     end
@@ -527,7 +527,7 @@ RSpec.describe Types::QueryType do
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'myTasksCount')).not_to be_nil
       expect(result.dig('data', 'myTasksCount')).to eql 1
     end

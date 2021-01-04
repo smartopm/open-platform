@@ -40,7 +40,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowUpdate do
       expect(result.dig('data', 'actionFlowUpdate', 'actionFlow', 'eventType')).to eq(
         'note_comment_create',
       )
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'throws unauthorized error when user is not admin' do

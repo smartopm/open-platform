@@ -32,7 +32,7 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
       expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'data')).not_to be_nil
       expect(result.dig('data', 'activityLogUpdateLog', 'eventLog', 'data', 'enrolled'))
         .not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should not update event log when not authorized' do
@@ -41,7 +41,7 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
                                          current_user: user,
                                        }).as_json
 
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
   end

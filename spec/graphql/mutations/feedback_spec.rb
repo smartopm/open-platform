@@ -34,7 +34,7 @@ RSpec.describe Mutations::Note do
                                               }).as_json
       expect(result.dig('data', 'feedbackCreate', 'feedback', 'id')).not_to be_nil
       expect(result.dig('data', 'feedbackCreate', 'feedback', 'isThumbsUp')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

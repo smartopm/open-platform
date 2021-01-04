@@ -14,7 +14,6 @@ module Mutations
       field :comment, Types::CommentType, null: true
 
       # refactor this
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         comment = context[:current_user].comments.new(
           discussion_id: vals[:discussion_id],
@@ -28,7 +27,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, comment.errors.full_messages
       end
-      # rubocop:enable Metrics/AbcSize
 
       def attach_image(comt, vals)
         IMAGE_ATTACHMENTS.each_pair do |key, attr|

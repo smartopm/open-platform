@@ -37,7 +37,7 @@ RSpec.describe Mutations::Note::NoteCommentDelete do
 
       expect(result.dig('data', 'noteCommentDelete', 'commentDelete')).not_to be_nil
       expect(result.dig('data', 'noteCommentDelete', 'commentDelete')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

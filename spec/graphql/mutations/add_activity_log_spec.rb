@@ -35,7 +35,7 @@ RSpec.describe Mutations::ActivityLog::Add do
                                               context: {
                                                 current_user: user,
                                               }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'actingUser', 'id')).to eql user.id
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'data')).not_to be_nil
@@ -52,7 +52,7 @@ RSpec.describe Mutations::ActivityLog::Add do
         }
       ).as_json
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should create a user referred event' do
@@ -69,7 +69,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'actingUser', 'id')).to eql user.id
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'subject')).to eql 'user_referred'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

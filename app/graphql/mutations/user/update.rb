@@ -21,7 +21,6 @@ module Mutations
 
       field :user, Types::UserType, null: true
 
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless user
@@ -53,7 +52,6 @@ module Mutations
         end
       end
 
-      # rubocop:enable Metrics/AbcSize
       def log_user_update(user)
         ::EventLog.create(acting_user_id: context[:current_user].id,
                           community_id: user.community_id, subject: 'user_update',

@@ -15,16 +15,16 @@ module Mutations
 
         begin
           user.merge_user(duplicate_id)
-          return { success: true }
+          { success: true }
         rescue StandardError
           raise GraphQL::ExecutionError, 'Merge Failed'
         end
       end
 
       def authorized?(vals)
-        user_record = context[:site_community].users.find(vals[:id])
+        user_record = context[:site_community].users.find_by(id: vals[:id])
         current_user = context[:current_user]
-        comm_user = user_record.community_id == current_user.community_id
+        comm_user = user_record&.community_id == current_user.community_id
         raise GraphQL::ExecutionError, 'Unauthorized' unless comm_user && current_user&.admin?
 
         true

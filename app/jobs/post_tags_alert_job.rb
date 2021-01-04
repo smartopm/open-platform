@@ -33,14 +33,13 @@ class PostTagsAlertJob < ApplicationJob
     url = "https://doublegdp.wpcomstaging.com/tag/#{tag}/"
     html = URI.open(url)
     content = Nokogiri::HTML(html)
-    posts = content.css('[id^=post]').map do |post_container|
+    content.css('[id^=post]').map do |post_container|
       # each post article contains an post id in this form "post-post_id" e.g: post-901
       article = post_container['id']
       # get title of the article
       post_id = article.split('-')[1]
       post_id
     end
-    posts
   end
 
   def post_published_date(post_id)
