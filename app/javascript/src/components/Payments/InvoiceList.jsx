@@ -14,7 +14,7 @@ import Paginate from '../Paginate'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
 
-export default function InvoiceList({ userId, data, user }) {
+export default function InvoiceList({ userId, user }) {
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
@@ -59,7 +59,6 @@ export default function InvoiceList({ userId, data, user }) {
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
-        data={data}
         userId={userId}
         creatorId={user.id}
         refetch={refetch}
@@ -105,12 +104,6 @@ export default function InvoiceList({ userId, data, user }) {
 }
 
 InvoiceList.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      parcelNumber: PropTypes.string.isRequired
-    })
-  ).isRequired,
   userId: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,

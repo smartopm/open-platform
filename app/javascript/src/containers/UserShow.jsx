@@ -7,7 +7,7 @@ import UserInformation from '../components/UserInformation'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
-import { UserQuery, UserAccountQuery, UserLandParcel } from '../graphql/queries'
+import { UserQuery, UserAccountQuery } from '../graphql/queries'
 import { AddActivityLog, SendOneTimePasscode } from '../graphql/mutations'
 import ErrorPage from '../components/Error'
 
@@ -36,14 +36,6 @@ export default ({ history }) => {
     }
   })
 
-  const {
-    loading: parcelLoading, data: parcelData
-  } = useQuery(UserLandParcel, {
-    variables: { userId: id },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network'
-  })
-
   const { data: accountData, refetch: accountRefetch } = useQuery(UserAccountQuery, {
     variables: { id },
     fetchPolicy: 'cache-and-network',
@@ -52,7 +44,7 @@ export default ({ history }) => {
 
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
 
-  if (loading || entry.loading || parcelLoading) return <Loading />
+  if (loading || entry.loading) return <Loading />
   if (entry.data) return <Redirect to="/" />
   if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message || error} /> // error could be a string sometimes
@@ -63,7 +55,6 @@ export default ({ history }) => {
         ? <Nav navName="Identification" menuButton="cancel" backTo={`/${history.location.state.from}?offset=${history.location.state.offset}`} />
         : <Nav navName="Identification" menuButton="cancel" backTo="/" />}
       <UserInformation
-        parcelData={parcelData?.userLandParcel}
         data={data}
         accountData={accountData}
         accountRefetch={accountRefetch}

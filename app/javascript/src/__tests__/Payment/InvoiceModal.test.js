@@ -5,9 +5,27 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import InvoiceModal from '../../components/Payments/invoiceModal'
 import { generateId } from '../../utils/helpers'
+import { UserLandParcel } from '../../graphql/queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the invoice modal component', () => {
+  const userId = generateId()[2]
+  const landParcelMock = {
+    request: {
+      query: UserLandParcel,
+      variables: { userId }
+    },
+    result: {
+      data: {
+        userLandParcel: [
+          {
+            id: '95e3c5f3-6757-48c1-837c-1d3e',
+            parcelNumber: 'Plot-1343'
+          }
+        ]
+      }
+    }
+  }
   const data = [
       {
         id: 'hiuwkeh',
@@ -18,8 +36,6 @@ describe('It should test the invoice modal component', () => {
   const open = true
 
   const handleModalClose = jest.fn
-
-  const userId = generateId()[2]
   const user = {
     userId,
     userType: 'admin'
@@ -27,11 +43,11 @@ describe('It should test the invoice modal component', () => {
 
   it('it should render invoice modal', () => {
     const container = render(
-      <BrowserRouter>
-        <MockedProvider>
+      <MockedProvider mocks={[landParcelMock]} addTypename={false}>
+        <BrowserRouter>
           <InvoiceModal open={open} data={data} userId={user.userId} handleModalClose={handleModalClose} userType={user.userType} />
-        </MockedProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </MockedProvider> 
     )
 
     expect(container.getByTestId("parcel-number")).toBeInTheDocument()
