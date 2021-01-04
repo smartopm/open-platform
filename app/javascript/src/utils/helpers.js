@@ -279,3 +279,11 @@ export const InvoiceStatus = {
   cancelled: 'Cancelled',
   in_progress: 'In-Progress',
 }
+
+export function generateId() {
+  if (!window.crypto) {
+    return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']
+  }
+  const array = new Uint32Array(10)
+  return window.crypto.getRandomValues(array)
+}

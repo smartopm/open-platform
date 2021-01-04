@@ -32,15 +32,17 @@ describe('User Plot Info Page', () => {
       ]
     }
   ]
-  const userType = 'admin'
 
-  const userId = 'bwekwjkewj'
+  const userMock = {
+    userType:'admin',
+    userId: 'bwekwjkewj'
+  }
   
   it('should include this type of a plot', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userId} userType={userType} />
+          <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -51,7 +53,7 @@ describe('User Plot Info Page', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={[]} userId={userId} userType={userType} />
+          <UserPlotInfo account={[]} userId={userMock.userId} userType={userMock.userType} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -62,7 +64,7 @@ describe('User Plot Info Page', () => {
     const { getByTestId } = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userId} userType={userType} />
+          <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
         </BrowserRouter>
       </MockedProvider>
     )
