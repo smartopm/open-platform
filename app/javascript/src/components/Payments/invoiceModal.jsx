@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useMutation } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,6 +13,8 @@ import { formatError } from '../../utils/helpers'
 import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import PaymentModal from './PaymentModal'
+import { UserLandParcel } from '../../graphql/queries'
+import { Spinner } from '../Loading'
 
 const initialValues = {
   status: '',
@@ -21,7 +23,7 @@ const initialValues = {
   amount: '',
   note: ''
 }
-export default function InvoiceModal({ open, handleModalClose, data, userId, creatorId, refetch, currency }) {
+export default function InvoiceModal({ open, handleModalClose, userId, creatorId, refetch, currency }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -31,6 +33,11 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
   const [openPayment, setOpenPayment] = useState(false)
   const [pay, setPay] = useState(false)
   const [invoiceData, setInvoiceData] = useState(null)
+  const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcel,{
+    variables: { userId },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  })
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -81,6 +88,18 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
   function handleChange(event){
     setPay(event.target.checked)
   }
+
+  useEffect(() => {
+    if (open) {
+      loadLandParcel({variables: { userId },
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'})
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  if (loading) return <Spinner />
+
   return (
     <>
       <MessageAlert
@@ -107,7 +126,7 @@ export default function InvoiceModal({ open, handleModalClose, data, userId, cre
             required
             select
           >
-            {data.map(land => (
+            {data?.userLandParcel.map(land => (
               <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
               ))}
           </TextField>
@@ -192,10 +211,6 @@ const useStyles = makeStyles({
 });
 
 InvoiceModal.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    parcelNumber: PropTypes.string.isRequired
-  })).isRequired,
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
