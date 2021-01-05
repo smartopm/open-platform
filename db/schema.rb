@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_31_104258) do
+ActiveRecord::Schema.define(version: 2021_01_05_133511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -226,6 +226,7 @@ ActiveRecord::Schema.define(version: 2020_12_31_104258) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_email_templates_on_community_id"
+    t.index ["name"], name: "index_email_templates_on_name", unique: true
   end
 
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

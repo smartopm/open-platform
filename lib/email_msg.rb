@@ -6,7 +6,6 @@ require 'uri'
 require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
-# rubocop:disable Metrics/ClassLength
 class EmailMsg
   include SendGrid
 
@@ -158,4 +157,3 @@ class EmailMsg
   # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/ClassLength
