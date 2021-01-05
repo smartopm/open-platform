@@ -3,18 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe NoteHistory, type: :model do
-  describe 'note history crud' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:note) do
-      admin.notes.create!(
-        body: 'This is a note',
-        user_id: current_user.id,
-        community_id: current_user.community_id,
-        author_id: admin.id,
-      )
-    end
+  let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+  let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+  let!(:note) do
+    admin.notes.create!(
+      body: 'This is a note',
+      user_id: current_user.id,
+      community_id: current_user.community_id,
+      author_id: admin.id,
+    )
+  end
 
+  describe 'note history crud' do
     it 'should create a note history record' do
       note.note_histories.create!(
         note_id: note.id,
@@ -46,5 +46,21 @@ RSpec.describe NoteHistory, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:note) }
     it { is_expected.to belong_to(:user) }
+  end
+
+  describe 'methods' do
+    it 'should return the note object when entity method is called' do
+      note.note_histories.create!(
+        note_id: note.id,
+        user_id: current_user.id,
+        attr_changed: 'Attribute',
+        initial_value: 'initial',
+        updated_value: 'updated',
+        action: %w[create update].sample,
+        note_entity_type: 'Note',
+        note_entity_id: note.id,
+      )
+      expect(note.note_histories.last.entity).to eql note
+    end
   end
 end
