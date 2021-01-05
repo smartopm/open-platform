@@ -29,6 +29,22 @@ class EmailMsg
     client.mail._('send').post(request_body: mail.to_json)
   end
 
+  # We should rename this to send_mail by the time we get rid of the send_mail() above
+  def self.send_mail_from_db(user_email, template, template_data = [{}])
+    return if Rails.env.test?
+    raise EmailMsgError, 'Email must be provided' if user_email.blank?
+
+    mail = SendGrid::Mail.new
+    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
+    personalization = Personalization.new
+    personalization.add_to(SendGrid::Email.new(email: user_email))
+    template_data.each { |data| personalization.add_substitution(Substitution.new(data)) }
+    personalization.subject = template.subject
+    mail.add_personalization(personalization)
+    mail.add_content(Content.new(type: 'text/html', value: template.body))
+    client.mail._('send').post(request_body: mail.to_json)
+  end
+
   def self.sendgrid_api(api_link)
     url = URI(api_link)
     http = Net::HTTP.new(url.host, url.port)
