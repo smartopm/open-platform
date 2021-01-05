@@ -12,9 +12,15 @@ export default function CaptureTemp({ refId, refName, refType }) {
     const [open, setOpen] = useState(false)
     const [tempValue, setTempValue] = useState('')
     const [disabled, setDisabled] = useState('')
+    const [tempErrorMessage, setTempErrorMessage] = useState('')
+
 
     function handleClick() {
-
+        if (!tempValue.trim().length) {
+            setTempErrorMessage('Input cannot be empty')
+            return
+        }
+        setTempErrorMessage('')
         recordTemp({
             variables: { refId: refId, temp: tempValue, refName, refType }
         }).then(() => {
@@ -26,11 +32,11 @@ export default function CaptureTemp({ refId, refName, refType }) {
     }
         return (
 
-            <div className="row flex-row col-8 pl-10 " style={{pointerEvents: disabled}}>
+            <div className="flex-row col-8 pl-10 " style={{pointerEvents: disabled}}>
                 <TextField required label="°C" className="tempvalue" variant="outlined" value={tempValue}
-                    size="small" style={{ width: 80, marginRight: 30 }} InputLabelProps={{
+                    size="small" style={{ width: 156, marginRight: 30 }} InputLabelProps={{
                         shrink: true,
-                    }} onChange={()=>setTempValue(event.target.value)} />
+                    }} onChange={()=>setTempValue(event.target.value)} error={!!tempErrorMessage} helperText={tempErrorMessage} />
 
                 <Button className="button" variant="contained" color="inherit" onClick={handleClick} >log</Button>
 
