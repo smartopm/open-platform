@@ -2,8 +2,9 @@
 
 module Mutations
     module EmailTemplate
-      # Create a new EmailTemplate
-      class TemplateCreate < BaseMutation
+      # update an email template
+      class TemplateUpdate < BaseMutation
+        argument :id, ID, required: true
         argument :name, String, required: true
         argument :subject, String, required: true
         argument :body, String, required: true
@@ -11,9 +12,12 @@ module Mutations
         field :email_template, Types::EmailTemplateType, null: true
   
         def resolve(vals)
-          email = context[:site_community].email_templates.create(vals)
-          
+          email = context[:site_community].email_templates.find(vals[:id])
+          raise GraphQL::ExecutionError, 'Template not found' if email.nil?
+        
+          email.update(vals)
           return { email_template: email } if email.persisted?
+          
           raise GraphQL::ExecutionError, email.errors.full_messages
         end
   

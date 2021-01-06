@@ -122,5 +122,6 @@ module Types
 
     # email_template
     field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
+    field :email_template_update, mutation: Mutations::EmailTemplate::TemplateUpdate
   end
 end
