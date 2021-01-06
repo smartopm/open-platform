@@ -16,6 +16,7 @@ export const UserFragment = {
       expiresAt
       email
       subStatus
+      address
       accounts {
         id
         updatedAt
@@ -49,6 +50,11 @@ export const UserFragment = {
           id
           name
         }
+      }
+      contactInfos {
+        id
+        info
+        contactType
       }
     }
   `
@@ -84,7 +90,6 @@ export const NotesFragment = {
       category
       description
       dueDate
-      reminderTime
       user {
         id
         name
@@ -98,6 +103,10 @@ export const NotesFragment = {
         id
         name
         imageUrl
+      }
+      assigneeNotes{
+        userId
+        reminderTime
       }
     }
   `

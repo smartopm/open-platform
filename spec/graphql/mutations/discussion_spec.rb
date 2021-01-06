@@ -59,7 +59,7 @@ RSpec.describe Mutations::Discussion do
       expect(result.dig('data', 'discussionCreate', 'discussion', 'userId')).to eql current_user.id
       expect(result.dig('data', 'discussionCreate', 'discussion', 'postId')).to eql '21'
       expect(result.dig('data', 'discussionCreate', 'discussion', 'description')).to include 'Lets'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'deletes a discussion' do
@@ -74,7 +74,7 @@ RSpec.describe Mutations::Discussion do
                                                        site_community: current_user.community,
                                                      }).as_json
       expect(result.dig('data', 'discussionUpdate', 'success')).to eql 'updated'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'doesnt allow non admin users to create a discussion' do
@@ -92,7 +92,7 @@ RSpec.describe Mutations::Discussion do
       expect(result.dig('data', 'discussionCreate', 'discussion', 'id')).to be_nil
       expect(result.dig('data', 'discussionCreate', 'discussion', 'userId')).to be_nil
       expect(result.dig('data', 'discussionCreate', 'discussion', 'postId')).to be_nil
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
 
@@ -107,10 +107,10 @@ RSpec.describe Mutations::Discussion do
                                                 current_user: current_user,
                                                 site_community: current_user.community,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message'))
-        .to eql 'Variable title of type String! was provided invalid value'
+        .to eql 'Variable $title of type String! was provided invalid value'
     end
     it 'returns error when user is not resident, client or admin' do
       variables = {
@@ -123,7 +123,7 @@ RSpec.describe Mutations::Discussion do
                                                 current_user: guard,
                                                 site_community: guard.community,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'result', 'discussionCreate', 'discussion', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end

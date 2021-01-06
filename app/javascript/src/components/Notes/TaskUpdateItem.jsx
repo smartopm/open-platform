@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-export default function TaskUpdateItem({ user, content, icon }) {
+export default function TaskUpdateItem({ user, content, icon, date }) {
 
   return(
     <>
@@ -16,6 +16,9 @@ export default function TaskUpdateItem({ user, content, icon }) {
           </b>
           {' '}
           {content}
+          <br />
+          {' '}
+          {date}
         </Typography>
       </div>
       <Divider orientation="vertical" />
@@ -26,11 +29,13 @@ export default function TaskUpdateItem({ user, content, icon }) {
 TaskUpdateItem.defaultProps = {
   user: '',
   content: '',
-  icon: {}
+  icon: {},
+  date: '',
  }
  TaskUpdateItem.propTypes = {
    user: PropTypes.string,
    content: PropTypes.string,
+   date: PropTypes.string,
    // eslint-disable-next-line react/forbid-prop-types
    icon: PropTypes.object
  } 

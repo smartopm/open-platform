@@ -46,6 +46,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         phoneNumber: '26923422232',
         userType: 'client',
+        email: 'dummy@email.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -55,7 +56,7 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userCreate', 'user', 'phoneNumber')).to eql '26923422232'
       expect(result.dig('data', 'userCreate', 'user', 'userType')).to eql 'client'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns  duplicate number' do
@@ -65,13 +66,14 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         phoneNumber: '26923422232',
         userType: 'client',
+        email: 'dummy@email.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
                                                 site_community: current_user.community,
                                               }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns should not create an invalid pending user' do
@@ -87,7 +89,7 @@ RSpec.describe Mutations::User do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user')).to be_nil
-      expect(result.dig('errors')).not_to be_empty
+      expect(result['errors']).not_to be_empty
     end
 
     it 'should not create a user when user_type is not valid' do
@@ -97,6 +99,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         phoneNumber: '26923422232',
         userType: nil,
+        email: 'dummy@email.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -104,7 +107,7 @@ RSpec.describe Mutations::User do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user')).to be_nil
-      expect(result.dig('errors')).not_to be_empty
+      expect(result['errors']).not_to be_empty
     end
 
     it 'should fail to create a duplicate email user' do
@@ -124,7 +127,7 @@ RSpec.describe Mutations::User do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'userCreate', 'user')).to be_nil
-      expect(result.dig('errors')).not_to be_empty
+      expect(result['errors']).not_to be_empty
     end
 
     it 'should allow clients to create other clients' do
@@ -133,6 +136,7 @@ RSpec.describe Mutations::User do
         reason: 'Resident',
         phoneNumber: '26913422232',
         userType: 'client',
+        email: 'dummy@email.com',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -140,7 +144,7 @@ RSpec.describe Mutations::User do
                                                 current_user: admin_user,
                                                 site_community: admin_user.community,
                                               }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       # expect(result.dig('data', 'userCreate', 'user', 'requestReason')).to eql 'Resident'
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
       # expect(result.dig('data', 'userCreate', 'user', 'name')).to eql 'Mark John'
@@ -194,7 +198,7 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'requestReason')).to eql 'Rspec'
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql 'client'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns should not update to an invalid pending user' do
@@ -211,7 +215,7 @@ RSpec.describe Mutations::User do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'userUpdate', 'user')).to be_nil
-      expect(result.dig('errors')).not_to be_empty
+      expect(result['errors']).not_to be_empty
     end
     it 'returns should not update without a user type' do
       variables = {
@@ -227,7 +231,7 @@ RSpec.describe Mutations::User do
                                                 site_community: current_user.community,
                                               }).as_json
       expect(result.dig('data', 'userUpdate', 'user')).to be_nil
-      expect(result.dig('errors')).not_to be_empty
+      expect(result['errors']).not_to be_empty
     end
   end
 
@@ -236,24 +240,28 @@ RSpec.describe Mutations::User do
     let!(:user) { create(:user_with_community) }
     let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
+    let!(:client) { create(:pending_user, community_id: admin.community_id, user_type: 'client') }
 
     let(:query) do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
-            $userType: String!
+            $userType: String
             $vehicle: String
+            $name: String
           ) {
           userUpdate(
               id: $id,
               userType: $userType,
               vehicle: $vehicle,
+              name: $name
             ) {
             user {
               id
               userType
               roleName
               vehicle
+              name
             }
           }
         }
@@ -283,7 +291,51 @@ RSpec.describe Mutations::User do
                                               }).as_json
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'roleName')).to eql 'Security Guard'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
+    end
+
+    it 'should not update with restricted field' do
+      variables = {
+        id: pending_user.id,
+        userType: 'visitor',
+        name: 'Some nice name',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: client,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized Arguments'
+    end
+
+    it 'should not update when is client and record isnt theirs' do
+      variables = {
+        id: pending_user.id,
+        name: 'Some nice name',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: client,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should update when it is user updating their own' do
+      variables = {
+        id: client.id,
+        name: 'Some nice name',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: client,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(result.dig('data', 'userUpdate', 'user', 'name')).to eql 'Some nice name'
+      expect(result['errors']).to be_nil
     end
 
     it 'returns prevent non-admins from updating protected user fields' do
@@ -299,7 +351,7 @@ RSpec.describe Mutations::User do
                                               }).as_json
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
-      expect(result.dig('errors')).to_not be nil
+      expect(result['errors']).to_not be nil
     end
 
     it 'should merge the 2 given users' do
@@ -315,7 +367,7 @@ RSpec.describe Mutations::User do
                                                            site_community: admin.community,
                                                          }).as_json
       expect(result.dig('data', 'userMerge', 'success')).to eql true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should not merge the 2 new given users' do
@@ -373,7 +425,7 @@ RSpec.describe Mutations::User do
                                                            site_community: user.community,
                                                          }).as_json
       expect(result.dig('data', 'userMerge', 'success')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'User not found'
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
   end
 
@@ -386,7 +438,8 @@ RSpec.describe Mutations::User do
         mutation CreateUserMutation(
             $name: String!,
             $reason: String!,
-            $vehicle: String
+            $vehicle: String,
+            $email: String
             $avatarBlobId: String
             $phoneNumber: String!
             $userType: String!
@@ -396,7 +449,8 @@ RSpec.describe Mutations::User do
               requestReason: $reason,
               vehicle: $vehicle,
               avatarBlobId: $avatarBlobId,
-              phoneNumber: $phoneNumber
+              phoneNumber: $phoneNumber,
+              email: $email,
               userType: $userType
             ) {
             user {
@@ -434,7 +488,7 @@ RSpec.describe Mutations::User do
     end
 
     it 'should allow authorized users to attach avatars and documents to new users' do
-      file = fixture_file_upload(Rails.root.join('public', 'apple-touch-icon.png'), 'image/png')
+      file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
       avatar_blob = ActiveStorage::Blob.create_after_upload!(
         io: file,
         filename: 'test.jpg',
@@ -446,6 +500,7 @@ RSpec.describe Mutations::User do
         vehicle: nil,
         avatarBlobId: avatar_blob.signed_id,
         phoneNumber: '26923422232',
+        email: 'name@email.com',
         userType: 'resident',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
@@ -455,11 +510,11 @@ RSpec.describe Mutations::User do
                                                      }).as_json
 
       expect(result.dig('data', 'userCreate', 'user', 'avatarUrl')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should allow authorized users to attach avatars and documents' do
-      file = fixture_file_upload(Rails.root.join('public', 'apple-touch-icon.png'), 'image/png')
+      file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
       avatar_blob = ActiveStorage::Blob.create_after_upload!(
         io: file,
         filename: 'test.jpg',
@@ -478,7 +533,7 @@ RSpec.describe Mutations::User do
                                                      }).as_json
 
       expect(result.dig('data', 'userUpdate', 'user', 'avatarUrl')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
   describe 'sending a user a one time passcode' do
@@ -511,7 +566,7 @@ RSpec.describe Mutations::User do
                                                               site_community: admin.community,
                                                             }).as_json
       expect(result.dig('data', 'result', 'success')).to be true
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should not allow non-admins to send one time login codes' do
@@ -524,7 +579,7 @@ RSpec.describe Mutations::User do
                                                               site_community: admin.community,
                                                             }).as_json
       expect(result.dig('data', 'result')).to be nil
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
     end
   end
 end

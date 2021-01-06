@@ -52,14 +52,27 @@ export const userState = {
 export const userSubStatus = {
   applied: 'Applied',
   architecture_reviewed: 'Architecture Reviewed',
-  banned: 'Approved',
+  approved: 'Approved',
   contracted: 'Contracted',
-  expired: 'Built',
+  built: 'Built',
   in_construction: 'In Construction',
   interested: 'Interested',
   moved_in: 'Moved-In',
   paying: 'Paying',
   ready_for_construction: 'Ready for Construction',
+}
+
+export const subStatus = {
+  0: 'Applied',
+  1: 'Architecture Reviewed',
+  2: 'Approved',
+  3: 'Contracted',
+  4: 'Built',
+  5: 'In Construction',
+  6: 'Interested',
+  7: 'Moved-In',
+  8: 'Paying',
+  9: 'Ready for Construction',
 }
 
 export const entryReason = [
@@ -109,39 +122,6 @@ export const commentStatusAction = {
 }
 // Values from here should be managed at the community level
 export const ponisoNumber = '+260976064298'
-export const salesSupport = [
-  {
-    contact: '+260 966 194383',
-    type: 'phone'
-  },
-  {
-    contact: '+260 760 635024',
-    type: 'phone'
-  },
-  {
-    contact: ' nkwashi-sales@doublegdp.com',
-    type: 'mail'
-  }
-]
-
-export const customerCare = [
-  {
-    contact: '+260 976 261199',
-    type: 'phone'
-  },
-  {
-    contact: '+260 974 624243',
-    type: 'phone'
-  },
-  {
-    contact: '+260 974 624243',
-    type: 'whatsapp'
-  },
-  {
-    contact: 'support@doublegdp.com',
-    type: 'mail'
-  }
-]
 
 export const messageFilters = [
   {
@@ -185,4 +165,17 @@ export const fieldType = {
   signature: 3,
   display_text: 4,
   display_image: 5
+}
+
+export const formStatus = {
+  rejected: 'Rejected',
+  approved: 'Approved',
+  pending: 'Pending',
+  draft: 'draft',
+  publish: 'published',
+  delete: 'deleted'
+}
+
+export const currencies = {
+  zambian_kwacha: 'k'
 }

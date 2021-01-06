@@ -3,6 +3,7 @@
 # alias for tasks and todos
 
 # Notes queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Note
   extend ActiveSupport::Concern
 
@@ -54,7 +55,9 @@ module Types::Queries::Note
   def all_notes(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:user, :note_comments).limit(limit).offset(offset)
+    context[:site_community].notes.where(flagged: false)
+                            .includes(:user, :note_comments)
+                            .limit(limit).offset(offset)
   end
 
   def user_notes(id:)
@@ -63,16 +66,36 @@ module Types::Queries::Note
     context[:site_community].notes.where(user_id: id, flagged: false)
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def flagged_notes(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.includes(:assignees, :author, :user)
-                            .eager_load(:assignee_notes, :assignees, :user)
-                            .where(flagged: true)
-                            .search(query)
-                            .order(completed: :desc, created_at: :desc)
-                            .limit(limit).offset(offset)
+    if query.present? && query.include?('assignees')
+      context[:site_community].notes.search_assignee(query)
+                              .includes(:assignees, :author, :user)
+                              .eager_load(:assignee_notes, :assignees, :user)
+                              .where(flagged: true)
+                              .order(completed: :desc, created_at: :desc)
+                              .limit(limit).offset(offset)
+    elsif query.present? && query.include?('user')
+      context[:site_community].notes.search_user(query)
+                              .includes(:assignees, :author, :user)
+                              .eager_load(:assignee_notes, :assignees, :user)
+                              .where(flagged: true)
+                              .order(completed: :desc, created_at: :desc)
+                              .limit(limit).offset(offset)
+    else
+      context[:site_community].notes.includes(:assignees, :author, :user)
+                              .eager_load(:assignee_notes, :assignees, :user)
+                              .where(flagged: true)
+                              .search(query)
+                              .order(completed: :desc, created_at: :desc)
+                              .limit(limit).offset(offset)
+    end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def task(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
@@ -92,7 +115,10 @@ module Types::Queries::Note
   def task_histories(task_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.find(task_id).note_histories.eager_load(:user)
+    context[:site_community].notes.find(task_id)
+                            .note_histories
+                            .eager_load(:user)
+                            .order(created_at: :desc)
   end
 
   def my_tasks_count
@@ -128,3 +154,4 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 end
+# rubocop:enable Metrics/ModuleLength

@@ -52,17 +52,18 @@ RSpec.describe Mutations::Comment do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'commentCreate', 'comment', 'id')).not_to be_nil
       expect(result.dig('data', 'commentCreate', 'comment', 'content')).to include 'last comment'
       expect(result.dig('data', 'commentCreate', 'comment', 'userId')).to eql user.id
       expect(result.dig('data', 'commentCreate', 'comment', 'discussionId'))
         .to eql u_discussion.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should allow attaching images to a comment' do
-      file = fixture_file_upload(Rails.root.join('public', 'apple-touch-icon.png'), 'image/png')
+      file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
       image_blob = ActiveStorage::Blob.create_after_upload!(
         io: file,
         filename: 'test.jpg',
@@ -76,13 +77,14 @@ RSpec.describe Mutations::Comment do
 
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
+                                                site_community: admin.community,
                                                 current_user: user,
                                               }).as_json
 
       expect(result.dig('data', 'commentCreate', 'comment', 'imageUrl')).not_to be_nil
       expect(result.dig('data', 'commentCreate', 'comment',
                         'imageUrl')).to include image_blob.signed_id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'returns error when not supplied properly' do
@@ -97,7 +99,7 @@ RSpec.describe Mutations::Comment do
                                                 current_user: user,
                                                 site_community: admin.community,
                                               }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'commentCreate', 'comment', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'invalid value'
     end
@@ -114,7 +116,7 @@ RSpec.describe Mutations::Comment do
                                                          current_user: user,
                                                          site_community: admin.community,
                                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'commentUpdate', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
@@ -131,7 +133,7 @@ RSpec.describe Mutations::Comment do
                                                          current_user: admin,
                                                          site_community: admin.community,
                                                        }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'commentUpdate', 'success')).to include 'updated'
     end
 
@@ -147,7 +149,7 @@ RSpec.describe Mutations::Comment do
                                                          current_user: admin,
                                                          site_community: admin.community,
                                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'commentUpdate', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'invalid value'
     end
@@ -164,7 +166,7 @@ RSpec.describe Mutations::Comment do
                                                          current_user: another_admin,
                                                          site_community: admin.community,
                                                        }).as_json
-      expect(result.dig('errors')).not_to be_nil
+      expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'commentUpdate', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end

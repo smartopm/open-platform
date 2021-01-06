@@ -14,6 +14,10 @@ module Authorizable
     user_google_oauth2_omniauth_authorize_path
   end
 
+  def current_hostname
+    request.host
+  end
+
   # rubocop:disable Metrics/MethodLength
   def current_community
     community_list = { 'app.doublegdp.com' => 'Nkwashi',
@@ -49,6 +53,7 @@ module Authorizable
     {
       current_user: user,
       site_community: @site_community,
+      site_hostname: current_hostname,
     }
   end
 
@@ -63,9 +68,7 @@ module Authorizable
   def log_active_user(user)
     cache_key = log_cache_key(user)
     cached = Rails.cache.read(cache_key)
-    if cached
-      return if Time.zone.at(cached) > Time.zone.now
-    end
+    return if cached && Time.zone.at(cached) > Time.zone.now
 
     EventLog.log_user_activity_daily(user)
     Rails.cache.write(cache_key, 8.hours.from_now.to_i, expires_in: 8.hours)

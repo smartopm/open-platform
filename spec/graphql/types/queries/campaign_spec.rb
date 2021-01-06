@@ -51,7 +51,7 @@ RSpec.describe Types::QueryType do
         })
     end
 
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     it 'should retrieve list of campaigns' do
       result = DoubleGdpSchema.execute(campaigns_query, context: {
                                          current_user: admin,
@@ -69,7 +69,7 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('totalSent')).to be_truthy
       expect(result.dig('data', 'campaigns', 0, 'campaignMetrics').key?('totalClicked')).to be_truthy
     end
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
 
     it 'should retrieve the requested campaing via id' do
       result = DoubleGdpSchema.execute(campaign_query, context: {

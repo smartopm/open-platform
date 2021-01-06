@@ -110,6 +110,22 @@ https://nurudeen.dgdp.site {
   }
 }
 
+https://victor.dgdp.site {
+  tls /root/certs/victor.dgdp.site/cert.pem /root/certs/victor.dgdp.site/privkey.pem
+  log stdout
+  errors stdout
+  proxy /packs webpacker:3035 {
+    transparent
+  }
+  proxy /sockjs-node webpacker:3035 {
+    transparent
+    websocket
+  }
+  proxy / rails:3000 {
+    transparent
+  }
+}
+
 localhost:443 {
   tls self_signed
   log stdout

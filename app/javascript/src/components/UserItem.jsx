@@ -11,7 +11,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Hidden
+  Hidden,
+  Checkbox
 } from '@material-ui/core'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -27,7 +28,11 @@ import CenteredContent from './CenteredContent'
 export default function UserItem({
   user,
   currentUserType,
-  sendOneTimePasscode
+  sendOneTimePasscode,
+  handleUserSelect,
+  selectedUsers,
+  offset,
+  selectCheckBox
 }) {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -67,7 +72,10 @@ export default function UserItem({
 
   function showUserDetails(event) {
     if (event.target.tagName === 'DIV') {
-      history.push(`/user/${user.id}`)
+      history.push({
+        pathname: `/user/${user.id}`,
+        state: { from: 'users', offset }
+      })
     }
   }
 
@@ -101,6 +109,14 @@ export default function UserItem({
         onClick={showUserDetails}
       >
         <Grid container alignItems="center">
+          <Checkbox
+            checked={selectedUsers.includes(user.id) || selectCheckBox}
+            onChange={() => handleUserSelect(user)}
+            name="includeReplyLink"
+            data-testid="reply_link"
+            color="primary"
+            style={{padding: '0px', marginRight: '15px'}}
+          />
           <ListItemAvatar className={classes.avatarList}>
             <Avatar user={user} />
           </ListItemAvatar>
@@ -139,7 +155,7 @@ export default function UserItem({
               >
                 <Link
                   style={{ color: 'black' }}
-                  to={`/user/${user.id}`}
+                  to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
                   key={user.id}
                 >
                   <Typography component="span" variant="subtitle1">
@@ -159,19 +175,15 @@ export default function UserItem({
                   marginRight: 30
                 }}
               >
-                <Typography variant="body2" color="textSecondary">
-                  {user.email}
-                </Typography>
-                {
-                  user.subStatus && (
-                  <Typography variant="body2" color="textSecondary" data-testid="user-substatus">
-                    {titleize(user.subStatus)}
-                  </Typography>
-                )
-}
+                <Typography variant="body2">{user.email}</Typography>
                 <Typography component="span" variant="body2">
                   {user.phoneNumber}
                 </Typography>
+                {user.subStatus && (
+                  <Typography variant="body2" data-testid="user-substatus">
+                    {titleize(user.subStatus)}
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Box>
@@ -240,10 +252,14 @@ UserItem.propTypes = {
     imageUrl: PropTypes.string,
     subStatus: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),
-    labels: PropTypes.arrayOf(PropTypes.object),
+    labels: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired
+  selectCheckBox: PropTypes.bool.isRequired,
+  offset: PropTypes.number.isRequired,
+  sendOneTimePasscode: PropTypes.func.isRequired,
+  handleUserSelect: PropTypes.func.isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
 const useStyles = makeStyles(() => ({

@@ -42,11 +42,11 @@ export function Results({ data, loading, called, authState }) {
             className={css(styles.link)}
           >
             <div className="d-flex flex-row align-items-center py-2">
-              {/* eslint-disable-next-line react/style-prop-object */} 
+              {/* eslint-disable-next-line react/style-prop-object */}
               <Avatar user={user} style="small" />
               <div className="px-3 w-100">
                 <h6 className={css(styles.title)}>{user.name}</h6>
-                <small className={css(styles.small)}> 
+                <small className={css(styles.small)}>
                   {' '}
                   {user.roleName}
                   {' '}
@@ -95,17 +95,10 @@ export default function SearchContainer({ location }) {
     setName(value)
   }
 
-  function specifyQuery(queryName) {
-    if (Number(queryName)) {
-      return `plot_no = ${queryName}`
-    }
-    return queryName
-  }
-
   function handleSearch(event){
-    if(event.keyCode === 13){
+    if(event.keyCode === 13 && name.trim().length > 0){
       loadGQL({
-        variables: { query: specifyQuery(name), limit, offset },
+        variables: { query: name, limit, offset },
         errorPolicy: 'all'
       })
     }

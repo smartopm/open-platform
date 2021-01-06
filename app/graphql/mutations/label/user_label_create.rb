@@ -4,14 +4,16 @@ module Mutations
   module Label
     # Create a new Label for the user
     class UserLabelCreate < BaseMutation
-      argument :user_id, String, required: true
+      argument :query, String, required: false
+      argument :limit, Integer, required: false
       argument :label_id, String, required: true
+      argument :user_list, String, required: false
 
       field :label, [Types::UserLabelType], null: true
 
       # TODO: move create label operations to background job : Saurabh
-      def resolve(user_id:, label_id:)
-        user_ids = user_id.split(',')
+      def resolve(query:, limit:, label_id:, user_list:)
+        user_ids = (user_list.present? ? user_list.split(',') : list_of_user_ids(query, limit))
         label_ids = label_id.split(',')
         labels = []
         user_ids.each do |u_id|
@@ -30,6 +32,18 @@ module Mutations
         raise GraphQL::ExecutionError, label.errors.full_messages if label_records.nil?
 
         label_records
+      end
+
+      def list_of_user_ids(query, limit)
+        users = if query.present? && query.include?('date_filter')
+                  ::User.allowed_users(context[:current_user])
+                        .heavy_search(query)
+                else
+                  ::User.allowed_users(context[:current_user])
+                        .search(query)
+                end
+
+        users.order(name: :asc).limit(limit).pluck(:id).uniq
       end
 
       def authorized?(_vals)

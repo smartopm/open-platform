@@ -6,18 +6,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { StyleSheet, css } from 'aphrodite'
 import Avatar from '@material-ui/core/Avatar'
 import MenuIcon from '@material-ui/icons/Menu'
-import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined'
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider.js'
-import logoUrl from '../../../assets/images/nkwashi_white_logo_transparent.png'
 import Drawer from '@material-ui/core/Drawer'
 import { SideList } from './SideList.jsx'
 import { safeAvatarLink } from './Avatar.jsx'
-import { FormContext } from '../containers/UserEdit.jsx'
 import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
-import { Badge } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
-import { MyTaskCountQuery } from '../graphql/queries.js';
+import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries.js';
+import NotificationBell from './NotificationBell'
+import ImageAuth from './ImageAuth'
 
 export default withRouter(function Nav({
   children,
@@ -53,8 +50,10 @@ export function Component({
   backTo
 }) {
   const [state, setState] = React.useState(false)
-  const { values, handleSubmit } = useContext(FormContext)
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' })
+  const { data: messageCount } = useQuery(messageCountQuery,
+                                          {fetchPolicy: 'cache-and-network',
+                                          errorPolicy: 'all'})
   const theme = useContext(ThemeContext)
 
 
@@ -83,23 +82,7 @@ export function Component({
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </span>
       )
-    } else if (menuButton === 'edit') {
-      return (
-        <Fragment>
-          <span
-            className={css(styles.buttonLeft)}
-            onClick={() => history.push(backTo)}
-          >
-            <i className={`material-icons ${css(styles.icon)}`}>clear</i>
-          </span>
-          <span onClick={e => handleSubmit(e, values)}>
-            <i className={`material-icons ${css(styles.rightSideIcon)}`}>
-              check
-            </i>
-          </span>
-        </Fragment>
-      )
-    }
+    } 
 
     return (
       <Fragment>
@@ -117,20 +100,7 @@ export function Component({
             />
           )}
 
-        <Badge
-          badgeContent={data?.myTasksCount}
-          color="secondary"
-              className={`${css(
-                  authState.user.userType === 'security_guard'
-                    ? styles.rightSideIconGuard
-                    : styles.rightSideIconAdmin
-          )}`}
-           onClick={() => history.push('/my_tasks')}
-        >
-          {
-            data?.myTasksCount ? <NotificationsIcon /> :<NotificationsNoneOutlinedIcon />
-          }
-        </Badge>
+        <NotificationBell user={authState.user} history={history} data={data} messageCount={messageCount} />
       </Fragment>
     )
   }
@@ -156,7 +126,11 @@ export function Component({
     }
     return (
       <Link to="/">
-        <img src={logoUrl} className={css(styles.logo)} alt="community logo" />
+        <ImageAuth 
+          imageLink={authState.user?.community.imageUrl} 
+          token={authState.token} 
+          className={css(styles.logo)}
+        />
       </Link>
     )
   }

@@ -12,7 +12,25 @@ export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) 
   const { state } = useLocation()
   const shifts = data.userTimeSheetLogs
   const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours']
+  const timezone = 'Africa/Lusaka'
   // Day, Date, Start Time, Stop Time, Total Hours in the day
+
+  const getWeekDay = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleString('en-us', { weekday: 'long', timeZone: timezone })
+  }
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: timezone }
+    const date = new Date(dateString).toLocaleString('en-CA', options)
+    return date;
+  }
+
+  const formatTime = (dateString) => {
+    const options = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: timezone }
+    const time = new Date(dateString).toLocaleString("en-US", options)
+    return time
+  }
 
   const { days, hours } = calculateHoursAndDays(shifts)
   return (
@@ -39,17 +57,17 @@ export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) 
             shifts.map(shift => (
               <StyledTableRow key={shift.id}>
                 <StyledTableCell>
-                  {dateutil.getWeekDay(new Date(dateToString(shift.startedAt)))}
+                  {getWeekDay(shift.startedAt)}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {dateToString(shift.startedAt)}
+                  {formatDate(shift.startedAt)}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {dateTimeToString(new Date(shift.startedAt))}
+                  {formatTime(shift.startedAt)}
                 </StyledTableCell>
                 <StyledTableCell>
                   {shift.endedAt
-                    ? dateTimeToString(new Date(shift.endedAt))
+                    ? formatTime(shift.endedAt)
                     : 'In-Progress'}
                 </StyledTableCell>
                 <StyledTableCell data-testid="prog">

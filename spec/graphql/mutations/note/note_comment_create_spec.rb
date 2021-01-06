@@ -39,7 +39,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
                                               }).as_json
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body')).to eql 'Comment body'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

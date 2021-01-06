@@ -29,27 +29,41 @@ class EmailMsg
     client.mail._('send').post(request_body: mail.to_json)
   end
 
+  # We should rename this to send_mail by the time we get rid of the send_mail() above
+  def self.send_mail_from_db(user_email, template, template_data = [{}])
+    return if Rails.env.test?
+    raise EmailMsgError, 'Email must be provided' if user_email.blank?
+
+    mail = SendGrid::Mail.new
+    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
+    personalization = Personalization.new
+    personalization.add_to(SendGrid::Email.new(email: user_email))
+    template_data.each { |data| personalization.add_substitution(Substitution.new(data)) }
+    personalization.subject = template.subject
+    mail.add_personalization(personalization)
+    mail.add_content(Content.new(type: 'text/html', value: template.body))
+    client.mail._('send').post(request_body: mail.to_json)
+  end
+
   def self.sendgrid_api(api_link)
     url = URI(api_link)
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     request = Net::HTTP::Get.new(url)
     request['authorization'] = "Bearer #{Rails.application.credentials[:sendgrid_updated_api_key]}"
     request.body = '{}'
     response = http.request(request)
-    res = JSON.parse(response.read_body)
-    res
+    JSON.parse(response.read_body)
   end
 
   def self.fetch_unsubscribes_list(start_time)
     return if Rails.env.test?
 
     end_time = Time.zone.now.to_i
-    # rubocop:disable Metrics/LineLength
-    response = sendgrid_api("https://api.sendgrid.com/v3/suppression/unsubscribes?start_time=#{start_time}&end_time=#{end_time}")
-    # rubocop:enable Metrics/LineLength
-    response
+    # rubocop:disable Layout/LineLength
+    sendgrid_api("https://api.sendgrid.com/v3/suppression/unsubscribes?start_time=#{start_time}&end_time=#{end_time}")
+    # rubocop:enable Layout/LineLength
   end
 
   def self.messages_from_sendgrid(date_from = nil)
@@ -60,9 +74,9 @@ class EmailMsg
     date_from_e = date_from.nil? ? end_date : ERB::Util.url_encode(date_from)
     start_date = ERB::Util.url_encode(DateTime.now.to_s)
 
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     url = URI("https://api.sendgrid.com/v3/messages?limit=2000&query=last_event_time%20BETWEEN%20TIMESTAMP%20%22#{date_from_e}%22%20AND%20TIMESTAMP%20%22#{start_date}%22'")
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
     response = sendgrid_api(url)
     response['messages']
   end
@@ -79,8 +93,7 @@ class EmailMsg
     community = Community.find_by(name: name)
     return if community.nil?
 
-    user = community.users.find_by(email: email)
-    user
+    community.users.find_by(email: email)
   end
 
   # msg_id here === source_system_id

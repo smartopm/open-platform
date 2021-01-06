@@ -1,9 +1,7 @@
-/* eslint-disable */
 import React from 'react'
-import TaskStatCard from './TaskStatCard'
-import { useQuery } from 'react-apollo'
-import { TaskStatsQuery } from '../../graphql/queries'
 import { Grid, Typography } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import TaskStatCard from './TaskStatCard'
 import CenteredContent from '../CenteredContent'
 
 const tiles = {
@@ -15,16 +13,11 @@ const tiles = {
   totalCallsOpen: 'Total Calls Open',
   totalFormsOpen: 'Total Forms Open',
   tasksOpen: 'Tasks Open',
-  completedTasks: 'Tasks Completed',
+  completedTasks: 'Tasks Completed'
 }
 
-// data.taskStasts
-export default function TaskDashboard({ filterTasks, currentTile }) {
-  const { loading, data, error } = useQuery(TaskStatsQuery, {
-    fetchPolicy: 'network-only'
-  })
-
-  if (loading || error) {
+export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
+  if (taskData.loading || taskData.error) {
     return (
       <CenteredContent>
         <Typography
@@ -38,15 +31,35 @@ export default function TaskDashboard({ filterTasks, currentTile }) {
       </CenteredContent>
     )
   }
-// use extra white space
+  // use extra white space
   return Object.entries(tiles).map(([key, val]) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
       <TaskStatCard
-        filterTasks={evt => filterTasks(evt, key)}
+        filter={evt => filterTasks(evt, key)}
         title={val}
-        count={data?.taskStats[key]}
+        count={taskData.data?.taskStats[key]}
         isCurrent={key === currentTile}
       />
     </Grid>
   ))
+}
+
+TaskDashboard.propTypes = {
+  taskData: PropTypes.shape({
+    data: PropTypes.shape({
+      taskStats: PropTypes.shape({
+        myOpenTasks: PropTypes.number,
+        tasksDueIn10Days: PropTypes.number,
+        tasksDueIn30Days: PropTypes.number,
+        tasksOpenAndOverdue: PropTypes.number,
+        tasksWithNoDueDate: PropTypes.number,
+        totalCallsOpen: PropTypes.number,
+        totalFormsOpen: PropTypes.number,
+        tasksOpen: PropTypes.number,
+        completedTasks: PropTypes.number
+      })
+    })
+  }).isRequired,
+  filterTasks: PropTypes.func.isRequired,
+  currentTile: PropTypes.string.isRequired
 }

@@ -9,7 +9,7 @@ module Types
       super
     end
 
-    def authorized?(object, context)
+    def authorized?(object, _args, context)
       return visible?(object, context) if @visible
 
       super

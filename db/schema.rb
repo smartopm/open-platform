@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_03_050539) do
+ActiveRecord::Schema.define(version: 2021_01_05_133511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -31,6 +31,21 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_accounts_on_community_id"
     t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
+
+  create_table "action_flows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.string "event_type"
+    t.string "event_condition"
+    t.json "event_action"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.string "event_condition_query"
+    t.string "status", default: "not_deleted"
+    t.index ["community_id"], name: "index_action_flows_on_community_id"
+    t.index ["title"], name: "index_action_flows_on_title", unique: true
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -80,6 +95,8 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.uuid "note_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "reminder_time"
+    t.string "reminder_job_id"
     t.index ["note_id"], name: "index_assignee_notes_on_note_id"
     t.index ["user_id", "note_id"], name: "index_assignee_notes_on_user_id_and_note_id", unique: true
     t.index ["user_id"], name: "index_assignee_notes_on_user_id"
@@ -131,6 +148,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.string "template_style"
     t.integer "status", default: 0
     t.integer "message_count", default: 0
+    t.boolean "include_reply_link", default: false
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
@@ -142,9 +160,9 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.uuid "note_id"
     t.string "status"
-    t.index ["note_id"], name: "index_comments_on_note_id"
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_comments_on_community_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -159,6 +177,11 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.string "timezone"
     t.string "default_users", default: [], array: true
     t.json "templates"
+    t.string "hostname"
+    t.json "support_number"
+    t.json "support_email"
+    t.json "support_whatsapp"
+    t.string "currency"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -195,6 +218,17 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.index ["user_id"], name: "index_discussions_on_user_id"
   end
 
+  create_table "email_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "subject"
+    t.text "body"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_email_templates_on_community_id"
+    t.index ["name"], name: "index_email_templates_on_name", unique: true
+  end
+
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.uuid "community_id"
@@ -212,6 +246,9 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "source"
     t.boolean "acknowledged"
+    t.datetime "visitation_date"
+    t.string "start_time"
+    t.string "end_time"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -245,6 +282,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.uuid "form_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "field_value"
     t.index ["form_id"], name: "index_form_properties_on_form_id"
   end
 
@@ -267,7 +305,28 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.datetime "expires_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0
+    t.text "description"
     t.index ["community_id"], name: "index_forms_on_community_id"
+    t.index ["name"], name: "index_forms_on_name", unique: true
+  end
+
+  create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "land_parcel_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "due_date"
+    t.float "amount"
+    t.integer "status"
+    t.string "description"
+    t.string "note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "user_id"
+    t.uuid "created_by_id"
+    t.index ["community_id"], name: "index_invoices_on_community_id"
+    t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
+    t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
   create_table "labels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -304,6 +363,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
+    t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
   end
 
   create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -364,10 +424,56 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.uuid "assigned_to"
     t.uuid "community_id"
     t.text "description"
-    t.datetime "reminder_time"
-    t.string "reminder_job_id"
     t.uuid "form_user_id"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
+  end
+
+  create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "seen_at"
+    t.string "notifable_type"
+    t.uuid "notifable_id"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "description"
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_notifications_on_community_id"
+    t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "invoice_id", null: false
+    t.string "payment_type"
+    t.float "amount"
+    t.integer "payment_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "bank_name"
+    t.string "cheque_number"
+    t.index ["invoice_id"], name: "index_payments_on_invoice_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
+  create_table "post_tag_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "post_tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_tag_id"], name: "index_post_tag_users_on_post_tag_id"
+    t.index ["user_id", "post_tag_id"], name: "index_post_tag_users_on_user_id_and_post_tag_id", unique: true
+    t.index ["user_id"], name: "index_post_tag_users_on_user_id"
+  end
+
+  create_table "post_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_post_tags_on_community_id"
+    t.index ["name"], name: "index_post_tags_on_name", unique: true
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -448,6 +554,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
     t.string "id_number"
     t.datetime "followup_at"
     t.integer "sub_status"
+    t.string "address"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
@@ -465,6 +572,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
 
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
+  add_foreign_key "action_flows", "communities"
   add_foreign_key "activity_points", "users"
   add_foreign_key "assignee_notes", "notes"
   add_foreign_key "assignee_notes", "users"
@@ -473,16 +581,21 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
   add_foreign_key "campaign_labels", "campaigns"
   add_foreign_key "campaign_labels", "labels"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "comments", "communities"
   add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"
   add_foreign_key "discussion_users", "users"
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
+  add_foreign_key "email_templates", "communities"
   add_foreign_key "form_properties", "forms"
   add_foreign_key "form_users", "forms"
   add_foreign_key "form_users", "users"
   add_foreign_key "form_users", "users", column: "status_updated_by_id"
   add_foreign_key "forms", "communities"
+  add_foreign_key "invoices", "communities"
+  add_foreign_key "invoices", "land_parcels"
+  add_foreign_key "invoices", "users"
   add_foreign_key "labels", "communities"
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
@@ -492,6 +605,13 @@ ActiveRecord::Schema.define(version: 2020_11_03_050539) do
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
   add_foreign_key "notes", "form_users"
+  add_foreign_key "notifications", "communities"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "payments", "invoices"
+  add_foreign_key "payments", "users"
+  add_foreign_key "post_tag_users", "post_tags"
+  add_foreign_key "post_tag_users", "users"
+  add_foreign_key "post_tags", "communities"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"

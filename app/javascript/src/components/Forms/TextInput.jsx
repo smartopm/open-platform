@@ -6,7 +6,7 @@ export default function TextInput({id, handleValue, properties, value, editable 
     return (
       <TextField
         id={id}
-        label={`Type ${properties.fieldName} here`}
+        label={properties.fieldName}
         style={{ width: '100%' }}
         defaultValue={value}
         onChange={handleValue}

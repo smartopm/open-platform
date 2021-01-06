@@ -8,16 +8,35 @@ module Mutations
       argument :user_id, ID, required: true
       argument :prop_values, GraphQL::Types::JSON, required: true
 
+      # Prop Values should be passed in this format
+      # propValues: {
+      #   user_form_properties: [
+      #     {
+      #       form_property_id: "xxxxxxxxxxxxxxxxxxxx"
+      #       value: "Value",
+      #     },
+      #     {
+      #       form_property_id: "xxxxxxxxxxxxxxxxxxxx",
+      #       value: "Val",
+      #     },
+      #   ]
+      # }
+
       field :form_user, Types::FormUsersType, null: true
       field :error, String, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        form = context[:site_community].forms.find(vals[:form_id])
+        form = context[:site_community].forms.find_by(id: vals[:form_id])
         raise GraphQL::ExecutionError, 'Form not found' if form.nil?
 
         vals = vals.merge(status_updated_by: context[:current_user])
-        create_form_user(form, vals)
+        u_form = create_form_user(form, vals)
+
+        u_form[:form_user].create_form_task(context[:site_hostname]) if u_form[:form_user].present?
+        u_form
       end
+      # rubocop:enable Metrics/AbcSize
 
       def create_form_user(form, vals)
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)

@@ -33,7 +33,7 @@ RSpec.describe Mutations::EntryRequest do
                                                 current_user: user,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 
@@ -67,7 +67,7 @@ RSpec.describe Mutations::EntryRequest do
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'entryRequest', 'name')).to eql 'Mark Smith'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 
@@ -100,7 +100,7 @@ RSpec.describe Mutations::EntryRequest do
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 
@@ -133,7 +133,7 @@ RSpec.describe Mutations::EntryRequest do
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 2
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

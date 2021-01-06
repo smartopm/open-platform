@@ -6,13 +6,19 @@ module Mutations
     class FormUpdate < BaseMutation
       argument :id, ID, required: true
       argument :name, String, required: false
+      argument :status, String, required: false
+      argument :description, String, required: false
       argument :expires_at, String, required: false
 
       field :form, Types::FormType, null: true
 
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:id])
-        return { form: form } if form.update(vals.except(:id))
+        if form.update(vals.except(:id))
+          context[:current_user].generate_events('form_publish', form, action: vals[:status])
+
+          return { form: form }
+        end
 
         raise GraphQL::ExecutionError, form.errors.full_messages
       end

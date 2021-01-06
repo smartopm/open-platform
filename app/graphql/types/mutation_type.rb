@@ -41,6 +41,7 @@ module Types
 
     # messages
     field :message_create, mutation: Mutations::Message::MessageCreate
+    field :message_notification_update, mutation: Mutations::Message::MessageNotificationUpdate
 
     # temperature capture
     field :temperature_update, mutation: Mutations::Temperature::TemperatureUpdate
@@ -83,12 +84,14 @@ module Types
     # posts
     field :log_read_post, mutation: Mutations::Post::LogReadPost
     field :log_shared_post, mutation: Mutations::Post::LogSharedPost
+    field :follow_post_tag, mutation: Mutations::Post::FollowPostTag
 
     # forms
     field :form_create, mutation: Mutations::Form::FormCreate
     field :form_update, mutation: Mutations::Form::FormUpdate
     field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
     field :form_properties_update, mutation: Mutations::Form::FormPropertiesUpdate
+    field :form_properties_delete, mutation: Mutations::Form::FormPropertiesDelete
     field :form_user_create, mutation: Mutations::Form::FormUserCreate
     field :form_user_update, mutation: Mutations::Form::FormUserUpdate
     field :form_user_status_update, mutation: Mutations::Form::FormUserStatusUpdate
@@ -98,5 +101,23 @@ module Types
     # land_parcel
     field :land_parcel, mutation: Mutations::LandParcel::LandParcelCreate
     field :land_parcel_update, mutation: Mutations::LandParcel::LandParcelUpdate
+    field :PropertyCreate, mutation: Mutations::LandParcel::PropertyCreate
+
+    # action_flow
+    field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
+    field :action_flow_update, mutation: Mutations::ActionFlow::ActionFlowUpdate
+    field :action_flow_delete, mutation: Mutations::ActionFlow::ActionFlowDelete
+
+    # community
+    field :community_update, mutation: Mutations::Community::CommunityUpdate
+
+    # contact_info
+    field :contact_info_delete, mutation: Mutations::ContactInfo::Delete
+
+    # invoice
+    field :invoice_create, mutation: Mutations::Invoice::InvoiceCreate
+
+    # payments
+    field :payment_create, mutation: Mutations::Payment::PaymentCreate
   end
 end

@@ -76,5 +76,3 @@ export function useFetch(url) {
   }, [url]);
   return { response, error };
 }
-
-

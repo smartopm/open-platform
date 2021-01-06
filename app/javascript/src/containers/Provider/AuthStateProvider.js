@@ -34,6 +34,11 @@ const QUERY = gql`
         name
         logoUrl
         timezone
+        supportNumber
+        supportEmail
+        supportWhatsapp
+        imageUrl
+        currency
       }
     }
   }

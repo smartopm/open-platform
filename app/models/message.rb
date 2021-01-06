@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'host_env'
 # Messages being sent out
 class Message < ApplicationRecord
   include NoteHistoryRecordable
@@ -8,6 +9,7 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   belongs_to :note, optional: true
   belongs_to :note_entity, polymorphic: true, optional: true
+  has_one :notification, as: :notifable, dependent: :destroy
   has_one :campaign, dependent: :restrict_with_exception
 
   default_scope { order(created_at: :asc) }
@@ -41,9 +43,10 @@ class Message < ApplicationRecord
 
     new_message = ''
     text = 'Click this link to reply to this message in our app '
-    link = "https://#{ENV['HOST']}/message/#{user_id}"
-    new_message = "#{sender[:name]} from Nkwashi said: \n" if add_prefix
-    new_message += "#{message} \n\n#{text} \n#{link}"
+    link = "https://#{HostEnv.base_url(user.community)}/message/#{id}"
+    new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
+    new_message += message
+    new_message += "\n\n#{text} \n#{link}" if include_reply_link?
     Sms.send(receiver, new_message)
   end
 
@@ -84,5 +87,11 @@ class Message < ApplicationRecord
     return if Campaign.find(campaign_id)&.update(message_count: count)
 
     raise StandardError, 'Campaign message count update failed'
+  end
+
+  def include_reply_link?
+    return true if campaign_id.nil?
+
+    Campaign.find(campaign_id).include_reply_link
   end
 end

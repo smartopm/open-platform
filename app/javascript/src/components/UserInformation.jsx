@@ -1,25 +1,20 @@
-/* eslint-disable */
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import UserPlotInfo from './UserPlotInfo'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import Avatar from './Avatar'
 import PhoneIcon from '@material-ui/icons/Phone'
-import ShiftButtons from './TimeTracker/ShiftButtons'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-} from '@material-ui/core'
-import { ponisoNumber } from '../utils/constants.js'
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
 import { css, StyleSheet } from 'aphrodite'
-import { CreateNote } from '../graphql/mutations'
 import { useMutation } from 'react-apollo'
-import UserCommunication from './UserCommunication'
-import ReactGA from 'react-ga';
+import PropTypes from 'prop-types'
+import ReactGA from 'react-ga'
+import { CreateNote } from '../graphql/mutations'
+import { ponisoNumber } from '../utils/constants'
+import ShiftButtons from './TimeTracker/ShiftButtons'
+import Avatar from './Avatar'
+import UserPlotInfo from './UserPlotInfo'
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
 import UserActionMenu from './User/UserActionMenu'
@@ -28,11 +23,14 @@ import UserInfo from './User/UserInfo'
 import UserDetail from './User/UserDetail'
 import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
-import UserFilledForms from '../components/User/UserFilledForms'
-
+import UserFilledForms from './User/UserFilledForms'
+import UserMessages from './Messaging/UserMessages'
+import InvoiceList from './Payments/InvoiceList'
+import { useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
   data,
+  parcelData,
   onLogEntry,
   authState,
   sendOneTimePasscode,
@@ -43,13 +41,15 @@ export default function UserInformation({
   accountRefetch
 }) {
   const CSMNumber = '260974624243'
-  const [tabValue, setValue] = useState('Contacts')
+  const path = useParamsQuery()
+  const tab = path.get('tab')
+  const [tabValue, setValue] = useState(tab || 'Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
   const [isDialogOpen, setDialogOpen] = useState(false)
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { handleSubmit, register } = useForm()
-  let location = useLocation()
+  const location = useLocation()
 
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form')
@@ -60,11 +60,12 @@ export default function UserInformation({
       form.reset()
     })
   }
-  
+
   const open = Boolean(anchorEl)
   const userType = authState.user.userType.toLowerCase()
 
   const handleChange = (_event, newValue) => {
+    router.push(`/user/${userId}?tab=${newValue}`)
     setValue(newValue)
     const pages = {
       Contacts: 'Contacts',
@@ -75,8 +76,8 @@ export default function UserInformation({
       Forms: 'Forms'
     }
     if (location.pathname.includes('/user')) {
-      let [, rootURL, , userPage] = location.pathname.split('/')
-      let pageHit = `/${rootURL}/${userPage}/${pages[newValue]}`
+      const [, rootURL, , userPage] = location.pathname.split('/')
+      const pageHit = `/${rootURL}/${userPage}/${pages[newValue]}`
       ReactGA.pageview(pageHit)
     }
   }
@@ -95,35 +96,32 @@ export default function UserInformation({
   }
 
   function sendOTP() {
-      sendOneTimePasscode({
-        variables: { userId }
+    sendOneTimePasscode({
+      variables: { userId }
+    })
+      .then(_data => {
+        router.push('/otp_sent', {
+          url: _data.data.oneTimeLogin.url,
+          user: data.user.name,
+          success: true
+        })
       })
-        .then(_data => {
-          router.push('/otp_sent', {
-            url: _data.data.oneTimeLogin.url,
-            user: data.user.name,
-            success: true
-          })
+      .catch(() => {
+        router.push('/otp_sent', {
+          url: 'The user has no Phone number added',
+          user: data.user.name,
+          success: false
         })
-        .catch(() => {
-          // alert('Make sure the user has a phone number')
-          router.push('/otp_sent', {
-            url: 'The user has no Phone number added',
-            user: data.user.name,
-            success: false
-          })
-        })
+      })
   }
-
   return (
     <div>
-      <Fragment>
-
+      <>
         <Dialog
           open={isDialogOpen}
-          fullWidth={true}
-          maxWidth={'md'}
-          scroll={'paper'}
+          fullWidth
+          maxWidth="md"
+          scroll="paper"
           onClose={handleMergeDialog}
           aria-labelledby="user_merge"
         >
@@ -133,14 +131,18 @@ export default function UserInformation({
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
-            <UserMerge close={handleMergeDialog} userId={userId}/>
+            <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
 
         <div className="container">
           <div className="row d-flex justify-content-between">
             <div className="col-4 ">
-              <Avatar user={data.user} style="small" />
+              <Avatar
+                user={data.user}
+                // eslint-disable-next-line react/style-prop-object
+                style="small"
+              />
             </div>
 
             <UserDetail data={data} userType={userType} />
@@ -158,40 +160,42 @@ export default function UserInformation({
               )}
               {/* Menu */}
               <UserActionMenu
-                    data={data}
-                    router={router}
-                    anchorEl={anchorEl}
-                    handleClose={handleClose}
-                    userType={userType}
-                    sendOTP={sendOTP}
-                    CSMNumber={CSMNumber}
-                    open={open}
-                    OpenMergeDialog={handleMergeDialog}
-                    linkStyles={css(styles.linkItem)}
+                data={data}
+                router={router}
+                anchorEl={anchorEl}
+                handleClose={handleClose}
+                userType={userType}
+                sendOTP={sendOTP}
+                CSMNumber={CSMNumber}
+                open={open}
+                OpenMergeDialog={handleMergeDialog}
+                linkStyles={css(styles.linkItem)}
               />
             </div>
           </div>
-          {/*  <ShiftButtons userId={userId} /> */}
           <br />
           {authState.user.userType === 'custodian' &&
             ['security_guard', 'contractor'].includes(data.user.userType) && (
               <ShiftButtons userId={userId} />
             )}
         </div>
-          {/* tabValue, handleChange, userType, data  */}
-        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} userType={userType} />
+        <UserStyledTabs
+          tabValue={tabValue}
+          handleChange={handleChange}
+          userType={userType}
+        />
 
-        <TabPanel value={tabValue} index={'Contacts'}>
+        <TabPanel value={tabValue} index="Contacts">
           {/* userinfo */}
-          <UserInfo data={data} userType={authState.user.userType} />
+          <UserInfo user={data.user} userType={authState.user.userType} />
         </TabPanel>
         {['admin'].includes(userType) && (
           <>
-            <TabPanel value={tabValue} index={'Notes'}>
+            <TabPanel value={tabValue} index="Notes">
               <div className="container">
                 <form id="note-form">
                   <div className="form-group">
-                    <label htmlFor="notes">Notes</label>
+                    Notes
                     <br />
                     <textarea
                       className="form-control"
@@ -209,7 +213,6 @@ export default function UserInformation({
                     onClick={handleSubmit(onSaveNote)}
                     disabled={mutationLoading}
                   >
-                    {/* Save */}
                     {mutationLoading ? 'Saving ...' : 'Save'}
                   </button>
                 </form>
@@ -219,28 +222,35 @@ export default function UserInformation({
               </div>
             </TabPanel>
 
-            <TabPanel value={tabValue} index={'Communication'}>
-              <UserCommunication
-                user={authState.user}
-                phoneNumber={data.user.phoneNumber}
+            <TabPanel value={tabValue} index="Communication">
+              <UserMessages />
+            </TabPanel>
+          </>
+        )}
+        {!['security_guard', 'custodian'].includes(userType) && (
+          <>
+            <TabPanel value={tabValue} index="Plots">
+              <UserPlotInfo
+                account={accountData?.user.accounts || []}
+                userId={data.user.id}
+                refetch={accountRefetch}
+                userType={userType}
+              />
+            </TabPanel>
+            <TabPanel value={tabValue} index="Forms">
+              <UserFilledForms
+                userFormsFilled={data.user.formUsers}
+                userId={data.user.id}
               />
             </TabPanel>
           </>
         )}
-        {
-          !['security_guard', 'custodian'].includes(userType) && (
-            <>
-            <TabPanel value={tabValue} index={'Plots'}>
-              <UserPlotInfo account={accountData?.user.accounts} userId={data.user.id} refetch={accountRefetch} userType={userType}/>
-            </TabPanel>
-            <TabPanel value={tabValue} index={'Forms'}>
-              <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
-            </TabPanel>
-            </>
-          )
-        }
-        <TabPanel value={tabValue} index={'Payments'}>
-          <h4 className="text-center">Coming soon</h4>
+        <TabPanel value={tabValue} index="Payments">
+          <InvoiceList
+            data={parcelData}
+            userId={userId}
+            user={authState.user}
+          />
         </TabPanel>
 
         <div className="container d-flex justify-content-between">
@@ -266,12 +276,36 @@ export default function UserInformation({
             </Button>
           ) : null}
         </div>
-      </Fragment>
+      </>
     </div>
   )
 }
 
-
+const User = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  userType: PropTypes.string,
+  state: PropTypes.string,
+  accounts: PropTypes.arrayOf(PropTypes.object),
+  formUsers: PropTypes.arrayOf(PropTypes.object)
+})
+UserInformation.propTypes = {
+  data: PropTypes.shape({ user: User }).isRequired,
+  onLogEntry: PropTypes.func.isRequired,
+  authState: PropTypes.shape({ user: User }).isRequired,
+  sendOneTimePasscode: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired,
+  router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  accountData: PropTypes.shape({ user: User }).isRequired,
+  accountRefetch: PropTypes.func.isRequired,
+  parcelData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      parcelNumber: PropTypes.string.isRequired
+    })
+  ).isRequired
+}
 
 const styles = StyleSheet.create({
   linkItem: {
@@ -285,5 +319,5 @@ const styles = StyleSheet.create({
   callButton: {
     backgroundColor: '#FF6347',
     color: '#FFF'
-  },
+  }
 })

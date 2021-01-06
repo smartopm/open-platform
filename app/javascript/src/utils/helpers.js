@@ -1,5 +1,6 @@
 /* eslint-disable */
 import dompurify from 'dompurify';
+import { useLocation } from 'react-router';
 
 // keep string methods [helpers]
 
@@ -11,6 +12,16 @@ import dompurify from 'dompurify';
  */
 export function sanitizeText(text) {
   return dompurify.sanitize(text)
+}
+
+/**
+ *
+ * @param {String} errMsg
+ * @returns a string without the Graphql part
+ * @description receives an error message and returns a a message without the graphql part
+ */
+export function formatError(errMsg) {
+  return errMsg.split(":").pop()
 }
 
 /**
@@ -215,6 +226,24 @@ export function titleize(string) {
   }).join(' ')
 }
 
+/**
+ * @param {String} action
+ * @description return the sentence form for ActionFlow actions
+ * @returns {String}
+ */
+export function sentencizeAction(action){
+  const sendActions = ['email', 'notification']
+  const createActions = ['task']
+
+  if(sendActions.indexOf(action.toLowerCase()) >= 0) {
+    return `Send ${action}`
+  }
+
+  if(createActions.indexOf(action.toLowerCase()) >= 0) {
+    return `Create ${action}`
+  }
+}
+
 
 export async function convertBase64ToFile(data){
   const res = await fetch(data)
@@ -232,5 +261,29 @@ export async function convertBase64ToFile(data){
  */
 export function sortPropertyOrder(field1, field2){
   if(!field1 || !field2) return
-  return Number(field1.formProperty?.order) - Number(field2.formProperty?.order)
+  if(field1.formProperty) {
+    return Number(field1.formProperty.order) - Number(field2.formProperty.order)
+  }
+  return Number(field1.order) - Number(field2.order)
+}
+
+export function useParamsQuery() {
+  return new URLSearchParams(useLocation().search)
+}
+
+
+export const InvoiceStatus = {
+  inProgress: 'In-Progress',
+  paid: 'Paid',
+  late: 'Late',
+  cancelled: 'Cancelled',
+  in_progress: 'In-Progress',
+}
+
+export function generateId() {
+  if (!window.crypto) {
+    return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']
+  }
+  const array = new Uint32Array(10)
+  return window.crypto.getRandomValues(array)
 }

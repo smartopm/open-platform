@@ -28,6 +28,7 @@ RSpec.describe User, type: :model do
         name: 'Mark',
         email: 'mark@doublegdp.com',
         image: 'https://mypic.com/image.png',
+        phone_number: '1234567890',
       ),
       credentials: OpenStruct.new(
         token: '12345',
@@ -190,6 +191,7 @@ RSpec.describe User, type: :model do
         email: 'mark@doublegdp.com',
         request_reason: 'Resident',
         vehicle: nil,
+        phone_number: '1234567890',
       }
       @nuser = @admin.enroll_user(vals)
       expect(@nuser.community_id).to be @admin.community_id
@@ -275,6 +277,51 @@ RSpec.describe User, type: :model do
       end
 
       expect(current_user.first_login_today?).to eq(false)
+    end
+  end
+
+  describe '#note_assigned?' do
+    let!(:user) { create(:user_with_community) }
+    let!(:note) do
+      create(:note, user: create(:user_with_community),
+                    author: create(:user_with_community))
+    end
+    let!(:assignee_note) { create(:assignee_note, user: user, note: note) }
+
+    it 'returns true if a note is assigned to a user and false otherwise' do
+      expect(user.note_assigned?(note.id)).to eq(true)
+
+      note.assign_or_unassign_user(user.id)
+
+      expect(user.note_assigned?(note.id)).to eq(false)
+    end
+  end
+
+  describe '#send_email_msg' do
+    let!(:user) { create(:user_with_community) }
+    let!(:email_template) do
+      create(:email_template, community: user.community, name: 'welcome')
+    end
+
+    context 'when welcome template is available' do
+      it 'fires EmailMsg.send_mail_from_db' do
+        expect(EmailMsg).to receive(:send_mail_from_db).with(
+          user.email,
+          email_template,
+          [{ key: '%login_url%', value: '' }],
+        )
+        user.send_email_msg
+      end
+    end
+
+    context 'when welcome template is not available' do
+      let!(:email_template) do
+        create(:email_template, community: user.community, name: 'no-name')
+      end
+      it 'does not fire' do
+        expect(EmailMsg).not_to receive(:send_mail_from_db)
+        user.send_email_msg
+      end
     end
   end
 end

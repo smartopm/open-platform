@@ -23,7 +23,9 @@ class EventLog < ApplicationRecord
   VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                       user_active user_feedback showroom_entry user_update user_temp
                       shift_start shift_end user_referred post_read post_shared
-                      task_create task_update note_comment_create note_comment_update].freeze
+                      task_create task_update note_comment_create note_comment_update
+                      form_create form_update form_publish form_submit form_update_submit
+                      visit_request].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -117,6 +119,20 @@ class EventLog < ApplicationRecord
     "Post #{data['post_id']} was shared by #{acting_user_name}"
   end
 
+  # form_create form_update form_publish
+  def form_create_to_sentence
+    "#{acting_user_name} created the form"
+  end
+
+  def form_update_to_sentence
+    "#{acting_user_name} #{data['action']} #{data['field_name']} field"
+  end
+
+  def form_publish_to_sentence
+    # published or deleted
+    "#{acting_user_name} #{data['action']} the form"
+  end
+
   def user_enrolled_to_sentence
     new_user = User.order('created_at').last
     "#{new_user[:name]} was enrolled"
@@ -139,19 +155,25 @@ class EventLog < ApplicationRecord
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def execute_action_flows
-    # rubocop:disable Rails/DynamicFindBy
-    events = ActionFlows::ActionFlow.find_by_event_type(subject)
-    return if events.blank?
+    # include (status: 'active') once the active/inactive functionality is implemented
+    action_flows = ActionFlow.where(event_type: subject).map do |f|
+      ActionFlows::ActionFlow.new(f.description, f.event_type,
+                                  f.event_condition, f.event_action)
+    end
+    return if action_flows.blank?
 
-    # rubocop:enable Rails/DynamicFindBy
-    events.each do |af|
+    action_flows.each do |af|
       event = af.event_object.new
       event.preload_data(self)
       cond = event.event_condition
       af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   private
 

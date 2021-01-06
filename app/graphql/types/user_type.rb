@@ -7,6 +7,7 @@ module Types
     field :community, Types::CommunityType, null: false
     field :email, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :name, String, null: false
+    field :address, String, null: true
     field :image_url, String, null: true
     field :user_type, String, null: true
     field :vehicle, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
@@ -38,6 +39,10 @@ module Types
     field :businesses, [Types::BusinessType], null: true, visible: { roles: %i[admin], user: :id }
     field :labels, [Types::LabelType], null: true, visible: { roles: %i[admin], user: :id }
     field :form_users, [Types::FormUsersType], null: true, visible: { roles: %i[admin], user: :id }
+    field :contact_infos, [Types::ContactInfoType], null: true, visible: { roles: %i[admin],
+                                                                           user: :id }
+    field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin],
+                                                                  user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?

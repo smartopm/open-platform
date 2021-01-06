@@ -32,6 +32,7 @@ module Mutations
         check_land_parcel(vals, account) if account
       end
 
+      # rubocop:disable Metrics/MethodLength
       def check_land_parcel(vals, account)
         v = vals[:parcel_number]
         check_number = check_parcel_number(v)
@@ -40,8 +41,12 @@ module Mutations
             .land_parcels.create!(community_id: context[:site_community].id, parcel_number: v)
         else
           check_number.land_parcel_accounts.create!(account_id: vals[:account_id])
+          check_number
         end
+      rescue ActiveRecord::RecordNotUnique
+        raise GraphQL::ExecutionError, 'Record already exist'
       end
+      # rubocop:enable Metrics/MethodLength
 
       def check_parcel_number(num)
         context[:site_community].land_parcels.find_by(parcel_number: num)

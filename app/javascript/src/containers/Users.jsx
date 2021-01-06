@@ -1,101 +1,60 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
-import { Redirect , Link } from 'react-router-dom'
+import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
+import { Redirect, Link , useLocation} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Button,
-  TextField,
-  Divider,
-  IconButton,
-  Icon,
-  InputBase,
-  MenuItem,
-  Select,
-  Grid,
-  FormControl,
-  InputLabel,
-  Input,
-  CircularProgress,
-  Chip
-} from '@material-ui/core'
-import TelegramIcon from '@material-ui/icons/Telegram'
-import FilterListIcon from '@material-ui/icons/FilterList';
+import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
+import FilterListIcon from '@material-ui/icons/FilterList'
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../components/Nav'
 import Loading from '../components/Loading'
 import ErrorPage from '../components/Error'
-import { UsersDetails, LabelsQuery } from '../graphql/queries'
-import { UserLabelCreate, CampaignCreateThroughUsers , CreateNote, SendOneTimePasscode } from '../graphql/mutations'
-import { ModalDialog, CustomizedDialogs } from '../components/Dialog'
-import { userType } from '../utils/constants'
+import { UsersDetails, LabelsQuery, UsersCount } from '../graphql/queries'
+import {
+  CreateNote,
+  SendOneTimePasscode,
+  UserLabelCreate,
+  CampaignCreateThroughUsers
+} from '../graphql/mutations'
+import { ModalDialog, ActionDialog } from '../components/Dialog'
+import { userType, subStatus } from '../utils/constants'
 import Paginate from '../components/Paginate'
 import UserListCard from '../components/UserListCard'
-import CreateLabel from '../components/CreateLabel'
-import FilterComponent from '../components/FilterComponent'
-import DateFilterComponent from '../components/DateFilterComponent'
+import UsersActionMenu from '../components/UsersActionMenu'
+import QueryBuilder from '../components/QueryBuilder'
 import { dateToString } from '../utils/dateutil'
 
-import { Context as AuthStateContext } from "./Provider/AuthStateProvider"
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
+import { pluralizeCount } from '../utils/helpers'
 
-const limit = 50
+const limit = 25
+const USERS_CAMPAIGN_WARNING_LIMIT = 2000
 
 export default function UsersList() {
   const classes = useStyles()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false)
-  const [type, setType] = useState([])
-  const [labels, setLabels] = useState([])
-  const [phoneNumbers, setPhoneNumbers] = useState([])
-  const [searchValue, setSearchValue] = useState('')
   const [offset, setOffset] = useState(0)
   const [note, setNote] = useState('')
-  const [labelError, setError] = useState('')
-  const [labelLoading, setLabelLoading] = useState(false)
-  const [searchType, setSearchType] = useState('type')
+  const [searchQuery, setSearchQuery] = useState('')
   const [userId, setId] = useState('')
   const [userName, setName] = useState('')
-
+  const [displayBuilder, setDisplayBuilder] = useState('none')
+  const [filterCount, setFilterCount] = useState(0)
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
-  const [filterType, setFilterType] = useState('')
-  const [selectDateFrom, setSelectDateFrom] = useState('')
-  const [selectDateTo, setSelectDateTo] = useState('')
-  const [selectDateOn, setSelectDateOn] = useState('')
-  const [filterOpen, setOpenFilter] = useState(false)
   const authState = useContext(AuthStateContext)
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
+  const [labelError, setError] = useState('')
+  const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
+  const [campaignCreateOption, setCampaignCreateOption] = useState('none')
+  const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectCheckBox, setSelectCheckBox] = useState(false)
 
-  const search = {
-    type,
-    phone: phoneNumbers,
-    label: labels
-  }
-  function joinSearchQuery(query, currentSearchType) {
-    const types = {
-      phone: 'phone_number',
-      label: 'labels',
-      type: 'user_type'
-    }
-    const currentFilterType = types[currentSearchType]
-    return query.map(q => `${currentFilterType} = "${q}"`).join(' OR ')
-  }
-  function specifyUserQuery() {
-    if (selectDateFrom !== '') {
-      return `date_filter > ${dateToString(selectDateFrom)}`
-    }
-    if (selectDateTo !== '') {
-      return `date_filter < ${dateToString(selectDateTo)}`
-    }
-    if (selectDateOn !== '') {
-      return `date_filter = ${dateToString(selectDateOn)}`
-    }
-    return joinSearchQuery(search[searchType], searchType)
-  }
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
-      query: specifyUserQuery(),
+      query: searchQuery,
       limit,
       offset
     },
@@ -107,48 +66,69 @@ export default function UsersList() {
     userList = data.users.map(user => user.id)
   }
 
+  function getQuery() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return new URLSearchParams(useLocation().search);
+  }
+
+  const querry = getQuery()
+
+  useEffect(() => {
+    if (filterCount !== 0) {
+      setOffset(0)
+    } else {
+      const offsetParams = querry.get('offset')
+      setOffset(Number(offsetParams))
+    }
+  }, [filterCount])
+
+
   // TODO: @dennis, add pop up for notes
   const [userLabelCreate] = useMutation(UserLabelCreate)
-  const { loading: labelsLoading, error: labelsError, data: labelsData } = useQuery(LabelsQuery)
-  function handleFilterModal() {
-    setOpen(!open)
-    setSearchType('phone')
+  const {
+    loading: labelsLoading,
+    error: labelsError,
+    data: labelsData
+  } = useQuery(LabelsQuery)
+
+  const [fetchUsersCount, { data: usersCountData }] = useLazyQuery(UsersCount, {
+    variables: { query: searchQuery }
+  })
+
+  function handleQueryOnChange(selectedOptions) {
+    if (selectedOptions) {
+      const andConjugate = selectedOptions.logic?.and
+      const orConjugate = selectedOptions.logic?.or
+      const availableConjugate = andConjugate || orConjugate
+      if (availableConjugate) {
+        const conjugate = andConjugate ? 'AND' : 'OR'
+        const query = availableConjugate
+          .map(option => {
+            let operator = Object.keys(option)[0]
+            const property = filterFields[option[operator][0].var]
+            let value = option[operator][1]
+
+            if (operator === '==') operator = '='
+            if (property === 'date_filter') {
+              operator = '>'
+              value = dateToString(value)
+            }
+
+            return `${property} ${operator} "${value}"`
+          })
+          .join(` ${conjugate} `)
+        setSearchQuery(query)
+        setFilterCount(availableConjugate.length)
+      }
+    }
   }
-  function handleBatchFilter() {
-    setPhoneNumbers(searchValue.split('\n').join(',').split(','))
-    setOpen(!open)
-  }
-  function handleFilterInputChange(event) {
-    setFilterType("")
-    setFilterType(event.target.value)
-  }
-  function handleDateChangeFrom(date) {
-    setSelectDateTo("")
-    setSelectDateOn("")
-    setSelectDateFrom(date)
-  }
-  function handleDateChangeTo(date) {
-    setSelectDateFrom("")
-    setSelectDateOn("")
-    setSelectDateTo(date)
-  }
-  function handleDateChangeOn(date) {
-    setSelectDateFrom("")
-    setSelectDateTo("")
-    setSelectDateOn(date)
-  }
-  function resetDateFilter() {
-    setSelectDateFrom("")
-    setSelectDateTo("")
-    setSelectDateOn("")
-    setFilterType("")
-  }
+
   function handleSaveNote() {
     let noteType = ''
     if (modalAction === 'Answered') {
-      noteType = "Outgoing Call Answered: "
+      noteType = 'Outgoing Call Answered: '
     } else if (modalAction === 'Missed') {
-      noteType = "Outgoing Call not Answered: "
+      noteType = 'Outgoing Call not Answered: '
     }
     noteCreate({
       variables: { userId, body: noteType + note, flagged: false }
@@ -169,73 +149,140 @@ export default function UsersList() {
     }
     setModalAction(NoteTypes[noteType])
   }
+
   function inputToSearch() {
     setRedirect('/search')
   }
-  function handleInputChange(event) {
-    setType(event.target.value)
-    setSearchType('type')
-  }
 
-  function handleLabelSelect(lastLabel) {
-    const { id, shortDesc } = lastLabel
-    setLabelLoading(true)
-    if (userList) {
-      userLabelCreate({
-        variables: { userId: userList.toString(), labelId: id }
-      }).then(() => {
-        refetch()
-        setLabels([...labels, shortDesc])
-        setLabelLoading(false)
-      }).catch(err => {
-        setLabelLoading(false)
-        setError(err.message)
-      })
+  function checkUserList(){
+    if (
+      !!selectedUsers.length &&
+      !!userList.length &&
+      selectedUsers.length === userList.length
+    ) {
+      setSelectedUsers([])
+      setCampaignCreateOption('none')
     }
   }
 
-  function handleCampaignCreate() {
-    if (userList) {
-      campaignCreate({
-        variables: { labels: labels.join(), userType: type.join(), number: searchValue }
-      }).then(res => {
-        // eslint-disable-next-line no-shadow
-        const { data } = res
-        setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
-        // eslint-disable-next-line no-shadow
-      }).catch(error => {
-        setError(error.message)
-      })
-    }
-  }
-
-  function handleLabelChange(event) {
-    setLabels(event.target.value)
-    setSearchType('label')
-  }
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
         return
       }
       setOffset(offset - limit)
+      checkUserList()
     } else {
       setOffset(offset + limit)
+      checkUserList()
     }
   }
 
-  // reset pagination when the filter changes
-  useEffect(() => {
-    setOffset(0)
-  }, [type])
-
-  function handleSelect() {
-    setOpenFilter(!filterOpen)
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none')
+    } else {
+      setDisplayBuilder('')
+    }
   }
 
+  function handleLabelSelect(labels) {
+    let createLimit = null
+    if (campaignCreateOption === 'all_on_the_page') createLimit = limit
+    if (userList) {
+      userLabelCreate({
+        variables: {
+          query: searchQuery,
+          limit: createLimit,
+          labelId: labels.flatMap(l => l.id || []).toString(),
+          userList: selectedUsers.toString()
+        }
+      })
+        .then(() => {
+          refetch()
+        })
+        .catch(labelErr => {
+          setError(labelErr.message)
+        })
+    }
+  }
 
-  if (loading || labelsLoading) return <Loading />
-  if (error || labelsError) return <ErrorPage error={error.message || labelsError.message} />
+  function setCampaignOption(option) {
+    setCampaignCreateOption(option)
+    if (option === 'all') {
+      fetchUsersCount()
+      setSelectedUsers([])
+      setSelectCheckBox(true)
+    }
+    if (option === 'all_on_the_page') {
+      setSelectCheckBox(false)
+      setSelectedUsers(userList)
+    }
+    if (option === 'none') {
+      setSelectCheckBox(false)
+      setSelectedUsers([])
+    }  
+  }
+
+  function setSelectAll() {
+    if (
+      !!selectedUsers.length &&
+      !!userList.length &&
+      selectedUsers.length === userList.length
+    ) {
+      setSelectedUsers([])
+      setCampaignCreateOption('none')
+    } else if (selectCheckBox) {
+      setSelectCheckBox(false)
+      setCampaignCreateOption('none')
+    } else {
+      setSelectedUsers(userList)
+      setCampaignCreateOption('all_on_the_page')
+    }
+  }
+
+  function handleUserSelect(user) {
+    if (selectedUsers.length === 0) setCampaignCreateOption('none')
+
+    let newSelected = []
+    if (selectedUsers.includes(user.id)) {
+      newSelected = selectedUsers.filter(id => id !== user.id)
+    } else {
+      newSelected = selectedUsers.concat(user.id)
+    }
+    setSelectedUsers(newSelected)
+  }
+
+  function createCampaign() {
+    let createLimit = null
+    if (campaignCreateOption === 'all_on_the_page') createLimit = limit
+    campaignCreate({
+      variables: { query: searchQuery, limit: createLimit, userList: selectedUsers.toString() }
+    })
+      .then(res => {
+        // eslint-disable-next-line no-shadow
+        const { data } = res
+        setRedirect(`/campaign/${data.campaignCreateThroughUsers.campaign.id}`)
+      })
+      .catch(campaignError => {
+        setError(campaignError.message)
+      })
+  }
+
+  function handleCampaignCreate() {
+    if (
+      campaignCreateOption === 'all' &&
+      usersCountData.usersCount > USERS_CAMPAIGN_WARNING_LIMIT
+    ) {
+      setOpenCampaignWarning(true)
+      return
+    }
+    createCampaign()
+  }
+
+  if (labelsLoading) return <Loading />
+  if (error || labelsError)
+    return <ErrorPage error={error.message || labelsError.message} />
   if (redirect) {
     return (
       <Redirect
@@ -248,24 +295,91 @@ export default function UsersList() {
     )
   }
 
+  const InitialConfig = MaterialConfig
+  const queryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      role: {
+        label: 'Role',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(userType).map(([key, val]) => {
+            return { value: key, title: val }
+          })
+        }
+      },
+      label: {
+        label: 'Label',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: labelsData.labels.map(label => {
+            return { value: label.shortDesc, title: label.shortDesc }
+          })
+        }
+      },
+      phoneNumber: {
+        label: 'Phone Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      loginAfter: {
+        label: 'Login After',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      subStatus: {
+        label: 'Sub Status',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(subStatus).map(([key, val]) => {
+            return { value: key, title: val }
+          })
+        }
+      }
+    }
+  }
+
+  const queryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'role',
+          operator: 'select_equals',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['select']
+        }
+      }
+    }
+  }
+
+  const filterFields = {
+    role: 'user_type',
+    label: 'labels',
+    phoneNumber: 'phone_number',
+    loginAfter: 'date_filter',
+    subStatus: 'sub_status'
+  }
+
   return (
     <>
       <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
-        <CustomizedDialogs
-          open={open}
-          saveAction="Save"
-          dialogHeader="Filter by User Phone # (provide a comma delimited list)"
-          handleBatchFilter={handleBatchFilter}
-          handleModal={handleFilterModal}
-        >
-          <TextField
-            rows={5}
-            multiline
-            className="form-control"
-            onChange={event => setSearchValue(event.target.value)}
-          />
-        </CustomizedDialogs>
+        <ActionDialog
+          open={openCampaignWarning}
+          handleClose={() => setOpenCampaignWarning(false)}
+          handleOnSave={createCampaign}
+          message={`You are going to create a campaign for 2000+ users. We recommend using
+          a smaller list. Do you still want to proceed?`}
+        />
         <ModalDialog
           handleClose={handleNoteModal}
           handleConfirm={handleSaveNote}
@@ -274,7 +388,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                Add note for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -287,14 +401,15 @@ export default function UsersList() {
                 name="note"
                 placeholder="Type action note here"
               />
-              {mutationLoading && <p className="text-center">Saving note ...</p>}
+              {mutationLoading && (
+                <p className="text-center">Saving note ...</p>
+              )}
             </div>
           )}
           {modalAction === 'Answered' && (
-
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                Add Outgoing call answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -307,14 +422,15 @@ export default function UsersList() {
                 name="note"
                 placeholder="Type action note here"
               />
-              {mutationLoading && <p className="text-center">Saving note ...</p>}
+              {mutationLoading && (
+                <p className="text-center">Saving note ...</p>
+              )}
             </div>
           )}
           {modalAction === 'Missed' && (
-
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                Add Outgoing call not answered for 
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -327,7 +443,9 @@ export default function UsersList() {
                 name="note"
                 placeholder="Type action note here"
               />
-              {mutationLoading && <p className="text-center">Saving note ...</p>}
+              {mutationLoading && (
+                <p className="text-center">Saving note ...</p>
+              )}
             </div>
           )}
         </ModalDialog>
@@ -346,129 +464,99 @@ export default function UsersList() {
               className={classes.iconButton}
               aria-label="search"
             >
-              <FilterListIcon onClick={inputToSearch} />
+              <FilterListIcon onClick={toggleFilterMenu} />
             </IconButton>
+            <div style={{ margin: '10px 19px 10px 0' }}>
+              {filterCount
+                ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}`
+                : 'Filter'}
+            </div>
             <div className={classes.searchButton}>
-              <Link to="/users/import" style={{textDecoration: 'none'}}>
-                <Button variant="contained" style={{border: '1px #dfdfdf solid'}}>
+              <Link to="/users/import" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  style={{ border: '1px #dfdfdf solid' }}
+                >
                   UPLOAD
                 </Button>
               </Link>
             </div>
           </>
         </div>
-        <Grid container alignItems="center">
-          <Grid item xs="auto">
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-mutiple-chip-label">Filter by Role</InputLabel>
-              <Select
-                labelId="select-by-role"
-                id="role-chip"
-                multiple
-                value={type}
-                onChange={handleInputChange}
-                input={<Input id="select-by-role" />}
-                renderValue={selected => (
-                  <div>
-                    {selected.map((value, i) => (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <Chip key={i} label={value} />
-                    ))}
-                  </div>
-                )}
-              >
-
-                {Object.entries(userType).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </Select>
-              {Boolean(type.length) && (
-                <Button size="small" onClick={() => setType([])}>Clear Filter</Button>
-              )}
-            </FormControl>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            position: 'relative'
+          }}
+        >
+          <Grid container alignItems="center" style={{ width: '40%' }}>
+            <div className="d-flex justify-content-center row">
+              <span>{labelError}</span>
+            </div>
           </Grid>
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <FilterComponent
-              stateList={labels}
-              list={labelsData.labels || []}
-              handleInputChange={handleLabelChange}
-              classes={classes}
-              resetFilter={() => setLabels([])}
-              type="labels"
-              filterOpen={filterOpen}
-              handleOpenSelect={handleSelect}
+
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              display: displayBuilder
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={handleQueryOnChange}
+              builderConfig={queryBuilderConfig}
+              initialQueryValue={queryBuilderInitialValue}
+              addRuleLabel="Add filter"
             />
           </Grid>
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end', margin: 5 }}>
-            <CreateLabel handleLabelSelect={handleLabelSelect} />
-          </Grid>
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
-            {labelLoading ? <CircularProgress size={25} /> : ''}
-          </Grid>
-
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.filterButton}
-              endIcon={<Icon>search</Icon>}
-              onClick={handleFilterModal}
-            >
-              Filter by Phone #
-            </Button>
-            {Boolean(phoneNumbers.length) && (
-              <Button size="small" onClick={() => setPhoneNumbers([])}>Clear Filter</Button>
-            )}
-          </Grid>
-          <DateFilterComponent
-            classes={classes}
-            handleFilterInputChange={handleFilterInputChange}
-            filterType={filterType}
-            handleDateChangeFrom={handleDateChangeFrom}
-            handleDateChangeTo={handleDateChangeTo}
-            selectDateFrom={selectDateFrom}
-            selectDateTo={selectDateTo}
-            selectDateOn={selectDateOn}
-            handleDateChangeOn={handleDateChangeOn}
-            resetFilter={resetDateFilter}
-          />
-          <Grid item xs="auto" style={{ display: 'flex', alignItems: 'flex-end', marginLeft: 5 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.filterButton}
-              endIcon={<TelegramIcon />}
-              onClick={handleCampaignCreate}
-            >
-              Create Campaign
-            </Button>
-          </Grid>
-        </Grid>
-
-        <br />
-        <div className="d-flex justify-content-center row">
-          {/* <span>{labelError ? "Error: Duplicate Label, Check if label is already assigned!" : ''}</span> */}
-
-          <span>{labelError}</span>
         </div>
-
         <br />
-        <br />
-
-
-        <UserListCard userData={data} handleNoteModal={handleNoteModal} currentUserType={authState.user.userType} sendOneTimePasscode={sendOneTimePasscode} />
-
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Paginate
-            count={data.users.length}
-            active={false}
-            offset={offset}
-            handlePageChange={paginate}
-            limit={limit}
-          />
-        </Grid>
+        {loading || labelsLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <UsersActionMenu
+              campaignCreateOption={campaignCreateOption}
+              setCampaignCreateOption={setCampaignOption}
+              selectedUsers={selectedUsers}
+              userList={userList}
+              setSelectAllOption={setSelectAll}
+              handleCampaignCreate={handleCampaignCreate}
+              handleLabelSelect={handleLabelSelect}
+              usersCountData={usersCountData}
+              selectCheckBox={selectCheckBox}
+            />
+            <UserListCard
+              userData={data}
+              handleNoteModal={handleNoteModal}
+              currentUserType={authState.user.userType}
+              sendOneTimePasscode={sendOneTimePasscode}
+              handleUserSelect={handleUserSelect}
+              selectedUsers={selectedUsers}
+              offset={offset}
+              selectCheckBox={selectCheckBox}
+            />
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Paginate
+                count={data.users.length}
+                active={false}
+                offset={offset}
+                handlePageChange={paginate}
+                limit={limit}
+              />
+            </Grid>
+          </>
+        )}
       </div>
     </>
   )
@@ -518,8 +606,7 @@ export const useStyles = makeStyles(theme => ({
   },
   '@media only screen and (max-width: 768px)': {
     searchButton: {
-      flexBasis: '100%',
+      flexBasis: '100%'
     }
   }
 }))
-

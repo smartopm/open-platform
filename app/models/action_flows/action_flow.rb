@@ -2,13 +2,10 @@
 
 module ActionFlows
   # Class to run JSONLogic with passed rules and data
-  # rubocop:disable Metrics/ClassLength
   class ActionFlow
     #  ActionFlows::ActionFlow
     attr_accessor :description
-    attr_accessor :event_type
-    attr_accessor :event_condition
-    attr_accessor :event_action
+    attr_accessor :event_type, :event_condition, :event_action
 
     def initialize(description, event_type, event_condition, event_action)
       @event_type = event_type
@@ -45,98 +42,5 @@ module ActionFlows
 
       nil
     end
-
-    def self.find_by_event_type(event_type)
-      ActionFlows::ActionFlow.load_flows.select { |e| e.event_type == event_type }
-    end
-
-    # rubocop:disable Metrics/MethodLength
-    def self.load_flows
-      [{
-        'description' => 'Email On task update',
-        'event_type' => 'task_update',
-        'event_condition' => '{"==":[1,1]}',
-        'event_action' => {
-          'action_name' => 'email',
-          'action_fields' => {
-            'email' => {
-              'name' => 'email',
-              'value' => 'note_assignees_emails',
-              'type' => 'variable',
-            }, 'template' => {
-              'name' => 'template',
-              'value' => 'd-285b8ab4099b424a93fc04be801a87db',
-              'type' => 'string',
-            }, 'url' => {
-              'name' => 'url',
-              'value' => 'note_url',
-              'type' => 'variable',
-            }, 'body' => {
-              'name' => 'body',
-              'value' => 'note_body',
-              'type' => 'variable',
-            }
-          },
-        },
-      }, {
-        'description' => 'Email On comment update',
-        'event_type' => 'note_comment_update',
-        'event_condition' => '{"==":[1,1]}',
-        'event_action' => {
-          'action_name' => 'email',
-          'action_fields' => {
-            'email' => {
-              'name' => 'email',
-              'value' => 'note_comment_assignees_emails',
-              'type' => 'variable',
-            }, 'template' => {
-              'name' => 'template',
-              'value' => 'd-285b8ab4099b424a93fc04be801a87db',
-              'type' => 'string',
-            }, 'url' => {
-              'name' => 'url',
-              'value' => 'note_comment_url',
-              'type' => 'variable',
-            }, 'body' => {
-              'name' => 'body',
-              'value' => 'note_comment_body',
-              'type' => 'variable',
-            }
-          },
-        },
-      },
-       {
-         'description' => 'Email On comment create',
-         'event_type' => 'note_comment_create',
-         'event_condition' => '{"==":[1,1]}',
-         'event_action' => {
-           'action_name' => 'email',
-           'action_fields' => {
-             'email' => {
-               'name' => 'email',
-               'value' => 'note_comment_assignees_emails',
-               'type' => 'variable',
-             }, 'template' => {
-               'name' => 'template',
-               'value' => 'd-285b8ab4099b424a93fc04be801a87db',
-               'type' => 'string',
-             }, 'url' => {
-               'name' => 'url',
-               'value' => 'note_comment_url',
-               'type' => 'variable',
-             }, 'body' => {
-               'name' => 'body',
-               'value' => 'note_comment_body',
-               'type' => 'variable',
-             }
-           },
-         },
-       }].map do |e|
-        ActionFlows::ActionFlow.new(e['description'], e['event_type'],
-                                    e['event_condition'], e['event_action'])
-      end
-    end
-    # rubocop:enable Metrics/MethodLength
   end
-  # rubocop:enable Metrics/ClassLength
 end

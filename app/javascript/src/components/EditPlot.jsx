@@ -12,11 +12,22 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { EditPlotNumber } from '../graphql/mutations'
+import MessageAlert from "./MessageAlert"
+import { formatError } from "../utils/helpers"
 
 export default function EditPlotModal({ open, handleClose, data, refetch }) {
   const classes = useStyles();
   const [editPlot] = useMutation(EditPlotNumber)
   const [parcelNumber, setParcelNumber] = useState('')
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
+  }
 
   function handleEditPlotNumber(event) {
     event.preventDefault()
@@ -24,7 +35,13 @@ export default function EditPlotModal({ open, handleClose, data, refetch }) {
       id: data.id,
       parcelNumber
     }}).then(() => {
+      setMessageAlert('Plot number editted successfully')
+      setIsSuccessAlert(true)
+      handleClose()
       refetch()
+    }).catch(err => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
       handleClose()
     })
   }
@@ -62,6 +79,12 @@ export default function EditPlotModal({ open, handleClose, data, refetch }) {
           </DialogActions>
         </form>
       </Dialog>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
     </>
   )
 }

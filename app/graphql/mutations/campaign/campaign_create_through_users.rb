@@ -6,17 +6,17 @@ module Mutations
     class CampaignCreateThroughUsers < BaseMutation
       include Helpers::Campaign
 
-      argument :labels, String, required: false
-      argument :user_type, String, required: false
-      argument :number, String, required: false
+      argument :query, String, required: false
+      argument :limit, Integer, required: false
+      argument :user_list, String, required: false
 
       field :campaign, Types::CampaignType, null: true
 
       # TODO: Move campaign create process to a background job
-      def resolve(vals)
+      def resolve(query:, limit:, user_list:)
         campaign = campaign_object
-        campaign.name = campaign_name(vals[:labels])
-        campaign.user_id_list = user_id_list(vals).pluck(:id).join(',')
+        campaign.name = I18n.t('campaign.default_name')
+        campaign.user_id_list = user_list.presence || list_of_user_ids(query, limit).join(',')
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
         { campaign: campaign }
@@ -31,40 +31,19 @@ module Mutations
         campaign
       end
 
-      def campaign_name(labels)
-        labels ? labels.tr(',', '_') : I18n.t('campaign.default_name')
+      def list_of_user_ids(query, limit)
+        users = if query.present? && query.include?('date_filter')
+                  ::User.allowed_users(context[:current_user])
+                        .heavy_search(query)
+                else
+                  ::User.allowed_users(context[:current_user])
+                        .search(query)
+                end
+
+        # Check Later @nurudeen!
+        # .heavy_search & .search returns duplicates when .pluck is used on them, a bug?
+        users.order(name: :asc).limit(limit).pluck(:id).uniq
       end
-
-      # rubocop:disable Metrics/AbcSize
-      def user_id_list(vals)
-        vals.delete_if { |_key, value| value.nil? }
-        return context[:site_community].users.all if vals.empty?
-        return user_by_single_filter(vals) if vals.length.eql? 1
-        return user_by_double_filter(vals) if vals.length.eql? 2
-
-        context[:site_community].users.joins(:labels).by_phone_number(vals[:number])
-                                .by_type(vals[:user_type]).by_labels(vals[:labels])
-      end
-
-      def user_by_single_filter(vals)
-        return context[:site_community].users.by_labels(vals[:labels]) if vals.key?(:labels)
-        return context[:site_community].users.by_type(vals[:user_type]) if vals.key?(:user_type)
-
-        context[:site_community].users.by_phone_number(vals[:number]) if vals.key?(:number)
-      end
-
-      def user_by_double_filter(vals)
-        if vals.key?(:user_type) && vals.key?(:labels)
-          return context[:site_community].users.by_type(vals[:user_type]).by_labels(vals[:labels])
-        end
-
-        if vals.key?(:user_type) && vals.key?(:number)
-          return context[:site_community].users.by_type(vals[:user_type])
-                                         .by_phone_number(vals[:number])
-        end
-        context[:site_community].users.by_phone_number(vals[:number]).by_labels(vals[:labels])
-      end
-      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         current_user = context[:current_user]

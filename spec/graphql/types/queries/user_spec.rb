@@ -221,8 +221,8 @@ RSpec.describe Types::Queries::User do
                                          site_community: another_user.community,
                                        }).as_json
       current_user.notes.create(author_id: admin.id, body: 'test')
-      expect(result.dig('errors')).to_not be_nil
-      expect(result.dig('errors')[0]['message']).to eql 'Unauthorized'
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
       expect(result.dig('data', 'user', 'id')).to be_nil
       expect(result.dig('data', 'user', 'phoneNumber')).to be_nil
       expect(result.dig('data', 'user', 'notes')).to be_nil
@@ -250,7 +250,7 @@ RSpec.describe Types::Queries::User do
                                                     context: {
                                                       current_user: admin,
                                                     }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'users').length).to eql 1
     end
 
@@ -262,7 +262,7 @@ RSpec.describe Types::Queries::User do
                                                     context: {
                                                       current_user: admin,
                                                     }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'users').length).to eql 1
     end
 
@@ -274,7 +274,7 @@ RSpec.describe Types::Queries::User do
                                                     context: {
                                                       current_user: admin,
                                                     }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'users').length).to eql 10
     end
 
@@ -287,13 +287,14 @@ RSpec.describe Types::Queries::User do
                                                       current_user: admin,
                                                     }).as_json
       expect(result.dig('data', 'users').length).to eql 10
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 
   describe 'user_search' do
     before :each do
       @user = create(:user_with_community, name: 'Joe Test')
+      @user2 = create(:user_with_community, name: 'Doe Test', community: @user.community)
       @admin_user = create(:user_with_community,
                            user_type: 'admin',
                            community_id: @user.community_id)
@@ -316,6 +317,20 @@ RSpec.describe Types::Queries::User do
                                                variables: { query: 'Joe' }).as_json
 
       expect(result.dig('data', 'userSearch').length).to eql 1
+      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Joe Test'
+    end
+
+    it 'searches by contact info' do
+      @user2.contact_infos.create(contact_type: 'phone', info: '09056783452')
+      result = DoubleGdpSchema.execute(@query, context: {
+                                         current_user: @current_user,
+                                       },
+                                               variables: {
+                                                 query: 'contact_info: 09056783452',
+                                               }).as_json
+
+      expect(result.dig('data', 'userSearch').length).to eql 1
+      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Doe Test'
     end
 
     it 'should fail if no logged in' do
@@ -361,8 +376,8 @@ RSpec.describe Types::Queries::User do
                                          current_user: nil,
                                        }).as_json
 
-      expect(result.dig('errors')).to_not be_nil
-      expect(result.dig('errors')[0]['message']).to eq('Unauthorized')
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eq('Unauthorized')
     end
 
     it "creates a new empty user's activity point if there's no current one" do
@@ -380,6 +395,39 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'userActivityPoint', 'login')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'referral')).to eq(0)
       expect(ActivityPoint.count).to eql(prev_activtity_point_count + 1)
+    end
+  end
+
+  describe 'users_count' do
+    let!(:admin_user) { create(:admin_user) }
+    let!(:client_user) do
+      create(:user_with_community, user_type: 'client',
+                                   community: admin_user.community)
+    end
+    let(:query) do
+      %(query usersCount($query: String) {
+        usersCount(query: $query)
+      })
+    end
+
+    it 'returns users count based on the query' do
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin_user,
+                                       },
+                                              variables: { query: 'user_type = "client"' }).as_json
+
+      expect(result.dig('data', 'usersCount')).to eq(1)
+      expect(result['errors']).to be_nil
+    end
+
+    it 'throws unauthorized error if current-user is not an admin' do
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: client_user,
+                                       },
+                                              variables: { query: 'user_type = "client"' }).as_json
+
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
     end
   end
 end

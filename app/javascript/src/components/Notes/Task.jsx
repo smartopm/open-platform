@@ -55,7 +55,7 @@ export default function Task({
   }
 
   function routeToAction(_event, taskId) {
-    return history.push(`/todo/${taskId}`)
+    return history.push(`/tasks/${taskId}`)
   }
 
   function handleOpenMenu(event) {
@@ -85,7 +85,10 @@ export default function Task({
   }
 
   function currentActiveReminder() {
-    const timeScheduled = reminderTime || note.reminderTime
+    const assignedNote = note.assigneeNotes
+      .find(assigneeNote => assigneeNote.userId === currentUser.id)
+    
+    const timeScheduled = reminderTime || assignedNote?.reminderTime
     let formattedTime = null
     if (
       timeScheduled &&
@@ -212,6 +215,7 @@ export default function Task({
             }}
           >
             <EditIcon
+              data-testid="edit_due_date_btn"
               style={{
                 cursor: 'pointer',
                 margin: '5px 4px 0 0',

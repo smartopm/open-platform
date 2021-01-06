@@ -2,14 +2,16 @@
 
 module ActionFlows
   module Actions
-    ACTION_FIELDS = [
-      { 'name' => 'email' },
-      { 'name' => 'template' },
-    ].freeze
-
     # Action defined for firing email
     class Email
+      ACTION_FIELDS = [
+        { name: 'email', type: 'text' },
+        { name: 'template', type: 'text' },
+      ].freeze
+
       def self.process_vars(field, data, field_config)
+        return unless field_config[field]
+
         if field_config[field]['type'] == 'variable'
           return data[(field_config[field]['value']).to_sym]
         end
@@ -26,15 +28,11 @@ module ActionFlows
       end
 
       def self.mail_data(data, field_config)
-        {
-          url: process_vars('url', data, field_config),
-          body: process_vars('body', data, field_config),
-        }
-      end
-
-      # Method temporarily here, need a more generic way to get template id : Saurabh
-      def self.community_template
-        'd-285b8ab4099b424a93fc04be801a87db'
+        hash = {}
+        (field_config.keys - %w[email template]).each do |var|
+          hash[var.to_sym] = process_vars(var, data, field_config)
+        end
+        hash
       end
     end
   end

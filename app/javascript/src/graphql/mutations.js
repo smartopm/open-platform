@@ -8,12 +8,14 @@ export const CreateUserMutation = gql`
     $email: String
     $phoneNumber: String!
     $userType: String!
+    $address: String
     $state: String
     $vehicle: String
     $requestReason: String
     $avatarBlobId: String
     $documentBlobId: String
     $subStatus: String
+    $secondaryInfo: JSON
   ) {
     result: userCreate(
       name: $name
@@ -26,14 +28,16 @@ export const CreateUserMutation = gql`
       avatarBlobId: $avatarBlobId
       documentBlobId: $documentBlobId
       subStatus: $subStatus
+      address: $address
+      secondaryInfo: $secondaryInfo
     ) {
       user {
-        ...UserFields
+       id
       }
     }
   }
-  ${UserFragment.publicFields}
-`
+  `
+  // ${UserFragment.publicFields}
 
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
@@ -49,6 +53,8 @@ export const UpdateUserMutation = gql`
     $documentBlobId: String
     $expiresAt: String
     $subStatus: String
+    $address: String
+    $secondaryInfo: [JSON!]
   ) {
     result: userUpdate(
       id: $id
@@ -63,6 +69,8 @@ export const UpdateUserMutation = gql`
       documentBlobId: $documentBlobId
       expiresAt: $expiresAt
       subStatus: $subStatus
+      address: $address
+      secondaryInfo: $secondaryInfo
     ) {
       user {
         ...UserFields
@@ -70,6 +78,29 @@ export const UpdateUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
+`
+
+
+export const NonAdminUpdateMutation = gql`
+mutation UpdateUserMutation(
+  $id: ID!
+  $name: String
+  $avatarBlobId: String
+  $address: String
+  $secondaryInfo: [JSON!]
+) {
+  result: userUpdate(
+    id: $id
+    name: $name
+    avatarBlobId: $avatarBlobId
+    address: $address
+    secondaryInfo: $secondaryInfo
+  ) {
+    user {
+      id
+    }
+  }
+}
 `
 
 export const CreatePendingUserMutation = gql`
@@ -199,6 +230,9 @@ export const EntryRequestCreate = gql`
     $otherReason: String
     $phoneNumber: String
     $source: String
+    $visitationDate: String
+    $startTime: String
+    $endTime: String
   ) {
     result: entryRequestCreate(
       name: $name
@@ -208,6 +242,9 @@ export const EntryRequestCreate = gql`
       otherReason: $otherReason
       phoneNumber: $phoneNumber
       source: $source
+      visitationDate: $visitationDate
+      startTime: $startTime
+      endTime: $endTime
     ) {
       entryRequest {
         ...EntryRequestFields
@@ -346,6 +383,30 @@ export const AddPlotNumber = gql`
   }
 `
 
+export const AddNewProperty = gql`
+mutation AddNewProperty($parcelNumber: String!,
+  $address1: String,
+  $address2: String,
+  $city: String,
+  $postalCode: String,
+  $stateProvince: String,
+  $parcelType: String,
+  $country: String) {
+    PropertyCreate(parcelNumber: $parcelNumber,
+    address1: $address1,
+    address2: $address2,
+    city: $city,
+    postalCode: $postalCode,
+    stateProvince: $stateProvince,
+    parcelType: $parcelType,
+    country: $country) {
+      landParcel {
+        id
+    }
+  }
+}
+`
+
 export const EditPlotNumber = gql`
   mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
     landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {
@@ -366,6 +427,22 @@ export const DeleteLabel = gql`
   mutation LabelDelete($id: ID!) {
     labelDelete(id: $id) {
       labelDelete
+    }
+  }
+`
+
+export const DeleteActionFlow = gql`
+  mutation ActionFlowDelete($id: ID!) {
+    actionFlowDelete(id: $id) {
+      success
+    }
+  }
+`
+
+export const MsgNotificationUpdate = gql`
+  mutation MsgNotificationUpdate {
+    messageNotificationUpdate {
+      success
     }
   }
 `
@@ -527,6 +604,7 @@ export const CampaignCreate = gql`
     $subject: String
     $preHeader: String
     $templateStyle: String
+    $includeReplyLink: Boolean
   ) {
     campaignCreate(
       name: $name
@@ -539,6 +617,7 @@ export const CampaignCreate = gql`
       subject: $subject
       preHeader: $preHeader
       templateStyle: $templateStyle
+      includeReplyLink: $includeReplyLink
     ) {
       campaign {
         name
@@ -560,6 +639,7 @@ export const CampaignUpdateMutation = gql`
     $subject: String
     $preHeader: String
     $templateStyle: String
+    $includeReplyLink: Boolean
   ) {
     campaignUpdate(
       id: $id
@@ -573,6 +653,7 @@ export const CampaignUpdateMutation = gql`
       subject: $subject
       preHeader: $preHeader
       templateStyle: $templateStyle
+      includeReplyLink: $includeReplyLink
     ) {
       campaign {
         batchTime
@@ -642,6 +723,73 @@ export const DiscussionMutation = gql`
   }
 `
 
+export const InvoiceCreate = gql`
+  mutation InvoiceCreate(
+    $landParcelId: ID!
+    $description: String
+    $note: String
+    $amount: Float!
+    $dueDate: String!
+    $status: String!
+    $userId: ID!
+  ) {
+    invoiceCreate(
+      landParcelId: $landParcelId
+      description: $description
+      note: $note
+      amount: $amount
+      dueDate: $dueDate
+      status: $status
+      userId: $userId
+    ) {
+      invoice {
+        id
+        amount
+        landParcel {
+          id
+          parcelNumber
+        }
+      }
+    }
+  }
+`
+
+export const PaymentCreate = gql`
+  mutation PaymentCreate(
+    $userId: ID!
+    $invoiceId: ID!
+    $amount: Float!
+    $paymentType: String!
+    $paymentStatus: String
+    $bankName: String
+    $chequeNumber: String
+  ) {
+    paymentCreate(
+      userId: $userId
+      invoiceId: $invoiceId
+      amount: $amount
+      paymentType: $paymentType
+      paymentStatus: $paymentStatus
+      bankName: $bankName
+      chequeNumber: $chequeNumber
+    ) {
+      payment {
+        id
+      }
+    }
+  }
+`
+
+export const FollowPostTag = gql`
+    mutation followPostTag($tagName: String!){
+      followPostTag(tagName: $tagName){
+        postTagUser {
+          id
+        }
+      }
+    }
+`
+
 export const DiscussionSubscription = gql`
   mutation discussionUserCreate(
     $discussionId: ID!
@@ -670,8 +818,8 @@ export const LabelCreate = gql`
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-    mutation userLabelCreate($userId: String!, $labelId: String!){
-       userLabelCreate(userId: $userId, labelId: $labelId){
+    mutation userLabelCreate($query: String, $limit: Int, $labelId: String!, $userList: String,){
+       userLabelCreate(query: $query, limit: $limit, labelId: $labelId, userList: $userList){
          label {
            labelId
          }
@@ -705,8 +853,8 @@ export const NotificationPreference = gql`
 }
 `
 export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($labels: String, $userType: String, $number: String){
-    campaignCreateThroughUsers(labels: $labels, userType: $userType, number: $number){
+  mutation campaignCreateThroughUsers($query: String, $limit: Int, $userList: String){
+    campaignCreateThroughUsers(query: $query, limit: $limit, userList: $userList){
       campaign{
         id
       }
@@ -821,4 +969,24 @@ export const FormUserStatusUpdateMutation = gql`
         }
       }
     }
+`
+
+export const CreateActionFlow = gql`
+  mutation actionFlowCreate($title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowCreate(title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+      actionFlow {
+        description
+      }
+    }
+  }
+`
+
+export const UpdateActionFlow = gql`
+  mutation actionFlowUpdate($id: ID!, $title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
+    actionFlowUpdate(id: $id, title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+      actionFlow {
+        description
+      }
+    }
+  }
 `

@@ -12,6 +12,7 @@ module Mutations
       argument :name, String, required: true
       argument :email, String, required: false
       argument :phone_number, String, required: true
+      argument :address, String, required: false
       argument :user_type, String, required: true
       argument :state, String, required: false
       argument :request_reason, String, required: false
@@ -19,12 +20,15 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
+      argument :secondary_info, GraphQL::Types::JSON, required: false
 
       field :user, Types::UserType, null: true
 
       ALLOWED_PARAMS_FOR_ROLES = {
         admin: {}, # Everything
         security_guard: { except: %i[state user_type] },
+        client: { except: %i[state user_type phone_number email] },
+        resident: { except: %i[state user_type phone_number email] },
       }.freeze
 
       def resolve(vals)

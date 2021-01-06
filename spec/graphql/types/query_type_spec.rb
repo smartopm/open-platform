@@ -216,7 +216,7 @@ RSpec.describe Types::QueryType do
                                          site_community: @current_user.community,
                                        }).as_json
       expect(result.dig('data', 'usersFeedback')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'should fails if not logged in' do
@@ -231,6 +231,7 @@ RSpec.describe Types::QueryType do
   describe 'To-dos and notes in general' do
     let!(:admin) { create(:user_with_community, user_type: 'admin') }
     let!(:current_user) { create(:user, community_id: admin.community_id) }
+    let!(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
     let!(:notes) do
       admin.community.notes.create!(
         body: 'This is a note',
@@ -262,11 +263,14 @@ RSpec.describe Types::QueryType do
     end
 
     let(:flagged_query) do
-      %(query {
-            flaggedNotes {
+      %(query($offset: Int, $limit: Int, $query: String) {
+            flaggedNotes(offset: $offset, limit: $limit, query: $query) {
               body
               createdAt
               id
+              user {
+                name
+              }
             }
         })
     end
@@ -303,6 +307,42 @@ RSpec.describe Types::QueryType do
       )
     end
 
+    let(:task_histories_query) do
+      %(query {
+        taskHistories(taskId: "#{notes.id}") {
+          id
+          attrChanged
+          initialValue
+          updatedValue
+          action
+          noteEntityType
+          createdAt
+          user {
+            id
+            name
+            imageUrl
+          }
+        }
+      }
+    )
+    end
+
+    let(:task_comments_query) do
+      %(query {
+        taskComments(taskId: "#{notes.id}") {
+          id
+          body
+          createdAt
+          user {
+            id
+            name
+            imageUrl
+          }
+        }
+      }
+    )
+    end
+
     let(:task_query) do
       %(query {
         task(taskId: "#{other_notes.id}") {
@@ -328,14 +368,58 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'flaggedNotes').length).to eql 2
     end
 
-    it 'should query all notes' do
+    it 'should search all to-dos by user\'s name' do
+      admin.tasks.create!(
+        body: "Note created for #{searchable_user.name}",
+        user_id: searchable_user.id,
+        author_id: admin.id,
+        flagged: true,
+        community_id: admin.community_id,
+        due_date: 10.days.from_now,
+        completed: false,
+      )
+
+      variables = {
+        query: "user: 'Henry'",
+      }
+
+      result = DoubleGdpSchema.execute(flagged_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }, variables: variables).as_json
+
+      expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+      expect(result.dig('data', 'flaggedNotes').length).to eql 1
+
+      filtered_note = Note.search_user("user: 'Henry'").first
+      expect(filtered_note.user).to eq searchable_user
+    end
+
+    it 'should search all to-dos by assignees' do
+      variables = {
+        query: "assignees: #{admin.name}",
+      }
+
+      result = DoubleGdpSchema.execute(flagged_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }, variables: variables).as_json
+
+      filtered_note = result.dig('data', 'flaggedNotes').select { |n| n['id'] == admin_tasks.id }
+      expect(filtered_note.length).to eql 1
+    end
+
+    it 'should query all notes without tasks' do
       result = DoubleGdpSchema.execute(notes_query, context: {
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
 
       expect(result.dig('data', 'allNotes')).not_to be_nil
-      expect(result.dig('data', 'allNotes').length).to eql 3
+      expect(result.dig('data', 'allNotes').length).to eql 1
+
+      tasks = result.dig('data', 'allNotes').select { |n| n['id'] == admin_tasks.id }
+      expect(tasks.length).to eql 0
     end
 
     it 'should query notes for the user' do
@@ -370,6 +454,61 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'taskStats', 'tasksWithNoDueDate')).to eql 0
     end
 
+    it 'should query task histories' do
+      notes.note_histories.create!(
+        note_id: notes.id,
+        user_id: admin.id,
+        attr_changed: 'description',
+        initial_value: 'initial description',
+        updated_value: 'updated description',
+        action: 'update',
+        note_entity_type: 'Note',
+        note_entity_id: notes.id,
+      )
+
+      result = DoubleGdpSchema.execute(task_histories_query, context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+
+      expect(result['errors']).to be_nil
+
+      history_data = result.dig('data', 'taskHistories')
+      expect(history_data.length).not_to eq 0
+
+      update_history = history_data.select do |h|
+        h['initialValue'] == 'initial description' && h['noteEntityType'] == 'Note'
+      end
+
+      expect(update_history.length).not_to eq 0
+      expect(update_history[0]['action']).to eq 'update'
+      expect(update_history[0].dig('user', 'id')).to eq admin.id
+    end
+
+    it 'should query task comments' do
+      notes.note_comments.create!(
+        user_id: admin.id,
+        body: 'New Comment',
+        status: 'active',
+      )
+
+      result = DoubleGdpSchema.execute(task_comments_query, context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+
+      expect(result['errors']).to be_nil
+
+      task_comments = result.dig('data', 'taskComments')
+      expect(task_comments.length).not_to eq 0
+
+      task_comment = task_comments.select { |h| h['body'] == 'New Comment' }
+
+      expect(task_comment.length).not_to eq 0
+      expect(task_comment[0]['createdAt']).not_to be_nil
+      expect(task_comment[0].dig('user', 'id')).to eq admin.id
+    end
+
     it 'query individual task' do
       # task_query
       result = DoubleGdpSchema.execute(task_query, context: {
@@ -377,7 +516,7 @@ RSpec.describe Types::QueryType do
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'task')).not_to be_nil
       expect(result.dig('data', 'task', 'id')).to eql other_notes.id
     end
@@ -388,7 +527,7 @@ RSpec.describe Types::QueryType do
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'myTasksCount')).not_to be_nil
       expect(result.dig('data', 'myTasksCount')).to eql 1
     end

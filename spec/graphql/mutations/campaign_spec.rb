@@ -59,7 +59,7 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0)).not_to be_nil
       expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc'))
         .to eql 'label 1'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
 
     it 'fails to create campaign without campaign type' do
@@ -98,21 +98,24 @@ RSpec.describe Mutations::Campaign do
 
   describe 'create campaign through users' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:user1) { create(:user_with_community) }
+    let!(:user2) { create(:user_with_community) }
     let(:query) do
       <<~GQL
         mutation campaignCreateThroughUsers(
-          $labels: String
-          $userType: String
-          $number: String
+          $query: String,
+          $limit: Int,
+          $userList: String
         ) {
           campaignCreateThroughUsers(
-            labels: $labels
-            userType: $userType
-            number: $number
+            query: $query,
+            limit: $limit,
+            userList: $userList
             ){
               campaign{
                 id
                 name
+                userIdList
               }
             }
           }
@@ -121,64 +124,35 @@ RSpec.describe Mutations::Campaign do
 
     it 'create a campaign with filters' do
       variables = {
-        labels: 'admin,client,security_guard',
-        userType: 'admin',
-        number: '13246579',
+        query: '', limit: 50, userList: user2.id.to_s
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
                                                 site_community: current_user.community,
                                               }).as_json
+
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'userIdList'))
+        .to eq(user2.id.to_s)
+      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
+        .to eql 'Default Campaign Name'
+      expect(result['errors']).to be_nil
+    end
+
+    it 'create a campaign through user_list' do
+      variables = {
+        query: '', limit: 50, userList: ''
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
       expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'name'))
-        .to eql 'admin_client_security_guard'
-      expect(result.dig('errors')).to be_nil
-    end
-
-    it 'create a campaign with number filter only' do
-      variables = {
-        labels: nil,
-        userType: nil,
-        number: '1324564789',
-      }
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
-    end
-
-    it 'create a campaign with number and label filter only' do
-      variables = {
-        labels: 'com_news_sms',
-        userType: nil,
-        number: '1324564789',
-      }
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
-    end
-
-    it 'create a campaign without applying filters' do
-      variables = {
-        labels: nil,
-        userType: nil,
-        number: nil,
-      }
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result.dig('data', 'campaignCreateThroughUsers', 'campaign', 'id')).not_to be_nil
-      expect(result.dig('errors')).to be_nil
+        .to eql 'Default Campaign Name'
+      expect(result['errors']).to be_nil
     end
   end
 
@@ -250,7 +224,7 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'message')).to eql 'Visiting Update'
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc'))
         .to eql 'label 3'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
 
       other_variables = {
         campaignId: campaign.id,
@@ -264,7 +238,7 @@ RSpec.describe Mutations::Campaign do
                                                                    current_user.community,
                                                                  }).as_json
       expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
-      expect(other_result.dig('errors')).to be_nil
+      expect(other_result['errors']).to be_nil
     end
   end
 
@@ -304,7 +278,7 @@ RSpec.describe Mutations::Campaign do
                                                      }).as_json
       expect(result.dig('data', 'campaignDelete', 'campaign', 'id')).to eql campaign_for_delete.id
       expect(result.dig('data', 'campaignDelete', 'campaign', 'status')).to eql 'deleted'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

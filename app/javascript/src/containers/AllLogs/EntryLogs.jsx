@@ -15,8 +15,6 @@ import Loading from '../../components/Loading'
 import { AllEventLogsQuery } from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
 import { Footer } from '../../components/Footer'
-import newUserIcon from '../../../../assets/images/new.svg'
-import gateIcon from '../../../../assets/images/bar.svg'
 import { userType } from '../../utils/constants'
 import useDebounce from '../../utils/useDebounce'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
@@ -27,6 +25,7 @@ import {
   a11yProps
 } from '../../components/Tabs'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
+import FloatButton from '../../components/FloatButton'
 
 export default ({ history, match }) => AllEventLogs(history, match)
 
@@ -62,9 +61,15 @@ const AllEventLogs = (history, match) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const logsQuery = {
+    0: subjects,
+    1: 'user_enrolled',
+    2: 'visit_request'
+  }
+
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: value === 0 ? subjects : 'user_enrolled',
+      subject: logsQuery[value],
       refId,
       refType: null,
       offset,
@@ -96,7 +101,6 @@ const AllEventLogs = (history, match) => {
   function handleChange(_event, newValue) {
     setvalue(newValue)
   }
-
   return (
     <IndexComponent
       data={data}
@@ -132,12 +136,12 @@ export function IndexComponent({
     if (eventLog.refType === 'EntryRequest') {
       router.push({
         pathname: `/request/${eventLog.refId}`,
-        state: { from: 'logs', offset }
+        state: { from: 'entry_logs', offset }
       })
     } if (eventLog.refType === 'User') {
       router.push({
         pathname: `/user/${eventLog.refId}`,
-        state: { from: 'logs', offset }
+        state: { from: 'entry_logs', offset }
       })
     }
   }
@@ -297,45 +301,24 @@ export function IndexComponent({
           aria-label="simple tabs example"
           centered
         >
-          <StyledTab icon={<img alt="" src={gateIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(0)} />
-          <StyledTab icon={<img alt="" src={newUserIcon} style={{ height: 30, width: 30 }} />} {...a11yProps(1)} />
+          <StyledTab label="All Visits" {...a11yProps(0)} />
+          <StyledTab label="New Visits" {...a11yProps(1)} />
+          <StyledTab label="Upcoming Visits" />
         </StyledTabs>
         <TabPanel value={tabValue} index={0}>
           <>{logs(filteredEvents)}</>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-
-          {data.result.map((user) => (
-            <Fragment key={user.id}>
-              <div className="container">
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {dateToString(user.createdAt)}
-                    </span>
-                  </div>
-                </div>
-                <br />
-                <div className="row justify-content-between">
-                  <div className="col-xs-8">
-                    <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
-                  </div>
-                  <div className="col-xs-4">
-                    <span className={css(styles.subTitle)}>
-                      {dateTimeToString(new Date(user.createdAt))}
-                    </span>
-                  </div>
-                </div>
-                <br />
-                <div className="border-top my-3" />
-              </div>
-            </Fragment>
-          ))}
+          {data.result.map((user) => <LogView key={user.id} user={user} /> )}
         </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          {data.result.map((log) => <LogView key={log.id} user={log} /> )}
+        </TabPanel>    
+        <FloatButton 
+          title="New Visit Request"
+          handleClick={() => router.push('/visit_request')}
+        />
       </div>
 
       <div className="d-flex justify-content-center">
@@ -363,6 +346,39 @@ export function IndexComponent({
     </div>
   )
 }
+
+export function LogView({ user }){
+  return (
+    <>
+      <div className="container">
+        <div className="row justify-content-between">
+          <div className="col-xs-8">
+            <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
+          </div>
+          <div className="col-xs-4">
+            <span className={css(styles.subTitle)}>
+              {dateToString(user.createdAt)}
+            </span>
+          </div>
+        </div>
+        <br />
+        <div className="row justify-content-between">
+          <div className="col-xs-8">
+            <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
+          </div>
+          <div className="col-xs-4">
+            <span className={css(styles.subTitle)}>
+              {dateTimeToString(new Date(user.createdAt))}
+            </span>
+          </div>
+        </div>
+        <br />
+        <div className="border-top my-3" />
+      </div>
+    </>
+  )
+}
+
 
 const styles = StyleSheet.create({
   logTitle: {

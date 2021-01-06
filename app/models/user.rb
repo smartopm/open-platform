@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # TODO: @mdp break this class up
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 
 require 'email_msg'
 require 'merge_users'
@@ -16,7 +16,7 @@ class User < ApplicationRecord
   include SearchCop
 
   search_scope :search do
-    attributes :name, :phone_number, :user_type, :email
+    attributes :name, :phone_number, :user_type, :email, :sub_status
     attributes labels: ['labels.short_desc']
   end
 
@@ -29,6 +29,11 @@ class User < ApplicationRecord
 
   search_scope :plot_number do
     attributes plot_no: ['land_parcels.parcel_number']
+  end
+
+  search_scope :search_by_contact_info do
+    attributes :phone_number, :email
+    attributes contact_infos: ['contact_infos.info']
   end
 
   search_scope :search_lite do
@@ -58,7 +63,10 @@ class User < ApplicationRecord
   has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
                                     dependent: :destroy, inverse_of: :user
 
+  has_many :payments, dependent: :destroy
+  has_many :invoices, dependent: :destroy
   has_many :notes, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   has_many :note_comments, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :time_sheets, dependent: :destroy
@@ -78,6 +86,8 @@ class User < ApplicationRecord
   has_many :activity_points, dependent: :destroy
   has_many :user_form_properties, dependent: :destroy
   has_many :form_users, dependent: :destroy
+  has_many :post_tag_users, dependent: :destroy
+  has_many :post_tags, through: :post_tag_users
   has_one_attached :avatar
   has_one_attached :document
 
@@ -94,9 +104,9 @@ class User < ApplicationRecord
   enum sub_status: {
     applied: 0,
     architecture_reviewed: 1,
-    banned: 2,
+    approved: 2,
     contracted: 3,
-    expired: 4,
+    built: 4,
     in_construction: 5,
     interested: 6,
     moved_in: 7,
@@ -128,6 +138,7 @@ class User < ApplicationRecord
   OAUTH_FIELDS_MAP = {
     email: ->(auth) { auth.info.email },
     name: ->(auth) { auth.info.name },
+    address: ->(auth) { auth.info.address },
     provider: ->(auth) { auth.provider },
     uid: ->(auth) { auth.uid },
     image_url: ->(auth) { auth.info.image },
@@ -149,7 +160,7 @@ class User < ApplicationRecord
   def self.from_omniauth(auth, site_community)
     # Either create a User record or update it based on the provider (Google) and the UID
     user = find_or_initialize_from_oauth(auth, site_community)
-    OAUTH_FIELDS_MAP.keys.each do |param|
+    OAUTH_FIELDS_MAP.each_key do |param|
       user[param] = OAUTH_FIELDS_MAP[param][auth]
     end
     user.assign_default_community(site_community)
@@ -179,9 +190,9 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def enroll_user(vals)
-    enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys))
+    enrolled_user = ::User.new(vals.except(*ATTACHMENTS.keys).except(:secondary_info))
     enrolled_user.community_id = community_id
     enrolled_user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
     ATTACHMENTS.each_pair do |key, attr|
@@ -190,13 +201,23 @@ class User < ApplicationRecord
     data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
     return enrolled_user unless enrolled_user.save
 
+    record_secondary_info(enrolled_user, vals[:secondary_info])
     generate_events('user_enrolled', enrolled_user, data)
     process_referral(enrolled_user, data)
     enrolled_user
   end
 
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
+
+  def record_secondary_info(user, secondary_contact_data)
+    return unless secondary_contact_data.present? && user.valid?
+
+    JSON.parse(secondary_contact_data).each do |key, values|
+      values.each { |val| user.contact_infos.create(contact_type: key, info: val) }
+    end
+  end
+
   def process_referral(enrolled_user, data)
     return unless user_type != 'admin'
 
@@ -239,7 +260,7 @@ class User < ApplicationRecord
                       data: data)
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def generate_note(vals)
     community.notes.create(
       # give the note to the author if no other user
@@ -272,7 +293,7 @@ class User < ApplicationRecord
       timesheet
     end
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 
   def construct_message(vals)
     mess = messages.new(vals)
@@ -291,7 +312,10 @@ class User < ApplicationRecord
 
   def user_form(form_id, user_id)
     if admin?
-      community.forms.find(form_id).form_users.find_by(user_id: user_id)
+      forms = community.forms.find_by(id: form_id)
+      return if forms.nil?
+
+      forms.form_users.find_by(user_id: user_id)
     else
       form_users.find_by(form_id: form_id)
     end
@@ -431,15 +455,11 @@ class User < ApplicationRecord
   def send_email_msg
     return if self[:email].nil?
 
-    template = community.templates || {}
-    EmailMsg.send_mail(self[:email], template['welcome_template_id'], welcome_mail_data)
-  end
+    template = community.email_templates.find_by(name: 'welcome')
+    return unless template
 
-  def welcome_mail_data
-    {
-      "community": community,
-      "name": name,
-    }
+    template_data = [{ key: '%login_url%', value: ENV['HOST'] || '' }]
+    EmailMsg.send_mail_from_db(self[:email], template, template_data)
   end
 
   # catch exceptions in here to be caught in the mutation
@@ -466,6 +486,10 @@ class User < ApplicationRecord
     user_logins_today.length == 1
   end
 
+  def note_assigned?(note_id)
+    tasks.where(id: note_id).present?
+  end
+
   private
 
   def current_time_in_timezone
@@ -476,7 +500,7 @@ class User < ApplicationRecord
   def phone_number_valid?
     return nil if self[:phone_number].nil? || self[:phone_number].blank?
 
-    unless self[:phone_number].match(/\A[0-9\+\s\-]+\z/)
+    unless self[:phone_number].match(/\A[0-9+\s\-]+\z/)
       errors.add(:phone_number, "can only contain 0-9, '-', '+' and space")
     end
 
@@ -494,4 +518,4 @@ class User < ApplicationRecord
     end
   end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength

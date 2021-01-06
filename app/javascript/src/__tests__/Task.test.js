@@ -1,8 +1,8 @@
 import React from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { BrowserRouter } from 'react-router-dom/'
+import { BrowserRouter, Route } from 'react-router-dom/'
 import { createClient } from '../utils/apollo'
 import Task from '../components/Notes/Task'
 
@@ -19,7 +19,8 @@ const props = {
     user: {
       name: 'somebody'
     },
-    assignees: [{ name: 'Tester', id: '93sd45435' }]
+    assignees: [{ name: 'Tester', id: '93sd45435' }],
+    assigneeNotes: []
   },
   message: '',
   users: [],
@@ -40,6 +41,7 @@ describe('Task Component', () => {
       <BrowserRouter>
         <ApolloProvider client={createClient}>
           <Task {...props} />
+          <Route path={`/tasks/${props.note.id}`}>{props.note.body}</Route>
         </ApolloProvider>
       </BrowserRouter>
     )
@@ -65,6 +67,16 @@ describe('Task Component', () => {
     expect(reminderBtn).toBeInTheDocument()
     fireEvent.click(reminderBtn)
     expect(mck).toHaveBeenCalled()
+
+    const moreDetailsBtn = container.getByTestId('more_details_btn')
+    expect(moreDetailsBtn).toBeInTheDocument()
+    fireEvent.click(moreDetailsBtn)
+    expect(screen.getAllByText(`${props.note.body}`)).not.toBeNull()
+
+    const editDueDateBtn = container.getByTestId('edit_due_date_btn')
+    expect(editDueDateBtn).toBeInTheDocument()
+    fireEvent.click(editDueDateBtn)
+    expect(props.handleModal).toHaveBeenCalled()
   })
 
   it('should not render reminder button if current user is not an assignee', () => {

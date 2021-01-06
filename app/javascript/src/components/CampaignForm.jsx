@@ -5,7 +5,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { Redirect, useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import {
-  Button, TextField, Chip, Snackbar, MenuItem
+  Button, TextField, Chip, Snackbar, MenuItem, FormControlLabel, Checkbox
 } from '@material-ui/core'
 import { DateAndTimePickers } from './DatePickerDialog'
 import {
@@ -15,7 +15,7 @@ import {
 } from '../graphql/mutations'
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
-import CampaignToggle from './Campaign/ToggleButton'
+import Toggler from './Campaign/ToggleButton'
 
 const initData = {
   id: '',
@@ -29,7 +29,8 @@ const initData = {
   preHeader: '',
   templateStyle: '',
   loaded: false,
-  labels: []
+  labels: [],
+  includeReplyLink: false
 }
 export default function CampaignForm({
   authState, data, loading, refetch
@@ -93,7 +94,8 @@ export default function CampaignForm({
       labels: labels.toString(),
       subject: formData.subject,
       preHeader: formData.preHeader,
-      templateStyle: formData.templateStyle
+      templateStyle: formData.templateStyle,
+      includeReplyLink: formData.includeReplyLink
     }
     if (id) {
       return campaignUpdateOnSubmit(campaignData)
@@ -128,7 +130,7 @@ export default function CampaignForm({
     return <Redirect push to="/" />
   }
   if (!loading && !formData.loaded && data) {
-    setFormData({ ...data, loaded: true, })
+    setFormData({ ...data, loaded: true})
   }
   return (
     <div className="container">
@@ -141,7 +143,14 @@ export default function CampaignForm({
         message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
       />
       <form onSubmit={handleSubmit} aria-label="campaign-form">
-        <CampaignToggle campaignType={campaignType} handleCampaignType={handleCampaignType} />
+        <Toggler
+          type={campaignType}
+          handleType={handleCampaignType}
+          data={{
+            type: 'draft',
+            antiType: 'scheduled'
+          }}
+        />
         <TextField
           label="Campaign Type"
           name="campaignType"
@@ -261,6 +270,20 @@ export default function CampaignForm({
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
             pastDate
+          />
+        </div>
+        <div>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={formData.includeReplyLink}
+                onChange={event => setFormData({ ...formData, includeReplyLink: event.target.checked })}
+                name="includeReplyLink"
+                data-testid="reply_link"
+                color="primary"
+              />
+          )}
+            label="Include reply link"
           />
         </div>
         <div className="d-flex row justify-content-center">

@@ -62,7 +62,7 @@ import FeedbackPage from '../src/containers/Activity/AllFeedback'
 import UsersList from '../src/containers/Users'
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
 import AllMessages from '../src/containers/Messages/AllMessages'
-import UserMessages from '../src/containers/Messages/UserMessages'
+import UserMessages from '../src/containers/Messages/UserMessagePage'
 import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
 import ClientRequestForm from '../src/containers/ClientRequestForm'
@@ -83,12 +83,18 @@ import GeoMap from '../src/containers/GeoMap'
 import Notifications from '../src/containers/Preferences/Notifications'
 import { MuiThemeProvider } from '@material-ui/core'
 import { theme } from '../src/themes/nkwashi/theme'
-import FormLinks from '../src/containers/FormLinks'
+import FormLinks from '../src/containers/Forms/FormLinks'
 import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
+import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
 import EmailBuilder from '../src/components/Email/EmailBuilder'
 
+import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
+import LandParcel from '../src/containers/LandParcels/LandParcel'
+import CommentsPage from '../src/containers/Comments/CommentPage'
+import CommunitySettings from '../src/containers/Settings/CommunitySettings'
+import Payments from '../src/containers/Payment/Payments'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -200,7 +206,7 @@ const App = () => {
                     <Route path="/logout" component={Logout} />
                     <Route path="/google/:token" component={MainAuthCallback} />
                     <Route path="/facebook/:token" component={MainAuthCallback} />
-
+   
                     {/* Spike page */}
                     <Route path="/news/post/:id" exact component={PostPage} />
 
@@ -277,7 +283,7 @@ const App = () => {
                           component={UserLogs}
                         />{' '}
                         {/* Still admin route */}
-                        <Route path="/user/:id/:tm?/:dg?" component={UserShow} />
+                        <Route path={["/user/:id/:tm?/:dg?", "/user/:id/:tab?"]} component={UserShow} />
                         <Route
                           path="/timesheet"
                           exact
@@ -314,6 +320,7 @@ const App = () => {
                         {/* Forms */}
                         <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
+                        <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
                         
                         {/* Email */}
@@ -333,12 +340,28 @@ const App = () => {
                               component={ShowroomLogs}
                             />
                             <Route path="/notes" component={AllNotes} />
-                            <Route path="/todo/:taskId" exact component={TaskUpdate} />
-                            <Route path="/todo" component={Todo} />
+                            <Route path="/tasks/:taskId" exact component={TaskUpdate} />
+                            <Route path="/tasks" component={Todo} />
+                            <Route
+                              exact
+                              path="/todo/:taskId"
+                              render={({ match }) => (
+                                <Redirect to={`/tasks/${match.params.taskId}`} />
+                              )}
+                            />
+                            <Route
+                              exact
+                              path="/todo"
+                              render={() => (
+                                <Redirect to='/tasks' />
+                              )}
+                            />
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
                             <Route path="/labels" component={Labels} />
+                            <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} />
+                            <Route path="/land_parcels" component={LandParcel} />
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route
@@ -346,6 +369,10 @@ const App = () => {
                               exact
                               component={PendingUsers}
                             />
+                            <Route path="/comments" exact component={CommentsPage} />
+                            <Route path="/community" component={CommunitySettings}  />
+                            <Route path="/payments" component={Payments}  />
+                            <Route path="/visit_request" component={EntryRequest} />
                           </Switch>
                         </AdminRoutes>
                         <Route

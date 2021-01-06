@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = function(api) {
   var validEnv = ["development", "test", "production"];
   var currentEnv = api.env();
@@ -47,6 +48,7 @@ module.exports = function(api) {
       require("babel-plugin-macros"),
       require("@babel/plugin-syntax-dynamic-import").default,
       isTestEnv && require("babel-plugin-dynamic-import-node"),
+      isDevelopmentEnv && require('react-refresh/babel'),
       require("@babel/plugin-transform-destructuring").default,
       [
         require("@babel/plugin-proposal-class-properties").default,

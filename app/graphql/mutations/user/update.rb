@@ -8,7 +8,8 @@ module Mutations
       argument :name, String, required: false
       argument :email, String, required: false
       argument :phone_number, String, required: false
-      argument :user_type, String, required: true
+      argument :address, String, required: false
+      argument :user_type, String, required: false
       argument :state, String, required: false
       argument :request_reason, String, required: false
       argument :vehicle, String, required: false
@@ -16,6 +17,7 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
+      argument :secondary_info, [GraphQL::Types::JSON], required: false
 
       field :user, Types::UserType, null: true
 
@@ -24,8 +26,8 @@ module Mutations
         raise GraphQL::ExecutionError, 'NotFound' unless user
 
         attach_avatars(user, vals)
-
         log_user_update(user)
+        update_secondary_info(user, vals.delete(:secondary_info))
         return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
         raise GraphQL::ExecutionError, user.errors.full_messages
@@ -34,6 +36,19 @@ module Mutations
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
           user.send(attr).attach(vals[key]) if vals[key]
+        end
+      end
+
+      def update_secondary_info(user, contact_info)
+        return if contact_info.nil?
+
+        contact_info.each do |value|
+          if value['id'].nil?
+            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
+          else
+            contact = user.contact_infos.find(value['id'])
+            contact.update(info: value['info']) unless contact.info.eql?(value['info'])
+          end
         end
       end
 
@@ -47,10 +62,15 @@ module Mutations
                           })
       end
 
+      def own_user?(vals)
+        context[:current_user].id == vals[:id]
+      end
+
       def authorized?(vals)
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
         user_record = ::User.find(vals[:id])
         current_user = context[:current_user]
+        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.admin? || own_user?(vals)
         raise GraphQL::ExecutionError, 'Unauthorized' unless user_record.community_id ==
                                                              current_user.community_id
 

@@ -6,12 +6,17 @@ module Mutations
     class FormCreate < BaseMutation
       argument :name, String, required: true
       argument :expires_at, String, required: true
+      argument :description, String, required: false
 
       field :form, Types::FormType, null: true
 
       def resolve(vals)
         form = context[:site_community].forms.new(vals)
-        return { form: form } if form.save
+        if form.save
+          context[:current_user].generate_events('form_create', form)
+
+          return { form: form }
+        end
 
         raise GraphQL::ExecutionError, form.errors.full_messages
       end

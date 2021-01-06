@@ -54,7 +54,11 @@ export function PostItemGrid({ data }) {
       >
         {data.length
         && data.map((tile) => (
-          <GridListTile key={tile.ID} onClick={() => routeToPost(tile.ID)}>
+          <GridListTile 
+            key={tile.ID} 
+            onClick={() => routeToPost(tile.ID)}
+            style={{ cursor: 'pointer' }}
+          >
             <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
             <GridListTileBar
               title={(
@@ -93,7 +97,7 @@ export default function NewsFeed() {
   }
   if (!response || !response.posts) {
     return (
-      <div style={{margin: '85px 0'}}>
+      <div style={{margin: '95px 0'}}>
         <Spinner />
       </div>
       )
@@ -105,10 +109,11 @@ export default function NewsFeed() {
 function postsToDisplay(posts) {
   const data = []
   if (posts && posts.length) {
-    const stickyPosts = posts.filter(post => post.sticky).slice(0, NUMBER_OF_POSTS_TO_DISPLAY)
+    const publicPosts = posts.filter(p => p.categories.Private == null)
+    const stickyPosts = publicPosts.filter(_post => _post.sticky).slice(0, NUMBER_OF_POSTS_TO_DISPLAY)
     data.push(...stickyPosts)
     if (stickyPosts.length < NUMBER_OF_POSTS_TO_DISPLAY) {
-      const nonStickyPosts = posts.filter(post => !post.sticky)
+      const nonStickyPosts = publicPosts.filter(p => !p.sticky)
       const moreToDisplay = nonStickyPosts.slice(0, NUMBER_OF_POSTS_TO_DISPLAY - stickyPosts.length)
       data.push(...moreToDisplay)
     }

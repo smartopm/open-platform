@@ -63,8 +63,8 @@ module Mutations
       private
 
       def set_host
-        ActiveStorage::Current.host = Rails.application.routes.default_url_options[:protocol] +
-                                      '://' + Rails.application.routes.default_url_options[:host]
+        base_url = Rails.application.routes.default_url_options[:protocol]
+        ActiveStorage::Current.host = "#{base_url}://#{context[:site_hostname]}"
       end
     end
   end

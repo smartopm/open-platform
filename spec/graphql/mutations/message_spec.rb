@@ -51,12 +51,13 @@ RSpec.describe Mutations::Message do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
+                                                site_community: non_admin.community,
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
                         'message')).to eql variables[:message]
       expect(result.dig('data', 'messageCreate', 'message', 'category')).to eql 'sms'
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       message_in_db = Message.first
       expect(Message.all.count).to eql 1
       expect(message_in_db[:receiver]).to eql '260971500748'
@@ -73,12 +74,13 @@ RSpec.describe Mutations::Message do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
+                                                site_community: non_admin.community,
                                                 current_user: non_admin,
                                               }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(result.dig('data', 'messageCreate', 'message',
                         'message')).to eql variables[:message]
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       message_in_db = Message.first
       expect(Message.all.count).to eql 1
       expect(message_in_db[:receiver]).to eql '260971500748'
@@ -96,13 +98,14 @@ RSpec.describe Mutations::Message do
       }
       result = DoubleGdpSchema.execute(query_with_note, variables: variables,
                                                         context: {
+                                                          site_community: non_admin.community,
                                                           current_user: non_admin,
                                                         }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
       expect(NoteHistory.count).to eql 1
       expect(NoteHistory.last.note_id).to eql note.id
       expect(NoteHistory.last.user_id).to eql non_admin.id
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

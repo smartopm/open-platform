@@ -17,10 +17,6 @@ module ActionFlows
         #  UserLoginEvent.event_metadata.values.map{|v| v.values }
       end
 
-      def initialize
-        super
-      end
-
       def self.event_description
         EVENT_DESC
       end
@@ -29,8 +25,9 @@ module ActionFlows
         EVENT_TYPE
       end
 
-      def setup_data(user_data)
-        load_data('User' => user_data)
+      def preload_data(event_log)
+        user = event_log.ref_type.constantize.find(event_log.ref_id)
+        load_data('User' => user)
       end
     end
   end

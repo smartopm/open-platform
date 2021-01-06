@@ -8,19 +8,23 @@ import { useTranslation } from 'react-i18next'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import PersonIcon from '@material-ui/icons/Person'
-import LabelIcon from '@material-ui/icons/Label';
+import LabelIcon from '@material-ui/icons/Label'
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import LogIcon from '@material-ui/icons/Assignment'
 import MessageIcon from '@material-ui/icons/Message'
 import NotesIcon from '@material-ui/icons/Notes'
+import SettingsIcon from '@material-ui/icons/Settings';
 import ForumIcon from '@material-ui/icons/Forum'
 import CallIcon from '@material-ui/icons/Call'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import CommentIcon from '@material-ui/icons/Comment'
 import LocalMallIcon from '@material-ui/icons/LocalMall'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
+import LandscapeIcon from '@material-ui/icons/Landscape';
+import PaymentIcon from '@material-ui/icons/Payment';
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -29,6 +33,7 @@ import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { Footer } from './Footer'
 import AccountManagement from '../../../assets/images/account_management.svg'
 import NewsIcon from '../../../assets/images/iconfinder.svg'
+import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 
 export default function Homepage({ authState }) {
   const { t } = useTranslation()
@@ -126,7 +131,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 8,
       title: 'Tasks',
-      path: '/todo',
+      path: '/tasks',
 
       icon: <PlaylistAddCheckIcon fontSize="large" />,
       access: ['admin']
@@ -146,9 +151,7 @@ export default function Homepage({ authState }) {
       titleStyle: css(styles.CardtextImg),
       clientName: authState.user.name,
       from: 'home',
-      icon: (
-        <SVGIcon image={AccountManagement} alt="account management icon" />
-      ),
+      icon: <SVGIcon image={AccountManagement} alt="account management icon" />,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -157,7 +160,7 @@ export default function Homepage({ authState }) {
       path: '/forms',
       id: 'crfl',
       icon: <ListAltIcon fontSize="large" />,
-      access: ['admin', 'resident', 'client'],
+      access: ['admin', 'resident', 'client']
     },
     {
       card_id: 12,
@@ -248,9 +251,37 @@ export default function Homepage({ authState }) {
       title: 'Labels',
       path: `/labels`,
       icon: <LabelIcon fontSize="large" />,
-      access: [
-        'admin'
-      ]
+      access: ['admin']
+    },
+    {
+      title: 'Comments',
+      path: '/comments',
+      icon: <CommentIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Action Flows',
+      path: '/action_flows',
+      icon: <ActionFlowIcon />,
+      access: ['admin']
+    },
+    {
+      title: 'Parcels and Properties',
+      path: '/land_parcels',
+      icon: <LandscapeIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Payments',
+      path: '/payments',
+      icon: <PaymentIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Community Settings',
+      path: '/community',
+      icon: <SettingsIcon fontSize="large" />,
+      access: ['admin']
     }
   ]
 
