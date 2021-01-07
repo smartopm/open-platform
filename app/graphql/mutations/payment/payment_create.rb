@@ -15,7 +15,13 @@ module Mutations
       field :payment, Types::PaymentType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
+        if vals[:amount] > find_invoice(vals[:invoice_id]).amount
+          raise GraphQL::ExecutionError,
+                'The amount you are trying to pay is higher than the invoiced amount'
+        end
+
         user = context[:site_community].users.find(vals[:user_id])
         payment = user.payments.create(vals.except(:user_id))
         invoice_update(vals[:invoice_id], vals[:amount])
@@ -27,6 +33,7 @@ module Mutations
         raise GraphQL::ExecutionError, payment.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def invoice_update(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
