@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import EmailEditor from 'react-email-editor';
 import TemplateList from './TemplateList'
 
 export default function EmailBuilder() {
   const emailEditorRef = useRef(null);
+  const [template, setTemplate] = useState('')
 
   const exportHtml = () => {
     emailEditorRef.current.editor.exportHtml((data) => {
@@ -12,6 +13,10 @@ export default function EmailBuilder() {
       console.log('exportHtml', design);
     });
   };
+
+  function handleTemplateValue(event){
+    setTemplate(event.target.value)
+  }
 
   const onLoad = () => {
     // you can load your template here;
@@ -24,7 +29,11 @@ export default function EmailBuilder() {
       <div>
         <button type="button" onClick={exportHtml}>Export HTML</button>
       </div>
-      <TemplateList />
+      <TemplateList 
+        value={template} 
+        handleValue={handleTemplateValue}
+        createTemplate={() => console.log('I was clicked pe')}
+      />
       <EmailEditor
         ref={emailEditorRef}
         onLoad={onLoad}
