@@ -88,7 +88,7 @@ import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
 import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
-import EmailBuilder from '../src/components/Email/EmailBuilder'
+import EmailBuilder from '../src/components/EmailTemplate/EmailBuilder'
 
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 import LandParcel from '../src/containers/LandParcels/LandParcel'

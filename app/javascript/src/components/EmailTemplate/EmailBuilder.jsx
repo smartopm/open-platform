@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import EmailEditor from 'react-email-editor';
+import TemplateList from './TemplateList'
 
 export default function EmailBuilder() {
   const emailEditorRef = useRef(null);
@@ -23,7 +24,7 @@ export default function EmailBuilder() {
       <div>
         <button type="button" onClick={exportHtml}>Export HTML</button>
       </div>
-      
+      <TemplateList />
       <EmailEditor
         ref={emailEditorRef}
         onLoad={onLoad}
