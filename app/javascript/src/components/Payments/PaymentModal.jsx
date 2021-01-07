@@ -78,7 +78,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
         handleModal={handleModalClose}
         dialogHeader='Make a Payment'
         handleBatchFilter={handleSubmit}
-        subHeader={`You are about to make a payment $${invoiceData?.amount} for parcel number ${invoiceData?.landParcel.parcelNumber}`}
+        subHeader={`You are about to make a payment ${currency}${invoiceData?.amount} for parcel number ${invoiceData?.landParcel.parcelNumber}`}
       >
         <div className={classes.invoiceForm}>
           <TextField
@@ -155,7 +155,7 @@ const useStyles = makeStyles({
   invoiceForm: {
     display: 'flex',
     flexDirection: 'column',
-    width: '400px'
+    width: '500px'
   }
 });
 

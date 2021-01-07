@@ -18,17 +18,27 @@ module Mutations
       def resolve(vals)
         user = context[:site_community].users.find(vals[:user_id])
         payment = user.payments.create(vals.except(:user_id))
-        payment.settled! if vals[:payment_type] == 'cash'
-        payment_status_update(vals[:invoice_id], vals[:amount])
+        invoice_update(vals[:invoice_id], vals[:amount])
+        payment.settled! if vals[:payment_type] == 'cash' || find_invoice(vals[:invoice_id]).amount == 0
         return { payment: payment } if payment.persisted?
 
         raise GraphQL::ExecutionError, payment.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
 
-      def payment_status_update(invoice_id, amount)
+      def invoice_update(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
-        inv.paid! if inv.amount == amount
+        inv.update!(amount: "#{inv.amount - amount}".to_f)
+        inv.paid! if verify_amount(invoice_id, amount) || inv.amount == 0
+      end
+
+      def verify_amount(invoice_id, amount)
+        inv = context[:site_community].invoices.find(invoice_id) 
+        inv.amount == amount
+      end
+
+      def find_invoice(invoice_id)
+        context[:site_community].invoices.find(invoice_id)
       end
 
       def authorized?(_vals)
