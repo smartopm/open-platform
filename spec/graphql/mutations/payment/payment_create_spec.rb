@@ -70,8 +70,8 @@ RSpec.describe Mutations::Payment::PaymentCreate do
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
-      expect(result.dig('errors', 0, 'message')).to eql
-      'The amount you are trying to pay is higher than the invoiced amount'
+      expect(result.dig('errors', 0, 'message'))
+        .to eql 'The amount you are trying to pay is higher than the invoiced amount'
     end
   end
 end
