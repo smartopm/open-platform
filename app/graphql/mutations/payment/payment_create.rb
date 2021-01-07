@@ -19,7 +19,9 @@ module Mutations
         user = context[:site_community].users.find(vals[:user_id])
         payment = user.payments.create(vals.except(:user_id))
         invoice_update(vals[:invoice_id], vals[:amount])
-        payment.settled! if vals[:payment_type] == 'cash' || find_invoice(vals[:invoice_id]).amount == 0
+        if vals[:payment_type] == 'cash' || find_invoice(vals[:invoice_id]).amount.zero?
+          payment.settled!
+        end
         return { payment: payment } if payment.persisted?
 
         raise GraphQL::ExecutionError, payment.errors.full_messages
@@ -28,12 +30,12 @@ module Mutations
 
       def invoice_update(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
-        inv.update!(amount: "#{inv.amount - amount}".to_f)
-        inv.paid! if verify_amount(invoice_id, amount) || inv.amount == 0
+        inv.update!(amount: (inv.amount - amount).to_f)
+        inv.paid! if verify_amount(invoice_id, amount) || inv.amount.zero?
       end
 
       def verify_amount(invoice_id, amount)
-        inv = context[:site_community].invoices.find(invoice_id) 
+        inv = context[:site_community].invoices.find(invoice_id)
         inv.amount == amount
       end
 
