@@ -5,11 +5,7 @@ import ActionFLowDelete from './ActionFlows/ActionFlowDelete'
 
 export default function ActionCardMenu({ data, open, handleClose, anchorEl, openFlowModal, refetch }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
-
-  function handleClick() {
-    console.log('click')
-  }
-
+  
   function handleDelete() {
     setDeleteOpen(true)
   }
@@ -39,12 +35,6 @@ export default function ActionCardMenu({ data, open, handleClose, anchorEl, open
             onClick={handleEdit}
           >
             Edit
-          </MenuItem>
-          <MenuItem
-            key="activate"
-            onClick={handleClick}
-          >
-            Activate
           </MenuItem>
           <MenuItem
             key="delete"

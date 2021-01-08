@@ -25,6 +25,7 @@ import Comments from '../../components/Discussion/Comment'
 import { DiscussionMutation, LogReadPost, LogSharedPost } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
 import TagsComponent from '../../components/NewsPage/Tags'
+import MessageAlert from "../../components/MessageAlert"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -47,6 +48,8 @@ export default function PostPage() {
   const [discuss] = useMutation(DiscussionMutation)
   const [logReadPost] = useMutation(LogReadPost)
   const [logSharedPost] = useMutation(LogSharedPost)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
 
   useEffect(() => {
     if (authState.loggedIn) {
@@ -54,7 +57,10 @@ export default function PostPage() {
         variables: { postId: id }
       })
       .then(res => res)
-      .catch(err => console.log(err.message))
+      .catch(err => {
+        setMessageAlert(err.message)
+        setIsSuccessAlert(false)
+      })
     }
   }, [authState.loggedIn, logReadPost, id])
 
@@ -67,12 +73,22 @@ export default function PostPage() {
         queryResponse.refetch()
         setLoading(false)
     })
-    .catch(err => console.log(err.message))
+    .catch(err => {
+      setMessageAlert(err.message)
+      setIsSuccessAlert(false)
+    })
   }
   const [open, setOpen] = useState(false)
 
   function handleCommentsView() {
     setOpen(!open)
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
   }
 
   function fetchMoreComments() {
@@ -92,7 +108,10 @@ export default function PostPage() {
       variables: { postId: id }
     })
     .then(res => res)
-    .catch(err => console.log(err.message))
+    .catch(err => {
+      setMessageAlert(err.message)
+      setIsSuccessAlert(false)
+    })
   }
 
   if (!response || queryResponse.loading || loading) {
@@ -105,6 +124,12 @@ export default function PostPage() {
 
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <Nav
         menuButton="back"
         backTo={authState.loggedIn ? '/news' : '/welcome'}

@@ -42,6 +42,7 @@ export default function ActionFlows() {
     if (locationInfo[locationInfo.length - 1] === 'edit') {
       openModal(locationInfo[locationInfo.length - 2])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   function openModal(flowId = null) {

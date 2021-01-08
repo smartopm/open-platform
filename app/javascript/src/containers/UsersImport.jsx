@@ -10,6 +10,7 @@ import CenteredContent from '../components/CenteredContent'
 import Loading from '../components/Loading'
 import { sanitizeText, pluralizeCount } from '../utils/helpers'
 import { Context } from "./Provider/AuthStateProvider"
+import MessageAlert from "../components/MessageAlert"
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate)
@@ -19,6 +20,8 @@ export default function UsersImport() {
   const [isLoading, setIsLoading] = useState(false)
   const history = useHistory()
   const { token } = useContext(Context)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
 
   function createImport() {
     setIsLoading(true)
@@ -31,12 +34,20 @@ export default function UsersImport() {
       })
       .catch(err => {
         setIsLoading(false)
-        console.log(err)
+        setMessageAlert(err.message)
+        setIsSuccessAlert(false)
       })
   }
 
   function onCancel() {
     return history.push('/users')
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
   }
 
   function processCsv(evt) {
@@ -49,6 +60,7 @@ export default function UsersImport() {
       return
     }
     const reader = new FileReader()
+    // eslint-disable-next-line func-names
     reader.onload = function(e) {
       setCsvString(e.target.result)
     }
@@ -108,6 +120,12 @@ export default function UsersImport() {
 
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
       <Grid container style={{margin: '5px auto', width: '95%'}}>
         <Grid item md={6}>
@@ -141,6 +159,7 @@ export default function UsersImport() {
           {errorMessage && (
             <div className={css(styles.errorContainer)}>
               <div
+                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
                   __html: sanitizeText(errorMessage)
                 }}
