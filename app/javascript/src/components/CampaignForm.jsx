@@ -16,6 +16,8 @@ import {
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
 import Toggler from './Campaign/ToggleButton'
+import TemplateList from './EmailTemplate/TemplateList'
+import EmailBuilderDialog from './EmailTemplate/EmailBuilderDialog'
 
 const initData = {
   id: '',
@@ -38,7 +40,10 @@ export default function CampaignForm({
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [templateDialogOpen, setDialogOpen] = useState(false)
   const [mutationLoading, setLoading] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false)
+
   const [campaignCreate] = useMutation(CampaignCreate)
   const [campaignUpdate] = useMutation(CampaignUpdateMutation)
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
@@ -48,6 +53,22 @@ export default function CampaignForm({
   const handleCampaignType = (event, newCampaignType) => {
     setCampaignType(newCampaignType);
   };
+// let fetch = false
+function handleTemplateDialog(status){
+  setDialogOpen(!templateDialogOpen)
+  // console.log(fetch)
+  // console.log(status)
+  if (status === 'closed') {
+    setIsUpdated(true)
+  }
+}
+
+
+  const [template, setTemplate] = useState('')
+
+  function handleTemplateValue(event){
+    setTemplate(event.target.value)
+  }
 
   useEffect(() => {
     if (id) {
@@ -132,8 +153,12 @@ export default function CampaignForm({
   if (!loading && !formData.loaded && data) {
     setFormData({ ...data, loaded: true})
   }
+
   return (
     <div className="container">
+      {/* only show this when no template is selected */}
+      <EmailBuilderDialog open={templateDialogOpen} handleClose={handleTemplateDialog} />
+      
       <Snackbar
         open={isSubmitted}
         autoHideDuration={3000}
@@ -165,6 +190,14 @@ export default function CampaignForm({
           <MenuItem value="sms">SMS</MenuItem>
           <MenuItem value="email">Email</MenuItem>
         </TextField>
+        
+        <TemplateList 
+          value={template} 
+          handleValue={handleTemplateValue}
+          createTemplate={handleTemplateDialog}
+          shouldRefect={isUpdated}
+        />
+
         <TextField
           label="Campaign Name"
           name="name"
