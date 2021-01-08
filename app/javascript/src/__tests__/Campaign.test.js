@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import Campaign from '../components/CampaignForm'
-
+import { EmailTemplatesQuery } from '../graphql/queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Campaign page', () => {
@@ -25,9 +25,25 @@ describe('Campaign page', () => {
       userType: 'admin'
     }
   }
+  const mocks = {
+    request: {
+      query: EmailTemplatesQuery
+    },
+    result: {
+      data: {
+        emailTemplates: [
+          {
+            name: 'task update',
+            id: '501b718c-8687-4e78-8c65-60b732df5ab1',
+          }
+        ]
+      }
+    }
+  }
+
   it('should render without error', () => {
     const { getByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
           <Campaign authState={authState} />
         </BrowserRouter>
@@ -37,7 +53,7 @@ describe('Campaign page', () => {
   })
   it('should render input elements', () => {
     const { getByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
           <Campaign authState={authState} />
         </BrowserRouter>
@@ -65,7 +81,7 @@ describe('Campaign page', () => {
       }
     }
     const container = render(
-      <MockedProvider>
+      <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
           <Campaign authState={residentAuthState} />
         </BrowserRouter>
@@ -78,7 +94,7 @@ describe('Campaign page', () => {
 
   it('should allow campain name inputs', () => {
     const container = render(
-      <MockedProvider>
+      <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
           <Campaign authState={authState} />
         </BrowserRouter>
@@ -87,12 +103,11 @@ describe('Campaign page', () => {
     const nameInput = container.queryByTestId('campaign_name')
     fireEvent.change(nameInput, { target: { value: 'Marketing' } })
     expect(nameInput.value).toBe('Marketing')
-
   })
 
   it('should allow campain fields inputs', () => {
     const container = render(
-      <MockedProvider>
+      <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
           <Campaign authState={authState} />
         </BrowserRouter>
@@ -106,13 +121,19 @@ describe('Campaign page', () => {
     fireEvent.change(nameInput, { target: { value: 'new campaign' } })
     expect(nameInput.value).toBe('new campaign')
 
-    fireEvent.change(messageInput, { target: { value: 'This is a campaign message from the input field' } })
-    expect(messageInput.value).toBe('This is a campaign message from the input field')
+    fireEvent.change(messageInput, {
+      target: { value: 'This is a campaign message from the input field' }
+    })
+    expect(messageInput.value).toBe(
+      'This is a campaign message from the input field'
+    )
 
-    fireEvent.change(idsInput, { target: { value: '6353472323, 734923479324723, 209423423' } })
+    fireEvent.change(idsInput, {
+      target: { value: '6353472323, 734923479324723, 209423423' }
+    })
     expect(idsInput.value).toBe('6353472323, 734923479324723, 209423423')
 
-    fireEvent.change(checkInput, { target: { checked: true} })
+    fireEvent.change(checkInput, { target: { checked: true } })
     expect(checkInput.checked).toBe(true)
   })
 })

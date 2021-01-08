@@ -50,19 +50,18 @@ export default function CampaignForm({
   const { id } = useParams() // will only exist on campaign update
   const [formData, setFormData] = useState(initData)
   const [campaignType, setCampaignType] = useState('draft')
-  const handleCampaignType = (event, newCampaignType) => {
+  const [template, setTemplate] = useState('')
+
+  const handleCampaignType = (_event, newCampaignType) => {
     setCampaignType(newCampaignType);
   };
-  
+
 function handleTemplateDialog(status){
   setDialogOpen(!templateDialogOpen)
   if (status === 'closed') {
     setIsUpdated(true)
   }
 }
-
-
-  const [template, setTemplate] = useState('')
 
   function handleTemplateValue(event){
     setTemplate(event.target.value)
