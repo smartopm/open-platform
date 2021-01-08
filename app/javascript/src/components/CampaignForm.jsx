@@ -53,11 +53,9 @@ export default function CampaignForm({
   const handleCampaignType = (event, newCampaignType) => {
     setCampaignType(newCampaignType);
   };
-// let fetch = false
+  
 function handleTemplateDialog(status){
   setDialogOpen(!templateDialogOpen)
-  // console.log(fetch)
-  // console.log(status)
   if (status === 'closed') {
     setIsUpdated(true)
   }
