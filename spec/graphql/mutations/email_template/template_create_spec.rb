@@ -9,14 +9,14 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
 
     let(:template_mutation) do
       <<~GQL
-      mutation template($name: String!, $subject: String!, $body: String!) {
-        emailTemplateCreate( name: $name, subject: $subject, body: $body){
-          emailTemplate {
-            name
-            id
+        mutation template($name: String!, $subject: String!, $body: String!) {
+          emailTemplateCreate( name: $name, subject: $subject, body: $body){
+            emailTemplate {
+              name
+              id
+            }
           }
         }
-      }
       GQL
     end
 
@@ -24,15 +24,15 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
       variables = {
         name: 'welcome',
         subject: 'Welcome back',
-        body: '<h2>Hello there, welcome to our community</h2>'
+        body: '<h2>Hello there, welcome to our community</h2>',
       }
       result = DoubleGdpSchema.execute(template_mutation, variables: variables,
-                                              context: {
-                                                current_user: admin,
-                                                site_community: user.community,
-                                              }).as_json
+                                                          context: {
+                                                            current_user: admin,
+                                                            site_community: user.community,
+                                                          }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).not_to be_nil
-      expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'name'),).to eql 'welcome'
+      expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'name')).to eql 'welcome'
       expect(result['errors']).to be_nil
     end
 
@@ -40,15 +40,29 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
       variables = {
         name: 'welcome',
         subject: 'Welcome back',
-        body: '<h2>Hello there, welcome to our community</h2>'
+        body: '<h2>Hello there, welcome to our community</h2>',
       }
       result = DoubleGdpSchema.execute(template_mutation, variables: variables,
-                                              context: {
-                                                current_user: user,
-                                                site_community: user.community,
-                                              }).as_json
+                                                          context: {
+                                                            current_user: user,
+                                                            site_community: user.community,
+                                                          }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).to be_nil
-      expect(result['errors']0).to include 'Unauthorized'
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+    it 'should value the requirement of the given argument' do
+      variables = {
+        name: 23_232,
+        subject: 'Welcome back',
+        body: '<h2>Hello there, welcome to our community</h2>',
+      }
+      result = DoubleGdpSchema.execute(template_mutation, variables: variables,
+                                                          context: {
+                                                            current_user: user,
+                                                            site_community: user.community,
+                                                          }).as_json
+      expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'String! was provided invalid value'
     end
   end
 end

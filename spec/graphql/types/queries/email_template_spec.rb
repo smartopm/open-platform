@@ -9,9 +9,9 @@ RSpec.describe Types::Queries::EmailTemplate do
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:comm_templates) do
       current_user.community.email_templates.create(
-          name: 'welcome',
-          subject: 'Welcome Email',
-          body: '<h2>some html %variable% </h2>'
+        name: 'welcome',
+        subject: 'Welcome Email',
+        body: '<h2>some html %variable% </h2>',
       )
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Types::Queries::EmailTemplate do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('errors')).to be_nil
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'emailTemplates')).to_not be_nil
       expect(result.dig('data', 'emailTemplates', 0, 'name')).to eql 'welcome'
       expect(result.dig('data', 'emailTemplates', 0, 'id')).to_not be_nil
@@ -44,7 +44,7 @@ RSpec.describe Types::Queries::EmailTemplate do
                                          site_community: another_user.community,
                                        }).as_json
       expect(result.dig('data', 'emailTemplates')).to be_nil
-      expect(result.dig('errors',0, 'message')).to include 'Unauthorized'
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end
