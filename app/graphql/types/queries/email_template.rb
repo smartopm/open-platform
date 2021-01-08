@@ -17,7 +17,7 @@ module Types::Queries::EmailTemplate
   end
 
   def email_template(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     email = context[:site_community].email_templates.find(id)
     raise GraphQL::ExecutionError, 'email template not found' if email.nil?
@@ -26,7 +26,7 @@ module Types::Queries::EmailTemplate
   end
 
   def email_templates
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].email_templates
   end
