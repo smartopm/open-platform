@@ -51,6 +51,8 @@ export default function LandParcelPage() {
         <LandParcelModal
           open={open}
           setOpen={setDetailsModalOpen}
+          modalType='details'
+          landParcel={selectedLandParcel}
         />
         <CreateLandParcel refetch={refetch} />
         <ParcelPageTitle />

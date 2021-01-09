@@ -49,6 +49,7 @@ export default function CreateLandParcel({ refetch }) {
         open={open}
         setOpen={setOpen}
         handleSubmit={handleSubmit}
+        modalType='new'
       />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}

@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { TextField } from '@material-ui/core'
 import { CustomizedDialogs } from '../Dialog'
 
-export default function LandParcelModal({ open, setOpen, handleSubmit }) {
+export default function LandParcelModal({ open, setOpen, handleSubmit, modalType, landParcel }) {
   const classes = useStyles()
   const [parcelNumber, setParcelNumber] = useState('')
   const [address1, setAddress1] = useState('')
@@ -34,8 +34,9 @@ export default function LandParcelModal({ open, setOpen, handleSubmit }) {
     <CustomizedDialogs
       open={open}
       handleModal={() => setOpen(false)}
-      dialogHeader="New Property"
+      dialogHeader={modalType === 'new' ? "New Property" : `Parcel ${landParcel.parcelNumber}`}
       handleBatchFilter={handleParcelSubmit}
+      saveAction={modalType === 'details' && 'Edit Parcel'}
     >
       <div className={classes.parcelForm}>
         <TextField
@@ -128,5 +129,8 @@ const useStyles = makeStyles(() => ({
 LandParcelModal.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  modalType: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  landParcel: PropTypes.object.isRequired
 }
