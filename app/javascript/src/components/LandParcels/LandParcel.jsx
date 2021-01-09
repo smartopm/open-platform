@@ -8,11 +8,14 @@ import Loading from '../Loading'
 import ErrorPage from '../Error'
 import ParcelItem from './LandParcelItem'
 import CreateLandParcel from './CreateLandParcel'
-
+import LandParcelModal from './LandParcelModal'
 
 export default function LandParcelPage() {
   const limit = 20
   const [offset, setOffset] = useState(0)
+  const [open, setDetailsModalOpen] = useState(false)
+  /* eslint-disable no-unused-vars */
+  const [selectedLandParcel, setSelectedLandParcel] = useState({})
 
   const { loading, error, data, refetch } = useQuery(ParcelQuery, {
     variables: { limit, offset }
@@ -28,8 +31,12 @@ export default function LandParcelPage() {
     }
     setOffset(offset - limit)
   }
-  
 
+  function onParcelClick(landParcel) {
+    console.log('Clicked!')
+    setSelectedLandParcel(landParcel)
+    setDetailsModalOpen(true)
+  }
 
   if (loading) return <Loading />
 
@@ -41,11 +48,15 @@ export default function LandParcelPage() {
   return (
     <>
       <Container>
+        <LandParcelModal
+          open={open}
+          setOpen={setDetailsModalOpen}
+        />
         <CreateLandParcel refetch={refetch} />
         <ParcelPageTitle />
         <br />
         {data?.fetchLandParcel.map(parcel => (
-          <ParcelItem key={parcel.id} parcel={parcel} />
+          <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
       ))}
         <div className="d-flex justify-content-center">
           <nav aria-label="center Page navigation">
