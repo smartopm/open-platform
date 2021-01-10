@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
-import { useQuery } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useQuery, useLazyQuery } from 'react-apollo'
 import { Grid, Typography, Container } from '@material-ui/core'
-import { makeStyles } from "@material-ui/core/styles"
-import { ParcelQuery } from '../../graphql/queries'
+import { useHistory } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import { ParcelQuery, LandParcel } from '../../graphql/queries'
 import Loading from '../Loading'
 import ErrorPage from '../Error'
 import ParcelItem from './LandParcelItem'
@@ -16,10 +17,28 @@ export default function LandParcelPage() {
   const [open, setDetailsModalOpen] = useState(false)
   /* eslint-disable no-unused-vars */
   const [selectedLandParcel, setSelectedLandParcel] = useState({})
+  const history = useHistory()
 
   const { loading, error, data, refetch } = useQuery(ParcelQuery, {
     variables: { limit, offset }
   })
+
+
+  const [loadParcel, { loading: parcelDataLoading, error: parcelDataError, data: parcelData }] = useLazyQuery(LandParcel,
+    {
+      fetchPolicy: 'cache-and-network'
+    })
+
+  useEffect(() => {
+    const pathName = window.location.pathname
+    const paths = pathName.match(/^\/land_parcels\/((?!new)\w+)/)
+    if (paths) {
+      const urlInfo = pathName.split('/')
+      loadParcel({ variables: { id: urlInfo[urlInfo.length - 1] } })
+      setSelectedLandParcel(parcelData?.landParcel || {})
+      setDetailsModalOpen(true)
+    }
+  }, [data, parcelData])
 
   function handleNextPage() {
     setOffset(offset + limit)
@@ -35,31 +54,45 @@ export default function LandParcelPage() {
   function onParcelClick(landParcel) {
     console.log('Clicked!')
     setSelectedLandParcel(landParcel)
+    history.push(`/land_parcels/${landParcel.id}`)
     setDetailsModalOpen(true)
   }
 
-  if (loading) return <Loading />
+  function handleDetailsModalClose() {
+    history.push('/land_parcels')
+    setDetailsModalOpen(false)
+  }
+
+  if (loading || parcelDataLoading) return <Loading />
 
   if (error) {
     return <ErrorPage title={error.message || error} />
   }
 
+  if (parcelDataError) {
+    return <ErrorPage title={parcelDataError.message || parcelDataError} />
+  }
 
+  console.log('parcelData', parcelData)
   return (
     <>
       <Container>
         <LandParcelModal
           open={open}
-          setOpen={setDetailsModalOpen}
-          modalType='details'
+          handelClose={handleDetailsModalClose}
+          modalType="details"
           landParcel={selectedLandParcel}
         />
         <CreateLandParcel refetch={refetch} />
         <ParcelPageTitle />
         <br />
         {data?.fetchLandParcel.map(parcel => (
-          <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
-      ))}
+          <ParcelItem
+            key={parcel.id}
+            parcel={parcel}
+            onParcelClick={onParcelClick}
+          />
+        ))}
         <div className="d-flex justify-content-center">
           <nav aria-label="center Page navigation">
             <ul className="pagination">
@@ -83,48 +116,80 @@ export default function LandParcelPage() {
     </>
   )
 
-  function ParcelPageTitle(){
+  function ParcelPageTitle() {
     // eslint-disable-next-line no-use-before-define
     const classes = useStyles()
     return (
       <Grid container spacing={0} className={classes.labelTitle}>
         <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            className={classes.label}
+          >
             Parcel Number
           </Typography>
         </Grid>
         <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "30px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingLeft: '30px' }}
+          >
             Address1
           </Typography>
         </Grid>
         <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "30px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingLeft: '30px' }}
+          >
             Address2
           </Typography>
         </Grid>
         <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "15px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingLeft: '15px' }}
+          >
             city
           </Typography>
         </Grid>
         <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingRight: '15px' }}
+          >
             Postal Code
           </Typography>
         </Grid>
         <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingRight: '15px' }}
+          >
             State Province
           </Typography>
         </Grid>
         <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingLeft: "10px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingLeft: '10px' }}
+          >
             Country
           </Typography>
         </Grid>
         <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{paddingRight: "15px"}}>
+          <Typography
+            variant="subtitle2"
+            data-testid="label-name"
+            style={{ paddingRight: '15px' }}
+          >
             Parcel Type
           </Typography>
         </Grid>
@@ -136,5 +201,5 @@ export default function LandParcelPage() {
 const useStyles = makeStyles(() => ({
   labelTitle: {
     marginTop: '5%'
-  },
-}));
+  }
+}))
