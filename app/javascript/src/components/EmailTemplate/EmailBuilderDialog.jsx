@@ -42,7 +42,6 @@ export default function EmailBuilderDialog({ open, handleClose }) {
         handleCloseDetails()
       })
       .catch(err => {
-        console.log(err)
         setMessage({ isError: true, detail: formatError(err.message) })
         setAlertOpen(true)
       })
