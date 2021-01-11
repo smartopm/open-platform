@@ -6,7 +6,6 @@ class Campaign < ApplicationRecord
   has_many :messages, dependent: :restrict_with_exception
   has_many :campaign_labels, dependent: :destroy
   has_many :labels, through: :campaign_labels
-  has_many :email_templates, as: :templatable
 
   EXPIRATION_DAYS = 7
   CAMPAIGN_MAIL_TEMPLATE = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
