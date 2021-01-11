@@ -597,6 +597,7 @@ export const CampaignCreate = gql`
     $name: String!
     $campaignType: String!
     $status: String!
+    $emailTemplatesId: ID!
     $message: String
     $batchTime: String
     $userIdList: String
@@ -610,6 +611,7 @@ export const CampaignCreate = gql`
       name: $name
       campaignType: $campaignType
       status: $status
+      emailTemplatesId: $emailTemplatesId
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList

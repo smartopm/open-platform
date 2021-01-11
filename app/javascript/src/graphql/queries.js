@@ -395,6 +395,7 @@ export const Campaign = gql`
       preHeader
       templateStyle
       includeReplyLink
+      emailTemplatesId
       campaignMetrics {
         batchTime
         startTime

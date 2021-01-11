@@ -14,6 +14,7 @@ module Types
     field :template_style, String, null: true
     field :status, String, null: false
     field :include_reply_link, Boolean, null: false
+    field :email_templates_id, ID, null: false
     field :labels, [Types::LabelType], null: true
     field :start_time, GraphQL::Types::ISO8601DateTime, null: true
     field :end_time, GraphQL::Types::ISO8601DateTime, null: true

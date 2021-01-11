@@ -24,6 +24,7 @@ const initData = {
   name: '',
   campaignType: 'sms',
   status: 'draft',
+  emailTemplatesId: null,
   message: '',
   batchTime: new Date(),
   userIdList: '',
@@ -50,7 +51,6 @@ export default function CampaignForm({
   const { id } = useParams() // will only exist on campaign update
   const [formData, setFormData] = useState(initData)
   const [campaignType, setCampaignType] = useState('draft')
-  const [template, setTemplate] = useState('')
 
   const handleCampaignType = (_event, newCampaignType) => {
     setCampaignType(newCampaignType);
@@ -64,7 +64,10 @@ function handleTemplateDialog(status){
 }
 
   function handleTemplateValue(event){
-    setTemplate(event.target.value)
+    setFormData({
+      ...formData,
+      emailTemplatesId: event.target.value
+    })
   }
 
   useEffect(() => {
@@ -100,12 +103,12 @@ function handleTemplateDialog(status){
     e.preventDefault()
     // if creating a campaign don't spread
     const labels = id ? [...label, ...getJustLabels(formData.labels)] : label
-
     const campaignData = {
       id: formData.id,
       name: formData.name,
       campaignType: formData.campaignType,
       status: campaignType,
+      emailTemplatesId: formData.emailTemplatesId,
       message: formData.message,
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
@@ -150,7 +153,6 @@ function handleTemplateDialog(status){
   if (!loading && !formData.loaded && data) {
     setFormData({ ...data, loaded: true})
   }
-
   return (
     <div className="container">
       {/* only show this when no template is selected */}
@@ -189,7 +191,7 @@ function handleTemplateDialog(status){
         </TextField>
         
         <TemplateList 
-          value={template} 
+          value={formData.emailTemplatesId} 
           handleValue={handleTemplateValue}
           createTemplate={handleTemplateDialog}
           shouldRefect={isUpdated}

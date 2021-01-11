@@ -72,7 +72,7 @@ class Campaign < ApplicationRecord
   end
 
   def send_mail_from_db(user_email)
-    template = community.email_templates.find("155ec8db-a90f-465c-ace8-3b9064cc7b38")
+    template = community.email_templates.find(email_templates_id)
     EmailMsg.send_mail(user_email, template, campaign_mail_data)
   end
 
