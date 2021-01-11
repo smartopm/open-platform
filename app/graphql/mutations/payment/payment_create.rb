@@ -21,15 +21,15 @@ module Mutations
           raise GraphQL::ExecutionError,
                 'The amount you are trying to pay is higher than the invoiced amount'
         end
-
-        user = context[:site_community].users.find(vals[:user_id])
-        payment = user.payments.create(vals.except(:user_id))
-        invoice_update(vals[:invoice_id], vals[:amount])
-        if vals[:payment_type] == 'cash' || find_invoice(vals[:invoice_id]).amount.zero?
-          payment.settled!
+        ActiveRecord::Base.transaction do
+          user = context[:site_community].users.find(vals[:user_id])
+          payment = user.payments.create(vals.except(:user_id))
+          invoice_update(vals[:invoice_id], vals[:amount])
+          if vals[:payment_type] == 'cash' || find_invoice(vals[:invoice_id]).amount.zero?
+            payment.settled!
+          end
+          return { payment: payment } if payment.persisted?
         end
-        return { payment: payment } if payment.persisted?
-
         raise GraphQL::ExecutionError, payment.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
