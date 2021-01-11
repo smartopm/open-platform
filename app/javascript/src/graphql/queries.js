@@ -886,3 +886,12 @@ export const InvoiceStatsQuery = gql`
     }
   }
 `
+
+export const EmailTemplatesQuery = gql`
+  query emailTemplates {
+    emailTemplates {
+      name
+      id
+    }
+  }
+`

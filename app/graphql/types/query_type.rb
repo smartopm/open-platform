@@ -19,6 +19,7 @@ module Types
     include Types::Queries::PostTag
     include Types::Queries::Community
     include Types::Queries::Invoice
+    include Types::Queries::EmailTemplate
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 

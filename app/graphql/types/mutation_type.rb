@@ -119,5 +119,9 @@ module Types
 
     # payments
     field :payment_create, mutation: Mutations::Payment::PaymentCreate
+
+    # email_template
+    field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
+    field :email_template_update, mutation: Mutations::EmailTemplate::TemplateUpdate
   end
 end

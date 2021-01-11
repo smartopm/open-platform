@@ -88,6 +88,7 @@ import FormPage from '../src/containers/Forms/FormPage'
 import Labels from '../src/containers/Label/Labels'
 import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
 import UsersImport from '../src/containers/UsersImport'
+
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 import LandParcel from '../src/containers/LandParcels/LandParcel'
 import CommentsPage from '../src/containers/Comments/CommentPage'
@@ -315,7 +316,7 @@ const App = () => {
                           exact
                           component={BusinessProfile}
                         />
-
+                        {/* Forms */}
                         <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
                         <Route path="/edit_form/:formId" component={FormBuilderPage} />
