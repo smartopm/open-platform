@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_133511) do
+ActiveRecord::Schema.define(version: 2021_01_11_103950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -149,9 +149,11 @@ ActiveRecord::Schema.define(version: 2021_01_05_133511) do
     t.integer "status", default: 0
     t.integer "message_count", default: 0
     t.boolean "include_reply_link", default: false
+    t.uuid "email_templates_id"
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
+    t.index ["email_templates_id"], name: "index_campaigns_on_email_templates_id"
   end
 
   create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -581,6 +583,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_133511) do
   add_foreign_key "campaign_labels", "campaigns"
   add_foreign_key "campaign_labels", "labels"
   add_foreign_key "campaigns", "communities"
+  add_foreign_key "campaigns", "email_templates", column: "email_templates_id"
   add_foreign_key "comments", "communities"
   add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"
