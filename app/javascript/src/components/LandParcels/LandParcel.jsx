@@ -65,11 +65,11 @@ export default function LandParcelPage() {
   if (loading || parcelDataLoading) return <Loading />
 
   if (error) {
-    return <ErrorPage title={error.message || error} />
+    return <ErrorPage title={error.message} />
   }
 
   if (parcelDataError) {
-    return <ErrorPage title={parcelDataError.message || parcelDataError} />
+    return <ErrorPage title={parcelDataError.message} />
   }
 
   return (
