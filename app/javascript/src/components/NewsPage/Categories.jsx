@@ -17,6 +17,7 @@ export default function Categories() {
     return <Spinner />
   }
   const cats = response.categories.filter(
+    // eslint-disable-next-line func-names
     function(cat) {
       // eslint-disable-next-line react/no-this-in-sfc
       return this.indexOf(cat.name) < 0

@@ -11,6 +11,7 @@ import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
 import UserPoints from '../components/UserPoints'
 import { UserPointQuery } from '../graphql/queries'
+import ErrorPage from "../components/Error"
 
 export default function Home() {
   const [redirect, setRedirect] = useState(false)
@@ -27,7 +28,7 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (error) console.log(error.message)
+  if (error) return <ErrorPage title={error.message} />
   if (redirect) {
     return (
       <Redirect

@@ -26,14 +26,15 @@ const props = {
   }
 }
 describe('ActionFlowModal', () => {
-  it('renders "Edit Workflow" and "Save Changes" and other necessary elements', () => {
-    const container = render(
+  it('renders "Edit Workflow" and "Save Changes" and other necessary elements', async () => {
+    let container;
+    await act(async () => { container = render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
           <ActionFlowModal {...props} />
         </BrowserRouter>
       </MockedProvider>
-    )
+    )})
 
     expect(container.queryByText('Edit Workflow')).toBeInTheDocument()
     expect(container.queryByText('Title')).toBeInTheDocument()
@@ -44,18 +45,19 @@ describe('ActionFlowModal', () => {
     expect(container.queryByText('Save')).toBeNull()
   })
 
-  it('renders "New Workflow" and "Save" and other necessary elements', () => {
+  it('renders "New Workflow" and "Save" and other necessary elements', async () => {
     const updatedProps = {
       ...props,
       selectedActionFlow: {}
     }
-    const container = render(
+    let container;
+    await act(async () => {container = render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
           <ActionFlowModal {...updatedProps} />
         </BrowserRouter>
       </MockedProvider>
-    )
+    )})
 
     expect(container.queryByText('Edit Workflow')).toBeNull()
     expect(container.queryByText('Title')).toBeInTheDocument()

@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
@@ -8,7 +8,7 @@ import { AuthStateProvider } from '../containers/Provider/AuthStateProvider'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('UserForm Component', () => {
-  it('it should render correct with form properties when creating and editing', () => {
+  it('it should render correct with form properties when creating and editing', async () => {
     const props = { isEditing: true, isFromRef: false,  }
     const container = render(
       <MockedProvider mocks={[]}>
@@ -33,31 +33,35 @@ describe('UserForm Component', () => {
     fireEvent.click(container.queryByTestId('submit_btn'))
     expect(container.queryByTestId('submit_btn')).toBeDisabled()
 
-    fireEvent.change(container.queryByTestId('username'), {
-      target: { value: 'My New Name' }
+    await act(async () => {
+      fireEvent.change(container.queryByTestId('phoneNumber'), {
+        target: { value: '090909090909' }
+      })
     })
-    expect(container.queryByTestId('username').value).toContain('My New Name')
-
-    fireEvent.change(container.queryByTestId('phoneNumber'), {
-      target: { value: '090909090909' }
-    })
+    
     expect(container.queryByTestId('phoneNumber').value).toContain(
       '090909090909'
     )
 
-    fireEvent.change(container.queryByTestId('email'), {
-      target: { value: 'abc@def.jkl' }
+    await act(async () => {
+      fireEvent.change(container.queryByTestId('email'), {
+        target: { value: 'abc@def.jkl' }
+      })
     })
+
     expect(container.queryByTestId('email').value).toContain('abc@def.jkl')
 
-    fireEvent.change(container.queryByTestId('address'), {
-      target: { value: '24th street, west' }
+    await act(async () => {
+      fireEvent.change(container.queryByTestId('address'), {
+        target: { value: '24th street, west' }
+      })
     })
+  
     expect(container.queryByTestId('address').value).toContain(
       '24th street, west'
     )
   })
-  it('should contain referral form when referring', () => {
+  it('should contain referral form when referring', async () => {
     const props = { isEditing: false, isFromRef: true }
     const container = render(
       <MockedProvider mocks={[]}>
@@ -77,15 +81,20 @@ describe('UserForm Component', () => {
     expect(container.queryByText('Primary Phone Number')).toBeInTheDocument()
     expect(container.queryByTestId('phoneNumber')).not.toBeDisabled()
     expect(container.queryByTestId('email')).not.toBeDisabled()
-
-    fireEvent.change(container.queryByTestId('username'), {
+    
+    await act(async () => {
+      fireEvent.change(container.queryByTestId('username'), {
         target: { value: 'My New Name' }
       })
+    })
     expect(container.queryByTestId('username').value).toContain('My New Name')
 
-    fireEvent.change(container.queryByTestId('phoneNumber'), {
-    target: { value: '090909090909' }
+    await act(async () => {
+      fireEvent.change(container.queryByTestId('phoneNumber'), {
+        target: { value: '090909090909' }
+      })
     })
+  
     expect(container.queryByTestId('phoneNumber').value).toContain(
     '090909090909'
     )

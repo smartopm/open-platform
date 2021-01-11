@@ -23,6 +23,7 @@ import DateContainer, { dateToString, dateTimeToString } from '../DateContainer'
 import { removeNewLines, sanitizeText } from '../../utils/helpers'
 import RemindMeLaterMenu from './RemindMeLaterMenu'
 import { TaskReminder } from '../../graphql/mutations'
+import MessageAlert from "../MessageAlert"
 
 export default function Task({
   note,
@@ -46,6 +47,8 @@ export default function Task({
 
   const [setReminder] = useMutation(TaskReminder)
   const [reminderTime, setReminderTime] = useState(null)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
 
   const history = useHistory()
 
@@ -70,6 +73,13 @@ export default function Task({
     return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`
   }
 
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
+  }
+
   function setTaskReminder(hour) {
     setReminder({
       variables: { noteId: note.id, hour }
@@ -81,7 +91,10 @@ export default function Task({
         ).toISOString()
         setReminderTime(timeFormat(timeScheduled))
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        setMessageAlert(err.message)
+        setIsSuccessAlert(false)
+      })
   }
 
   function currentActiveReminder() {
@@ -106,12 +119,19 @@ export default function Task({
 
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <Grid container direction="column" justify="flex-start">
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
             {/* eslint-disable-next-line react/no-danger */}
             <span
               style={{ whiteSpace: 'pre-line' }}
+              // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
                 __html: sanitizeText(removeNewLines(note.body))
               }}
