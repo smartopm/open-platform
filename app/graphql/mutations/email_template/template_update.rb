@@ -15,8 +15,7 @@ module Mutations
         email = context[:site_community].email_templates.find(vals[:id])
         raise GraphQL::ExecutionError, 'Template not found' if email.nil?
 
-        email.update(vals)
-        return { email_template: email } if email.persisted?
+        return { email_template: email } if email.update(vals)
 
         raise GraphQL::ExecutionError, email.errors.full_messages
       end
