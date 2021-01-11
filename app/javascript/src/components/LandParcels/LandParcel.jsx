@@ -52,7 +52,6 @@ export default function LandParcelPage() {
   }
 
   function onParcelClick(landParcel) {
-    console.log('Clicked!')
     setSelectedLandParcel(landParcel)
     history.push(`/land_parcels/${landParcel.id}`)
     setDetailsModalOpen(true)
@@ -73,7 +72,6 @@ export default function LandParcelPage() {
     return <ErrorPage title={parcelDataError.message || parcelDataError} />
   }
 
-  console.log('parcelData', parcelData)
   return (
     <>
       <Container>

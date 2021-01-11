@@ -43,10 +43,10 @@ RSpec.describe Types::Queries::LandParcel do
       context 'when current-user is an admin' do
         it 'should return a single land parcel by id' do
           result = DoubleGdpSchema.execute(parcel_query,
-                                          context: {
-                                            current_user: admin_user,
-                                            site_community: admin_user.community,
-                                          }).as_json
+                                           context: {
+                                             current_user: admin_user,
+                                             site_community: admin_user.community,
+                                           }).as_json
 
           puts result
           expect(result.dig('data', 'landParcel', 'id')).to eql land_parcel.id
@@ -56,10 +56,10 @@ RSpec.describe Types::Queries::LandParcel do
       context 'when current-user is not an admin' do
         it 'should raise an unauthorized error' do
           result = DoubleGdpSchema.execute(parcel_query,
-                                          context: {
-                                            current_user: current_user,
-                                            site_community: current_user.community,
-                                          }).as_json
+                                           context: {
+                                             current_user: current_user,
+                                             site_community: current_user.community,
+                                           }).as_json
 
           expect(result.dig('data', 'landParcel')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

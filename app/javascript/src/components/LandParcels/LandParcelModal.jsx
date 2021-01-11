@@ -43,7 +43,7 @@ export default function LandParcelModal({ open, handelClose, handleSubmit, modal
       handleModal={handelClose}
       dialogHeader={modalType === 'new' ? "New Property" : `Parcel ${landParcel.parcelNumber}`}
       handleBatchFilter={handleParcelSubmit}
-      saveAction={modalType === 'details' && 'Edit Parcel'}
+      saveAction={modalType === 'details' ? 'Edit Parcel' : 'Save'}
     >
       <StyledTabs
         value={tabValue}
@@ -158,11 +158,16 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+LandParcelModal.defaultProps = {
+  handleSubmit: () => {},
+  landParcel: null
+}
+
 LandParcelModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handelClose: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func,
   modalType: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  landParcel: PropTypes.object.isRequired
+  landParcel: PropTypes.object
 }
