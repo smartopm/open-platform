@@ -82,7 +82,8 @@ const useStyles = makeStyles(() => ({
       borderBottomStyle: 'solid',
       borderBottomColor: '#F6F6F6',
       borderBottom: 10,
-      backgroundColor: '#FFFFFF'
+      backgroundColor: '#FFFFFF',
+      cursor: 'pointer'
   },
   parcelGrid: {
     marginTop: '8px'
