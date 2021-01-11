@@ -6,6 +6,7 @@ class Campaign < ApplicationRecord
   has_many :messages, dependent: :restrict_with_exception
   has_many :campaign_labels, dependent: :destroy
   has_many :labels, through: :campaign_labels
+  has_many :email_templates, as: :templatable
 
   EXPIRATION_DAYS = 7
   CAMPAIGN_MAIL_TEMPLATE = 'd-8f92d03a6f5c4e16a976ab47b03298a1'
@@ -69,6 +70,11 @@ class Campaign < ApplicationRecord
 
   def send_email(user_email)
     EmailMsg.send_mail(user_email, CAMPAIGN_MAIL_TEMPLATE, campaign_mail_data)
+  end
+
+  def send_mail_from_db(user_email)
+    template = community.email_templates.find("155ec8db-a90f-465c-ace8-3b9064cc7b38")
+    EmailMsg.send_mail(user_email, template, campaign_mail_data)
   end
 
   def campaign_mail_data

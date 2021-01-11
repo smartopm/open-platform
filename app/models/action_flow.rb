@@ -5,6 +5,7 @@ class ActionFlow < ApplicationRecord
   VALID_EVENT_TYPES = ActionFlows::EventPop.event_list.map { |event| event::EVENT_TYPE }
 
   belongs_to :community
+  has_many :email_templates, as: :templatable
 
   validates :title, :description, :event_type, :event_condition, :event_action, presence: true
   validates :title, uniqueness: { case_sensitive: false }
