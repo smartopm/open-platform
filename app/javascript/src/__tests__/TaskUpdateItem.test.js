@@ -8,7 +8,7 @@ import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Card Component', () => {
   const mock = {
-    user: '8423nsjfsd'
+    user: 'some_user'
   }
   const content = 'added new comment'
   const date = new Date().toISOString()
@@ -32,7 +32,7 @@ describe('Comment Card Component', () => {
       )
     })
     
-    expect(container.queryByText(/tolulope/i)).toBeInTheDocument()
+    expect(container.queryByText(/some_user/i)).toBeInTheDocument()
     expect(container.queryByText(/added new comment/i)).toBeInTheDocument()
 
     const pattern = /a-z/
