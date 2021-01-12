@@ -29,7 +29,7 @@ export default function PostsList() {
         variables: { postId: slug || 'posts' }
       })
       .then(res => res)
-      .catch(err => console.log(err.message))
+      .catch(err => err.message)
     }
 
     function loadPostPage(postId) {

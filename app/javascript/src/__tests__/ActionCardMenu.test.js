@@ -28,7 +28,6 @@ describe('ActionCardMenu', () => {
     )
 
     expect(container.queryByText('Edit')).toBeInTheDocument()
-    expect(container.queryByText('Activate')).toBeInTheDocument()
     expect(container.queryByText('Delete')).toBeInTheDocument()
   })
 })

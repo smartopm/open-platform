@@ -77,6 +77,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       setData(initialData)
       setMetaData({})
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedActionFlow])
 
   const ruleFieldsConfig = {}

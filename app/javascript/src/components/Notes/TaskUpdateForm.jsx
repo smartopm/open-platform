@@ -153,7 +153,7 @@ export default function TaskForm({
         ).toISOString()
         setReminderTime(timeFormat(timeScheduled))
       })
-      .catch(err => console.log(err))
+      .catch(err => setErrorMessage(err))
   }
 
   function currentActiveReminder() {

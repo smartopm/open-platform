@@ -7,17 +7,17 @@ import PropTypes from 'prop-types'
 import { makeStyles } from "@material-ui/core/styles";
 
 
-export default function ParcelItem({ parcel }) {
+export default function ParcelItem({ parcel, onParcelClick }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
 
   return (
-    <ListItem key={parcel.id} className={classes.parcelItem}>
+    <ListItem key={parcel.id} className={classes.parcelItem} onClick={() => onParcelClick(parcel)}>
       <Grid container spacing={3}>
         <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography 
-            variant="subtitle1" 
-            data-testid="label-title" 
+          <Typography
+            variant="subtitle1"
+            data-testid="label-title"
           >
             {parcel.parcelNumber}
           </Typography>
@@ -73,7 +73,8 @@ ParcelItem.propTypes = {
         stateProvince: PropTypes.string,
         country: PropTypes.string,
         parcelType: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    onParcelClick: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles(() => ({
@@ -81,7 +82,8 @@ const useStyles = makeStyles(() => ({
       borderBottomStyle: 'solid',
       borderBottomColor: '#F6F6F6',
       borderBottom: 10,
-      backgroundColor: '#FFFFFF'
+      backgroundColor: '#FFFFFF',
+      cursor: 'pointer'
   },
   parcelGrid: {
     marginTop: '8px'

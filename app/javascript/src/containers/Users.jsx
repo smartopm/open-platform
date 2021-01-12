@@ -80,6 +80,7 @@ export default function UsersList() {
       const offsetParams = querry.get('offset')
       setOffset(Number(offsetParams))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCount])
 
 

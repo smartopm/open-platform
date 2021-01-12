@@ -10,6 +10,7 @@ describe('It should render the dialog box for delete', () => {
         handleClose={jest.fn()}
         handleDelete={jest.fn()}
         title="business"
+        handleAction={jest.fn}
       />
     )
     it('It should render with dialog', () => {

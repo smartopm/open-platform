@@ -14,7 +14,7 @@ describe('It should render the dialog for user search', () => {
             handleBatchFilter={jest.fn()}
             handleModal={jest.fn()}
             dialogHeader={"Filter"}
-        />
+        >Test Dialogue</CustomizedDialogs>
     )
     it('It should render with dialog', () => {
         expect(container.queryByTestId('custom-dialog-button')).toBeNull()
