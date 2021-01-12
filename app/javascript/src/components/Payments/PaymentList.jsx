@@ -17,8 +17,9 @@ import { Spinner } from '../Loading'
 import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
-import InvoiceTiles from './InvoiceTiles'
+// import InvoiceTiles from './InvoiceTiles'
 import { currencies } from '../../utils/constants'
+import PaymentListHeading from './PaymentListHeading'
 
 export default function PaymentList({ authState }) {
   const history = useHistory()
@@ -27,7 +28,7 @@ export default function PaymentList({ authState }) {
   const page = path.get('page')
   const status = path.get('status')
   const pageNumber = Number(page)
-  const [currentTile, setCurrentTile] = useState(status || '')
+  // const [currentTile, setCurrentTile] = useState(status || '')
   const { loading, data: invoicesData, error, refetch } = useQuery(
     InvoicesQuery,
     {
@@ -35,16 +36,16 @@ export default function PaymentList({ authState }) {
       errorPolicy: 'all'
     }
   )
-  const invoiceStats = useQuery(InvoiceStatsQuery, {
-    fetchPolicy: 'cache-first'
-  })
+  // const invoiceStats = useQuery(InvoiceStatsQuery, {
+  //   fetchPolicy: 'cache-first'
+  // })
   const currency = currencies[authState.user?.community.currency] || ''
 
-  function handleFilter(_evt, key) {
-    setCurrentTile(key)
-    const state = key === 'inProgress' ? 'in_progress' : key
-    history.push(`/payments?page=0&status=${state}`)
-  }
+  // function handleFilter(_evt, key) {
+  //   setCurrentTile(key)
+  //   const state = key === 'inProgress' ? 'in_progress' : key
+  //   history.push(`/payments?page=0&status=${state}`)
+  // }
 
   useEffect(() => {
     refetch({ status, offset: pageNumber })
@@ -66,53 +67,56 @@ export default function PaymentList({ authState }) {
 
   return (
     <Container>
-      <br />
+      {/* <br />
       <Grid container spacing={3}>
         <InvoiceTiles
           invoiceData={invoiceStats || []}
           filter={handleFilter}
           currentTile={currentTile}
         />
-      </Grid>
+      </Grid> */}
       <List>
         {
         // eslint-disable-next-line no-nested-ternary
         loading ? <Spinner /> : invoicesData?.invoices.length ? (
-          invoicesData?.invoices.map(invoice => (
-            <ListItem key={invoice.id}>
-              <ListItemText
-                disableTypography
-                primary={invoice.description}
-                secondary={(
-                  <div>
-                    <Grid container spacing={10} style={{ color: '#808080' }}>
-                      <Grid xs item data-testid="amount">
-                        {`Invoice amount: ${currency}${invoice.amount}`}
+          <div>
+            <PaymentListHeading />
+            {invoicesData?.invoices.map(invoice => (
+              <ListItem key={invoice.id}>
+                <ListItemText
+                  disableTypography
+                  primary={invoice.description}
+                  secondary={(
+                    <div>
+                      <Grid container spacing={10} style={{ color: '#808080' }}>
+                        <Grid xs item data-testid="amount">
+                          {`Invoice amount: ${currency}${invoice.amount}`}
+                        </Grid>
+                        <Grid xs item data-testid="landparcel">
+                          Parcel number:
+                          {' '}
+                          {invoice.landParcel?.parcelNumber}
+                        </Grid>
+                        <Grid xs item data-testid="duedate">
+                          {`Due at: ${dateToString(invoice.dueDate)}`}
+                        </Grid>
                       </Grid>
-                      <Grid xs item data-testid="landparcel">
-                        Parcel number:
-                        {' '}
-                        {invoice.landParcel?.parcelNumber}
-                      </Grid>
-                      <Grid xs item data-testid="duedate">
-                        {`Due at: ${dateToString(invoice.dueDate)}`}
-                      </Grid>
-                    </Grid>
-                    {invoice.payments?.map(payment => (
-                      <div key={payment.id}>
-                        <i>
-                          <PaymentItem paymentData={payment} currency={currency} />
-                        </i>
-                      </div>
+                      {invoice.payments?.map(payment => (
+                        <div key={payment.id}>
+                          <i>
+                            <PaymentItem paymentData={payment} currency={currency} />
+                          </i>
+                        </div>
                     ))}
-                  </div>
+                    </div>
                 )}
-              />
-              <ListItemSecondaryAction data-testid="status">
-                {InvoiceStatus[invoice.status]}
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))
+                />
+                <ListItemSecondaryAction data-testid="status">
+                  {InvoiceStatus[invoice.status]}
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </div>
         ) : (
           <CenteredContent>No Invoices Yet</CenteredContent>
         )
