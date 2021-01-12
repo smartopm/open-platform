@@ -19,12 +19,12 @@ export default function TemplateList({ value, handleValue, createTemplate, shoul
   if (error) return error.message
   return (
     <FormControl style={{ width: '100%' }}>
-      <InputLabel id="template_list">Select a template</InputLabel>
-      <Select value={value} onChange={handleValue} required={isRequired}>
+      <InputLabel>Select a template</InputLabel>
+      <Select value={value} onChange={handleValue} required={isRequired} data-testid="template_list">
         <MenuItem key={1} value="1332712" onClick={createTemplate}>
           Create a new template
         </MenuItem>
-        {data.emailTemplates.map(template => (
+        {data?.emailTemplates.map(template => (
           <MenuItem key={template.id} value={template.id}>
             {template.name}
           </MenuItem>
