@@ -6,20 +6,20 @@ module Types::Queries::LandParcel
 
   included do
     # Get land parcel entries
-    field :fetch_land_parcel, [Types::ParcelFieldType], null: true do
+    field :fetch_land_parcel, [Types::LandParcelType], null: true do
       description 'Get all land parcel entries'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
 
     # Get land parcel details that belongs to a user
-    field :user_land_parcel, [Types::ParcelFieldType], null: true do
+    field :user_land_parcel, [Types::LandParcelType], null: true do
       description 'Get a user land parcel details'
       argument :user_id, GraphQL::Types::ID, required: true
     end
 
     # Get a land parcel
-    field :land_parcel, Types::ParcelFieldType, null: true do
+    field :land_parcel, Types::LandParcelType, null: true do
       description 'Get a land parcel'
       argument :id, GraphQL::Types::ID, required: true
     end
