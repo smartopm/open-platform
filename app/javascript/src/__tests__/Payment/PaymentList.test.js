@@ -94,23 +94,13 @@ describe('Invoice Item Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryAllByTestId('amount')[0].textContent).toContain(
-          'Invoice amount: k23423423'
-        )
         expect(container.queryAllByTestId('duedate')[0].textContent).toContain(
-          'Due at: 2020-12-31'
+          '2020-12-31'
         )
         expect(
           container.queryAllByTestId('landparcel')[0].textContent
-        ).toContain('Parcel number: Plot-1343')
-        expect(container.queryAllByText('Final Payment')[0]).toBeInTheDocument()
-        expect(container.queryAllByText('Late')[0]).toBeInTheDocument()
-        expect(container.queryAllByText('Paid')[0]).toBeInTheDocument()
+        ).toContain('Plot-1343')
         expect(container.queryAllByText('In-Progress')[0]).toBeInTheDocument()
-        expect(container.queryAllByText('Cancelled')[0]).toBeInTheDocument()
-        expect(container.queryAllByText('5')[0]).toBeInTheDocument()
-        expect(container.queryAllByText('6')[0]).toBeInTheDocument()
-        expect(container.queryAllByText('2')[0]).toBeInTheDocument()
       },
       { timeout: 500 }
     )

@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   Grid,
-  List
+  List,
+  IconButton
 } from '@material-ui/core'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from 'react-router'
@@ -17,6 +19,7 @@ import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import { currencies } from '../../utils/constants'
 import PaymentListHeading from './PaymentListHeading'
+import PaymentActionMenu from './PaymentActionMenu'
 
 export default function PaymentList({ authState }) {
   const history = useHistory()
@@ -26,6 +29,8 @@ export default function PaymentList({ authState }) {
   const page = path.get('page')
   const status = path.get('status')
   const pageNumber = Number(page)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
   const { loading, data: invoicesData, error } = useQuery(
     InvoicesQuery,
     {
@@ -34,6 +39,14 @@ export default function PaymentList({ authState }) {
     }
   )
   const currency = currencies[authState.user?.community.currency] || ''
+
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleClose() {
+    setAnchorEl(null)
+  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -50,7 +63,6 @@ export default function PaymentList({ authState }) {
 
   return (
     <Container>
-      {console.log(invoicesData)}
       <List>
         {
         // eslint-disable-next-line no-nested-ternary
@@ -58,38 +70,59 @@ export default function PaymentList({ authState }) {
           <div>
             <PaymentListHeading />
             {invoicesData?.invoices.map(invoice => (
-              <Grid
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center"
-                className={classes.list}
-                key={invoice.id}
-              >
-                <Typography className={classes.typography}>{invoice.landParcel.parcelNumber}</Typography>
-                <Typography className={classes.typography}>
-                  {invoice.payments.map((pay) => (
-                    <div key={pay.id}>
-                      <Typography>
-                        {currency}
-                        {pay.amount}
+              <div key={invoice.id}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-evenly"
+                  alignItems="center"
+                  className={classes.list}
+                >
+                  <Typography className={classes.typography} data-testid="landparcel">{invoice.landParcel.parcelNumber}</Typography>
+                  <Typography className={classes.typography}>
+                    {invoice.payments.map((pay) => (
+                      <div key={pay.id}>
+                        <Typography>
+                          {currency}
+                          {pay.amount}
+                          ,
+                          {pay.paymentType}
+                        </Typography>
+                      </div>
+                  ))}
+                  </Typography>
+                  <Typography className={classes.typography} data-testid="duedate">{dateToString(invoice.dueDate)}</Typography>
+                  <Typography className={classes.typography}>
+                    {invoice.payments.map((pay) => (
+                      <Typography key={pay.id}>
+                        {pay.user.name}
                         ,
-                        {pay.paymentType}
                       </Typography>
-                    </div>
                   ))}
-                </Typography>
-                <Typography className={classes.typography}>{dateToString(invoice.dueDate)}</Typography>
-                <Typography className={classes.typography}>
-                  {invoice.payments.map((pay) => (
-                    <Typography key={pay.id}>
-                      {pay.user.name}
-                      ,
+                  </Typography>
+                  <div style={{display: 'flex'}}>
+                    <Typography 
+                      className={classes.typography}
+                    >
+                      {InvoiceStatus[invoice.status]}
                     </Typography>
-                  ))}
-                </Typography>
-                <Typography className={classes.typography}>{InvoiceStatus[invoice.status]}</Typography>
-              </Grid>
+                    <IconButton
+                      className={classes.option}
+                      aria-label="more-payment"
+                      aria-controls="long-menu"
+                      aria-haspopup="true"
+                      onClick={handleOpenMenu}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </div>
+                </Grid>
+                <PaymentActionMenu
+                  anchorEl={anchorEl}
+                  handleClose={handleClose}
+                  open={open}
+                />
+              </div>
             ))}
           </div>
         ) : (
@@ -124,6 +157,9 @@ const useStyles = makeStyles(() => ({
   button: {
     float: 'right',
     marginBottom: '10px' 
+  },
+  option: {
+    width: '10px'
   }
 }));
 

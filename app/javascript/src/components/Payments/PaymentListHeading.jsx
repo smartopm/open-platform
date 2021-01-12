@@ -18,7 +18,10 @@ export default function PaymentListHeading(){
         <Typography className={classes.typography}>Amount/Payment Type</Typography>
         <Typography className={classes.typography}>Due Date</Typography>
         <Typography className={classes.typography}>Payment made by</Typography>
-        <Typography className={classes.typography}>Invoice Status</Typography>
+        <div style={{display: 'flex'}}>
+          <Typography className={classes.typography}>Invoice Status</Typography>
+          <Typography style={{width: '25px'}}>{' '}</Typography>
+        </div>
       </Grid>
     </>
   )
