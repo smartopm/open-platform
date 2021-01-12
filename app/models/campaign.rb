@@ -71,9 +71,10 @@ class Campaign < ApplicationRecord
     EmailMsg.send_mail(user_email, CAMPAIGN_MAIL_TEMPLATE, campaign_mail_data)
   end
 
-  def send_mail_from_db(user_email)
+  def send_template_email(user_email)
     template = community.email_templates.find(email_templates_id)
-    EmailMsg.send_mail(user_email, template, campaign_mail_data)
+    template_data = [{ key: '%community%', value: community.name },]
+    EmailMsg.send_mail_from_db(user_email, template, template_data)
   end
 
   def campaign_mail_data
@@ -93,6 +94,7 @@ class Campaign < ApplicationRecord
     update(start_time: Time.current, status: 'in_progress')
     users = target_list_user
     CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
+
     users.each do |acc|
       if campaign_type.eql?('email')
         return false unless send_email(acc.email)
