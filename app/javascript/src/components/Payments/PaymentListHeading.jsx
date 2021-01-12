@@ -14,12 +14,11 @@ export default function PaymentListHeading(){
         alignItems="center"
         className={classes.heading}
       >
-        <Typography>Parcel Number</Typography>
-        <Typography>Amount/Payment Type</Typography>
-        <Typography>Due Date</Typography>
-        <Typography>Payment made by</Typography>
-        <Typography>Settlement Status</Typography>
-        <Typography>Status</Typography>
+        <Typography className={classes.typography}>Parcel Number</Typography>
+        <Typography className={classes.typography}>Amount/Payment Type</Typography>
+        <Typography className={classes.typography}>Due Date</Typography>
+        <Typography className={classes.typography}>Payment made by</Typography>
+        <Typography className={classes.typography}>Invoice Status</Typography>
       </Grid>
     </>
   )
@@ -30,5 +29,8 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#FFFFFF',
     padding: '15px 0',
     border: '1px solid #ECECEC'
+  },
+  typography: {
+    width: '150px'
   }
 }));

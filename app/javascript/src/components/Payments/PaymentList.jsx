@@ -1,56 +1,39 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Container,
   Grid,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText
+  List
 } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from 'react-router'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
-import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
+import { InvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
-import PaymentItem from './PaymentItem'
-// import InvoiceTiles from './InvoiceTiles'
 import { currencies } from '../../utils/constants'
 import PaymentListHeading from './PaymentListHeading'
 
 export default function PaymentList({ authState }) {
   const history = useHistory()
+  const classes = useStyles();
   const path = useParamsQuery()
   const limit = 50
   const page = path.get('page')
   const status = path.get('status')
   const pageNumber = Number(page)
-  // const [currentTile, setCurrentTile] = useState(status || '')
-  const { loading, data: invoicesData, error, refetch } = useQuery(
+  const { loading, data: invoicesData, error } = useQuery(
     InvoicesQuery,
     {
       variables: { limit, offset: pageNumber, status },
       errorPolicy: 'all'
     }
   )
-  // const invoiceStats = useQuery(InvoiceStatsQuery, {
-  //   fetchPolicy: 'cache-first'
-  // })
   const currency = currencies[authState.user?.community.currency] || ''
-
-  // function handleFilter(_evt, key) {
-  //   setCurrentTile(key)
-  //   const state = key === 'inProgress' ? 'in_progress' : key
-  //   history.push(`/payments?page=0&status=${state}`)
-  // }
-
-  useEffect(() => {
-    refetch({ status, offset: pageNumber })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, page])
 
   function paginate(action) {
     if (action === 'prev') {
@@ -67,14 +50,7 @@ export default function PaymentList({ authState }) {
 
   return (
     <Container>
-      {/* <br />
-      <Grid container spacing={3}>
-        <InvoiceTiles
-          invoiceData={invoiceStats || []}
-          filter={handleFilter}
-          currentTile={currentTile}
-        />
-      </Grid> */}
+      {console.log(invoicesData)}
       <List>
         {
         // eslint-disable-next-line no-nested-ternary
@@ -82,39 +58,38 @@ export default function PaymentList({ authState }) {
           <div>
             <PaymentListHeading />
             {invoicesData?.invoices.map(invoice => (
-              <ListItem key={invoice.id}>
-                <ListItemText
-                  disableTypography
-                  primary={invoice.description}
-                  secondary={(
-                    <div>
-                      <Grid container spacing={10} style={{ color: '#808080' }}>
-                        <Grid xs item data-testid="amount">
-                          {`Invoice amount: ${currency}${invoice.amount}`}
-                        </Grid>
-                        <Grid xs item data-testid="landparcel">
-                          Parcel number:
-                          {' '}
-                          {invoice.landParcel?.parcelNumber}
-                        </Grid>
-                        <Grid xs item data-testid="duedate">
-                          {`Due at: ${dateToString(invoice.dueDate)}`}
-                        </Grid>
-                      </Grid>
-                      {invoice.payments?.map(payment => (
-                        <div key={payment.id}>
-                          <i>
-                            <PaymentItem paymentData={payment} currency={currency} />
-                          </i>
-                        </div>
-                    ))}
+              <Grid
+                container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"
+                className={classes.list}
+                key={invoice.id}
+              >
+                <Typography className={classes.typography}>{invoice.landParcel.parcelNumber}</Typography>
+                <Typography className={classes.typography}>
+                  {invoice.payments.map((pay) => (
+                    <div key={pay.id}>
+                      <Typography>
+                        {currency}
+                        {pay.amount}
+                        ,
+                        {pay.paymentType}
+                      </Typography>
                     </div>
-                )}
-                />
-                <ListItemSecondaryAction data-testid="status">
-                  {InvoiceStatus[invoice.status]}
-                </ListItemSecondaryAction>
-              </ListItem>
+                  ))}
+                </Typography>
+                <Typography className={classes.typography}>{dateToString(invoice.dueDate)}</Typography>
+                <Typography className={classes.typography}>
+                  {invoice.payments.map((pay) => (
+                    <Typography key={pay.id}>
+                      {pay.user.name}
+                      ,
+                    </Typography>
+                  ))}
+                </Typography>
+                <Typography className={classes.typography}>{InvoiceStatus[invoice.status]}</Typography>
+              </Grid>
             ))}
           </div>
         ) : (
@@ -135,6 +110,22 @@ export default function PaymentList({ authState }) {
     </Container>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  list: {
+    backgroundColor: '#FFFFFF',
+    padding: '15px 0',
+    border: '1px solid #ECECEC',
+    marginBottom: '10px'
+  },
+  typography: {
+    width: '150px'
+  },
+  button: {
+    float: 'right',
+    marginBottom: '10px' 
+  }
+}));
 
 PaymentList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
