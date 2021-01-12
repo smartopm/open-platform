@@ -887,6 +887,22 @@ export const InvoiceStatsQuery = gql`
   }
 `
 
+export const LandParcel = gql`
+  query landParcel($id: ID!) {
+    landParcel(id: $id) {
+      id
+      parcelNumber
+      address1
+      address2
+      city
+      postalCode
+      stateProvince
+      country
+      parcelType
+      createdAt
+    }
+  }
+`
 export const EmailTemplatesQuery = gql`
   query emailTemplates {
     emailTemplates {
