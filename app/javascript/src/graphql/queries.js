@@ -391,9 +391,6 @@ export const Campaign = gql`
       startTime
       updatedAt
       userIdList
-      subject
-      preHeader
-      templateStyle
       includeReplyLink
       emailTemplatesId
       campaignMetrics {

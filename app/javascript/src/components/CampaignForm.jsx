@@ -28,9 +28,6 @@ const initData = {
   message: '',
   batchTime: new Date(),
   userIdList: '',
-  subject: '',
-  preHeader: '',
-  templateStyle: '',
   loaded: false,
   labels: [],
   includeReplyLink: false
@@ -113,9 +110,6 @@ function handleTemplateDialog(status){
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
       labels: labels.toString(),
-      subject: formData.subject,
-      preHeader: formData.preHeader,
-      templateStyle: formData.templateStyle,
       includeReplyLink: formData.includeReplyLink
     }
     if (id) {
@@ -189,13 +183,6 @@ function handleTemplateDialog(status){
           <MenuItem value="sms">SMS</MenuItem>
           <MenuItem value="email">Email</MenuItem>
         </TextField>
-        
-        <TemplateList 
-          value={formData.emailTemplatesId} 
-          handleValue={handleTemplateValue}
-          createTemplate={handleTemplateDialog}
-          shouldRefect={isUpdated}
-        />
 
         <TextField
           label="Campaign Name"
@@ -221,38 +208,11 @@ function handleTemplateDialog(status){
         />
         {formData.campaignType === 'email' && (
           <>
-            <TextField
-              label="Subject"
-              name="subject"
-              rows={1}
-              multiline
-              className="form-control"
-              value={formData.subject || ''}
-              onChange={handleInputChange}
-              aria-label="campaign_subject"
-              inputProps={{ 'data-testid': 'campaign_subject' }}
-            />
-            <TextField
-              label="Pre Header"
-              name="preHeader"
-              rows={1}
-              multiline
-              className="form-control"
-              value={formData.preHeader || ''}
-              onChange={handleInputChange}
-              aria-label="campaign_pre_header"
-              inputProps={{ 'data-testid': 'campaign_pre_header' }}
-            />
-            <TextField
-              label="Template Style"
-              rows={1}
-              multiline
-              className="form-control"
-              aria-label="campaign_template_style"
-              inputProps={{ 'data-testid': 'campaign_template_style' }}
-              name="templateStyle"
-              value={formData.templateStyle || ''}
-              onChange={handleInputChange}
+            <TemplateList 
+              value={formData.emailTemplatesId} 
+              handleValue={handleTemplateValue}
+              createTemplate={handleTemplateDialog}
+              shouldRefect={isUpdated}
             />
           </>
         )}
