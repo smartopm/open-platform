@@ -7,7 +7,9 @@ import TaskUpdateItem from '../components/Notes/TaskUpdateItem'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Card Component', () => {
-  const user = 'tolulope'
+  const mock = {
+    user: '8423nsjfsd'
+  }
   const content = 'added new comment'
   const date = new Date().toISOString()
 
@@ -19,7 +21,7 @@ describe('Comment Card Component', () => {
         <MockedProvider>
           <BrowserRouter>
             <TaskUpdateItem
-              user={user}
+              user={mock.user}
               content={content}
               icon={<AddBoxOutlinedIcon />}
               date={date}
