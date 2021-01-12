@@ -10,6 +10,7 @@ module Mutations
       argument :name, String, required: false
       argument :campaign_type, String, required: false
       argument :status, String, required: false
+      argument :email_templates_id, ID, required: false
       argument :message, String, required: false
       argument :batch_time, String, required: false
       argument :user_id_list, String, required: false
