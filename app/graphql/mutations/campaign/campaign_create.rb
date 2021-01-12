@@ -44,7 +44,8 @@ module Mutations
       end
 
       def check_missing_args(vals)
-        %w[name campaign_type message user_id_list batch_time status email_templates_id].each do |attr|
+        %w[name campaign_type message user_id_list batch_time status
+           email_templates_id].each do |attr|
           if vals[attr.to_sym].blank?
             raise GraphQL::ExecutionError, "Missing Parameter: Please Supply #{attr} parameter"
           end

@@ -73,7 +73,7 @@ class Campaign < ApplicationRecord
 
   def send_template_email(user_email)
     template = community.email_templates.find(email_templates_id)
-    template_data = [{ key: '%community%', value: community.name },]
+    template_data = [{ key: '%community%', value: community.name }]
     EmailMsg.send_mail_from_db(user_email, template, template_data)
   end
 

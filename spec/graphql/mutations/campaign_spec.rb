@@ -45,9 +45,6 @@ RSpec.describe Mutations::Campaign do
         batchTime: '17/06/2020 03:49',
         userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
         labels: 'label 1,label 2',
-        subject: 'subject',
-        preHeader: 'Pre header',
-        templateStyle: 'Template Style',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
