@@ -40,7 +40,7 @@ module Mutations
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
 
-        return campaign if vals[:campaign_type].eql?('sms')
+        return campaign
       end
 
       def check_missing_args(vals)
