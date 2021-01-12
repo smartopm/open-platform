@@ -2,28 +2,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import PropTypes from 'prop-types'
-import {  Button } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
 import CreateIcon from '@material-ui/icons/Create';
 import { dateToString } from "./DateContainer"
-import GeoData from '../data/nkwashi_plots.json'
 import PlotModal from "./PlotOpen"
 import EditModal from './EditPlot'
+import UserPlotMap from './UserPlotMap'
 
 export default function UserPlotInfo({ userId, account, refetch, userType }) {
-  function getPropertyByName(jsonData, value) {
-    const data = jsonData.features
-    const property = data.filter(feature =>
-      value.includes(feature.properties.name)
-    )
-    return property
-  }
-
   const [plotNumber, setPlotNumber] = useState([])
   const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
@@ -46,10 +37,6 @@ export default function UserPlotInfo({ userId, account, refetch, userType }) {
     setData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
-
-    const history = useHistory() 
-
-    const features = getPropertyByName(GeoData, plotNumber)
 
     return (
       <>
@@ -100,15 +87,8 @@ export default function UserPlotInfo({ userId, account, refetch, userType }) {
                   </span>
                 </Typography>
               </div>
-              <div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => history.push({ pathname: '/myplot', state: { features } })}
-                  className={`${css(styles.chatButton)}`}
-                >
-                  My Plot Location
-                </Button>
+              <div className={css(styles.mapContainer)}>
+                <UserPlotMap plotData={account[0].landParcels} />
               </div>
             </div>
           </div>
@@ -163,6 +143,11 @@ const styles = StyleSheet.create({
     height: 51,
     boxShadow: 'none',
     marginTop: 50
+  },
+  mapContainer: {
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    width: '100%',
   }
 })
 
