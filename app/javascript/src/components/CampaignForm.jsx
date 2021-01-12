@@ -212,7 +212,8 @@ function handleTemplateDialog(status){
               value={formData.emailTemplatesId} 
               handleValue={handleTemplateValue}
               createTemplate={handleTemplateDialog}
-              shouldRefect={isUpdated}
+              shouldRefecth={isUpdated}
+              isRequired
             />
           </>
         )}
