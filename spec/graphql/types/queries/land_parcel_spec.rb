@@ -6,7 +6,8 @@ RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
     let!(:current_user) { create(:user_with_community) }
     let!(:land_parcel) do
-      current_user.community.land_parcels.create(address1: 'This address', long_x: 28.234, lat_y: -15.234)
+      current_user.community.land_parcels.create(address1: 'This address',
+                                                long_x: 28.234, lat_y: -15.234)
     end
 
     let!(:admin_user) { create(:admin_user, community_id: current_user.community.id) }
@@ -31,7 +32,7 @@ RSpec.describe Types::Queries::LandParcel do
       expect(result.dig('data', 'fetchLandParcel', 0, 'id')).to eql land_parcel.id
       expect(result.dig('data', 'fetchLandParcel', 0, 'address1')).to eql 'This address'
       expect(result.dig('data', 'fetchLandParcel', 0, 'longX')).to eql 28.234
-      expect(result.dig('data', 'fetchLandParcel', 0, 'latY')).to eql -15.234
+      expect(result.dig('data', 'fetchLandParcel', 0, 'latY')).to eql(-15.234)
     end
 
     it 'should raise unauthorized error when no current-user' do
