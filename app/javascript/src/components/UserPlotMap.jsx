@@ -13,7 +13,7 @@ export default function UserPlotMap({ plotData }){
   const featureCollection = { type: 'FeatureCollection',  features: [] }
 
   return (
-    <div>
+    <div data-testid="leaflet-map-container">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -42,14 +42,14 @@ export default function UserPlotMap({ plotData }){
 
       <Map
         center={nkwashi}
-        zoom={15}
+        zoom={16}
         attributionControl
         zoomControl
         doubleClickZoom
         scrollWheelZoom
         dragging
-        // animate
-        // easeLinearity={0.35}
+        animate
+        easeLinearity={0.35}
       >
         <LayersControl position="topleft">
           <LayersControl.BaseLayer checked name="Mapbox">

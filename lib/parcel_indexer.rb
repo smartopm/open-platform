@@ -16,6 +16,10 @@ class ParcelIndexer
 
   # public interface to handle generation of IDs
   def self.generate_parcel_no(parcel_type: 'basic')
+    unless PARCEL_TYPE.key?(parcel_type.downcase.to_sym)
+      raise ParcelIndexerError "Invalid Parcel Type. Expected one of #{PARCEL_TYPE.keys}"
+    end
+
     generate_id(type: parcel_type.downcase.to_sym)
   end
 

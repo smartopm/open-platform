@@ -49,6 +49,17 @@ describe('User Plot Info Page', () => {
     expect(container.queryByText('Standard434')).toBeInTheDocument()
   })
 
+  it('should contain a map display', () => {
+    const container = render(
+      <MockedProvider mock={[]}>
+        <BrowserRouter>
+          <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+        </BrowserRouter>
+      </MockedProvider>
+    )
+    expect(container.queryByTestId('leaflet-map-container')).toBeTruthy()
+  })
+
   it('should show no plot when plots are empty', () => {
     const container = render(
       <MockedProvider mock={[]}>
