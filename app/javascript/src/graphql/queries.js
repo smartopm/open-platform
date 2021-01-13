@@ -21,6 +21,10 @@ export const UserAccountQuery = gql`
         landParcels {
           id
           parcelNumber
+          parcelType
+          longX
+          latY
+          geom
         }
       }
     }
@@ -482,6 +486,9 @@ export const ParcelQuery = gql`
       stateProvince
       country
       parcelType
+      latY
+      longX
+      geom
       createdAt
     }
   }

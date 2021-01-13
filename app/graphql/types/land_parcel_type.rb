@@ -13,6 +13,9 @@ module Types
     field :state_province, String, null: true
     field :country, String, null: true
     field :parcel_type, String, null: true
+    field :long_x, Float, null: true
+    field :lat_y, Float, null: true
+    field :geom, GraphQL::Types::JSON, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :read_at, GraphQL::Types::ISO8601DateTime, null: true
   end

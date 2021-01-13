@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_133511) do
+ActiveRecord::Schema.define(version: 2021_01_10_120441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -362,6 +362,9 @@ ActiveRecord::Schema.define(version: 2021_01_05_133511) do
     t.string "parcel_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "long_x", precision: 10, scale: 6
+    t.decimal "lat_y", precision: 10, scale: 6
+    t.json "geom"
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
   end
