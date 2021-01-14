@@ -35,6 +35,7 @@ import { formStatus } from '../../utils/constants'
 import { ActionDialog } from '../Dialog'
 import MessageAlert from '../MessageAlert'
 import FloatButton from '../FloatButton'
+import { propAccessor } from '../../utils/helpers'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType }) {
@@ -210,10 +211,10 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
 
   function updateForm(){
     publish({
-      variables: { id: formId, status: formStatus[actionType] }
+      variables: { id: formId, status: propAccessor(formStatus, actionType)}
     })
     .then(() => {
-      setMessage({isError: false, detail: `Successfully ${formStatus[actionType]} the form`})
+      setMessage({isError: false, detail: `Successfully ${propAccessor(formStatus, actionType)} the form`})
       setOpen(!isDialogOpen)
       setAlertOpen(true)
       handleClose()

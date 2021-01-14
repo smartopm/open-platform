@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import Square from "./Square"
 import { useWindowDimensions } from '../utils/customHooks'
 import colors from '../themes/nkwashi/colors'
-import { pluralizeCount } from '../utils/helpers'
+import { pluralizeCount, propAccessor } from '../utils/helpers'
 
 export default function UserPoints({ userPoints }) {
   const { width } = useWindowDimensions()
@@ -29,8 +29,8 @@ export default function UserPoints({ userPoints }) {
           <Square
             // eslint-disable-next-line react/no-array-index-key
             key={index}
-            title={userPoints[subject].toString()}
-            subtitle={squareSubtitles[subject]}
+            title={propAccessor(userPoints, subject).toString()}
+            subtitle={propAccessor(squareSubtitles, subject)}
             squareStyle={{
               backgroundColor: subject === 'total' ? primary : lightGreen,
               textColor: subject === 'total' ? textColor : primary,

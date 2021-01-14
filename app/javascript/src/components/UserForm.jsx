@@ -25,7 +25,7 @@ import Loading from './Loading'
 import FormOptionInput, {
   FormOptionWithOwnActions
 } from './Forms/FormOptionInput'
-import { saniteError } from '../utils/helpers'
+import { propAccessor, saniteError } from '../utils/helpers'
 import { ModalDialog } from './Dialog'
 import CenteredContent from './CenteredContent'
 
@@ -179,7 +179,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       ...data,
       contactInfos: [
         ...opts.slice(0, index),
-        { ...opts[index], ...newValue },
+        { ...propAccessor(opts, index), ...newValue },
         ...opts.slice(index + 1)
       ]
     })

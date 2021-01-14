@@ -8,7 +8,7 @@ import Nav from '../components/Nav'
 import { ImportCreate } from '../graphql/mutations'
 import CenteredContent from '../components/CenteredContent'
 import Loading from '../components/Loading'
-import { sanitizeText, pluralizeCount } from '../utils/helpers'
+import { sanitizeText, pluralizeCount, propAccessor } from '../utils/helpers'
 import { Context } from "./Provider/AuthStateProvider"
 import MessageAlert from "../components/MessageAlert"
 
@@ -92,7 +92,7 @@ export default function UsersImport() {
       let message = ''
       errorRows.forEach(row => {
         message += `Row ${row}: <br>`
-        parsedErrors[row].forEach(err => {
+        propAccessor(parsedErrors, row).forEach(err => {
           message += `&nbsp; ${err} <br>`
         })
       })

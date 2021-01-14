@@ -3,6 +3,7 @@ import { Grid, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import TaskStatCard from './TaskStatCard'
 import CenteredContent from '../CenteredContent'
+import { propAccessor } from '../../utils/helpers'
 
 const tiles = {
   myOpenTasks: 'My Tasks',
@@ -37,7 +38,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
       <TaskStatCard
         filter={evt => filterTasks(evt, key)}
         title={val}
-        count={taskData.data?.taskStats[key]}
+        count={propAccessor(taskData.data?.taskStats, key)}
         isCurrent={key === currentTile}
       />
     </Grid>

@@ -154,16 +154,14 @@ describe('array methods', () => {
 
   // property accessor
   it('should validate params', () => {
-    // prop should be string
     expect(propAccessor({a: 4}, 3)).toBeUndefined()
-    // get corrects value
+    // get correct value
     expect(propAccessor({a: 4}, 'a')).toBe(4)
     // prop must be a property in the given object
     expect(propAccessor({a: 4}, 'b')).toBeUndefined()
     // the object should only be of type object 
     expect(propAccessor([], 'b')).toBeUndefined()
   })
-
 })
 
 describe('pluralizeCount', () => {

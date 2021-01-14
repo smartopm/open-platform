@@ -2,7 +2,7 @@
 import React, { useContext } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
-import { forceLinkHttps } from '../utils/helpers'
+import { forceLinkHttps, propAccessor } from '../utils/helpers'
 import ImageAuth from './ImageAuth'
 import { Context } from '../containers/Provider/AuthStateProvider'
 
@@ -26,7 +26,7 @@ export default function Avatar({ imageUrl, user, style}) {
     return (
       <img
         src={safeAvatarLink({user, imageUrl})}
-        className={css(imageStyles[style])}
+        className={css(propAccessor(imageStyles, style))}
         alt="avatar for the user"
       />
     )
@@ -35,7 +35,7 @@ export default function Avatar({ imageUrl, user, style}) {
     <ImageAuth
       imageLink={safeAvatarLink({ imageUrl, user })}
       token={token}
-      className={css(imageStyles[style])}
+      className={css(propAccessor(imageStyles, style))}
     />
   )
 }

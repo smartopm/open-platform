@@ -6,6 +6,7 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { propAccessor } from '../utils/helpers'
 
 const icons = {
   mail: <MailOutlineIcon />,
@@ -74,12 +75,12 @@ export default function SupportCard({ handleSendMessage, user }) {
     user.community[supportName]?.forEach(support => {
       if (support.category === 'sales')
         sales.push({
-          contact: support[supportType],
+          contact: propAccessor(support, supportType),
           type
         })
       if (support.category === 'customer_care')
         customerCare.push({
-          contact: support[supportType],
+          contact: propAccessor(support, supportType),
           type
         })
     })

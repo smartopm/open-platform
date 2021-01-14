@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { IconButton, TextField, Typography } from '@material-ui/core'
 import { AddCircleOutline, DeleteOutline } from '@material-ui/icons'
+import { propAccessor } from '../../utils/helpers'
 
 /**
  * 
@@ -36,7 +37,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
               variant="outlined"
               size="small"
               style={{ width: 300 }}
-              value={options[i].info}
+              value={propAccessor(options, i)?.info}
               onChange={event => handleOptionChange(event, i)}
               margin="normal"
               autoFocus

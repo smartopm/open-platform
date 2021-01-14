@@ -3,6 +3,7 @@ import { IconButton, MenuItem, TextField } from '@material-ui/core'
 import { DeleteOutline } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
+import { propAccessor } from '../../utils/helpers'
 
 export default function DynamicContactFields({
   options,
@@ -22,7 +23,7 @@ export default function DynamicContactFields({
         style={{ width: '300px'}}
         label={data.label}
         onChange={event => handleChange(event, i)}
-        value={options[i][data.name]}
+        value={propAccessor(options[i], data.name)}
         name={data.name}
       />
       <TextField

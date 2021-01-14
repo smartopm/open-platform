@@ -25,7 +25,7 @@ import QueryBuilder from '../components/QueryBuilder'
 import { dateToString } from '../utils/dateutil'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
-import { pluralizeCount } from '../utils/helpers'
+import { pluralizeCount, propAccessor } from '../utils/helpers'
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
@@ -106,8 +106,9 @@ export default function UsersList() {
         const query = availableConjugate
           .map(option => {
             let operator = Object.keys(option)[0]
+            // skipped nested object accessor here until fully tested 
             const property = filterFields[option[operator][0].var]
-            let value = option[operator][1]
+            let value = propAccessor(option, operator)[1]
 
             if (operator === '==') operator = '='
             if (property === 'date_filter') {
@@ -148,7 +149,7 @@ export default function UsersList() {
       Answered: 'Answered',
       Missed: 'Missed'
     }
-    setModalAction(NoteTypes[noteType])
+    setModalAction(propAccessor(NoteTypes, noteType))
   }
 
   function inputToSearch() {
