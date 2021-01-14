@@ -35,6 +35,7 @@ export default function GeoMap() {
      <div data-testid="leaflet-map-container">
        <Nav navName="Explore" menuButton="back" backTo="/" />
        <style
+         // eslint-disable-next-line react/no-danger
          dangerouslySetInnerHTML={{
           __html: `
       .leaflet-tooltip-top:before, 
