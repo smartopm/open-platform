@@ -23,7 +23,7 @@ export default function DynamicContactFields({
         style={{ width: '300px'}}
         label={data.label}
         onChange={event => handleChange(event, i)}
-        value={propAccessor(options[i], data.name)}
+        value={propAccessor(options[parseInt(i, 10)], data.name)}
         name={data.name}
       />
       <TextField

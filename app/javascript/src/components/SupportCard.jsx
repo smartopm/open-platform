@@ -72,7 +72,7 @@ export default function SupportCard({ handleSendMessage, user }) {
     if (type === 'phone') supportType = 'phone_number'
     if (type === 'mail') supportType = 'email'
     // eslint-disable-next-line no-unused-expressions
-    user.community[supportName]?.forEach(support => {
+    propAccessor(user.community, supportName)?.forEach(support => {
       if (support.category === 'sales')
         sales.push({
           contact: propAccessor(support, supportType),
