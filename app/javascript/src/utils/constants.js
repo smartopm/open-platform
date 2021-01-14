@@ -179,3 +179,36 @@ export const formStatus = {
 export const currencies = {
   zambian_kwacha: 'k'
 }
+
+export const mapTiles = {
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+  mapboxSatellite: 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=',
+  mapboxStreets: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=',
+  openStreetMap: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  centerPoint: {
+    nkwashi: [-15.5106850854, 28.6493892334]
+  }
+}
+
+export const publicMapToken = {
+  mapbox: 'pk.eyJ1Ijoiam9obnNvbnNpcnYiLCJhIjoiY2tqOGNzemdzMmg1djJ6bGdubnR4MDY4ciJ9.dUpC4xn0Iwj9MPNrpCx7IQ'
+}
+
+export const emptyPolygonFeature =  JSON.stringify({
+    type: 'Feature',
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
+        ]
+      ]
+    },
+    properties: { }
+  })

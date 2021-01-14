@@ -2,7 +2,7 @@ import dompurify from 'dompurify';
 
 import { sentencizeAction, titleize, pluralizeCount, 
 capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText, getJustLabels } from '../../utils/helpers'
+forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText, getJustLabels, checkValidGeoJSON } from '../../utils/helpers'
 
 jest.mock('dompurify')
 describe('helper methods', () => {
@@ -148,6 +148,17 @@ describe('helper methods', () => {
         expect(result).toMatch(/<a href/i);
         expect(result).toMatch(/mailto:/i);
         expect(result).toMatch(/email@email.com/i);
+      });
+    });
+
+    describe('#checkValidGeoJSON', () => {
+      it('should return true for valid json', () => {
+        expect(checkValidGeoJSON(JSON.stringify({ name: 'John' }))).toBe(true);
+      });
+      it('should return false for invalid json', () => {
+        expect(checkValidGeoJSON('')).toBe(false);
+        expect(checkValidGeoJSON(1234)).toBeFalsy();
+        expect(checkValidGeoJSON(null)).toBeFalsy();
       });
     });
 });

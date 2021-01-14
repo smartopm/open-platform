@@ -56,7 +56,7 @@ export default function PlotModal({ open, handleClose, userId, accountId, refetc
         <form onSubmit={handleAddPlotNumber}>
           <DialogContent style={{ margin: '15px' }}>
             <Typography variant='body1'><b>Add a new plot associated with this user</b></Typography>
-            <TextField autoFocus id="standard-basic" label="Plot Number" style={{width: '100%'}} onChange={e => setParcelNumber(e.target.value)} />
+            <TextField autoFocus id="standard-basic" label="Plot Number" style={{width: '100%'}} onChange={e => setParcelNumber(e.target.value.trim())} />
           </DialogContent>
           <Divider />
           <DialogActions style={{ margin: '10px' }}>
