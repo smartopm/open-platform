@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu } from '@material-ui/core';
 
-export default function LabelActionMenu({
+export default function ActionMenu({
   anchorEl,
   handleClose,
-  open
+  open,
+  children
 }) {
 
   return (
     <Menu
-      id='menu-view'
+      id='long-menu-view'
       anchorEl={anchorEl}
       open={open}
       keepMounted
@@ -23,37 +24,21 @@ export default function LabelActionMenu({
     >
       <div>
         <>
-          <MenuItem
-            id="view-button"
-            key="view-user"
-          >
-            View
-          </MenuItem>
-          <MenuItem
-            id="edit-button"
-            key="edit-user"
-          >
-            Edit
-          </MenuItem>
-          <MenuItem
-            id="cancel-button"
-            key="cancel-user"
-            style={{ color: 'red' }}
-          >
-            Cancel Invoice
-          </MenuItem>
+          {children}
         </>
       </div>
     </Menu>
   );
 }
 
-LabelActionMenu.defaultProps = {
-  anchorEl: {}
+ActionMenu.defaultProps = {
+  anchorEl: {},
+  children: {} 
  }
-LabelActionMenu.propTypes = {
+ ActionMenu.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  children: PropTypes.node,
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object 
 }

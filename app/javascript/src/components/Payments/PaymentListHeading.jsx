@@ -20,7 +20,7 @@ export default function PaymentListHeading(){
         <Typography className={classes.typography}>Payment made by</Typography>
         <div style={{display: 'flex'}}>
           <Typography className={classes.typography}>Invoice Status</Typography>
-          <Typography style={{width: '25px'}}>{' '}</Typography>
+          <Typography style={{width: '40px'}}>{' '}</Typography>
         </div>
       </Grid>
     </>
