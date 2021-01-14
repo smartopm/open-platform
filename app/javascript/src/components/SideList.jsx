@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 import React from 'react'
 import PropTypes from 'prop-types'
 import List from '@material-ui/core/List'

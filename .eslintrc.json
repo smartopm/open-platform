@@ -7,8 +7,15 @@
     },
     "extends": "airbnb"
   },
-  "plugins": ["react", "react-hooks"],
-  "extends": ["airbnb","eslint:recommended", "plugin:react/recommended", "prettier", "plugin:react-hooks/recommended"],
+  "plugins": ["react", "react-hooks", "security"],
+  "extends": [
+      "airbnb",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "prettier",
+      "plugin:react-hooks/recommended",
+      "plugin:security/recommended"
+    ],
   "rules": {
     "comma-dangle": 0,
     "react/prop-types": 2,
