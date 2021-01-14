@@ -308,3 +308,25 @@ export function checkValidGeoJSON(str){
       return false;
     }
   }
+
+/**
+ * 
+ * @param {Object} obj 
+ * @param {String} prop 
+ * @description get value based on a passed property name, if validates object and string first
+ */
+  export function propAccessor(obj, prop){
+    // check if the given prop is a string
+    if(typeof prop !== 'string') return
+    // check if obj is a valid object
+    // I couldn't find a better way of validating am object
+    if(Object.prototype.toString.call(obj) !== '[object Object]') return 
+    // check if prop is in obj
+    if(!obj.hasOwnProperty(prop)) return
+    for (const [key, value] of Object.entries(obj)) {
+        if(key === prop){
+            return value
+        }
+    }
+    
+}

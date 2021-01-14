@@ -11,7 +11,8 @@ import {
   removeNewLines,
   titleize,
   formatError,
-  generateId
+  generateId,
+  propAccessor
 } from '../utils/helpers'
 
 const message =
@@ -150,6 +151,19 @@ describe('array methods', () => {
     expect(generateId()).toBeTruthy()
     expect(generateId()).toBeInstanceOf(Array)
   })
+
+  // property accessor
+  it('should validate params', () => {
+    // prop should be string
+    expect(propAccessor({a: 4}, 3)).toBeUndefined()
+    // get corrects value
+    expect(propAccessor({a: 4}, 'a')).toBe(4)
+    // prop must be a property in the given object
+    expect(propAccessor({a: 4}, 'b')).toBeUndefined()
+    // the object should only be of type object 
+    expect(propAccessor([], 'b')).toBeUndefined()
+  })
+
 })
 
 describe('pluralizeCount', () => {
