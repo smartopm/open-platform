@@ -13,7 +13,7 @@ import { propAccessor } from '../../utils/helpers'
 export default function FormOptionInput({ options, setOptions, label }) {
   function handleOptionChange(event, index){
     const values = options
-    values[index] = event.target.value
+    values[parseInt(index, 10)] = event.target.value
     setOptions([...values])
   }
 

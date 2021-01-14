@@ -76,7 +76,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   function handleSetOptions(handler, index, newValue, options) {
     handler([
       ...options.slice(0, index),
-      { ...options[index], ...newValue },
+      { ...options[parseInt(index, 10)], ...newValue },
       ...options.slice(index + 1)
     ])
   }
