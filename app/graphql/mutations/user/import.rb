@@ -36,7 +36,7 @@ module Mutations
             state      = row['State']&.strip&.downcase
             expires_at = row['Expiration date']&.strip&.to_datetime
             notes      = row['Notes on client']&.strip
-            phone_list = [phone, phone1, phone2].compact
+            phone_list = [phone, phone1, phone2].reject(&:blank?)
 
             if user_already_present?(email, phone_list)
               no_of_duplicates += 1
@@ -87,7 +87,7 @@ module Mutations
       # rubocop:enable Metrics/PerceivedComplexity
 
       def user_already_present?(email, phone_list)
-        ::User.where(email: email).or(
+        ::User.where.not(email: nil).where(email: email).or(
           ::User.where(phone_number: phone_list),
         ).present? ||
           ::User.joins(:contact_infos).where(contact_infos:
