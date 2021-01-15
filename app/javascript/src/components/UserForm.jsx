@@ -25,7 +25,7 @@ import Loading from './Loading'
 import FormOptionInput, {
   FormOptionWithOwnActions
 } from './Forms/FormOptionInput'
-import { propAccessor, saniteError } from '../utils/helpers'
+import { saniteError } from '../utils/helpers'
 import { ModalDialog } from './Dialog'
 import CenteredContent from './CenteredContent'
 
@@ -174,12 +174,12 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       contactType: type ? 'email' : 'phone'
     }
     const opts = data.contactInfos
-
     setData({
       ...data,
       contactInfos: [
         ...opts.slice(0, index),
-        { ...propAccessor(opts, index), ...newValue },
+        // eslint-disable-next-line security/detect-object-injection
+        { ...opts[index], ...newValue },
         ...opts.slice(index + 1)
       ]
     })
