@@ -178,8 +178,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       ...data,
       contactInfos: [
         ...opts.slice(0, index),
-        // eslint-disable-next-line security/detect-object-injection
-        { ...opts[index], ...newValue },
+        { ...opts[parseInt(index, 10)], ...newValue },
         ...opts.slice(index + 1)
       ]
     })
