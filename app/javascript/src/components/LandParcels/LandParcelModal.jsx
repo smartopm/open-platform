@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from "@material-ui/core/styles"
-import { TextField } from '@material-ui/core'
+import { TextField, InputAdornment } from '@material-ui/core'
 import { CustomizedDialogs } from '../Dialog'
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
+import DatePickerDialog from '../DatePickerDialog'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { currencies } from '../../utils/constants'
 
 export default function LandParcelModal({ open, handelClose, handleSubmit, modalType, landParcel }) {
   const classes = useStyles()
@@ -17,6 +20,9 @@ export default function LandParcelModal({ open, handelClose, handleSubmit, modal
   const [country, setCountry] = useState('')
   const [tabValue, setTabValue] = useState('Details')
   const isFormReadOnly = modalType === 'details'
+  const authState = useContext(AuthStateContext)
+  const currency = currencies[authState.user?.community.currency] || ''
+
 
   function handleParcelSubmit() {
     if (handleSubmit) {
@@ -144,7 +150,35 @@ export default function LandParcelModal({ open, handelClose, handleSubmit, modal
         <div>Coming soon!!</div>
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
-        <div>Coming soon!!!</div>
+        {
+          landParcel?.valuations?.length ?
+          landParcel?.valuations.map((valuation) => (
+            <div className={classes.parcelForm} key={valuation.id}>
+              <TextField
+                autoFocus
+                margin="dense"
+                InputProps={{
+                  "data-testid": "valuation-amount", readOnly: isFormReadOnly,
+                  startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
+                }}
+                // eslint-disable-next-line react/jsx-no-duplicate-props
+                inputProps={{ style: { paddingTop: '6px' } }}
+                label="Amount"
+                type="text"
+                defaultValue={valuation.amount}
+                required
+              />
+              <DatePickerDialog
+                label="Start Date"
+                selectedDate={valuation.startDate}
+                handleDateChange={() => {}}
+                inputProps={{readOnly: true}}
+                required
+              />
+            </div>
+          )) :
+          <div>No Valuations Yet</div>
+        }
       </TabPanel>
     </CustomizedDialogs>
   );
@@ -154,7 +188,8 @@ const useStyles = makeStyles(() => ({
   parcelForm: {
     display: 'flex',
     flexDirection: 'column',
-    width: '400px'
+    width: '400px',
+    marginBottom: '30px'
   }
 }));
 
