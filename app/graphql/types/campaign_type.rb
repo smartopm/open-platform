@@ -9,11 +9,9 @@ module Types
     field :campaign_type, String, null: false
     field :message, String, null: true
     field :user_id_list, String, null: true
-    field :subject, String, null: true
-    field :pre_header, String, null: true
-    field :template_style, String, null: true
     field :status, String, null: false
     field :include_reply_link, Boolean, null: false
+    field :email_templates_id, ID, null: true
     field :labels, [Types::LabelType], null: true
     field :start_time, GraphQL::Types::ISO8601DateTime, null: true
     field :end_time, GraphQL::Types::ISO8601DateTime, null: true
