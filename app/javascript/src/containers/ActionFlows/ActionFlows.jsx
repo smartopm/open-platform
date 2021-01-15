@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
@@ -83,6 +82,7 @@ export default function ActionFlows() {
   function handleSave(data, metaData) {
     const actionMetaData = {}
     Object.entries(metaData).forEach(([key, value]) => {
+      // eslint-disable-next-line security/detect-object-injection
       actionMetaData[key] = {
         name: key,
         value: isMetaDataAVariable({key, value})

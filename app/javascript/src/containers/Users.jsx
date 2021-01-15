@@ -107,6 +107,7 @@ export default function UsersList() {
           .map(option => {
             let operator = Object.keys(option)[0]
             // skipped nested object accessor here until fully tested 
+            // eslint-disable-next-line security/detect-object-injection
             const property = filterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 

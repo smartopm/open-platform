@@ -38,6 +38,7 @@ export default function LandParcelPage() {
       setSelectedLandParcel(parcelData?.landParcel || {})
       setDetailsModalOpen(true)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, parcelData])
 
   function handleNextPage() {

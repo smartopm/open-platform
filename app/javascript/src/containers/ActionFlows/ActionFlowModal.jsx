@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'

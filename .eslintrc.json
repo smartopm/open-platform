@@ -21,7 +21,11 @@
     "react/prop-types": 2,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/jsx-props-no-spreading": 0,
-    "no-use-before-define":"off"
+    "no-use-before-define":"off",
+    "security/detect-object-injection": 2,
+    "security/detect-non-literal-fs-filename": 2,
+    "security/detect-non-literal-regexp": 2,
+    "security/detect-unsafe-regex": 2
   },
   "env": {
     "browser": true,

@@ -48,6 +48,7 @@ export function ModalDialog({
           autoFocus
           onClick={handleConfirm}
           color={
+            // eslint-disable-next-line security/detect-non-literal-regexp
             new RegExp(action).test(/grant|acknowledge|save|proceed/)
               ? 'primary'
               : 'secondary'
