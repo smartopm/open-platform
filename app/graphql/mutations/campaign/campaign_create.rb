@@ -10,12 +10,10 @@ module Mutations
       argument :message, String, required: false
       argument :campaign_type, String, required: true
       argument :status, String, required: true
+      argument :email_templates_id, ID, required: false
       argument :batch_time, String, required: false
       argument :user_id_list, String, required: false
       argument :labels, String, required: false
-      argument :subject, String, required: false
-      argument :pre_header, String, required: false
-      argument :template_style, String, required: false
       argument :include_reply_link, Boolean, required: false
 
       field :campaign, Types::CampaignType, null: true
@@ -36,28 +34,18 @@ module Mutations
 
       def add_attributes(campaign, vals)
         %w[name campaign_type message user_id_list batch_time
-           status include_reply_link].each do |attr|
+           status include_reply_link email_templates_id].each do |attr|
           next if vals[attr.to_sym].blank?
 
           campaign.send("#{attr}=", vals[attr.to_sym])
         end
 
-        return campaign if vals[:campaign_type].eql?('sms')
-
-        add_email_attributes(campaign, vals)
-      end
-
-      def add_email_attributes(campaign, vals)
-        %w[subject pre_header template_style].each do |attr|
-          next if vals[attr.to_sym].blank?
-
-          campaign.send("#{attr}=", vals[attr.to_sym])
-        end
         campaign
       end
 
       def check_missing_args(vals)
-        %w[name campaign_type message user_id_list batch_time status].each do |attr|
+        %w[name campaign_type message user_id_list batch_time status
+           email_templates_id].each do |attr|
           if vals[attr.to_sym].blank?
             raise GraphQL::ExecutionError, "Missing Parameter: Please Supply #{attr} parameter"
           end

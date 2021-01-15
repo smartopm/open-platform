@@ -5,7 +5,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
 import { EmailTemplatesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
 
-export default function TemplateList({ value, handleValue, createTemplate, shouldRefect }) {
+export default function TemplateList({ value, handleValue, createTemplate, shouldRefecth, isRequired }) {
   const { loading, error, data, refetch } = useQuery(EmailTemplatesQuery)
 
   useEffect(() => {
@@ -13,18 +13,18 @@ export default function TemplateList({ value, handleValue, createTemplate, shoul
       refetch()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldRefect])
+  }, [shouldRefecth])
 
   if (loading) return <Spinner />
   if (error) return error.message
   return (
     <FormControl style={{ width: '100%' }}>
-      <InputLabel id="template_list">Select a template</InputLabel>
-      <Select value={value} onChange={handleValue}>
+      <InputLabel>Select a template</InputLabel>
+      <Select value={value} onChange={handleValue} required={isRequired} data-testid="template_list">
         <MenuItem key={1} value="1332712" onClick={createTemplate}>
           Create a new template
         </MenuItem>
-        {data.emailTemplates.map(template => (
+        {data?.emailTemplates.map(template => (
           <MenuItem key={template.id} value={template.id}>
             {template.name}
           </MenuItem>
@@ -38,5 +38,6 @@ TemplateList.propTypes = {
   value: PropTypes.string.isRequired,
   handleValue: PropTypes.func.isRequired,
   createTemplate: PropTypes.func.isRequired,
-  shouldRefect: PropTypes.bool.isRequired
+  shouldRefecth: PropTypes.bool.isRequired,
+  isRequired: PropTypes.bool.isRequired,
 }

@@ -10,13 +10,11 @@ module Mutations
       argument :name, String, required: false
       argument :campaign_type, String, required: false
       argument :status, String, required: false
+      argument :email_templates_id, ID, required: false
       argument :message, String, required: false
       argument :batch_time, String, required: false
       argument :user_id_list, String, required: false
       argument :labels, String, required: false
-      argument :subject, String, required: false
-      argument :pre_header, String, required: false
-      argument :template_style, String, required: false
       argument :include_reply_link, Boolean, required: false
 
       field :campaign, Types::CampaignType, null: true

@@ -597,30 +597,26 @@ export const CampaignCreate = gql`
     $name: String!
     $campaignType: String!
     $status: String!
+    $emailTemplatesId: ID
     $message: String
     $batchTime: String
     $userIdList: String
     $labels: String
-    $subject: String
-    $preHeader: String
-    $templateStyle: String
     $includeReplyLink: Boolean
   ) {
     campaignCreate(
       name: $name
       campaignType: $campaignType
       status: $status
+      emailTemplatesId: $emailTemplatesId
       message: $message
       batchTime: $batchTime
       userIdList: $userIdList
       labels: $labels
-      subject: $subject
-      preHeader: $preHeader
-      templateStyle: $templateStyle
       includeReplyLink: $includeReplyLink
     ) {
       campaign {
-        name
+        id
       }
     }
   }
@@ -636,9 +632,6 @@ export const CampaignUpdateMutation = gql`
     $batchTime: String
     $userIdList: String
     $labels: String
-    $subject: String
-    $preHeader: String
-    $templateStyle: String
     $includeReplyLink: Boolean
   ) {
     campaignUpdate(
@@ -650,9 +643,6 @@ export const CampaignUpdateMutation = gql`
       batchTime: $batchTime
       userIdList: $userIdList
       labels: $labels
-      subject: $subject
-      preHeader: $preHeader
-      templateStyle: $templateStyle
       includeReplyLink: $includeReplyLink
     ) {
       campaign {
@@ -668,9 +658,6 @@ export const CampaignUpdateMutation = gql`
         startTime
         updatedAt
         userIdList
-        subject
-        preHeader
-        templateStyle
         campaignMetrics {
           batchTime
           startTime

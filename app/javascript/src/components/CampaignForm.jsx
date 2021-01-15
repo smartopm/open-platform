@@ -24,12 +24,10 @@ const initData = {
   name: '',
   campaignType: 'sms',
   status: 'draft',
+  emailTemplatesId: null,
   message: '',
   batchTime: new Date(),
   userIdList: '',
-  subject: '',
-  preHeader: '',
-  templateStyle: '',
   loaded: false,
   labels: [],
   includeReplyLink: false
@@ -50,7 +48,6 @@ export default function CampaignForm({
   const { id } = useParams() // will only exist on campaign update
   const [formData, setFormData] = useState(initData)
   const [campaignType, setCampaignType] = useState('draft')
-  const [template, setTemplate] = useState('')
 
   const handleCampaignType = (_event, newCampaignType) => {
     setCampaignType(newCampaignType);
@@ -64,7 +61,10 @@ function handleTemplateDialog(status){
 }
 
   function handleTemplateValue(event){
-    setTemplate(event.target.value)
+    setFormData({
+      ...formData,
+      emailTemplatesId: event.target.value
+    })
   }
 
   useEffect(() => {
@@ -100,19 +100,16 @@ function handleTemplateDialog(status){
     e.preventDefault()
     // if creating a campaign don't spread
     const labels = id ? [...label, ...getJustLabels(formData.labels)] : label
-
     const campaignData = {
       id: formData.id,
       name: formData.name,
       campaignType: formData.campaignType,
       status: campaignType,
+      emailTemplatesId: formData.emailTemplatesId,
       message: formData.message,
       batchTime: formData.batchTime,
       userIdList: delimitorFormator(formData.userIdList).toString(),
       labels: labels.toString(),
-      subject: formData.subject,
-      preHeader: formData.preHeader,
-      templateStyle: formData.templateStyle,
       includeReplyLink: formData.includeReplyLink
     }
     if (id) {
@@ -150,7 +147,6 @@ function handleTemplateDialog(status){
   if (!loading && !formData.loaded && data) {
     setFormData({ ...data, loaded: true})
   }
-
   return (
     <div className="container">
       {/* only show this when no template is selected */}
@@ -187,13 +183,6 @@ function handleTemplateDialog(status){
           <MenuItem value="sms">SMS</MenuItem>
           <MenuItem value="email">Email</MenuItem>
         </TextField>
-        
-        <TemplateList 
-          value={template} 
-          handleValue={handleTemplateValue}
-          createTemplate={handleTemplateDialog}
-          shouldRefect={isUpdated}
-        />
 
         <TextField
           label="Campaign Name"
@@ -219,38 +208,12 @@ function handleTemplateDialog(status){
         />
         {formData.campaignType === 'email' && (
           <>
-            <TextField
-              label="Subject"
-              name="subject"
-              rows={1}
-              multiline
-              className="form-control"
-              value={formData.subject || ''}
-              onChange={handleInputChange}
-              aria-label="campaign_subject"
-              inputProps={{ 'data-testid': 'campaign_subject' }}
-            />
-            <TextField
-              label="Pre Header"
-              name="preHeader"
-              rows={1}
-              multiline
-              className="form-control"
-              value={formData.preHeader || ''}
-              onChange={handleInputChange}
-              aria-label="campaign_pre_header"
-              inputProps={{ 'data-testid': 'campaign_pre_header' }}
-            />
-            <TextField
-              label="Template Style"
-              rows={1}
-              multiline
-              className="form-control"
-              aria-label="campaign_template_style"
-              inputProps={{ 'data-testid': 'campaign_template_style' }}
-              name="templateStyle"
-              value={formData.templateStyle || ''}
-              onChange={handleInputChange}
+            <TemplateList 
+              value={formData.emailTemplatesId} 
+              handleValue={handleTemplateValue}
+              createTemplate={handleTemplateDialog}
+              shouldRefecth={isUpdated}
+              isRequired
             />
           </>
         )}

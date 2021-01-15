@@ -8,8 +8,10 @@ import '@testing-library/jest-dom/extend-expect'
 describe('add plot modal', () => {
   const handleClose = jest.fn
   const open = true
-  const userId = 'hgjh'
-  const accountId = 'sjyqhjw'
+  const user = {
+    userId: 'hgjh',
+    accountId: 'sjyqhjw'
+  }
 
   it('render without error', () => {
     render(
@@ -17,9 +19,9 @@ describe('add plot modal', () => {
         <BrowserRouter>
           <PlotModal
             open={open}
-            userId={userId}
+            userId={user.userId}
             handleClose={handleClose}
-            accountId={accountId}
+            accountId={user.accountId}
           />
         </BrowserRouter>
       </MockedProvider>
