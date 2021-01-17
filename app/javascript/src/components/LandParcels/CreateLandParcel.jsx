@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { AddNewProperty } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
+import { formatError } from '../../utils/helpers'
 
 export default function CreateLandParcel({ refetch }) {
   const classes = useStyles()
@@ -38,7 +39,7 @@ export default function CreateLandParcel({ refetch }) {
       setOpen(false);
       refetch();
     }).catch((err) => {
-      setMessageAlert(err.message)
+      setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
     })
   }

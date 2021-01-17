@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
@@ -293,6 +294,7 @@ export default function LandParcelModal({
                   selectedDate={valuationFields[index].startDate}
                   handleDateChange={date =>
                     onChangeValuationDateField(date, index)}
+                  disablePastDate
                   required
                 />
               </div>
@@ -308,7 +310,7 @@ export default function LandParcelModal({
             </div>
           ))}
         {modalType === 'new' && (
-          <div className={classes.addIcon} role="button" onClick={addValuation} tabIndex={0}>
+          <div className={classes.addIcon} role="button" onClick={addValuation}>
             <AddCircleOutlineIcon />
             <div style={{ marginLeft: '6px', color: 'secondary' }}>
               <Typography align="center" variant="caption">
