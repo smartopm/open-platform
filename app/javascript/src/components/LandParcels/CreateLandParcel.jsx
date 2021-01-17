@@ -38,7 +38,6 @@ export default function CreateLandParcel({ refetch }) {
       setOpen(false);
       refetch();
     }).catch((err) => {
-      closeNewParcelModal()
       setMessageAlert(err.message)
       setIsSuccessAlert(false)
     })

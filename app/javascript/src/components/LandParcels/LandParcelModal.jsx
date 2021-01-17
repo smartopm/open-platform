@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -39,6 +39,25 @@ export default function LandParcelModal({
   const authState = useContext(AuthStateContext)
   const currency = currencies[authState.user?.community.currency] || ''
 
+  useEffect(() => {
+   if (!open) {
+    resetModalFields()
+   }
+  }, [open])
+
+  function resetModalFields() {
+    setParcelNumber('')
+    setAddress1('')
+    setAddress2('')
+    setCity('')
+    setPostalCode('')
+    setStateProvince('')
+    setParcelType('')
+    setCountry('')
+    setTabValue('Details')
+    setValuationFields([])
+  }
+
   function handleParcelSubmit() {
     if (handleSubmit) {
       handleSubmit({
@@ -49,7 +68,8 @@ export default function LandParcelModal({
         postalCode,
         stateProvince,
         parcelType,
-        country
+        country,
+        valuationFields
       })
     }
   }

@@ -391,7 +391,8 @@ mutation AddNewProperty($parcelNumber: String!,
   $postalCode: String,
   $stateProvince: String,
   $parcelType: String,
-  $country: String) {
+  $country: String,
+  $valuationFields: JSON) {
     PropertyCreate(parcelNumber: $parcelNumber,
     address1: $address1,
     address2: $address2,
@@ -399,7 +400,8 @@ mutation AddNewProperty($parcelNumber: String!,
     postalCode: $postalCode,
     stateProvince: $stateProvince,
     parcelType: $parcelType,
-    country: $country) {
+    country: $country,
+    valuationFields: $valuationFields) {
       landParcel {
         id
     }
