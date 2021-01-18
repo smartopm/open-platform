@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Valuation, describe valuations on land parcels
 class Valuation < ApplicationRecord
   belongs_to :land_parcel
   validates :amount, :start_date, presence: true
@@ -6,8 +9,8 @@ class Valuation < ApplicationRecord
   private
 
   def start_date_cannot_be_in_the_past
-    if start_date.present? && start_date < Date.today
-      errors.add(:start_date, "can't be in the past")
-    end
+    return unless start_date.present? && start_date < Time.zone.today
+
+    errors.add(:start_date, "can't be in the past")
   end
 end

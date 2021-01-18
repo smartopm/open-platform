@@ -16,9 +16,12 @@ module Mutations
 
       field :land_parcel, Types::LandParcelType, null: true
 
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
-          land_parcel = context[:site_community].land_parcels.create!(vals.except(:valuation_fields))
+          land_parcel = context[:site_community].land_parcels.create!(
+            vals.except(:valuation_fields),
+          )
           Array.wrap(vals[:valuation_fields]).each do |v|
             land_parcel.valuations.create!(amount: v['amount'], start_date: v['startDate'])
           end
@@ -28,6 +31,7 @@ module Mutations
       rescue ActiveRecord::RecordInvalid => e
         raise GraphQL::ExecutionError, e.message
       end
+      # rubocop:enable Metrics/MethodLength
 
       def authorized?(_vals)
         raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
