@@ -410,6 +410,16 @@ RSpec.describe Types::Queries::User do
       })
     end
 
+    let(:substatus_query) do
+      %(
+          query subs {
+            substatusQuery {
+              applied
+              approved
+            }
+          })
+    end
+
     it 'returns users count based on the query' do
       result = DoubleGdpSchema.execute(query, context: {
                                          current_user: admin_user,
@@ -426,6 +436,25 @@ RSpec.describe Types::Queries::User do
                                        },
                                               variables: { query: 'user_type = "client"' }).as_json
 
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
+
+    it 'should query the substatus report' do
+      result = DoubleGdpSchema.execute(substatus_query, context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'substatusQuery', 'applied')).to eq(0)
+      expect(result.dig('data', 'substatusQuery', 'approved')).to eq(0)
+    end
+
+    it 'should not query the substatus report when user is not admin' do
+      result = DoubleGdpSchema.execute(substatus_query, context: {
+                                         current_user: client_user,
+                                         site_community: client_user.community,
+                                       }).as_json
       expect(result['errors']).to_not be_nil
       expect(result['errors'][0]['message']).to eql 'Unauthorized'
     end
