@@ -476,13 +476,16 @@ export default function UsersList() {
             </div>
             <div className={classes.searchButton}>
               <Link to="/users/import" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant="contained"
-                  style={{ border: '1px #dfdfdf solid' }}
-                >
+                <Button variant="outlined">
                   UPLOAD
                 </Button>
               </Link>
+              <Button
+                variant="outlined"
+                className={classes.reportBtn}
+              >
+                Create Report
+              </Button>
             </div>
           </>
         </div>
@@ -607,9 +610,14 @@ export const useStyles = makeStyles(theme => ({
   searchButton: {
     display: 'flex'
   },
+  reportBtn: {
+    display: 'flex',
+    height: 36,
+    marginLeft: 20
+  },
   '@media only screen and (max-width: 768px)': {
     searchButton: {
       flexBasis: '100%'
-    }
+    },
   }
 }))
