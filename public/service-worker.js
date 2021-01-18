@@ -1,9 +1,11 @@
+/* eslint-disable */
 const CACHE_VERSION = 'v1';
 const CACHE_NAME = CACHE_VERSION + ':sw-cache-';
 
 function onInstall(event) {
   console.log('[Serviceworker]', "Installing!", event);
   event.waitUntil(
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
     caches.open(CACHE_NAME).then(function prefill(cache) {
       return cache.addAll([
         'index.html',

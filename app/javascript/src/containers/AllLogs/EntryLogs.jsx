@@ -26,6 +26,7 @@ import {
 } from '../../components/Tabs'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
 import FloatButton from '../../components/FloatButton'
+import { propAccessor } from '../../utils/helpers'
 
 export default ({ history, match }) => AllEventLogs(history, match)
 
@@ -69,7 +70,7 @@ const AllEventLogs = (history, match) => {
 
   const { loading, error, data } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: logsQuery[value],
+      subject: propAccessor(logsQuery, value),
       refId,
       refType: null,
       offset,

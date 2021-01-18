@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import CenteredContent from '../CenteredContent'
-import { InvoiceStatus } from '../../utils/helpers'
+import { InvoiceStatus, propAccessor } from '../../utils/helpers'
 import AnalyticsCard from '../Notes/TaskStatCard'
 
 
@@ -28,7 +28,7 @@ export default function InvoiceTiles({ invoiceData, filter, currentTile }) {
             <AnalyticsCard
               filter={evt => filter(evt, key)}
               title={val}
-              count={invoiceData.data?.invoiceStats[key]}
+              count={propAccessor(invoiceData.data?.invoiceStats, key)}
               isCurrent={key === currentTile}
             />
           )

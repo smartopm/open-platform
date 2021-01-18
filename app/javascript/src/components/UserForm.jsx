@@ -174,12 +174,11 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       contactType: type ? 'email' : 'phone'
     }
     const opts = data.contactInfos
-
     setData({
       ...data,
       contactInfos: [
         ...opts.slice(0, index),
-        { ...opts[index], ...newValue },
+        { ...opts[parseInt(index, 10)], ...newValue },
         ...opts.slice(index + 1)
       ]
     })

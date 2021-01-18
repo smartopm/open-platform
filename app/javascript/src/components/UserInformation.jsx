@@ -26,7 +26,7 @@ import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
 import InvoiceList from './Payments/InvoiceList'
-import { useParamsQuery } from '../utils/helpers'
+import { propAccessor, useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
   data,
@@ -77,7 +77,7 @@ export default function UserInformation({
     }
     if (location.pathname.includes('/user')) {
       const [, rootURL, , userPage] = location.pathname.split('/')
-      const pageHit = `/${rootURL}/${userPage}/${pages[newValue]}`
+      const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`
       ReactGA.pageview(pageHit)
     }
   }

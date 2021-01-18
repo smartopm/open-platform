@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'

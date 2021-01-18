@@ -2,7 +2,7 @@ import React from 'react'
 import { act, render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
+import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined'
 import TaskUpdateItem from '../components/Notes/TaskUpdateItem'
 import '@testing-library/jest-dom/extend-expect'
 
@@ -14,7 +14,7 @@ describe('Comment Card Component', () => {
   const date = new Date().toISOString()
 
   it('render without error', async () => {
-    let container;
+    let container
 
     await act(async () => {
       container = render(
@@ -26,17 +26,15 @@ describe('Comment Card Component', () => {
               icon={<AddBoxOutlinedIcon />}
               date={date}
             />
-            getByText
           </BrowserRouter>
         </MockedProvider>
       )
     })
-    
+
     expect(container.queryByText(/some_user/i)).toBeInTheDocument()
     expect(container.queryByText(/added new comment/i)).toBeInTheDocument()
 
-    const pattern = /a-z/
-    const re = new RegExp(pattern, 'g')
+    const re = new RegExp(/a-z/, 'g')
     const updateItemWithDate = container.getAllByText(''.replace(re, date))
     expect(updateItemWithDate.length).not.toBe(0)
   })
