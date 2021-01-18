@@ -280,6 +280,19 @@ export const InvoiceStatus = {
   in_progress: 'In-Progress',
 }
 
+export const InvoiceStatusColor = {
+  inProgress: '#3493FB',
+  paid: '#66A69B',
+  late: '#E79040',
+  cancelled: '#E74540',
+  in_progress: '#3493FB',
+}
+
+export const InvoiceType = {
+  cash: 'Cash',
+  'cheque/cashier_cheque': 'Cheque/CashierCheque'
+}
+
 export function generateId() {
   if (!window.crypto) {
     return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']

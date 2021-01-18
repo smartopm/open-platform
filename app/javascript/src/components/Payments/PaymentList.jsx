@@ -3,9 +3,10 @@ import {
   Container,
   Grid,
   List,
-  IconButton
+  IconButton,
+  MenuItem
 } from '@material-ui/core'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from 'react-router'
@@ -15,11 +16,11 @@ import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { InvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
-import { formatError, InvoiceStatus, useParamsQuery } from '../../utils/helpers'
+import { formatError, InvoiceStatus, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
 import { currencies } from '../../utils/constants'
 import PaymentListHeading from './PaymentListHeading'
-import PaymentActionMenu from './PaymentActionMenu'
+import ActionMenu from './PaymentActionMenu'
 
 export default function PaymentList({ authState }) {
   const history = useHistory()
@@ -35,6 +36,7 @@ export default function PaymentList({ authState }) {
     InvoicesQuery,
     {
       variables: { limit, offset: pageNumber, status },
+      fetchPolicy: 'cache-and-network',
       errorPolicy: 'all'
     }
   )
@@ -86,7 +88,8 @@ export default function PaymentList({ authState }) {
                           {currency}
                           {pay.amount}
                           ,
-                          {pay.paymentType}
+                          {' '}
+                          {InvoiceType[pay.paymentType]}
                         </Typography>
                       </div>
                   ))}
@@ -96,34 +99,61 @@ export default function PaymentList({ authState }) {
                     {invoice.payments.map((pay) => (
                       <Typography key={pay.id}>
                         {pay.user.name}
-                        ,
+                        {pay.length > 1 ? ',' : ''}
                       </Typography>
                   ))}
                   </Typography>
                   <div style={{display: 'flex'}}>
                     <Typography 
                       className={classes.typography}
+                      style={{marginTop: '8px',
+                              textAlign: 'center',
+                              background: `${InvoiceStatusColor[invoice.status]}`,
+                              paddingTop: '7px',
+                              color: 'white',
+                              borderRadius: '15px',
+                              marginRight: '15px'
+                            }}
                     >
                       {InvoiceStatus[invoice.status]}
                     </Typography>
                     <IconButton
                       className={classes.option}
-                      aria-label="more-payment"
-                      aria-controls="long-menu"
+                      aria-controls="simple-menu" 
                       aria-haspopup="true"
                       onClick={handleOpenMenu}
                     >
-                      <MoreVertIcon />
+                      <MoreHorizIcon />
                     </IconButton>
                   </div>
                 </Grid>
-                <PaymentActionMenu
-                  anchorEl={anchorEl}
-                  handleClose={handleClose}
-                  open={open}
-                />
               </div>
             ))}
+            <ActionMenu
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+              open={open}
+            >
+              <MenuItem
+                id="view-button"
+                key="view-user"
+              >
+                View
+              </MenuItem>
+              <MenuItem
+                id="edit-button"
+                key="edit-user"
+              >
+                Edit
+              </MenuItem>
+              <MenuItem
+                id="cancel-button"
+                key="cancel-user"
+                style={{ color: 'red' }}
+              >
+                Cancel Invoice
+              </MenuItem>
+            </ActionMenu>
           </div>
         ) : (
           <CenteredContent>No Invoices Yet</CenteredContent>
@@ -152,14 +182,14 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   typography: {
-    width: '150px'
+    width: '150px',
   },
   button: {
     float: 'right',
     marginBottom: '10px' 
   },
   option: {
-    width: '10px'
+    width: '40px',
   }
 }));
 
