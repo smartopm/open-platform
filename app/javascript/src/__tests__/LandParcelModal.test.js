@@ -10,7 +10,7 @@ describe('Land Parcel Modal Component', () => {
     const props = {
       open: true,
       handelClose: jest.fn,
-      modalType: 'details',
+      modalType: 'new',
       landParcel: {
         id: '1u2y3y4',
         parcelNumber: '15800'
@@ -31,6 +31,11 @@ describe('Land Parcel Modal Component', () => {
     expect(container.queryByText('Coming soon!!')).toBeInTheDocument()
 
     fireEvent.click(container.queryByText('Valuation History'))
-    expect(container.queryByText('Coming soon!!!')).toBeInTheDocument()
+    expect(container.queryByText('Add Valuation')).toBeInTheDocument()
+
+    fireEvent.click(container.queryByText('Add Valuation'))
+    const valuationAmount = container.queryByTestId('valuation-amount')
+    fireEvent.change(valuationAmount, { target: { value: 200 } })
+    expect(valuationAmount.value).toBe('200')
   })
 })

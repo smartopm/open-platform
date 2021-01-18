@@ -41,9 +41,9 @@ export default function LandParcelModal({
   const currency = currencies[authState.user?.community.currency] || ''
 
   useEffect(() => {
-   if (!open) {
-    resetModalFields()
-   }
+    if (!open) {
+      resetModalFields()
+    }
   }, [open])
 
   function resetModalFields() {
@@ -88,7 +88,7 @@ export default function LandParcelModal({
   }
 
   function updateValuationField(name, value, index) {
-    const fields = [ ...valuationFields ]
+    const fields = [...valuationFields]
     fields[index] = { ...fields[index], [name]: value }
     setValuationFields(fields)
   }
@@ -237,7 +237,6 @@ export default function LandParcelModal({
                   autoFocus
                   margin="dense"
                   InputProps={{
-                    'data-testid': 'valuation-amount',
                     readOnly: isFormReadOnly,
                     startAdornment: (
                       <InputAdornment position="start">
@@ -248,7 +247,7 @@ export default function LandParcelModal({
                   // eslint-disable-next-line react/jsx-no-duplicate-props
                   inputProps={{ style: { paddingTop: '6px' } }}
                   label="Amount"
-                  type="text"
+                  type="number"
                   defaultValue={valuation.amount}
                   required
                 />
@@ -273,7 +272,6 @@ export default function LandParcelModal({
                   autoFocus
                   margin="dense"
                   InputProps={{
-                    'data-testid': 'valuation-amount',
                     startAdornment: (
                       <InputAdornment position="start">
                         {currency}
@@ -281,10 +279,13 @@ export default function LandParcelModal({
                     )
                   }}
                   // eslint-disable-next-line react/jsx-no-duplicate-props
-                  inputProps={{ style: { paddingTop: '6px' } }}
+                  inputProps={{
+                    'data-testid': 'valuation-amount',
+                    style: { paddingTop: '6px' }
+                  }}
                   label="Amount"
                   name="amount"
-                  type="text"
+                  type="number"
                   value={valuationFields[index].amount}
                   onChange={e => onChangeValuationField(e, index)}
                   required

@@ -39,7 +39,8 @@ RSpec.describe Mutations::LandParcel do
           $postalCode: String,
           $stateProvince: String,
           $parcelType: String,
-          $country: String) {
+          $country: String,
+          $valuationFields: JSON) {
             PropertyCreate(parcelNumber: $parcelNumber,
             address1: $address1,
             address2: $address2,
@@ -47,9 +48,13 @@ RSpec.describe Mutations::LandParcel do
             postalCode: $postalCode,
             stateProvince: $stateProvince,
             parcelType: $parcelType,
-            country: $country) {
+            country: $country,
+            valuationFields: $valuationFields) {
               landParcel {
                 id
+                valuations {
+                  amount
+                }
             }
           }
         }
@@ -99,7 +104,9 @@ RSpec.describe Mutations::LandParcel do
         stateProvince: 'this is state province',
         parcelType: 'this is parcel type',
         country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
       }
+      prev_valuation_count = Valuation.count
 
       result = DoubleGdpSchema.execute(propertyQuery, variables: variables,
                                                       context: {
@@ -108,7 +115,28 @@ RSpec.describe Mutations::LandParcel do
                                                       }).as_json
 
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'id')).not_to be_nil
+      expect(result.dig('data', 'PropertyCreate', 'landParcel', 'valuations', 0, 'amount')).to eq(
+        200,
+      )
+      expect(Valuation.count).to eq(prev_valuation_count + 1)
       expect(result['errors']).to be_nil
+    end
+
+    it 'raises an error if valuation\'s start-date is in the past' do
+      variables = {
+        parcelNumber: '67890',
+        valuationFields: [{ amount: 200, startDate: 2.days.ago }],
+      }
+
+      result = DoubleGdpSchema.execute(propertyQuery, variables: variables,
+                                                      context: {
+                                                        current_user: current_user,
+                                                        site_community: current_user.community,
+                                                      }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to eq(
+        'Validation failed: Start date can\'t be in the past',
+      )
     end
   end
 end
