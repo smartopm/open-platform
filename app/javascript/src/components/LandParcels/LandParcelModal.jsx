@@ -89,7 +89,7 @@ export default function LandParcelModal({
 
   function updateValuationField(name, value, index) {
     const fields = [...valuationFields]
-    fields[index] = { ...fields[index], [name]: value }
+    fields[Number(index)] = { ...fields[Number(index)], [name]: value }
     setValuationFields(fields)
   }
 
@@ -286,13 +286,13 @@ export default function LandParcelModal({
                   label="Amount"
                   name="amount"
                   type="number"
-                  value={valuationFields[index].amount}
+                  value={valuationFields[Number(index)].amount}
                   onChange={e => onChangeValuationField(e, index)}
                   required
                 />
                 <DatePickerDialog
                   label="Start Date"
-                  selectedDate={valuationFields[index].startDate}
+                  selectedDate={valuationFields[Number(index)].startDate}
                   handleDateChange={date =>
                     onChangeValuationDateField(date, index)}
                   disablePastDate
