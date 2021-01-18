@@ -170,7 +170,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
   )
 }
 
-const useStyles = makeStyles({
+export const useStyles = makeStyles({
   title: {
     borderBottom: '1px #b8d4d0 solid'
   },
