@@ -31,7 +31,7 @@ import DatePickerDialog from '../DatePickerDialog'
 import Loading from '../Loading'
 import QueryBuilder from '../QueryBuilder'
 import { ModalDialog } from '../Dialog'
-import { pluralizeCount } from '../../utils/helpers'
+import { pluralizeCount, propAccessor } from '../../utils/helpers'
 import useDebounce from '../../utils/useDebounce'
 
 // component needs a redesign both implementation and UI
@@ -201,7 +201,7 @@ export default function TodoList({
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return
     setCurrentTile(key)
-    setQuery(taskQuery[key])
+    setQuery(propAccessor(taskQuery, key))
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks()
   }
@@ -238,7 +238,7 @@ export default function TodoList({
         let value = null
         const queryText = availableConjugate.map(option => {
           let operator = Object.keys(option)[0]
-          const [inputFilterProperty, inputFilterValue] = option[operator]
+          const [inputFilterProperty, inputFilterValue] = propAccessor(option, operator)
           
           property = filterFields[inputFilterProperty.var]
           value = inputFilterValue

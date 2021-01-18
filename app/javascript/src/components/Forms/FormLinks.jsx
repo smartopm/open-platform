@@ -44,6 +44,7 @@ const classes = useStyles()
       <ListItem
         data-testid="forms-link-crf"
         onClick={() => {
+          // eslint-disable-next-line security/detect-non-literal-fs-filename
           window.open(
             `https://docs.google.com/forms/d/e/1FAIpQLSeC663sLzKdpxzaqzY2gdGAT5fe-Uc8lvLi1V7KdLfrralyeA/viewform?entry.568472638=${authState.user.name.replace(
               /\s+/g,

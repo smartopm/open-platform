@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import React from 'react'
 import { Button, AppBar, Toolbar, Typography, Grid, Divider } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
@@ -144,6 +143,7 @@ export function CustomButton({ title, ...props }) {
       eventLabel: 'Open page Interaction',
       nonInteraction: true
     })
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
     return window.open(route[getName(title)], '_blank')
   }
   return (

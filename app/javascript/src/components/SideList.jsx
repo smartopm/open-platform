@@ -38,7 +38,7 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
       <List>
         {['admin', 'custodian'].includes(authState.user.userType) && (
           <>
-            <Link to="/scan" className={`${css(styles.link)}`}>
+            <Link to="/scan" className={`${css(styles.linkStyles)}`}>
               <ListItem button>
                 <ListItemIcon>
                   <CropFreeIcon />
@@ -51,7 +51,7 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
                 pathname: 'search',
                 state: { from: '/' }
               }}
-              className={`${css(styles.link)}`}
+              className={`${css(styles.linkStyles)}`}
             >
               <ListItem button>
                 <ListItemIcon>
@@ -64,7 +64,7 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
         )}
         <Link
           to={`/myaccount/${authState.user.id}`}
-          className={`${css(styles.link)}`}
+          className={`${css(styles.linkStyles)}`}
         >
           <ListItem button>
             <ListItemIcon>
@@ -74,7 +74,7 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
             <ListItemText primary="Profile" />
           </ListItem>
         </Link>
-        <Link to="/contact" className={`${css(styles.link)}`}>
+        <Link to="/contact" className={`${css(styles.linkStyles)}`}>
           <ListItem button>
             <ListItemIcon>
               <HelpIcon />
@@ -83,7 +83,7 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
             <ListItemText primary="Contact" />
           </ListItem>
         </Link>
-        <a href="/settings" className={`${css(styles.link)}`}>
+        <Link to="/settings" className={`${css(styles.linkStyles)}`}>
           <ListItem button>
             <ListItemIcon>
               <NotificationsActiveIcon />
@@ -91,8 +91,8 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
 
             <ListItemText primary="Preferences" />
           </ListItem>
-        </a>
-        <a href="/logout" className={`${css(styles.link)}`}>
+        </Link>
+        <a href="/logout" className={`${css(styles.linkStyles)}`}>
           <ListItem button>
             <ListItemIcon>
               <MeetingRoomIcon />
@@ -112,7 +112,7 @@ SideList.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
   user: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    phoneNumber: PropTypes.string.isRequired,
+    phoneNumber: PropTypes.string.isRequired
   }).isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({
@@ -123,7 +123,7 @@ SideList.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  link: {
+  linkStyles: {
     color: '#000',
     textDecoration: 'none'
   },

@@ -15,6 +15,7 @@ export default function UserPlotMap({ plotData }){
   return (
     <div data-testid="leaflet-map-container">
       <style
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: `
       .leaflet-tooltip-top:before, 

@@ -9,10 +9,9 @@ describe('add plot modal', () => {
   const handleClose = jest.fn
   const open = true
   const user = {
-    userId: 'hgjh',
+    userId: '35tf3t4534',
     accountId: 'sjyqhjw'
   }
-
   it('render without error', () => {
     render(
       <MockedProvider>

@@ -1,5 +1,4 @@
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable no-use-before-define */
 import React, { useState, useContext } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -39,7 +38,7 @@ export function Results({ data, loading, called, authState }) {
             to={`/user/${user.id}`}
             key={user.id}
             data-testid="link_search_user"
-            className={css(styles.link)}
+            className={css(styles.linkStyles)}
           >
             <div className="d-flex flex-row align-items-center py-2">
               {/* eslint-disable-next-line react/style-prop-object */}
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
     margin: '1em 0',
     padding: 0
   },
-  link: {
+  linkStyles: {
     'text-decoration': 'none',
     color: '#222',
     ':hover': {

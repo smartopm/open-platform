@@ -1,0 +1,1200 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6463226497,
+              -15.4965991401,
+              0
+            ],
+            [
+              28.6463420236,
+              -15.5009242427,
+              0
+            ],
+            [
+              28.6467014852,
+              -15.5008680751,
+              0
+            ],
+            [
+              28.6468569244,
+              -15.5010085014,
+              0
+            ],
+            [
+              28.6469637861,
+              -15.501261268,
+              0
+            ],
+            [
+              28.6474203916,
+              -15.5015421214,
+              0
+            ],
+            [
+              28.6478770014,
+              -15.5015233994,
+              0
+            ],
+            [
+              28.6482073148,
+              -15.5014204215,
+              0
+            ],
+            [
+              28.6484890518,
+              -15.5013455286,
+              0
+            ],
+            [
+              28.6486444951,
+              -15.5008961688,
+              0
+            ],
+            [
+              28.6488193651,
+              -15.5008774458,
+              0
+            ],
+            [
+              28.6489942347,
+              -15.5009523392,
+              0
+            ],
+            [
+              28.649198249,
+              -15.5011770194,
+              0
+            ],
+            [
+              28.6497022202,
+              -15.5013718919,
+              0
+            ],
+            [
+              28.6507651317,
+              -15.5017068706,
+              0
+            ],
+            [
+              28.6508238572,
+              -15.5019484897,
+              0
+            ],
+            [
+              28.6508044224,
+              -15.5021145191,
+              0
+            ],
+            [
+              28.6512012879,
+              -15.5025109894,
+              0
+            ],
+            [
+              28.6517878123,
+              -15.5028474241,
+              0
+            ],
+            [
+              28.6527144591,
+              -15.5029944845,
+              0
+            ],
+            [
+              28.6534826418,
+              -15.503038386,
+              0
+            ],
+            [
+              28.6548335731,
+              -15.5027756087,
+              0
+            ],
+            [
+              28.6551860858,
+              -15.5021834575,
+              0
+            ],
+            [
+              28.6552986064,
+              -15.5017147421,
+              0
+            ],
+            [
+              28.6555646177,
+              -15.5015756684,
+              0
+            ],
+            [
+              28.6557702932,
+              -15.5015221052,
+              0
+            ],
+            [
+              28.6559135058,
+              -15.5015863708,
+              0
+            ],
+            [
+              28.6560673051,
+              -15.5017854475,
+              0
+            ],
+            [
+              28.6561777745,
+              -15.5020021307,
+              0
+            ],
+            [
+              28.6563584425,
+              -15.502248207,
+              0
+            ],
+            [
+              28.6567701465,
+              -15.5024512455,
+              0
+            ],
+            [
+              28.6570960623,
+              -15.5025217598,
+              0
+            ],
+            [
+              28.6574004979,
+              -15.5024784242,
+              0
+            ],
+            [
+              28.6576470344,
+              -15.5023089551,
+              0
+            ],
+            [
+              28.6577151261,
+              -15.5020585318,
+              0
+            ],
+            [
+              28.6577494968,
+              -15.5018886041,
+              0
+            ],
+            [
+              28.6579211856,
+              -15.5018371537,
+              0
+            ],
+            [
+              28.6582813282,
+              -15.5019284758,
+              0
+            ],
+            [
+              28.6585550706,
+              -15.5020641621,
+              0
+            ],
+            [
+              28.6588047718,
+              -15.5021370189,
+              0
+            ],
+            [
+              28.6589347642,
+              -15.50215708,
+              0
+            ],
+            [
+              28.6583690975,
+              -15.5005331001,
+              0
+            ],
+            [
+              28.6582683427,
+              -15.5004297315,
+              0
+            ],
+            [
+              28.6538573042,
+              -15.4989731784,
+              0
+            ],
+            [
+              28.6514849863,
+              -15.4982517173,
+              0
+            ],
+            [
+              28.6465290782,
+              -15.4966418186,
+              0
+            ],
+            [
+              28.6463226497,
+              -15.4965991401,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "University",
+        "long_x": 28.652629,
+        "lat_y": -15.499819,
+        "icon": "https://cdn1.iconfinder.com/data/icons/resume-pictograms/100/Resume_Graduate-512.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6463565247,
+              -15.5127421985,
+              0
+            ],
+            [
+              28.6461562037,
+              -15.5129746316,
+              0
+            ],
+            [
+              28.6461451016,
+              -15.5132861792,
+              0
+            ],
+            [
+              28.6462508618,
+              -15.5135723815,
+              0
+            ],
+            [
+              28.6464247823,
+              -15.514418148,
+              0
+            ],
+            [
+              28.6462635669,
+              -15.5152451534,
+              0
+            ],
+            [
+              28.6459022211,
+              -15.5160006453,
+              0
+            ],
+            [
+              28.6459495482,
+              -15.5164254488,
+              0
+            ],
+            [
+              28.6460832239,
+              -15.5160326793,
+              0
+            ],
+            [
+              28.6461956609,
+              -15.5156572081,
+              0
+            ],
+            [
+              28.6464572386,
+              -15.5155059369,
+              0
+            ],
+            [
+              28.6464820991,
+              -15.5146072248,
+              0
+            ],
+            [
+              28.6466555012,
+              -15.5144849919,
+              0
+            ],
+            [
+              28.6472079994,
+              -15.5146072277,
+              0
+            ],
+            [
+              28.647251979,
+              -15.5147732654,
+              0
+            ],
+            [
+              28.647702962,
+              -15.5143409073,
+              0
+            ],
+            [
+              28.6478754118,
+              -15.5145923317,
+              0
+            ],
+            [
+              28.6483631492,
+              -15.5121544794,
+              0
+            ],
+            [
+              28.6472896283,
+              -15.5118100146,
+              0
+            ],
+            [
+              28.6469994929,
+              -15.5121666822,
+              0
+            ],
+            [
+              28.6463565247,
+              -15.5127421985,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#eaa4a4",
+        "fill-opacity": 0.5,
+        "poi_name": "Shopping Center",
+        "long_x": 28.647133,
+        "lat_y": -15.514118,
+        "icon": "https://cdn.iconscout.com/icon/premium/png-256-thumb/shopping-mall-17-966712.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6661027248,
+              -15.5151714749,
+              0
+            ],
+            [
+              28.6668349779,
+              -15.5145467972,
+              0
+            ],
+            [
+              28.6661213835,
+              -15.5139176263,
+              0
+            ],
+            [
+              28.6654917383,
+              -15.5145602778,
+              0
+            ],
+            [
+              28.6661027248,
+              -15.5151714749,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#fd6d30",
+        "fill-opacity": 0.5,
+        "poi_name": "Sewer Treatment Plant",
+        "long_x": 28.666163,
+        "lat_y": -15.514545,
+        "icon": "https://png.pngtree.com/png-vector/20191016/ourmid/pngtree-water-treatment-industrial-building-vector-icon-png-image_1804194.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6317202691,
+              -15.4943358473,
+              0
+            ],
+            [
+              28.6326558766,
+              -15.4945493956,
+              0
+            ],
+            [
+              28.6328774778,
+              -15.4936833896,
+              0
+            ],
+            [
+              28.6319972733,
+              -15.493487635,
+              0
+            ],
+            [
+              28.6317202691,
+              -15.4943358473,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#ebebeb",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#64f2ef",
+        "fill-opacity": 0.5,
+        "poi_name": "Water Treatment Plant",
+        "long_x": 28.632299,
+        "lat_y": -15.494019,
+        "icon": "https://png.pngtree.com/png-vector/20191016/ourmid/pngtree-water-treatment-industrial-building-vector-icon-png-image_1804194.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6513810405,
+              -15.5218191489,
+              0
+            ],
+            [
+              28.6512087971,
+              -15.5219836719,
+              0
+            ],
+            [
+              28.6515461175,
+              -15.5220142639,
+              0
+            ],
+            [
+              28.6514397005,
+              -15.5218191487,
+              0
+            ],
+            [
+              28.6513810405,
+              -15.5218191489,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#100e0e",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#1a1919",
+        "fill-opacity": 1,
+        "poi_name": "Gate",
+        "long_x": 28.651377,
+        "lat_y": -15.521917,
+        "icon": "https://library.kissclipart.com/20180926/vbq/kissclipart-gate-icon-png-clipart-computer-icons-c063b8399e174a56.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6488988963,
+              -15.5103799954,
+              0
+            ],
+            [
+              28.6484544615,
+              -15.5106976252,
+              0
+            ],
+            [
+              28.6481472221,
+              -15.5106327382,
+              0
+            ],
+            [
+              28.6472934669,
+              -15.511265157,
+              0
+            ],
+            [
+              28.6472735484,
+              -15.5117437509,
+              0
+            ],
+            [
+              28.6473118422,
+              -15.5118007295,
+              0
+            ],
+            [
+              28.6483632959,
+              -15.5121205802,
+              0
+            ],
+            [
+              28.6489602989,
+              -15.5105172925,
+              0
+            ],
+            [
+              28.6488988963,
+              -15.5103799954,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#49a4f3",
+        "fill-opacity": 0.5,
+        "poi_name": "Hotel",
+        "long_x": 28.648117,
+        "lat_y": -15.51125,
+        "icon": "https://www.iconpacks.net/icons/2/free-hotel-icon-1880-thumb.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6493231394,
+              -15.5109156432,
+              0
+            ],
+            [
+              28.6490590155,
+              -15.5116993366,
+              0
+            ],
+            [
+              28.648682137,
+              -15.5133424599,
+              0
+            ],
+            [
+              28.6485658779,
+              -15.513861794,
+              0
+            ],
+            [
+              28.6483715483,
+              -15.5153774016,
+              0
+            ],
+            [
+              28.6485739319,
+              -15.5154009161,
+              0
+            ],
+            [
+              28.6494277374,
+              -15.5151166719,
+              0
+            ],
+            [
+              28.6500538094,
+              -15.5147060144,
+              0
+            ],
+            [
+              28.6504403072,
+              -15.5144468195,
+              0
+            ],
+            [
+              28.6505438323,
+              -15.5143803431,
+              0
+            ],
+            [
+              28.6506005427,
+              -15.5143985236,
+              0
+            ],
+            [
+              28.6506094405,
+              -15.5143560398,
+              0
+            ],
+            [
+              28.6505696071,
+              -15.5143042664,
+              0
+            ],
+            [
+              28.6505477958,
+              -15.5141342757,
+              0
+            ],
+            [
+              28.6505851543,
+              -15.5139777054,
+              0
+            ],
+            [
+              28.6506151049,
+              -15.5138937882,
+              0
+            ],
+            [
+              28.6506080097,
+              -15.5138049087,
+              0
+            ],
+            [
+              28.6505370557,
+              -15.5137433766,
+              0
+            ],
+            [
+              28.6505299605,
+              -15.5136271495,
+              0
+            ],
+            [
+              28.6505938194,
+              -15.5135177595,
+              0
+            ],
+            [
+              28.6507144414,
+              -15.5134699016,
+              0
+            ],
+            [
+              28.6510692093,
+              -15.5121572171,
+              0
+            ],
+            [
+              28.6494390155,
+              -15.5108557773,
+              0
+            ],
+            [
+              28.6493231394,
+              -15.5109156432,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#618e57",
+        "fill-opacity": 0.5,
+        "poi_name": "Administration",
+        "long_x": 28.64972,
+        "lat_y": -15.513128,
+        "icon": "data:image/png;base64,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"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.648958536,
+              -15.5165960967,
+              0
+            ],
+            [
+              28.6494040867,
+              -15.5162805852,
+              0
+            ],
+            [
+              28.6491195832,
+              -15.5158409308,
+              0
+            ],
+            [
+              28.6487813945,
+              -15.5160478226,
+              0
+            ],
+            [
+              28.648958536,
+              -15.5165960967,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.649093,
+        "lat_y": -15.516219,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6495114474,
+              -15.5162754136,
+              0
+            ],
+            [
+              28.650005306,
+              -15.5159392124,
+              0
+            ],
+            [
+              28.649656387,
+              -15.5154840412,
+              0
+            ],
+            [
+              28.649189368,
+              -15.5157892077,
+              0
+            ],
+            [
+              28.6495114474,
+              -15.5162754136,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.649597,
+        "lat_y": -15.51588,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6500697222,
+              -15.5158874891,
+              0
+            ],
+            [
+              28.6503059143,
+              -15.5157426636,
+              0
+            ],
+            [
+              28.6501663468,
+              -15.5155047338,
+              0
+            ],
+            [
+              28.6504025385,
+              -15.5153443909,
+              0
+            ],
+            [
+              28.6502361311,
+              -15.5151271499,
+              0
+            ],
+            [
+              28.6497691152,
+              -15.515442663,
+              0
+            ],
+            [
+              28.6500697222,
+              -15.5158874891,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.650086,
+        "lat_y": -15.515507,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6505809883,
+              -15.5159895931,
+              0
+            ],
+            [
+              28.65102608,
+              -15.515672926,
+              0
+            ],
+            [
+              28.6507077877,
+              -15.5152490405,
+              0
+            ],
+            [
+              28.6502683386,
+              -15.5155357685,
+              0
+            ],
+            [
+              28.6505809883,
+              -15.5159895931,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.650647,
+        "lat_y": -15.515619,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6511295899,
+              -15.5157128208,
+              0
+            ],
+            [
+              28.6508941053,
+              -15.5158474671,
+              0
+            ],
+            [
+              28.6510726599,
+              -15.5160718761,
+              0
+            ],
+            [
+              28.651533279,
+              -15.5157826354,
+              0
+            ],
+            [
+              28.6512149852,
+              -15.5153213493,
+              0
+            ],
+            [
+              28.6509665619,
+              -15.5154709572,
+              0
+            ],
+            [
+              28.6511295899,
+              -15.5157128208,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.651214,
+        "lat_y": -15.515697,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6493602757,
+              -15.5171469731,
+              0
+            ],
+            [
+              28.6497840246,
+              -15.5168574055,
+              0
+            ],
+            [
+              28.6494470539,
+              -15.5164050274,
+              0
+            ],
+            [
+              28.6490343551,
+              -15.5166932336,
+              0
+            ],
+            [
+              28.6493602757,
+              -15.5171469731,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.649409,
+        "lat_y": -15.516776,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6498900778,
+              -15.5168174157,
+              0
+            ],
+            [
+              28.6503215186,
+              -15.5165072434,
+              0
+            ],
+            [
+              28.6500376167,
+              -15.5160506018,
+              0
+            ],
+            [
+              28.6495681739,
+              -15.5163370803,
+              0
+            ],
+            [
+              28.6498900778,
+              -15.5168174157,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#ff0000",
+        "fill-opacity": 0.5,
+        "poi_name": "Light Industry",
+        "long_x": 28.649945,
+        "lat_y": -15.516434,
+        "icon": "https://image.flaticon.com/icons/png/512/508/508021.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.6405406007,
+              -15.5042646082,
+              0
+            ],
+            [
+              28.6409209388,
+              -15.5046005681,
+              0
+            ],
+            [
+              28.6418638537,
+              -15.5054710068,
+              0
+            ],
+            [
+              28.6424740014,
+              -15.504783822,
+              0
+            ],
+            [
+              28.6427513353,
+              -15.5045547627,
+              0
+            ],
+            [
+              28.6431792173,
+              -15.5042646219,
+              0
+            ],
+            [
+              28.643527859,
+              -15.5040431995,
+              0
+            ],
+            [
+              28.644439072,
+              -15.5038370485,
+              0
+            ],
+            [
+              28.645667222,
+              -15.5035927185,
+              0
+            ],
+            [
+              28.6458970047,
+              -15.5035469061,
+              0
+            ],
+            [
+              28.6460079283,
+              -15.5026612179,
+              0
+            ],
+            [
+              28.6460316969,
+              -15.5023329025,
+              0
+            ],
+            [
+              28.6459445376,
+              -15.502203104,
+              0
+            ],
+            [
+              28.6460316906,
+              -15.5009890967,
+              0
+            ],
+            [
+              28.6440904419,
+              -15.5010349119,
+              0
+            ],
+            [
+              28.6438765078,
+              -15.5012410634,
+              0
+            ],
+            [
+              28.6427751302,
+              -15.5026535781,
+              0
+            ],
+            [
+              28.6424264896,
+              -15.5028215507,
+              0
+            ],
+            [
+              28.6415073312,
+              -15.5034629055,
+              0
+            ],
+            [
+              28.6404058986,
+              -15.5041042639,
+              0
+            ],
+            [
+              28.6405406007,
+              -15.5042646082,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "Playing Field",
+        "long_x": 28.643219,
+        "lat_y": -15.50323,
+        "icon": "https://image.flaticon.com/icons/png/512/185/185271.png"
+      }
+    }
+  ]
+}

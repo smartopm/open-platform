@@ -11,7 +11,8 @@ import {
   removeNewLines,
   titleize,
   formatError,
-  generateId
+  generateId,
+  propAccessor
 } from '../utils/helpers'
 
 const message =
@@ -149,6 +150,17 @@ describe('array methods', () => {
   it('should generate random string', () => {
     expect(generateId()).toBeTruthy()
     expect(generateId()).toBeInstanceOf(Array)
+  })
+
+  // property accessor
+  it('should validate params', () => {
+    expect(propAccessor({a: 4}, 3)).toBeUndefined()
+    // get correct value
+    expect(propAccessor({a: 4}, 'a')).toBe(4)
+    // prop must be a property in the given object
+    expect(propAccessor({a: 4}, 'b')).toBeUndefined()
+    // the object should only be of type object 
+    expect(propAccessor([], 'b')).toBeUndefined()
   })
 })
 
