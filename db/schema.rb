@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_103950) do
+ActiveRecord::Schema.define(version: 2021_01_12_195401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -565,6 +565,15 @@ ActiveRecord::Schema.define(version: 2021_01_11_103950) do
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
   end
 
+  create_table "valuations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.date "start_date"
+    t.decimal "amount", precision: 8, scale: 2
+    t.uuid "land_parcel_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["land_parcel_id"], name: "index_valuations_on_land_parcel_id"
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.uuid "item_id", null: false
@@ -623,4 +632,5 @@ ActiveRecord::Schema.define(version: 2021_01_11_103950) do
   add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
+  add_foreign_key "valuations", "land_parcels"
 end

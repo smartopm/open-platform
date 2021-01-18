@@ -488,6 +488,12 @@ export const ParcelQuery = gql`
       longX
       geom
       createdAt
+      valuations {
+        id
+        amount
+        startDate
+        createdAt
+      }
     }
   }
 `
@@ -905,6 +911,12 @@ export const LandParcel = gql`
       country
       parcelType
       createdAt
+      valuations {
+        id
+        amount
+        startDate
+        createdAt
+      }
     }
   }
 `

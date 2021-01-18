@@ -28,5 +28,6 @@ RSpec.describe LandParcel, type: :model do
     it { is_expected.to have_many(:land_parcel_accounts) }
     it { is_expected.to have_many(:accounts) }
     it { is_expected.to belong_to(:community) }
+    it { is_expected.to have_many(:valuations) }
   end
 end
