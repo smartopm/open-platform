@@ -18,10 +18,7 @@ export default function ActionMenu({
       onClose={handleClose}
       PaperProps={{
         style: {
-          width: 200,
-          '-webkit-box-shadow': 'none',
-    	    '-moz-box-shadow': 'none',
-	        boxShadow: '3px 5px 7px #888888'
+          width: 200
         }
       }}
     >

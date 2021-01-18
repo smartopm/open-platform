@@ -88,6 +88,7 @@ export default function PaymentList({ authState }) {
                           {currency}
                           {pay.amount}
                           ,
+                          {' '}
                           {InvoiceType[pay.paymentType]}
                         </Typography>
                       </div>
@@ -124,35 +125,35 @@ export default function PaymentList({ authState }) {
                     >
                       <MoreHorizIcon />
                     </IconButton>
-                    <ActionMenu
-                      anchorEl={anchorEl}
-                      handleClose={handleClose}
-                      open={open}
-                    >
-                      <MenuItem
-                        id="view-button"
-                        key="view-user"
-                      >
-                        View
-                      </MenuItem>
-                      <MenuItem
-                        id="edit-button"
-                        key="edit-user"
-                      >
-                        Edit
-                      </MenuItem>
-                      <MenuItem
-                        id="cancel-button"
-                        key="cancel-user"
-                        style={{ color: 'red' }}
-                      >
-                        Cancel Invoice
-                      </MenuItem>
-                    </ActionMenu>
                   </div>
                 </Grid>
               </div>
             ))}
+            <ActionMenu
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+              open={open}
+            >
+              <MenuItem
+                id="view-button"
+                key="view-user"
+              >
+                View
+              </MenuItem>
+              <MenuItem
+                id="edit-button"
+                key="edit-user"
+              >
+                Edit
+              </MenuItem>
+              <MenuItem
+                id="cancel-button"
+                key="cancel-user"
+                style={{ color: 'red' }}
+              >
+                Cancel Invoice
+              </MenuItem>
+            </ActionMenu>
           </div>
         ) : (
           <CenteredContent>No Invoices Yet</CenteredContent>
