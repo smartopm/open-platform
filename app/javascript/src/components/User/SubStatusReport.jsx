@@ -39,7 +39,6 @@ export default function SubStatusReportDialog({ handleClose, open }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
-
   return (
     <Dialog
       onClose={handleClose}
