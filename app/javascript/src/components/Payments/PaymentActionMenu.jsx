@@ -11,14 +11,17 @@ export default function ActionMenu({
 
   return (
     <Menu
-      id='long-menu-view'
+      id='long-menu'
       anchorEl={anchorEl}
       open={open}
       keepMounted
       onClose={handleClose}
       PaperProps={{
         style: {
-          width: 200
+          width: 200,
+          '-webkit-box-shadow': 'none',
+    	    '-moz-box-shadow': 'none',
+	        boxShadow: '3px 5px 7px #888888'
         }
       }}
     >
