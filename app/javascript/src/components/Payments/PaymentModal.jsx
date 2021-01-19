@@ -60,8 +60,17 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
     setMessageAlert('')
   }
 
+  function paymentAmount() {
+    const payAmount = invoiceData?.payments?.map(pay => pay.amount).reduce((prev, curr) => prev + curr, 0)
+    setInputValue({...inputValue, amount: (invoiceData?.amount - payAmount)})
+  }
+
   useEffect(() => {
-    setInputValue({...inputValue ,amount: invoiceData?.amount})
+    if (invoiceData?.payments?.length > 0) {
+      paymentAmount()
+    } else {
+      setInputValue({...inputValue, amount: invoiceData?.amount})
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
@@ -78,7 +87,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
         handleModal={handleModalClose}
         dialogHeader='Make a Payment'
         handleBatchFilter={handleSubmit}
-        subHeader={`You are about to make a payment ${currency}${invoiceData?.amount} for parcel number ${invoiceData?.landParcel.parcelNumber}`}
+        subHeader={`You are about to make a payment for parcel number ${invoiceData?.landParcel.parcelNumber}`}
       >
         <div className={classes.invoiceForm}>
           <TextField
@@ -168,7 +177,11 @@ PaymentModal.propTypes = {
     id: PropTypes.string,
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string
-    })
+    }),
+    payments: PropTypes.arrayOf(PropTypes.shape({ 
+      id: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired  
+    }))
   }),
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
