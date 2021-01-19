@@ -928,3 +928,21 @@ export const EmailTemplatesQuery = gql`
     }
   }
 `
+
+export const SubStatusQuery = gql`
+query subStatus {
+  substatusQuery {
+    applied
+    approved
+    architectureReviewed
+    interested
+    built
+    contracted
+    inConstruction
+    movedIn
+    paying
+    readyForConstruction
+  }
+}
+
+`

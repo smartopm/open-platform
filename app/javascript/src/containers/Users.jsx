@@ -26,6 +26,7 @@ import { dateToString } from '../utils/dateutil'
 
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount, propAccessor } from '../utils/helpers'
+import SubStatusReportDialog from '../components/User/SubStatusReport'
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
@@ -51,6 +52,11 @@ export default function UsersList() {
   const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState([])
   const [selectCheckBox, setSelectCheckBox] = useState(false)
+  const [substatusReportOpen, setSubstatusReportOpen] = useState(false)
+
+  function handleReportDialog(){
+    setSubstatusReportOpen(!substatusReportOpen)
+  }
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
@@ -452,6 +458,10 @@ export default function UsersList() {
             </div>
           )}
         </ModalDialog>
+        <SubStatusReportDialog
+          open={substatusReportOpen}
+          handleClose={handleReportDialog}
+        />
         <div className={classes.root}>
           <>
             <InputBase
@@ -476,13 +486,17 @@ export default function UsersList() {
             </div>
             <div className={classes.searchButton}>
               <Link to="/users/import" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant="contained"
-                  style={{ border: '1px #dfdfdf solid' }}
-                >
+                <Button variant="outlined">
                   UPLOAD
                 </Button>
               </Link>
+              <Button
+                variant="outlined"
+                className={classes.reportBtn}
+                onClick={handleReportDialog}
+              >
+                Create Report
+              </Button>
             </div>
           </>
         </div>
@@ -607,9 +621,14 @@ export const useStyles = makeStyles(theme => ({
   searchButton: {
     display: 'flex'
   },
+  reportBtn: {
+    display: 'flex',
+    height: 36,
+    marginLeft: 20
+  },
   '@media only screen and (max-width: 768px)': {
     searchButton: {
       flexBasis: '100%'
-    }
+    },
   }
 }))
