@@ -92,13 +92,14 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe 'User state and roles' do
+  describe 'User state, type and roles' do
     before :each do
       @user = FactoryBot.create(:user_with_community, phone_number: '14157351116')
     end
 
-    it 'without a role/type it should be pending' do
+    it 'without a state/type it should be pending and visitor' do
       expect(@user.pending?).to be true
+      expect(@user.user_type).to eq('visitor')
     end
 
     it 'Roles should have a human name' do

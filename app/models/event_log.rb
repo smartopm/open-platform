@@ -9,7 +9,7 @@ class EventLog < ApplicationRecord
 
   after_create :notify_slack
   after_create :populate_activity_points
-  after_create :execute_action_flows
+  after_commit :execute_action_flows
   validate :validate_log, :validate_acting_user
 
   default_scope { order(created_at: :desc) }
@@ -155,25 +155,9 @@ class EventLog < ApplicationRecord
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   def execute_action_flows
-    # include (status: 'active') once the active/inactive functionality is implemented
-    action_flows = ActionFlow.where(event_type: subject).map do |f|
-      ActionFlows::ActionFlow.new(f.description, f.event_type,
-                                  f.event_condition, f.event_action)
-    end
-    return if action_flows.blank?
-
-    action_flows.each do |af|
-      event = af.event_object.new
-      event.preload_data(self)
-      cond = event.event_condition
-      af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
-    end
+    ActionFlowJob.perform_later(self)
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   private
 
