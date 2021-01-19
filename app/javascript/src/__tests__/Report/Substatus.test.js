@@ -34,7 +34,7 @@ describe('Substatus component', () => {
     await act(async () => {
       container = render(
         <MockedProvider mocks={[statusMock]}>
-          <SubStatusReportDialog open handleClose={jest.fn()} />
+          <SubStatusReportDialog open handleClose={jest.fn()} handleFilter={jest.fn()} />
         </MockedProvider>
       );
     });
@@ -49,14 +49,14 @@ describe('Substatus component', () => {
       expect(container.queryByText('Applied')).toBeInTheDocument();
       expect(container.queryByText('Interested')).toBeInTheDocument();
       expect(container.queryByText('In Construction')).toBeInTheDocument();
-      expect(container.queryByText('Ready For Construction')).toBeInTheDocument();
+      expect(container.queryByText('Moved-In')).toBeInTheDocument();
     }, 200);
   });
 });
 
 describe('StatusCount component', () => {
   it('should render status count', () => {
-    const container = render(<StatusCount title='Applied' count={1} />);
+    const container = render(<StatusCount title='Applied' count={1} handleFilter={jest.fn()} />);
     expect(container.queryAllByText('Applied')[0]).toBeInTheDocument();
     expect(container.queryAllByText('1')[0]).toBeInTheDocument();
   });
