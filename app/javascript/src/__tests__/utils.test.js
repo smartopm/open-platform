@@ -12,7 +12,8 @@ import {
   titleize,
   formatError,
   generateId,
-  propAccessor
+  propAccessor,
+  toCamelCase
 } from '../utils/helpers'
 
 const message =
@@ -185,5 +186,8 @@ describe('titleize', () => {
   })
   it('should return as it is, if already ok', () => {
     expect(titleize('Posts')).toBe('Posts')
+  })
+  it('should return a converted string to camelCase', () => {
+    expect(toCamelCase('snake_case')).toBe('snakeCase')
   })
 })

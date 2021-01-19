@@ -342,3 +342,13 @@ export function checkValidGeoJSON(str){
         }
     }
 }
+
+/**
+ * 
+ * @param {String} str snake_case string
+ * @return {String} camelCase string
+ * @description converts a snake_case string to a camelCase
+ */
+export function toCamelCase(str){
+  return str.replace(/([-_]\w)/g, g => g[1].toUpperCase())
+}

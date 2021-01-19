@@ -9,23 +9,12 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { useLazyQuery } from 'react-apollo';
-import { propAccessor } from '../../utils/helpers';
+import { propAccessor, toCamelCase } from '../../utils/helpers';
 import { SubStatusQuery } from '../../graphql/queries';
 import { Spinner } from '../Loading';
 import { useStyles } from '../Dialog'
+import { userSubStatus } from '../../utils/constants';
 
-const status = {
-  applied: 'Applied',
-  architectureReviewed: 'Architecture Reviewed',
-  approved: 'Approved',
-  contracted: 'Contracted',
-  built: 'Built',
-  inConstruction: 'In Construction',
-  interested: 'Interested',
-  movedIn: 'Moved In',
-  paying: 'Paying',
-  readyForConstruction: 'Ready For Construction'
-};
 export default function SubStatusReportDialog({ handleClose, open, handleFilter }) {
   const [getSubstatusReport, { loading, data, error }] = useLazyQuery(
     SubStatusQuery
@@ -52,10 +41,10 @@ export default function SubStatusReportDialog({ handleClose, open, handleFilter 
         <Spinner />
       ) : (
         <List>
-          {Object.entries(status).map(([key, val], index) => (
+          {Object.entries(userSubStatus).map(([key, val], index) => (
             <Fragment key={key}>
               <StatusCount
-                count={propAccessor(data?.substatusQuery, key)}
+                count={propAccessor(data?.substatusQuery, toCamelCase(key))}
                 title={val}
                 handleFilter={() => handleFilter(index)}
               />
