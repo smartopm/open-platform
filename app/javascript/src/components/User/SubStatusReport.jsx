@@ -16,18 +16,17 @@ import { useStyles } from '../Dialog'
 
 const status = {
   applied: 'Applied',
-  approved: 'Approved',
   architectureReviewed: 'Architecture Reviewed',
-  interested: 'Interested',
-  built: 'Built',
+  approved: 'Approved',
   contracted: 'Contracted',
+  built: 'Built',
   inConstruction: 'In Construction',
+  interested: 'Interested',
   movedIn: 'Moved In',
   paying: 'Paying',
   readyForConstruction: 'Ready For Construction'
 };
-
-export default function SubStatusReportDialog({ handleClose, open }) {
+export default function SubStatusReportDialog({ handleClose, open, handleFilter }) {
   const [getSubstatusReport, { loading, data, error }] = useLazyQuery(
     SubStatusQuery
   );
@@ -53,11 +52,12 @@ export default function SubStatusReportDialog({ handleClose, open }) {
         <Spinner />
       ) : (
         <List>
-          {Object.entries(status).map(([key, val]) => (
+          {Object.entries(status).map(([key, val], index) => (
             <Fragment key={key}>
               <StatusCount
                 count={propAccessor(data?.substatusQuery, key)}
                 title={val}
+                handleFilter={() => handleFilter(index)}
               />
               <hr style={{marginLeft: 16}} />
             </Fragment>
@@ -68,21 +68,26 @@ export default function SubStatusReportDialog({ handleClose, open }) {
   );
 }
 
-export function StatusCount({ title, count }) {
+export function StatusCount({ title, count, handleFilter }) {
   return (
-    <ListItem style={{ height: 32 }}>
+    <ListItem style={{ height: 32 }} onClick={handleFilter}>
       <ListItemText primary={title} />
       <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
     </ListItem>
   );
 }
 
+StatusCount.defaultProps = {
+  count: 0
+}
 StatusCount.propTypes = {
   title: PropTypes.string.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number,
+  handleFilter: PropTypes.func.isRequired,
 };
 
 SubStatusReportDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  handleFilter: PropTypes.func.isRequired,
 };

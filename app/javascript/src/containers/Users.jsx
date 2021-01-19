@@ -132,6 +132,10 @@ export default function UsersList() {
     }
   }
 
+  function handleFilterUserBySubstatus(index){
+    setSearchQuery(`sub_status = "${index}"`)
+    handleReportDialog()
+  }
   function handleSaveNote() {
     let noteType = ''
     if (modalAction === 'Answered') {
@@ -461,6 +465,7 @@ export default function UsersList() {
         <SubStatusReportDialog
           open={substatusReportOpen}
           handleClose={handleReportDialog}
+          handleFilter={handleFilterUserBySubstatus}
         />
         <div className={classes.root}>
           <>
