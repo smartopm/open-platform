@@ -901,6 +901,7 @@ export const UserInvoicesQuery = gql`
       dueDate
       updatedAt
       createdAt
+      invoiceNumber
       createdBy {
         id
         name
@@ -920,6 +921,7 @@ export const InvoicesQuery = gql`
       amount
       status
       description
+      invoiceNumber
       dueDate
       createdAt
       updatedAt

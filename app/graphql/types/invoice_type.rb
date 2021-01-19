@@ -9,6 +9,7 @@ module Types
     field :amount, Float, null: true
     field :pending_amount, Float, null: true
     field :description, String, null: true
+    field :invoice_number, Integer, null: true
     field :community, Types::CommunityType, null: false
     field :land_parcel, Types::LandParcelType, null: false
     field :user, Types::UserType, null: false
