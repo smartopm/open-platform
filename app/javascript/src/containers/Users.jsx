@@ -481,8 +481,9 @@ export default function UsersList() {
               type="submit"
               className={classes.iconButton}
               aria-label="search"
+              onClick={toggleFilterMenu}
             >
-              <FilterListIcon onClick={toggleFilterMenu} />
+              <FilterListIcon />
             </IconButton>
             <div style={{ margin: '10px 19px 10px 0' }}>
               {filterCount

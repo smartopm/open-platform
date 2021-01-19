@@ -121,6 +121,12 @@ export default function UsersActionMenu({
   )
 }
 
+UsersActionMenu.defaultProps = {
+  usersCountData: {
+    usersCount: 0
+  }
+};
+
 UsersActionMenu.propTypes = {
   campaignCreateOption: PropTypes.string.isRequired,
   setCampaignCreateOption: PropTypes.func.isRequired,
@@ -132,5 +138,5 @@ UsersActionMenu.propTypes = {
   selectCheckBox: PropTypes.bool.isRequired,
   usersCountData: PropTypes.shape({
     usersCount: PropTypes.number.isRequired
-  }).isRequired
+  })
 }
