@@ -120,7 +120,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validate :phone_number_valid?
   after_create :add_notification_preference
-  before_save :ensure_default_state
+  before_save :ensure_default_state_and_type
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -365,8 +365,10 @@ class User < ApplicationRecord
     self[:expires_at] < Time.zone.now
   end
 
-  def ensure_default_state
+  def ensure_default_state_and_type
+    # TODO(Nurudeen): Move these to DB level as default values
     self[:state] ||= 'pending'
+    self[:user_type] ||= 'visitor'
   end
 
   def create_new_phone_token
@@ -498,7 +500,7 @@ class User < ApplicationRecord
   end
 
   def phone_number_valid?
-    return nil if self[:phone_number].nil? || self[:phone_number].blank?
+    return if self[:phone_number].blank?
 
     unless self[:phone_number].match(/\A[0-9+\s\-]+\z/)
       errors.add(:phone_number, "can only contain 0-9, '-', '+' and space")

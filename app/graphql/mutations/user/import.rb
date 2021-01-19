@@ -39,6 +39,7 @@ module Mutations
             phone_list = [phone, phone1, phone2].reject(&:blank?)
 
             if user_already_present?(email, phone_list)
+              errors[index + 1] = ['User already exists']
               no_of_duplicates += 1
               next
             end
