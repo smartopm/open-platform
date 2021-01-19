@@ -7,5 +7,6 @@ FactoryBot.define do
     status { Invoice.statuses.keys.sample }
     community
     land_parcel
+    invoice_number { (rand * 10).floor }
   end
 end

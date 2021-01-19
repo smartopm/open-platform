@@ -11,6 +11,7 @@ RSpec.describe Invoice, type: :model do
     it { is_expected.to have_db_column(:amount).of_type(:float) }
     it { is_expected.to have_db_column(:note).of_type(:string) }
     it { is_expected.to have_db_column(:description).of_type(:string) }
+    it { is_expected.to have_db_column(:invoice_number).of_type(:integer) }
   end
 
   describe 'associations' do

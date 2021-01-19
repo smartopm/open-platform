@@ -15,8 +15,6 @@ class Invoice < ApplicationRecord
   has_many :payment_invoices, dependent: :destroy
   has_many :payments, through: :payment_invoices
 
-  validates :invoice_number, presence: true
-
   enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
   scope :by_status, ->(status) { where(status: status) if status.present? }
   default_scope { order(created_at: :desc) }
