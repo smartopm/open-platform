@@ -189,5 +189,6 @@ describe('titleize', () => {
   })
   it('should return a converted string to camelCase', () => {
     expect(toCamelCase('snake_case')).toBe('snakeCase')
+    expect(toCamelCase('snake_case_again_and_again')).toBe('snakeCaseAgainAndAgain')
   })
 })

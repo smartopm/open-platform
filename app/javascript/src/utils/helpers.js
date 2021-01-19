@@ -347,8 +347,11 @@ export function checkValidGeoJSON(str){
  * 
  * @param {String} str snake_case string
  * @return {String} camelCase string
- * @description converts a snake_case string to a camelCase
+ * @description converts a snake_case string to a camelCase by finding words that start with _ or - 
+ * and replaces this with a titlecased word after the _ or - since the regex is global, 
+ * it applies this to all instances
+ * @example snake_name ==> snakeName 
  */
 export function toCamelCase(str){
-  return str.replace(/([-_]\w)/g, g => g[1].toUpperCase())
+  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase())
 }
