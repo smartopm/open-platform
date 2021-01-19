@@ -9,6 +9,5 @@ class LandParcel < ApplicationRecord
            dependent: :destroy, inverse_of: :land_parcel
 
   validates :parcel_number, uniqueness: true
-  # default_scope { order('created_at DESC') }
   default_scope { order(created_at: :desc) }
 end
