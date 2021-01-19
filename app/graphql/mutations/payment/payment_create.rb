@@ -17,7 +17,8 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
-        if vals[:amount] > find_invoice(vals[:invoice_id]).amount
+        if vals[:amount] > find_invoice(vals[:invoice_id]).amount ||
+           vals[:amount] > rem_amount(find_invoice(vals[:invoice_id]))
           raise GraphQL::ExecutionError,
                 'The amount you are trying to pay is higher than the invoiced amount'
         end
@@ -25,9 +26,7 @@ module Mutations
           user = context[:site_community].users.find(vals[:user_id])
           payment = user.payments.create(vals.except(:user_id))
           invoice_update(vals[:invoice_id], vals[:amount])
-          if vals[:payment_type] == 'cash' || find_invoice(vals[:invoice_id]).amount.zero?
-            payment.settled!
-          end
+          payment.settled! if vals[:payment_type] == 'cash'
           return { payment: payment } if payment.persisted?
         end
         raise GraphQL::ExecutionError, payment.errors.full_messages
@@ -37,13 +36,20 @@ module Mutations
 
       def invoice_update(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
-        inv.update!(amount: (inv.amount - amount).to_f)
-        inv.paid! if verify_amount(invoice_id, amount) || inv.amount.zero?
+        inv.paid! if verify_amount(invoice_id, amount)
       end
 
       def verify_amount(invoice_id, amount)
         inv = context[:site_community].invoices.find(invoice_id)
-        inv.amount == amount
+        amount == inv.amount || inv.amount == total_payment(inv)
+      end
+
+      def total_payment(inv)
+        inv.payments.sum(&:amount)
+      end
+
+      def rem_amount(inv)
+        inv.amount - total_payment(inv)
       end
 
       def find_invoice(invoice_id)
