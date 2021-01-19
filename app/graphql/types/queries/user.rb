@@ -191,26 +191,11 @@ module Types::Queries::User
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def substatus_query
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     users = context[:site_community].users
-    {
-      applied: users.applied.count,
-      architecture_reviewed: users.architecture_reviewed.count,
-      approved: users.approved.count,
-      contracted: users.contracted.count,
-      built: users.built.count,
-      in_construction: users.in_construction.count,
-      interested: users.interested.count,
-      moved_in: users.moved_in.count,
-      paying: users.paying.count,
-      ready_for_construction: users.ready_for_construction.count,
-    }
+    users.group(:sub_status).count
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
 end
 # rubocop:enable Metrics/ModuleLength

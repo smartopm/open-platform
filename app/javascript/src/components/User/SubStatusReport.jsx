@@ -61,7 +61,7 @@ export function StatusCount({ title, count, handleFilter }) {
   return (
     <ListItem style={{ height: 32, cursor: 'pointer' }} onClick={handleFilter}>
       <ListItemText primary={title} />
-      <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
+      <ListItemSecondaryAction>{count || 0}</ListItemSecondaryAction>
     </ListItem>
   );
 }
