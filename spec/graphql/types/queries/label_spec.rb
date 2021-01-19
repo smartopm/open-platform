@@ -97,8 +97,9 @@ RSpec.describe Types::Queries::Label do
                                        }).as_json
       expect(result.dig('data', 'labelUsers').length).to eql 1
       rec_exp = result.dig('data', 'labelUsers').select { |x| x['id'].eql? current_user.id }
+      rec_exp2 = rec_exp.dig(0, 'labels').select { |x| x['id'].eql? first_label.id }
       expect(rec_exp[0]['id']).to eql current_user.id
-      expect(rec_exp.dig(0, 'labels', 3, 'id')).to eql first_label.id
+      expect(rec_exp2[0]['id']).to eql first_label.id
     end
   end
 end
