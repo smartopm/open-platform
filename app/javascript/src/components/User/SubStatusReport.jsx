@@ -9,25 +9,13 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { useLazyQuery } from 'react-apollo';
-import { propAccessor } from '../../utils/helpers';
+import { propAccessor, toCamelCase } from '../../utils/helpers';
 import { SubStatusQuery } from '../../graphql/queries';
 import { Spinner } from '../Loading';
 import { useStyles } from '../Dialog'
+import { userSubStatus } from '../../utils/constants';
 
-const status = {
-  applied: 'Applied',
-  approved: 'Approved',
-  architectureReviewed: 'Architecture Reviewed',
-  interested: 'Interested',
-  built: 'Built',
-  contracted: 'Contracted',
-  inConstruction: 'In Construction',
-  movedIn: 'Moved In',
-  paying: 'Paying',
-  readyForConstruction: 'Ready For Construction'
-};
-
-export default function SubStatusReportDialog({ handleClose, open }) {
+export default function SubStatusReportDialog({ handleClose, open, handleFilter }) {
   const [getSubstatusReport, { loading, data, error }] = useLazyQuery(
     SubStatusQuery
   );
@@ -53,11 +41,12 @@ export default function SubStatusReportDialog({ handleClose, open }) {
         <Spinner />
       ) : (
         <List>
-          {Object.entries(status).map(([key, val]) => (
+          {Object.entries(userSubStatus).map(([key, val], index) => (
             <Fragment key={key}>
               <StatusCount
-                count={propAccessor(data?.substatusQuery, key)}
+                count={propAccessor(data?.substatusQuery, toCamelCase(key))}
                 title={val}
+                handleFilter={() => handleFilter(index)}
               />
               <hr style={{marginLeft: 16}} />
             </Fragment>
@@ -68,21 +57,26 @@ export default function SubStatusReportDialog({ handleClose, open }) {
   );
 }
 
-export function StatusCount({ title, count }) {
+export function StatusCount({ title, count, handleFilter }) {
   return (
-    <ListItem style={{ height: 32 }}>
+    <ListItem style={{ height: 32, cursor: 'pointer' }} onClick={handleFilter}>
       <ListItemText primary={title} />
-      <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
+      <ListItemSecondaryAction>{count || 0}</ListItemSecondaryAction>
     </ListItem>
   );
 }
 
+StatusCount.defaultProps = {
+  count: 0
+}
 StatusCount.propTypes = {
   title: PropTypes.string.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number,
+  handleFilter: PropTypes.func.isRequired,
 };
 
 SubStatusReportDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  handleFilter: PropTypes.func.isRequired,
 };
