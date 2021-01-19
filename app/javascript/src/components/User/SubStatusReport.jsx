@@ -59,7 +59,7 @@ export default function SubStatusReportDialog({ handleClose, open, handleFilter 
 
 export function StatusCount({ title, count, handleFilter }) {
   return (
-    <ListItem style={{ height: 32 }} onClick={handleFilter}>
+    <ListItem style={{ height: 32, cursor: 'pointer' }} onClick={handleFilter}>
       <ListItemText primary={title} />
       <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
     </ListItem>
