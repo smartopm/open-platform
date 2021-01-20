@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require 'host_env'
+
 module Types
   # CommunityType
   class CommunityType < Types::BaseObject
