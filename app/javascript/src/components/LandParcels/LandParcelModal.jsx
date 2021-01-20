@@ -16,6 +16,7 @@ import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
 import DatePickerDialog from '../DatePickerDialog'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
+import ParcelOwnership from './ParcelOwnership'
 
 export default function LandParcelModal({
   open,
@@ -226,7 +227,7 @@ export default function LandParcelModal({
         </div>
       </TabPanel>
       <TabPanel value={tabValue} index="Ownership">
-        <div>Coming soon!!</div>
+        <ParcelOwnership modalType={modalType} />
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
         {modalType === 'details' &&
