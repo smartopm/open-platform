@@ -14,13 +14,14 @@ import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
-import { InvoicesQuery } from '../../graphql/queries'
+import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
-import { formatError, InvoiceStatus, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers'
+import { formatError, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
-import { currencies } from '../../utils/constants'
+import { currencies, invoiceStatus } from '../../utils/constants'
 import PaymentListHeading from './PaymentListHeading'
 import ActionMenu from './PaymentActionMenu'
+import InvoiceTiles from './InvoiceTiles'
 
 export default function PaymentList({ authState }) {
   const history = useHistory()
@@ -30,6 +31,8 @@ export default function PaymentList({ authState }) {
   const page = path.get('page')
   const status = path.get('status')
   const pageNumber = Number(page)
+  const [currentTile, setCurrentTile] = useState(status || '')
+
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const { loading, data: invoicesData, error } = useQuery(
@@ -40,7 +43,16 @@ export default function PaymentList({ authState }) {
       errorPolicy: 'all'
     }
   )
+  const invoiceStats = useQuery(InvoiceStatsQuery, {
+    fetchPolicy: 'cache-and-network'
+  })
   const currency = currencies[authState.user?.community.currency] || ''
+
+  function handleFilter(key) {
+    setCurrentTile(key)
+    const state = key === 'inProgress' ? 'in_progress' : key
+    history.push(`/payments?page=0&status=${state}`)
+  }
 
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
@@ -65,6 +77,14 @@ export default function PaymentList({ authState }) {
 
   return (
     <Container>
+      <br />
+      <Grid container spacing={3}>
+        <InvoiceTiles
+          invoiceData={invoiceStats || []}
+          filter={handleFilter}
+          currentTile={currentTile}
+        />
+      </Grid>
       <List>
         {
         // eslint-disable-next-line no-nested-ternary
@@ -83,24 +103,22 @@ export default function PaymentList({ authState }) {
                   <Typography className={classes.typography} data-testid="landparcel">{invoice.landParcel.parcelNumber}</Typography>
                   <Typography className={classes.typography}>
                     {invoice.payments.map((pay) => (
-                      <div key={pay.id}>
-                        <Typography>
-                          {currency}
-                          {pay.amount}
-                          ,
-                          {' '}
-                          {InvoiceType[pay.paymentType]}
-                        </Typography>
-                      </div>
+                      <span key={pay.id}>
+                        {currency}
+                        {pay.amount}
+                        ,
+                        {' '}
+                        {InvoiceType[pay.paymentType]}
+                      </span>
                   ))}
                   </Typography>
                   <Typography className={classes.typography} data-testid="duedate">{dateToString(invoice.dueDate)}</Typography>
                   <Typography className={classes.typography}>
                     {invoice.payments.map((pay) => (
-                      <Typography key={pay.id}>
+                      <span key={pay.id}>
                         {pay.user.name}
                         {pay.length > 1 ? ',' : ''}
-                      </Typography>
+                      </span>
                   ))}
                   </Typography>
                   <div style={{display: 'flex'}}>
@@ -115,7 +133,7 @@ export default function PaymentList({ authState }) {
                               marginRight: '15px'
                             }}
                     >
-                      {InvoiceStatus[invoice.status]}
+                      {invoiceStatus[invoice.status]}
                     </Typography>
                     <IconButton
                       className={classes.option}

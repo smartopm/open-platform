@@ -271,15 +271,6 @@ export function useParamsQuery() {
   return new URLSearchParams(useLocation().search)
 }
 
-
-export const InvoiceStatus = {
-  inProgress: 'In-Progress',
-  paid: 'Paid',
-  late: 'Late',
-  cancelled: 'Cancelled',
-  in_progress: 'In-Progress',
-}
-
 export const InvoiceStatusColor = {
   inProgress: '#3493FB',
   paid: '#66A69B',

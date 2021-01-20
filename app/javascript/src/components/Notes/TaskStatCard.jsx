@@ -27,15 +27,19 @@ export default function AnalyticsCard({ count, title, filter, isCurrent }) {
           {title}
         </Typography>
         <Typography align="center" color="textPrimary" variant="h5" data-testid="task_count">
-          {count}
+          {count || 0}
         </Typography>
       </CardContent>
     </Card>
   )
 }
 
+AnalyticsCard.defaultProps = {
+  count: 0,
+}
+
 AnalyticsCard.propTypes = {
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number,
   title: PropTypes.string.isRequired,
   filter: PropTypes.func.isRequired,
   isCurrent: PropTypes.bool.isRequired,
