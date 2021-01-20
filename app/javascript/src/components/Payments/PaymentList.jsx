@@ -44,7 +44,7 @@ export default function PaymentList({ authState }) {
     }
   )
   const invoiceStats = useQuery(InvoiceStatsQuery, {
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   })
   const currency = currencies[authState.user?.community.currency] || ''
 
@@ -103,24 +103,22 @@ export default function PaymentList({ authState }) {
                   <Typography className={classes.typography} data-testid="landparcel">{invoice.landParcel.parcelNumber}</Typography>
                   <Typography className={classes.typography}>
                     {invoice.payments.map((pay) => (
-                      <div key={pay.id}>
-                        <Typography>
-                          {currency}
-                          {pay.amount}
-                          ,
-                          {' '}
-                          {InvoiceType[pay.paymentType]}
-                        </Typography>
-                      </div>
+                      <span key={pay.id}>
+                        {currency}
+                        {pay.amount}
+                        ,
+                        {' '}
+                        {InvoiceType[pay.paymentType]}
+                      </span>
                   ))}
                   </Typography>
                   <Typography className={classes.typography} data-testid="duedate">{dateToString(invoice.dueDate)}</Typography>
                   <Typography className={classes.typography}>
                     {invoice.payments.map((pay) => (
-                      <Typography key={pay.id}>
+                      <span key={pay.id}>
                         {pay.user.name}
                         {pay.length > 1 ? ',' : ''}
-                      </Typography>
+                      </span>
                   ))}
                   </Typography>
                   <div style={{display: 'flex'}}>

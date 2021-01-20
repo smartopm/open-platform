@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Types
   # CommunityType
   class CommunityType < Types::BaseObject
