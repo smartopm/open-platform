@@ -83,7 +83,7 @@ export default function GeoMap() {
 
        <Map
          center={nkwashi}
-         zoom={17}
+         zoom={13}
          className={css(styles.mapContainer)}
          attributionControl
          zoomControl
@@ -100,19 +100,19 @@ export default function GeoMap() {
                url={`${mapboxStreets}${mapboxPublicToken}`}
              />
            </LayersControl.BaseLayer>
-           <LayersControl.BaseLayer name="OSM">
+           <LayersControl.BaseLayer checked name="OSM">
              <TileLayer
                attribution={attribution}
                url={openStreetMap}
              />
            </LayersControl.BaseLayer>
-           <LayersControl.BaseLayer checked name="Satellite">
+           <LayersControl.BaseLayer name="Satellite">
              <TileLayer
                attribution={attribution}
                url={`${mapboxSatellite}${mapboxPublicToken}`}
              />
            </LayersControl.BaseLayer>
-           <LayersControl.Overlay checked name="Nkwashi Land Parcels">
+           <LayersControl.Overlay name="Nkwashi Land Parcels">
              <FeatureGroup>
                {geoData && geoData?.fetchLandParcel.map(({ geom, parcelNumber, parcelType}) => {
                 if(checkValidGeoJSON(geom)){
@@ -132,7 +132,7 @@ export default function GeoMap() {
                />
              </FeatureGroup>
            </LayersControl.Overlay>
-           <LayersControl.Overlay name="Nkwashi Points of Interest">
+           <LayersControl.Overlay checked name="Nkwashi Points of Interest">
              <FeatureGroup>
                {NkwashiPointOfInterestData.features.map((poiData, index) => {
                  const { properties } = poiData
@@ -154,7 +154,7 @@ export default function GeoMap() {
                />
              </FeatureGroup>
            </LayersControl.Overlay>
-           <LayersControl.Overlay name="Nkwashi Coverage Area">
+           <LayersControl.Overlay checked name="Nkwashi Coverage Area">
              <FeatureGroup>
                <Popup>
                  <Typography variant="body2">Nkwashi Estate</Typography>
