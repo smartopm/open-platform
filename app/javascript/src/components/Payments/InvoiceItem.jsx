@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import { dateToString } from '../DateContainer'
 import PaymentItem from './PaymentItem'
 import PaymentModal from './PaymentModal'
-import { InvoiceStatus } from '../../utils/helpers'
+import { invoiceStatus } from '../../utils/constants'
 
 export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType, currency }) {
   const classes = useStyles();
@@ -61,7 +61,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
                 {
                     // eslint-disable-next-line no-nested-ternary
                     userType === 'admin' && invoice.status === ('paid' || 'cancelled') 
-                    ? InvoiceStatus[invoice.status]
+                    ? invoiceStatus[invoice.status]
                     :  userType === 'admin' ? (
                       <Button 
                         variant='text' 
@@ -72,7 +72,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
                         make payment
                       </Button>
                       )
-                      : InvoiceStatus[invoice.status]
+                      : invoiceStatus[invoice.status]
                 }
               </Grid>
             </Grid>

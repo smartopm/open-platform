@@ -16,9 +16,9 @@ import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries'
 import { Spinner } from '../Loading'
-import { formatError, InvoiceStatus, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers'
+import { formatError, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers'
 import { dateToString } from '../DateContainer'
-import { currencies } from '../../utils/constants'
+import { currencies, invoiceStatus } from '../../utils/constants'
 import PaymentListHeading from './PaymentListHeading'
 import ActionMenu from './PaymentActionMenu'
 import InvoiceTiles from './InvoiceTiles'
@@ -32,6 +32,7 @@ export default function PaymentList({ authState }) {
   const status = path.get('status')
   const pageNumber = Number(page)
   const [currentTile, setCurrentTile] = useState(status || '')
+
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const { loading, data: invoicesData, error } = useQuery(
@@ -47,7 +48,7 @@ export default function PaymentList({ authState }) {
   })
   const currency = currencies[authState.user?.community.currency] || ''
 
-  function handleFilter(_evt, key) {
+  function handleFilter(key) {
     setCurrentTile(key)
     const state = key === 'inProgress' ? 'in_progress' : key
     history.push(`/payments?page=0&status=${state}`)
@@ -134,7 +135,7 @@ export default function PaymentList({ authState }) {
                               marginRight: '15px'
                             }}
                     >
-                      {InvoiceStatus[invoice.status]}
+                      {invoiceStatus[invoice.status]}
                     </Typography>
                     <IconButton
                       className={classes.option}

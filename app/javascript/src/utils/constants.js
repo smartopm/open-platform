@@ -75,6 +75,15 @@ export const subStatus = {
   9: 'Ready for Construction',
 }
 
+export const invoiceStatus = {
+  inProgress: 'In-Progress',
+  paid: 'Paid',
+  late: 'Late',
+  cancelled: 'Cancelled',
+  in_progress: 'In-Progress',
+}
+
+
 export const entryReason = [
   'Client',
   'Prospective Client',
