@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
-export default function PaymentListHeading(){
+export default function PaymentListHeading() {
   const classes = useStyles();
-  return(
+  return (
     <>
       <Grid
         container
@@ -18,13 +18,13 @@ export default function PaymentListHeading(){
         <Typography className={classes.typography}>Amount/Payment Type</Typography>
         <Typography className={classes.typography}>Due Date</Typography>
         <Typography className={classes.typography}>Payment made by</Typography>
-        <div style={{display: 'flex'}}>
+        <div style={{ display: 'flex' }}>
           <Typography className={classes.typography}>Invoice Status</Typography>
-          <Typography style={{width: '40px'}}>{' '}</Typography>
+          <Typography style={{ width: '40px' }}> </Typography>
         </div>
       </Grid>
     </>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({
