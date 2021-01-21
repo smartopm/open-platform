@@ -1,0 +1,10 @@
+version: "2"
+services:
+  cypress:
+    image: "cypress/included:6.3.0"
+    depends_on:
+      - rails
+    network_mode: "host"
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e

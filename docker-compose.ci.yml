@@ -1,0 +1,51 @@
+version: "2"
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    env_file:
+      - '.env.docker'
+  redis:
+    image: redis
+    expose:
+      - "6379"
+  rails:
+    build:
+      context: .
+      dockerfile: ./docker/rails/Dockerfile
+    image: doublegdp_rails:latest
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e test -p 3000 -b '0.0.0.0'"
+    env_file:
+      - '.env.docker'
+    volumes:
+      - .:/myapp
+    ports:
+      - 3000:3000
+    depends_on:
+      - redis
+      - postgres
+      - webpacker
+  webpacker:
+    image: doublegdp_rails:latest
+    command: bash -c "rm -rf ./public/packs; ./bin/webpack-dev-server"
+    cpu_shares: 75
+    env_file:
+      - '.env.docker'
+    volumes:
+      - .:/myapp
+    ports:
+      - 3035:3035
+  rails_worker:
+    image: doublegdp_rails:latest
+    command: bash -c "bundle exec sidekiq"
+    env_file:
+      - '.env.docker'
+    volumes:
+      - .:/myapp
+    depends_on:
+      - postgres
+volumes:
+  pgdata:

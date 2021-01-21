@@ -86,7 +86,7 @@ export function LoginScreen() {
     })
     window.open(
       `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
-       I would like access to the Nkwashi app. Please provide me with my login credentials. 
+       I would like access to the Nkwashi app. Please provide me with my login credentials.
        Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
       'emailWindow'
     )
@@ -180,6 +180,7 @@ export function LoginScreen() {
               }}
               variant="contained"
               startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
+              className="google-sign-in-btn"
             >
               Sign In with Google
             </Button>

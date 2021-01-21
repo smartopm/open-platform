@@ -1,0 +1,6 @@
+{
+  "screenshotsFolder": "tmp/cypress/screenshots",
+  "videosFolder": "tmp/cypress/videos",
+  "baseUrl": "http://localhost:3000/",
+  "trashAssetsBeforeRuns": false
+}

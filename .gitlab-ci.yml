@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - e2e
   - report
   - staging
   - deploy
@@ -65,32 +66,51 @@ pages:
     only:
       - master
 
-test:rspec:
-  extends: .base_db
-  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
-  stage: test
-  allow_failure: false
-  script:
-    - bundle exec rake lint
-    - bundle exec rake
-  artifacts:
-    paths:
-      - "coverage/"
-    name: "Rails $CI_PIPELINE_ID Coverage Report"
-    expire_in: 24 hours
+# test:rspec:
+#   extends: .base_db
+#   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+#   stage: test
+#   allow_failure: false
+#   script:
+#     - bundle exec rake lint
+#     - bundle exec rake
+#   artifacts:
+#     paths:
+#       - "coverage/"
+#     name: "Rails $CI_PIPELINE_ID Coverage Report"
+#     expire_in: 24 hours
 
-test:jest:
-  extends: .base_db
-  stage: test
-  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
-  allow_failure: false
+# test:jest:
+#   extends: .base_db
+#   stage: test
+#   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
+#   allow_failure: false
+#   script:
+#     - yarn lint
+#     - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+#   artifacts:
+#     paths:
+#       - "coverage/"
+#     name: "Jest $CI_PIPELINE_ID Coverage Report"
+#     expire_in: 24 hours
+
+cypress:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: e2e
+  before_script:
+    - apk --update add nodejs
+    - apk add yarn
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
+    - apk add --no-cache docker-compose
   script:
-    - yarn lint
-    - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+    - sh ./bin/integration_tests.sh
   artifacts:
     paths:
-      - "coverage/"
-    name: "Jest $CI_PIPELINE_ID Coverage Report"
+      - "tmp/cypress/"
+    name: "Cypress $CI_PIPELINE_ID Visual Report"
     expire_in: 24 hours
 
 staging:appdeploy:
