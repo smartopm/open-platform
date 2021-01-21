@@ -14,10 +14,9 @@ export default function ListHeader({ headers }) {
       alignItems="center"
       className={classes.heading}
     >
-      {headers.map((header, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <Typography key={`${header}-${index}`} className={classes.typography}>
-          {header}
+      {headers.map(header => (
+        <Typography key={header} className={classes.typography}>
+          {['Select', 'Menu'].includes(header) ? null : header}
         </Typography>
       ))}
     </Grid>
