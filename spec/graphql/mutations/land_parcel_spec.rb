@@ -57,6 +57,10 @@ RSpec.describe Mutations::LandParcel do
                 valuations {
                   amount
                 }
+                accounts {
+                  fullName
+                  address1
+                }
             }
           }
         }
