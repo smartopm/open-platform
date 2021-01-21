@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Container, Grid, List, IconButton, MenuItem } from '@material-ui/core';
+import { Container, Grid, List, IconButton, MenuItem, Checkbox } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
@@ -14,29 +12,19 @@ import { Spinner } from '../Loading';
 import { formatError, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { currencies, invoiceStatus } from '../../utils/constants';
-import PaymentListHeading from './PaymentListHeading';
 import ActionMenu from './PaymentActionMenu';
 import InvoiceTiles from './InvoiceTiles';
-import Item from '../List/ListHeader';
-import ListItem from '../List/ListItem';
+import DataList from '../List/DataList';
 
-const Iheaders = ['Select', 'Parcel', 'Amount', 'Due date', 'Paid by', 'Status', 'Action'];
-const IData = ['box', 'first col', 'second col', 'thrid date', 'fourth by', 'fifth', 'sixth'];
-
-const data = { a: 1, b: 2, c: 3, d: 4 };
-const keys = ['a', 'b', 'c', 'd'];
-const dataList = [data, data, data, data];
-
-// function extend(base, ...objs) {
-//   objs.forEach(obj => {
-//     Object.keys(obj).forEach(key => {
-//       // eslint-disable-next-line security/detect-object-injection
-//       base[key] = obj[key];
-//     })
-//   });
-//   return base;
-// }
-
+const Iheaders = [
+  'Select',
+  'Parcel Number',
+  'Amount/Payment Type',
+  'Due date',
+  'Payment made by',
+  'Invoice Status',
+  'Menu'
+];
 export default function PaymentList({ authState }) {
   const history = useHistory();
   const classes = useStyles();
@@ -85,34 +73,53 @@ export default function PaymentList({ authState }) {
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-
-  // console.log();
+  // the following are for prototyping
+  function handleChange() {}
+  const checked = false;
   const newData = invoicesData?.invoices.map(invoice => {
     return {
-      a: invoice.landParcel.parcelNumber,
-      b: invoice.dueDate,
-      c: (
-        <span
-          className={classes.typography}
-          style={{
-            // marginTop: '8px',
-            textAlign: 'center',
-            background: `${InvoiceStatusColor[invoice.status]}`,
-            padding: '14px',
-            color: 'white',
-            borderRadius: '9px'
-            // marginRight: '15px'
-          }}
-        >
-          {invoiceStatus[invoice.status]}
-        </span>
+      Select: (
+        <Checkbox
+          checked={checked}
+          onChange={handleChange}
+          inputProps={{ 'aria-label': 'primary checkbox' }}
+        />
       ),
-      d: invoice.payments.map(pay => (
+      'Parcel Number': invoice.landParcel.parcelNumber,
+      'Amount/Payment Type': invoice.payments.map(pay => (
+        <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
+      )),
+      'Due date': dateToString(invoice.dueDate),
+      'Payment made by': invoice.payments.map(pay => (
         <span key={pay.id}>
           {pay.user.name}
           {pay.length > 1 ? ',' : ''}
         </span>
-      ))
+      )),
+      'Invoice Status': (
+        <p
+          style={{
+            textAlign: 'center',
+            background: `${InvoiceStatusColor[invoice.status]}`,
+            padding: '9px',
+            color: 'white',
+            borderRadius: '15px',
+            width: 120
+          }}
+        >
+          {invoiceStatus[invoice.status]}
+        </p>
+      ),
+      Menu: (
+        <IconButton
+          className={classes.option}
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleOpenMenu}
+        >
+          <MoreHorizIcon />
+        </IconButton>
+      )
     };
   });
 
@@ -132,73 +139,7 @@ export default function PaymentList({ authState }) {
           <Spinner />
         ) : invoicesData?.invoices.length ? (
           <div>
-            {/* <PaymentListHeading /> */}
-
-            <Item headers={Iheaders} />
-            {/* <Item headers={Iheaders} /> */}
-            {/* <ListItem headers={Iheaders} dataList={IData} /> */}
-            {/* <ListItem headers={Iheaders} dataList={IData} /> */}
-            <ListItem keys={keys} data={newData} />
-            {/* headers={Iheaders} dataList={IData} */}
-
-            {/* {invoicesData?.invoices.map(invoice => (
-              <div key={invoice.id}>
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-evenly"
-                  alignItems="center"
-                  className={classes.list}
-                >
-                  <Typography className={classes.typography} data-testid="landparcel">
-                    {invoice.landParcel.parcelNumber}
-                  </Typography>
-                  <Typography className={classes.typography}>
-                    {invoice.payments.map(pay => (
-                      <span key={pay.id}>
-                        {currency}
-                        {pay.amount}, {InvoiceType[pay.paymentType]}
-                      </span>
-                    ))}
-                  </Typography>
-                  <Typography className={classes.typography} data-testid="duedate">
-                    {dateToString(invoice.dueDate)}
-                  </Typography>
-                  <Typography className={classes.typography}>
-                    {invoice.payments.map(pay => (
-                      <span key={pay.id}>
-                        {pay.user.name}
-                        {pay.length > 1 ? ',' : ''}
-                      </span>
-                    ))}
-                  </Typography>
-                  <div style={{ display: 'flex' }}>
-                    <Typography
-                      className={classes.typography}
-                      style={{
-                        marginTop: '8px',
-                        textAlign: 'center',
-                        background: `${InvoiceStatusColor[invoice.status]}`,
-                        paddingTop: '7px',
-                        color: 'white',
-                        borderRadius: '15px',
-                        marginRight: '15px'
-                      }}
-                    >
-                      {invoiceStatus[invoice.status]}
-                    </Typography>
-                    <IconButton
-                      className={classes.option}
-                      aria-controls="simple-menu"
-                      aria-haspopup="true"
-                      onClick={handleOpenMenu}
-                    >
-                      <MoreHorizIcon />
-                    </IconButton>
-                  </div>
-                </Grid>
-              </div>
-            ))} */}
+            <DataList keys={Iheaders} data={newData} />
             <ActionMenu anchorEl={anchorEl} handleClose={handleClose} open={open}>
               <MenuItem id="view-button" key="view-user">
                 View
@@ -245,7 +186,8 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   option: {
-    width: '40px'
+    // width: 40,
+    marginRight: -120
   }
 }));
 

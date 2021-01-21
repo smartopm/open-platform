@@ -10,7 +10,7 @@ export default function ListHeader({ headers }) {
     <Grid
       container
       direction="row"
-      justify="space-evenly"
+      justify="space-around"
       alignItems="center"
       className={classes.heading}
     >
