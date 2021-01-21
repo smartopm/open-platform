@@ -28,7 +28,7 @@ describe('Land Parcel Modal Component', () => {
     expect(container.queryByText('Valuation History')).toBeInTheDocument()
 
     fireEvent.click(container.queryByText('Ownership'))
-    expect(container.queryByText('Coming soon!!')).toBeInTheDocument()
+    expect(container.queryByText('New Owner')).toBeInTheDocument()
 
     fireEvent.click(container.queryByText('Valuation History'))
     expect(container.queryByText('Add Valuation')).toBeInTheDocument()
@@ -37,5 +37,10 @@ describe('Land Parcel Modal Component', () => {
     const valuationAmount = container.queryByTestId('valuation-amount')
     fireEvent.change(valuationAmount, { target: { value: 200 } })
     expect(valuationAmount.value).toBe('200')
+
+    fireEvent.click(container.queryByText('New Owner'))
+    const owner = container.queryByTestId('owner')
+    fireEvent.change(owner, { target: { value: 'Owner Name' } })
+    expect(owner.value).toBe('Owner Name')
   })
 })

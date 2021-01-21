@@ -40,7 +40,8 @@ RSpec.describe Mutations::LandParcel do
           $stateProvince: String,
           $parcelType: String,
           $country: String,
-          $valuationFields: JSON) {
+          $valuationFields: JSON
+          $ownershipFields: JSON) {
             PropertyCreate(parcelNumber: $parcelNumber,
             address1: $address1,
             address2: $address2,
@@ -49,7 +50,8 @@ RSpec.describe Mutations::LandParcel do
             stateProvince: $stateProvince,
             parcelType: $parcelType,
             country: $country,
-            valuationFields: $valuationFields) {
+            valuationFields: $valuationFields
+            ownershipFields: $ownershipFields) {
               landParcel {
                 id
                 valuations {
@@ -105,6 +107,7 @@ RSpec.describe Mutations::LandParcel do
         parcelType: 'this is parcel type',
         country: 'this is a country',
         valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'owner name', address: 'owner address', userId: current_user.id }]
       }
       prev_valuation_count = Valuation.count
 
@@ -113,12 +116,18 @@ RSpec.describe Mutations::LandParcel do
                                                         current_user: current_user,
                                                         site_community: current_user.community,
                                                       }).as_json
-
+      
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'id')).not_to be_nil
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'valuations', 0, 'amount')).to eq(
         200,
       )
       expect(Valuation.count).to eq(prev_valuation_count + 1)
+      expect(result.dig('data', 'PropertyCreate', 'landParcel', 'accounts', 0, 'fullName')).to eq(
+        'owner name',
+      )
+      expect(result.dig('data', 'PropertyCreate', 'landParcel', 'accounts', 0, 'address1')).to eq(
+        'owner address',
+      )
       expect(result['errors']).to be_nil
     end
 

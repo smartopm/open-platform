@@ -18,6 +18,7 @@ module Mutations
       field :land_parcel, Types::LandParcelType, null: true
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         ActiveRecord::Base.transaction do
           land_parcel = context[:site_community].land_parcels.create!(
@@ -28,7 +29,10 @@ module Mutations
           end
 
           Array.wrap(vals[:ownership_fields]).each do |v|
-            land_parcel.accounts.create!(user_id: v['userId'], full_name: v['name'], address1: v['address'], community_id: context[:site_community].id)
+            land_parcel.accounts.create!(user_id: v['userId'],
+                                         full_name: v['name'],
+                                         address1: v['address'],
+                                         community_id: context[:site_community].id)
           end
           { land_parcel: land_parcel }
         end
@@ -36,6 +40,7 @@ module Mutations
         raise GraphQL::ExecutionError, e.message
       end
       # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?

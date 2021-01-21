@@ -291,7 +291,7 @@ export default function LandParcelModal({
               landParcel?.accounts.map(owner => (
                 <div key={owner.id}>
                   <TextField 
-                    id="user-search" 
+                    id={`user-search-${owner.name}`} 
                     focused
                     value={owner.fullName}
                     label="Owner"
@@ -300,7 +300,7 @@ export default function LandParcelModal({
                     style={{marginBottom: '15px'}}
                   />
                   <TextField 
-                    id="user-search" 
+                    id={`user-search-${owner.address1}`} 
                     focused
                     value={owner.address1}
                     label="Address"
@@ -317,7 +317,7 @@ export default function LandParcelModal({
           <div key={index} style={{display: 'flex'}}>
             <div>
               <TextField 
-                id="user-search" 
+                id={`user-search-${index}`} 
                 helperText='Enter name of the user and Press enter to search'
                 autoFocus
                 value={ownershipFields[Number(index)].name}
@@ -326,11 +326,14 @@ export default function LandParcelModal({
                 onKeyDown={(e) => userSearch(e, index)}
                 name="name"
                 className={classes.textField}
+                inputProps={{
+                  'data-testid': 'owner'
+                }}
               />
               {showAddress && (
               <TextField 
                 focused
-                id="user-address"
+                id={`user-search-${index}`}
                 value={ownershipFields[Number(index)].address}
                 label="Address"
                 onChange={(event) => onChangeOwnershipField(event, index)}

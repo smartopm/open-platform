@@ -28,7 +28,8 @@ module Types::Queries::LandParcel
   def fetch_land_parcel(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].land_parcels.eager_load(:valuations, :accounts).limit(limit).offset(offset)
+    context[:site_community].land_parcels.eager_load(:valuations, :accounts).limit(limit)
+                            .offset(offset)
   end
 
   def user_land_parcel(user_id:)

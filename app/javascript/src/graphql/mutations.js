@@ -402,7 +402,7 @@ mutation AddNewProperty($parcelNumber: String!,
     stateProvince: $stateProvince,
     parcelType: $parcelType,
     country: $country,
-    valuationFields: $valuationFields
+    valuationFields: $valuationFields,
     ownershipFields: $ownershipFields) {
       landParcel {
         id
