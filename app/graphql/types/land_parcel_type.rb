@@ -19,5 +19,6 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :read_at, GraphQL::Types::ISO8601DateTime, null: true
     field :valuations, [Types::ValuationType], null: false
+    field :accounts, [Types::AccountType], null: false
   end
 end

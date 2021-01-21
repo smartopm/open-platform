@@ -498,6 +498,11 @@ export const ParcelQuery = gql`
         startDate
         createdAt
       }
+      accounts {
+        id
+        fullName
+        address1
+      }
     }
   }
 `

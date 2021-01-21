@@ -3,11 +3,15 @@
 import React, { useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import { useLazyQuery } from 'react-apollo'
 import {
   TextField,
   InputAdornment,
   Typography,
-  IconButton
+  IconButton,
+  RadioGroup,
+  Radio,
+  FormControlLabel
 } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import { DeleteOutline } from '@material-ui/icons'
@@ -16,7 +20,7 @@ import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
 import DatePickerDialog from '../DatePickerDialog'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
-import ParcelOwnership from './ParcelOwnership'
+import { UsersLiteQuery } from '../../graphql/queries'
 
 export default function LandParcelModal({
   open,
@@ -36,6 +40,10 @@ export default function LandParcelModal({
   const [country, setCountry] = useState('')
   const [tabValue, setTabValue] = useState('Details')
   const [valuationFields, setValuationFields] = useState([])
+  const [search, setSearch] = useState(false)
+  const [showAddress, setShowAddress] = useState(false)
+  const [ownershipFields, setOwnershipFields] = useState([])
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   const isFormReadOnly = modalType === 'details'
   const authState = useContext(AuthStateContext)
@@ -46,6 +54,55 @@ export default function LandParcelModal({
       resetModalFields()
     }
   }, [open])
+
+  const [searchUser, { data } ] = useLazyQuery(UsersLiteQuery,{
+    variables: { query: ownershipFields[Number(currentIndex)]?.name },
+    errorPolicy: 'all',
+    fetchPolicy: 'no-cache'
+  })
+
+  function addOwnership(){
+    setOwnershipFields([
+      ...ownershipFields,
+      { name: '', address: '' }
+    ])
+  }
+
+  function onChangeOwnershipField(event, index) {
+    setShowAddress(false)
+    updateOwnershipField(event.target.name, event.target.value, index)
+  }
+
+  function updateOwnershipField(name, value, index) {
+    const fields = [...ownershipFields]
+    fields[Number(index)] = { ...fields[Number(index)], [name]: value }
+    setOwnershipFields(fields)
+  }
+ 
+  function userSearch(e, index){
+    if(e.keyCode === 13){
+      setCurrentIndex(Number(index))
+      setSearch(true)
+      searchUser()
+    }
+  }
+
+  function removeOwnership(index) {
+    const ownershipOptions = ownershipFields
+    ownershipOptions.splice(index, 1)
+    setOwnershipFields([...ownershipOptions])
+  }
+
+  const handleOwnershipChange = (event, index) => {
+    const fields = [...ownershipFields]
+    fields[Number(index)] = { name: data?.usersLite[event.target.value].name, 
+                              address: data?.usersLite[event.target.value].address,
+                              userId: data?.usersLite[event.target.value].id 
+                            }
+    setOwnershipFields(fields)
+    setSearch(false);
+    setShowAddress(true)
+  };
 
   function resetModalFields() {
     setParcelNumber('')
@@ -58,6 +115,7 @@ export default function LandParcelModal({
     setCountry('')
     setTabValue('Details')
     setValuationFields([])
+    setOwnershipFields([])
   }
 
   function handleParcelSubmit() {
@@ -71,7 +129,8 @@ export default function LandParcelModal({
         stateProvince,
         parcelType,
         country,
-        valuationFields
+        valuationFields,
+        ownershipFields
       })
     }
   }
@@ -227,7 +286,90 @@ export default function LandParcelModal({
         </div>
       </TabPanel>
       <TabPanel value={tabValue} index="Ownership">
-        <ParcelOwnership modalType={modalType} />
+        {modalType === 'details' &&
+            (landParcel?.accounts?.length ? (
+              landParcel?.accounts.map(owner => (
+                <div key={owner.id}>
+                  <TextField 
+                    id="user-search" 
+                    focused
+                    value={owner.fullName}
+                    label="Owner"
+                    name="name"
+                    className={classes.textField}
+                    style={{marginBottom: '15px'}}
+                  />
+                  <TextField 
+                    id="user-search" 
+                    focused
+                    value={owner.address1}
+                    label="Address"
+                    name="address"
+                    className={classes.textField}
+                  />
+                </div>
+              ))
+            ) : (
+              <div>No owner yet</div>
+            ))}
+        {ownershipFields?.map((_field, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={index} style={{display: 'flex'}}>
+            <div>
+              <TextField 
+                id="user-search" 
+                helperText='Enter name of the user and Press enter to search'
+                autoFocus
+                value={ownershipFields[Number(index)].name}
+                label="Owner"
+                onChange={(event) => onChangeOwnershipField(event, index)}
+                onKeyDown={(e) => userSearch(e, index)}
+                name="name"
+                className={classes.textField}
+              />
+              {showAddress && (
+              <TextField 
+                focused
+                id="user-address"
+                value={ownershipFields[Number(index)].address}
+                label="Address"
+                onChange={(event) => onChangeOwnershipField(event, index)}
+                onKeyDown={userSearch}
+                name="address"
+                className={classes.textField}
+                style={{marginBottom: '15px'}}
+              />
+              )}
+              {search && data && currentIndex === index && (
+              <RadioGroup aria-label="user" name="user" onChange={(event) => handleOwnershipChange(event, index)}>
+                {data?.usersLite.map((user, i) => (
+                  <FormControlLabel value={i} control={<Radio />} label={user.name} key={user.id} />
+                ))}
+              </RadioGroup>
+              )}
+            </div>
+            <div className={classes.removeIcon}>
+              <IconButton
+                style={{ marginTop: 13 }}
+                onClick={() => removeOwnership(index)}
+                aria-label="remove"
+              >
+                <DeleteOutline />
+              </IconButton>
+            </div>
+          </div>
+        ))}
+        
+        {modalType === 'new' && (
+        <div className={classes.addIcon} role="button" onClick={addOwnership}>
+          <AddCircleOutlineIcon />
+          <div style={{ marginLeft: '6px', color: 'secondary' }}>
+            <Typography align="center" variant="caption">
+              New Owner
+            </Typography>
+          </div>
+        </div>
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
         {modalType === 'details' &&
@@ -342,6 +484,9 @@ const useStyles = makeStyles(() => ({
   removeIcon: {
     marginTop: '25px',
     marginLeft: '10px'
+  },
+  textField: {
+    width: '450px'
   }
 }))
 
