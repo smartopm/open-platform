@@ -325,7 +325,6 @@ ActiveRecord::Schema.define(version: 2021_01_22_093934) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "created_by_id"
-    t.bigint "invoice_number", default: -> { "nextval('global_seq'::regclass)" }
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"

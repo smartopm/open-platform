@@ -12,8 +12,11 @@ RSpec.describe Payment, type: :model do
     it { is_expected.to have_db_column(:payment_type).of_type(:string) }
   end
 
+  describe 'validations' do
+    it { is_expected.to validate_inclusion_of(:payment_type).in_array(Payment::VALID_TYPES) }
+  end
+
   describe 'associations' do
-    it { is_expected.to belong_to(:user) }
-    it { is_expected.to belong_to(:invoice) }
+    it { is_expected.to have_many(:invoices) }
   end
 end

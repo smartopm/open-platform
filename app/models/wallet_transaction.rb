@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
+# Record the transactions
 class WalletTransaction < ApplicationRecord
+  has_one :payment_invoice, dependent: :destroy
+
   VALID_SOURCES = ['cash', 'cheque/cashier_cheque'].freeze
 
   validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }

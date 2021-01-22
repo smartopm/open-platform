@@ -6,13 +6,13 @@ task copy_payments_to_transactions: :environment do
     attr = payment.attributes
     source = attr.delete('payment_type')
     status = attr.delete('payment_status')
-    invoice_id =  attr.delete('invoice_id')
+    invoice_id = attr.delete('invoice_id')
 
     transaction_attr = attr.merge(source: source, destination: 'invoice', status: status)
     transaction = WalletTransaction.create(transaction_attr)
-    
+
     PaymentInvoice.create(
-      payment_id: payment.id, invoice_id: invoice_id, wallet_transaction_id: transaction.id
+      payment_id: payment.id, invoice_id: invoice_id, wallet_transaction_id: transaction.id,
     )
   end
 end
