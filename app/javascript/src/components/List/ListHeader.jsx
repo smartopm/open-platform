@@ -13,18 +13,26 @@ export default function ListHeader({ headers }) {
       justify="space-around"
       alignItems="center"
       className={classes.heading}
+      // spacing={3}
     >
       {headers.map(header => (
-        <Typography key={header} className={classes.typography}>
-          {['Select', 'Menu'].includes(header) ? null : header}
-        </Typography>
+        <Grid item xs={header.col} key={header.title}>
+          <Typography className={classes.typography}>
+            {['Select', 'Menu'].includes(header.title) ? null : header.title}
+          </Typography>
+        </Grid>
       ))}
     </Grid>
   );
 }
 
 ListHeader.propTypes = {
-  headers: PropTypes.arrayOf(PropTypes.string).isRequired
+  headers: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      col: PropTypes.number.isRequired
+    })
+  ).isRequired
 };
 
 const useStyles = makeStyles(() => ({
@@ -34,7 +42,7 @@ const useStyles = makeStyles(() => ({
     border: '1px solid #ECECEC'
   },
   typography: {
-    width: '150px',
-    marginLeft: ''
+    // width: '150px',
+    marginLeft: 30
   }
 }));

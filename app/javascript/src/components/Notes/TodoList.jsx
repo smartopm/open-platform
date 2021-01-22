@@ -105,8 +105,9 @@ export default function TodoList({
     variables: {
       offset,
       limit,
-      // eslint-disable-next-line no-nested-ternary
-      query: `${qr} ${filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
+      query: `${qr} ${
+        // eslint-disable-next-line no-nested-ternary
+        filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
       }`
     },
     fetchPolicy: 'network-only'

@@ -24,13 +24,13 @@ import DataList from '../List/DataList';
 import Label from '../List/Label';
 
 const paymentHeaders = [
-  'Select',
-  'Parcel Number',
-  'Amount/Payment Type',
-  'Due date',
-  'Payment made by',
-  'Invoice Status',
-  'Menu'
+  { title: 'Select', col: 1 },
+  { title: 'Parcel Number', col: 2 },
+  { title: 'Amount/Payment Type', col: 2 },
+  { title: 'Due date', col: 1 },
+  { title: 'Payment made by', col: 3 },
+  { title: 'Invoice Status', col: 2 },
+  { title: 'Menu', col: 1 }
 ];
 export default function PaymentList({ authState }) {
   const history = useHistory();
@@ -86,38 +86,60 @@ export default function PaymentList({ authState }) {
   const newData = invoicesData?.invoices.map(invoice => {
     return {
       Select: (
-        <Checkbox
-          checked={checked}
-          onChange={handleChange}
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
+        <Grid item xs={1}>
+          <Checkbox
+            checked={checked}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        </Grid>
       ),
-      'Parcel Number': invoice.landParcel.parcelNumber,
-      'Amount/Payment Type': invoice.payments.map(pay => (
-        <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
-      )),
-      'Due date': dateToString(invoice.dueDate),
-      'Payment made by': invoice.payments.map(pay => (
-        <span key={pay.id}>
-          {pay.user.name}
-          {pay.length > 1 ? ',' : ''}
-        </span>
-      )),
+      'Parcel Number': (
+        <Grid item xs={2}>
+          {invoice.landParcel.parcelNumber}
+        </Grid>
+      ),
+      'Amount/Payment Type': (
+        <Grid item xs={2}>
+          {invoice.payments.map(pay => (
+            <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
+          ))}
+        </Grid>
+      ),
+      'Due date': (
+        <Grid item xs={1}>
+          {dateToString(invoice.dueDate)}
+        </Grid>
+      ),
+      'Payment made by': (
+        <Grid item xs={3}>
+          {invoice.payments.map(pay => (
+            <span key={pay.id}>
+              {pay.user.name}
+              {pay.length > 1 ? ',' : ''}
+            </span>
+          ))}
+        </Grid>
+      ),
       'Invoice Status': (
-        <Label
-          title={propAccessor(invoiceStatus, invoice.status)}
-          color={propAccessor(InvoiceStatusColor, invoice.status)}
-        />
+        <Grid item xs={2}>
+          <Label
+            title={propAccessor(invoiceStatus, invoice.status)}
+            color={propAccessor(InvoiceStatusColor, invoice.status)}
+          />
+        </Grid>
       ),
       Menu: (
-        <IconButton
-          className={classes.option}
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={handleOpenMenu}
-        >
-          <MoreHorizIcon />
-        </IconButton>
+        <Grid item xs={1}>
+          <IconButton
+            className={classes.option}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleOpenMenu}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+        </Grid>
       )
     };
   });

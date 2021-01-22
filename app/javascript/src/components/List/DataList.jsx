@@ -1,8 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
+import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
@@ -20,41 +19,37 @@ export default function DataList({ keys, data }) {
         <Grid
           container
           direction="row"
-          justify="space-around"
+          justify="space-between"
           alignItems="center"
           className={classes.list}
           key={index}
+          spacing={1}
         >
-          <CellData propNames={keys} className={classes.typography} dataObj={item} />
+          <CellData propNames={keys} dataObj={item} />
         </Grid>
       ))}
     </>
   );
 }
 
-export function CellData({ propNames, dataObj, className }) {
+export function CellData({ propNames, dataObj }) {
   return propNames.map(prop => (
-    <Typography className={className} key={prop} component="div">
-      {propAccessor(dataObj, prop)}
-    </Typography>
+    <Fragment key={prop.title}>{propAccessor(dataObj, prop.title)}</Fragment>
   ));
 }
 
 DataList.propTypes = {
-  keys: PropTypes.arrayOf(PropTypes.string).isRequired,
+  keys: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 CellData.propTypes = {
-  propNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-  dataObj: PropTypes.object.isRequired,
-  className: PropTypes.string.isRequired
+  propNames: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dataObj: PropTypes.object.isRequired
 };
 
 const useStyles = makeStyles(() => ({
-  typography: {
-    width: '150px'
-  },
+  // TODO: use colors from the theme
   list: {
     backgroundColor: '#FFFFFF',
     padding: '15px 0',
