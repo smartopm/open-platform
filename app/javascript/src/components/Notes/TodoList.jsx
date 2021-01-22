@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import {
   Fab,
   Dialog,
@@ -11,28 +11,28 @@ import {
   IconButton,
   Grid,
   Button
-} from '@material-ui/core'
-import FilterListIcon from '@material-ui/icons/FilterList'
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import { StyleSheet, css } from 'aphrodite'
-import { makeStyles } from '@material-ui/core/styles'
-import { useMutation, useLazyQuery, useQuery } from 'react-apollo'
-import { useParams, useHistory } from 'react-router'
-import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../graphql/queries'
-import { AssignUser } from '../../graphql/mutations'
-import TaskForm from './TaskForm'
-import ErrorPage from '../Error'
-import Paginate from '../Paginate'
-import CenteredContent from '../CenteredContent'
-import Task from './Task'
-import TaskDashboard from './TaskDashboard'
-import { futureDateAndTimeToString } from '../DateContainer'
-import DatePickerDialog from '../DatePickerDialog'
-import Loading from '../Loading'
-import QueryBuilder from '../QueryBuilder'
-import { ModalDialog } from '../Dialog'
-import { pluralizeCount, propAccessor } from '../../utils/helpers'
-import useDebounce from '../../utils/useDebounce'
+} from '@material-ui/core';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
+import { StyleSheet, css } from 'aphrodite';
+import { makeStyles } from '@material-ui/core/styles';
+import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
+import { useParams, useHistory } from 'react-router';
+import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../graphql/queries';
+import { AssignUser } from '../../graphql/mutations';
+import TaskForm from './TaskForm';
+import ErrorPage from '../Error';
+import Paginate from '../Paginate';
+import CenteredContent from '../CenteredContent';
+import Task from './Task';
+import TaskDashboard from './TaskDashboard';
+import { futureDateAndTimeToString } from '../DateContainer';
+import DatePickerDialog from '../DatePickerDialog';
+import Loading from '../Loading';
+import QueryBuilder from '../QueryBuilder';
+import { ModalDialog } from '../Dialog';
+import { pluralizeCount, propAccessor } from '../../utils/helpers';
+import useDebounce from '../../utils/useDebounce';
 
 // component needs a redesign both implementation and UI
 export default function TodoList({
@@ -45,23 +45,23 @@ export default function TodoList({
   location,
   currentUser
 }) {
-  const classes = useStyles()
-  const limit = 50
-  const [offset, setOffset] = useState(0)
-  const [loaded, setLoadingAssignee] = useState(false)
-  const [open, setModalOpen] = useState(false)
-  const [filterOpen, setOpenFilter] = useState(false)
-  const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false)
-  const [loadingMutation, setMutationLoading] = useState(false)
-  const [message, setErrorMessage] = useState('')
-  const [query, setQuery] = useState('')
-  const [currentTile, setCurrentTile] = useState('')
-  const [displayBuilder, setDisplayBuilder] = useState('none')
-  const [filterCount, setFilterCount] = useState(0)
-  const [filterQuery, setFilterQuery] = useState('')
-  const [searchInputQuery, setSearchInputQuery] = useState('')
-  const { taskId } = useParams()
-  const history = useHistory()
+  const classes = useStyles();
+  const limit = 50;
+  const [offset, setOffset] = useState(0);
+  const [loaded, setLoadingAssignee] = useState(false);
+  const [open, setModalOpen] = useState(false);
+  const [filterOpen, setOpenFilter] = useState(false);
+  const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false);
+  const [loadingMutation, setMutationLoading] = useState(false);
+  const [message, setErrorMessage] = useState('');
+  const [query, setQuery] = useState('');
+  const [currentTile, setCurrentTile] = useState('');
+  const [displayBuilder, setDisplayBuilder] = useState('none');
+  const [filterCount, setFilterCount] = useState(0);
+  const [filterQuery, setFilterQuery] = useState('');
+  const [searchInputQuery, setSearchInputQuery] = useState('');
+  const { taskId } = useParams();
+  const history = useHistory();
   const [userNameSearchTerm, setUserNameSearchTerm] = useState('');
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
@@ -77,192 +77,196 @@ export default function TodoList({
     myOpenTasks: `assignees: ${currentUser.name} AND completed: false`,
     totalCallsOpen: 'category: call AND completed: false',
     totalFormsOpen: 'category: form AND completed: false'
-  }
+  };
 
-  const taskCountData = useQuery(TaskStatsQuery)
+  const taskCountData = useQuery(TaskStatsQuery);
 
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: 'user_type = admin' },
     errorPolicy: 'all'
-  })
+  });
 
   const [loadTask, { loading: taskLoading, data: taskData }] = useLazyQuery(TaskQuery, {
     variables: { taskId },
-    errorPolicy: 'all',
+    errorPolicy: 'all'
     // fetchPolicy: 'cache-and-network'
-  })
+  });
 
   // eslint-disable-next-line no-nested-ternary
-  const qr = query.length ? query : location === 'my_tasks' ? `assignees: '${currentUser.name}'` : ''
-  const [loadTasks, {
-    loading: isLoading, error: tasksError, data, refetch, called
-  }] = useLazyQuery(
-    flaggedNotes,
-    {
-      variables: {
-        offset,
-        limit,
-        // eslint-disable-next-line no-nested-ternary
-        query: `${qr} ${filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''}`
-      },
-      fetchPolicy: 'network-only'
-    }
-  )
-  const [assignUserToNote] = useMutation(AssignUser)
+  const qr = query.length
+    ? query
+    : location === 'my_tasks'
+    ? `assignees: '${currentUser.name}'`
+    : '';
+  const [
+    loadTasks,
+    { loading: isLoading, error: tasksError, data, refetch, called }
+  ] = useLazyQuery(flaggedNotes, {
+    variables: {
+      offset,
+      limit,
+      // eslint-disable-next-line no-nested-ternary
+      query: `${qr} ${filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
+      }`
+    },
+    fetchPolicy: 'network-only'
+  });
+  const [assignUserToNote] = useMutation(AssignUser);
 
   function openModal() {
-    setModalOpen(!open)
+    setModalOpen(!open);
   }
 
   useEffect(() => {
     // only fetch admins when the  modal is opened or when the select is triggered
     if (open || filterOpen || isAssignTaskOpen) {
-      loadAssignees()
+      loadAssignees();
     }
     // load tasks on runtime when we are on my task page from notification
     if (location !== 'tasks') {
-      loadTasks()
+      loadTasks();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location]);
 
   useEffect(() => {
     if (taskId) {
-      loadTask()
-      setModalOpen(true)
+      loadTask();
+      setModalOpen(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId]);
 
   useEffect(() => {
     if (taskCountData) {
-      taskCountData.refetch()
+      taskCountData.refetch();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   useEffect(() => {
-    if(debouncedFilterInputText){
-      setFilterQuery(`${debouncedFilterInputText}`)
-      loadTasks()
+    if (debouncedFilterInputText) {
+      setFilterQuery(`${debouncedFilterInputText}`);
+      loadTasks();
     }
 
     // for tasks searched using the top search bar input
-    if(debouncedSearchText){
-      setSearchInputQuery(`user: '${debouncedSearchText}'`)
-      loadTasks()
+    if (debouncedSearchText) {
+      setSearchInputQuery(`user: '${debouncedSearchText}'`);
+      loadTasks();
     }
-  }, [debouncedFilterInputText, debouncedSearchText, loadTasks])
+  }, [debouncedFilterInputText, debouncedSearchText, loadTasks]);
 
-  function handleRefetch(){
-    refetch()
-    taskCountData.refetch()
+  function handleRefetch() {
+    refetch();
+    taskCountData.refetch();
   }
 
   // unassign the user if already assigned
   function handleDelete(userId, noteId) {
-    return assignUnassignUser(noteId, userId)
+    return assignUnassignUser(noteId, userId);
   }
   function assignUnassignUser(noteId, userId) {
-    setLoadingAssignee(true)
+    setLoadingAssignee(true);
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => {
         if (called) {
-          refetch()
+          refetch();
         }
-        taskCountData.refetch()
-        setLoadingAssignee(false)
+        taskCountData.refetch();
+        setLoadingAssignee(false);
       })
-      .catch((err) => setErrorMessage(err.message))
+      .catch(err => setErrorMessage(err.message));
   }
 
   function handleCompleteNote(noteId, completed) {
-    setMutationLoading(true)
-    todoAction(noteId, completed)
+    setMutationLoading(true);
+    todoAction(noteId, completed);
     // allow the mutation above to finish running before refetching
     setTimeout(() => {
-      refetch()
-      taskCountData.refetch()
-      setMutationLoading(false)
-    }, 200)
+      refetch();
+      taskCountData.refetch();
+      setMutationLoading(false);
+    }, 200);
   }
 
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
-        return
+        return;
       }
-      setOffset(offset - limit)
+      setOffset(offset - limit);
     } else if (action === 'next') {
-      setOffset(offset + limit)
+      setOffset(offset + limit);
     }
   }
 
   function handleTaskFilter(_evt, key) {
-    if (key === 'tasksWithNoDueDate') return
-    setCurrentTile(key)
-    setQuery(propAccessor(taskQuery, key))
+    if (key === 'tasksWithNoDueDate') return;
+    setCurrentTile(key);
+    setQuery(propAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
-    loadTasks()
+    loadTasks();
   }
 
   function closeAndExit() {
-    setModalOpen(false)
-    history.replace('/tasks')
+    setModalOpen(false);
+    history.replace('/tasks');
   }
 
   function inputToSearch(e) {
     // debounce input from search bar input field
-    const { value } = e.target
-    setSearchText(value)
+    const { value } = e.target;
+    setSearchText(value);
   }
 
   function toggleFilterMenu() {
     if (displayBuilder === '') {
-      setDisplayBuilder('none')
+      setDisplayBuilder('none');
     } else {
-      setDisplayBuilder('')
+      setDisplayBuilder('');
     }
-    setOpenFilter(!filterOpen)
+    setOpenFilter(!filterOpen);
   }
 
   function handleQueryOnChange(selectedOptions) {
-    if(selectedOptions){
-      const andConjugate = selectedOptions.logic?.and
-      const orConjugate = selectedOptions.logic?.or
-      const availableConjugate = andConjugate || orConjugate
+    if (selectedOptions) {
+      const andConjugate = selectedOptions.logic?.and;
+      const orConjugate = selectedOptions.logic?.or;
+      const availableConjugate = andConjugate || orConjugate;
 
-      if(availableConjugate){
-        const conjugate = andConjugate ? 'AND' : 'OR'
-        let property = ''
-        let value = null
-        const queryText = availableConjugate.map(option => {
-          let operator = Object.keys(option)[0]
-          const [inputFilterProperty, inputFilterValue] = propAccessor(option, operator)
-          
-          property = filterFields[inputFilterProperty.var]
-          value = inputFilterValue
-          operator = property === 'assignees' ? '=' : ':'
-          
-          return `${property}${operator} '${value}'`
-        })
-        .join(` ${conjugate} `)
+      if (availableConjugate) {
+        const conjugate = andConjugate ? 'AND' : 'OR';
+        let property = '';
+        let value = null;
+        const queryText = availableConjugate
+          .map(option => {
+            let operator = Object.keys(option)[0];
+            const [inputFilterProperty, inputFilterValue] = propAccessor(option, operator);
+
+            property = filterFields[inputFilterProperty.var];
+            value = inputFilterValue;
+            operator = property === 'assignees' ? '=' : ':';
+
+            return `${property}${operator} '${value}'`;
+          })
+          .join(` ${conjugate} `);
 
         // debounce only for user's Name
-        if(property === 'user') {
-          setUserNameSearchTerm(queryText)
-          setFilterCount(availableConjugate.length)
+        if (property === 'user') {
+          setUserNameSearchTerm(queryText);
+          setFilterCount(availableConjugate.length);
         }
 
-        if(property === 'assignees' && value){
-          setFilterQuery(queryText)
-          setFilterCount(availableConjugate.length)
+        if (property === 'assignees' && value) {
+          setFilterQuery(queryText);
+          setFilterCount(availableConjugate.length);
         }
       }
     }
   }
 
-  const InitialConfig = MaterialConfig
+  const InitialConfig = MaterialConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {
@@ -272,18 +276,18 @@ export default function TodoList({
         valueSources: ['value'],
         fieldSettings: {
           listValues: liteData?.usersLite.map(u => {
-            return { value: u.name, title: u.name }
+            return { value: u.name, title: u.name };
           })
         }
       },
       userName: {
-        label: 'User\'s Name',
+        label: "User's Name",
         type: 'text',
         valueSources: ['value'],
         excludeOperators: ['not_equal']
-      },
+      }
     }
-  }
+  };
 
   const queryBuilderInitialValue = {
     // Just any random UUID
@@ -301,14 +305,14 @@ export default function TodoList({
         }
       }
     }
-  }
+  };
 
   const filterFields = {
     assignee: 'assignees',
-    userName: 'user',
-  }
+    userName: 'user'
+  };
 
-  if (tasksError) return <ErrorPage error={tasksError.message} />
+  if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
     <>
@@ -341,52 +345,51 @@ export default function TodoList({
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
-            {
-              // eslint-disable-next-line no-nested-ternary
-              !taskId ? (
-                <TaskForm
-                  refetch={handleRefetch}
-                  close={() => setModalOpen(!open)}
-                  assignUser={assignUnassignUser}
-                  users={liteData?.usersLite}
+            {// eslint-disable-next-line no-nested-ternary
+            !taskId ? (
+              <TaskForm
+                refetch={handleRefetch}
+                close={() => setModalOpen(!open)}
+                assignUser={assignUnassignUser}
+                users={liteData?.usersLite}
+              />
+            ) : // eslint-disable-next-line no-nested-ternary
+            !taskData ? (
+              'No Task found'
+            ) : (
+              <>
+                <Task
+                  key={taskData.task.id}
+                  note={taskData.task}
+                  message={message}
+                  users={liteData?.usersLite || []}
+                  handleCompleteNote={handleCompleteNote}
+                  assignUnassignUser={assignUnassignUser}
+                  loaded={loaded}
+                  handleDelete={handleDelete}
+                  handleModal={handleModal}
+                  loading={loading}
+                  loadingMutation={loadingMutation}
+                  handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+                  isAssignTaskOpen={isAssignTaskOpen}
+                  currentUser={currentUser}
                 />
-              // eslint-disable-next-line no-nested-ternary
-              )
-                : !taskData ? 'No Task found' : (
-                  <>
-                    <Task
-                      key={taskData.task.id}
-                      note={taskData.task}
-                      message={message}
-                      users={liteData?.usersLite || []}
-                      handleCompleteNote={handleCompleteNote}
-                      assignUnassignUser={assignUnassignUser}
-                      loaded={loaded}
-                      handleDelete={handleDelete}
-                      handleModal={handleModal}
-                      loading={loading}
-                      loadingMutation={loadingMutation}
-                      handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-                      isAssignTaskOpen={isAssignTaskOpen}
-                      currentUser={currentUser}
-                    />
-                    <CenteredContent>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        aria-label="task_submit"
-                        onClick={closeAndExit}
-                      >
-                        Close
-                      </Button>
-                    </CenteredContent>
-
-                  </>
-                )
-            }
+                <CenteredContent>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    aria-label="task_submit"
+                    onClick={closeAndExit}
+                  >
+                    Close
+                  </Button>
+                </CenteredContent>
+              </>
+            )
+}
           </DialogContent>
         </Dialog>
-        
+
         <div className={classes.root}>
           <>
             <InputBase
@@ -409,12 +412,10 @@ export default function TodoList({
               <FilterListIcon />
             </IconButton>
             <div style={{ margin: '10px 19px 10px 0' }}>
-              {filterCount
-                ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}`
-                : 'Filter'}
+              {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : 'Filter'}
             </div>
           </>
-        </div> 
+        </div>
         <div
           style={{
             display: 'flex',
@@ -442,41 +443,43 @@ export default function TodoList({
           </Grid>
         </div>
         <br />
-        {isLoading || taskLoading ? 
-        (<Loading />)  : (
+        {isLoading || taskLoading ? (
+          <Loading />
+        ) : (
           <>
             <Grid container spacing={3}>
-              <TaskDashboard taskData={taskCountData} filterTasks={handleTaskFilter} currentTile={currentTile} />
+              <TaskDashboard
+                taskData={taskCountData}
+                filterTasks={handleTaskFilter}
+                currentTile={currentTile}
+              />
             </Grid>
             <br />
-            {data?.flaggedNotes.length ? data?.flaggedNotes.map((note) => (
-              <Task
-                key={note.id}
-                note={note}
-                message={message}
-                users={liteData?.usersLite || []}
-                handleCompleteNote={handleCompleteNote}
-                assignUnassignUser={assignUnassignUser}
-                loaded={loaded}
-                handleDelete={handleDelete}
-                handleModal={handleModal}
-                loading={loading}
-                loadingMutation={loadingMutation}
-                handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-                isAssignTaskOpen={isAssignTaskOpen}
-                currentUser={currentUser}
-              />
-          )) : (
-            <CenteredContent>Click a card above to filter</CenteredContent>
+            {data?.flaggedNotes.length ? (
+              data?.flaggedNotes.map(note => (
+                <Task
+                  key={note.id}
+                  note={note}
+                  message={message}
+                  users={liteData?.usersLite || []}
+                  handleCompleteNote={handleCompleteNote}
+                  assignUnassignUser={assignUnassignUser}
+                  loaded={loaded}
+                  handleDelete={handleDelete}
+                  handleModal={handleModal}
+                  loading={loading}
+                  loadingMutation={loadingMutation}
+                  handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
+                  isAssignTaskOpen={isAssignTaskOpen}
+                  currentUser={currentUser}
+                />
+              ))
+            ) : (
+              <CenteredContent>Click a card above to filter</CenteredContent>
             )}
             <br />
             <CenteredContent>
-              <Paginate
-                offSet={offset}
-                limit={limit}
-                active
-                handlePageChange={paginate}
-              />
+              <Paginate offSet={offset} limit={limit} active handlePageChange={paginate} />
             </CenteredContent>
             <Fab
               variant="extended"
@@ -487,10 +490,10 @@ export default function TodoList({
               Create task
             </Fab>
           </>
-)}
+        )}
       </div>
     </>
-  )
+  );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -515,8 +518,8 @@ const useStyles = makeStyles(theme => ({
   input: {
     marginLeft: theme.spacing(1),
     flex: 1
-  },
-}))
+  }
+}));
 
 const styles = StyleSheet.create({
   taskButton: {
@@ -528,4 +531,4 @@ const styles = StyleSheet.create({
     marginLeft: '30%',
     color: '#FFFFFF'
   }
-})
+});
