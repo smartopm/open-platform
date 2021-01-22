@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_22_083807) do
+ActiveRecord::Schema.define(version: 2021_01_22_093934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -162,11 +162,9 @@ ActiveRecord::Schema.define(version: 2021_01_22_083807) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
-    t.uuid "note_id"
     t.string "status"
     t.uuid "community_id"
     t.index ["community_id"], name: "index_comments_on_community_id"
-    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -450,6 +448,18 @@ ActiveRecord::Schema.define(version: 2021_01_22_083807) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "payment_invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "invoice_id", null: false
+    t.uuid "payment_id", null: false
+    t.uuid "wallet_transaction_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invoice_id"], name: "index_payment_invoices_on_invoice_id"
+    t.index ["payment_id", "invoice_id"], name: "index_payment_invoices_on_payment_id_and_invoice_id", unique: true
+    t.index ["payment_id"], name: "index_payment_invoices_on_payment_id"
+    t.index ["wallet_transaction_id"], name: "index_payment_invoices_on_wallet_transaction_id"
+  end
+
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "invoice_id", null: false
@@ -460,12 +470,6 @@ ActiveRecord::Schema.define(version: 2021_01_22_083807) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "bank_name"
     t.string "cheque_number"
-    t.string "name_on_card"
-    t.string "card_number_four_digits"
-    t.string "transaction_id"
-    t.string "success_code"
-    t.string "error"
-    t.string "transaction_code"
     t.index ["invoice_id"], name: "index_payments_on_invoice_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
@@ -597,6 +601,7 @@ ActiveRecord::Schema.define(version: 2021_01_22_083807) do
     t.string "source"
     t.string "destination"
     t.float "amount"
+    t.integer "status"
     t.string "bank_name"
     t.string "cheque_number"
     t.float "current_wallet_balance"
@@ -644,6 +649,9 @@ ActiveRecord::Schema.define(version: 2021_01_22_083807) do
   add_foreign_key "notes", "form_users"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
+  add_foreign_key "payment_invoices", "invoices"
+  add_foreign_key "payment_invoices", "payments"
+  add_foreign_key "payment_invoices", "wallet_transactions"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
   add_foreign_key "post_tag_users", "post_tags"

@@ -5,5 +5,5 @@ class WalletTransaction < ApplicationRecord
   validates :bank_name, :cheque_number, presence: true,
                                         if: -> { source.eql?('cheque/cashier_cheque') }
 
-  enum payment_status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
+  enum status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
 end
