@@ -1,11 +1,17 @@
-/* eslint-disable no-undef */
+/* eslint-disable */
 
 import './commands'
 
-beforeEach(() => {
-  // cy.resetDatabase()
-})
+// Cypress.on('uncaught:exception', (err, runnable) => {
+//   // returning false here prevents Cypress from
+// // failing the test
+//   return false
+// })
 
-after(() => {
-  // cy.resetDatabase()
-})
+// beforeEach(() => {
+//   // cy.resetDatabase()
+// })
+
+// after(() => {
+//   // cy.resetDatabase()
+// })

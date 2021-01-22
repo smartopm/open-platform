@@ -1,6 +1,6 @@
 {
   "screenshotsFolder": "tmp/cypress/screenshots",
   "videosFolder": "tmp/cypress/videos",
-  "baseUrl": "http://localhost:3000/",
-  "trashAssetsBeforeRuns": false
+  "baseUrl": "http://rails:3000",
+  "responseTimeout": 60000
 }

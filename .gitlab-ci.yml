@@ -99,6 +99,7 @@ cypress:
   services:
     - docker:dind
   stage: e2e
+  allow_failure: false
   before_script:
     - apk --update add nodejs
     - apk add yarn

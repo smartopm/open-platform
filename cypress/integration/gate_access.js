@@ -9,4 +9,13 @@ describe('Gate Access', () => {
     cy.get('.justify-content-center h4')
       .should('contain', 'Welcome to Nkwashi App')
   })
+
+  // it('clicks next button', () => {
+  //   cy.visit('/')
+
+  //   cy.get('.next-btn').click()
+  //   cy.wait(5)
+
+  //   cy.get('.text-danger').should('contain', 'An error occurred.')
+  // })
 })
