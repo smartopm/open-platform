@@ -15,8 +15,9 @@ import { currencies, invoiceStatus } from '../../utils/constants';
 import ActionMenu from './PaymentActionMenu';
 import InvoiceTiles from './InvoiceTiles';
 import DataList from '../List/DataList';
+import Label from '../List/Label';
 
-const Iheaders = [
+const paymentHeaders = [
   'Select',
   'Parcel Number',
   'Amount/Payment Type',
@@ -97,18 +98,7 @@ export default function PaymentList({ authState }) {
         </span>
       )),
       'Invoice Status': (
-        <p
-          style={{
-            textAlign: 'center',
-            background: `${InvoiceStatusColor[invoice.status]}`,
-            padding: '9px',
-            color: 'white',
-            borderRadius: '15px',
-            width: 120
-          }}
-        >
-          {invoiceStatus[invoice.status]}
-        </p>
+        <Label title={invoiceStatus[invoice.status]} color={InvoiceStatusColor[invoice.status]} />
       ),
       Menu: (
         <IconButton
@@ -139,7 +129,7 @@ export default function PaymentList({ authState }) {
           <Spinner />
         ) : invoicesData?.invoices.length ? (
           <div>
-            <DataList keys={Iheaders} data={newData} />
+            <DataList keys={paymentHeaders} data={newData} />
             <ActionMenu anchorEl={anchorEl} handleClose={handleClose} open={open}>
               <MenuItem id="view-button" key="view-user">
                 View
