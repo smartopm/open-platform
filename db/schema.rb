@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_12_195401) do
+ActiveRecord::Schema.define(version: 2021_01_22_083807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -162,9 +162,11 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "discussion_id"
+    t.uuid "note_id"
     t.string "status"
     t.uuid "community_id"
     t.index ["community_id"], name: "index_comments_on_community_id"
+    t.index ["note_id"], name: "index_comments_on_note_id"
     t.index ["status"], name: "index_comments_on_status"
   end
 
@@ -325,6 +327,7 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "created_by_id"
+    t.bigint "invoice_number", default: -> { "nextval('global_seq'::regclass)" }
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
@@ -457,6 +460,12 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "bank_name"
     t.string "cheque_number"
+    t.string "name_on_card"
+    t.string "card_number_four_digits"
+    t.string "transaction_id"
+    t.string "success_code"
+    t.string "error"
+    t.string "transaction_code"
     t.index ["invoice_id"], name: "index_payments_on_invoice_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
@@ -584,6 +593,19 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  create_table "wallet_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "source"
+    t.string "destination"
+    t.float "amount"
+    t.string "bank_name"
+    t.string "cheque_number"
+    t.float "current_wallet_balance"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_wallet_transactions_on_user_id"
+  end
+
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
   add_foreign_key "action_flows", "communities"
@@ -633,4 +655,5 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
   add_foreign_key "valuations", "land_parcels"
+  add_foreign_key "wallet_transactions", "users"
 end
