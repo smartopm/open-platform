@@ -214,6 +214,10 @@ export const UsersLiteQuery = gql`
       name
       imageUrl
       avatarUrl
+      address
+      accounts {
+        id
+      }
     }
   }
 `
@@ -493,6 +497,11 @@ export const ParcelQuery = gql`
         amount
         startDate
         createdAt
+      }
+      accounts {
+        id
+        fullName
+        address1
       }
     }
   }
