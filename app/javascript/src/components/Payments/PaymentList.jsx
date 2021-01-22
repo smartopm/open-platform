@@ -9,7 +9,13 @@ import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../Loading';
-import { formatError, useParamsQuery, InvoiceType, InvoiceStatusColor } from '../../utils/helpers';
+import {
+  formatError,
+  useParamsQuery,
+  InvoiceType,
+  InvoiceStatusColor,
+  propAccessor
+} from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { currencies, invoiceStatus } from '../../utils/constants';
 import ActionMenu from './PaymentActionMenu';
@@ -98,7 +104,10 @@ export default function PaymentList({ authState }) {
         </span>
       )),
       'Invoice Status': (
-        <Label title={invoiceStatus[invoice.status]} color={InvoiceStatusColor[invoice.status]} />
+        <Label
+          title={propAccessor(invoiceStatus, invoice.status)}
+          color={propAccessor(InvoiceStatusColor, invoice.status)}
+        />
       ),
       Menu: (
         <IconButton
@@ -176,7 +185,6 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   option: {
-    // width: 40,
     marginRight: -120
   }
 }));
