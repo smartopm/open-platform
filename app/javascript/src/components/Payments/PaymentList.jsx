@@ -130,6 +130,13 @@ export default function PaymentList({ authState }) {
   );
 }
 
+/**
+ *
+ * @param {object} payments list of tasks
+ * @param {function} handleOpenMenu a function that opens the menu for each task
+ * @param {String} currency community currency
+ * @returns {object} an object with properties that DataList component uses to render
+ */
 export function renderPayments(payments, handleOpenMenu, currency) {
   // the following are for checkbox prototyping
   function handleChange() {}

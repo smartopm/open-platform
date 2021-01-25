@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { removeNewLines, sanitizeText } from '../../utils/helpers';
 import DateContainer, { dateToString } from '../DateContainer';
 
+// TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
   return (
     <Typography gutterBottom>
