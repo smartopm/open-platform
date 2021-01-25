@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Grid, List, IconButton, MenuItem, Checkbox } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -34,7 +33,6 @@ const paymentHeaders = [
 ];
 export default function PaymentList({ authState }) {
   const history = useHistory();
-  const classes = useStyles();
   const path = useParamsQuery();
   const limit = 50;
   const page = path.get('page');
@@ -80,69 +78,6 @@ export default function PaymentList({ authState }) {
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-  // the following are for checkbox prototyping
-  function handleChange() {}
-  const checked = false;
-  const newData = invoicesData?.invoices.map(invoice => {
-    return {
-      Select: (
-        <Grid item xs={1}>
-          <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-          />
-        </Grid>
-      ),
-      'Parcel Number': (
-        <Grid item xs={2}>
-          {invoice.landParcel.parcelNumber}
-        </Grid>
-      ),
-      'Amount/Payment Type': (
-        <Grid item xs={2}>
-          {invoice.payments.map(pay => (
-            <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
-          ))}
-        </Grid>
-      ),
-      'Due date': (
-        <Grid item xs={1}>
-          {dateToString(invoice.dueDate)}
-        </Grid>
-      ),
-      'Payment made by': (
-        <Grid item xs={3}>
-          {invoice.payments.map(pay => (
-            <span key={pay.id}>
-              {pay.user.name}
-              {pay.length > 1 ? ',' : ''}
-            </span>
-          ))}
-        </Grid>
-      ),
-      'Invoice Status': (
-        <Grid item xs={2}>
-          <Label
-            title={propAccessor(invoiceStatus, invoice.status)}
-            color={propAccessor(InvoiceStatusColor, invoice.status)}
-          />
-        </Grid>
-      ),
-      Menu: (
-        <Grid item xs={1}>
-          <IconButton
-            className={classes.option}
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleOpenMenu}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-        </Grid>
-      )
-    };
-  });
 
   return (
     <Container>
@@ -160,7 +95,10 @@ export default function PaymentList({ authState }) {
           <Spinner />
         ) : invoicesData?.invoices.length ? (
           <div>
-            <DataList keys={paymentHeaders} data={newData} />
+            <DataList
+              keys={paymentHeaders}
+              data={renderPayments(invoicesData?.invoices, handleOpenMenu, currency)}
+            />
             <ActionMenu anchorEl={anchorEl} handleClose={handleClose} open={open}>
               <MenuItem id="view-button" key="view-user">
                 View
@@ -192,25 +130,73 @@ export default function PaymentList({ authState }) {
   );
 }
 
-const useStyles = makeStyles(() => ({
-  list: {
-    backgroundColor: '#FFFFFF',
-    padding: '15px 0',
-    border: '1px solid #ECECEC',
-    marginBottom: '10px'
-  },
-  typography: {
-    width: '150px'
-  },
-  button: {
-    float: 'right',
-    marginBottom: '10px'
-  },
-  option: {
-    marginRight: -120
-  }
-}));
-
+export function renderPayments(payments, handleOpenMenu, currency) {
+  // the following are for checkbox prototyping
+  function handleChange() {}
+  return payments.map(invoice => {
+    return {
+      Select: (
+        <Grid item xs={1}>
+          <Checkbox
+            checked={false}
+            onChange={handleChange}
+            inputProps={{
+              'aria-label': 'primary checkbox',
+              'data-testid': 'select_payment'
+            }}
+          />
+        </Grid>
+      ),
+      'Parcel Number': (
+        <Grid item xs={2} data-testid="parcel_number">
+          {invoice.landParcel.parcelNumber}
+        </Grid>
+      ),
+      'Amount/Payment Type': (
+        <Grid item xs={2}>
+          {invoice.payments.map(pay => (
+            <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
+          ))}
+        </Grid>
+      ),
+      'Due date': (
+        <Grid item xs={1}>
+          {dateToString(invoice.dueDate)}
+        </Grid>
+      ),
+      'Payment made by': (
+        <Grid item xs={3}>
+          {invoice.payments.map(pay => (
+            <span key={pay.id}>
+              {pay.user.name}
+              {pay.length > 1 ? ',' : ''}
+            </span>
+          ))}
+        </Grid>
+      ),
+      'Invoice Status': (
+        <Grid item xs={2} data-testid="invoice_status">
+          <Label
+            title={propAccessor(invoiceStatus, invoice.status)}
+            color={propAccessor(InvoiceStatusColor, invoice.status)}
+          />
+        </Grid>
+      ),
+      Menu: (
+        <Grid item xs={1}>
+          <IconButton
+            style={{ marginRight: -120 }}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleOpenMenu}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+        </Grid>
+      )
+    };
+  });
+}
 PaymentList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   authState: PropTypes.object.isRequired
