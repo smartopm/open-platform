@@ -88,6 +88,8 @@ class User < ApplicationRecord
   has_many :form_users, dependent: :destroy
   has_many :post_tag_users, dependent: :destroy
   has_many :post_tags, through: :post_tag_users
+  has_many :wallet_transactions, dependent: :destroy
+  has_many :wallets, dependent: :destroy
   has_one_attached :avatar
   has_one_attached :document
 
@@ -490,6 +492,10 @@ class User < ApplicationRecord
 
   def note_assigned?(note_id)
     tasks.where(id: note_id).present?
+  end
+
+  def wallet
+    wallets.first.presence || wallets.create(balance: 0, pending_balance: 0)
   end
 
   private
