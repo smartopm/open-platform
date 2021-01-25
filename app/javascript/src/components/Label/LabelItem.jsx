@@ -21,7 +21,7 @@ export default function LabelItem({ label, userType, refetch }) {
   return (
     <ListItem key={label.id} className={classes.labelItem}>
       <Grid container spacing={6}>
-        <Grid item xs={3} className={classes.labelGrid}>
+        <Grid item xs={3} className={classes.labelGrid} data-testid="label-title">
           <Label color={label.color} title={label.shortDesc} />
         </Grid>
         <Grid item xs={3} className={classes.labelGrid}>
