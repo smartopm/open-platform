@@ -46,8 +46,20 @@ DataList.defaultProps = {
 };
 
 DataList.propTypes = {
+  /**
+   * @param {object} keys used to know which property to pick from the given object,
+   * this also contains number of columns it should occupy
+   */
   keys: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   *  @param {object} data is the list that is to be rendered, it has to be an array of object,
+   * this is then passed to CellData component
+   */
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * @param {boolean} hasHeader this determines whether the list should have header,
+   * it also verifies if the number of given columns is the same as that of the headers
+   */
   hasHeader: PropTypes.bool
 };
 

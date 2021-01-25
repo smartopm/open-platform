@@ -92,11 +92,11 @@ export function LinkToUser({ userId, name }) {
 
 /**
  *
- * @param {object} data
- * @param {function} handleChange
- * @param {String[]} selectedTasks
- * @param {function} handleTaskDetails
- * @returns {object}
+ * @param {object} data list of tasks
+ * @param {function} handleChange a function that handles the checkbox for each task
+ * @param {String[]} selectedTasks an array of task ids
+ * @param {function} handleTaskDetails a function that routes to task details
+ * @returns {object} an object with properties that DataList component uses to render
  */
 export function taskData(data, handleChange, selectedTasks, handleTaskDetails) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
