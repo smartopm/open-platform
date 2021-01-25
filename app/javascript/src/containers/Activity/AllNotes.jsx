@@ -3,7 +3,7 @@ import React, { Fragment, useState } from 'react'
 import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { allNotes } from '../../graphql/queries'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 import DateContainer from '../../components/DateContainer'
 

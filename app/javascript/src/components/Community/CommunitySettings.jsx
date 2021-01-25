@@ -1,75 +1,75 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useState } from 'react'
-import Typography from '@material-ui/core/Typography'
-import { Button, TextField, MenuItem , Container } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import PropTypes from 'prop-types'
+import React, { useEffect, useState } from 'react';
+import Typography from '@material-ui/core/Typography';
+import { Button, TextField, MenuItem, Container } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import PropTypes from 'prop-types';
 
-import { useMutation, useApolloClient } from 'react-apollo'
-import { CommunityUpdateMutation } from '../../graphql/mutations/community'
-import DynamicContactFields from './DynamicContactFields'
-import MessageAlert from '../MessageAlert'
-import { useFileUpload } from '../../graphql/useFileUpload'
-import ImageCropper from './ImageCropper'
-import ImageAuth from '../ImageAuth'
-import { currencies } from '../../utils/constants'
+import { useMutation, useApolloClient } from 'react-apollo';
+import { CommunityUpdateMutation } from '../../graphql/mutations/community';
+import DynamicContactFields from './DynamicContactFields';
+import MessageAlert from '../MessageAlert';
+import { useFileUpload } from '../../graphql/useFileUpload';
+import ImageCropper from './ImageCropper';
+import { currencies } from '../../utils/constants';
+import ImageAuth from '../../shared/ImageAuth';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
     phone_number: '',
     category: ''
-  }
+  };
   const emails = {
     email: '',
     category: ''
-  }
+  };
   const whatsapps = {
     whatsapp: '',
     category: ''
-  }
-  const [communityUpdate] = useMutation(CommunityUpdateMutation)
-  const [numberOptions, setNumberOptions] = useState([numbers])
-  const [emailOptions, setEmailOptions] = useState([emails])
-  const [whatsappOptions, setWhatsappOptions] = useState([whatsapps])
-  const [message, setMessage] = useState({ isError: false, detail: '' })
-  const [alertOpen, setAlertOpen] = useState(false)
-  const [mutationLoading, setCallMutation] = useState(false)
-  const [blob, setBlob] = useState(null)
-  const [inputImg, setInputImg] = useState('')
-  const [fileName, setFileName] = useState('')
-  const [currency, setCurrency] = useState('')
-  const [showCropper, setShowCropper] = useState(false)
+  };
+  const [communityUpdate] = useMutation(CommunityUpdateMutation);
+  const [numberOptions, setNumberOptions] = useState([numbers]);
+  const [emailOptions, setEmailOptions] = useState([emails]);
+  const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [mutationLoading, setCallMutation] = useState(false);
+  const [blob, setBlob] = useState(null);
+  const [inputImg, setInputImg] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [showCropper, setShowCropper] = useState(false);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
-  })
+  });
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   function handleAddNumberOption() {
-    setNumberOptions([...numberOptions, numbers])
+    setNumberOptions([...numberOptions, numbers]);
   }
 
   function getBlob(blobb) {
-    setBlob(blobb)
+    setBlob(blobb);
   }
 
   function handleAddEmailOption() {
-    setEmailOptions([...emailOptions, emails])
+    setEmailOptions([...emailOptions, emails]);
   }
 
   function handleAddWhatsappOption() {
-    setWhatsappOptions([...whatsappOptions, whatsapps])
+    setWhatsappOptions([...whatsappOptions, whatsapps]);
   }
 
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
-      handleSetOptions(setEmailOptions, index, newValue, options)
+      handleSetOptions(setEmailOptions, index, newValue, options);
     } else if (type === 'whatsapp') {
-      handleSetOptions(setWhatsappOptions, index, newValue, options)
+      handleSetOptions(setWhatsappOptions, index, newValue, options);
     } else {
-      handleSetOptions(setNumberOptions, index, newValue, options)
+      handleSetOptions(setNumberOptions, index, newValue, options);
     }
   }
 
@@ -78,66 +78,56 @@ export default function CommunitySettings({ data, token, refetch }) {
       ...options.slice(0, index),
       { ...options[parseInt(index, 10)], ...newValue },
       ...options.slice(index + 1)
-    ])
+    ]);
   }
 
   function handleEmailChange(event, index) {
-    updateOptions(
-      index,
-      { [event.target.name]: event.target.value },
-      emailOptions,
-      'email'
-    )
+    updateOptions(index, { [event.target.name]: event.target.value }, emailOptions, 'email');
   }
 
   function handleWhatsappChange(event, index) {
-    updateOptions(
-      index,
-      { [event.target.name]: event.target.value },
-      whatsappOptions,
-      'whatsapp'
-    )
+    updateOptions(index, { [event.target.name]: event.target.value }, whatsappOptions, 'whatsapp');
   }
 
   function handleNumberRemove(id) {
-    const values = numberOptions
+    const values = numberOptions;
     if (values.length !== 1) {
-      values.splice(id, 1)
+      values.splice(id, 1);
     }
-    setNumberOptions([...values])
+    setNumberOptions([...values]);
   }
 
   function handleEmailRemoveRow(id) {
-    const values = emailOptions
+    const values = emailOptions;
     if (values.length !== 1) {
-      values.splice(id, 1)
+      values.splice(id, 1);
     }
-    setEmailOptions([...values])
+    setEmailOptions([...values]);
   }
 
   function handleWhatsappRemoveRow(id) {
-    const values = whatsappOptions
+    const values = whatsappOptions;
     if (values.length !== 1) {
-      values.splice(id, 1)
+      values.splice(id, 1);
     }
-    setWhatsappOptions([...values])
+    setWhatsappOptions([...values]);
   }
 
   function onInputChange(file) {
-    setFileName(file.name)
+    setFileName(file.name);
     // convert image file to base64 string
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     reader.addEventListener(
       'load',
       () => {
-        setInputImg(reader.result)
+        setInputImg(reader.result);
       },
       false
-    )
+    );
 
     if (file) {
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(file);
     }
   }
 
@@ -147,23 +137,23 @@ export default function CommunitySettings({ data, token, refetch }) {
       { [event.target.name]: event.target.value },
       numberOptions,
       'phone_number'
-    )
+    );
   }
 
   function uploadLogo(img) {
-    onChange(img)
-    setShowCropper(false)
-    setMessage({ isError: false, detail: `Logo uploaded successfully` })
-    setAlertOpen(true)
+    onChange(img);
+    setShowCropper(false);
+    setMessage({ isError: false, detail: `Logo uploaded successfully` });
+    setAlertOpen(true);
   }
 
   function selectLogoOnchange(img) {
-    onInputChange(img)
-    setShowCropper(true)
+    onInputChange(img);
+    setShowCropper(true);
   }
 
   function updateCommunity() {
-    setCallMutation(true)
+    setCallMutation(true);
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
@@ -177,24 +167,24 @@ export default function CommunitySettings({ data, token, refetch }) {
         setMessage({
           isError: false,
           detail: `Successfully updated the community`
-        })
-        setAlertOpen(true)
-        setCallMutation(false)
-        refetch()
+        });
+        setAlertOpen(true);
+        setCallMutation(false);
+        refetch();
       })
       .catch(error => {
-        setMessage({ isError: true, detail: error.message })
-        setAlertOpen(true)
-        setCallMutation(false)
-      })
+        setMessage({ isError: true, detail: error.message });
+        setAlertOpen(true);
+        setCallMutation(false);
+      });
   }
   useEffect(() => {
-    setEmailOptions(data.supportEmail || [emails])
-    setNumberOptions(data.supportNumber || [numbers])
-    setWhatsappOptions(data.supportWhatsapp || [whatsapps])
-    setCurrency(data.currency)
+    setEmailOptions(data.supportEmail || [emails]);
+    setNumberOptions(data.supportNumber || [numbers]);
+    setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
+    setCurrency(data.currency);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+  }, [data]);
 
   return (
     <Container>
@@ -205,9 +195,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         handleClose={() => setAlertOpen(false)}
       />
       <Typography variant="h6">Community Logo</Typography>
-      <Typography variant="caption">
-        You can change your community logo here
-      </Typography>
+      <Typography variant="caption">You can change your community logo here</Typography>
       <div className={classes.avatar}>
         <ImageAuth
           imageLink={data.imageUrl}
@@ -216,10 +204,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           style={{ height: '70px', width: '70px' }}
         />
         <div className={classes.upload}>
-          <Typography
-            variant="caption"
-            style={{ fontWeight: 'bold', marginLeft: '10px' }}
-          >
+          <Typography variant="caption" style={{ fontWeight: 'bold', marginLeft: '10px' }}>
             Upload new logo
           </Typography>
           <div>
@@ -237,27 +222,17 @@ export default function CommunitySettings({ data, token, refetch }) {
       </div>
       <div style={{ position: 'relative' }}>
         {showCropper && inputImg && (
-          <ImageCropper
-            getBlob={getBlob}
-            inputImg={inputImg}
-            fileName={fileName}
-          />
+          <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />
         )}
       </div>
       {showCropper && blob && (
-        <Button
-          variant="contained"
-          style={{ margin: '10px' }}
-          onClick={() => uploadLogo(blob)}
-        >
+        <Button variant="contained" style={{ margin: '10px' }} onClick={() => uploadLogo(blob)}>
           Upload
         </Button>
       )}
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <Typography variant="h6">Support Contact Information</Typography>
-        <Typography variant="caption">
-          Make changes to your contact information here.
-        </Typography>
+        <Typography variant="caption">Make changes to your contact information here.</Typography>
 
         <DynamicContactFields
           options={numberOptions}
@@ -286,11 +261,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           handleRemoveRow={handleWhatsappRemoveRow}
           data={{ label: 'WhatsApp', name: 'whatsapp' }}
         />
-        <div
-          className={classes.addIcon}
-          role="button"
-          onClick={handleAddWhatsappOption}
-        >
+        <div className={classes.addIcon} role="button" onClick={handleAddWhatsappOption}>
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -306,11 +277,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           handleRemoveRow={handleEmailRemoveRow}
           data={{ label: 'Email', name: 'email' }}
         />
-        <div
-          className={classes.addIcon}
-          role="button"
-          onClick={handleAddEmailOption}
-        >
+        <div className={classes.addIcon} role="button" onClick={handleAddEmailOption}>
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -350,7 +317,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         </Button>
       </div>
     </Container>
-  )
+  );
 }
 
 CommunitySettings.propTypes = {
@@ -364,7 +331,7 @@ CommunitySettings.propTypes = {
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired
-}
+};
 
 const useStyles = makeStyles({
   avatar: {
@@ -395,4 +362,4 @@ const useStyles = makeStyles({
   button: {
     marginTop: '15px'
   }
-})
+});

@@ -11,7 +11,7 @@ import {
 import { useLazyQuery } from 'react-apollo';
 import { propAccessor, toCamelCase } from '../../utils/helpers';
 import { SubStatusQuery } from '../../graphql/queries';
-import { Spinner } from '../Loading';
+import { Spinner } from '../../shared/Loading';
 import { useStyles } from '../Dialog';
 import { userSubStatus } from '../../utils/constants';
 

@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
-import { Spinner } from '../../components/Loading';
+import { Spinner } from '../../shared/Loading';
 import PaymentList, { renderPayments } from '../../components/Payments/PaymentList';
 
 describe('Invoice Item Component', () => {
@@ -101,7 +101,7 @@ describe('Invoice Item Component', () => {
       { timeout: 500 }
     );
   });
-  it('should if renderPayments works as expected', () => {
+  it('should check if renderPayments works as expected', () => {
     const openMenu = jest.fn();
     const results = renderPayments(invoices, openMenu, 'k');
     expect(results).toBeInstanceOf(Array);

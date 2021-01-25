@@ -8,7 +8,7 @@ import { PropTypes } from 'prop-types'
 import { ManageShiftMutation } from '../../graphql/mutations'
 import { lastUserTimeSheet } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
-import { Spinner } from '../Loading'
+import { Spinner } from '../../shared/Loading'
 import { useWindowDimensions } from '../../utils/customHooks'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';

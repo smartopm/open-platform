@@ -15,7 +15,7 @@ import {
   CreateUserMutation,
   UpdateLogMutation
 } from '../../graphql/mutations';
-import Loading from "../Loading";
+import Loading from "../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../utils/dateutil';
 import { ponisoNumber, userState, userType } from '../../utils/constants'
 import { ModalDialog } from "../Dialog"

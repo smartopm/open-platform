@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
-import Loading from "../../components/Loading.jsx";
+import Loading from "../../shared/Loading.jsx";
 import { AllEventLogsForUserQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
 import UserLog from "../../components/UserLog"

@@ -1,34 +1,34 @@
-import React, { useState } from 'react'
-import { useQuery } from 'react-apollo'
-import { Grid, Typography, Container } from '@material-ui/core'
-import { makeStyles } from "@material-ui/core/styles"
-import PropTypes from 'prop-types'
-import { LabelsQuery } from '../../graphql/queries'
-import ErrorPage from '../Error'
-import Loading from '../Loading'
-import LabelItem from './LabelItem'
-import CenteredContent from '../CenteredContent'
-import Paginate from '../Paginate'
+import React, { useState } from 'react';
+import { useQuery } from 'react-apollo';
+import { Grid, Typography, Container } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { LabelsQuery } from '../../graphql/queries';
+import ErrorPage from '../Error';
+import Loading from '../../shared/Loading';
+import LabelItem from './LabelItem';
+import CenteredContent from '../CenteredContent';
+import Paginate from '../Paginate';
 
 export default function LabelList({ userType }) {
-  const limit = 50
-  const [offset, setOffset] = useState(0)
+  const limit = 50;
+  const [offset, setOffset] = useState(0);
   const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
-  })
+  });
 
   function paginate(action) {
     if (action === 'prev') {
-      if (offset < limit) return
-      setOffset(offset - limit)
+      if (offset < limit) return;
+      setOffset(offset - limit);
     } else if (action === 'next') {
-      setOffset(offset + limit)
+      setOffset(offset + limit);
     }
   }
- 
-  if (loading) return <Loading />
+
+  if (loading) return <Loading />;
   if (error) {
-    return <ErrorPage title={error.message} />
+    return <ErrorPage title={error.message} />;
   }
   return (
     <Container>
@@ -44,20 +44,15 @@ export default function LabelList({ userType }) {
         />
       ))}
       <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-        />
+        <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
       </CenteredContent>
     </Container>
-  )
+  );
 }
 
-function LabelPageTitle(){
+function LabelPageTitle() {
   // eslint-disable-next-line no-use-before-define
-  const classes = useStyles()
+  const classes = useStyles();
   return (
     <Grid container spacing={6} className={classes.labelTitle}>
       <Grid item xs={3}>
@@ -76,12 +71,12 @@ function LabelPageTitle(){
         </Typography>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 LabelList.propTypes = {
   userType: PropTypes.string.isRequired
-}
+};
 const useStyles = makeStyles(() => ({
   labelTitle: {
     marginTop: '5%'

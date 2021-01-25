@@ -4,7 +4,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import LabelActionMenu from './LabelActionMenu';
-import Label from '../List/Label';
+import Label from '../../shared/label/Label';
 
 export default function LabelItem({ label, userType, refetch }) {
   const classes = useStyles();

@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { act } from 'react-dom/test-utils';
 import SubStatusReportDialog, { StatusCount } from '../../components/User/SubStatusReport';
 import { SubStatusQuery } from '../../graphql/queries';
-import { Spinner } from '../../components/Loading';
+import { Spinner } from '../../shared/Loading';
 
 describe('Substatus component', () => {
   it('should render the substatus modal ', async () => {

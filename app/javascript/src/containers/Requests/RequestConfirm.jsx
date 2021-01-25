@@ -6,7 +6,7 @@ import { StyleSheet, css } from 'aphrodite'
 import Nav from '../../components/Nav'
 import { EntryRequestQuery } from '../../graphql/queries.js'
 import { AcknowledgeRequest, CreateNote } from '../../graphql/mutations.js'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import { ModalDialog } from '../../components/Dialog'
 import { dateTimeToString, dateToString } from '../../components/DateContainer'
 

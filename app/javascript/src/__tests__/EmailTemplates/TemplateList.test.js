@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { EmailTemplatesQuery } from '../../graphql/queries'
 import TemplateList from '../../components/EmailTemplate/TemplateList'
-import { Spinner } from '../../components/Loading'
+import { Spinner } from '../../shared/Loading'
 
 describe('Template List Component', () => {
     it('should return a list of all email templates', async () => {

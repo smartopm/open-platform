@@ -16,7 +16,7 @@ import SignaturePad from './SignaturePad'
 import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
 import RadioInput from './RadioInput'
 import { FormPropertyDeleteMutation } from '../../graphql/mutations/forms';
-import { Spinner } from '../Loading';
+import { Spinner } from '../../shared/Loading';
 
 // date
 // text input (TextField or TextArea)

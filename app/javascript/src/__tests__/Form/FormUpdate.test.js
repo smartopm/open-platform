@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import { UserFormProperiesQuery, FormUserQuery } from '../../graphql/queries'
 import FormUpdate from '../../components/Forms/FormUpdate'
 

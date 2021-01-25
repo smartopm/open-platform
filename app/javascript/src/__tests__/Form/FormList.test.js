@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
 import '@testing-library/jest-dom/extend-expect'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import FormLinkList from '../../components/Forms/FormList'
 import { FormsQuery } from '../../graphql/queries'
 

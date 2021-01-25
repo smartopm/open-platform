@@ -1,35 +1,35 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from 'react'
-import { StyleSheet, css } from 'aphrodite'
-import PropTypes from 'prop-types'
-import { forceLinkHttps, propAccessor } from '../utils/helpers'
-import ImageAuth from './ImageAuth'
-import { Context } from '../containers/Provider/AuthStateProvider'
+import React, { useContext } from 'react';
+import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
+import { forceLinkHttps, propAccessor } from '../utils/helpers';
+import ImageAuth from '../shared/ImageAuth';
+import { Context } from '../containers/Provider/AuthStateProvider';
 
-export function safeAvatarLink({ imageUrl, user}){
+export function safeAvatarLink({ imageUrl, user }) {
   if (user?.imageUrl || user?.avatarUrl) {
-    return forceLinkHttps(user.imageUrl || user.avatarUrl )
+    return forceLinkHttps(user.imageUrl || user.avatarUrl);
   }
-  return forceLinkHttps(imageUrl)
+  return forceLinkHttps(imageUrl);
 }
 
-export default function Avatar({ imageUrl, user, style}) {
-  const { token } = useContext(Context)
+export default function Avatar({ imageUrl, user, style }) {
+  const { token } = useContext(Context);
   const imageStyles = {
     small: styles.avatarSmall,
     medium: styles.avatarMedium,
     big: styles.avatarBig
-  }
+  };
   // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
-  // user.imageUrl contains links from Auth Providers ==> Google and Facebook 
+  // user.imageUrl contains links from Auth Providers ==> Google and Facebook
   if (user && user.imageUrl) {
     return (
       <img
-        src={safeAvatarLink({user, imageUrl})}
+        src={safeAvatarLink({ user, imageUrl })}
         className={css(propAccessor(imageStyles, style))}
         alt="avatar for the user"
       />
-    )
+    );
   }
   return (
     <ImageAuth
@@ -37,7 +37,7 @@ export default function Avatar({ imageUrl, user, style}) {
       token={token}
       className={css(propAccessor(imageStyles, style))}
     />
-  )
+  );
 }
 
 Avatar.defaultProps = {
@@ -47,7 +47,7 @@ Avatar.defaultProps = {
   },
   imageUrl: '/images/default_avatar.svg',
   style: 'small'
-}
+};
 
 Avatar.propTypes = {
   imageUrl: PropTypes.string,
@@ -56,7 +56,7 @@ Avatar.propTypes = {
     avatarUrl: PropTypes.string
   }),
   style: PropTypes.string
-}
+};
 
 const styles = StyleSheet.create({
   avatarSmall: {
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
     maxHeight: '200px',
     borderRadius: '8px'
   }
-})
+});

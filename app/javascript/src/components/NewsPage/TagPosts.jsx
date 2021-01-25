@@ -13,7 +13,7 @@ import { dateToString } from '../DateContainer'
 import Tag from './Tag';
 import MessageAlert from '../MessageAlert';
 import { PostTagUser } from '../../graphql/queries';
-import { Spinner } from '../Loading'
+import { Spinner } from '../../shared/Loading'
 import { FollowPostTag } from '../../graphql/mutations';
 
 export default function TagPosts({ open, handleClose, tagName }) {

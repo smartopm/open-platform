@@ -4,7 +4,7 @@ import Nav from '../../components/Nav'
 import { useParams } from 'react-router-dom'
 import { DiscussionQuery } from '../../graphql/queries'
 import { useQuery } from 'react-apollo'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 import Discussion from '../../components/Discussion/Discussion'
 

@@ -4,7 +4,7 @@ import { List, Dialog, DialogTitle } from '@material-ui/core';
 import { useLazyQuery } from 'react-apollo';
 import { propAccessor, toCamelCase } from '../../utils/helpers';
 import { TaskStatsQuery } from '../../graphql/queries';
-import { Spinner } from '../Loading';
+import { Spinner } from '../../shared/Loading';
 import { useStyles } from '../Dialog';
 import { taskStatus } from '../../utils/constants';
 import { StatusCount } from '../User/SubStatusReport';

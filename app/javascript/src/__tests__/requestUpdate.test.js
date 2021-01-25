@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import { EntryRequestQuery } from '../graphql/queries'
-import Loading from '../components/Loading'
+import Loading from '../shared/Loading'
 import RequestUpdate from '../components/Request/RequestUpdate'
 
 describe("RequestUpdate Component ",() => {

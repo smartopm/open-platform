@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { allCampaigns } from '../graphql/queries'
-import Loading from "./Loading"
+import Loading from "../shared/Loading"
 import ErrorPage from "./Error"
 import { dateTimeToString, dateToString } from "./DateContainer"
 import CampaignDeleteAction from "./Campaign/CampaignDeleteAction"

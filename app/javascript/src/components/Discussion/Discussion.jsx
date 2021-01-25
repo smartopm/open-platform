@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment, useContext, useState } from 'react'
 import {
   Divider,
   Typography,
@@ -12,10 +12,9 @@ import {
 } from '../../graphql/queries'
 import { useQuery } from 'react-apollo'
 import DateContainer from '../DateContainer'
-import Loading, { Spinner } from '../../components/Loading'
+import Loading, { Spinner } from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../CenteredContent'
-import { useState } from 'react'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import FollowButton from './FollowButton'
 import Disclaimer from '../Disclaimer'

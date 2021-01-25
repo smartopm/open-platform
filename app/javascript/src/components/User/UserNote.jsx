@@ -9,7 +9,7 @@ import { IconButton } from '@material-ui/core'
 import dateutil from '../../utils/dateutil'
 import { UpdateNote } from '../../graphql/mutations'
 import { UserNotesQuery } from '../../graphql/queries'
-import { Spinner } from '../Loading'
+import { Spinner } from '../../shared/Loading'
 
 export function UserNote({ note, handleFlagNote }) {
   return (

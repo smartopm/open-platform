@@ -27,12 +27,12 @@ import Task from './Task';
 import TaskDashboard from './TaskDashboard';
 import { futureDateAndTimeToString } from '../DateContainer';
 import DatePickerDialog from '../DatePickerDialog';
-import Loading from '../Loading';
+import Loading from '../../shared/Loading';
 import QueryBuilder from '../QueryBuilder';
 import { ModalDialog } from '../Dialog';
 import { pluralizeCount, propAccessor } from '../../utils/helpers';
 import useDebounce from '../../utils/useDebounce';
-import DataList from '../List/DataList';
+import DataList from '../../shared/list/DataList';
 import renderTaskData from './RenderTaskData';
 
 const taskHeader = [

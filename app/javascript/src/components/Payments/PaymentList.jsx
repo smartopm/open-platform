@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
-import { Spinner } from '../Loading';
+import { Spinner } from '../../shared/Loading';
 import {
   formatError,
   useParamsQuery,
@@ -19,8 +19,8 @@ import { dateToString } from '../DateContainer';
 import { currencies, invoiceStatus } from '../../utils/constants';
 import ActionMenu from './PaymentActionMenu';
 import InvoiceTiles from './InvoiceTiles';
-import DataList from '../List/DataList';
-import Label from '../List/Label';
+import DataList from '../../shared/list/DataList';
+import Label from '../../shared/label/Label';
 
 const paymentHeaders = [
   { title: 'Select', col: 1 },

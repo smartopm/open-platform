@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { LabelsQuery } from '../graphql/queries';
-import Loading from '../components/Loading';
+import Loading from '../shared/Loading';
 import LabelList from '../components/Label/LabelList';
 
 describe('Label List Component', () => {
