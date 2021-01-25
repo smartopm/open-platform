@@ -13,7 +13,7 @@ const depositHeader = [
 ];
 export default function DepositList({ transactions }) {
   if (!transactions.length) {
-    return <Text content="No Invoices" align="center" />;
+    return <Text content="No deposits available yet" align="center" />;
   }
   return <DataList keys={depositHeader} data={renderDeposits(transactions)} />;
 }
