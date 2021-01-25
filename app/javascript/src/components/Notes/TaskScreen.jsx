@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useQuery } from 'react-apollo';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { flaggedNotes } from '../../graphql/queries';
 import { removeNewLines, sanitizeText } from '../../utils/helpers';
@@ -55,20 +55,27 @@ export default function TaskScreen() {
   }
 
   function filterTaskByStatus() {}
+
+  const history = useHistory();
+
+  function handleTaskDetails(taskId) {
+    history.push(`/tasks/${taskId}`);
+  }
+
   if (loading) return 'loading';
   if (error) return error.message;
 
   return (
     <>
-      {/* <Button variant="outlined" className={classes.reportBtn} onClick={handleReportDialog}>
-        Create Report
-      </Button> */}
       <TaskReportDialog
         open={statusOpen}
         handleClose={handleReportDialog}
         handleFilter={filterTaskByStatus}
       />
-      <DataList keys={taskHeader} data={taskData(data, handleChange, selectedTasks)} />
+      <DataList
+        keys={taskHeader}
+        data={taskData(data, handleChange, selectedTasks, handleTaskDetails)}
+      />
     </>
   );
 }
@@ -83,7 +90,17 @@ export function LinkToUser({ userId, name }) {
   );
 }
 
-export function taskData(data, handleChange, selectedTasks) {
+/**
+ *
+ * @param {object} data
+ * @param {function} handleChange
+ * @param {String[]} selectedTasks
+ * @param {function} handleTaskDetails
+ * @returns {object}
+ */
+export function taskData(data, handleChange, selectedTasks, handleTaskDetails) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   return data.flaggedNotes?.map(task => {
     return {
       Select: (
@@ -129,7 +146,11 @@ export function taskData(data, handleChange, selectedTasks) {
       ),
       Menu: (
         <Grid item xs={1}>
-          <IconButton aria-controls="simple-menu" aria-haspopup="true">
+          <IconButton
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={() => handleTaskDetails(task.id)}
+          >
             <MoreHorizIcon />
           </IconButton>
         </Grid>
@@ -142,11 +163,3 @@ LinkToUser.propTypes = {
   userId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired
 };
-
-// export const useStyles = makeStyles({
-//   reportBtn: {
-//     display: 'flex',
-//     height: 36,
-//     marginLeft: 20
-//   }
-// });

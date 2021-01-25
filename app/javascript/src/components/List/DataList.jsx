@@ -7,14 +7,17 @@ import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 
-export default function DataList({ keys, data }) {
-  if (keys.length !== Object.keys(data[0]).length) {
-    throw new Error('headers must have same length as number of columns in the data prop');
+export default function DataList({ keys, data, hasHeader }) {
+  if (hasHeader && keys.length !== Object.keys(data[0]).length) {
+    throw new Error(
+      'headers must have same length as number of columns in the data prop or set hasHeader to false'
+    );
   }
   const classes = useStyles();
   return (
     <>
-      <ListHeader headers={keys} />
+      {hasHeader && <ListHeader headers={keys} />}
+
       {data.map((item, index) => (
         <Grid
           container
@@ -38,9 +41,14 @@ export function CellData({ propNames, dataObj }) {
   ));
 }
 
+DataList.defaultProps = {
+  hasHeader: true
+};
+
 DataList.propTypes = {
   keys: PropTypes.arrayOf(PropTypes.object).isRequired,
-  data: PropTypes.arrayOf(PropTypes.object).isRequired
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  hasHeader: PropTypes.bool
 };
 
 CellData.propTypes = {
