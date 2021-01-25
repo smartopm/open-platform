@@ -49,6 +49,7 @@ DataList.propTypes = {
   /**
    * @param {object} keys used to know which property to pick from the given object,
    * this also contains number of columns it should occupy
+   * headers title must match the properties in the object to be rendered e.g: RenderTaskData.js
    */
   keys: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

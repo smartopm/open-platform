@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react';
 import {
   Fab,
@@ -33,7 +32,17 @@ import QueryBuilder from '../QueryBuilder';
 import { ModalDialog } from '../Dialog';
 import { pluralizeCount, propAccessor } from '../../utils/helpers';
 import useDebounce from '../../utils/useDebounce';
+import DataList from '../List/DataList';
+import renderTaskData from './RenderTaskData';
 
+const taskHeader = [
+  { title: 'Select', col: 1 },
+  { title: 'Task', col: 4 },
+  { title: 'Created By', col: 3 },
+  { title: 'Duedate', col: 1 },
+  { title: 'Assignees', col: 2 },
+  { title: 'Menu', col: 1 }
+];
 // component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
@@ -78,6 +87,22 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false',
     totalFormsOpen: 'category: form AND completed: false'
   };
+
+  const [selectedTasks, setSelected] = useState([]);
+
+  function handleChange(selectedId) {
+    let currentTasks = [];
+    if (selectedTasks.includes(selectedId)) {
+      currentTasks = selectedTasks.filter(id => id !== selectedId);
+      setSelected([...currentTasks]);
+    } else {
+      setSelected([...selectedTasks, selectedId]);
+    }
+  }
+
+  function handleTaskDetails(taskDetailId) {
+    history.push(`/tasks/${taskDetailId}`);
+  }
 
   const taskCountData = useQuery(TaskStatsQuery);
 
@@ -457,24 +482,15 @@ export default function TodoList({
             </Grid>
             <br />
             {data?.flaggedNotes.length ? (
-              data?.flaggedNotes.map(note => (
-                <Task
-                  key={note.id}
-                  note={note}
-                  message={message}
-                  users={liteData?.usersLite || []}
-                  handleCompleteNote={handleCompleteNote}
-                  assignUnassignUser={assignUnassignUser}
-                  loaded={loaded}
-                  handleDelete={handleDelete}
-                  handleModal={handleModal}
-                  loading={loading}
-                  loadingMutation={loadingMutation}
-                  handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-                  isAssignTaskOpen={isAssignTaskOpen}
-                  currentUser={currentUser}
-                />
-              ))
+              <DataList
+                keys={taskHeader}
+                data={renderTaskData(
+                  data?.flaggedNotes,
+                  handleChange,
+                  selectedTasks,
+                  handleTaskDetails
+                )}
+              />
             ) : (
               <CenteredContent>Click a card above to filter</CenteredContent>
             )}

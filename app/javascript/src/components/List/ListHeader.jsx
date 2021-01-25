@@ -13,7 +13,6 @@ export default function ListHeader({ headers }) {
       justify="space-around"
       alignItems="center"
       className={classes.heading}
-      // spacing={3}
     >
       {headers.map(header => (
         <Grid item xs={header.col} key={header.title}>
@@ -42,7 +41,6 @@ const useStyles = makeStyles(() => ({
     border: '1px solid #ECECEC'
   },
   typography: {
-    // width: '150px',
     marginLeft: 30
   }
 }));

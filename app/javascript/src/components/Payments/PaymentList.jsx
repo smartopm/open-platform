@@ -80,7 +80,7 @@ export default function PaymentList({ authState }) {
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-  // the following are for prototyping
+  // the following are for checkbox prototyping
   function handleChange() {}
   const checked = false;
   const newData = invoicesData?.invoices.map(invoice => {
