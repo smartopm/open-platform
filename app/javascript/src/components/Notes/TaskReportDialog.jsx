@@ -1,0 +1,56 @@
+import React, { useEffect, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { List, Dialog, DialogTitle } from '@material-ui/core';
+import { useLazyQuery } from 'react-apollo';
+import { propAccessor, toCamelCase } from '../../utils/helpers';
+import { TaskStatsQuery } from '../../graphql/queries';
+import { Spinner } from '../../shared/Loading';
+import { useStyles } from '../Dialog';
+import { taskStatus } from '../../utils/constants';
+import { StatusCount } from '../User/SubStatusReport';
+
+export default function TaskReportDialog({ handleClose, open, handleFilter }) {
+  const [getTaskStats, { loading, data, error }] = useLazyQuery(TaskStatsQuery);
+  const classes = useStyles();
+
+  useEffect(() => {
+    if (open) {
+      getTaskStats();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+  return (
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="substatus-report"
+      open={open}
+      fullWidth
+      maxWidth="sm"
+    >
+      <DialogTitle className={classes.confirmDialogTitle}>Tasks Status</DialogTitle>
+      {error && error.message}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <List>
+          {Object.entries(taskStatus).map(([key, val], index) => (
+            <Fragment key={key}>
+              <StatusCount
+                count={propAccessor(data?.taskStats, toCamelCase(key))}
+                title={val}
+                handleFilter={() => handleFilter(index)}
+              />
+              <hr style={{ marginLeft: 16 }} />
+            </Fragment>
+          ))}
+        </List>
+      )}
+    </Dialog>
+  );
+}
+
+TaskReportDialog.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleFilter: PropTypes.func.isRequired
+};

@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import InvoiceList from '../../components/Payments/InvoiceList'
 import { UserInvoicesQuery } from '../../graphql/queries'
-import { Spinner } from '../../components/Loading'
+import { Spinner } from '../../shared/Loading'
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider'
 import { generateId } from '../../utils/helpers'
 

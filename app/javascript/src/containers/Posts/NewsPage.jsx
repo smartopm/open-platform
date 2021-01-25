@@ -6,7 +6,7 @@ import Categories from '../../components/NewsPage/Categories'
 import PostContent from '../../components/NewsPage/PostContent'
 import { ShareButton } from '../../components/ShareButton'
 import Nav from '../../components/Nav'
-import { Spinner } from '../../components/Loading'
+import { Spinner } from '../../shared/Loading'
 
 export default function NewsPage() {
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=news`)

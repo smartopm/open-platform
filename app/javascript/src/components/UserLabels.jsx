@@ -9,7 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import useDebounce from '../utils/useDebounce'
 import ErrorPage from '../components/Error.jsx'
 import { TextField, IconButton, Chip } from '@material-ui/core'
-import Loading from './Loading'
+import Loading from '../shared/Loading'
 
 export default function UserLabels({ userId }) {
     const [showAddTextBox, setshowAddTextBox] = useState(false)

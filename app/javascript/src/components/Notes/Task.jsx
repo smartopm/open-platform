@@ -1,29 +1,30 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   Chip,
   TextField,
   Divider,
   Grid,
   Button,
-  Typography, Link as MuiLink
-} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import EditIcon from '@material-ui/icons/Edit'
-import AlarmIcon from '@material-ui/icons/Alarm'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CancelIcon from '@material-ui/icons/Cancel'
-import { Link, useHistory } from 'react-router-dom'
+  Typography,
+  Link as MuiLink
+} from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import EditIcon from '@material-ui/icons/Edit';
+import AlarmIcon from '@material-ui/icons/Alarm';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { Link, useHistory } from 'react-router-dom';
 
-import { useMutation } from 'react-apollo'
-import { Spinner } from '../Loading'
-import { UserChip } from '../UserChip'
-import DateContainer, { dateToString, dateTimeToString } from '../DateContainer'
-import { removeNewLines, sanitizeText } from '../../utils/helpers'
-import RemindMeLaterMenu from './RemindMeLaterMenu'
-import { TaskReminder } from '../../graphql/mutations'
-import MessageAlert from "../MessageAlert"
+import { useMutation } from 'react-apollo';
+import { Spinner } from '../../shared/Loading';
+import { UserChip } from '../UserChip';
+import DateContainer, { dateToString, dateTimeToString } from '../DateContainer';
+import { removeNewLines, sanitizeText } from '../../utils/helpers';
+import RemindMeLaterMenu from './RemindMeLaterMenu';
+import { TaskReminder } from '../../graphql/mutations';
+import MessageAlert from '../MessageAlert';
 
 export default function Task({
   note,
@@ -40,44 +41,44 @@ export default function Task({
   handleOpenTaskAssign,
   currentUser
 }) {
-  const [autoCompleteOpen, setOpen] = useState(false)
-  const [id, setNoteId] = useState('')
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
+  const [autoCompleteOpen, setOpen] = useState(false);
+  const [id, setNoteId] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
-  const [setReminder] = useMutation(TaskReminder)
-  const [reminderTime, setReminderTime] = useState(null)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
+  const [setReminder] = useMutation(TaskReminder);
+  const [reminderTime, setReminderTime] = useState(null);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
 
-  const history = useHistory()
+  const history = useHistory();
 
   function handleOpenAutoComplete(_event, noteId) {
-    setOpen(!autoCompleteOpen)
-    setNoteId(noteId)
+    setOpen(!autoCompleteOpen);
+    setNoteId(noteId);
   }
 
   function routeToAction(_event, taskId) {
-    return history.push(`/tasks/${taskId}`)
+    return history.push(`/tasks/${taskId}`);
   }
 
   function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
+    setAnchorEl(event.currentTarget);
   }
 
   function handleClose() {
-    setAnchorEl(null)
+    setAnchorEl(null);
   }
 
   function timeFormat(time) {
-    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`
+    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`;
   }
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
-      return
+      return;
     }
-    setMessageAlert('')
+    setMessageAlert('');
   }
 
   function setTaskReminder(hour) {
@@ -85,36 +86,32 @@ export default function Task({
       variables: { noteId: note.id, hour }
     })
       .then(() => {
-        handleClose()
-        const timeScheduled = new Date(
-          Date.now() + hour * 60 * 60000
-        ).toISOString()
-        setReminderTime(timeFormat(timeScheduled))
+        handleClose();
+        const timeScheduled = new Date(Date.now() + hour * 60 * 60000).toISOString();
+        setReminderTime(timeFormat(timeScheduled));
       })
       .catch(err => {
-        setMessageAlert(err.message)
-        setIsSuccessAlert(false)
-      })
+        setMessageAlert(err.message);
+        setIsSuccessAlert(false);
+      });
   }
 
   function currentActiveReminder() {
-    const assignedNote = note.assigneeNotes
-      .find(assigneeNote => assigneeNote.userId === currentUser.id)
-    
-    const timeScheduled = reminderTime || assignedNote?.reminderTime
-    let formattedTime = null
-    if (
-      timeScheduled &&
-      new Date(timeScheduled).getTime() > new Date().getTime()
-    ) {
-      formattedTime = timeFormat(timeScheduled)
+    const assignedNote = note.assigneeNotes.find(
+      assigneeNote => assigneeNote.userId === currentUser.id
+    );
+
+    const timeScheduled = reminderTime || assignedNote?.reminderTime;
+    let formattedTime = null;
+    if (timeScheduled && new Date(timeScheduled).getTime() > new Date().getTime()) {
+      formattedTime = timeFormat(timeScheduled);
     }
 
-    return formattedTime
+    return formattedTime;
   }
 
   function isCurrentUserAnAssignee() {
-    return note.assignees.find(assignee => assignee.id === currentUser.id)
+    return note.assignees.find(assignee => assignee.id === currentUser.id);
   }
 
   return (
@@ -140,19 +137,13 @@ export default function Task({
         </Grid>
         <Grid item xs={12}>
           <Typography variant="caption" gutterBottom>
-            <Link
-              style={{ textDecoration: 'none' }}
-              to={`/user/${note.author.id}`}
-            >
+            <Link style={{ textDecoration: 'none' }} to={`/user/${note.author.id}`}>
               {note.author.name}
               {' '}
             </Link>
             created this note for
             {' '}
-            <Link
-              style={{ textDecoration: 'none' }}
-              to={`/user/${note.user.id}`}
-            >
+            <Link style={{ textDecoration: 'none' }} to={`/user/${note.user.id}`}>
               {note.user.name}
               {' '}
             </Link>
@@ -180,17 +171,9 @@ export default function Task({
             <Chip
               key={note.id}
               variant="outlined"
-              label={
-                autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee'
-              }
+              label={autoCompleteOpen && id === note.id ? 'Close' : 'Add Assignee'}
               size="medium"
-              icon={
-                autoCompleteOpen && id === note.id ? (
-                  <CancelIcon />
-                ) : (
-                  <AddCircleIcon />
-                )
-              }
+              icon={autoCompleteOpen && id === note.id ? <CancelIcon /> : <AddCircleIcon />}
               onClick={event => handleOpenAutoComplete(event, note.id)}
             />
           )}
@@ -214,10 +197,10 @@ export default function Task({
               onChange={(_evt, value) => {
                 // if nothing selected, ignore and move on
                 if (!value) {
-                  return
+                  return;
                 }
                 // assign or unassign the user here
-                assignUnassignUser(note.id, value.id)
+                assignUnassignUser(note.id, value.id);
               }}
               renderInput={params => (
                 // eslint-disable-next-line react/jsx-props-no-spreading
@@ -245,7 +228,7 @@ export default function Task({
               onClick={() => handleModal(note.id)}
             />
             <Typography variant="subtitle1" gutterBottom>
-              Due at:
+              Due at: 
               {' '}
               {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
               <MuiLink
@@ -285,10 +268,7 @@ export default function Task({
           )}
           {isCurrentUserAnAssignee() && currentActiveReminder() && (
             <>
-              <Typography
-                variant="subtitle1"
-                style={{ margin: '5px 5px 10px 0', float: 'right' }}
-              >
+              <Typography variant="subtitle1" style={{ margin: '5px 5px 10px 0', float: 'right' }}>
                 {currentActiveReminder()}
               </Typography>
               <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
@@ -306,5 +286,5 @@ export default function Task({
       <Divider />
       <br />
     </>
-  )
+  );
 }

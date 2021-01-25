@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { CommentsPostQuery } from '../../graphql/queries'
-import Loading from '../Loading'
+import Loading from '../../shared/Loading'
 import ErrorPage from '../Error'
 import CommentList from './CommentList'
 

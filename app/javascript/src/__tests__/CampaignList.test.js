@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import { allCampaigns } from '../graphql/queries'
 import Campaign from '../components/CampaignList'
-import Loading from '../components/Loading'
+import Loading from '../shared/Loading'
 import ErrorPage from '../components/Error'
 
 describe('Campaign List page', () => {

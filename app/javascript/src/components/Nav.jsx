@@ -1,20 +1,20 @@
 /* eslint-disable */
-import React, { useContext, Fragment } from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import React, { useContext, Fragment } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { StyleSheet, css } from 'aphrodite'
-import Avatar from '@material-ui/core/Avatar'
-import MenuIcon from '@material-ui/icons/Menu'
-import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider.js'
-import Drawer from '@material-ui/core/Drawer'
-import { SideList } from './SideList.jsx'
-import { safeAvatarLink } from './Avatar.jsx'
-import {Context as ThemeContext} from '../../Themes/Nkwashi/ThemeProvider'
+import { StyleSheet, css } from 'aphrodite';
+import Avatar from '@material-ui/core/Avatar';
+import MenuIcon from '@material-ui/icons/Menu';
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider.js';
+import Drawer from '@material-ui/core/Drawer';
+import { SideList } from './SideList.jsx';
+import { safeAvatarLink } from './Avatar.jsx';
+import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider';
 import { useQuery } from 'react-apollo';
 import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries.js';
-import NotificationBell from './NotificationBell'
-import ImageAuth from './ImageAuth'
+import NotificationBell from './NotificationBell';
+import ImageAuth from '../shared/ImageAuth.jsx';
 
 export default withRouter(function Nav({
   children,
@@ -24,7 +24,7 @@ export default withRouter(function Nav({
   backTo,
   boxShadow
 }) {
-  const authState = useContext(AuthStateContext)
+  const authState = useContext(AuthStateContext);
   return (
     <Component
       {...{
@@ -37,8 +37,8 @@ export default withRouter(function Nav({
         boxShadow
       }}
     />
-  )
-})
+  );
+});
 
 export function Component({
   children,
@@ -49,13 +49,13 @@ export function Component({
   history,
   backTo
 }) {
-  const [state, setState] = React.useState(false)
-  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' })
-  const { data: messageCount } = useQuery(messageCountQuery,
-                                          {fetchPolicy: 'cache-and-network',
-                                          errorPolicy: 'all'})
-  const theme = useContext(ThemeContext)
-
+  const [state, setState] = React.useState(false);
+  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
+  const { data: messageCount } = useQuery(messageCountQuery, {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+  const theme = useContext(ThemeContext);
 
   function backButtonOrMenu() {
     if (menuButton === 'back' && navName === 'Scan') {
@@ -63,46 +63,42 @@ export function Component({
         <a href="/" className={css(styles.buttonLeft)}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </a>
-      )
+      );
     } else if (menuButton === 'back') {
       return (
-        <span
-          className={css(styles.buttonLeft)}
-          onClick={() => history.push(backTo)}
-        >
+        <span className={css(styles.buttonLeft)} onClick={() => history.push(backTo)}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </span>
-      )
+      );
     } else if (menuButton === 'cancel') {
       return (
-        <span
-          className={css(styles.buttonLeft)}
-          onClick={() => history.push(backTo)}
-        >
+        <span className={css(styles.buttonLeft)} onClick={() => history.push(backTo)}>
           <i className={`material-icons ${css(styles.icon)}`}>clear</i>
         </span>
-      )
-    } 
+      );
+    }
 
     return (
       <Fragment>
         {authState.user.userType === 'security_guard' ? (
-          <MenuIcon
+          <MenuIcon onClick={toggleDrawer} className={`${css(styles.userAvatar)}`} />
+        ) : (
+          <Avatar
+            alt="Default Avatar"
             onClick={toggleDrawer}
             className={`${css(styles.userAvatar)}`}
+            src={safeAvatarLink({ user: authState.user })}
           />
-        ) : (
-            <Avatar
-              alt="Default Avatar"
-              onClick={toggleDrawer}
-              className={`${css(styles.userAvatar)}`}
-              src={safeAvatarLink({ user: authState.user })}
-            />
-          )}
+        )}
 
-        <NotificationBell user={authState.user} history={history} data={data} messageCount={messageCount} />
+        <NotificationBell
+          user={authState.user}
+          history={history}
+          data={data}
+          messageCount={messageCount}
+        />
       </Fragment>
-    )
+    );
   }
 
   function communityName() {
@@ -116,42 +112,37 @@ export function Component({
               alt="community logo"
             />
           </Link>
-        )
+        );
       }
       return (
         <Link to="/">
           <div>{authState.community.name}</div>
         </Link>
-      )
+      );
     }
     return (
       <Link to="/">
-        <ImageAuth 
-          imageLink={authState.user?.community.imageUrl} 
-          token={authState.token} 
+        <ImageAuth
+          imageLink={authState.user?.community.imageUrl}
+          token={authState.token}
           className={css(styles.logo)}
         />
       </Link>
-    )
+    );
   }
   const toggleDrawer = event => {
-    if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
     }
-    setState(!state)
-  }
+    setState(!state);
+  };
   return (
     <>
-      {
-        authState.loggedIn && (
-          <Drawer open={state} onClose={toggleDrawer}>
-            <SideList toggleDrawer={toggleDrawer} user={authState.user} authState={authState} />
-          </Drawer>
-        )
-      }
+      {authState.loggedIn && (
+        <Drawer open={state} onClose={toggleDrawer}>
+          <SideList toggleDrawer={toggleDrawer} user={authState.user} authState={authState} />
+        </Drawer>
+      )}
       <nav
         className={`navbar navbar-dark`}
         style={{ boxShadow, backgroundColor: theme.primaryColor, minHeight: '50px' }}
@@ -171,25 +162,28 @@ export function Component({
         </div>
       </nav>
     </>
-  )
+  );
 }
 
 export function NewsNav({ children }) {
   return (
-    <AppBar style={{
-      display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', background: 'transparent', boxShadow: 'none'
-    }}>
-      <Toolbar >
-        {children}
-      </Toolbar>
+    <AppBar
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        background: 'transparent',
+        boxShadow: 'none'
+      }}
+    >
+      <Toolbar>{children}</Toolbar>
     </AppBar>
-  )
-
+  );
 }
 
 Component.defaultProps = {
-  boxShadow: '0 2px 2px 0 rgba(0,0,0,.14)',
-}
+  boxShadow: '0 2px 2px 0 rgba(0,0,0,.14)'
+};
 
 const styles = StyleSheet.create({
   logo: {
@@ -251,4 +245,4 @@ const styles = StyleSheet.create({
       cursor: 'pointer'
     }
   }
-})
+});

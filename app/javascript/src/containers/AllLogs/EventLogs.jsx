@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import { useQuery } from "react-apollo";
 import Nav from "../../components/Nav";
 import { Context as AuthStateContext } from "../Provider/AuthStateProvider.js";
-import Loading from "../../components/Loading.jsx";
+import Loading from "../../shared/Loading.jsx";
 import { AllEventLogsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
 import Events from "../../components/Events"

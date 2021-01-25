@@ -2,7 +2,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
-import Loading from '../components/Loading.jsx'
+import Loading from '../shared/Loading.jsx'
 import DateUtil from '../utils/dateutil.js'
 import { UserQuery } from '../graphql/queries'
 import { Context } from './Provider/AuthStateProvider'

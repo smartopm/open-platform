@@ -1,9 +1,9 @@
 /* eslint-disable */
-import React from 'react'
-import { StyleSheet, css } from 'aphrodite'
+import React from 'react';
+import { StyleSheet, css } from 'aphrodite';
 import { withStyles } from '@material-ui/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CenteredContent from './CenteredContent';
+import CenteredContent from '../components/CenteredContent';
 
 export default function Loading() {
   return (
@@ -15,21 +15,21 @@ export default function Loading() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const ColorCircularProgress = withStyles({
   root: {
-    color: '#00695c',
-  },
+    color: '#00695c'
+  }
 })(CircularProgress);
 
-export function Spinner(){
+export function Spinner() {
   return (
     <CenteredContent>
       <ColorCircularProgress size={30} thickness={5} data-testid="loader" />
     </CenteredContent>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
     left: '50%',
     transform: 'translate(-50%, -50%)'
   }
-})
+});

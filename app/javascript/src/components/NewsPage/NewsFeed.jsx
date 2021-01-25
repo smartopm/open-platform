@@ -9,7 +9,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { Typography } from '@material-ui/core'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
-import { Spinner } from '../Loading'
+import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
 import { sanitizeText } from '../../utils/helpers'
 

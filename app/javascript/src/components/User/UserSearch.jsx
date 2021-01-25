@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Fragment } from 'react'
+import React, { Fragment } from 'react';
 import {
   TextField,
   FormControlLabel,
@@ -8,20 +8,19 @@ import {
   FormControl,
   RadioGroup,
   Typography
-} from '@material-ui/core'
-import { useLazyQuery } from 'react-apollo'
-import PropTypes from 'prop-types'
-import { UsersLiteQuery } from '../../graphql/queries'
-import { Spinner } from '../Loading'
+} from '@material-ui/core';
+import { useLazyQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
+import { UsersLiteQuery } from '../../graphql/queries';
+import { Spinner } from '../../shared/Loading';
 
 export default function UserSearch({ userData, update }) {
-  const [
-    loadUsers,
-    { loading: isLoading, error: queryErrors, data }
-  ] = useLazyQuery(UsersLiteQuery)
+  const [loadUsers, { loading: isLoading, error: queryErrors, data }] = useLazyQuery(
+    UsersLiteQuery
+  );
 
   function handleSearchUser(event) {
-    update({ ...userData, user: event.target.value })
+    update({ ...userData, user: event.target.value });
 
     setTimeout(() => {
       loadUsers({
@@ -30,8 +29,8 @@ export default function UserSearch({ userData, update }) {
           errorPolicy: 'all',
           fetchPolicy: 'cache-and-network'
         }
-      })
-    }, 1000)
+      });
+    }, 1000);
   }
   return (
     <>
@@ -54,8 +53,8 @@ export default function UserSearch({ userData, update }) {
             }}
           />
           <Typography variant="subtitle2" color="textSecondary">
-            The account selected will be deleted from the system and
-            merged into the profile you are currently on
+            The account selected will be deleted from the system and merged into the profile you are
+            currently on
           </Typography>
         </Fragment>
       ) : (
@@ -82,14 +81,15 @@ export default function UserSearch({ userData, update }) {
           </RadioGroup>
         </FormControl>
       ) : (
-        Boolean(userData.user.length) && Boolean(data?.usersLite.length) &&
+        Boolean(userData.user.length) &&
+        Boolean(data?.usersLite.length) &&
         !isLoading &&
         `${userData.user} not found in users`
       )}
       {// separate radios from checkbox only after search
       data?.usersLite.length && <hr />}
     </>
-  )
+  );
 }
 
 UserSearch.propTypes = {
@@ -99,4 +99,4 @@ UserSearch.propTypes = {
     userId: PropTypes.string,
     imageUrl: PropTypes.string
   })
-}
+};

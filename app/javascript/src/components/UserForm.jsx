@@ -21,7 +21,7 @@ import { UserQuery } from '../graphql/queries'
 import { CreateUserMutation, NonAdminUpdateMutation, UpdateUserMutation } from '../graphql/mutations'
 import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
-import Loading from './Loading'
+import Loading from '../shared/Loading'
 import FormOptionInput, {
   FormOptionWithOwnActions
 } from './Forms/FormOptionInput'

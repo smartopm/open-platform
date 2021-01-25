@@ -4,7 +4,7 @@ import CommunitySettingsPage from '../../components/Community/CommunitySettings'
 import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import { CommunityQuery } from '../../graphql/queries'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 
 export default function CommunitySettings(){

@@ -4,7 +4,7 @@ import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { FormPropertiesQuery } from '../../graphql/queries'
 import GenericForm from './GenericForm'
-import { Spinner } from '../Loading'
+import { Spinner } from '../../shared/Loading'
 
 export default function Form({ formId, pathname }) {
   const { data: formData, error, loading, refetch } = useQuery(FormPropertiesQuery, {

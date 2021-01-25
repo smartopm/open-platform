@@ -18,7 +18,7 @@ import { useFetch, useWindowDimensions } from '../../utils/customHooks'
 import { ShareButton, styles } from '../../components/ShareButton'
 import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
-import { Spinner } from '../../components/Loading'
+import { Spinner } from '../../shared/Loading'
 import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'

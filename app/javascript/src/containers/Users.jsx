@@ -7,7 +7,7 @@ import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Nav from '../components/Nav'
-import Loading from '../components/Loading'
+import Loading from '../shared/Loading'
 import ErrorPage from '../components/Error'
 import { UsersDetails, LabelsQuery, UsersCount } from '../graphql/queries'
 import {

@@ -4,19 +4,13 @@ export const filterUserByLoggedin = {
   log_from: 'login after',
   log_to: 'login before',
   log_on: 'logged in on'
-}
+};
 
 export const wordpressEndpoint =
-  'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com'
-export const reasons = [
-  'Visiting',
-  'Residing',
-  'Working',
-  'Passing through',
-  'Other'
-]
+  'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com';
+export const reasons = ['Visiting', 'Residing', 'Working', 'Passing through', 'Other'];
 
-export const requiredFields = ['userType', 'phoneNumber', 'name', 'email']
+export const requiredFields = ['userType', 'phoneNumber', 'name', 'email'];
 
 export const userType = {
   admin: 'Admin',
@@ -27,27 +21,27 @@ export const userType = {
   client: 'Client',
   visitor: 'Visitor',
   custodian: 'Store Custodian'
-}
+};
 
 export const colorPallete = [
-   '#2c8bd0',
-   '#f07030',
-   '#61d190',
-   '#b54ecf',
-   '#65d11e',
-   '#afcf21',
-   '#cf9e28',
-   '#cfc028',
-   '#cf5628',
-   '#3a7047'
-]
+  '#2c8bd0',
+  '#f07030',
+  '#61d190',
+  '#b54ecf',
+  '#65d11e',
+  '#afcf21',
+  '#cf9e28',
+  '#cfc028',
+  '#cf5628',
+  '#3a7047'
+];
 
 export const userState = {
   valid: 'Valid',
   pending: 'Pending',
   banned: 'Not Allowed',
   expired: 'Expired'
-}
+};
 
 export const userSubStatus = {
   applied: 'Applied',
@@ -59,8 +53,8 @@ export const userSubStatus = {
   interested: 'Interested',
   moved_in: 'Moved-In',
   paying: 'Paying',
-  ready_for_construction: 'Ready for Construction',
-}
+  ready_for_construction: 'Ready for Construction'
+};
 
 export const subStatus = {
   0: 'Applied',
@@ -72,17 +66,16 @@ export const subStatus = {
   6: 'Interested',
   7: 'Moved-In',
   8: 'Paying',
-  9: 'Ready for Construction',
-}
+  9: 'Ready for Construction'
+};
 
 export const invoiceStatus = {
   inProgress: 'In-Progress',
   paid: 'Paid',
   late: 'Late',
   cancelled: 'Cancelled',
-  in_progress: 'In-Progress',
-}
-
+  in_progress: 'In-Progress'
+};
 
 export const entryReason = [
   'Client',
@@ -91,14 +84,14 @@ export const entryReason = [
   'Sales',
   'Passing through',
   'Other'
-]
+];
 // This is for the showRoom
 export const infoSource = [
   'Family / Friend / Acquaintance',
   'Social Media(Facebook, Twitter or Whatsapp)',
   'Tv/Radio',
   'Other'
-]
+];
 
 export const NotesCategories = {
   call: 'Call',
@@ -106,7 +99,7 @@ export const NotesCategories = {
   email: 'Email',
   to_do: 'To-Do',
   form: 'Form'
-}
+};
 
 export const businessCategories = {
   agriculture: 'Agriculture and Farming',
@@ -118,19 +111,19 @@ export const businessCategories = {
   restaurant: 'Restaurant',
   beauty_salon: 'Beauty Salon',
   supermarket: 'Supermarket'
-}
+};
 
 export const businessStatus = {
   verified: 'Verified',
   pending: 'Pending'
-}
+};
 
 export const commentStatusAction = {
   delete: 'deleted',
   validate: 'valid'
-}
+};
 // Values from here should be managed at the community level
-export const ponisoNumber = '+260976064298'
+export const ponisoNumber = '+260976064298';
 
 export const messageFilters = [
   {
@@ -165,7 +158,7 @@ export const messageFilters = [
     value: 'email/non_campaign',
     title: 'Email and Non-Campaign'
   }
-]
+];
 
 export const fieldType = {
   text: 0,
@@ -174,7 +167,7 @@ export const fieldType = {
   signature: 3,
   display_text: 4,
   display_image: 5
-}
+};
 
 export const formStatus = {
   rejected: 'Rejected',
@@ -183,41 +176,57 @@ export const formStatus = {
   draft: 'draft',
   publish: 'published',
   delete: 'deleted'
-}
+};
 
 export const currencies = {
   zambian_kwacha: 'k'
-}
+};
 
 export const mapTiles = {
-  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-  mapboxSatellite: 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=',
-  mapboxStreets: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=',
+  attribution:
+    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+  mapboxSatellite:
+    'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=',
+  mapboxStreets:
+    'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=',
   openStreetMap: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   centerPoint: {
     nkwashi: [-15.5106850854, 28.6493892334]
   }
-}
+};
 
 export const publicMapToken = {
-  mapbox: 'pk.eyJ1Ijoiam9obnNvbnNpcnYiLCJhIjoiY2tqOGNzemdzMmg1djJ6bGdubnR4MDY4ciJ9.dUpC4xn0Iwj9MPNrpCx7IQ'
-}
+  mapbox:
+    'pk.eyJ1Ijoiam9obnNvbnNpcnYiLCJhIjoiY2tqOGNzemdzMmg1djJ6bGdubnR4MDY4ciJ9.dUpC4xn0Iwj9MPNrpCx7IQ'
+};
 
-export const emptyPolygonFeature =  JSON.stringify({
-    type: 'Feature',
-    geometry: {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0],
-          [0, 0]
-        ]
+export const emptyPolygonFeature = JSON.stringify({
+  type: 'Feature',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [
+      [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0]
       ]
-    },
-    properties: { }
-  })
+    ]
+  },
+  properties: {}
+});
+
+export const taskStatus = {
+  myOpenTasks: 'My Tasks',
+  tasksDueIn10Days: 'Tasks due in 10 days',
+  tasksDueIn30Days: 'Tasks due in 30 days',
+  tasksOpenAndOverdue: 'Overdue Tasks',
+  tasksWithNoDueDate: 'Tasks with no due date',
+  totalCallsOpen: 'Total Calls Open',
+  totalFormsOpen: 'Total Forms Open',
+  tasksOpen: 'Tasks Open',
+  completedTasks: 'Tasks Completed'
+};

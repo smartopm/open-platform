@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import { useQuery } from 'react-apollo'
-import Loading from '../components/Loading.jsx'
+import Loading from '../shared/Loading.jsx'
 import Logo from '../../../assets/images/nkwashi_logo_black_transparent.png'
 
 import html2canvas from 'html2canvas'

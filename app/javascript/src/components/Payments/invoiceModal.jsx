@@ -14,7 +14,7 @@ import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import PaymentModal from './PaymentModal'
 import { UserLandParcel } from '../../graphql/queries'
-import { Spinner } from '../Loading'
+import { Spinner } from '../../shared/Loading'
 
 const initialValues = {
   status: '',

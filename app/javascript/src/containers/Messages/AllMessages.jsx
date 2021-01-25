@@ -14,7 +14,7 @@ import { MessagesQuery } from '../../graphql/queries'
 import CenteredContent from '../../components/CenteredContent'
 import ErrorPage from '../../components/Error'
 import MessageList from '../../components/Messaging/MessageList'
-import { Spinner } from '../../components/Loading';
+import { Spinner } from '../../shared/Loading';
 import Nav from '../../components/Nav'
 
 const limit = 50

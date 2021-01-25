@@ -18,7 +18,7 @@ import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import DeleteDialogueBox from '../Business/DeleteDialogue'
 import { commentStatusAction } from '../../utils/constants'
-import ImageAuth from '../ImageAuth'
+import ImageAuth from '../../shared/ImageAuth'
 
 export default function Comments({ comments, refetch, discussionId }) {
   const init = {

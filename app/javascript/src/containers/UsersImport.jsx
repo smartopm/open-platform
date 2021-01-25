@@ -7,7 +7,7 @@ import { Button, Grid } from '@material-ui/core'
 import Nav from '../components/Nav'
 import { ImportCreate } from '../graphql/mutations'
 import CenteredContent from '../components/CenteredContent'
-import Loading from '../components/Loading'
+import Loading from '../shared/Loading'
 import { sanitizeText, pluralizeCount, propAccessor } from '../utils/helpers'
 import { Context } from "./Provider/AuthStateProvider"
 import MessageAlert from "../components/MessageAlert"

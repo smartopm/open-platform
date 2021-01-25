@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import ActionFlows from '../containers/ActionFlows/ActionFlows'
 import { Flows } from '../graphql/queries'
-import Loading from '../components/Loading'
+import Loading from '../shared/Loading'
 import '@testing-library/jest-dom/extend-expect'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())

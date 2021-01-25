@@ -6,7 +6,7 @@ import NotificationPage from '../../components/NotificationPage'
 import { NotificationPreference } from '../../graphql/mutations'
 import { UserLabelsQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import { Snackbar } from '@material-ui/core'
 
 export default function Notifications() {

@@ -5,7 +5,7 @@ import Profile from '../../components/Business/BusinessProfile'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'react-apollo'
 import { BusinessByIdQuery } from '../../graphql/queries'
-import Loading from '../../components/Loading'
+import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 
 export default function BusinessProfile() {
