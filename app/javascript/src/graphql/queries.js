@@ -936,5 +936,15 @@ query subStatus {
   }
 }
 `
-
-// payment details query
+export const TransactionQuery = gql`
+  query walletTrans($userId: ID!) {
+    userWalletTransactions(userId: $userId) {
+      amount
+      status
+      createdAt
+      updatedAt
+      currentWalletBalance
+      id
+    }
+  }
+`;
