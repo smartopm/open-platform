@@ -25,7 +25,7 @@ import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
-import InvoiceList from './Payments/InvoiceList'
+import Transactions from './Payments/Transactions'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
@@ -246,7 +246,7 @@ export default function UserInformation({
           </>
         )}
         <TabPanel value={tabValue} index="Payments">
-          <InvoiceList
+          <Transactions
             data={parcelData}
             userId={userId}
             user={authState.user}
