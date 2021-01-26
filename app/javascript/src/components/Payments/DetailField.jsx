@@ -8,9 +8,9 @@ export default function DetailsField({ title, value }){
   return(
     <>
       <div className={classes.detail}>
-        <Typography variant='body1'>{title}</Typography>
+        <Typography variant='body1' data-testid="title">{title}</Typography>
         :
-        <Typography variant='body2' style={{margin: '2px 0 0 10px'}}>{value}</Typography>
+        <Typography variant='body2' style={{margin: '2px 0 0 10px'}} data-testid="value">{value}</Typography>
       </div>
     </>
   )
