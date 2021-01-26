@@ -26,7 +26,6 @@ const paymentHeaders = [
   { title: 'Parcel Number', col: 2 },
   { title: 'Amount', col: 2 },
   { title: 'Due date', col: 1 },
-  // { title: 'Payment made by', col: 3 },
   { title: 'Invoice Status', col: 2 },
   { title: 'Menu', col: 1 }
 ];
@@ -89,7 +88,8 @@ export default function PaymentList({ authState }) {
         />
       </Grid>
       <List>
-        {// eslint-disable-next-line no-nested-ternary
+        {
+        // eslint-disable-next-line no-nested-ternary
         loading ? (
           <Spinner />
         ) : invoicesData?.invoices.length ? (
@@ -113,7 +113,7 @@ export default function PaymentList({ authState }) {
         ) : (
           <CenteredContent>No Invoices Yet</CenteredContent>
         )
-}
+        }
       </List>
 
       <CenteredContent>
