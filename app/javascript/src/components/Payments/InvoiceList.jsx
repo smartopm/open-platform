@@ -3,7 +3,6 @@ import List from '@material-ui/core/List'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
-import InvoiceItem from './InvoiceItem'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
@@ -13,6 +12,7 @@ import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
+import UserInvoicesList from './UserInvoicesList'
 
 export default function InvoiceList({ userId, user }) {
   const history = useHistory()
@@ -66,17 +66,19 @@ export default function InvoiceList({ userId, user }) {
       />
       <List>
         {invoicesData?.userInvoices.length
-          ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem
-              key={invoice.id}
-              invoice={invoice}
-              userId={userId}
-              creatorId={user.id}
-              refetch={refetch}
-              userType={authState.user?.userType}
-              currency={currency}
-            />
-            ))
+          ? 
+            <UserInvoicesList invoices={invoicesData?.userInvoices} />
+          // invoicesData?.userInvoices.map(invoice => (
+          //   <InvoiceItem
+          //     key={invoice.id}
+          //     invoice={invoice}
+          //     userId={userId}
+          //     creatorId={user.id}
+          //     refetch={refetch}
+          //     userType={authState.user?.userType}
+          //     currency={currency}
+          //   />
+          //   ))
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
 

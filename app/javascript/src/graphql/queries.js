@@ -845,6 +845,8 @@ export const UserInvoicesQuery = gql`
       status
       description
       dueDate
+      updatedAt
+      createdAt
       createdBy {
         id
         name
@@ -852,16 +854,6 @@ export const UserInvoicesQuery = gql`
       landParcel {
         id
         parcelNumber
-      }
-      payments {
-        id
-        amount
-        paymentType
-        paymentStatus
-        user {
-          id
-          name
-        }
       }
     }
   }
@@ -881,16 +873,6 @@ export const InvoicesQuery = gql`
       landParcel {
         id
         parcelNumber
-      }
-      payments {
-        id
-        amount
-        paymentType
-        paymentStatus
-        user {
-          id
-          name
-        }
       }
     }
   }
@@ -953,5 +935,6 @@ query subStatus {
     readyForConstruction
   }
 }
-
 `
+
+// payment details query

@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types'
 import { dateToString } from '../DateContainer'
-import PaymentItem from './PaymentItem'
 import PaymentModal from './PaymentModal'
 import { invoiceStatus } from '../../utils/constants'
 
@@ -76,13 +75,6 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
                 }
               </Grid>
             </Grid>
-            {invoice.payments?.map((payment) => (
-              <div key={payment.id}>
-                <i>
-                  <PaymentItem paymentData={payment} currency={currency} />
-                </i>
-              </div>
-            ))}
           </div>
         )}
       />
