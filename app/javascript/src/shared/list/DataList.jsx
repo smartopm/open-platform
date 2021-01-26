@@ -29,7 +29,7 @@ export default function DataList({ keys, data, hasHeader, clickable }) {
           key={index}
           spacing={1}
         >
-          <CellData propNames={keys} dataObj={item} clickable={clickable} />
+          <CellData propNames={keys} dataObj={item} />
         </Grid>
       ))}
     </>
