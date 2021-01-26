@@ -4,7 +4,7 @@ module Mutations
   module Transaction
     # Create transactions against wallet
     class WalletTransactionCreate < BaseMutation
-      argument :user_id, ID, required: false
+      argument :user_id, ID, required: true
       argument :amount, Float, required: true
       argument :source, String, required: true
       argument :destination, String, required: true
