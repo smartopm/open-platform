@@ -108,7 +108,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
   )
 }
 
-export function renderInvoices(invoice, userType, handleDetailsOpen, currency, handleOpenPayment) {
+export function renderInvoices(invoice, userType, currency, handleOpenPayment) {
   function createdBy() {
     if (invoice?.createdBy === null) {
       return 'Not Available'
@@ -125,12 +125,12 @@ export function renderInvoices(invoice, userType, handleDetailsOpen, currency, h
         </Grid>
       ),
       'LandParcel': (
-        <Grid item xs={2} data-testid="parcelNumber">
+        <Grid item xs={2} data-testid="landparcel">
           {invoice?.landParcel?.parcelNumber}
         </Grid>
       ),
       'Due Date': (
-        <Grid item xs={2} data-testid="dueDate">
+        <Grid item xs={2} data-testid="duedate">
           {dateToString(invoice?.dueDate)}
         </Grid>
       ),
