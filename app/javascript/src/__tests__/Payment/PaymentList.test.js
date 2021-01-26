@@ -22,7 +22,6 @@ describe('Invoice Item Component', () => {
         id: '233b1634-bf08-4ece-a213-b3f120a1e009',
         parcelNumber: 'Plot-1343'
       },
-      payments: []
     },
     {
       id: '19f57fc2-610c-49b8-bc16-1dc239015b58',
@@ -37,7 +36,6 @@ describe('Invoice Item Component', () => {
         id: '50da896a-9217-43b9-a28f-03a13c7d401f',
         parcelNumber: 'Starter-200'
       },
-      payments: []
     }
   ];
   it('should render the invoice item component', async () => {

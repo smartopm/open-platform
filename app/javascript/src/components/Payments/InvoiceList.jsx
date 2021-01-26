@@ -67,18 +67,7 @@ export default function InvoiceList({ userId, user }) {
       <List>
         {invoicesData?.userInvoices.length
           ? 
-            <UserInvoicesList invoices={invoicesData?.userInvoices} />
-          // invoicesData?.userInvoices.map(invoice => (
-          //   <InvoiceItem
-          //     key={invoice.id}
-          //     invoice={invoice}
-          //     userId={userId}
-          //     creatorId={user.id}
-          //     refetch={refetch}
-          //     userType={authState.user?.userType}
-          //     currency={currency}
-          //   />
-          //   ))
+            <UserInvoicesList invoices={invoicesData?.userInvoices} currency={currency}  />
           : <CenteredContent>No Invoices Yet</CenteredContent>}
       </List>
 
