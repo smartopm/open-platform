@@ -12,20 +12,20 @@ const invoiceHeader = [
   { title: 'Amount', col: 1 },
   { title: 'Balance', col: 1 }
 ];
-export default function UserInvoicesList({ invoices }) {
+export default function UserInvoicesList({ invoices, currency }) {
   if (!invoices.length) {
     return <Text content="No Invoices" align="center" />;
   }
-  return <DataList keys={invoiceHeader} data={renderInvoices(invoices)} hasHeader={false} />;
+  return <DataList keys={invoiceHeader} data={renderInvoices(invoices, currency)} hasHeader={false} />;
 }
 
-export function renderInvoices(data) {
+export function renderInvoices(data, currency) {
   return data.map((invoice, count) => {
     return {
       'Invoice Number': <GridText col={1} content={`#${invoice.invoiceNumber || count + 1}`} />,
       Status: <GridText col={3} content={`Updated to ${invoiceStatus[invoice.status]} on ${dateToString(invoice.updatedAt)}`}  />,
       'Date Created': <GridText content={`Created on ${dateToString(invoice.createdAt)}`} />,
-      Amount: <GridText content={invoice.amount} />,
+      Amount: <GridText content={`${currency}${invoice.amount}`} />,
       Balance: <GridText content={invoice.balance || 'Coming soon ...'} />
     };
   });
@@ -40,5 +40,6 @@ UserInvoicesList.propTypes = {
       amount: PropTypes.number.isRequired,
       balance: PropTypes.number
     })
-  ).isRequired
+  ).isRequired,
+  currency: PropTypes.string.isRequired
 };
