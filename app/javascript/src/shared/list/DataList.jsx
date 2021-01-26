@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 
-export default function DataList({ keys, data, hasHeader }) {
+export default function DataList({ keys, data, hasHeader, clickable }) {
   if (hasHeader && keys.length !== Object.keys(data[0]).length) {
     throw new Error(
       'headers must have same length as number of columns in the data prop or set hasHeader to false'
@@ -24,11 +24,12 @@ export default function DataList({ keys, data, hasHeader }) {
           direction="row"
           justify="space-between"
           alignItems="center"
-          className={classes.list}
+          className={clickable?.status ? classes.clickable : classes.list}
+          onClick={clickable?.onclick || null}
           key={index}
           spacing={1}
         >
-          <CellData propNames={keys} dataObj={item} />
+          <CellData propNames={keys} dataObj={item} clickable={clickable} />
         </Grid>
       ))}
     </>
@@ -37,12 +38,20 @@ export default function DataList({ keys, data, hasHeader }) {
 
 export function CellData({ propNames, dataObj }) {
   return propNames.map(prop => (
-    <Fragment key={prop.title}>{propAccessor(dataObj, prop.title)}</Fragment>
+    <Fragment
+      key={prop.title} 
+    >
+      {propAccessor(dataObj, prop.title)}
+    </Fragment>
   ));
 }
 
 DataList.defaultProps = {
-  hasHeader: true
+  hasHeader: true,
+  clickable: {
+    status: false,
+    onclick: null
+  }
 };
 
 DataList.propTypes = {
@@ -61,7 +70,15 @@ DataList.propTypes = {
    * @param {boolean} hasHeader this determines whether the list should have header,
    * it also verifies if the number of given columns is the same as that of the headers
    */
-  hasHeader: PropTypes.bool
+  hasHeader: PropTypes.bool,
+  /**
+   * @param {object} clickable used to set the card clickable,
+   * it also includes the onClick function when the card is being clicked
+   */
+  clickable: PropTypes.shape({
+    status: PropTypes.bool,
+    onclick: PropTypes.func
+  })
 };
 
 CellData.propTypes = {
@@ -76,5 +93,12 @@ const useStyles = makeStyles(() => ({
     padding: '15px 0',
     border: '1px solid #ECECEC',
     marginBottom: '10px'
+  },
+  clickable: {
+    backgroundColor: '#FFFFFF',
+    padding: '15px 0',
+    border: '1px solid #ECECEC',
+    cursor: 'pointer',
+    textAlign: 'center'
   }
 }));
