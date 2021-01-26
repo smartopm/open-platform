@@ -104,9 +104,8 @@ describe('Invoice Item Component', () => {
     const results = renderPayments(invoices, openMenu, 'k');
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Parcel Number');
-    expect(results[0]).toHaveProperty('Amount/Payment Type');
+    expect(results[0]).toHaveProperty('Amount');
     expect(results[0]).toHaveProperty('Due date');
-    expect(results[0]).toHaveProperty('Payment made by');
     expect(results[0]).toHaveProperty('Invoice Status');
     expect(results[0]).toHaveProperty('Menu');
     expect(results[0]).toHaveProperty('Select');

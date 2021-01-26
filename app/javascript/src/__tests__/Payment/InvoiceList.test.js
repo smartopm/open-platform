@@ -9,8 +9,6 @@ import { Spinner } from '../../shared/Loading'
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider'
 import { generateId } from '../../utils/helpers'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
-
 describe('Invoice Item Component', () => {
   it('should render the invoice item component', async () => {
     const userId = generateId()[1]
@@ -28,6 +26,8 @@ describe('Invoice Item Component', () => {
               status: 'late',
               description: 'Final Payment',
               dueDate: '2020-12-28',
+              updatedAt: '2020-12-20' ,
+              createdAt: '2020-12-19',
               createdBy: {
                 id: '233b1634-bf08-4ece-a213-b3f120a1e009',
                 name: 'Some User'
@@ -41,12 +41,6 @@ describe('Invoice Item Component', () => {
         }
       }
     }
-    const data = [
-      {
-        id: '3429hdisu34',
-        parcelNumber: 'ho2ij3'
-      }
-    ]
 
     const user = {
       id: "939453bef34-f3",
@@ -61,9 +55,7 @@ describe('Invoice Item Component', () => {
           <BrowserRouter>
             <InvoiceList
               userId={userId}
-              data={data}
               user={user}
-              userType='admin'
             />
           </BrowserRouter>
         </AuthStateProvider>
@@ -76,19 +68,10 @@ describe('Invoice Item Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryAllByTestId('amount')[0].textContent).toContain('Invoice amount: k50')
-        expect(container.queryAllByTestId('duedate')[0].textContent).toContain(
-          'Due at: 2020-12-28'
-        )
-        expect(container.queryAllByTestId('landparcel')[0].textContent).toContain(
-          'Parcel number: Plot-1343'
-        )
-        expect(
-          container.queryByText('Final Payment')
-        ).toBeInTheDocument()
-        expect(container.queryAllByTestId('pay-button')).toBeTruthy()
+        expect(container.queryByText('k50')).toBeInTheDocument()
+        expect(container.queryByText('Updated to Late on 2020-12-20')).toBeInTheDocument()
       },
-      { timeout: 500 }
+      { timeout: 100 }
     )
   })
 })

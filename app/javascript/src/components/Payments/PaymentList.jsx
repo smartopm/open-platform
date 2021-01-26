@@ -11,7 +11,6 @@ import { Spinner } from '../../shared/Loading';
 import {
   formatError,
   useParamsQuery,
-  InvoiceType,
   InvoiceStatusColor,
   propAccessor
 } from '../../utils/helpers';
@@ -25,9 +24,9 @@ import Label from '../../shared/label/Label';
 const paymentHeaders = [
   { title: 'Select', col: 1 },
   { title: 'Parcel Number', col: 2 },
-  { title: 'Amount/Payment Type', col: 2 },
+  { title: 'Amount', col: 2 },
   { title: 'Due date', col: 1 },
-  { title: 'Payment made by', col: 3 },
+  // { title: 'Payment made by', col: 3 },
   { title: 'Invoice Status', col: 2 },
   { title: 'Menu', col: 1 }
 ];
@@ -159,26 +158,14 @@ export function renderPayments(payments, handleOpenMenu, currency) {
           {invoice.landParcel.parcelNumber}
         </Grid>
       ),
-      'Amount/Payment Type': (
+      'Amount': (
         <Grid item xs={2}>
-          {invoice.payments.map(pay => (
-            <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
-          ))}
+          <span>{`${currency}${invoice.amount}`}</span>
         </Grid>
       ),
       'Due date': (
         <Grid item xs={1}>
           {dateToString(invoice.dueDate)}
-        </Grid>
-      ),
-      'Payment made by': (
-        <Grid item xs={3}>
-          {invoice.payments.map(pay => (
-            <span key={pay.id}>
-              {pay.user.name}
-              {pay.length > 1 ? ',' : ''}
-            </span>
-          ))}
         </Grid>
       ),
       'Invoice Status': (
