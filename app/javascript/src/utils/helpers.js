@@ -355,15 +355,15 @@ export function toCamelCase(str){
  */
 /* eslint-disable no-nested-ternary */
 export function getHexColor (range) {
-  return (range > 300
+  return (range > 320
     ? '#800026'
-    : range > 200
+    : range > 270
     ? '#BD0026'
-    : range > 100
+    : range > 220
     ? '#E31A1C'
-    : range > 40
+    : range > 170
     ? '#FC4E2A'
-    : range > 30
+    : range > 120
     ? '#FD8D3C'
     : range > 20
     ? '#FEB24C'

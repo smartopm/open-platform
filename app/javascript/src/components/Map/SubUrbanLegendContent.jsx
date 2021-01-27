@@ -12,7 +12,7 @@ export default function SubUrbanLegendContent(){
 
     legend.onAdd = () => {
       const div = L.DomUtil.create('div', 'info legend')
-      const grades = [0, 10, 20, 30, 40, 100, 300]
+      const grades = [0, 20, 120, 170, 220, 270, 320]
       const labels = []
       let from
       let to
@@ -31,7 +31,7 @@ export default function SubUrbanLegendContent(){
     }
 
     legend.addTo(map)
-  }, [])
+  })
 
   return null
 }

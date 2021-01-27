@@ -12,7 +12,7 @@ function geoJSONStyle(feature) {
     color: "white",
     dashArray: "3",
     fillOpacity: 0.7,
-    fillColor: getHexColor(feature && parseInt(feature.properties.estimated_population))
+    fillColor: getHexColor(feature && Number(feature.properties.estimated_population))
   }
 }
 
@@ -29,6 +29,7 @@ export default function SubUrbanLayer(){
       return info.div
     };
 
+    /* eslint-disable react/prop-types */
     info.update = function(props){
       info.div.innerHTML =
         `<h5>Est. Population Census/Nkwashi Sub-urban</h5>
@@ -37,7 +38,7 @@ export default function SubUrbanLayer(){
           ? `<b>${ 
             props.sub_urban 
             }</b><br />${ 
-            parseInt(props.estimated_population)
+            Number(props.estimated_population)
             } people / mi<sup>2</sup>`
           : 'Hover over a Sub-urban area'}`
     };
@@ -80,7 +81,7 @@ export default function SubUrbanLayer(){
       style: geoJSONStyle,
       onEachFeature
     }).addTo(map)
-  }, [])
+  })
 
   return (
     <>
