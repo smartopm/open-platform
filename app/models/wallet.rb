@@ -21,6 +21,9 @@ class Wallet < ApplicationRecord
       update(pending_balance: (pending_balance - amount))
     else
       update(balance: (balance + amount - pending_balance), pending_balance: 0)
+      # TODO: We should also check the status before creating payments, ignoring now
+      # not sure which statuses to include: Saurabh
+      user.invoices.where('pending_amount > ?', 0).find_each { |inv| make_payment(inv) }
     end
     balance
   end
@@ -33,5 +36,10 @@ class Wallet < ApplicationRecord
       update(balance: 0, pending_balance: pending_balance)
     end
     balance
+  end
+
+  def make_payment(inv)
+    inv.payments.create(payment_type: 'wallet', amount: inv.pending_amount)
+    inv.update(pending_amount: 0, status: 'paid')
   end
 end

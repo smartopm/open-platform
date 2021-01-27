@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_25_091421) do
+ActiveRecord::Schema.define(version: 2021_01_27_074523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -325,6 +325,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_091421) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "created_by_id"
+    t.float "pending_amount"
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
@@ -450,7 +451,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_091421) do
   create_table "payment_invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "invoice_id", null: false
     t.uuid "payment_id", null: false
-    t.uuid "wallet_transaction_id", null: false
+    t.uuid "wallet_transaction_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["invoice_id"], name: "index_payment_invoices_on_invoice_id"
@@ -460,8 +461,8 @@ ActiveRecord::Schema.define(version: 2021_01_25_091421) do
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.uuid "invoice_id", null: false
+    t.uuid "user_id"
+    t.uuid "invoice_id"
     t.string "payment_type"
     t.float "amount"
     t.integer "payment_status"

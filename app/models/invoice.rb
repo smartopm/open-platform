@@ -16,7 +16,21 @@ class Invoice < ApplicationRecord
   scope :by_status, ->(status) { where(status: status) if status.present? }
 
   def collect_payment
-    paid! if amount < user.wallet.balance
-    user.wallet.update_balance(amount, 'debit')
+    ActiveRecord::Base.transaction do
+      current_payment = settle_amount
+      user.wallet.update_balance(amount, 'debit')
+      payments.create(amount: current_payment, payment_type: 'wallet')
+    end
+  end
+
+  def settle_amount
+    pending_amount = amount - user.wallet.balance
+    if pending_amount.positive?
+      update(pending_amount: pending_amount)
+      return amount - pending_amount
+    end
+
+    paid!
+    amount
   end
 end
