@@ -39,7 +39,19 @@ class Wallet < ApplicationRecord
   end
 
   def make_payment(inv)
-    inv.payments.create(payment_type: 'wallet', amount: inv.pending_amount)
+    transaction = create_transaction(inv)
+    payment = Payment.create(payment_type: 'wallet', amount: inv.pending_amount)
+    inv.payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
     inv.update(pending_amount: 0, status: 'paid')
+  end
+
+  def create_transaction(inv)
+    user.wallet_transactions.create!({
+                                       source: 'wallet',
+                                       destination: 'invoice',
+                                       amount: inv.pending_amount,
+                                       status: 'settled',
+                                       user_id: user.id,
+                                     })
   end
 end

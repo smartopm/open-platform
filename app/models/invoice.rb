@@ -15,13 +15,23 @@ class Invoice < ApplicationRecord
   enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
   scope :by_status, ->(status) { where(status: status) if status.present? }
 
+  # rubocop:disable Metrics/MethodLength
   def collect_payment
     ActiveRecord::Base.transaction do
       current_payment = settle_amount
       user.wallet.update_balance(amount, 'debit')
-      payments.create(amount: current_payment, payment_type: 'wallet')
+      transaction = user.wallet_transactions.create!({
+                                                       source: 'wallet',
+                                                       destination: 'invoice',
+                                                       amount: current_payment,
+                                                       status: 'settled',
+                                                       user_id: user.id,
+                                                     })
+      payment = Payment.create(amount: current_payment, payment_type: 'wallet')
+      payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def settle_amount
     pending_amount = amount - user.wallet.balance

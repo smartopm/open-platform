@@ -451,7 +451,7 @@ ActiveRecord::Schema.define(version: 2021_01_27_074523) do
   create_table "payment_invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "invoice_id", null: false
     t.uuid "payment_id", null: false
-    t.uuid "wallet_transaction_id"
+    t.uuid "wallet_transaction_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["invoice_id"], name: "index_payment_invoices_on_invoice_id"

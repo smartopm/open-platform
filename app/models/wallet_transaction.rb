@@ -7,7 +7,7 @@ class WalletTransaction < ApplicationRecord
 
   before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }
 
-  VALID_SOURCES = ['cash', 'cheque/cashier_cheque'].freeze
+  VALID_SOURCES = ['cash', 'cheque/cashier_cheque', 'wallet'].freeze
 
   validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }
   validates :bank_name, :cheque_number, presence: true,
