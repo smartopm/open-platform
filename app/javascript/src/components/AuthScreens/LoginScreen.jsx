@@ -129,7 +129,7 @@ export function LoginScreen() {
             value={phoneNumber}
             containerClass="a css class"
             containerStyle={{ width: "55%" }}
-            inputClass="a input class"
+            inputClass="phone-login-input"
             inputStyle={{ width: "100%", height: 51 }}
             country={'zm'}
             enableSearch={true}

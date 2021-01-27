@@ -2,20 +2,10 @@
 
 describe('Gate Access', () => {
   it('runs gate access scenario', () => {
-    // cy.factory('user', { name: 'Jide Kola' })
-
-    cy.visit('/')
-
-    cy.get('.justify-content-center h4')
-      .should('contain', 'Welcome to Nkwashi App')
+    cy.login('Nkwashi', 'security_guard', 'A Guard', '2347065834175', 'guard.dgdp@gmail.com')
   })
 
   // it('clicks next button', () => {
   //   cy.visit('/')
-
-  //   cy.get('.next-btn').click()
-  //   cy.wait(5)
-
-  //   cy.get('.text-danger').should('contain', 'An error occurred.')
   // })
 })

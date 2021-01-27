@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require "#{Rails.root}/spec/factories/community_factory.rb"
+require "#{Rails.root}/spec/factories/user_factory.rb"
 
 # Cypress support to seed data
 class Cypress::FactoriesController < ApplicationController
@@ -9,10 +11,19 @@ class Cypress::FactoriesController < ApplicationController
     render json: factory
   end
 
+  def record
+    record = resource_name.camelize.constantize.find(params[:id])
+    render json: record
+  end
+
   private
 
   def factory_name
     params.fetch(:name)
+  end
+
+  def resource_name
+    params.fetch(:resource)
   end
 
   def factory_attributes

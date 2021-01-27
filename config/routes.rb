@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   if Rails.env.test?
     namespace :cypress do
       delete 'cleanup', to: 'cleanup#destroy'
+      post   'record', to: 'factories#record'
 
       resource :factories, only: %i[create]
     end

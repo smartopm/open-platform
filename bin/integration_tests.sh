@@ -8,7 +8,7 @@ sleep 60
 echo "Services are up and ready"
 
 echo "Preparing test DB..."
-./bin/docker_rails db:test:prepare
+docker-compose -f docker-compose.ci.yml run --rm rails rails db:create db:schema:load
 
 echo "Compiling assets..."
 docker-compose -f docker-compose.ci.yml run --rm rails rails webpacker:compile
