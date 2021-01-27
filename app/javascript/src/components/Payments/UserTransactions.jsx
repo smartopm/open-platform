@@ -16,7 +16,7 @@ export default function UserTransactionsList({ transactions, currency }) {
   if (!transactions.length) {
     return <CenteredContent><Text content="No Transactions Yet" align="justify" /></CenteredContent>
   }
-  return <DataList keys={transactionHeader} data={renderTransactions(transactions, currency)} hasHeader={false} />;
+  return <DataList keys={transactionHeader} data={renderTransactions(transactions, currency)} hasHeader={false} clickable={{status: true}} />;
 }
 
 export function renderTransactions(data, currency) {
