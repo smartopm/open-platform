@@ -2,7 +2,7 @@ import dompurify from 'dompurify';
 
 import { sentencizeAction, titleize, pluralizeCount, 
 capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText, getJustLabels, checkValidGeoJSON } from '../../utils/helpers'
+forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor } from '../../utils/helpers'
 
 jest.mock('dompurify')
 describe('helper methods', () => {
@@ -159,6 +159,12 @@ describe('helper methods', () => {
         expect(checkValidGeoJSON('')).toBe(false);
         expect(checkValidGeoJSON(1234)).toBeFalsy();
         expect(checkValidGeoJSON(null)).toBeFalsy();
+      });
+    });
+
+    describe('#getHexColor', () => {
+      it('should return HEX color string', () => {
+        expect(getHexColor(200)).toEqual('#FC4E2A');
       });
     });
 });

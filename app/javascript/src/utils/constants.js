@@ -214,6 +214,7 @@ export const emptyPolygonFeature = JSON.stringify({
         [0, 0],
         [0, 0]
       ]
+
     ]
   },
   properties: {}
@@ -230,3 +231,8 @@ export const taskStatus = {
   tasksOpen: 'Tasks Open',
   completedTasks: 'Tasks Completed'
 };
+
+export const plotStatusColorPallete = {
+    sold: '#DB4949',
+    available: '#307404'
+}

@@ -23,6 +23,10 @@ module Types::Queries::LandParcel
       description 'Get a land parcel'
       argument :id, GraphQL::Types::ID, required: true
     end
+
+    field :land_parcel_geo_data, [Types::LandParcelGeoDataType], null: true do
+      description 'Get all land parcel Geo Data'
+    end
   end
 
   def fetch_land_parcel(offset: 0, limit: 100)
@@ -45,5 +49,24 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?
 
     parcel
+  end
+
+  def land_parcel_geo_data
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    context[:site_community].land_parcels.where.not(geom: nil)
+                            .eager_load(:valuations, :accounts)
+                            .map { |p| geo_data(p) }
+  end
+
+  def geo_data(parcel)
+    {
+      parcel_type: parcel[:parcel_type],
+      parcel_number: parcel[:parcel_number],
+      lat_y: parcel[:lat_y],
+      long_x: parcel[:long_x],
+      geom: parcel[:geom],
+      plot_sold: parcel.accounts.present?,
+    }
   end
 end
