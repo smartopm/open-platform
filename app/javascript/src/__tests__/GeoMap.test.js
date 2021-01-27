@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { act, render } from '@testing-library/react'
 import GeoMap from '../containers/GeoMap'
 
+jest.mock('react-leaflet')
 describe('GeoMap', () => {
   it('should mount component correctly', async () => {
     let container;
