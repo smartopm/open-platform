@@ -2,17 +2,16 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import { act, render } from '@testing-library/react'
-import LandParcelLegend from '../components/Map/LandParcelLegend'
+import SubUrbanLegendContent from '../components/Map/SubUrbanLegendContent'
 
-describe('<LandParcelLegend />', () => {
-  it('should render Land Parcel', async () => {
-    
+describe('<SubUrbanLegendContent />', () => {
+  it('should render SubUrbanLegendContent', async () => {
     let container;
     await act(async () => {
       container = render(
         <MockedProvider>
           <BrowserRouter>
-            <LandParcelLegend />
+            <SubUrbanLegendContent />
           </BrowserRouter>
         </MockedProvider>
       )
