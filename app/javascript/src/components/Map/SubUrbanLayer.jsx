@@ -54,10 +54,6 @@ export default function SubUrbanLayer(){
         fillOpacity: 0.7
       })
 
-      if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront()
-      }
-
       info.update(layer.feature.properties)
     };
 
