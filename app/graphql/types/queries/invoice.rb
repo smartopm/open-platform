@@ -13,6 +13,14 @@ module Types::Queries::Invoice
       argument :status, String, required: false
     end
 
+    # Get invoices and transaction
+    field :invoices_with_transactions, Types::InvoiceTransactionType, null: true do
+      description 'Get all invoices for a user and all associated transactions'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
+
     # Get invoice by id
     field :invoice, Types::InvoiceType, null: true do
       description 'Get invoice by its id'
@@ -59,6 +67,20 @@ module Types::Queries::Invoice
 
     user.invoices.eager_load(:land_parcel, :payments)
         .order(created_at: :desc).limit(limit).offset(offset)
+  end
+
+  def invoices_with_transactions(user_id:, _offset: 0, _limit: 100)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
+                                                         context[:current_user]&.id == user_id
+
+    user = User.allowed_users(context[:current_user]).find(user_id)
+    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+
+    {
+      invoices: user.invoices,
+      deposits: user.wallet_transactions,
+      payments: user.invoices.map(&:payments).flatten,
+    }
   end
 
   def invoice_stats

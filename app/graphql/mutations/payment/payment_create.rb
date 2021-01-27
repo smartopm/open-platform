@@ -18,24 +18,24 @@ module Mutations
           user = context[:site_community].users.find(vals[:user_id])
           transaction = create_transaction(user, vals)
           user.invoices.where('pending_amount > ?', 0).each do |inv|
-            debugger
+            # WIP: Saurabh
           end
           return { wallet_transaction: transaction } if transaction.persisted?
         end
         raise GraphQL::ExecutionError, transaction.errors.full_messages
       end
 
-      def create_transaction(user, vals) uske baad 
+      def create_transaction(user, vals)
         payment_status = vals[:payment_type].eql?('cash') ? 'settled' : vals[:payment_status]
         user.wallet_transactions.create!({
-          source: vals[:payment_type],
-          destination: 'invoice',
-          amount: vals[:amount],
-          status: payment_status,
-          user_id: vals[:user_id],
-          bank_name: vals[:bank_name],
-          cheque_number: vals[:cheque_number],
-        })
+                                           source: vals[:payment_type],
+                                           destination: 'invoice',
+                                           amount: vals[:amount],
+                                           status: payment_status,
+                                           user_id: vals[:user_id],
+                                           bank_name: vals[:bank_name],
+                                           cheque_number: vals[:cheque_number],
+                                         })
       end
 
       def authorized?(_vals)
