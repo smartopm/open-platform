@@ -27,18 +27,18 @@ export default function UserStats() {
   );
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   statusSection: {
     width: '40%',
     margin: '6%'
   },
   titleSection: {
-    color: '#66A59A',
-    borderBottom: '1px #66A59A solid',
-    backgroundColor: '#FAFFFE',
+    color: theme.palette.primary,
+    borderBottom: `1px ${theme.palette.primary.main} solid`,
+    backgroundColor: theme.palette.primary.dew,
     height: 50
   },
   title: {
     padding: 10
   }
-});
+}));

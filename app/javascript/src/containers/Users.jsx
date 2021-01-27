@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
-import { Redirect, Link , useLocation} from 'react-router-dom'
+import { Redirect, Link , useLocation, useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
@@ -53,7 +53,7 @@ export default function UsersList() {
   const [selectedUsers, setSelectedUsers] = useState([])
   const [selectCheckBox, setSelectCheckBox] = useState(false)
   const [substatusReportOpen, setSubstatusReportOpen] = useState(false)
-
+  const history = useHistory()
   function handleReportDialog(){
     setSubstatusReportOpen(!substatusReportOpen)
   }
@@ -506,7 +506,7 @@ export default function UsersList() {
               <Button
                 variant="outlined"
                 className={classes.reportBtn}
-                onClick={handleReportDialog}
+                onClick={() => history.push('/users/stats')}
               >
                 User Stats
               </Button>

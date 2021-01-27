@@ -7,6 +7,7 @@ export const theme = createMuiTheme({
     primary: {
       main: colors.primary,
       contrastText: colors.textColor,
+      dew: colors.dew
     },
     secondary: {
       main: colors.secondary,
