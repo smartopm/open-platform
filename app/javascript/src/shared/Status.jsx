@@ -30,10 +30,13 @@ export function StatusList({ data, statuses, handleFilter }) {
   );
 }
 
+StatusList.defaultProps = {
+  handleFilter: () => {}
+};
+
 StatusList.propTypes = {
   data: object.isRequired,
   statuses: object.isRequired,
-  // eslint-disable-next-line react/require-default-props
   handleFilter: func
 };
 
