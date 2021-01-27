@@ -14,13 +14,6 @@ export default function StatusCount({ title, count, handleFilter }) {
 }
 
 export function StatusList({ data, statuses, handleFilter }) {
-  if (
-    !statuses ||
-    Object.prototype.toString.call(statuses) !== '[object Object]' ||
-    Object.prototype.toString.call(data) !== '[object Object]'
-  ) {
-    throw new Error('statuses and data must both be a valid object');
-  }
   return (
     <List dense>
       {Object.entries(statuses).map(([key, val], index) => (
