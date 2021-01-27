@@ -503,6 +503,13 @@ export default function UsersList() {
               >
                 Create Report
               </Button>
+              <Button
+                variant="outlined"
+                className={classes.reportBtn}
+                onClick={handleReportDialog}
+              >
+                User Stats
+              </Button>
             </div>
           </>
         </div>

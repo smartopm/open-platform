@@ -7,7 +7,7 @@ import { TaskStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { useStyles } from '../Dialog';
 import { taskStatus } from '../../utils/constants';
-import { StatusCount } from '../User/SubStatusReport';
+import StatusCount from '../../shared/Status';
 
 export default function TaskReportDialog({ handleClose, open, handleFilter }) {
   const [getTaskStats, { loading, data, error }] = useLazyQuery(TaskStatsQuery);
