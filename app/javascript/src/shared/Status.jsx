@@ -33,7 +33,8 @@ export function StatusList({ data, statuses, handleFilter }) {
 StatusList.propTypes = {
   data: object.isRequired,
   statuses: object.isRequired,
-  handleFilter: func.isRequired
+  // eslint-disable-next-line react/require-default-props
+  handleFilter: func
 };
 
 StatusCount.defaultProps = {
