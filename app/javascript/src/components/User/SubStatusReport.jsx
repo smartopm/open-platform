@@ -32,7 +32,7 @@ export default function SubStatusReportDialog({ handleClose, open, handleFilter 
         <Spinner />
       ) : (
         <StatusList
-          data={data?.substatusQuery}
+          data={data?.substatusQuery || {}}
           statuses={userSubStatus}
           handleFilter={handleFilter}
         />
