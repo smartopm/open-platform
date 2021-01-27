@@ -56,6 +56,7 @@ export default function TransactionsList({ userId, user }) {
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <div>
+      {console.log(transactionsData)}
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}

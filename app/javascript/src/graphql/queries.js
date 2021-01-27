@@ -941,6 +941,7 @@ export const TransactionQuery = gql`
     userWalletTransactions(userId: $userId) {
       amount
       status
+      destination
       createdAt
       updatedAt
       currentWalletBalance
