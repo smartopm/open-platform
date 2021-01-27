@@ -32,8 +32,7 @@ class Wallet < ApplicationRecord
     if balance > amount
       update(balance: (balance - amount))
     else
-      pending_balance = amount - balance
-      update(balance: 0, pending_balance: pending_balance)
+      update(balance: 0, pending_balance: (pending_balance + amount - balance))
     end
     balance
   end
