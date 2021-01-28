@@ -506,6 +506,19 @@ export const ParcelQuery = gql`
     }
   }
 `
+export const LandParcelGeoData = gql`
+  query landParcelGeoData {
+    landParcelGeoData {
+      parcelNumber
+      parcelType
+      latY
+      longX
+      geom
+      plotSold
+    }
+  }
+`
+
 export const CommentsPostQuery = gql`
   query comments($limit: Int, $offset: Int) {
     fetchComments(limit: $limit, offset: $offset) {

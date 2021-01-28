@@ -4,7 +4,11 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Nkwashi"
+        "name": "Nkwashi",
+        "stroke": "#7d7c7c",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill-opacity": 0.5
       },
       "geometry": {
         "type": "Polygon",
@@ -45,8 +49,8 @@
     {
       "type": "Feature",
       "properties": {
-        "stroke": "#bd491e",
-        "stroke-width": 2,
+        "stroke": "#7d7c7c",
+        "stroke-width": 1,
         "stroke-opacity": 1,
         "fill": "#fe831c",
         "fill-opacity": 0.5

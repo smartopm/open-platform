@@ -346,3 +346,29 @@ export function checkValidGeoJSON(str){
 export function toCamelCase(str){
   return str.replace(/([-_]\w)/g, word => word[1].toUpperCase())
 }
+
+/**
+ * 
+ * @param {Number} range integer number
+ * @return {String} Hex color based on number range
+ * @description Converts a number range to HEX color used for map map legend 
+ */
+/* eslint-disable no-nested-ternary */
+export function getHexColor (range) {
+  return (range > 320
+    ? '#800026'
+    : range > 270
+    ? '#BD0026'
+    : range > 220
+    ? '#E31A1C'
+    : range > 170
+    ? '#FC4E2A'
+    : range > 120
+    ? '#FD8D3C'
+    : range > 20
+    ? '#FEB24C'
+    : range > 10
+    ? '#FED976'
+    : '#FFEDA0'
+  )
+}
