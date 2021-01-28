@@ -56,7 +56,6 @@ export default function TransactionsList({ userId, user }) {
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <div>
-      {console.log(transactionsData)}
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
@@ -65,14 +64,14 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         currency={currency}
       />
-      <UserTransactionsList transactions={transactionsData?.userWalletTransactions || []} currency={currency}  />
+      <UserTransactionsList transactions={transactionsData?.invoicesWithTransactions || {}} currency={currency}  />
       <CenteredContent>
         <Paginate
           offSet={offset}
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={transactionsData?.userWalletTransactions.length}
+          count={transactionsData?.invoicesWithTransactions.length}
         />
       </CenteredContent>
 

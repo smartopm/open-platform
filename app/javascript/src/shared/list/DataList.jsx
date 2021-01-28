@@ -1,5 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable */
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +8,7 @@ import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 
-export default function DataList({ keys, data, hasHeader, clickable }) {
+export default function DataList({ keys, data, hasHeader, clickable, handleClick }) {
   if (hasHeader && keys.length !== Object.keys(data[0]).length) {
     throw new Error(
       'headers must have same length as number of columns in the data prop or set hasHeader to false'
@@ -17,7 +18,6 @@ export default function DataList({ keys, data, hasHeader, clickable }) {
   return (
     <>
       {hasHeader && <ListHeader headers={keys} />}
-
       {data.map((item, index) => (
         <Grid
           container
@@ -25,8 +25,8 @@ export default function DataList({ keys, data, hasHeader, clickable }) {
           justify="space-between"
           alignItems="center"
           className={clickable?.status ? classes.clickable : classes.list}
-          onClick={clickable?.onclick || null}
-          key={index}
+          onClick={() => handleClick(index) || null}
+          key={item.id || index}
           spacing={1}
         >
           <CellData propNames={keys} dataObj={item} />
@@ -77,7 +77,7 @@ DataList.propTypes = {
    */
   clickable: PropTypes.shape({
     status: PropTypes.bool,
-    onclick: PropTypes.func
+    handelClick: PropTypes.func
   })
 };
 
