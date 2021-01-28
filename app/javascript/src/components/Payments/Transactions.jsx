@@ -66,8 +66,6 @@ export default function TransactionsList({ userId, user }) {
   if (invoiceError && !invoiceData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
   return (
     <div>
-      {console.log(invoiceData.pendingInvoices)}
-      {console.log(transactionsData.userWalletTransactions)}
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
@@ -76,7 +74,10 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         currency={currency}
       />
-      <UserTransactionsList transactions={transactionsData?.userWalletTransactions || []} currency={currency}  />
+      <UserTransactionsList 
+        transactions={invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) || []} 
+        currency={currency}  
+      />
       <CenteredContent>
         <Paginate
           offSet={offset}
