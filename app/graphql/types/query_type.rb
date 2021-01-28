@@ -20,6 +20,7 @@ module Types
     include Types::Queries::Community
     include Types::Queries::Invoice
     include Types::Queries::EmailTemplate
+    include Types::Queries::Deposit
     include Types::Queries::Payment
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
