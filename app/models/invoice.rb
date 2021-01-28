@@ -7,7 +7,8 @@ class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :created_by, class_name: 'User', optional: true
 
-  after_create :collect_payment
+  before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
+  after_create :collect_payment_from_wallet
 
   has_many :payment_invoices, dependent: :destroy
   has_many :payments, through: :payment_invoices
@@ -17,7 +18,7 @@ class Invoice < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   # rubocop:disable Metrics/MethodLength
-  def collect_payment
+  def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       current_payment = settle_amount
       user.wallet.update_balance(amount, 'debit')
@@ -43,5 +44,11 @@ class Invoice < ApplicationRecord
 
     paid!
     amount
+  end
+
+  def modify_status
+    return if pending_amount.positive? || status.eql?('paid')
+
+    paid!
   end
 end

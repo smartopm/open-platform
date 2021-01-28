@@ -10,6 +10,14 @@ class Wallet < ApplicationRecord
     self.currency = DEFAULT_CURRENCY if currency.nil?
   end
 
+  def settle_pending_balance(amount)
+    if amount > pending_balance
+      update(pending_balance: 0, balance: amount - pending_balance)
+    else
+      update(pending_balance: pending_balance - amount)
+    end
+  end
+
   def update_balance(amount, type = 'credit')
     return credit_amount(amount) if type.eql?('credit')
 
@@ -17,14 +25,11 @@ class Wallet < ApplicationRecord
   end
 
   def credit_amount(amount)
-    if pending_balance > amount
-      update(pending_balance: (pending_balance - amount))
-    else
-      update(balance: (balance + amount - pending_balance), pending_balance: 0)
-      # TODO: We should also check the status before creating payments, ignoring now
-      # not sure which statuses to include: Saurabh
+    settle_pending_balance(amount)
+    if balance.positive?
       user.invoices.where('pending_amount > ?', 0).find_each { |inv| make_payment(inv) }
     end
+
     balance
   end
 
