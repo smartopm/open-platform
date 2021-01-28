@@ -3,9 +3,10 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { act } from 'react-dom/test-utils';
-import SubStatusReportDialog, { StatusCount } from '../../components/User/SubStatusReport';
+import SubStatusReportDialog from '../../components/User/SubStatusReport';
 import { SubStatusQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
+import StatusCount from '../../shared/Status';
 
 describe('Substatus component', () => {
   it('should render the substatus modal ', async () => {
@@ -56,7 +57,7 @@ describe('Substatus component', () => {
 
 describe('StatusCount component', () => {
   it('should render status count', () => {
-    const container = render(<StatusCount title='Applied' count={1} handleFilter={jest.fn()} />);
+    const container = render(<StatusCount title="Applied" count={1} handleFilter={jest.fn()} />);
     expect(container.queryAllByText('Applied')[0]).toBeInTheDocument();
     expect(container.queryAllByText('1')[0]).toBeInTheDocument();
   });
