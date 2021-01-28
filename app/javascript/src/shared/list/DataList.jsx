@@ -25,7 +25,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
           justify="space-between"
           alignItems="center"
           className={clickable?.status ? classes.clickable : classes.list}
-          onClick={() => handleClick(index) || null}
+          onClick={() => handleClick(item.id) || null}
           key={item.id || index}
           spacing={1}
         >

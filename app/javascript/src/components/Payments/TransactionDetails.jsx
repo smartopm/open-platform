@@ -1,24 +1,44 @@
 /* eslint-disable */
-import React from 'react'
+import React, {useEffect} from 'react'
+import { useLazyQuery } from 'react-apollo'
 import { DetailsDialog } from '../Dialog'
 import DetailsField from './DetailField'
+import { invoiceQuery } from '../../graphql/queries'
 
-export  default function TransactionDetails({ transType, detailsOpen, handleClose }){
+export  default function TransactionDetails({ transObj, detailsOpen, handleClose }){
+  const [loadInvoice, { error: invoiceError, loading: invoiceLoading, data: invoiceData } ] = useLazyQuery(invoiceQuery,{
+    variables: { id: transObj?.id },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  })
+
+  useEffect(() => {
+    if (transObj?.type === 'Invoice') {
+      loadInvoice()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (invoiceLoading) return <div>Loading</div>
   return (
     <>
-      <DetailsDialog
-        handleClose={() => handleClose}
-        open={detailsOpen}
-        title={`Details for ${data.title}`} 
-      >
-        {Object.keys(data).map((key, value, index) => (
-          <DetailsField
-            title={key}
-            key={index}
-            value={value} 
-          />
-        ))}
-        {/* <DetailsField
+      {console.log(transObj)}
+      {invoiceData && (
+        <DetailsDialog
+          handleClose={() => handleClose}
+          open={detailsOpen}
+          title={`Details for ${transObj?.type}`}
+        >
+          {Object.keys(invoiceData?.invoice).filter((i) => !i.createdAt && !i.updatedAt).map((value) => (
+            <div key={value.id}>
+              {console.log(value)}
+              <DetailsField
+                title={value}
+                value={Object.keys(value)[0]} 
+              />
+            </div>
+          ))}
+          {/* <DetailsField
           title='Plot Number'
           value={invoice?.landParcel?.parcelNumber} 
         />
@@ -38,7 +58,8 @@ export  default function TransactionDetails({ transType, detailsOpen, handleClos
           title='Status'
           value={`${invoiceStatus[invoice.status]} ${outstandingPay()}`} 
         /> */}
-      </DetailsDialog>
+        </DetailsDialog>
+      )}
     </>
   )
 }

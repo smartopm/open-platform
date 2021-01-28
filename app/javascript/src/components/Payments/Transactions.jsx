@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
@@ -5,7 +6,7 @@ import { useHistory } from 'react-router'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
-import { TransactionQuery } from '../../graphql/queries'
+import { TransactionQuery, PendingInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
@@ -24,6 +25,14 @@ export default function TransactionsList({ userId, user }) {
   const [open, setOpen] = useState(!!tab)
   const { loading, data: transactionsData, error, refetch } = useQuery(
     TransactionQuery,
+    {
+      variables: { userId, limit, offset },
+      errorPolicy: 'all'
+    }
+  )
+
+  const { loading: invLoading, data: invoiceData, error: invoiceError, refetch: invoiceRefetch } = useQuery(
+    PendingInvoicesQuery,
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all'
@@ -52,10 +61,13 @@ export default function TransactionsList({ userId, user }) {
     }
   }
 
-  if (loading) return <Spinner />
+  if (loading || invLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if (invoiceError && !invoiceData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
   return (
     <div>
+      {console.log(invoiceData.pendingInvoices)}
+      {console.log(transactionsData.userWalletTransactions)}
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
@@ -64,14 +76,14 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         currency={currency}
       />
-      <UserTransactionsList transactions={transactionsData?.invoicesWithTransactions || {}} currency={currency}  />
+      <UserTransactionsList transactions={transactionsData?.userWalletTransactions || []} currency={currency}  />
       <CenteredContent>
         <Paginate
           offSet={offset}
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={transactionsData?.invoicesWithTransactions.length}
+          count={transactionsData?.userWalletTransactions.length}
         />
       </CenteredContent>
 
