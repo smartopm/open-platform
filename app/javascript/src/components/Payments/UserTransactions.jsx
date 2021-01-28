@@ -4,6 +4,7 @@ import DataList from '../../shared/list/DataList';
 import Text, { GridText } from '../../shared/Text';
 import { dateToString } from '../DateContainer';
 import CenteredContent from '../CenteredContent';
+import { invoiceStatus } from '../../utils/constants'
 
 const transactionHeader = [
   { title: 'Invoice Number', col: 1 },
@@ -22,8 +23,8 @@ export default function UserTransactionsList({ transactions, currency }) {
 export function renderTransactions(data, currency) {
   return data.map((transaction, count) => {
     return {
-      'Invoice Number': <GridText col={1} content={`#${transaction.transactionNumber || count + 1}`} />,
-      Status: <GridText col={3} content={transaction.status} />,
+      'Invoice Number': <GridText col={2} content={`${transaction.transactionNumber || transaction.status === 'in_progress' ? `Invoice #${count + 1}` : `Transaction #${count + 1}` }`} />,
+      Status: <GridText col={3} content={invoiceStatus[transaction.status]} />,
       'Date Created': <GridText col={3} content={`Created on ${dateToString(transaction.createdAt)}`} />,
       Amount: <GridText content={`${currency}${transaction.amount}`} />,
       Balance: <GridText content={`Balance of ${currency}${transaction.currentWalletBalance || 0}`} />,
