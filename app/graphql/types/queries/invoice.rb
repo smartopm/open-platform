@@ -3,7 +3,7 @@
 # invoice queries
 module Types::Queries::Invoice
   extend ActiveSupport::Concern
-
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get invoices
     field :invoices, [Types::InvoiceType], null: true do
@@ -33,11 +33,19 @@ module Types::Queries::Invoice
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+    # Get pending invoice by for a user
+    field :pending_invoices, [Types::InvoiceType], null: true do
+      description 'Get pending invoices for a user'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
 
     field :invoice_stats, Types::InvoiceStatType, null: false do
       description 'return stats based on status of invoices'
     end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def invoices(status: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
@@ -83,11 +91,31 @@ module Types::Queries::Invoice
     }
   end
 
+  def pending_invoices(user_id:, offset: 0, limit: 100)
+    user = verified_user(user_id)
+
+    user.invoices.in_progress.eager_load(:land_parcel)
+        .order(created_at: :desc).limit(limit).offset(offset)
+  end
+
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     invoices = context[:site_community].invoices
     invoices.group(:status).count
+  end
+
+  # It would be good to put this elsewhere to use it in other queries
+
+  def verified_user(user_id)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
+                                                         context[:current_user].admin?
+
+    user = User.allowed_users(context[:current_user]).find(user_id)
+    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+
+    user
   end
   # rubocop:enable Metrics/AbcSize
 end
