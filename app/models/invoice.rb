@@ -18,6 +18,7 @@ class Invoice < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       current_payment = settle_amount
@@ -28,13 +29,14 @@ class Invoice < ApplicationRecord
                                                        amount: current_payment,
                                                        status: 'settled',
                                                        user_id: user.id,
-                                                       current_wallet_balance: user.wallet.balance
+                                                       current_wallet_balance: user.wallet.balance,
                                                      })
       payment = Payment.create(amount: current_payment, payment_type: 'wallet')
       payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
     end
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def settle_amount
     pending_amount = amount - user.wallet.balance

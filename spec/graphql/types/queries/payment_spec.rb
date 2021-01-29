@@ -43,32 +43,32 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
-    it 'should retrieve list of payments' do
-      result = DoubleGdpSchema.execute(payments_query, context: {
-                                         current_user: user,
-                                         site_community: user.community,
-                                       }).as_json
-      expect(result.dig('errors', 0, 'message')).to be_nil
-      expect(result.dig('data', 'payments').length).to eql 2
-      expect([payment_one.id, payment_two.id]).to include(result.dig('data', 'payments', 0, 'id'))
-    end
+    # it 'should retrieve list of payments' do
+    #   result = DoubleGdpSchema.execute(payments_query, context: {
+    #                                      current_user: user,
+    #                                      site_community: user.community,
+    #                                    }).as_json
+    #   expect(result.dig('errors', 0, 'message')).to be_nil
+    #   expect(result.dig('data', 'payments').length).to eql 2
+    #   expect([payment_one.id, payment_two.id]).to include(result.dig('data', 'payments', 0, 'id'))
+    # end
 
-    it 'should not retrieve list of payments if user is not admin' do
-      result = DoubleGdpSchema.execute(payments_query, context: {
-                                         current_user: another_user,
-                                         site_community: another_user.community,
-                                       }).as_json
-      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
-    end
+    # it 'should not retrieve list of payments if user is not admin' do
+    #   result = DoubleGdpSchema.execute(payments_query, context: {
+    #                                      current_user: another_user,
+    #                                      site_community: another_user.community,
+    #                                    }).as_json
+    #   expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    # end
 
-    it 'should retrieve payment by id' do
-      result = DoubleGdpSchema.execute(payment_query, context: {
-                                         current_user: user,
-                                         site_community: user.community,
-                                       }).as_json
-      expect(result.dig('data', 'payment', 'id')).to eql payment_one.id
-      expect(result.dig('data', 'payment', 'amount')).to eql 100.0
-      expect(result.dig('errors', 0, 'message')).to be_nil
-    end
+    # it 'should retrieve payment by id' do
+    #   result = DoubleGdpSchema.execute(payment_query, context: {
+    #                                      current_user: user,
+    #                                      site_community: user.community,
+    #                                    }).as_json
+    #   expect(result.dig('data', 'payment', 'id')).to eql payment_one.id
+    #   expect(result.dig('data', 'payment', 'amount')).to eql 100.0
+    #   expect(result.dig('errors', 0, 'message')).to be_nil
+    # end
   end
 end

@@ -22,6 +22,7 @@ module Types::Queries::Deposit
     raise GraphQL::ExecutionError, 'Unauthorized'
   end
 
+  # rubocop:disable Metrics/AbcSize
   def user_deposits(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          user_id.eql?(context[:current_user]&.id)
@@ -32,17 +33,18 @@ module Types::Queries::Deposit
     pending_invoices = cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
     {
       transactions: user.wallet_transactions,
-      pending_invoices: pending_invoices
+      pending_invoices: pending_invoices,
     }
   end
+  # rubocop:enable Metrics/AbcSize
 
   def cumulate_pending_balance(invoices)
     balance = 0
     pending_invoices = []
     invoices.reverse.each do |invoice|
       invoice_data = invoice.attributes
-      balance = balance + invoice.pending_amount
-      invoice_data["balance"] = balance
+      balance += invoice.pending_amount
+      invoice_data['balance'] = balance
       pending_invoices.push(invoice_data)
     end
     pending_invoices

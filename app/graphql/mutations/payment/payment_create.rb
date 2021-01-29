@@ -43,6 +43,7 @@ module Mutations
         amount - payment_amount
       end
 
+      # rubocop:disable Metrics/MethodLength
       def create_transaction(user, vals)
         payment_status = vals[:payment_type].eql?('cash') ? 'settled' : vals[:payment_status]
         user.wallet_transactions.create!({
@@ -56,6 +57,7 @@ module Mutations
                                            current_wallet_balance: user.wallet.balance,
                                          })
       end
+      # rubocop:enable Metrics/MethodLength
 
       def authorized?(_vals)
         return true if context[:current_user]&.admin?

@@ -14,7 +14,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 
     def balance
-      object["balance"]
+      object['balance']
     end
   end
 end
