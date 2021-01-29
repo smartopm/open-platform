@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_12_195401) do
+ActiveRecord::Schema.define(version: 2021_01_27_074523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -325,6 +325,7 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "user_id"
     t.uuid "created_by_id"
+    t.float "pending_amount"
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
@@ -447,9 +448,21 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
-  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
+  create_table "payment_invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "invoice_id", null: false
+    t.uuid "payment_id", null: false
+    t.uuid "wallet_transaction_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invoice_id"], name: "index_payment_invoices_on_invoice_id"
+    t.index ["payment_id", "invoice_id"], name: "index_payment_invoices_on_payment_id_and_invoice_id", unique: true
+    t.index ["payment_id"], name: "index_payment_invoices_on_payment_id"
+    t.index ["wallet_transaction_id"], name: "index_payment_invoices_on_wallet_transaction_id"
+  end
+
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.uuid "invoice_id"
     t.string "payment_type"
     t.float "amount"
     t.integer "payment_status"
@@ -584,6 +597,30 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  create_table "wallet_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "source"
+    t.string "destination"
+    t.float "amount"
+    t.integer "status"
+    t.string "bank_name"
+    t.string "cheque_number"
+    t.float "current_wallet_balance"
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_wallet_transactions_on_user_id"
+  end
+
+  create_table "wallets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "currency"
+    t.float "balance"
+    t.float "pending_balance"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_wallets_on_user_id"
+  end
+
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
   add_foreign_key "action_flows", "communities"
@@ -622,6 +659,9 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
   add_foreign_key "notes", "form_users"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
+  add_foreign_key "payment_invoices", "invoices"
+  add_foreign_key "payment_invoices", "payments"
+  add_foreign_key "payment_invoices", "wallet_transactions"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
   add_foreign_key "post_tag_users", "post_tags"
@@ -633,4 +673,6 @@ ActiveRecord::Schema.define(version: 2021_01_12_195401) do
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
   add_foreign_key "valuations", "land_parcels"
+  add_foreign_key "wallet_transactions", "users"
+  add_foreign_key "wallets", "users"
 end
