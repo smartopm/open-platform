@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import CloseIcon from '@material-ui/icons/Close';
 import { titleize } from '../utils/helpers'
 
 export function ModalDialog({
@@ -134,6 +135,28 @@ export function CustomizedDialogs({
   )
 }
 
+export function DetailsDialog({ handleClose, open, title, children }){
+  const classes = useStyles()
+  return(
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="customized-dialog-title"
+      open={open}
+    >
+      <DialogTitle
+        id="customized-dialog-title"
+        onClose={handleClose}
+        className={classes.detailTitle}
+      >
+        {title}
+        <CloseIcon className={classes.close} onClick={() => handleClose()} />
+      </DialogTitle>
+      <Divider />
+      {children}
+    </Dialog>
+  )
+}
+
 export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
   const classes = useStyles()
   return (
@@ -183,6 +206,15 @@ export const useStyles = makeStyles({
     color: '#69ABA4',
     borderBottom: '1px #69ABA4 solid'
   },
+  detailTitle: {
+    background: '#FAFEFE',
+    color: '#81B7AD'
+  },
+  close: {
+    float: 'right',
+    marginLeft: '40px',
+    cursor: 'pointer'
+  }
 })
 
 ActionDialog.defaultProps = {
@@ -195,6 +227,17 @@ ActionDialog.propTypes = {
   message: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['warning', 'confirm']),
   handleOnSave: PropTypes.func.isRequired,
+}
+
+DetailsDialog.defaultProps = {
+  children: {}
+}
+
+DetailsDialog.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node
 }
 
 ModalDialog.propTypes = {

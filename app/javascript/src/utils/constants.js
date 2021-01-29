@@ -74,7 +74,8 @@ export const invoiceStatus = {
   paid: 'Paid',
   late: 'Late',
   cancelled: 'Cancelled',
-  in_progress: 'In-Progress'
+  in_progress: 'In-Progress',
+  settled: 'Settled'
 };
 
 export const entryReason = [

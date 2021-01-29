@@ -1,20 +1,20 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
-import List from '@material-ui/core/List'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
-import InvoiceItem from './InvoiceItem'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
-import { UserInvoicesQuery } from '../../graphql/queries'
+import { TransactionQuery, PendingInvoicesQuery } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
+import UserTransactionsList from './UserTransactions'
 
-export default function InvoiceList({ userId, user }) {
+export default function TransactionsList({ userId, user }) {
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
@@ -23,10 +23,19 @@ export default function InvoiceList({ userId, user }) {
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
   const [open, setOpen] = useState(!!tab)
-  const { loading, data: invoicesData, error, refetch } = useQuery(
-    UserInvoicesQuery,
+  const { loading, data: transactionsData, error, refetch } = useQuery(
+    TransactionQuery,
     {
       variables: { userId, limit, offset },
+      errorPolicy: 'all'
+    }
+  )
+
+  const { loading: invLoading, data: invoiceData, error: invoiceError, refetch: invoiceRefetch } = useQuery(
+    PendingInvoicesQuery,
+    {
+      variables: { userId, limit, offset },
+      errorPolicy: 'all'
     }
   )
   const currency = currencies[user.community.currency] || ''
@@ -52,10 +61,11 @@ export default function InvoiceList({ userId, user }) {
     }
   }
 
-  if (loading) return <Spinner />
-  if (error && !invoicesData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if (loading || invLoading) return <Spinner />
+  if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if (invoiceError && !invoiceData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
   return (
-    <>
+    <div>
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
@@ -64,29 +74,17 @@ export default function InvoiceList({ userId, user }) {
         refetch={refetch}
         currency={currency}
       />
-      <List>
-        {invoicesData?.userInvoices.length
-          ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem
-              key={invoice.id}
-              invoice={invoice}
-              userId={userId}
-              creatorId={user.id}
-              refetch={refetch}
-              userType={authState.user?.userType}
-              currency={currency}
-            />
-            ))
-          : <CenteredContent>No Invoices Yet</CenteredContent>}
-      </List>
-
+      <UserTransactionsList 
+        transactions={invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) || []} 
+        currency={currency}  
+      />
       <CenteredContent>
         <Paginate
           offSet={offset}
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={invoicesData?.userInvoices.length}
+          count={transactionsData?.userWalletTransactions.length}
         />
       </CenteredContent>
 
@@ -99,11 +97,11 @@ export default function InvoiceList({ userId, user }) {
             />
           )
         }
-    </>
+    </div>
   )
 }
 
-InvoiceList.propTypes = {
+TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
