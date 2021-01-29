@@ -74,10 +74,13 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         currency={currency}
       />
-      <UserTransactionsList 
-        transactions={invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) || []} 
-        currency={currency}  
-      />
+      {invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        <UserTransactionsList 
+          transaction={trans || {}} 
+          currency={currency}
+          key={trans.id}  
+        />
+      ))}
       <CenteredContent>
         <Paginate
           offSet={offset}

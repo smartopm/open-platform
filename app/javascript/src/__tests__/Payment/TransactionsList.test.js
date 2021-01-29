@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import TransactionsList from '../../components/Payments/Transactions';
-import { TransactionQuery } from '../../graphql/queries';
+import { TransactionQuery, PendingInvoicesQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../utils/helpers';
@@ -43,6 +43,31 @@ describe('Transactions Component', () => {
       }
     };
 
+    const pendingInvoicesMock = {
+      request: {
+        query: PendingInvoicesQuery,
+        variables: { userId, limit: 15, offset: 0 }
+      },
+      result: {
+        data: {
+          pendingInvoices: [
+            {
+              amount: 200,
+              status: 'settled',
+              createdAt: '2021-01-21',
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            },
+            {
+              amount: 344,
+              status: 'settled',
+              createdAt: '2020-12-23',
+              id: 'ec289778-8d32-4ec6-ba69-313058e61c19',
+            }
+          ]
+        }
+      }
+    };
+
     const user = {
       id: '939453bef34-f3',
       community: {
@@ -51,7 +76,7 @@ describe('Transactions Component', () => {
     };
 
     const container = render(
-      <MockedProvider mocks={[transactionsMock]} addTypename={false}>
+      <MockedProvider mocks={[transactionsMock, pendingInvoicesMock]} addTypename={false}>
         <AuthStateProvider>
           <BrowserRouter>
             <TransactionsList userId={userId} user={user} />
@@ -68,7 +93,7 @@ describe('Transactions Component', () => {
       () => {
         expect(container.queryByText('k100')).toBeInTheDocument();
         expect(container.queryByText('Balance of k200')).toBeInTheDocument();
-        expect(container.queryByText('Updated to settled on 2021-01-26')).toBeInTheDocument();
+        expect(container.queryByText('Paid on 2021-01-26')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

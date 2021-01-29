@@ -1,65 +1,43 @@
-/* eslint-disable */
-import React, {useEffect} from 'react'
-import { useLazyQuery } from 'react-apollo'
+import React from 'react'
+import PropTypes from 'prop-types';
 import { DetailsDialog } from '../Dialog'
 import DetailsField from './DetailField'
-import { invoiceQuery } from '../../graphql/queries'
+import { dateToString } from '../DateContainer';
+import { invoiceStatus } from '../../utils/constants'
 
-export  default function TransactionDetails({ transObj, detailsOpen, handleClose }){
-  const [loadInvoice, { error: invoiceError, loading: invoiceLoading, data: invoiceData } ] = useLazyQuery(invoiceQuery,{
-    variables: { id: transObj?.id },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network'
-  })
-
-  useEffect(() => {
-    if (transObj?.type === 'Invoice') {
-      loadInvoice()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  if (invoiceLoading) return <div>Loading</div>
+export  default function TransactionDetails({ data, detailsOpen, handleClose, currency }){
   return (
     <>
-      {console.log(transObj)}
-      {invoiceData && (
-        <DetailsDialog
-          handleClose={() => handleClose}
-          open={detailsOpen}
-          title={`Details for ${transObj?.type}`}
-        >
-          {Object.keys(invoiceData?.invoice).filter((i) => !i.createdAt && !i.updatedAt).map((value) => (
-            <div key={value.id}>
-              {console.log(value)}
-              <DetailsField
-                title={value}
-                value={Object.keys(value)[0]} 
-              />
-            </div>
-          ))}
-          {/* <DetailsField
-          title='Plot Number'
-          value={invoice?.landParcel?.parcelNumber} 
-        />
+      <DetailsDialog
+        handleClose={handleClose}
+        open={detailsOpen}
+        title={data?.status === 'in_progress' ? 'Invoice Details' : 'Transaction Details'}
+      >
         <DetailsField
           title='Amount'
-          value={`${currency}${invoice?.amount}`} 
+          value={`${currency}${data?.amount}`}
         />
         <DetailsField
-          title='Date Created'
-          value={dateToString(invoice?.createdAt)} 
-        />
-        <DetailsField
-          title='Due Date'
-          value={dateToString(invoice?.dueDate)} 
+          title={data?.status === 'in_progress' ? 'Date Issued' : 'Payment Date'}
+          value={dateToString(data?.createdAt)}
         />
         <DetailsField
           title='Status'
-          value={`${invoiceStatus[invoice.status]} ${outstandingPay()}`} 
-        /> */}
-        </DetailsDialog>
-      )}
+          value={invoiceStatus[data?.status]}
+        />
+      </DetailsDialog>
     </>
   )
 }
+
+TransactionDetails.propTypes = {
+  data: PropTypes.shape({
+    status: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    balance: PropTypes.number
+  }).isRequired,
+  currency: PropTypes.string.isRequired,
+  detailsOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired
+};
