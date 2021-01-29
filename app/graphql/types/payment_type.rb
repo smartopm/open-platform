@@ -9,7 +9,7 @@ module Types
     field :payment_type, String, null: true
     field :bank_name, String, null: true
     field :cheque_number, String, null: true
-    field :invoice, Types::InvoiceType, null: false
+    field :invoices, [Types::InvoiceType], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end

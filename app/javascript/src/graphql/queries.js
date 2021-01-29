@@ -1041,3 +1041,35 @@ export const PendingInvoicesQuery = gql`
     }
   }
 `;
+
+export const TransactionsQuery = gql`
+  query allTransactions {
+    transactions {
+      amount
+      status
+      createdAt
+      updatedAt
+      currentWalletBalance
+      id
+    }
+  }
+`
+export const PaymentsQuery = gql`
+    query allPayments {
+      payments{
+        id
+        amount
+        bankName
+        createdAt
+        invoices {
+          id
+          user {
+            id
+          }
+          landParcel {
+            parcelNumber
+          }
+        }
+      }
+    }
+`
