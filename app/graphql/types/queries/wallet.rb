@@ -22,10 +22,10 @@ module Types::Queries::Wallet
     end
 
     # Get wallets transactions
-    field :transaction_invoice, Types::InvoiceType, null: true do
-      description 'Get all an invoice using a transaction'
-      argument :transaction_id, GraphQL::Types::ID, required: true
-      argument :user_id, GraphQL::Types::ID, required: true
+    field :transactions, [Types::WalletTransactionType], null: true do
+      description 'Get list of all transactions'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -40,9 +40,10 @@ module Types::Queries::Wallet
     user.wallet_transactions.order(created_at: :desc).limit(limit).offset(offset)
   end
 
-  def transaction_invoice(transaction_id:, user_id:)
-    user = verified_user(user_id)
-    user.wallet_transactions.find(transaction_id).payment_invoice.invoice
+  def transactions(offset: 0, limit: 100)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    ::WalletTransaction.limit(limit).offset(offset)
   end
 
   # It would be good to put this elsewhere to use it in other queries
