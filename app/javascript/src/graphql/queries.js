@@ -1022,8 +1022,9 @@ export const PendingInvoicesQuery = gql`
   query pendingInvoices($userId: ID!) {
     pendingInvoices(userId: $userId) {
       amount
+      pendingAmount
+      balance
       createdAt
-      status
       id
     }
   }

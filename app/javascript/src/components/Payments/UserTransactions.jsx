@@ -12,12 +12,13 @@ const transactionHeader = [
   { title: 'Status', col: 1 },
   { title: 'Date Created', col: 1 },
   { title: 'Amount', col: 1 },
-  { title: 'Balance', col: 1 }
+  { title: 'Balance', col: 1 },
+  { title: 'Pending Amount', col: 1 }
 ];
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
 
-  if (!Object.keys(transaction).length) {
+  if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
     return <CenteredContent><Text content="No Transactions Yet" align="justify" /></CenteredContent>
   }
   return (
@@ -41,11 +42,12 @@ export default function UserTransactionsList({ transaction, currency }) {
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Invoice Number': <GridText col={2} content={`${transaction.transactionNumber || transaction.status === 'in_progress' ? 'Invoice' : 'Transaction' }`} />,
-    Status: <GridText col={3} content={invoiceStatus[transaction.status]} />,
-    'Date Created': <GridText col={3} content={transaction.status === 'in_progress' ? `Issued on ${dateToString(transaction.createdAt)}` : `Paid on ${dateToString(transaction.createdAt)}`} />,
+    'Invoice Number': <GridText col={2} content={`${transaction.transactionNumber || transaction.status === 'settled' ? 'Transaction' : 'Invoice' }`} />,
+    Status: <GridText col={3} content={invoiceStatus[transaction.status] || 'In-Progress'} />,
+    'Date Created': <GridText col={3} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
     Amount: <GridText content={`${currency}${transaction.amount}`} />,
-    Balance: <GridText content={`Balance of ${currency}${transaction.currentWalletBalance || 0}`} />,
+    Balance: <GridText content={transaction.currentWalletBalance ? `Balance of ${currency}${transaction.currentWalletBalance}`: `Balance of ${currency}${transaction.balance}`} />,
+    'Pending Amount': <GridText content={transaction.pendingAmount ? `Pending Balance of ${currency}${transaction.pendingAmount}` : null} />,
   };
 }
 
