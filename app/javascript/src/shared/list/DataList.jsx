@@ -22,7 +22,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
         <Grid
           container
           direction="row"
-          justify="space-between"
+          justify="space-around"
           alignItems="center"
           className={clickable?.status ? classes.clickable : classes.list}
           onClick={() => handleClick(item.id) || null}
@@ -38,20 +38,16 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
 
 export function CellData({ propNames, dataObj }) {
   return propNames.map(prop => (
-    <Fragment
-      key={prop.title} 
-    >
-      {propAccessor(dataObj, prop.title)}
-    </Fragment>
+    <Fragment key={prop.title}>{propAccessor(dataObj, prop.title)}</Fragment>
   ));
 }
 
 DataList.defaultProps = {
   hasHeader: true,
   clickable: {
-    status: false,
-    onclick: null
-  }
+    status: false
+  },
+  handleClick: () => {}
 };
 
 DataList.propTypes = {

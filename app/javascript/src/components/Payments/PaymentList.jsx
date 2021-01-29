@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, List, IconButton, MenuItem, Checkbox } from '@material-ui/core';
+import { Container, Grid, List, IconButton, MenuItem } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
@@ -8,12 +8,7 @@ import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import {
-  formatError,
-  useParamsQuery,
-  InvoiceStatusColor,
-  propAccessor
-} from '../../utils/helpers';
+import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { currencies, invoiceStatus } from '../../utils/constants';
 import ActionMenu from './PaymentActionMenu';
@@ -21,8 +16,7 @@ import InvoiceTiles from './InvoiceTiles';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
 
-const paymentHeaders = [
-  { title: 'Select', col: 1 },
+const invoiceHeaders = [
   { title: 'Parcel Number', col: 2 },
   { title: 'Amount', col: 2 },
   { title: 'Due date', col: 1 },
@@ -88,15 +82,15 @@ export default function PaymentList({ authState }) {
         />
       </Grid>
       <List>
-        {
-        // eslint-disable-next-line no-nested-ternary
+        {// eslint-disable-next-line no-nested-ternary
         loading ? (
           <Spinner />
         ) : invoicesData?.invoices.length ? (
           <div>
             <DataList
-              keys={paymentHeaders}
-              data={renderPayments(invoicesData?.invoices, handleOpenMenu, currency)}
+              keys={invoiceHeaders}
+              data={renderInvoices(invoicesData?.invoices, handleOpenMenu, currency)}
+              hasHeader={false}
             />
             <ActionMenu anchorEl={anchorEl} handleClose={handleClose} open={open}>
               <MenuItem id="view-button" key="view-user">
@@ -113,7 +107,7 @@ export default function PaymentList({ authState }) {
         ) : (
           <CenteredContent>No Invoices Yet</CenteredContent>
         )
-        }
+}
       </List>
 
       <CenteredContent>
@@ -131,34 +125,20 @@ export default function PaymentList({ authState }) {
 
 /**
  *
- * @param {object} payments list of tasks
+ * @param {object} invoices list of tasks
  * @param {function} handleOpenMenu a function that opens the menu for each task
  * @param {String} currency community currency
  * @returns {object} an object with properties that DataList component uses to render
  */
-export function renderPayments(payments, handleOpenMenu, currency) {
-  // the following are for checkbox prototyping
-  function handleChange() {}
-  return payments.map(invoice => {
+export function renderInvoices(invoices, handleOpenMenu, currency) {
+  return invoices.map(invoice => {
     return {
-      Select: (
-        <Grid item xs={1}>
-          <Checkbox
-            checked={false}
-            onChange={handleChange}
-            inputProps={{
-              'aria-label': 'primary checkbox',
-              'data-testid': 'select_payment'
-            }}
-          />
-        </Grid>
-      ),
       'Parcel Number': (
         <Grid item xs={2} data-testid="parcel_number">
           {invoice.landParcel.parcelNumber}
         </Grid>
       ),
-      'Amount': (
+      Amount: (
         <Grid item xs={2}>
           <span>{`${currency}${invoice.amount}`}</span>
         </Grid>
