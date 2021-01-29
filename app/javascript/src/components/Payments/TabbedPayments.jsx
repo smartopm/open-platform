@@ -1,8 +1,9 @@
 import React from 'react';
 import { shape } from 'prop-types';
 import { a11yProps, StyledTabs, StyledTab, TabPanel } from '../Tabs';
-import PaymentList from './PaymentList';
+import InvoiceList from './InvoiceList';
 import authStateProps from '../../shared/types/authState';
+import PaymentList from './PaymentList';
 
 export default function TabbedPayments({ authState }) {
   const [value, setValue] = React.useState(0);
@@ -17,10 +18,10 @@ export default function TabbedPayments({ authState }) {
       </StyledTabs>
 
       <TabPanel value={value} index={0}>
-        <PaymentList authState={authState} />
+        <InvoiceList authState={authState} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <div className="container">Coming soon ...</div>
+        <PaymentList />
       </TabPanel>
     </>
   );
