@@ -24,7 +24,7 @@ RSpec.describe Types::Queries::Payment do
     let(:payments_query) do
       <<~GQL
         query {
-            payments(userId: "#{user.id}") {
+            payments {
                 id
                 amount
               }
@@ -35,7 +35,7 @@ RSpec.describe Types::Queries::Payment do
     let(:payment_query) do
       <<~GQL
         query {
-            payment(userId: "#{user.id}", paymentId: "#{payment_one.id}") {
+            payment(paymentId: "#{payment_one.id}") {
                 id
                 amount
               }
@@ -49,7 +49,7 @@ RSpec.describe Types::Queries::Payment do
                                          site_community: user.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to be_nil
-      expect(result.dig('data', 'payments').length).to eql 2
+      expect(result.dig('data', 'payments').length).to eql 3
       expect([payment_one.id, payment_two.id]).to include(result.dig('data', 'payments', 0, 'id'))
     end
 

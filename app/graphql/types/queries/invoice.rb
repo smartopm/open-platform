@@ -102,7 +102,12 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     invoices = context[:site_community].invoices
-    invoices.group(:status).count
+    {
+      late: invoices.late.count,
+      paid: invoices.paid.count,
+      in_progress: invoices.in_progress.count,
+      cancelled: invoices.cancelled.count,
+    }
   end
 
   # It would be good to put this elsewhere to use it in other queries

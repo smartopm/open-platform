@@ -101,8 +101,8 @@ RSpec.describe Types::Queries::Invoice do
       expect(result.dig('errors', 0, 'message')).to be_nil
       expect(result.dig('data', 'invoiceStats', 'inProgress')).to eql 1
       expect(result.dig('data', 'invoiceStats', 'late')).to eql 1
-      expect(result.dig('data', 'invoiceStats', 'paid')).to be_nil
-      expect(result.dig('data', 'invoiceStats', 'cancelled')).to be_nil
+      expect(result.dig('data', 'invoiceStats', 'paid')).to eql 0
+      expect(result.dig('data', 'invoiceStats', 'cancelled')).to eql 0
     end
 
     it 'should retrieve invoice by id' do

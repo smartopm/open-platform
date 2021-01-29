@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Container, Grid, List, IconButton, MenuItem } from '@material-ui/core';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { Container, Grid, List, MenuItem } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
-import PropTypes from 'prop-types';
+import { shape } from 'prop-types';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
@@ -15,13 +14,13 @@ import ActionMenu from './PaymentActionMenu';
 import InvoiceTiles from './InvoiceTiles';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
+import authStateProps from '../../shared/types/authState';
 
 const invoiceHeaders = [
   { title: 'Parcel Number', col: 2 },
   { title: 'Amount', col: 2 },
   { title: 'Due date', col: 1 },
-  { title: 'Invoice Status', col: 2 },
-  { title: 'Menu', col: 1 }
+  { title: 'Invoice Status', col: 2 }
 ];
 export default function PaymentList({ authState }) {
   const history = useHistory();
@@ -155,23 +154,10 @@ export function renderInvoices(invoices, handleOpenMenu, currency) {
             color={propAccessor(InvoiceStatusColor, invoice.status)}
           />
         </Grid>
-      ),
-      Menu: (
-        <Grid item xs={1}>
-          <IconButton
-            style={{ marginRight: -120 }}
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleOpenMenu}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-        </Grid>
       )
     };
   });
 }
 PaymentList.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  authState: PropTypes.object.isRequired
+  authState: shape({ ...authStateProps }).isRequired
 };
