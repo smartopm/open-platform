@@ -1,6 +1,6 @@
-import { Grid } from '@material-ui/core';
+import { Grid, InputBase } from '@material-ui/core';
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { PaymentsQuery } from '../../graphql/queries';
 import Label from '../../shared/label/Label';
@@ -35,8 +35,28 @@ export default function PaymentList({ currency }) {
   if (loading) return 'loading ...';
   return (
     <div>
-      <DataList 
-        keys={paymentHeaders} 
+      <div
+        style={{
+          padding: '2px 4px',
+          display: 'flex',
+          alignItems: 'right',
+          width: '100%',
+          overflowX: 'auto'
+        }}
+      >
+        <InputBase
+          data-testid="search_input"
+          type="text"
+          placeholder="Search Payments"
+          onChange={() => {}}
+          value=""
+          inputProps={{ 'aria-label': 'search tasks' }}
+        />
+      </div>
+      <br />
+      <br />
+      <DataList
+        keys={paymentHeaders}
         data={renderPayments(data?.payments, currency)}
         hasHeader={false}
       />
@@ -45,6 +65,9 @@ export default function PaymentList({ currency }) {
 }
 
 export function renderPayments(payments, currency) {
+  if (!payments.length) {
+    return <CenteredContent>No Payments yet</CenteredContent>;
+  }
   return payments?.map(payment => {
     return {
       'Payment Type': (
@@ -75,5 +98,5 @@ export function renderPayments(payments, currency) {
 }
 
 PaymentList.propTypes = {
-    currency: PropTypes.string.isRequired,
-}
+  currency: PropTypes.string.isRequired
+};
