@@ -28,6 +28,7 @@ class Invoice < ApplicationRecord
                                                        amount: current_payment,
                                                        status: 'settled',
                                                        user_id: user.id,
+                                                       current_wallet_balance: user.wallet.balance
                                                      })
       payment = Payment.create(amount: current_payment, payment_type: 'wallet')
       payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)

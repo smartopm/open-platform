@@ -56,6 +56,7 @@ class Wallet < ApplicationRecord
                                        amount: inv.pending_amount,
                                        status: 'settled',
                                        user_id: user.id,
+                                       current_wallet_balance: balance,
                                      })
   end
 end

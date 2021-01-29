@@ -29,6 +29,7 @@ module Types::Queries::Payment
     user = User.allowed_users(context[:current_user]).find(user_id)
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
     
-    ::PaymentInvoice.where(invoice_id: user.invoices.pluck(:id))&.map(&:payment)
+    ::PaymentInvoice.where(invoice_id: user.invoices.eager_load(:payments)
+                                           .pluck(:id))&.map(&:payment)
   end
 end

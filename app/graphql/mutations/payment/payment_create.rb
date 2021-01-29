@@ -53,6 +53,7 @@ module Mutations
                                            user_id: vals[:user_id],
                                            bank_name: vals[:bank_name],
                                            cheque_number: vals[:cheque_number],
+                                           current_wallet_balance: user.wallet.balance,
                                          })
       end
 

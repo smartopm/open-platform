@@ -9,11 +9,42 @@ module Types::Queries::Deposit
       description 'return details for one deposit'
       argument :deposit_id, GraphQL::Types::ID, required: true
     end
+
+    field :user_deposits, Types::DepositType, null: false do
+      description 'return deposits for a user'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
   def deposit(deposit_id:)
     return ::WalletTransaction.find(deposit_id) if context[:current_user]&.admin?
 
     raise GraphQL::ExecutionError, 'Unauthorized'
+  end
+
+  def user_deposits(user_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
+                                                         user_id.eql?(context[:current_user]&.id)
+
+    user = User.allowed_users(context[:current_user]).find(user_id)
+    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+
+    pending_invoices = cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
+    {
+      transactions: user.wallet_transactions,
+      pending_invoices: pending_invoices
+    }
+  end
+
+  def cumulate_pending_balance(invoices)
+    balance = 0
+    pending_invoices = []
+    invoices.reverse.each do |invoice|
+      invoice_data = invoice.attributes
+      balance = balance + invoice.pending_amount
+      invoice_data["balance"] = balance
+      pending_invoices.push(invoice_data)
+    end
+    pending_invoices
   end
 end
