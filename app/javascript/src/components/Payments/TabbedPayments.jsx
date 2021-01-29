@@ -4,9 +4,12 @@ import { a11yProps, StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import InvoiceList from './InvoiceList';
 import authStateProps from '../../shared/types/authState';
 import PaymentList from './PaymentList';
+import { currencies } from '../../utils/constants';
 
 export default function TabbedPayments({ authState }) {
   const [value, setValue] = React.useState(0);
+  const currency = currencies[authState.user?.community.currency] || '';
+
   function handleChange(_event, newValue) {
     setValue(newValue);
   }
@@ -18,10 +21,10 @@ export default function TabbedPayments({ authState }) {
       </StyledTabs>
 
       <TabPanel value={value} index={0}>
-        <InvoiceList authState={authState} />
+        <InvoiceList currency={currency} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <PaymentList />
+        <PaymentList currency={currency} />
       </TabPanel>
     </>
   );

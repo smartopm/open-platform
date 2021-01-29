@@ -1061,15 +1061,8 @@ export const PaymentsQuery = gql`
         amount
         bankName
         createdAt
-        invoices {
-          id
-          user {
-            id
-          }
-          landParcel {
-            parcelNumber
-          }
-        }
+        paymentStatus
+        paymentType
       }
     }
 `

@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { Container, Grid, List, MenuItem } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
-import { shape } from 'prop-types';
+import { string } from 'prop-types';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
-import { currencies, invoiceStatus } from '../../utils/constants';
+import { invoiceStatus } from '../../utils/constants';
 import ActionMenu from './PaymentActionMenu';
 import InvoiceTiles from './InvoiceTiles';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
-import authStateProps from '../../shared/types/authState';
 
 const invoiceHeaders = [
   { title: 'Parcel Number', col: 2 },
@@ -22,7 +21,7 @@ const invoiceHeaders = [
   { title: 'Due date', col: 1 },
   { title: 'Invoice Status', col: 2 }
 ];
-export default function InvoiceList({ authState }) {
+export default function InvoiceList({ currency }) {
   const history = useHistory();
   const path = useParamsQuery();
   const limit = 50;
@@ -41,7 +40,6 @@ export default function InvoiceList({ authState }) {
   const invoiceStats = useQuery(InvoiceStatsQuery, {
     fetchPolicy: 'cache-and-network'
   });
-  const currency = currencies[authState.user?.community.currency] || '';
 
   function handleFilter(key) {
     setCurrentTile(key);
@@ -159,5 +157,5 @@ export function renderInvoices(invoices, handleOpenMenu, currency) {
   });
 }
 InvoiceList.propTypes = {
-  authState: shape({ ...authStateProps }).isRequired
+  currency: string.isRequired
 };
