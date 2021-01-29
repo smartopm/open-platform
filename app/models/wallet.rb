@@ -12,7 +12,7 @@ class Wallet < ApplicationRecord
 
   def settle_pending_balance(amount)
     if amount > pending_balance
-      update(pending_balance: 0, balance: amount - pending_balance)
+      update(pending_balance: 0, balance: balance + amount - pending_balance)
     else
       update(pending_balance: pending_balance - amount)
     end

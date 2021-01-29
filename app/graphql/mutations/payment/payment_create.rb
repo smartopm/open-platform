@@ -18,9 +18,9 @@ module Mutations
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find(vals[:user_id])
-          transaction = create_transaction(user, vals)
           remaining_amount = vals[:amount]
           user.wallet.settle_pending_balance(remaining_amount)
+          transaction = create_transaction(user, vals)
           user.invoices.where('pending_amount > ?', 0).each do |invoice|
             break unless remaining_amount.positive?
 
