@@ -2,7 +2,7 @@ import { Grid, InputBase } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
-import { PaymentsQuery } from '../../graphql/queries';
+import { TransactionsQuery } from '../../graphql/queries';
 import Label from '../../shared/label/Label';
 import DataList from '../../shared/list/DataList';
 import { paymentStatus, paymentStatusColor } from '../../utils/constants';
@@ -11,10 +11,11 @@ import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 
 const paymentHeaders = [
-  { title: 'Payment Type', col: 2 },
+  { title: 'CreatedBy', col: 2 },
   { title: 'Amount', col: 2 },
+  { title: 'Balance', col: 1 },
   { title: 'Paid date', col: 1 },
-  { title: 'Payment Status', col: 2 }
+  { title: 'Status', col: 2 }
 ];
 
 export default function PaymentList({ currency }) {
@@ -23,7 +24,7 @@ export default function PaymentList({ currency }) {
   const page = path.get('page');
 
   const pageNumber = Number(page);
-  const { loading, data, error } = useQuery(PaymentsQuery, {
+  const { loading, data, error } = useQuery(TransactionsQuery, {
     variables: { limit, offset: pageNumber },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -57,7 +58,7 @@ export default function PaymentList({ currency }) {
       <br />
       <DataList
         keys={paymentHeaders}
-        data={renderPayments(data?.payments, currency)}
+        data={renderPayments(data?.transactions, currency)}
         hasHeader={false}
       />
     </div>
@@ -70,14 +71,19 @@ export function renderPayments(payments, currency) {
   }
   return payments?.map(payment => {
     return {
-      'Payment Type': (
+      'CreatedBy': (
         <Grid item xs={2} data-testid="parcel_number">
-          {payment.paymentType}
+          {payment.user.name}
         </Grid>
       ),
       Amount: (
         <Grid item xs={2}>
-          <span>{`${currency}${payment.amount}`}</span>
+          <span>{`Paid ${currency}${payment.amount || 0}`}</span>
+        </Grid>
+      ),
+      Balance: (
+        <Grid item xs={2}>
+          <span>{`Balance of ${currency}${payment.currentWalletBalance || 0}`}</span>
         </Grid>
       ),
       'Paid date': (
@@ -85,11 +91,11 @@ export function renderPayments(payments, currency) {
           {dateToString(payment.createdAt)}
         </Grid>
       ),
-      'Payment Status': (
+      'Status': (
         <Grid item xs={2} data-testid="payment_status">
           <Label
-            title={propAccessor(paymentStatus, payment.paymentStatus || 'pending')}
-            color={propAccessor(paymentStatusColor, payment.paymentStatus || 'pending')}
+            title={propAccessor(paymentStatus, payment.status || 'pending')}
+            color={propAccessor(paymentStatusColor, payment.status || 'pending')}
           />
         </Grid>
       )

@@ -1051,6 +1051,10 @@ export const TransactionsQuery = gql`
       updatedAt
       currentWalletBalance
       id
+      user {
+        id
+        name
+      }
     }
   }
 `
