@@ -26,6 +26,7 @@ module Types::Queries::Wallet
       description 'Get list of all transactions'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :query, String, required: false
     end
   end
 
@@ -40,10 +41,10 @@ module Types::Queries::Wallet
     user.wallet_transactions.order(created_at: :desc).limit(limit).offset(offset)
   end
 
-  def transactions(offset: 0, limit: 100)
+  def transactions(offset: 0, limit: 100, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    ::WalletTransaction.eager_load(:user).limit(limit).offset(offset)
+    ::WalletTransaction.search(query).eager_load(:user).limit(limit).offset(offset)
   end
 
   # It would be good to put this elsewhere to use it in other queries

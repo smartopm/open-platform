@@ -1043,8 +1043,8 @@ export const PendingInvoicesQuery = gql`
 `;
 
 export const TransactionsQuery = gql`
-  query allTransactions {
-    transactions {
+  query allTransactions($limit: Int, $offset: Int, $query: String) {
+    transactions(limit: $limit, offset: $offset, query: $query) {
       amount
       status
       createdAt
