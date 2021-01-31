@@ -1,5 +1,5 @@
-import { Grid, InputBase } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
+import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { TransactionsQuery } from '../../graphql/queries';
@@ -9,6 +9,7 @@ import { paymentStatus, paymentStatusColor } from '../../utils/constants';
 import { formatError, propAccessor, useParamsQuery } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
+import SearchInput from '../../shared/search/SearchInput';
 
 const paymentHeaders = [
   { title: 'CreatedBy', col: 2 },
@@ -22,6 +23,7 @@ export default function PaymentList({ currency }) {
   const limit = 50;
   const path = useParamsQuery();
   const page = path.get('page');
+  const [searchValue, setSearchValue] = useState('');
 
   const pageNumber = Number(page);
   const { loading, data, error } = useQuery(TransactionsQuery, {
@@ -30,30 +32,20 @@ export default function PaymentList({ currency }) {
     errorPolicy: 'all'
   });
 
+  function handleFilter(){}
+
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
   if (loading) return 'loading ...';
   return (
     <div>
-      <div
-        style={{
-          padding: '2px 4px',
-          display: 'flex',
-          alignItems: 'right',
-          width: '100%',
-          overflowX: 'auto'
-        }}
-      >
-        <InputBase
-          data-testid="search_input"
-          type="text"
-          placeholder="Search Payments"
-          onChange={() => {}}
-          value=""
-          inputProps={{ 'aria-label': 'search tasks' }}
-        />
-      </div>
+      <SearchInput 
+        title='Transactions' 
+        searchValue={searchValue} 
+        handleSearch={event => setSearchValue(event.target.value)} 
+        handleFilter={handleFilter} 
+      />
       <br />
       <br />
       <DataList
