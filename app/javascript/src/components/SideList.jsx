@@ -92,7 +92,7 @@ export const SideList = ({ toggleDrawer, user, authState }) => {
             <ListItemText primary="Preferences" />
           </ListItem>
         </Link>
-        <a href="/logout" className={`${css(styles.linkStyles)}`}>
+        <a href="/logout" className={`${css(styles.linkStyles)} logout-link`}>
           <ListItem button>
             <ListItemIcon>
               <MeetingRoomIcon />

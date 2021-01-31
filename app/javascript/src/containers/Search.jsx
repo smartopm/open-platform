@@ -38,7 +38,7 @@ export function Results({ data, loading, called, authState }) {
             to={`/user/${user.id}`}
             key={user.id}
             data-testid="link_search_user"
-            className={css(styles.linkStyles)}
+            className={`${css(styles.linkStyles)} user-search-result`}
           >
             <div className="d-flex flex-row align-items-center py-2">
               {/* eslint-disable-next-line react/style-prop-object */}
@@ -134,7 +134,7 @@ export default function SearchContainer({ location }) {
     <div className="container">
       <div className={`row justify-content-center ${css(styles.inputGroup)}`}>
         <input
-          className={`form-control ${css(styles.input)}`}
+          className={`form-control ${css(styles.input)} user-search-input`}
           onChange={updateSearch}
           type="text"
           placeholder="Search"

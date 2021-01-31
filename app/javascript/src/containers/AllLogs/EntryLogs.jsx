@@ -182,7 +182,7 @@ export function IndexComponent({
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.logTitle)}>{visitorName}</span>
+                <span className={`${css(styles.logTitle)} entry-log-visitor-name`}>{visitorName}</span>
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.access)}>
@@ -315,8 +315,8 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
           {data.result.map((log) => <LogView key={log.id} user={log} /> )}
-        </TabPanel>    
-        <FloatButton 
+        </TabPanel>
+        <FloatButton
           title="New Visit Request"
           handleClick={() => router.push('/visit_request')}
         />

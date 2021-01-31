@@ -11,19 +11,15 @@ class Cypress::FactoriesController < ApplicationController
     render json: factory
   end
 
-  def record
-    record = resource_name.camelize.constantize.find(params[:id])
-    render json: record
+  def fetch_user
+    user = User.find_by(phone_number: params[:phone])
+    render json: user
   end
 
   private
 
   def factory_name
     params.fetch(:name)
-  end
-
-  def resource_name
-    params.fetch(:resource)
   end
 
   def factory_attributes

@@ -81,7 +81,7 @@ export function Component({
     return (
       <Fragment>
         {authState.user.userType === 'security_guard' ? (
-          <MenuIcon onClick={toggleDrawer} className={`${css(styles.userAvatar)}`} />
+          <MenuIcon onClick={toggleDrawer} className={`${css(styles.userAvatar)} guard-menu-icon`} />
         ) : (
           <Avatar
             alt="Default Avatar"

@@ -258,7 +258,7 @@ export default function UserInformation({
           authState.user.userType === 'security_guard' ? (
             <Button
               id="log-entry"
-              className={`${css(styles.logButton)}`}
+              className={`${css(styles.logButton)} log-entry-btn`}
               onClick={onLogEntry}
             >
               Log This Entry
