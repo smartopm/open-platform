@@ -2,6 +2,8 @@
 
 # Invoice Record
 class Invoice < ApplicationRecord
+  include SearchCop
+
   belongs_to :land_parcel
   belongs_to :community
   belongs_to :user
@@ -16,6 +18,13 @@ class Invoice < ApplicationRecord
   enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
   scope :by_status, ->(status) { where(status: status) if status.present? }
   default_scope { order(created_at: :desc) }
+
+  search_scope :search do
+    attributes :status
+    attributes land_parcel: ['land_parcel.parcel_number']
+    attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number', ]
+    attributes user: ['user.name', 'user.email', 'user.phone_number', ]
+  end
 
   # rubocop:disable Metrics/MethodLength
   def collect_payment_from_wallet
