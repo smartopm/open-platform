@@ -107,7 +107,7 @@ cypress:
     - yarn install
     - apk add --no-cache docker-compose
   script:
-    - sh ./bin/integration_tests.sh
+    - sh ./bin/integration_tests.sh 'ci'
   artifacts:
     paths:
       - "tmp/cypress/"
