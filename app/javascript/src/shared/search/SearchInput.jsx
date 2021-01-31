@@ -15,7 +15,7 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
       <InputLabel htmlFor="outlined-adornment-filter">{`Search for ${title}`}</InputLabel>
       <OutlinedInput
         id="outlined-adornment-filter"
-        type="text"
+        type="search"
         label={`Search for ${title}`}
         value={searchValue}
         onChange={handleSearch}

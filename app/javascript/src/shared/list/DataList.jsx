@@ -7,14 +7,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
+import CenteredContent from '../../components/CenteredContent';
 
+// Todo: @tolu re-enable eslint and identify which prop is being used and which is not
 export default function DataList({ keys, data, hasHeader, clickable, handleClick }) {
+  const classes = useStyles();
   if (hasHeader && keys.length !== Object.keys(data[0]).length) {
     throw new Error(
       'headers must have same length as number of columns in the data prop or set hasHeader to false'
     );
   }
-  const classes = useStyles();
+  if (!data.length) {
+    return <CenteredContent>No Data</CenteredContent>;
+  }
   return (
     <>
       {hasHeader && <ListHeader headers={keys} />}

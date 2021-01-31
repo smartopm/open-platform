@@ -10,6 +10,8 @@ import { formatError, propAccessor, useParamsQuery } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
+import useDebounce from '../../utils/useDebounce';
+import { Spinner } from '../../shared/Loading';
 
 const paymentHeaders = [
   { title: 'CreatedBy', col: 2 },
@@ -24,10 +26,12 @@ export default function PaymentList({ currency }) {
   const path = useParamsQuery();
   const page = path.get('page');
   const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
+
 
   const pageNumber = Number(page);
   const { loading, data, error } = useQuery(TransactionsQuery, {
-    variables: { limit, offset: pageNumber },
+    variables: { limit, offset: pageNumber, query: debouncedValue},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -37,29 +41,34 @@ export default function PaymentList({ currency }) {
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-  if (loading) return 'loading ...';
   return (
     <div>
       <SearchInput 
-        title='Transactions' 
+        title='Payments' 
         searchValue={searchValue} 
         handleSearch={event => setSearchValue(event.target.value)} 
         handleFilter={handleFilter} 
       />
       <br />
       <br />
-      <DataList
-        keys={paymentHeaders}
-        data={renderPayments(data?.transactions, currency)}
-        hasHeader={false}
-      />
+      {
+          loading 
+          ? <Spinner /> 
+          : (
+            <DataList
+              keys={paymentHeaders}
+              data={renderPayments(data?.transactions, currency)}
+              hasHeader={false}
+            />
+          )
+        }
     </div>
   );
 }
 
 export function renderPayments(payments, currency) {
   if (!payments.length) {
-    return <CenteredContent>No Payments yet</CenteredContent>;
+    return []
   }
   return payments?.map(payment => {
     return {
