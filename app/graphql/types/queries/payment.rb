@@ -24,8 +24,7 @@ module Types::Queries::Payment
 
   def payments(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
-    
-    return ::Payment.eager_load(:invoices).limit(limit).offset(offset) 
-    
+
+    ::Payment.eager_load(:invoices).limit(limit).offset(offset)
   end
 end

@@ -3,83 +3,56 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
+import { TransactionsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import PaymentList, { renderPayments } from '../../components/Payments/PaymentList';
 
-describe('Invoice Item Component', () => {
-  const invoices = [
+describe('Payment List Item Component', () => {
+  const transactions = [
     {
-      id: '299191a9-dece-4ea5-96a2-1e50424fa38a',
-      amount: 23423423,
-      status: 'in_progress',
-      description: 'Final Payment',
-      dueDate: '2020-12-31T14:26:00Z',
+      amount: 100,
+      createdAt: '2021-01-26T20:26:39Z',
+      updatedAt: '2021-01-26T20:26:39Z',
+      id: '0aa61057-bec1-43f6-ad02-70c220ed56f3',
+      currentWalletBalance: 200,
+      status: 'settled',
       user: {
-        id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
-      },
-      landParcel: {
-        id: '233b1634-bf08-4ece-a213-b3f120a1e009',
-        parcelNumber: 'Plot-1343'
-      },
+        id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
+        name: 'joe m'
+      }
     },
     {
-      id: '19f57fc2-610c-49b8-bc16-1dc239015b58',
-      amount: 30,
-      status: 'paid',
-      description: 'Extra payment',
-      dueDate: '2020-12-28T22:00:00Z',
+      amount: 100,
+      createdAt: '2021-01-26T20:26:39Z',
+      updatedAt: '2021-01-26T20:26:39Z',
+      id: '0aa61057-bec1-43f6-ad02-70c220ed56f3',
+      currentWalletBalance: 200,
+      status: 'pending',
       user: {
-        id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
-      },
-      landParcel: {
-        id: '50da896a-9217-43b9-a28f-03a13c7d401f',
-        parcelNumber: 'Starter-200'
-      },
+        id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
+        name: 'joe m'
+      }
     }
   ];
   it('should render the invoice item component', async () => {
-    const invoiceMock = [
+    const mock = [
       {
         request: {
-          query: InvoicesQuery,
-          variables: { status: null, limit: 50, offset: 0 }
+          query: TransactionsQuery,
+          variables: { limit: 50, offset: 0, query: '' }
         },
         result: {
           data: {
-            invoices
+            transactions
           }
         }
       },
-      {
-        request: {
-          query: InvoiceStatsQuery
-        },
-        result: {
-          data: {
-            invoiceStats: {
-              late: 0,
-              paid: 5,
-              inProgress: 6,
-              cancelled: 2
-            }
-          }
-        }
-      }
     ];
 
-    const authState = {
-      user: {
-        community: {
-          currency: 'zambian_kwacha'
-        }
-      }
-    };
-
     const container = render(
-      <MockedProvider mocks={invoiceMock} addTypename={false}>
+      <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
-          <PaymentList authState={authState} />
+          <PaymentList currency='k' />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -90,24 +63,20 @@ describe('Invoice Item Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryAllByTestId('parcel_number')[0].textContent).toContain('Plot-1343');
-        expect(container.queryAllByTestId('select_payment')[0]).toBeInTheDocument();
-        expect(container.queryAllByTestId('select_payment')[0]).not.toBeDisabled();
-        expect(container.queryAllByTestId('invoice_status')[1].textContent).toContain('Paid');
-        expect(container.queryAllByText('In-Progress')[0]).toBeInTheDocument();
+        expect(container.queryAllByTestId('created_by')[0].textContent).toContain('joe');
+        expect(container.queryAllByTestId('payment_status')[0].textContent).toContain('Settled');
+        expect(container.queryAllByTestId('payment_status')[1].textContent).toContain('Pending');
       },
-      { timeout: 500 }
+      { timeout: 100 }
     );
   });
   it('should check if renderPayments works as expected', () => {
-    const openMenu = jest.fn();
-    const results = renderPayments(invoices, openMenu, 'k');
+    const results = renderPayments(transactions, 'k');
     expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('Parcel Number');
     expect(results[0]).toHaveProperty('Amount');
-    expect(results[0]).toHaveProperty('Due date');
-    expect(results[0]).toHaveProperty('Invoice Status');
-    expect(results[0]).toHaveProperty('Menu');
-    expect(results[0]).toHaveProperty('Select');
+    expect(results[0]).toHaveProperty('Paid date');
+    expect(results[0]).toHaveProperty('Balance');
+    expect(results[0]).toHaveProperty('Status');
+    expect(results[0]).toHaveProperty('CreatedBy');
   });
 });

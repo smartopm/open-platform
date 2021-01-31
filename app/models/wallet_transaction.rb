@@ -8,7 +8,7 @@ class WalletTransaction < ApplicationRecord
   has_one :payment_invoice, dependent: :destroy
 
   search_scope :search do
-    attributes user: ['user.name', 'user.email', 'user.phone_number', ]
+    attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
 
   before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }

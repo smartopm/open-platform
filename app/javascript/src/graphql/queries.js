@@ -911,8 +911,8 @@ export const UserInvoicesQuery = gql`
 `
 
 export const InvoicesQuery = gql`
-  query invoices($limit: Int, $offset: Int, $status: String) {
-    invoices(limit: $limit, offset: $offset, status: $status) {
+  query invoices($limit: Int, $offset: Int, $status: String, $query: String) {
+    invoices(limit: $limit, offset: $offset, status: $status, query: $query) {
       id
       amount
       status
@@ -920,6 +920,7 @@ export const InvoicesQuery = gql`
       dueDate
       user {
         id
+        name
       }
       landParcel {
         id

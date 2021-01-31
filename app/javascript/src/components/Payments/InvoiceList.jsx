@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, List, MenuItem } from '@material-ui/core';
+import { Grid, List } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
 import { string } from 'prop-types';
@@ -10,12 +10,14 @@ import { Spinner } from '../../shared/Loading';
 import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { invoiceStatus } from '../../utils/constants';
-import ActionMenu from './PaymentActionMenu';
 import InvoiceTiles from './InvoiceTiles';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
+import SearchInput from '../../shared/search/SearchInput';
+import useDebounce from '../../utils/useDebounce';
 
 const invoiceHeaders = [
+  { title: 'CreatedBy', col: 2 },
   { title: 'Parcel Number', col: 2 },
   { title: 'Amount', col: 2 },
   { title: 'Due date', col: 1 },
@@ -29,11 +31,11 @@ export default function InvoiceList({ currency }) {
   const status = path.get('status');
   const pageNumber = Number(page);
   const [currentTile, setCurrentTile] = useState(status || '');
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
-    variables: { limit, offset: pageNumber, status },
+    variables: { limit, offset: pageNumber, status, query: debouncedValue },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -45,14 +47,6 @@ export default function InvoiceList({ currency }) {
     setCurrentTile(key);
     const state = key === 'inProgress' ? 'in_progress' : key;
     history.push(`/payments?page=0&status=${state}`);
-  }
-
-  function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget);
-  }
-
-  function handleClose() {
-    setAnchorEl(null);
   }
 
   function paginate(action) {
@@ -69,7 +63,14 @@ export default function InvoiceList({ currency }) {
   }
 
   return (
-    <Container>
+    <>
+      <SearchInput 
+        title='Invoices' 
+        searchValue={searchValue} 
+        handleSearch={event => setSearchValue(event.target.value)} 
+        handleFilter={handleFilter}
+      />
+      <br />
       <br />
       <Grid container spacing={3}>
         <InvoiceTiles
@@ -79,32 +80,17 @@ export default function InvoiceList({ currency }) {
         />
       </Grid>
       <List>
-        {// eslint-disable-next-line no-nested-ternary
+        {
         loading ? (
           <Spinner />
-        ) : invoicesData?.invoices.length ? (
-          <div>
-            <DataList
-              keys={invoiceHeaders}
-              data={renderInvoices(invoicesData?.invoices, handleOpenMenu, currency)}
-              hasHeader={false}
-            />
-            <ActionMenu anchorEl={anchorEl} handleClose={handleClose} open={open}>
-              <MenuItem id="view-button" key="view-user">
-                View
-              </MenuItem>
-              <MenuItem id="edit-button" key="edit-user">
-                Edit
-              </MenuItem>
-              <MenuItem id="cancel-button" key="cancel-user" style={{ color: 'red' }}>
-                Cancel Invoice
-              </MenuItem>
-            </ActionMenu>
-          </div>
-        ) : (
-          <CenteredContent>No Invoices Yet</CenteredContent>
-        )
-}
+        ) :(
+          <DataList
+            keys={invoiceHeaders}
+            data={renderInvoices(invoicesData?.invoices, currency)}
+            hasHeader={false}
+          />
+)
+        }
       </List>
 
       <CenteredContent>
@@ -116,7 +102,7 @@ export default function InvoiceList({ currency }) {
           count={invoicesData?.invoices.length}
         />
       </CenteredContent>
-    </Container>
+    </>
   );
 }
 
@@ -127,16 +113,21 @@ export default function InvoiceList({ currency }) {
  * @param {String} currency community currency
  * @returns {object} an object with properties that DataList component uses to render
  */
-export function renderInvoices(invoices, handleOpenMenu, currency) {
+export function renderInvoices(invoices, currency) {
   return invoices.map(invoice => {
     return {
+      'CreatedBy': (
+        <Grid item xs={2} data-testid="created_by">
+          {invoice.user.name}
+        </Grid>
+      ),
       'Parcel Number': (
         <Grid item xs={2} data-testid="parcel_number">
           {invoice.landParcel.parcelNumber}
         </Grid>
       ),
       Amount: (
-        <Grid item xs={2}>
+        <Grid item xs={2} data-testid="invoice_amount">
           <span>{`${currency}${invoice.amount}`}</span>
         </Grid>
       ),

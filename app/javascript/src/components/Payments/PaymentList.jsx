@@ -67,13 +67,10 @@ export default function PaymentList({ currency }) {
 }
 
 export function renderPayments(payments, currency) {
-  if (!payments.length) {
-    return []
-  }
   return payments?.map(payment => {
     return {
       'CreatedBy': (
-        <Grid item xs={2} data-testid="parcel_number">
+        <Grid item xs={2} data-testid="created_by">
           {payment.user.name}
         </Grid>
       ),
