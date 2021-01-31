@@ -2,8 +2,15 @@
 
 # Record the transactions
 class WalletTransaction < ApplicationRecord
+  include SearchCop
+
   belongs_to :user
   has_one :payment_invoice, dependent: :destroy
+
+  search_scope :search do
+    attributes :status
+    attributes user: ['user.name', 'user.email', 'user.phone_number', ]
+  end
 
   before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }
 
