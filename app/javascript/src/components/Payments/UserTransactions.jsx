@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import DataList from '../../shared/list/DataList';
@@ -13,7 +14,7 @@ const transactionHeader = [
   { title: 'Date Created', col: 1 },
   { title: 'Amount', col: 1 },
   { title: 'Balance', col: 1 },
-  { title: 'Pending Amount', col: 1 }
+  { title: 'Type', col: 1 }
 ];
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
@@ -35,6 +36,7 @@ export default function UserTransactionsList({ transaction, currency }) {
         handleClose={() => setOpen(false)} 
         data={transaction}
         currency={currency}
+        title='Transaction'
       />
     </div>
   )
@@ -42,12 +44,12 @@ export default function UserTransactionsList({ transaction, currency }) {
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Invoice Number': <GridText col={2} content={`${transaction.transactionNumber || transaction.status === 'settled' ? 'Transaction' : 'Invoice' }`} />,
+    'Invoice Number': <GridText col={2} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice' }`} />,
     Status: <GridText col={3} content={invoiceStatus[transaction.status] || 'In-Progress'} />,
     'Date Created': <GridText col={3} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
     Amount: <GridText content={`${currency}${transaction.amount}`} />,
-    Balance: <GridText content={transaction.currentWalletBalance ? `Balance of ${currency}${transaction.currentWalletBalance}`: `Balance of ${currency}${transaction.balance}`} />,
-    'Pending Amount': <GridText content={transaction.pendingAmount ? `Pending Balance of ${currency}${transaction.pendingAmount}` : null} />,
+    Balance: <GridText content={transaction.__typename === 'WalletTransaction' ? `Balance of ${currency}${transaction.currentWalletBalance}`: `Balance of ${currency}${transaction.balance}`} />,
+    Type: <GridText content={transaction.source || null} />,
   };
 }
 

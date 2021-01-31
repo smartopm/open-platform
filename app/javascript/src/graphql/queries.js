@@ -977,20 +977,11 @@ query subStatus {
 export const AllTransactionQuery = gql`
   query InvoicesWithTransactions($userId: ID!) {
     invoicesWithTransactions(userId: $userId) {
-      deposits {
-        id
-        amount
-        status
-        source
-        createdAt
-        updatedAt
-      }
       invoices {
         id
         amount
         status
         createdAt
-        updatedAt
       }
       payments {
         id
@@ -998,7 +989,6 @@ export const AllTransactionQuery = gql`
         paymentStatus
         paymentType
         createdAt
-        updatedAt
       }
     }
   }
@@ -1009,6 +999,8 @@ export const TransactionQuery = gql`
     userWalletTransactions(userId: $userId) {
       amount
       status
+      source
+      destination
       createdAt
       updatedAt
       currentWalletBalance

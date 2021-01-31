@@ -86,7 +86,6 @@ module Types::Queries::Invoice
 
     {
       invoices: user.invoices,
-      deposits: user.wallet_transactions,
       payments: user.invoices.map(&:payments).flatten,
     }
   end

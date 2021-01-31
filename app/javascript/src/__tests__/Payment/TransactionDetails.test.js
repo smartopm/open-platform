@@ -29,7 +29,7 @@ describe('Transaction Details Component', () => {
 
     await waitFor(() => {
       expect(container.queryByText('k200')).toBeInTheDocument();
-      expect(container.queryByText('In-Progress')).toBeInTheDocument();
+      expect(container.queryByText('in_progress')).toBeInTheDocument();
       expect(container.queryByText('2020-12-28')).toBeInTheDocument();
     },
     { timeout: 500 }
