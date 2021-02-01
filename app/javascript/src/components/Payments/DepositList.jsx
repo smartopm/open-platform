@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataList from '../List/DataList';
-import Text from '../List/Text';
 import DateContainer from '../DateContainer';
+import Text from '../../shared/Text';
+import DataList from '../../shared/list/DataList';
 
 const depositHeader = [
   { title: 'Type', col: 2 },
