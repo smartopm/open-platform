@@ -115,7 +115,7 @@ export function renderPayments(payments, currency) {
       ),
       'chequeNumber': (
         <Grid item xs={4} md={2} data-testid="payment_cheque">
-          <span>{payment.chequeNumber}</span>
+          <span>{payment.chequeNumber || 'No cheque available'}</span>
         </Grid>
       )
     };
