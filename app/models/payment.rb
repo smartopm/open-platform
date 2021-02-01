@@ -2,6 +2,7 @@
 
 # Payment Record
 class Payment < ApplicationRecord
+  belongs_to :user
   has_many :payment_invoices, dependent: :destroy
   has_many :invoices, through: :payment_invoices
 

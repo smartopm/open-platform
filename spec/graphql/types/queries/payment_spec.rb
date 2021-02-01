@@ -49,8 +49,7 @@ RSpec.describe Types::Queries::Payment do
                                          site_community: user.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to be_nil
-      # payment is created after an invoice creation
-      expect(result.dig('data', 'payments').length).to eql 3
+      expect(result.dig('data', 'payments').length).to eql 2
       expect([payment_one.id, payment_two.id]).to include(result.dig('data', 'payments', 1, 'id'))
     end
 
