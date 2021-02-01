@@ -142,25 +142,15 @@ const useStyles = makeStyles({
 });
 
 PaymentModal.defaultProps = {
-  invoiceData: null
-}
+  depRefetch: () => {},
+  invoiceRefetch: () => {}
+ }
 PaymentModal.propTypes = {
-  invoiceData: PropTypes.shape({
-    amount: PropTypes.number,
-    id: PropTypes.string,
-    landParcel: PropTypes.shape({
-      parcelNumber: PropTypes.string
-    }),
-    payments: PropTypes.arrayOf(PropTypes.shape({ 
-      id: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired  
-    }))
-  }),
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
-  depRefetch: PropTypes.func.isRequired,
-  invoiceRefetch: PropTypes.func.isRequired,
+  depRefetch: PropTypes.func,
+  invoiceRefetch: PropTypes.func,
   currency: PropTypes.string.isRequired
 }

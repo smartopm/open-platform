@@ -41,7 +41,7 @@ DepositList.propTypes = {
   payment: PropTypes.shape({
           paymentType: PropTypes.string.isRequired,
           amount: PropTypes.number.isRequired,
-          createdAt: PropTypes.instanceOf(Date)
+          createdAt: PropTypes.string
     }).isRequired,
     currency: PropTypes.string.isRequired
 };

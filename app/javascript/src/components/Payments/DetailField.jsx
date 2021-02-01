@@ -25,5 +25,8 @@ const useStyles = makeStyles(() => ({
 
 DetailsField.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]).isRequired,
 }

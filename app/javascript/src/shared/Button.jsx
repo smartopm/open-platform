@@ -12,8 +12,12 @@ export default function ButtonComponent({ variant, color, buttonText, handleClic
   )
 }
 
+ButtonComponent.defaultProps = {
+  variant: 'text',
+ }
+
 ButtonComponent.propTypes = {
-  variant: PropTypes.string.isRequired,
+  variant: PropTypes.string,
   color: PropTypes.string.isRequired,
   buttonText: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired
