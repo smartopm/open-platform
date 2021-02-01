@@ -14,8 +14,9 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 import { currencies } from '../../utils/constants'
 import UserTransactionsList from './UserTransactions'
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
-import DepositList from './DepositList'
 import UserInvoiceItem from './UserInvoiceItem'
+import ButtonComponent from '../../shared/Button'
+import PaymentModal from './PaymentModal'
 
 export default function TransactionsList({ userId, user }) {
   const history = useHistory()
@@ -26,6 +27,7 @@ export default function TransactionsList({ userId, user }) {
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
   const [open, setOpen] = useState(!!tab)
+  const [payOpen, setPayOpen] = useState(false)
   const { loading, data: transactionsData, error, refetch } = useQuery(
     TransactionQuery,
     {
@@ -93,9 +95,16 @@ export default function TransactionsList({ userId, user }) {
           aria-label="Transactions tabs"
         >
           <StyledTab label="Invoices" value="Invoices" />
-          <StyledTab label="Payments" value="Payments" />
           <StyledTab label="Transactions" value="Transactions" />
         </StyledTabs>
+        <div style={{marginLeft: '100px'}}> 
+          <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
+          {
+            authState.user?.userType === 'admin' && (
+              <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+            )
+          }
+        </div>
       </CenteredContent>
       <InvoiceModal
         open={open}
@@ -108,28 +117,20 @@ export default function TransactionsList({ userId, user }) {
         currency={currency}
       />
       <TabPanel value={tabValue} index="Transactions">
-        {invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {invoiceData?.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
             key={trans.id}
-            userId={userId}
-            refetch={refetch}
-            invoiceRefetch={invoiceRefetch}
-            depRefetch={depRefetch}
           />
       ))}
-      </TabPanel>
-      <TabPanel value={tabValue} index="Payments">
-        {
-          invPayData?.invoicesWithTransactions.payments.map((pay) => (
-            <DepositList
-              key={pay.id} 
-              payment={pay}
-              currency={currency}
-            />
-          ))
-        }
+        {transactionsData?.userWalletTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+          <UserTransactionsList 
+            transaction={trans || {}} 
+            currency={currency}
+            key={trans.id}
+          />
+      ))}
       </TabPanel>
       <TabPanel value={tabValue} index="Invoices">
         {
@@ -142,6 +143,15 @@ export default function TransactionsList({ userId, user }) {
           ))
         }
       </TabPanel>
+      <PaymentModal 
+        open={payOpen}
+        handleModalClose={() => setPayOpen(false)}
+        userId={userId}
+        currency={currency} 
+        refetch={refetch}
+        depRefetch={depRefetch}
+        invoiceRefetch={invoiceRefetch}
+      />
       <CenteredContent>
         <Paginate
           offSet={offset}
@@ -151,16 +161,6 @@ export default function TransactionsList({ userId, user }) {
           count={transactionsData?.userWalletTransactions.length}
         />
       </CenteredContent>
-
-      {
-          authState.user?.userType === 'admin' && (
-            <FloatButton
-              data-testid="invoice_btn"
-              title="Add an Invoice"
-              handleClick={handleModalOpen}
-            />
-          )
-        }
     </div>
   )
 }

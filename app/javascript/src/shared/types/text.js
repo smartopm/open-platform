@@ -2,6 +2,6 @@
 import { number, string, oneOfType, object } from 'prop-types';
 
 export const textProps = {
-  content: oneOfType([string, number]).isRequired,
+  content: oneOfType([string, number]),
   otherProps: object
 };
