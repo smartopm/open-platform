@@ -20,7 +20,7 @@ const initialValues = {
   chequeNumber: '',
 }
 
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, invoiceRefetch }){
+export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -42,7 +42,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       setMessageAlert('Payment made successfully')
       setIsSuccessAlert(true)
       handleModalClose()
-      invoiceRefetch()
       refetch()
       depRefetch()
     }).catch((err) => {
@@ -143,7 +142,6 @@ const useStyles = makeStyles({
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
-  invoiceRefetch: () => {}
  }
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -151,6 +149,5 @@ PaymentModal.propTypes = {
   userId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
-  invoiceRefetch: PropTypes.func,
   currency: PropTypes.string.isRequired
 }

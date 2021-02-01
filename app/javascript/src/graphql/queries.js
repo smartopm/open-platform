@@ -1009,16 +1009,25 @@ export const AllTransactionQuery = gql`
 `;
 
 export const TransactionQuery = gql`
-  query walletTrans($userId: ID!) {
-    userWalletTransactions(userId: $userId) {
-      amount
-      status
-      source
-      destination
-      createdAt
-      updatedAt
-      currentWalletBalance
-      id
+  query userTransactions($userId: ID!) {
+    userDeposits(userId: $userId) {
+      transactions {
+        amount
+        status
+        source
+        destination
+        createdAt
+        updatedAt
+        currentWalletBalance
+        id
+      }
+      pendingInvoices {
+        amount
+        pendingAmount
+        balance
+        createdAt
+        id
+      }
     }
   }
 `;
