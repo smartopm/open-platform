@@ -566,6 +566,44 @@ export const discussionUserQuery = gql`
   }
 `
 
+export const invoiceQuery = gql`
+  query invoiceQuery($id: ID!) {
+    invoice(id: $id) {
+      id
+      amount
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const paymentQuery = gql`
+  query paymentQuery($paymentId: ID!) {
+    payment(paymentId: $paymentId) {
+      id
+      amount
+      paymentStatus
+      paymentType
+      createdAt
+      updatedAt
+    }
+  }
+`
+
+export const depositQuery = gql`
+  query depositQuery($depositId: ID!) {
+    deposit(depositId: $depositId) {
+      id
+      amount
+      status
+      source
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 // add pagination here
 export const DiscussionsQuery = gql`
   query discussions($limit: Int, $offset: Int) {
@@ -858,6 +896,8 @@ export const UserInvoicesQuery = gql`
       status
       description
       dueDate
+      updatedAt
+      createdAt
       createdBy {
         id
         name
@@ -866,23 +906,13 @@ export const UserInvoicesQuery = gql`
         id
         parcelNumber
       }
-      payments {
-        id
-        amount
-        paymentType
-        paymentStatus
-        user {
-          id
-          name
-        }
-      }
     }
   }
 `
 
 export const InvoicesQuery = gql`
-  query invoices($limit: Int, $offset: Int, $status: String) {
-    invoices(limit: $limit, offset: $offset, status: $status) {
+  query invoices($limit: Int, $offset: Int, $status: String, $query: String) {
+    invoices(limit: $limit, offset: $offset, status: $status, query: $query) {
       id
       amount
       status
@@ -890,20 +920,11 @@ export const InvoicesQuery = gql`
       dueDate
       user {
         id
+        name
       }
       landParcel {
         id
         parcelNumber
-      }
-      payments {
-        id
-        amount
-        paymentType
-        paymentStatus
-        user {
-          id
-          name
-        }
       }
     }
   }
@@ -966,5 +987,94 @@ query subStatus {
     readyForConstruction
   }
 }
+`
+export const AllTransactionQuery = gql`
+  query InvoicesWithTransactions($userId: ID!) {
+    invoicesWithTransactions(userId: $userId) {
+      invoices {
+        id
+        amount
+        status
+        createdAt
+      }
+      payments {
+        id
+        amount
+        paymentStatus
+        paymentType
+        createdAt
+      }
+    }
+  }
+`;
 
+export const TransactionQuery = gql`
+  query userTransactions($userId: ID!) {
+    userDeposits(userId: $userId) {
+      transactions {
+        amount
+        status
+        source
+        destination
+        createdAt
+        updatedAt
+        currentWalletBalance
+        id
+      }
+      pendingInvoices {
+        amount
+        pendingAmount
+        balance
+        createdAt
+        id
+      }
+    }
+  }
+`;
+
+
+export const PendingInvoicesQuery = gql`
+  query pendingInvoices($userId: ID!) {
+    pendingInvoices(userId: $userId) {
+      amount
+      pendingAmount
+      balance
+      createdAt
+      id
+    }
+  }
+`;
+
+export const TransactionsQuery = gql`
+  query allTransactions($limit: Int, $offset: Int, $query: String) {
+    transactions(limit: $limit, offset: $offset, query: $query) {
+      amount
+      status
+      createdAt
+      updatedAt
+      currentWalletBalance
+      id
+      user {
+        id
+        name
+      }
+    }
+  }
+`
+export const PaymentsQuery = gql`
+    query allPayments($limit: Int, $offset: Int, $query: String) {
+      payments(limit: $limit, offset: $offset, query: $query) {
+        id
+        amount
+        bankName
+        createdAt
+        paymentStatus
+        paymentType
+        chequeNumber
+        user {
+          id
+          name
+        }
+      }
+    }
 `

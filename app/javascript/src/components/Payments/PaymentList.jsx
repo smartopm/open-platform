@@ -1,210 +1,127 @@
 import React, { useState } from 'react';
-import { Container, Grid, List, IconButton, MenuItem, Checkbox } from '@material-ui/core';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { useHistory } from 'react-router';
-import { useQuery } from 'react-apollo';
+import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import CenteredContent from '../CenteredContent';
-import Paginate from '../Paginate';
-import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import {
-  formatError,
-  useParamsQuery,
-  InvoiceType,
-  InvoiceStatusColor,
-  propAccessor
-} from '../../utils/helpers';
-import { dateToString } from '../DateContainer';
-import { currencies, invoiceStatus } from '../../utils/constants';
-import ActionMenu from './PaymentActionMenu';
-import InvoiceTiles from './InvoiceTiles';
+import { useQuery } from 'react-apollo';
+import { useHistory } from 'react-router';
+import { PaymentsQuery } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
-import Label from '../../shared/label/Label';
+import { formatError, useParamsQuery } from '../../utils/helpers';
+import CenteredContent from '../CenteredContent';
+import { dateToString } from '../DateContainer';
+import SearchInput from '../../shared/search/SearchInput';
+import useDebounce from '../../utils/useDebounce';
+import { Spinner } from '../../shared/Loading';
+import Paginate from '../Paginate';
 
 const paymentHeaders = [
-  { title: 'Select', col: 1 },
-  { title: 'Parcel Number', col: 2 },
-  { title: 'Amount/Payment Type', col: 2 },
-  { title: 'Due date', col: 1 },
-  { title: 'Payment made by', col: 3 },
-  { title: 'Invoice Status', col: 2 },
-  { title: 'Menu', col: 1 }
+  { title: 'CreatedBy', col: 2 },
+  { title: 'PaymentType', col: 1 },
+  { title: 'Amount', col: 2 },
+  { title: 'Paid date', col: 1 },
+  { title: 'chequeNumber', col: 2 }
 ];
-export default function PaymentList({ authState }) {
-  const history = useHistory();
-  const path = useParamsQuery();
-  const limit = 50;
-  const page = path.get('page');
-  const status = path.get('status');
-  const pageNumber = Number(page);
-  const [currentTile, setCurrentTile] = useState(status || '');
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
-    variables: { limit, offset: pageNumber, status },
+export default function PaymentList({ currency }) {
+  const limit = 50;
+  const path = useParamsQuery();
+  const page = path.get('page');
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
+  const history = useHistory()
+
+  const pageNumber = Number(page);
+  const { loading, data, error } = useQuery(PaymentsQuery, {
+    variables: { limit, offset: pageNumber, query: debouncedValue},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-  const invoiceStats = useQuery(InvoiceStatsQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
-  const currency = currencies[authState.user?.community.currency] || '';
 
-  function handleFilter(key) {
-    setCurrentTile(key);
-    const state = key === 'inProgress' ? 'in_progress' : key;
-    history.push(`/payments?page=0&status=${state}`);
-  }
-
-  function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget);
-  }
-
-  function handleClose() {
-    setAnchorEl(null);
-  }
+  function handleFilter(){}
 
   function paginate(action) {
     if (action === 'prev') {
       if (pageNumber < limit) return;
-      history.push(`/payments?page=${pageNumber - limit}&status=${status}`);
+      history.push(`/payments?tab=payment&page=${pageNumber - limit}`);
     } else if (action === 'next') {
-      if (invoicesData?.invoices.length < limit) return;
-      history.push(`/payments?page=${pageNumber + limit}&status=${status}`);
+      if (data?.payments.length < limit) return;
+      history.push(`/payments?tab=payment&page=${pageNumber + limit}`);
     }
   }
-  if (error && !invoicesData) {
+
+  if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-
   return (
-    <Container>
+    <div>
+      <SearchInput 
+        title='Payments' 
+        searchValue={searchValue} 
+        handleSearch={event => setSearchValue(event.target.value)} 
+        handleFilter={handleFilter} 
+      />
       <br />
-      <Grid container spacing={3}>
-        <InvoiceTiles
-          invoiceData={invoiceStats || []}
-          filter={handleFilter}
-          currentTile={currentTile}
-        />
-      </Grid>
-      <List>
-        {// eslint-disable-next-line no-nested-ternary
-        loading ? (
-          <Spinner />
-        ) : invoicesData?.invoices.length ? (
-          <div>
+      <br />
+      {
+          loading 
+          ? <Spinner /> 
+          : (
             <DataList
               keys={paymentHeaders}
-              data={renderPayments(invoicesData?.invoices, handleOpenMenu, currency)}
+              data={renderPayments(data?.payments, currency)}
+              hasHeader={false}
             />
-            <ActionMenu anchorEl={anchorEl} handleClose={handleClose} open={open}>
-              <MenuItem id="view-button" key="view-user">
-                View
-              </MenuItem>
-              <MenuItem id="edit-button" key="edit-user">
-                Edit
-              </MenuItem>
-              <MenuItem id="cancel-button" key="cancel-user" style={{ color: 'red' }}>
-                Cancel Invoice
-              </MenuItem>
-            </ActionMenu>
-          </div>
-        ) : (
-          <CenteredContent>No Invoices Yet</CenteredContent>
-        )
-}
-      </List>
-
-      <CenteredContent>
-        <Paginate
-          offSet={pageNumber}
-          limit={limit}
-          active={pageNumber >= 1}
-          handlePageChange={paginate}
-          count={invoicesData?.invoices.length}
-        />
-      </CenteredContent>
-    </Container>
+          )
+        }
+      {
+          data?.payments.length >= limit && (
+            <CenteredContent>
+              <Paginate
+                offSet={pageNumber}
+                limit={limit}
+                active={pageNumber >= 1}
+                handlePageChange={paginate}
+                count={data?.payments.length}
+              />
+            </CenteredContent>
+          )
+        }
+    </div>
   );
 }
 
-/**
- *
- * @param {object} payments list of tasks
- * @param {function} handleOpenMenu a function that opens the menu for each task
- * @param {String} currency community currency
- * @returns {object} an object with properties that DataList component uses to render
- */
-export function renderPayments(payments, handleOpenMenu, currency) {
-  // the following are for checkbox prototyping
-  function handleChange() {}
-  return payments.map(invoice => {
+export function renderPayments(payments, currency) {
+  return payments?.map(payment => {
     return {
-      Select: (
-        <Grid item xs={1}>
-          <Checkbox
-            checked={false}
-            onChange={handleChange}
-            inputProps={{
-              'aria-label': 'primary checkbox',
-              'data-testid': 'select_payment'
-            }}
-          />
+      'CreatedBy': (
+        <Grid item xs={4} md={2} data-testid="created_by">
+          {payment.user.name}
         </Grid>
       ),
-      'Parcel Number': (
-        <Grid item xs={2} data-testid="parcel_number">
-          {invoice.landParcel.parcelNumber}
+      PaymentType: (
+        <Grid item xs={4} md={2} data-testid="payment_type">
+          <span>{payment.paymentType}</span>
         </Grid>
       ),
-      'Amount/Payment Type': (
-        <Grid item xs={2}>
-          {invoice.payments.map(pay => (
-            <span key={pay.id}>{`${currency}${pay.amount} ${InvoiceType[pay.paymentType]}`}</span>
-          ))}
+      Amount: (
+        <Grid item xs={4} md={2}>
+          <span>{`Paid ${currency}${payment.amount || 0}`}</span>
         </Grid>
       ),
-      'Due date': (
-        <Grid item xs={1}>
-          {dateToString(invoice.dueDate)}
+
+      'Paid date': (
+        <Grid item xs={4} md={2}>
+          {dateToString(payment.createdAt)}
         </Grid>
       ),
-      'Payment made by': (
-        <Grid item xs={3}>
-          {invoice.payments.map(pay => (
-            <span key={pay.id}>
-              {pay.user.name}
-              {pay.length > 1 ? ',' : ''}
-            </span>
-          ))}
-        </Grid>
-      ),
-      'Invoice Status': (
-        <Grid item xs={2} data-testid="invoice_status">
-          <Label
-            title={propAccessor(invoiceStatus, invoice.status)}
-            color={propAccessor(InvoiceStatusColor, invoice.status)}
-          />
-        </Grid>
-      ),
-      Menu: (
-        <Grid item xs={1}>
-          <IconButton
-            style={{ marginRight: -120 }}
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleOpenMenu}
-          >
-            <MoreHorizIcon />
-          </IconButton>
+      'chequeNumber': (
+        <Grid item xs={4} md={2} data-testid="payment_cheque">
+          <span>{payment.chequeNumber || 'No cheque available'}</span>
         </Grid>
       )
     };
   });
 }
+
 PaymentList.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  authState: PropTypes.object.isRequired
+  currency: PropTypes.string.isRequired
 };

@@ -69,12 +69,27 @@ export const subStatus = {
   9: 'Ready for Construction'
 };
 
+export const paymentStatusColor = {
+  pending: '#3493FB',
+  settled: '#66A69B',
+  denied: '#E79040',
+  cancelled: '#E74540',
+}
+
+export const paymentStatus = {
+  pending: 'Pending',
+  settled: 'Settled',
+  denied: 'Denied',
+  cancelled: 'Cancelled'
+}
+
 export const invoiceStatus = {
   inProgress: 'In-Progress',
   paid: 'Paid',
   late: 'Late',
   cancelled: 'Cancelled',
-  in_progress: 'In-Progress'
+  in_progress: 'In-Progress',
+  settled: 'Settled'
 };
 
 export const entryReason = [

@@ -2,14 +2,18 @@
 
 # Payment Record
 class Payment < ApplicationRecord
+  include SearchCop
+
   belongs_to :user
-  belongs_to :invoice
+  has_many :payment_invoices, dependent: :destroy
+  has_many :invoices, through: :payment_invoices
 
-  VALID_TYPES = ['cash', 'cheque/cashier_cheque'].freeze
-
-  validates :payment_type, inclusion: { in: VALID_TYPES, allow_nil: false }
-  validates :bank_name, :cheque_number, presence: true,
-                                        if: -> { payment_type.eql?('cheque/cashier_cheque') }
+  search_scope :search do
+    attributes user: ['user.name', 'user.email', 'user.phone_number']
+  end
 
   enum payment_status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
+  VALID_TYPES = ['cash', 'cheque/cashier_cheque', 'wallet'].freeze
+
+  validates :payment_type, inclusion: { in: VALID_TYPES, allow_nil: false }
 end

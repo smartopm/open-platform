@@ -1,115 +1,152 @@
-import React, { useContext, useState } from 'react'
-import List from '@material-ui/core/List'
-import { useQuery } from 'react-apollo'
-import PropTypes from 'prop-types'
-import { useHistory } from 'react-router'
-import InvoiceItem from './InvoiceItem'
-import FloatButton from '../FloatButton'
-import InvoiceModal from './invoiceModal'
-import { formatError, useParamsQuery } from '../../utils/helpers'
-import { UserInvoicesQuery } from '../../graphql/queries'
-import { Spinner } from '../../shared/Loading'
-import CenteredContent from '../CenteredContent'
-import Paginate from '../Paginate'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import { currencies } from '../../utils/constants'
+import React, { useState } from 'react';
+import { Grid, List } from '@material-ui/core';
+import { useHistory } from 'react-router';
+import { useQuery } from 'react-apollo';
+import { string } from 'prop-types';
+import CenteredContent from '../CenteredContent';
+import Paginate from '../Paginate';
+import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
+import { Spinner } from '../../shared/Loading';
+import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor } from '../../utils/helpers';
+import { dateToString } from '../DateContainer';
+import { invoiceStatus } from '../../utils/constants';
+import InvoiceTiles from './InvoiceTiles';
+import DataList from '../../shared/list/DataList';
+import Label from '../../shared/label/Label';
+import SearchInput from '../../shared/search/SearchInput';
+import useDebounce from '../../utils/useDebounce';
 
-export default function InvoiceList({ userId, user }) {
-  const history = useHistory()
-  const path = useParamsQuery()
-  const authState = useContext(AuthStateContext)
-  const limit = 15
-  const tab = path.get('invoices')
-  const page = path.get('page')
-  const [offset, setOffset] = useState(Number(page) || 0)
-  const [open, setOpen] = useState(!!tab)
-  const { loading, data: invoicesData, error, refetch } = useQuery(
-    UserInvoicesQuery,
-    {
-      variables: { userId, limit, offset },
-    }
-  )
-  const currency = currencies[user.community.currency] || ''
+const invoiceHeaders = [
+  { title: 'CreatedBy', col: 2 },
+  { title: 'Parcel Number', col: 2 },
+  { title: 'Amount', col: 2 },
+  { title: 'Due date', col: 1 },
+  { title: 'Invoice Status', col: 2 }
+];
+export default function InvoiceList({ currency }) {
+  const history = useHistory();
+  const path = useParamsQuery();
+  const limit = 50;
+  const page = path.get('page');
+  const status = path.get('status');
+  const pageNumber = Number(page);
+  const [currentTile, setCurrentTile] = useState(status || '');
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
 
-  function handleModalOpen() {
-    history.push(`/user/${userId}?tab=Payments&invoices=new`)
-    setOpen(true)
-  }
+  const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
+    variables: { limit, offset: pageNumber, status, query: debouncedValue },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+  const invoiceStats = useQuery(InvoiceStatsQuery, {
+    fetchPolicy: 'cache-and-network'
+  });
 
-  function handleModalClose() {
-    history.push(`/user/${userId}?tab=Payments`)
-    setOpen(false)
+  function handleFilter(key) {
+    setCurrentTile(key);
+    const state = key === 'inProgress' ? 'in_progress' : key;
+    history.push(`/payments?page=0&status=${state}`);
   }
 
   function paginate(action) {
     if (action === 'prev') {
-      if (offset < limit) return
-      setOffset(offset - limit)
-      history.push(`/user/${userId}?tab=Payments&page=${offset - limit}`)
+      if (pageNumber < limit) return;
+      history.push(`/payments?page=${pageNumber - limit}&status=${status}`);
     } else if (action === 'next') {
-      setOffset(offset + limit)
-      history.push(`/user/${userId}?tab=Payments&page=${offset + limit}`)
+      if (invoicesData?.invoices.length < limit) return;
+      history.push(`/payments?page=${pageNumber + limit}&status=${status}`);
     }
   }
+  if (error && !invoicesData) {
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  }
 
-  if (loading) return <Spinner />
-  if (error && !invoicesData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <>
-      <InvoiceModal
-        open={open}
-        handleModalClose={handleModalClose}
-        userId={userId}
-        creatorId={user.id}
-        refetch={refetch}
-        currency={currency}
+      <SearchInput 
+        title='Invoices' 
+        searchValue={searchValue} 
+        handleSearch={event => setSearchValue(event.target.value)} 
+        handleFilter={handleFilter}
       />
+      <br />
+      <br />
+      <Grid container spacing={3}>
+        <InvoiceTiles
+          invoiceData={invoiceStats || []}
+          filter={handleFilter}
+          currentTile={currentTile}
+        />
+      </Grid>
       <List>
-        {invoicesData?.userInvoices.length
-          ? invoicesData?.userInvoices.map(invoice => (
-            <InvoiceItem
-              key={invoice.id}
-              invoice={invoice}
-              userId={userId}
-              creatorId={user.id}
-              refetch={refetch}
-              userType={authState.user?.userType}
-              currency={currency}
-            />
-            ))
-          : <CenteredContent>No Invoices Yet</CenteredContent>}
+        {
+        loading ? (
+          <Spinner />
+        ) :(
+          <DataList
+            keys={invoiceHeaders}
+            data={renderInvoices(invoicesData?.invoices, currency)}
+            hasHeader={false}
+          />
+)
+        }
       </List>
 
       <CenteredContent>
         <Paginate
-          offSet={offset}
+          offSet={pageNumber}
           limit={limit}
-          active={offset >= 1}
+          active={pageNumber >= 1}
           handlePageChange={paginate}
-          count={invoicesData?.userInvoices.length}
+          count={invoicesData?.invoices.length}
         />
       </CenteredContent>
-
-      {
-          authState.user?.userType === 'admin' && (
-            <FloatButton
-              data-testid="invoice_btn"
-              title="Add an Invoice"
-              handleClick={handleModalOpen}
-            />
-          )
-        }
     </>
-  )
+  );
 }
 
-InvoiceList.propTypes = {
-  userId: PropTypes.string.isRequired,
-  user: PropTypes.shape({
-    id: PropTypes.string,
-    userType: PropTypes.string,
-    community: PropTypes.shape({
-      currency: PropTypes.string
-    }).isRequired
-  }).isRequired
+/**
+ *
+ * @param {object} invoices list of tasks
+ * @param {function} handleOpenMenu a function that opens the menu for each task
+ * @param {String} currency community currency
+ * @returns {object} an object with properties that DataList component uses to render
+ */
+export function renderInvoices(invoices, currency) {
+  return invoices.map(invoice => {
+    return {
+      'CreatedBy': (
+        <Grid item xs={4} md={2} data-testid="created_by">
+          {invoice.user.name}
+        </Grid>
+      ),
+      'Parcel Number': (
+        <Grid item xs={4} md={2} data-testid="parcel_number">
+          {invoice.landParcel.parcelNumber}
+        </Grid>
+      ),
+      Amount: (
+        <Grid item xs={4} md={2} data-testid="invoice_amount">
+          <span>{`${currency}${invoice.amount}`}</span>
+        </Grid>
+      ),
+      'Due date': (
+        <Grid item xs={4} md={2}>
+          {dateToString(invoice.dueDate)}
+        </Grid>
+      ),
+      'Invoice Status': (
+        <Grid item xs={4} md={2} data-testid="invoice_status">
+          <Label
+            title={propAccessor(invoiceStatus, invoice.status)}
+            color={propAccessor(InvoiceStatusColor, invoice.status)}
+          />
+        </Grid>
+      )
+    };
+  });
 }
+InvoiceList.propTypes = {
+  currency: string.isRequired
+};

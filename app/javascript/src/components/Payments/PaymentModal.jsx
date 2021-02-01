@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
@@ -20,7 +20,7 @@ const initialValues = {
   chequeNumber: '',
 }
 
-export default function PaymentModal({ open, handleModalClose, invoiceData, userId, creatorId, refetch, currency }){
+export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -32,11 +32,9 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
     event.preventDefault()
     createPayment({
       variables: {
-        userId: creatorId,
-        invoiceId: invoiceData.id,
+        userId,
         amount: parseFloat(inputValue.amount),
         paymentType: inputValue.transactionType,
-        paymentStatus: inputValue.paymentStatus || 'pending',
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
       }
@@ -45,6 +43,7 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
       setIsSuccessAlert(true)
       handleModalClose()
       refetch()
+      depRefetch()
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
@@ -60,20 +59,6 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
     setMessageAlert('')
   }
 
-  function paymentAmount() {
-    const payAmount = invoiceData?.payments?.map(pay => pay.amount).reduce((prev, curr) => prev + curr, 0)
-    setInputValue({...inputValue, amount: (invoiceData?.amount - payAmount)})
-  }
-
-  useEffect(() => {
-    if (invoiceData?.payments?.length > 0) {
-      paymentAmount()
-    } else {
-      setInputValue({...inputValue, amount: invoiceData?.amount})
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
   return(
     <>
       <MessageAlert
@@ -87,7 +72,6 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
         handleModal={handleModalClose}
         dialogHeader='Make a Payment'
         handleBatchFilter={handleSubmit}
-        subHeader={`You are about to make a payment for parcel number ${invoiceData?.landParcel.parcelNumber}`}
       >
         <div className={classes.invoiceForm}>
           <TextField
@@ -139,18 +123,6 @@ export default function PaymentModal({ open, handleModalClose, invoiceData, user
                   value={inputValue.chequeNumber}
                   onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
                 />
-                <TextField
-                  margin="dense"
-                  id="payment-status"
-                  inputProps={{ "data-testid": "payment-status" }}
-                  value={inputValue.paymentStatus}
-                  onChange={(event) => setInputValue({...inputValue, paymentStatus: event.target.value})}
-                  name="paymentStatus"
-                  select
-                >
-                  <MenuItem value='pending'>Pending</MenuItem>
-                  <MenuItem value='settled'>Settled</MenuItem>
-                </TextField>
               </>
             )
           }
@@ -169,24 +141,13 @@ const useStyles = makeStyles({
 });
 
 PaymentModal.defaultProps = {
-  invoiceData: null
-}
+  depRefetch: () => {},
+ }
 PaymentModal.propTypes = {
-  invoiceData: PropTypes.shape({
-    amount: PropTypes.number,
-    id: PropTypes.string,
-    landParcel: PropTypes.shape({
-      parcelNumber: PropTypes.string
-    }),
-    payments: PropTypes.arrayOf(PropTypes.shape({ 
-      id: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired  
-    }))
-  }),
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
-  creatorId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
+  depRefetch: PropTypes.func,
   currency: PropTypes.string.isRequired
 }

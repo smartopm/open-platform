@@ -12,19 +12,19 @@ RSpec.describe Types::Queries::Payment do
                        status: 'in_progress')
     end
     let!(:payment_one) do
-      user.payments.create(user_id: user.id, amount: 100, payment_type: 'cash',
+      user.payments.create(amount: 100, payment_type: 'cash',
                            invoice_id: invoice_one.id)
     end
 
     let!(:payment_two) do
-      user.payments.create(user_id: user.id, amount: 200, payment_type: 'cash',
+      user.payments.create(amount: 200, payment_type: 'cash',
                            invoice_id: invoice_one.id)
     end
 
     let(:payments_query) do
       <<~GQL
         query {
-            payments(userId: "#{user.id}") {
+            payments {
                 id
                 amount
               }
@@ -35,7 +35,7 @@ RSpec.describe Types::Queries::Payment do
     let(:payment_query) do
       <<~GQL
         query {
-            payment(userId: "#{user.id}", paymentId: "#{payment_one.id}") {
+            payment(paymentId: "#{payment_one.id}") {
                 id
                 amount
               }
@@ -50,7 +50,7 @@ RSpec.describe Types::Queries::Payment do
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to be_nil
       expect(result.dig('data', 'payments').length).to eql 2
-      expect([payment_one.id, payment_two.id]).to include(result.dig('data', 'payments', 0, 'id'))
+      expect([payment_one.id, payment_two.id]).to include(result.dig('data', 'payments', 1, 'id'))
     end
 
     it 'should not retrieve list of payments if user is not admin' do

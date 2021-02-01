@@ -97,11 +97,7 @@ module Types::Queries::User
           .offset(offset).with_attached_avatar
     end
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def user_search(query: '', offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
 
