@@ -212,7 +212,8 @@ export const useStyles = makeStyles({
   },
   close: {
     float: 'right',
-    marginLeft: '40px',
+    marginTop: '2px',
+    marginLeft: '200px',
     cursor: 'pointer'
   }
 })

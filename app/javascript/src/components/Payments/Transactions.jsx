@@ -6,13 +6,16 @@ import { useHistory } from 'react-router'
 import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
-import { TransactionQuery, PendingInvoicesQuery } from '../../graphql/queries'
+import { TransactionQuery, PendingInvoicesQuery, AllTransactionQuery } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../utils/constants'
 import UserTransactionsList from './UserTransactions'
+import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
+import DepositList from './DepositList'
+import UserInvoiceItem from './UserInvoiceItem'
 
 export default function TransactionsList({ userId, user }) {
   const history = useHistory()
@@ -38,11 +41,25 @@ export default function TransactionsList({ userId, user }) {
       errorPolicy: 'all'
     }
   )
+
+  const { loading: invPayDataLoading, data: invPayData, error: invPayDataError,  refetch: depRefetch } = useQuery(
+    AllTransactionQuery,
+    {
+      variables: { userId, limit, offset },
+      errorPolicy: 'all'
+    }
+  )
+
   const currency = currencies[user.community.currency] || ''
+  const [tabValue, setTabValue] = useState('Invoices')
 
   function handleModalOpen() {
     history.push(`/user/${userId}?tab=Payments&invoices=new`)
     setOpen(true)
+  }
+
+  function handleChange(_event, newValue) {
+    setTabValue(newValue)
   }
 
   function handleModalClose() {
@@ -61,23 +78,70 @@ export default function TransactionsList({ userId, user }) {
     }
   }
 
-  if (loading || invLoading) return <Spinner />
+  if (invLoading) return <Spinner />
+  if (loading) return <Spinner />
+  if (invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invoiceError && !invoiceData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
+  if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
   return (
     <div>
+      <CenteredContent>
+        <StyledTabs
+          value={tabValue}
+          onChange={handleChange}
+          aria-label="Transactions tabs"
+        >
+          <StyledTab label="Invoices" value="Invoices" />
+          <StyledTab label="Payments" value="Payments" />
+          <StyledTab label="Transactions" value="Transactions" />
+        </StyledTabs>
+      </CenteredContent>
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
         userId={userId}
         creatorId={user.id}
         refetch={refetch}
+        invoiceRefetch={invoiceRefetch}
+        depRefetch={depRefetch}
         currency={currency}
       />
-      <UserTransactionsList 
-        transactions={invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) || []} 
-        currency={currency}  
-      />
+      <TabPanel value={tabValue} index="Transactions">
+        {invoiceData?.pendingInvoices.concat(transactionsData?.userWalletTransactions).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+          <UserTransactionsList 
+            transaction={trans || {}} 
+            currency={currency}
+            key={trans.id}
+            userId={userId}
+            refetch={refetch}
+            invoiceRefetch={invoiceRefetch}
+            depRefetch={depRefetch}
+          />
+      ))}
+      </TabPanel>
+      <TabPanel value={tabValue} index="Payments">
+        {
+          invPayData?.invoicesWithTransactions.payments.map((pay) => (
+            <DepositList
+              key={pay.id} 
+              payment={pay}
+              currency={currency}
+            />
+          ))
+        }
+      </TabPanel>
+      <TabPanel value={tabValue} index="Invoices">
+        {
+          invPayData?.invoicesWithTransactions.invoices.map((inv) => (
+            <UserInvoiceItem
+              key={inv.id} 
+              invoice={inv}
+              currency={currency}
+            />
+          ))
+        }
+      </TabPanel>
       <CenteredContent>
         <Paginate
           offSet={offset}

@@ -35,7 +35,7 @@ module Types::Queries::Invoice
       argument :limit, Integer, required: false
     end
     # Get pending invoice by for a user
-    field :pending_invoices, [Types::InvoiceType], null: true do
+    field :pending_invoices, [Types::PendingInvoiceType], null: true do
       description 'Get pending invoices for a user'
       argument :user_id, GraphQL::Types::ID, required: true
       argument :offset, Integer, required: false
@@ -88,7 +88,6 @@ module Types::Queries::Invoice
 
     {
       invoices: user.invoices,
-      deposits: user.wallet_transactions,
       payments: user.invoices.map(&:payments).flatten,
     }
   end
@@ -96,8 +95,7 @@ module Types::Queries::Invoice
   def pending_invoices(user_id:, offset: 0, limit: 100)
     user = verified_user(user_id)
 
-    user.invoices.in_progress.eager_load(:land_parcel)
-        .order(created_at: :desc).limit(limit).offset(offset)
+    cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
   end
 
   def invoice_stats
@@ -123,6 +121,18 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     user
+  end
+
+  def cumulate_pending_balance(invoices)
+    balance = 0
+    pending_invoices = []
+    invoices.reverse.each do |invoice|
+      invoice_data = invoice.attributes
+      balance += invoice.pending_amount
+      invoice_data['balance'] = balance
+      pending_invoices.push(invoice_data)
+    end
+    pending_invoices
   end
   # rubocop:enable Metrics/AbcSize
 end

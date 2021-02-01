@@ -1,43 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import DateContainer from '../DateContainer';
-import Text from '../../shared/Text';
 import DataList from '../../shared/list/DataList';
+import Text, { GridText } from '../../shared/Text';
+import { dateToString } from '../DateContainer';
+import TransactionDetails from './TransactionDetails'
 
 const depositHeader = [
-  { title: 'Type', col: 2 },
-  { title: 'Info', col: 4 },
-  { title: 'Date Created', col: 2 },
-  { title: 'Amount', col: 2 },
-  { title: 'Balance', col: 2 }
+  { title: 'Amount', col: 1 },
+  { title: 'Type', col: 1 },
+  { title: 'Date Created', col: 1 }
 ];
-export default function DepositList({ transactions }) {
-  if (!transactions.length) {
-    return <Text content="No deposits available yet" align="center" />;
+export default function DepositList({ payment, currency }) {
+  const [open, setOpen] = useState(false)
+  if (!Object.keys(payment).length) {
+    return <Text content="No Payment Available" align="center" />;
   }
-  return <DataList keys={depositHeader} data={renderDeposits(transactions)} />;
+  return (
+    <div>
+      <DataList keys={depositHeader} data={[renderDeposits(payment)]} hasHeader={false} clickable={{status: true}} handleClick={() => setOpen(true)} />
+      <TransactionDetails 
+        detailsOpen={open} 
+        handleClose={() => setOpen(false)} 
+        data={payment}
+        currency={currency}
+        title="Payment"
+      />
+    </div>
+  )
 }
 
-export function renderDeposits(transactions) {
-  return transactions.map(transaction => {
+export function renderDeposits(pay) {
     return {
-      Type: <Text content={transaction.type} />,
-      Info: <Text content={transaction.info} />,
-      'Date Created': <DateContainer data={transaction.created} />,
-      Amount: <Text content={transaction.amount} />,
-      Balance: <Text content={transaction.balance} />
+      Amount: <GridText content={pay.amount} />,
+      Type: <GridText content={pay.paymentType} />,
+      'Date Created': <GridText content={`Paid on ${dateToString(pay.createdAt)}`} />
     };
-  });
 }
 
 DepositList.propTypes = {
-  transactions: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.string.isRequired,
-      info: PropTypes.string.isRequired,
-      createdAt: PropTypes.instanceOf(Date),
-      amount: PropTypes.number.isRequired,
-      balance: PropTypes.number
-    })
-  ).isRequired
+  payment: PropTypes.shape({
+          paymentType: PropTypes.string.isRequired,
+          amount: PropTypes.number.isRequired,
+          createdAt: PropTypes.instanceOf(Date)
+    }).isRequired,
+    currency: PropTypes.string.isRequired
 };

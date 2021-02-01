@@ -748,23 +748,19 @@ export const InvoiceCreate = gql`
 export const PaymentCreate = gql`
   mutation PaymentCreate(
     $userId: ID!
-    $invoiceId: ID!
     $amount: Float!
     $paymentType: String!
-    $paymentStatus: String
     $bankName: String
     $chequeNumber: String
   ) {
     paymentCreate(
       userId: $userId
-      invoiceId: $invoiceId
       amount: $amount
       paymentType: $paymentType
-      paymentStatus: $paymentStatus
       bankName: $bankName
       chequeNumber: $chequeNumber
     ) {
-      payment {
+      payments {
         id
       }
     }
