@@ -1061,7 +1061,7 @@ export const PaymentsQuery = gql`
         createdAt
         paymentStatus
         paymentType
-        checkNumber
+        chequeNumber
         user {
           id
           name
