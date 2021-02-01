@@ -1,29 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { shape } from 'prop-types';
-import { a11yProps, StyledTabs, StyledTab, TabPanel } from '../Tabs';
+import { useHistory } from 'react-router';
+import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import InvoiceList from './InvoiceList';
 import authStateProps from '../../shared/types/authState';
 import PaymentList from './PaymentList';
 import { currencies } from '../../utils/constants';
+import { useParamsQuery } from '../../utils/helpers';
 
 export default function TabbedPayments({ authState }) {
-  const [value, setValue] = React.useState(0);
+  const path = useParamsQuery();
+  const tab = path.get('tab');
+  const [value, setValue] = useState(tab || 'invoice');
+  const history = useHistory()
   const currency = currencies[authState.user?.community.currency] || '';
 
   function handleChange(_event, newValue) {
+    history.push(`/payments?tab=${newValue}`);
     setValue(newValue);
   }
   return (
     <>
       <StyledTabs value={value} onChange={handleChange} aria-label="request tabs" centered>
-        <StyledTab label="Invoices" {...a11yProps(0)} />
-        <StyledTab label="Payments" {...a11yProps(1)} />
+        <StyledTab label="Invoices" value='invoice' />
+        <StyledTab label="Payments" value='payment' />
       </StyledTabs>
 
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index='invoice'>
         <InvoiceList currency={currency} />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index='payment'>
         <PaymentList currency={currency} />
       </TabPanel>
     </>

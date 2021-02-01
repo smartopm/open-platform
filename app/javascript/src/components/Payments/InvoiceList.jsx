@@ -117,27 +117,27 @@ export function renderInvoices(invoices, currency) {
   return invoices.map(invoice => {
     return {
       'CreatedBy': (
-        <Grid item xs={2} data-testid="created_by">
+        <Grid item xs={4} md={2} data-testid="created_by">
           {invoice.user.name}
         </Grid>
       ),
       'Parcel Number': (
-        <Grid item xs={2} data-testid="parcel_number">
+        <Grid item xs={4} md={2} data-testid="parcel_number">
           {invoice.landParcel.parcelNumber}
         </Grid>
       ),
       Amount: (
-        <Grid item xs={2} data-testid="invoice_amount">
+        <Grid item xs={4} md={2} data-testid="invoice_amount">
           <span>{`${currency}${invoice.amount}`}</span>
         </Grid>
       ),
       'Due date': (
-        <Grid item xs={1}>
+        <Grid item xs={4} md={2}>
           {dateToString(invoice.dueDate)}
         </Grid>
       ),
       'Invoice Status': (
-        <Grid item xs={2} data-testid="invoice_status">
+        <Grid item xs={4} md={2} data-testid="invoice_status">
           <Label
             title={propAccessor(invoiceStatus, invoice.status)}
             color={propAccessor(InvoiceStatusColor, invoice.status)}
