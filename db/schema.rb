@@ -461,7 +461,7 @@ ActiveRecord::Schema.define(version: 2021_01_27_074523) do
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id"
+    t.uuid "user_id", null: false
     t.uuid "invoice_id"
     t.string "payment_type"
     t.float "amount"
