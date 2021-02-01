@@ -59,12 +59,12 @@ export default function UserTransactionsList({ transaction, currency, userId, re
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Invoice Number': <GridText col={2} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice' }`} />,
-    Status: <GridText col={3} content={invoiceStatus[transaction.status] || 'In-Progress'} />,
-    'Date Created': <GridText col={3} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
-    Amount: <GridText content={`${currency}${transaction.amount}`} />,
-    Type: <GridText content={transaction.source || null} />,
-    Balance: <GridText content={transaction.__typename === 'WalletTransaction' ? `Balance of ${currency}${transaction.currentWalletBalance}`: `Balance of ${currency}${transaction.balance}`} />,
+    'Invoice Number': <GridText col={4} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice' }`} />,
+    Status: <GridText col={4} content={invoiceStatus[transaction.status] || 'In-Progress'} />,
+    'Date Created': <GridText col={4} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
+    Amount: <GridText col={4} content={`${currency}${transaction.amount}`} />,
+    Type: <GridText col={4} content={transaction.source || null} />,
+    Balance: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Balance of ${currency}${transaction.currentWalletBalance}`: `Balance of ${currency}${transaction.balance}`} />,
   };
 }
 

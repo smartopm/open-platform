@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # invoice queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Invoice
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -92,7 +93,7 @@ module Types::Queries::Invoice
     }
   end
 
-  def pending_invoices(user_id:, offset: 0, limit: 100)
+  def pending_invoices(user_id:)
     user = verified_user(user_id)
 
     cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
@@ -136,3 +137,4 @@ module Types::Queries::Invoice
   end
   # rubocop:enable Metrics/AbcSize
 end
+# rubocop:enable Metrics/ModuleLength

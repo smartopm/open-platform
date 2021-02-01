@@ -13,7 +13,7 @@ export default function Text({ content, otherProps }) {
 
 export function GridText({ content, otherProps, col }) {
   return (
-    <Grid xs={col || true} item>
+    <Grid xs={col || true} md={2} item>
       <Text content={content} {...otherProps} />
     </Grid>
   );

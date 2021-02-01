@@ -11,7 +11,7 @@ const invoiceHeader = [
   { title: 'Status', col: 1 },
   { title: 'Date Created', col: 1 }
 ];
-export default function UserInvoiceDetail({ invoice, currency }) {
+export default function UserInvoiceItem({ invoice, currency }) {
   const [open, setOpen] = useState(false);
   if (!Object.keys(invoice).length) {
     return <Text content="No Invoice Available" align="center" />;
@@ -44,7 +44,7 @@ export function renderInvoices(inv) {
   };
 }
 
-UserInvoiceDetail.propTypes = {
+UserInvoiceItem.propTypes = {
   invoice: PropTypes.shape({
     status: PropTypes.string,
     amount: PropTypes.number,
