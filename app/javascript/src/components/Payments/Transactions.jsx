@@ -36,14 +36,6 @@ export default function TransactionsList({ userId, user }) {
     }
   )
 
-  const { loading: invLoading, data: invoiceData, error: invoiceError, refetch: invoiceRefetch } = useQuery(
-    PendingInvoicesQuery,
-    {
-      variables: { userId, limit, offset },
-      errorPolicy: 'all'
-    }
-  )
-
   const { loading: invPayDataLoading, data: invPayData, error: invPayDataError,  refetch: depRefetch } = useQuery(
     AllTransactionQuery,
     {
@@ -80,12 +72,10 @@ export default function TransactionsList({ userId, user }) {
     }
   }
 
-  if (invLoading) return <Spinner />
   if (loading) return <Spinner />
   if (invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-  if (invoiceError && !invoiceData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
-  if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
+  if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   return (
     <div>
       <CenteredContent>
@@ -112,19 +102,18 @@ export default function TransactionsList({ userId, user }) {
         userId={userId}
         creatorId={user.id}
         refetch={refetch}
-        invoiceRefetch={invoiceRefetch}
         depRefetch={depRefetch}
         currency={currency}
       />
       <TabPanel value={tabValue} index="Transactions">
-        {invoiceData?.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
             key={trans.id}
           />
       ))}
-        {transactionsData?.userWalletTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {transactionsData?.userDeposits.transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
@@ -150,7 +139,6 @@ export default function TransactionsList({ userId, user }) {
         currency={currency} 
         refetch={refetch}
         depRefetch={depRefetch}
-        invoiceRefetch={invoiceRefetch}
       />
       <CenteredContent>
         <Paginate
@@ -158,7 +146,7 @@ export default function TransactionsList({ userId, user }) {
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={transactionsData?.userWalletTransactions.length}
+          count={transactionsData?.userDeposits.transactions.length}
         />
       </CenteredContent>
     </div>
