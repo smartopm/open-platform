@@ -49,9 +49,7 @@ module Types::Queries::Wallet
   end
 
   # It would be good to put this elsewhere to use it in other queries
-  # rubocop:disable Metrics/AbcSize
   def verified_user(user_id)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
                                                          context[:current_user].admin?
 
@@ -60,5 +58,4 @@ module Types::Queries::Wallet
 
     user
   end
-  # rubocop:enable Metrics/AbcSize
 end

@@ -19,6 +19,7 @@ module Types::Queries::Payment
       description 'return list of all payments'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :query, String, required: false
     end
   end
 
@@ -43,9 +44,9 @@ module Types::Queries::Payment
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
 
-  def payments(offset: 0, limit: 100)
+  def payments(query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    ::Payment.eager_load(:invoices).limit(limit).offset(offset)
+    ::Payment.search(query).eager_load(:invoices, :user).limit(limit).offset(offset)
   end
 end

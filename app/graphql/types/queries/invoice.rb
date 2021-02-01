@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # invoice queries
-# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Invoice
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -114,7 +113,6 @@ module Types::Queries::Invoice
   # It would be good to put this elsewhere to use it in other queries
 
   def verified_user(user_id)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
                                                          context[:current_user].admin?
 
@@ -137,4 +135,3 @@ module Types::Queries::Invoice
   end
   # rubocop:enable Metrics/AbcSize
 end
-# rubocop:enable Metrics/ModuleLength

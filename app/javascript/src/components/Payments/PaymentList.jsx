@@ -3,11 +3,9 @@ import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import { TransactionsQuery } from '../../graphql/queries';
-import Label from '../../shared/label/Label';
+import { PaymentsQuery } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
-import { paymentStatus, paymentStatusColor } from '../../utils/constants';
-import { formatError, propAccessor, useParamsQuery } from '../../utils/helpers';
+import { formatError, useParamsQuery } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
@@ -17,10 +15,10 @@ import Paginate from '../Paginate';
 
 const paymentHeaders = [
   { title: 'CreatedBy', col: 2 },
+  { title: 'PaymentType', col: 1 },
   { title: 'Amount', col: 2 },
-  { title: 'Balance', col: 1 },
   { title: 'Paid date', col: 1 },
-  { title: 'Status', col: 2 }
+  { title: 'chequeNumber', col: 2 }
 ];
 
 export default function PaymentList({ currency }) {
@@ -32,7 +30,7 @@ export default function PaymentList({ currency }) {
   const history = useHistory()
 
   const pageNumber = Number(page);
-  const { loading, data, error } = useQuery(TransactionsQuery, {
+  const { loading, data, error } = useQuery(PaymentsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -45,7 +43,7 @@ export default function PaymentList({ currency }) {
       if (pageNumber < limit) return;
       history.push(`/payments?tab=payment&page=${pageNumber - limit}`);
     } else if (action === 'next') {
-      if (data?.transactions.length < limit) return;
+      if (data?.payments.length < limit) return;
       history.push(`/payments?tab=payment&page=${pageNumber + limit}`);
     }
   }
@@ -69,20 +67,20 @@ export default function PaymentList({ currency }) {
           : (
             <DataList
               keys={paymentHeaders}
-              data={renderPayments(data?.transactions, currency)}
+              data={renderPayments(data?.payments, currency)}
               hasHeader={false}
             />
           )
         }
       {
-          data?.transactions.length >= limit && (
+          data?.payments.length >= limit && (
             <CenteredContent>
               <Paginate
                 offSet={pageNumber}
                 limit={limit}
                 active={pageNumber >= 1}
                 handlePageChange={paginate}
-                count={data?.transactions.length}
+                count={data?.payments.length}
               />
             </CenteredContent>
           )
@@ -99,27 +97,25 @@ export function renderPayments(payments, currency) {
           {payment.user.name}
         </Grid>
       ),
+      PaymentType: (
+        <Grid item xs={4} md={2} data-testid="payment_type">
+          <span>{payment.paymentType}</span>
+        </Grid>
+      ),
       Amount: (
         <Grid item xs={4} md={2}>
           <span>{`Paid ${currency}${payment.amount || 0}`}</span>
         </Grid>
       ),
-      Balance: (
-        <Grid item xs={4} md={2}>
-          <span>{`Balance of ${currency}${payment.currentWalletBalance || 0}`}</span>
-        </Grid>
-      ),
+
       'Paid date': (
         <Grid item xs={4} md={2}>
           {dateToString(payment.createdAt)}
         </Grid>
       ),
-      'Status': (
-        <Grid item xs={4} md={2} data-testid="payment_status">
-          <Label
-            title={propAccessor(paymentStatus, payment.status || 'pending')}
-            color={propAccessor(paymentStatusColor, payment.status || 'pending')}
-          />
+      'chequeNumber': (
+        <Grid item xs={4} md={2} data-testid="payment_cheque">
+          <span>{payment.chequeNumber || 'No cheque available'}</span>
         </Grid>
       )
     };
