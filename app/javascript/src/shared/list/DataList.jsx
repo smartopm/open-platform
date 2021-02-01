@@ -105,6 +105,7 @@ const useStyles = makeStyles(() => ({
     padding: '15px 0',
     border: '1px solid #ECECEC',
     cursor: 'pointer',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: '10px'
   }
 }));

@@ -7,8 +7,6 @@ import { dateToString } from '../DateContainer';
 import CenteredContent from '../CenteredContent';
 import { invoiceStatus } from '../../utils/constants'
 import TransactionDetails from './TransactionDetails'
-import ButtonComponent from '../../shared/Button'
-import PaymentModal from './PaymentModal'
 
 const transactionHeader = [
   { title: 'Invoice Number', col: 1 },
@@ -18,33 +16,20 @@ const transactionHeader = [
   { title: 'Type', col: 1 },
   { title: 'Balance', col: 1 }
 ];
-export default function UserTransactionsList({ transaction, currency, userId, refetch, depRefetch, invoiceRefetch }) {
+export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
-  const [payOpen, setPayOpen] = useState(false)
 
   if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
     return <CenteredContent><Text content="No Transactions Yet" align="justify" /></CenteredContent>
   }
   return (
     <div>
-      <div style={{display: 'flex'}}>
-        <DataList 
-          keys={transactionHeader} 
-          data={[renderTransactions(transaction, currency)]} 
-          hasHeader={false} 
-          clickable={{status: true}}
-          handleClick={() => setOpen(true)} 
-        />
-        <ButtonComponent color='primary' buttonText='make payment' handleClick={() => setPayOpen(true)} />
-      </div>
-      <PaymentModal 
-        open={payOpen}
-        handleModalClose={() => setPayOpen(false)}
-        userId={userId}
-        currency={currency} 
-        refetch={refetch}
-        depRefetch={depRefetch}
-        invoiceRefetch={invoiceRefetch}
+      <DataList 
+        keys={transactionHeader} 
+        data={[renderTransactions(transaction, currency)]} 
+        hasHeader={false} 
+        clickable={{status: true}}
+        handleClick={() => setOpen(true)} 
       />
       <TransactionDetails 
         detailsOpen={open} 
@@ -69,16 +54,7 @@ export function renderTransactions(transaction, currency) {
 }
 
 UserTransactionsList.propTypes = {
-  transaction: PropTypes.shape({
-    status: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
-    updatedAt: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
-    balance: PropTypes.number
-  }).isRequired,
-  userId: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired,
-  depRefetch: PropTypes.func.isRequired,
-  invoiceRefetch: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  transaction: PropTypes.object.isRequired,
   currency: PropTypes.string.isRequired
 };
