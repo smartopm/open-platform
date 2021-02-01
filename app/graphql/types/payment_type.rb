@@ -10,6 +10,7 @@ module Types
     field :bank_name, String, null: true
     field :cheque_number, String, null: true
     field :invoices, [Types::InvoiceType], null: false
+    field :user, Types::UserType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end
