@@ -86,7 +86,6 @@ export default function TransactionsList({ userId, user }) {
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invoiceError.message)}</CenteredContent>
   return (
     <div>
-      {console.log(invPayData)}
       <CenteredContent>
         <StyledTabs
           value={tabValue}
@@ -114,6 +113,10 @@ export default function TransactionsList({ userId, user }) {
             transaction={trans || {}} 
             currency={currency}
             key={trans.id}
+            userId={userId}
+            refetch={refetch}
+            invoiceRefetch={invoiceRefetch}
+            depRefetch={depRefetch}
           />
       ))}
       </TabPanel>

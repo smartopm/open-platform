@@ -8,7 +8,6 @@ import TransactionDetails from './TransactionDetails'
 const depositHeader = [
   { title: 'Amount', col: 1 },
   { title: 'Type', col: 1 },
-  { title: 'Status', col: 1 },
   { title: 'Date Created', col: 1 }
 ];
 export default function DepositList({ payment, currency }) {
@@ -34,7 +33,6 @@ export function renderDeposits(pay) {
     return {
       Amount: <GridText content={pay.amount} />,
       Type: <GridText content={pay.paymentType} />,
-      Status: <GridText content={pay.paymentStatus} />,
       'Date Created': <GridText content={`Paid on ${dateToString(pay.createdAt)}`} />
     };
 }

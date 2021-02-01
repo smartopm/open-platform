@@ -26,7 +26,7 @@ export  default function TransactionDetails({ data, detailsOpen, handleClose, cu
       >
         {
           Object.entries(data).filter(([key]) => ( 
-            key !== 'updatedAt' && key !== 'id' && key !== '__typename' && key !== 'destination' && key !== 'pendingAmount')).map(([key, val]) => (
+            key !== 'updatedAt' && key !== 'id' && key !== '__typename' && key !== 'destination' && key !== 'pendingAmount' && key !== 'paymentStatus')).map(([key, val]) => (
               <DetailsField
                 key={key}
                 title={propAccessor(detailsField, key)}
