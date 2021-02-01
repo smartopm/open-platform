@@ -1053,14 +1053,19 @@ export const TransactionsQuery = gql`
   }
 `
 export const PaymentsQuery = gql`
-    query allPayments {
-      payments{
+    query allPayments($limit: Int, $offset: Int, $query: String) {
+      payments(limit: $limit, offset: $offset, query: $query) {
         id
         amount
         bankName
         createdAt
         paymentStatus
         paymentType
+        checkNumber
+        user {
+          id
+          name
+        }
       }
     }
 `
