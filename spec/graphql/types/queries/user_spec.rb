@@ -414,8 +414,8 @@ RSpec.describe Types::Queries::User do
       %(
           query subs {
             substatusQuery {
-              applied
-              approved
+              plotsFullyPurchased
+              eligibleToStartConstruction
             }
           })
     end
@@ -447,8 +447,8 @@ RSpec.describe Types::Queries::User do
                                        }).as_json
       expect(result['errors']).to be_nil
       # returned result for non existing substatus is nil instead of 0
-      expect(result.dig('data', 'substatusQuery', 'applied')).to be_nil
-      expect(result.dig('data', 'substatusQuery', 'approved')).to be_nil
+      expect(result.dig('data', 'substatusQuery', 'plotsFullyPurchased')).to be_nil
+      expect(result.dig('data', 'substatusQuery', 'eligibleToStartConstruction')).to be_nil
     end
 
     it 'should not query the substatus report when user is not admin' do

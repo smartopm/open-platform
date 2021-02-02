@@ -17,16 +17,14 @@ describe('Substatus component', () => {
       result: {
         data: {
           substatusQuery: {
-            applied: 0,
-            approved: 0,
-            architectureReviewed: 2,
-            interested: 0,
-            built: 0,
-            contracted: 0,
-            inConstruction: 0,
-            movedIn: 0,
-            paying: 0,
-            readyForConstruction: 0
+            plotsFullyPurchased: 4,
+            eligibleToStartConstruction: 0,
+            floorPlanPurchased: 0,
+            constructionApproved: 0,
+            constructionInProgress: 0,
+            constructionCompleted: 0,
+            census: 0,
+            workersOnSite: 0,
           }
         }
       }
@@ -45,12 +43,12 @@ describe('Substatus component', () => {
     expect(container.queryByText('Substatus')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(container.queryByText('Architecture Reviewed')).toBeInTheDocument();
-      expect(container.queryByText('Approved')).toBeInTheDocument();
-      expect(container.queryByText('Applied')).toBeInTheDocument();
-      expect(container.queryByText('Interested')).toBeInTheDocument();
-      expect(container.queryByText('In Construction')).toBeInTheDocument();
-      expect(container.queryByText('Moved-In')).toBeInTheDocument();
+      expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument();
+      expect(container.queryByText('Eligible to start Construction')).toBeInTheDocument();
+      expect(container.queryByText('Construction Approved')).toBeInTheDocument();
+      expect(container.queryByText('Construction in Progress')).toBeInTheDocument();
+      expect(container.queryByText('Construction Completed')).toBeInTheDocument();
+      expect(container.queryByText('Census')).toBeInTheDocument();
     }, 200);
   });
 });
