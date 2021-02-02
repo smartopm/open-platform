@@ -104,16 +104,14 @@ class User < ApplicationRecord
   DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
   enum sub_status: {
-    applied: 0,
-    architecture_reviewed: 1,
-    approved: 2,
-    contracted: 3,
-    built: 4,
-    in_construction: 5,
-    interested: 6,
-    moved_in: 7,
-    paying: 8,
-    ready_for_construction: 9,
+    plots_fully_purchased: 0,
+    eligible_to_start_construction: 1,
+    floor_plan_purchased: 2,
+    construction_approved: 3,
+    construction_in_progress: 4,
+    construction_completed: 5,
+    census: 6,
+    workers_on_site: 7,
   }
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }

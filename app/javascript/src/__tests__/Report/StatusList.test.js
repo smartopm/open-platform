@@ -6,16 +6,14 @@ import { userSubStatus } from '../../utils/constants';
 
 describe('Status List Component', () => {
   const list = {
-    applied: 4,
-    approved: 4,
-    architectureReviewed: 2,
-    interested: null,
-    built: null,
-    contracted: 1,
-    inConstruction: 0,
-    movedIn: 4,
-    paying: null,
-    readyForConstruction: 1
+    plotsFullyPurchased: 4,
+    eligibleToStartConstruction: 1,
+    floorPlanPurchased: 2,
+    constructionApproved: null,
+    constructionInProgress: null,
+    constructionCompleted: 1,
+    census: 0,
+    workersOnSite: 0,
   };
 
   it('should render a list of status with correct count', () => {
@@ -24,12 +22,12 @@ describe('Status List Component', () => {
     expect(container.queryAllByText('0')[0]).toBeInTheDocument();
     expect(container.queryAllByText('0')).toHaveLength(4);
     expect(container.queryAllByText('1')).toHaveLength(2);
-    expect(container.queryAllByText('4')).toHaveLength(3);
-    expect(container.queryByText('Architecture Reviewed')).toBeInTheDocument();
-    expect(container.queryByText('Approved')).toBeInTheDocument();
-    expect(container.queryByText('Applied')).toBeInTheDocument();
-    expect(container.queryByText('Interested')).toBeInTheDocument();
-    expect(container.queryByText('In Construction')).toBeInTheDocument();
-    expect(container.queryByText('Moved-In')).toBeInTheDocument();
+    expect(container.queryAllByText('4')).toHaveLength(1);
+    expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument();
+    expect(container.queryByText('Eligible to start Construction')).toBeInTheDocument();
+    expect(container.queryByText('Construction Approved')).toBeInTheDocument();
+    expect(container.queryByText('Construction in Progress')).toBeInTheDocument();
+    expect(container.queryByText('Construction Completed')).toBeInTheDocument();
+    expect(container.queryByText('Census')).toBeInTheDocument();
   });
 });

@@ -37,6 +37,9 @@ export default function UserStyledTabs({ tabValue, handleChange, userType }) {
         !['security_guard'].includes(userType) &&
         <StyledTab label="Payments" value={'Payments'} />
       }
+       {['admin'].includes(userType) && (
+        <StyledTab label="Customer Journey" value={'CustomerJourney'} />
+      )}
     </StyledTabs>
   )
 }
