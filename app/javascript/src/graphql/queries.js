@@ -1015,6 +1015,14 @@ export const AllTransactionQuery = gql`
   }
 `;
 
+export const UserBalance = gql`
+  query UserBalance($userId: ID!) {
+    userBalance(userId: $userId) {
+      wallet
+    }
+  }
+`;
+
 export const TransactionQuery = gql`
   query userTransactions($userId: ID!) {
     userDeposits(userId: $userId) {

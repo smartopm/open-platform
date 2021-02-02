@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
+import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
-import FloatButton from '../FloatButton'
 import InvoiceModal from './invoiceModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
-import { TransactionQuery, PendingInvoicesQuery, AllTransactionQuery } from '../../graphql/queries'
+import { TransactionQuery, AllTransactionQuery, UserBalance } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
 import Paginate from '../Paginate'
@@ -30,6 +30,14 @@ export default function TransactionsList({ userId, user }) {
   const [payOpen, setPayOpen] = useState(false)
   const { loading, data: transactionsData, error, refetch } = useQuery(
     TransactionQuery,
+    {
+      variables: { userId, limit, offset },
+      errorPolicy: 'all'
+    }
+  )
+
+  const { loading: walletLoading, data: walletData, error: walletError, refetch: walletRefetch } = useQuery(
+    UserBalance,
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all'
@@ -73,9 +81,11 @@ export default function TransactionsList({ userId, user }) {
   }
 
   if (loading) return <Spinner />
+  if (walletLoading) return <Spinner />
   if (invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
+  if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   return (
     <div>
       {console.log(invPayData)}
@@ -95,6 +105,7 @@ export default function TransactionsList({ userId, user }) {
               <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
             )
           }
+          <Typography>{walletData.wallet}</Typography>
         </div>
       </CenteredContent>
       <InvoiceModal
