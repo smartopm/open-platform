@@ -502,6 +502,9 @@ export const ParcelQuery = gql`
         id
         fullName
         address1
+        user {
+          id
+        }
       }
     }
   }
@@ -968,6 +971,14 @@ export const LandParcel = gql`
         startDate
         createdAt
       }
+      accounts {
+        id
+        fullName
+        address1
+        user {
+          id
+        }
+      }
     }
   }
 `
@@ -1008,7 +1019,7 @@ export const AllTransactionQuery = gql`
         landParcel {
           id
           parcelNumber
-        } 
+        }
       }
       payments {
         id
