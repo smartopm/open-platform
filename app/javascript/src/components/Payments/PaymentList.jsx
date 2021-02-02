@@ -119,7 +119,7 @@ export function renderPayments(payments, currency) {
           // eslint-disable-next-line no-nested-ternary
           payment.paymentType === 'cash' 
             ? '-'
-            : payment.chequeNumber ? `${payment.chequeNumber} - ${payment.bankName}` : '-'
+            : payment.chequeNumber ? `${payment.bankName} - ${payment.chequeNumber}` : '-'
           }
           </span>
         </Grid>

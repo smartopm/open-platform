@@ -920,6 +920,7 @@ export const InvoicesQuery = gql`
       dueDate
       createdAt
       updatedAt
+      pendingAmount
       user {
         id
         name
@@ -927,6 +928,11 @@ export const InvoicesQuery = gql`
       landParcel {
         id
         parcelNumber
+      }
+      payments {
+        id
+        createdAt
+        amount
       }
     }
   }
