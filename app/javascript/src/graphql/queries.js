@@ -918,6 +918,8 @@ export const InvoicesQuery = gql`
       status
       description
       dueDate
+      createdAt
+      updatedAt
       user {
         id
         name

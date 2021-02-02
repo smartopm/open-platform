@@ -20,6 +20,7 @@ const invoiceHeaders = [
   { title: 'CreatedBy', col: 2 },
   { title: 'Parcel Number', col: 2 },
   { title: 'Amount', col: 2 },
+  { title: 'Issued date', col: 1 },
   { title: 'Due date', col: 1 },
   { title: 'Invoice Status', col: 2 }
 ];
@@ -131,9 +132,20 @@ export function renderInvoices(invoices, currency) {
           <span>{`${currency}${invoice.amount}`}</span>
         </Grid>
       ),
+      'Issued date': (
+        <Grid item xs={4} md={2}>
+          <span>
+            {`Isssued: ${dateToString(invoice.createdAt)}`}
+          </span>
+          <br />
+          <span>
+            {invoice.status === 'paid' && `Paid: ${dateToString(invoice.updatedAt)} `}
+          </span>
+        </Grid>
+      ),
       'Due date': (
         <Grid item xs={4} md={2}>
-          {dateToString(invoice.dueDate)}
+          {`Due: ${dateToString(invoice.dueDate)}`}
         </Grid>
       ),
       'Invoice Status': (
