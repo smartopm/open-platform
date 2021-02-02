@@ -10,21 +10,19 @@ class Wallet < ApplicationRecord
     self.currency = DEFAULT_CURRENCY if currency.nil?
   end
 
-  # rubocop:disable Metrics/MethodLength
-  def settle_pending_balance(amount, source, user_id)
+  def settle_pending_balance(amount, _source, _user_id)
     if amount > pending_balance
       credited_amount = amount - pending_balance
       update(pending_balance: 0, balance: balance + credited_amount)
-      user.wallet_transactions.create!({
-                                         source: source, destination: 'wallet',
-                                         amount: credited_amount, status: 'settled',
-                                         user_id: user_id, current_wallet_balance: balance
-                                       })
+      # user.wallet_transactions.create!({
+      #                                    source: source, destination: 'wallet',
+      #                                    amount: credited_amount, status: 'settled',
+      #                                    user_id: user_id, current_wallet_balance: balance
+      #                                  })
     else
       update(pending_balance: pending_balance - amount)
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def update_balance(amount, type = 'credit')
     return credit_amount(amount) if type.eql?('credit')

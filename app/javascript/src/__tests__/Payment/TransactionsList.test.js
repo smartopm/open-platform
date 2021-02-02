@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import TransactionsList from '../../components/Payments/Transactions';
-import { TransactionQuery, PendingInvoicesQuery, AllTransactionQuery } from '../../graphql/queries';
+import { TransactionQuery, UserBalance, AllTransactionQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../utils/helpers';
@@ -42,32 +42,17 @@ describe('Transactions Component', () => {
         }
       }
     };
-
     const pendingInvoicesMock = {
       request: {
-        query: PendingInvoicesQuery,
+        query: UserBalance,
         variables: { userId, limit: 15, offset: 0 }
       },
       result: {
         data: {
-          pendingInvoices: [
-            {
-              amount: 200,
-              status: 'settled',
-              createdAt: '2021-01-21',
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-            },
-            {
-              amount: 344,
-              status: 'settled',
-              createdAt: '2020-12-23',
-              id: 'ec289778-8d32-4ec6-ba69-313058e61c19',
-            }
-          ]
+          userBalance: '2000'
         }
       }
     };
-
     const pendingDepositMock = {
       request: {
         query: AllTransactionQuery,
@@ -80,20 +65,25 @@ describe('Transactions Component', () => {
               amount: 200,
               status: 'paid',
               createdAt: '2021-01-21',
+              updatedAt: '2021-01-21',
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+              landParcel: {
+                id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+                parcelNumber: 'Test123'
+              }
             }],
             payments: [{
               amount: 344,
               paymentStatus: 'settled',
               paymentType: 'cash',
               createdAt: '2020-12-23',
-              id: 'ec289778-8d32-4ec6-ba69-313058e61c19',
+              updatedAt: '2021-01-21',
+              id: 'ec289778-8d32-4ec6-ba69-313058e61c19'
               }]
           }
         }
       }
     };
-
     const user = {
       id: '939453bef34-f3',
       community: {
@@ -102,7 +92,10 @@ describe('Transactions Component', () => {
     };
 
     const container = render(
-      <MockedProvider mocks={[transactionsMock, pendingInvoicesMock, pendingDepositMock]} addTypename={false}>
+      <MockedProvider
+        mocks={[transactionsMock, pendingInvoicesMock, pendingDepositMock]}
+        addTypename={false}
+      >
         <AuthStateProvider>
           <BrowserRouter>
             <TransactionsList userId={userId} user={user} />
@@ -117,7 +110,7 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('Paid')).toBeInTheDocument();
+        expect(container.queryByText('Paid on 2021-01-21')).toBeInTheDocument();
         expect(container.queryByText('Issued on 2021-01-21')).toBeInTheDocument();
       },
       { timeout: 100 }

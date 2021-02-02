@@ -68,26 +68,17 @@ module Types::Queries::Invoice
 
   # rubocop:disable Metrics/AbcSize
   def user_invoices(user_id:, offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
-                                                         context[:current_user].admin?
-
-    user = User.allowed_users(context[:current_user]).find(user_id)
-    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+    user = verified_user(user_id)
 
     user.invoices.eager_load(:land_parcel, :payments)
         .order(created_at: :desc).limit(limit).offset(offset)
   end
 
   def invoices_with_transactions(user_id:, _offset: 0, _limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
-                                                         context[:current_user]&.id == user_id
-
-    user = User.allowed_users(context[:current_user]).find(user_id)
-    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+    user = verified_user(user_id)
 
     {
-      invoices: user.invoices,
+      invoices: user.invoices.eager_load(:land_parcel, :payments),
       payments: user.invoices.map(&:payments).flatten,
     }
   end
@@ -113,6 +104,7 @@ module Types::Queries::Invoice
   # It would be good to put this elsewhere to use it in other queries
 
   def verified_user(user_id)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
                                                          context[:current_user].admin?
 

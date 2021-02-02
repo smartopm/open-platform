@@ -918,6 +918,9 @@ export const InvoicesQuery = gql`
       status
       description
       dueDate
+      createdAt
+      updatedAt
+      pendingAmount
       user {
         id
         name
@@ -925,6 +928,11 @@ export const InvoicesQuery = gql`
       landParcel {
         id
         parcelNumber
+      }
+      payments {
+        id
+        createdAt
+        amount
       }
     }
   }
@@ -996,6 +1004,11 @@ export const AllTransactionQuery = gql`
         amount
         status
         createdAt
+        updatedAt
+        landParcel {
+          id
+          parcelNumber
+        } 
       }
       payments {
         id
@@ -1005,6 +1018,12 @@ export const AllTransactionQuery = gql`
         createdAt
       }
     }
+  }
+`;
+
+export const UserBalance = gql`
+  query UserBalance($userId: ID!) {
+    userBalance(userId: $userId)
   }
 `;
 

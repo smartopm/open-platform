@@ -4,12 +4,13 @@ import DataList from '../../shared/list/DataList';
 import Text, { GridText } from '../../shared/Text';
 import { dateToString } from '../DateContainer';
 import { invoiceStatus } from '../../utils/constants';
-import TransactionDetails from './TransactionDetails';
+import InvoiceDetails from './InvoiceDetail';
 
 const invoiceHeader = [
+  { title: 'Date Created', col: 1 },
   { title: 'Amount', col: 1 },
   { title: 'Status', col: 1 },
-  { title: 'Date Created', col: 1 }
+  { title: 'Plot Number', col: 1 },
 ];
 export default function UserInvoiceItem({ invoice, currency }) {
   const [open, setOpen] = useState(false);
@@ -25,12 +26,11 @@ export default function UserInvoiceItem({ invoice, currency }) {
         clickable={{ status: true }}
         handleClick={() => setOpen(true)}
       />
-      <TransactionDetails
+      <InvoiceDetails
         detailsOpen={open}
         handleClose={() => setOpen(false)}
         data={invoice}
         currency={currency}
-        title="Invoice"
       />
     </div>
   );
@@ -38,9 +38,10 @@ export default function UserInvoiceItem({ invoice, currency }) {
 
 export function renderInvoices(inv) {
   return {
+    'Date Created': <GridText content={`Issued on ${dateToString(inv.createdAt)}`} />,
+    Status: <GridText content={inv.status === 'paid' ? `Paid on ${dateToString(inv.updatedAt)}` : invoiceStatus[inv.status]} />,
     Amount: <GridText content={inv.amount} />,
-    Status: <GridText content={invoiceStatus[inv.status]} />,
-    'Date Created': <GridText content={`Issued on ${dateToString(inv.createdAt)}`} />
+    'Plot Number': <GridText content={inv.landParcel.parcelNumber} />
   };
 }
 
