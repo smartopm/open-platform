@@ -9,11 +9,10 @@ import { invoiceStatus } from '../../utils/constants'
 import TransactionDetails from './TransactionDetails'
 
 const transactionHeader = [
+  { title: 'Date Created', col: 1 },
   { title: 'Invoice Number', col: 1 },
   { title: 'Status', col: 1 },
-  { title: 'Date Created', col: 1 },
   { title: 'Amount', col: 1 },
-  { title: 'Type', col: 1 },
   { title: 'Balance', col: 1 }
 ];
 export default function UserTransactionsList({ transaction, currency }) {
@@ -44,12 +43,11 @@ export default function UserTransactionsList({ transaction, currency }) {
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Invoice Number': <GridText col={4} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice' }`} />,
-    Status: <GridText col={4} content={invoiceStatus[transaction.status] || 'In-Progress'} />,
     'Date Created': <GridText col={4} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
+    'Invoice Number': <GridText col={4} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Deposit' : 'Invoice' }`} />,
+    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : transaction.source}` : 'In-Progress'} />,
     Amount: <GridText col={4} content={`${currency}${transaction.amount}`} />,
-    Type: <GridText col={4} content={transaction.source || null} />,
-    Balance: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Balance of ${currency}${transaction.currentWalletBalance}`: `Balance of ${currency}${transaction.balance}`} />,
+    Balance: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Balance of ${currency}${transaction.currentWalletBalance}` : `Balance of ${currency}${transaction.balance}`} />,
   };
 }
 
