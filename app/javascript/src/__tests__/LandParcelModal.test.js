@@ -43,4 +43,33 @@ describe('Land Parcel Modal Component', () => {
     fireEvent.change(owner, { target: { value: 'Owner Name' } })
     expect(owner.value).toBe('Owner Name')
   })
+
+  it('it should not allow adding new items if in "details" mode until edit-btn is clicked', () => {
+    const props = {
+      open: true,
+      handelClose: jest.fn,
+      modalType: 'details',
+      landParcel: {
+        id: '1u2y3y4',
+        parcelNumber: '15800'
+      }
+    }
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <LandParcelModal {...props} />
+        </BrowserRouter>
+      </MockedProvider>)
+
+    expect(container.queryByText('Add Valuation')).toBeNull()
+    expect(container.queryByText('New Owner')).toBeNull()
+
+    fireEvent.click(container.queryByText('Edit Parcel'))
+    expect(container.queryByText('Add Valuation')).toBeInTheDocument()
+    expect(container.queryByText('New Owner')).toBeInTheDocument()
+
+    const parcelNumber = container.queryByTestId('parcel-number')
+    fireEvent.change(parcelNumber, { target: { value: '12345' } })
+    expect(parcelNumber.value).toBe('12345')
+  })
 })

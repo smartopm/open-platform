@@ -8,6 +8,7 @@ RSpec.describe Mutations::LandParcel do
     let!(:user_parcel) do
       create(:land_parcel, community_id: current_user.community_id)
     end
+    let!(:normal_user) { create(:user_with_community) }
     let(:query) do
       <<~GQL
         mutation AddPlotNumber($userId: ID!, $accountId: ID, $parcelNumber: String!) {
@@ -43,6 +44,45 @@ RSpec.describe Mutations::LandParcel do
           $valuationFields: JSON
           $ownershipFields: JSON) {
             PropertyCreate(parcelNumber: $parcelNumber,
+            address1: $address1,
+            address2: $address2,
+            city: $city,
+            postalCode: $postalCode,
+            stateProvince: $stateProvince,
+            parcelType: $parcelType,
+            country: $country,
+            valuationFields: $valuationFields
+            ownershipFields: $ownershipFields) {
+              landParcel {
+                id
+                valuations {
+                  amount
+                }
+                accounts {
+                  fullName
+                  address1
+                }
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:propertyUpdateQuery) do
+      <<~GQL
+        mutation UpdateProperty($id: ID!,
+          $parcelNumber: String!,
+          $address1: String,
+          $address2: String,
+          $city: String,
+          $postalCode: String,
+          $stateProvince: String,
+          $parcelType: String,
+          $country: String,
+          $valuationFields: JSON
+          $ownershipFields: JSON) {
+            propertyUpdate(id: $id,
+            parcelNumber: $parcelNumber,
             address1: $address1,
             address2: $address2,
             city: $city,
@@ -152,6 +192,65 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('errors', 0, 'message')).to eq(
         'Validation failed: Start date can\'t be in the past',
       )
+    end
+
+    it 'updates a property' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+      }
+
+      result = DoubleGdpSchema.execute(
+        propertyUpdateQuery,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      parcel = LandParcel.find(user_parcel.id)
+      expect(parcel.parcel_number).to eq('#new123')
+      expect(parcel.valuations.first.amount).to eq(200)
+      expect(parcel.accounts.first.full_name).to eq('new name')
+      expect(result['errors']).to be_nil
+    end
+
+    it 'raises an error if non-admin tries to update a property' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+      }
+
+      result = DoubleGdpSchema.execute(propertyUpdateQuery, variables: variables,
+                                                            context: {
+                                                              current_user: normal_user,
+                                                              site_community: normal_user.community,
+                                                            }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end
