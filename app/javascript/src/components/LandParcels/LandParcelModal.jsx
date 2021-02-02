@@ -145,7 +145,7 @@ export default function LandParcelModal({
 
   function landParcelOwners(parcel) {
     return parcel.accounts.map(owner => {
-      return { name: owner.fullName, address: owner.address1 };
+      return { name: owner.fullName, address: owner.address1, userId: owner.user.id };
     });
   }
 
