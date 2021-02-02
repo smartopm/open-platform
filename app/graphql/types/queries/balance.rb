@@ -12,6 +12,7 @@ module Types::Queries::Balance
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def user_balance(user_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          user_id.eql?(context[:current_user]&.id)
@@ -22,4 +23,5 @@ module Types::Queries::Balance
     wallet = user.wallet
     wallet.pending_balance.positive? ? -wallet.pending_balance : wallet.balance
   end
+  # rubocop:enable Metrics/AbcSize
 end
