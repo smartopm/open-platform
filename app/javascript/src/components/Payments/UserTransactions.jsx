@@ -13,7 +13,6 @@ const transactionHeader = [
   { title: 'Invoice Number', col: 1 },
   { title: 'Status', col: 1 },
   { title: 'Amount', col: 1 },
-  { title: 'Balance', col: 1 }
 ];
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
@@ -47,7 +46,6 @@ export function renderTransactions(transaction, currency) {
     'Invoice Number': <GridText col={4} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Deposit' : 'Invoice' }`} />,
     Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : transaction.source}` : 'In-Progress'} />,
     Amount: <GridText col={4} content={`${currency}${transaction.amount}`} />,
-    Balance: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Balance of ${currency}${transaction.currentWalletBalance}` : `Balance of ${currency}${transaction.balance}`} />,
   };
 }
 
