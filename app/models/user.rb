@@ -104,16 +104,14 @@ class User < ApplicationRecord
   DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
   enum sub_status: {
-    applied: 0,
-    architecture_reviewed: 1,
-    approved: 2,
-    contracted: 3,
-    built: 4,
-    in_construction: 5,
-    interested: 6,
-    moved_in: 7,
-    paying: 8,
-    ready_for_construction: 9,
+    plots_fully_purchased: 0,
+    eligible_to_start_construction: 1,
+    floor_plan_purchased: 2,
+    construction_approved: 3,
+    construction_in_progress: 4,
+    construction_completed: 5,
+    census: 6,
+    workers_on_site: 7,
   }
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
@@ -523,6 +521,43 @@ class User < ApplicationRecord
       label = community.labels.find_by(short_desc: pref).presence ||
               community.labels.create!(short_desc: pref)
       user_labels.create!(label_id: label.id)
+    end
+  end
+
+  def log_sub_status_change
+    return sub_status_log if saved_changes.present? && saved_changes.key?('sub_status')
+  end
+
+  def sub_status_log
+    sub_status_changes = saved_changes['sub_status']
+
+    start_date = current_time_in_timezone
+    previous_status = sub_status_changes.first
+    new_status = sub_status_changes.last
+    stop_date = nil
+
+    if previous_status.present? && new_status != previous_status
+      stop_date = current_time_in_timezone
+    end
+
+    create_sub_status_log(start_date, previous_status, new_status, stop_date)
+  end
+
+  def create_sub_status_log(start_date, previous_status, new_status, stop_date)
+    log = SubstatusLog.new(
+      start_date: start_date,
+      changed_by_id: nil,
+      previous_status: previous_status,
+      new_status: new_status,
+      stop_date: stop_date,
+      user_id: id,
+      community_id: self[:community_id],
+    )
+
+    if log.save
+      puts "****************saveddddddddd"
+    else
+      puts "******************error #{log.errors.full_messages}"
     end
   end
 end

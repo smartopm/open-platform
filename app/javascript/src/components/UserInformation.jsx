@@ -26,6 +26,8 @@ import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
 import Transactions from './Payments/Transactions'
+import InvoiceList from './Payments/InvoiceList'
+import UserJourney from '../containers/User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
@@ -73,7 +75,8 @@ export default function UserInformation({
       Communication: 'Communication',
       Plots: 'Plots',
       Payments: 'Payments',
-      Forms: 'Forms'
+      Forms: 'Forms',
+      CustomerJourney: 'Customer Journey',
     }
     if (location.pathname.includes('/user')) {
       const [, rootURL, , userPage] = location.pathname.split('/')
@@ -252,6 +255,11 @@ export default function UserInformation({
             user={authState.user}
           />
         </TabPanel>
+        {['admin'].includes(userType) && (
+          <TabPanel value={tabValue} index="CustomerJourney">
+           <UserJourney />
+        </TabPanel>
+        )}
 
         <div className="container d-flex justify-content-between">
           {data.user.state === 'valid' &&

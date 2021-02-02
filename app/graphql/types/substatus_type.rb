@@ -3,15 +3,13 @@
 module Types
   # SubStatusType
   class SubstatusType < Types::BaseObject
-    field :applied, Integer, null: true
-    field :architecture_reviewed, Integer, null: true
-    field :approved, Integer, null: true
-    field :contracted, Integer, null: true
-    field :built, Integer, null: true
-    field :in_construction, Integer, null: true
-    field :interested, Integer, null: true
-    field :moved_in, Integer, null: true
-    field :paying, Integer, null: true
-    field :ready_for_construction, Integer, null: true
+    field :plots_fully_purchased, Integer, null: true
+    field :eligible_to_start_construction, Integer, null: true
+    field :floor_plan_purchased, Integer, null: true
+    field :construction_approved, Integer, null: true
+    field :construction_in_progress, Integer, null: true
+    field :construction_completed, Integer, null: true
+    field :census, Integer, null: true
+    field :workers_on_site, Integer, null: true
   end
 end

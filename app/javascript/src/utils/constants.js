@@ -44,29 +44,25 @@ export const userState = {
 };
 
 export const userSubStatus = {
-  applied: 'Applied',
-  architecture_reviewed: 'Architecture Reviewed',
-  approved: 'Approved',
-  contracted: 'Contracted',
-  built: 'Built',
-  in_construction: 'In Construction',
-  interested: 'Interested',
-  moved_in: 'Moved-In',
-  paying: 'Paying',
-  ready_for_construction: 'Ready for Construction'
+  plots_fully_purchased: 'Plots Fully Purchased',
+  eligible_to_start_construction: 'Eligible to start Construction',
+  floor_plan_purchased: 'Floor Plan Purchased',
+  construction_approved: 'Construction Approved',
+  construction_in_progress: 'Construction in Progress',
+  construction_completed: 'Construction Completed',
+  census: 'Census',
+  workers_on_site: 'Workers on Site',
 };
 
 export const subStatus = {
-  0: 'Applied',
-  1: 'Architecture Reviewed',
-  2: 'Approved',
-  3: 'Contracted',
-  4: 'Built',
-  5: 'In Construction',
-  6: 'Interested',
-  7: 'Moved-In',
-  8: 'Paying',
-  9: 'Ready for Construction'
+  0: 'Plots Fully Purchased',
+  1: 'Eligible to start Construction',
+  2: 'Floor Plan Purchased',
+  3: 'Construction Approved',
+  4: 'Construction in Progress',
+  5: 'Construction Completed',
+  6: 'Census',
+  7: 'Workers on Site',
 };
 
 export const paymentStatusColor = {
