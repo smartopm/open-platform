@@ -78,6 +78,7 @@ export default function TransactionsList({ userId, user }) {
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   return (
     <div>
+      {console.log(invPayData)}
       <CenteredContent>
         <StyledTabs
           value={tabValue}

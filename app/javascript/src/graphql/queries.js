@@ -996,6 +996,11 @@ export const AllTransactionQuery = gql`
         amount
         status
         createdAt
+        updatedAt
+        landParcel {
+          id
+          parcelNumber
+        } 
       }
       payments {
         id

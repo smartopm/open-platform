@@ -87,7 +87,7 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     {
-      invoices: user.invoices,
+      invoices: user.invoices.eager_load(:land_parcel, :payments),
       payments: user.invoices.map(&:payments).flatten,
     }
   end
