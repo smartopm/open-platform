@@ -23,6 +23,7 @@ module Types
     include Types::Queries::Deposit
     include Types::Queries::Payment
     include Types::Queries::Wallet
+    include Types::Queries::Balance
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
