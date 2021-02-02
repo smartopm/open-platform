@@ -15,6 +15,8 @@ describe('Invoice Item Component', () => {
       status: 'in_progress',
       description: 'Final Payment',
       dueDate: '2020-12-31T14:26:00Z',
+      createdAt: '2020-12-28T22:00:00Z',
+      updatedAt: '2020-12-28T22:00:00Z',
       user: {
         id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
         name: 'joe'
@@ -30,6 +32,8 @@ describe('Invoice Item Component', () => {
       status: 'paid',
       description: 'Extra payment',
       dueDate: '2020-12-28T22:00:00Z',
+      createdAt: '2020-12-28T22:00:00Z',
+      updatedAt: '2020-12-28T22:00:00Z',
       user: {
         id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
         name: 'joe'

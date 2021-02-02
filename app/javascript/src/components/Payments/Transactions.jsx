@@ -113,11 +113,11 @@ export default function TransactionsList({ userId, user }) {
             key={trans.id}
           />
       ))}
-        {transactionsData?.userDeposits.transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {transactionsData?.userDeposits.transactions.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
-            key={trans.id}
+            key={trans?.id}
           />
       ))}
       </TabPanel>
