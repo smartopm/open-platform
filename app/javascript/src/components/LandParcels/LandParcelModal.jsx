@@ -65,7 +65,6 @@ export default function LandParcelModal({
   }
 
   function onChangeOwnershipField(event, index) {
-    setShowAddress(false);
     updateOwnershipField(event.target.name, event.target.value, index);
   }
 

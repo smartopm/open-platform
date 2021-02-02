@@ -968,6 +968,11 @@ export const LandParcel = gql`
         startDate
         createdAt
       }
+      accounts {
+        id
+        fullName
+        address1
+      }
     }
   }
 `
