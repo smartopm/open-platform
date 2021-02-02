@@ -14,10 +14,10 @@ import { Spinner } from '../../shared/Loading';
 import Paginate from '../Paginate';
 
 const paymentHeaders = [
+  { title: 'Paid date', col: 1 },
   { title: 'CreatedBy', col: 2 },
   { title: 'PaymentType', col: 1 },
   { title: 'Amount', col: 2 },
-  { title: 'Paid date', col: 1 },
   { title: 'chequeNumber', col: 2 }
 ];
 
@@ -92,6 +92,11 @@ export default function PaymentList({ currency }) {
 export function renderPayments(payments, currency) {
   return payments?.map(payment => {
     return {
+      'Paid date': (
+        <Grid item xs={4} md={2}>
+          {dateToString(payment.createdAt)}
+        </Grid>
+      ),
       'CreatedBy': (
         <Grid item xs={4} md={2} data-testid="created_by">
           {payment.user.name}
@@ -107,15 +112,16 @@ export function renderPayments(payments, currency) {
           <span>{`Paid ${currency}${payment.amount || 0}`}</span>
         </Grid>
       ),
-
-      'Paid date': (
-        <Grid item xs={4} md={2}>
-          {dateToString(payment.createdAt)}
-        </Grid>
-      ),
       'chequeNumber': (
         <Grid item xs={4} md={2} data-testid="payment_cheque">
-          <span>{payment.chequeNumber || 'No cheque available'}</span>
+          <span>
+            {
+          // eslint-disable-next-line no-nested-ternary
+          payment.paymentType === 'cash' 
+            ? '-'
+            : payment.chequeNumber ? `${payment.chequeNumber} - ${payment.bankName}` : '-'
+          }
+          </span>
         </Grid>
       )
     };
