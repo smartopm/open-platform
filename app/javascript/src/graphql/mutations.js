@@ -411,6 +411,47 @@ mutation AddNewProperty($parcelNumber: String!,
 }
 `
 
+export const UpdateProperty = gql`
+mutation UpdateProperty($id: ID!,
+  $parcelNumber: String!,
+  $address1: String,
+  $address2: String,
+  $city: String,
+  $postalCode: String,
+  $stateProvince: String,
+  $parcelType: String,
+  $country: String,
+  $valuationFields: JSON
+  $ownershipFields: JSON) {
+    propertyUpdate(id: $id,
+    parcelNumber: $parcelNumber,
+    address1: $address1,
+    address2: $address2,
+    city: $city,
+    postalCode: $postalCode,
+    stateProvince: $stateProvince,
+    parcelType: $parcelType,
+    country: $country,
+    valuationFields: $valuationFields,
+    ownershipFields: $ownershipFields) {
+      landParcel {
+        id
+        valuations {
+          id
+          amount
+          startDate
+          createdAt
+        }
+        accounts {
+          id
+          fullName
+          address1
+        }
+    }
+  }
+}
+`
+
 export const EditPlotNumber = gql`
   mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
     landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {

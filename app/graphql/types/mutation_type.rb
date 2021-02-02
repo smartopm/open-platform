@@ -102,6 +102,7 @@ module Types
     field :land_parcel, mutation: Mutations::LandParcel::LandParcelCreate
     field :land_parcel_update, mutation: Mutations::LandParcel::LandParcelUpdate
     field :PropertyCreate, mutation: Mutations::LandParcel::PropertyCreate
+    field :property_update, mutation: Mutations::LandParcel::PropertyUpdate
 
     # action_flow
     field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate

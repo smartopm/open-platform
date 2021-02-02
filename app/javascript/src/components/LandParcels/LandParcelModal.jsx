@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useContext, useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
-import { useLazyQuery } from 'react-apollo'
+import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import { useLazyQuery } from 'react-apollo';
 import {
   TextField,
   InputAdornment,
@@ -12,15 +12,15 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel
-} from '@material-ui/core'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import { DeleteOutline } from '@material-ui/icons'
-import { CustomizedDialogs } from '../Dialog'
-import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
-import DatePickerDialog from '../DatePickerDialog'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import { currencies } from '../../utils/constants'
-import { UsersLiteQuery } from '../../graphql/queries'
+} from '@material-ui/core';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import { DeleteOutline } from '@material-ui/icons';
+import { CustomizedDialogs } from '../Dialog';
+import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
+import DatePickerDialog from '../DatePickerDialog';
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
+import { currencies } from '../../utils/constants';
+import { UsersLiteQuery } from '../../graphql/queries';
 
 export default function LandParcelModal({
   open,
@@ -29,160 +29,174 @@ export default function LandParcelModal({
   modalType,
   landParcel
 }) {
-  const classes = useStyles()
-  const [parcelNumber, setParcelNumber] = useState('')
-  const [address1, setAddress1] = useState('')
-  const [address2, setAddress2] = useState('')
-  const [city, setCity] = useState('')
-  const [postalCode, setPostalCode] = useState('')
-  const [stateProvince, setStateProvince] = useState('')
-  const [parcelType, setParcelType] = useState('')
-  const [country, setCountry] = useState('')
-  const [tabValue, setTabValue] = useState('Details')
-  const [valuationFields, setValuationFields] = useState([])
-  const [search, setSearch] = useState(false)
-  const [showAddress, setShowAddress] = useState(false)
-  const [ownershipFields, setOwnershipFields] = useState([])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const classes = useStyles();
+  const [parcelNumber, setParcelNumber] = useState('');
+  const [address1, setAddress1] = useState('');
+  const [address2, setAddress2] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [stateProvince, setStateProvince] = useState('');
+  const [parcelType, setParcelType] = useState('');
+  const [country, setCountry] = useState('');
+  const [tabValue, setTabValue] = useState('Details');
+  const [valuationFields, setValuationFields] = useState([]);
+  const [search, setSearch] = useState(false);
+  const [showAddress, setShowAddress] = useState(false);
+  const [ownershipFields, setOwnershipFields] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const isFormReadOnly = modalType === 'details'
-  const authState = useContext(AuthStateContext)
-  const currency = currencies[authState.user?.community.currency] || ''
+  const authState = useContext(AuthStateContext);
+  const currency = currencies[authState.user?.community.currency] || '';
+  const isFormReadOnly = modalType === 'details' && !isEditing;
 
   useEffect(() => {
-    if (!open) {
-      resetModalFields()
-    }
-  }, [open])
+    setDetailsFields(landParcel);
+  }, [open]);
 
-  const [searchUser, { data } ] = useLazyQuery(UsersLiteQuery,{
+  const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: ownershipFields[Number(currentIndex)]?.name },
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
-  })
+  });
 
-  function addOwnership(){
-    setOwnershipFields([
-      ...ownershipFields,
-      { name: '', address: '' }
-    ])
+  function addOwnership() {
+    setOwnershipFields([...ownershipFields, { name: '', address: '' }]);
   }
 
   function onChangeOwnershipField(event, index) {
-    setShowAddress(false)
-    updateOwnershipField(event.target.name, event.target.value, index)
+    setShowAddress(false);
+    updateOwnershipField(event.target.name, event.target.value, index);
   }
 
   function updateOwnershipField(name, value, index) {
-    const fields = [...ownershipFields]
-    fields[Number(index)] = { ...fields[Number(index)], [name]: value }
-    setOwnershipFields(fields)
+    const fields = [...ownershipFields];
+    fields[Number(index)] = { ...fields[Number(index)], [name]: value };
+    setOwnershipFields(fields);
   }
- 
-  function userSearch(e, index){
-    if(e.keyCode === 13){
-      setCurrentIndex(Number(index))
-      setSearch(true)
-      searchUser()
+
+  function userSearch(e, index) {
+    if (e.keyCode === 13) {
+      setCurrentIndex(Number(index));
+      setSearch(true);
+      searchUser();
     }
   }
 
   function removeOwnership(index) {
-    const ownershipOptions = ownershipFields
-    ownershipOptions.splice(index, 1)
-    setOwnershipFields([...ownershipOptions])
+    const ownershipOptions = ownershipFields;
+    ownershipOptions.splice(index, 1);
+    setOwnershipFields([...ownershipOptions]);
   }
 
   const handleOwnershipChange = (event, index) => {
-    const fields = [...ownershipFields]
-    fields[Number(index)] = { name: data?.usersLite[event.target.value].name, 
-                              address: data?.usersLite[event.target.value].address,
-                              userId: data?.usersLite[event.target.value].id 
-                            }
-    setOwnershipFields(fields)
+    const fields = [...ownershipFields];
+    fields[Number(index)] = {
+      name: data?.usersLite[event.target.value].name,
+      address: data?.usersLite[event.target.value].address,
+      userId: data?.usersLite[event.target.value].id
+    };
+    setOwnershipFields(fields);
     setSearch(false);
-    setShowAddress(true)
+    setShowAddress(true);
   };
 
-  function resetModalFields() {
-    setParcelNumber('')
-    setAddress1('')
-    setAddress2('')
-    setCity('')
-    setPostalCode('')
-    setStateProvince('')
-    setParcelType('')
-    setCountry('')
-    setTabValue('Details')
-    setValuationFields([])
-    setOwnershipFields([])
+  function setDetailsFields(parcel) {
+    setParcelNumber(parcel?.parcelNumber || '');
+    setAddress1(parcel?.address1 || '');
+    setAddress2(parcel?.address2 || '');
+    setCity(parcel?.city || '');
+    setPostalCode(parcel?.postalCode || '');
+    setStateProvince(parcel?.stateProvince || '');
+    setParcelType(parcel?.parcelType || '');
+    setCountry(parcel?.country || '');
+    setTabValue('Details');
+    setValuationFields([]);
+    setOwnershipFields([]);
+    setIsEditing(false);
   }
 
   function handleParcelSubmit() {
-    if (handleSubmit) {
-      handleSubmit({
-        parcelNumber,
-        address1,
-        address2,
-        city,
-        postalCode,
-        stateProvince,
-        parcelType,
-        country,
-        valuationFields,
-        ownershipFields
-      })
+    if (modalType === 'details' && !isEditing) {
+      setIsEditing(true);
+      setValuationFields(landParcelValuations(landParcel));
+      setOwnershipFields(landParcelOwners(landParcel));
+      return;
     }
+
+    handleSubmit({
+      parcelNumber,
+      address1,
+      address2,
+      city,
+      postalCode,
+      stateProvince,
+      parcelType,
+      country,
+      valuationFields,
+      ownershipFields
+    });
+  }
+
+  function landParcelValuations(parcel) {
+    return parcel.valuations.map(val => {
+      return { amount: val.amount, startDate: val.startDate };
+    });
+  }
+
+  function landParcelOwners(parcel) {
+    return parcel.accounts.map(owner => {
+      return { name: owner.fullName, address: owner.address1 };
+    });
   }
 
   function handleChange(_event, newValue) {
-    setTabValue(newValue)
+    setTabValue(newValue);
   }
 
   function onChangeValuationField(event, index) {
-    updateValuationField(event.target.name, event.target.value, index)
+    updateValuationField(event.target.name, event.target.value, index);
   }
 
   function onChangeValuationDateField(date, index) {
-    updateValuationField('startDate', date, index)
+    updateValuationField('startDate', date, index);
   }
 
   function updateValuationField(name, value, index) {
-    const fields = [...valuationFields]
-    fields[Number(index)] = { ...fields[Number(index)], [name]: value }
-    setValuationFields(fields)
+    const fields = [...valuationFields];
+    fields[Number(index)] = { ...fields[Number(index)], [name]: value };
+    setValuationFields(fields);
   }
 
   function addValuation() {
-    setValuationFields([
-      ...valuationFields,
-      { amount: '', startDate: new Date() }
-    ])
+    setValuationFields([...valuationFields, { amount: '', startDate: new Date() }]);
   }
 
   function removeValuation(index) {
-    const valuationOptions = valuationFields
-    valuationOptions.splice(index, 1)
-    setValuationFields([...valuationOptions])
+    const valuationOptions = valuationFields;
+    valuationOptions.splice(index, 1);
+    setValuationFields([...valuationOptions]);
+  }
+
+  function saveActionText() {
+    if (modalType === 'details') {
+      if (isEditing) {
+        return 'Save Changes';
+      }
+      return 'Edit Parcel';
+    }
+    return 'Save';
   }
 
   return (
     <CustomizedDialogs
       open={open}
       handleModal={handelClose}
-      dialogHeader={
-        modalType === 'new'
-          ? 'New Property'
-          : `Parcel ${landParcel.parcelNumber}`
-      }
+      dialogHeader={modalType === 'new' ? 'New Property' : `Parcel ${landParcel.parcelNumber}`}
       handleBatchFilter={handleParcelSubmit}
-      saveAction={modalType === 'details' ? 'Edit Parcel' : 'Save'}
+      saveAction={saveActionText()}
     >
-      <StyledTabs
-        value={tabValue}
-        onChange={handleChange}
-        aria-label="land parcel tabs"
-      >
+      <StyledTabs value={tabValue} onChange={handleChange} aria-label="land parcel tabs">
         <StyledTab label="Details" value="Details" />
         <StyledTab label="Ownership" value="Ownership" />
         <StyledTab label="Valuation History" value="Valuation History" />
@@ -199,8 +213,7 @@ export default function LandParcelModal({
             }}
             label="Parcel Number"
             type="text"
-            defaultValue={landParcel?.parcelNumber}
-            value={modalType === 'new' ? parcelNumber : undefined}
+            value={parcelNumber}
             onChange={e => setParcelNumber(e.target.value)}
             required
           />
@@ -210,8 +223,7 @@ export default function LandParcelModal({
             label="Address1"
             inputProps={{ 'data-testid': 'address1', readOnly: isFormReadOnly }}
             type="text"
-            defaultValue={landParcel?.address1}
-            value={modalType === 'new' ? address1 : undefined}
+            value={address1}
             onChange={e => setAddress1(e.target.value)}
           />
           <TextField
@@ -220,8 +232,7 @@ export default function LandParcelModal({
             label="Address2"
             inputProps={{ 'data-testid': 'address2', readOnly: isFormReadOnly }}
             type="text"
-            defaultValue={landParcel?.address2}
-            value={modalType === 'new' ? address2 : undefined}
+            value={address2}
             onChange={e => setAddress2(e.target.value)}
           />
           <TextField
@@ -230,8 +241,7 @@ export default function LandParcelModal({
             label="city"
             inputProps={{ 'data-testid': 'city', readOnly: isFormReadOnly }}
             type="text"
-            defaultValue={landParcel?.city}
-            value={modalType === 'new' ? city : undefined}
+            value={city}
             onChange={e => setCity(e.target.value)}
           />
           <TextField
@@ -243,8 +253,7 @@ export default function LandParcelModal({
               readOnly: isFormReadOnly
             }}
             type="text"
-            defaultValue={landParcel?.stateProvince}
-            value={modalType === 'new' ? stateProvince : undefined}
+            value={stateProvince}
             onChange={e => setStateProvince(e.target.value)}
           />
           <TextField
@@ -253,8 +262,7 @@ export default function LandParcelModal({
             label="Country"
             type="text"
             inputProps={{ 'data-testid': 'country', readOnly: isFormReadOnly }}
-            defaultValue={landParcel?.country}
-            value={modalType === 'new' ? country : undefined}
+            value={country}
             onChange={e => setCountry(e.target.value)}
           />
           <TextField
@@ -266,8 +274,7 @@ export default function LandParcelModal({
               readOnly: isFormReadOnly
             }}
             type="text"
-            defaultValue={landParcel?.parcelType}
-            value={modalType === 'new' ? parcelType : undefined}
+            value={parcelType}
             onChange={e => setParcelType(e.target.value)}
           />
           <TextField
@@ -279,51 +286,57 @@ export default function LandParcelModal({
               readOnly: isFormReadOnly
             }}
             type="number"
-            defaultValue={landParcel?.postalCode}
-            value={modalType === 'new' ? postalCode : undefined}
+            value={postalCode}
             onChange={e => setPostalCode(e.target.value)}
           />
         </div>
       </TabPanel>
       <TabPanel value={tabValue} index="Ownership">
         {modalType === 'details' &&
-            (landParcel?.accounts?.length ? (
-              landParcel?.accounts.map(owner => (
-                <div key={owner.id}>
-                  <TextField 
-                    id={`user-search-${owner.name}`} 
-                    focused
-                    value={owner.fullName}
-                    label="Owner"
-                    name="name"
-                    className={classes.textField}
-                    style={{marginBottom: '15px'}}
-                  />
-                  <TextField 
-                    id={`user-search-${owner.address1}`} 
-                    focused
-                    value={owner.address1}
-                    label="Address"
-                    name="address"
-                    className={classes.textField}
-                  />
-                </div>
-              ))
-            ) : (
-              <div>No owner yet</div>
-            ))}
+          !isEditing &&
+          (landParcel?.accounts?.length ? (
+            landParcel?.accounts.map(owner => (
+              <div key={owner.id}>
+                <TextField
+                  id={`user-search-${owner.name}`}
+                  focused
+                  value={owner.fullName}
+                  label="Owner"
+                  name="name"
+                  className={classes.textField}
+                  style={{ marginBottom: '15px' }}
+                  inputProps={{
+                    readOnly: isFormReadOnly
+                  }}
+                />
+                <TextField
+                  id={`user-search-${owner.address1}`}
+                  focused
+                  value={owner.address1}
+                  label="Address"
+                  name="address"
+                  className={classes.textField}
+                  inputProps={{
+                    readOnly: isFormReadOnly
+                  }}
+                />
+              </div>
+            ))
+          ) : (
+            <div>No owner yet</div>
+          ))}
         {ownershipFields?.map((_field, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={index} style={{display: 'flex'}}>
+          <div key={index} style={{ display: 'flex' }}>
             <div>
-              <TextField 
-                id={`user-search-${index}`} 
-                helperText='Enter name of the user and Press enter to search'
+              <TextField
+                id={`user-search-${index}`}
+                helperText="Enter name of the user and Press enter to search"
                 autoFocus
                 value={ownershipFields[Number(index)].name}
                 label="Owner"
-                onChange={(event) => onChangeOwnershipField(event, index)}
-                onKeyDown={(e) => userSearch(e, index)}
+                onChange={event => onChangeOwnershipField(event, index)}
+                onKeyDown={e => userSearch(e, index)}
                 name="name"
                 className={classes.textField}
                 inputProps={{
@@ -331,24 +344,33 @@ export default function LandParcelModal({
                 }}
               />
               {showAddress && (
-              <TextField 
-                focused
-                id={`user-search-${index}`}
-                value={ownershipFields[Number(index)].address}
-                label="Address"
-                onChange={(event) => onChangeOwnershipField(event, index)}
-                onKeyDown={userSearch}
-                name="address"
-                className={classes.textField}
-                style={{marginBottom: '15px'}}
-              />
+                <TextField
+                  focused
+                  id={`user-search-${index}`}
+                  value={ownershipFields[Number(index)].address}
+                  label="Address"
+                  onChange={event => onChangeOwnershipField(event, index)}
+                  onKeyDown={userSearch}
+                  name="address"
+                  className={classes.textField}
+                  style={{ marginBottom: '15px' }}
+                />
               )}
               {search && data && currentIndex === index && (
-              <RadioGroup aria-label="user" name="user" onChange={(event) => handleOwnershipChange(event, index)}>
-                {data?.usersLite.map((user, i) => (
-                  <FormControlLabel value={i} control={<Radio />} label={user.name} key={user.id} />
-                ))}
-              </RadioGroup>
+                <RadioGroup
+                  aria-label="user"
+                  name="user"
+                  onChange={event => handleOwnershipChange(event, index)}
+                >
+                  {data?.usersLite.map((user, i) => (
+                    <FormControlLabel
+                      value={i}
+                      control={<Radio />}
+                      label={user.name}
+                      key={user.id}
+                    />
+                  ))}
+                </RadioGroup>
               )}
             </div>
             <div className={classes.removeIcon}>
@@ -362,20 +384,21 @@ export default function LandParcelModal({
             </div>
           </div>
         ))}
-        
-        {modalType === 'new' && (
-        <div className={classes.addIcon} role="button" onClick={addOwnership}>
-          <AddCircleOutlineIcon />
-          <div style={{ marginLeft: '6px', color: 'secondary' }}>
-            <Typography align="center" variant="caption">
-              New Owner
-            </Typography>
+
+        {(modalType === 'new' || isEditing) && (
+          <div className={classes.addIcon} role="button" onClick={addOwnership}>
+            <AddCircleOutlineIcon />
+            <div style={{ marginLeft: '6px', color: 'secondary' }}>
+              <Typography align="center" variant="caption">
+                New Owner
+              </Typography>
+            </div>
           </div>
-        </div>
         )}
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
         {modalType === 'details' &&
+          !isEditing &&
           (landParcel?.valuations?.length ? (
             landParcel?.valuations.map(valuation => (
               <div className={classes.parcelForm} key={valuation.id}>
@@ -384,11 +407,7 @@ export default function LandParcelModal({
                   margin="dense"
                   InputProps={{
                     readOnly: isFormReadOnly,
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {currency}
-                      </InputAdornment>
-                    )
+                    startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
                   }}
                   // eslint-disable-next-line react/jsx-no-duplicate-props
                   inputProps={{ style: { paddingTop: '6px' } }}
@@ -401,7 +420,7 @@ export default function LandParcelModal({
                   label="Start Date"
                   selectedDate={valuation.startDate}
                   handleDateChange={() => {}}
-                  inputProps={{ readOnly: true }}
+                  inputProps={{ readOnly: isFormReadOnly }}
                   required
                 />
               </div>
@@ -409,7 +428,7 @@ export default function LandParcelModal({
           ) : (
             <div>No Valuations Yet</div>
           ))}
-        {modalType === 'new' &&
+        {(modalType === 'new' || isEditing) &&
           valuationFields.map((_field, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <div style={{ display: 'flex' }} key={index}>
@@ -418,11 +437,7 @@ export default function LandParcelModal({
                   autoFocus
                   margin="dense"
                   InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {currency}
-                      </InputAdornment>
-                    )
+                    startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
                   }}
                   // eslint-disable-next-line react/jsx-no-duplicate-props
                   inputProps={{
@@ -439,8 +454,7 @@ export default function LandParcelModal({
                 <DatePickerDialog
                   label="Start Date"
                   selectedDate={valuationFields[Number(index)].startDate}
-                  handleDateChange={date =>
-                    onChangeValuationDateField(date, index)}
+                  handleDateChange={date => onChangeValuationDateField(date, index)}
                   disablePastDate
                   required
                 />
@@ -456,7 +470,7 @@ export default function LandParcelModal({
               </div>
             </div>
           ))}
-        {modalType === 'new' && (
+        {(modalType === 'new' || isEditing) && (
           <div className={classes.addIcon} role="button" onClick={addValuation}>
             <AddCircleOutlineIcon />
             <div style={{ marginLeft: '6px', color: 'secondary' }}>
@@ -468,7 +482,7 @@ export default function LandParcelModal({
         )}
       </TabPanel>
     </CustomizedDialogs>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -491,12 +505,12 @@ const useStyles = makeStyles(() => ({
   textField: {
     width: '450px'
   }
-}))
+}));
 
 LandParcelModal.defaultProps = {
   handleSubmit: () => {},
   landParcel: null
-}
+};
 
 LandParcelModal.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -505,4 +519,4 @@ LandParcelModal.propTypes = {
   modalType: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   landParcel: PropTypes.object
-}
+};
