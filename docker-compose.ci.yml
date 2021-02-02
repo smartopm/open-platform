@@ -19,10 +19,7 @@ services:
       context: .
       dockerfile: ./docker/rails/Dockerfile
     image: doublegdp_rails:latest
-    command: >
-      bash -c "(([ -d "./public/packs" ] && rm -rf ./public/packs);bundle exec rails webpacker:compile) &&
-               rm -f tmp/pids/server.pid &&
-               bundle exec rails s -e test -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -e test -p 3000 -b '0.0.0.0'"
     env_file:
       - '.env.docker'
     environment:
