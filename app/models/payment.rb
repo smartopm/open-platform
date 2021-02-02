@@ -16,4 +16,5 @@ class Payment < ApplicationRecord
   VALID_TYPES = ['cash', 'cheque/cashier_cheque', 'wallet'].freeze
 
   validates :payment_type, inclusion: { in: VALID_TYPES, allow_nil: false }
+  default_scope { order(created_at: :desc) }
 end

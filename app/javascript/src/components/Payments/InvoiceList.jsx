@@ -15,6 +15,7 @@ import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
+import Text from '../../shared/Text';
 
 const invoiceHeaders = [
   { title: 'CreatedBy', col: 2 },
@@ -129,23 +130,20 @@ export function renderInvoices(invoices, currency) {
       ),
       Amount: (
         <Grid item xs={4} md={2} data-testid="invoice_amount">
-          <span>{`${currency}${invoice.amount}`}</span>
+          <Text content={`Amount: ${currency}${invoice.amount}`} />
+          { invoice.status === 'in_progress' && <Text content={`Amount Paid: ${currency}${invoice.amount - invoice.pendingAmount}`} /> }
         </Grid>
       ),
       'Issued date': (
         <Grid item xs={4} md={2}>
-          <span>
-            {`Isssued: ${dateToString(invoice.createdAt)}`}
-          </span>
-          <br />
-          <span>
-            {invoice.status === 'paid' && `Paid: ${dateToString(invoice.updatedAt)} `}
-          </span>
+          <Text content={`Issued: ${dateToString(invoice.createdAt)}`} />
+          {invoice.status === 'paid' && invoice.payments.length 
+            ? <Text content={`Paid: ${dateToString(invoice.payments[0]?.createdAt)} `} /> : null}
         </Grid>
       ),
       'Due date': (
         <Grid item xs={4} md={2}>
-          {`Due: ${dateToString(invoice.dueDate)}`}
+          <Text content={`Due: ${dateToString(invoice.dueDate)}`} />
         </Grid>
       ),
       'Invoice Status': (
