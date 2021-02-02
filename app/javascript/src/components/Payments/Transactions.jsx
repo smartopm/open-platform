@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { Typography } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import InvoiceModal from './invoiceModal'
@@ -88,7 +88,6 @@ export default function TransactionsList({ userId, user }) {
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   return (
     <div>
-      {console.log(invPayData)}
       <CenteredContent>
         <StyledTabs
           value={tabValue}
@@ -99,13 +98,14 @@ export default function TransactionsList({ userId, user }) {
           <StyledTab label="Transactions" value="Transactions" />
         </StyledTabs>
         <div style={{marginLeft: '100px'}}> 
+          <Button variant="text">{`Balance: ${currency}${walletData.userBalance}`}</Button>
           <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
           {
             authState.user?.userType === 'admin' && (
               <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
             )
           }
-          <Typography>{walletData.wallet}</Typography>
+          
         </div>
       </CenteredContent>
       <InvoiceModal
