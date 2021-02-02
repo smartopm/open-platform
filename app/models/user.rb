@@ -523,42 +523,5 @@ class User < ApplicationRecord
       user_labels.create!(label_id: label.id)
     end
   end
-
-  def log_sub_status_change
-    return sub_status_log if saved_changes.present? && saved_changes.key?('sub_status')
-  end
-
-  def sub_status_log
-    sub_status_changes = saved_changes['sub_status']
-
-    start_date = current_time_in_timezone
-    previous_status = sub_status_changes.first
-    new_status = sub_status_changes.last
-    stop_date = nil
-
-    if previous_status.present? && new_status != previous_status
-      stop_date = current_time_in_timezone
-    end
-
-    create_sub_status_log(start_date, previous_status, new_status, stop_date)
-  end
-
-  def create_sub_status_log(start_date, previous_status, new_status, stop_date)
-    log = SubstatusLog.new(
-      start_date: start_date,
-      changed_by_id: nil,
-      previous_status: previous_status,
-      new_status: new_status,
-      stop_date: stop_date,
-      user_id: id,
-      community_id: self[:community_id],
-    )
-
-    if log.save
-      puts "****************saveddddddddd"
-    else
-      puts "******************error #{log.errors.full_messages}"
-    end
-  end
 end
 # rubocop:enable Metrics/ClassLength

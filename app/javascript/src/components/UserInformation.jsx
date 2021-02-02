@@ -26,6 +26,7 @@ import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
 import Transactions from './Payments/Transactions'
+// eslint-disable-next-line no-unused-vars
 import InvoiceList from './Payments/InvoiceList'
 import UserJourney from '../containers/User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
@@ -257,8 +258,8 @@ export default function UserInformation({
         </TabPanel>
         {['admin'].includes(userType) && (
           <TabPanel value={tabValue} index="CustomerJourney">
-           <UserJourney />
-        </TabPanel>
+            <UserJourney />
+          </TabPanel>
         )}
 
         <div className="container d-flex justify-content-between">
