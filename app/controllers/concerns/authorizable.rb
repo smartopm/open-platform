@@ -25,7 +25,7 @@ module Authorizable
                        'femoza.doublegdp.com' => 'Femoza',
                        'femoza-staging.doublegdp.com' => 'Femoza', 'dev.dgdp.site' => 'Femoza' }
 
-    if request.domain == 'dgdp.site' && request.subdomain != 'dev'
+    if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
       @site_community = Community.find_by(name: 'Nkwashi')
     else
       dom = "#{request.subdomain}.#{request.domain}"

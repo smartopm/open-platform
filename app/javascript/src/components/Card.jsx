@@ -25,7 +25,7 @@ export default function Card({
   return (
     <div
       className={`${css(styles.cardSize)} card align-self-center text-center`}
-      
+
     >
       <span>{children}</span>
       <Link
@@ -41,7 +41,7 @@ export default function Card({
         id={id}
         className={`card-link`}
       >
-       
+
         <div className="card-body">
           <h5 className="card-title">
             <span style={{ color: theme.primaryColor }} >

@@ -56,7 +56,7 @@ export default function ShiftButtons({ userId }) {
   function handleEndShift() {
     if (!isInProgress) {
       setMessage('You can\'t end shift that is not in progress')
-      return 
+      return
     }
     setMessage("")
     setInProgress(false)
@@ -83,7 +83,7 @@ export default function ShiftButtons({ userId }) {
       alignItems="center"
     >
       <Grid item xs={6} container justify="flex-end">
-        <Button onClick={handleStartShift} className={css(styles.startBtn)} disabled={isInProgress}>
+        <Button onClick={handleStartShift} className={`${css(styles.startBtn)} start-shift-btn`} disabled={isInProgress}>
           {
             (width <= 767 && !isInProgress)
               ? <PlayArrowIcon /> : (width <= 767 && isInProgress)
@@ -92,7 +92,7 @@ export default function ShiftButtons({ userId }) {
         </Button>
       </Grid>
       <Grid item xs={6} >
-        <Button onClick={handleEndShift} className={css(styles.endBtn)}>
+        <Button onClick={handleEndShift} className={`${css(styles.endBtn)} end-shift-btn`}>
           {width <= 767 ?  <StopIcon /> : 'End Shift'}
         </Button>
           {

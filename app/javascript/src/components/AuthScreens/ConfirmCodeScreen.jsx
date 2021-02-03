@@ -110,7 +110,7 @@ export default function ConfirmCodeScreen({ match }) {
         <br />
         <br />
         <div className="row justify-content-center align-items-center">
-          {randomCodeData.map(item => (
+          {randomCodeData.map((item, index) => (
             <input
               key={item}
               name={`code${item}`}
@@ -118,7 +118,7 @@ export default function ConfirmCodeScreen({ match }) {
               type="tel"
               autoFocus
               ref={elementsRef.current[item]}
-              className={css(styles.newInput)}
+              className={`${css(styles.newInput)} code-input-${index}`}
               onChange={() =>
                 item < 6
                   ? elementsRef.current[item + 1].current.focus()

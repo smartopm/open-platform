@@ -25,4 +25,13 @@ Rails.application.routes.draw do
     req.path.exclude? 'rails/active_storage'
   }
   root 'home#react'
+
+  if Rails.env.test?
+    namespace :cypress do
+      delete 'cleanup', to: 'cleanup#destroy'
+      post   'user', to: 'factories#fetch_user'
+
+      resource :factories, only: %i[create]
+    end
+  end
 end

@@ -25,7 +25,7 @@ export default function CustodianTimeSheetLog({ data }) {
         {data.timeSheetLogs.map(shift => (
           <React.Fragment key={shift.id}>
             <div className="row justify-content-between">
-              <div className="col-xs-8 nz_user">
+              <div className="col-xs-8 nz_user shift-user-name">
                 <strong>{shift.user.name}</strong>
               </div>
               <div className="col-xs-4">
