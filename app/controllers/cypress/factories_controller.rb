@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
-require Rails.root.join('spec/factories/community_factory.rb')
-require Rails.root.join('spec/factories/user_factory.rb')
+unless Rails.env.production?
+  require Rails.root.join('spec/factories/community_factory.rb')
+  require Rails.root.join('spec/factories/user_factory.rb')
+end
 
 # Cypress support to seed data
 class Cypress::FactoriesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
+    return if Rails.env.production?
+
     factory = FactoryBot.create(factory_name, factory_attributes)
     render json: factory
   end
