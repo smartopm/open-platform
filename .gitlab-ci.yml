@@ -1,8 +1,8 @@
 stages:
   - build
   - test
-  - e2e
   - report
+  - e2e
   - staging
   - deploy
 
@@ -112,6 +112,8 @@ cypress:
       - "tmp/cypress/"
     name: "Cypress $CI_PIPELINE_ID Visual Report"
     expire_in: 24 hours
+  only:
+    - master
 
 staging:appdeploy:
   stage: staging
