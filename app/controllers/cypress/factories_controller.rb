@@ -10,6 +10,8 @@ class Cypress::FactoriesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
+    return if Rails.env.production?
+
     factory = FactoryBot.create(factory_name, factory_attributes)
     render json: factory
   end
