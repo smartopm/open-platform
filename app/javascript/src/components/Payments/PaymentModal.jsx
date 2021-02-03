@@ -20,7 +20,7 @@ const initialValues = {
   chequeNumber: '',
 }
 
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch }){
+export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -44,6 +44,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       handleModalClose()
       refetch()
       depRefetch()
+      walletRefetch()
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
@@ -142,6 +143,7 @@ const useStyles = makeStyles({
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
+  walletRefetch: () => {}
  }
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -149,5 +151,6 @@ PaymentModal.propTypes = {
   userId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
+  walletRefetch: PropTypes.func,
   currency: PropTypes.string.isRequired
 }

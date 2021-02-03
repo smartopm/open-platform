@@ -10,7 +10,7 @@ import TransactionDetails from './TransactionDetails'
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
-  { title: 'Invoice Number', col: 1 },
+  { title: 'Description', col: 1 },
   { title: 'Status', col: 1 },
   { title: 'Amount', col: 1 },
 ];
@@ -43,8 +43,8 @@ export default function UserTransactionsList({ transaction, currency }) {
 export function renderTransactions(transaction, currency) {
   return {
     'Date Created': <GridText col={4} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
-    'Invoice Number': <GridText col={4} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Deposit' : 'Invoice' }`} />,
-    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : transaction.source}` : 'In-Progress'} />,
+    Description: <GridText col={4} content={`${transaction.source === 'wallet' ? 'Invoice settlement' : 'Deposit' }`} />,
+    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? invoiceStatus[transaction.status] : 'In-Progress'} />,
     Amount: <GridText col={4} content={`${currency}${transaction.amount}`} />,
   };
 }

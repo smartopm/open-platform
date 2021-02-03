@@ -88,6 +88,7 @@ export default function TransactionsList({ userId, user }) {
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   return (
     <div>
+      {console.log(transactionsData)}
       <CenteredContent>
         <StyledTabs
           value={tabValue}
@@ -116,6 +117,7 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         depRefetch={depRefetch}
         currency={currency}
+        walletRefetch={walletRefetch}
       />
       <TabPanel value={tabValue} index="Transactions">
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
@@ -151,6 +153,7 @@ export default function TransactionsList({ userId, user }) {
         currency={currency} 
         refetch={refetch}
         depRefetch={depRefetch}
+        walletRefetch={walletRefetch}
       />
       <CenteredContent>
         <Paginate
