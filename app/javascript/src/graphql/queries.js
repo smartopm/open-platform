@@ -573,6 +573,7 @@ export const invoiceQuery = gql`
   query invoiceQuery($id: ID!) {
     invoice(id: $id) {
       id
+      invoiceNumber
       amount
       status
       createdAt
@@ -897,6 +898,7 @@ export const UserInvoicesQuery = gql`
       id
       amount
       status
+      invoiceNumber
       description
       dueDate
       updatedAt
@@ -1015,6 +1017,7 @@ export const AllTransactionQuery = gql`
         amount
         status
         createdAt
+        invoiceNumber
         updatedAt
         landParcel {
           id
