@@ -65,6 +65,7 @@ describe('Transactions Component', () => {
               amount: 200,
               status: 'paid',
               createdAt: '2021-01-21',
+              invoiceNumber: '123',
               updatedAt: '2021-01-21',
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               landParcel: {
