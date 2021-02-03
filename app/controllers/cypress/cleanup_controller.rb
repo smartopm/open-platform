@@ -7,7 +7,7 @@ class Cypress::CleanupController < ApplicationController
   def destroy
     return head(:bad_request) unless Rails.env.test?
 
-    tables = ActiveRecord::Base.connection.tables - %w(ar_internal_metadata)
+    tables = ActiveRecord::Base.connection.tables - %w[ar_internal_metadata]
     tables.delete 'schema_migrations'
     tables.each do |t|
       ActiveRecord::Base.connection.execute("TRUNCATE #{t} CASCADE")

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-require "#{Rails.root}/spec/factories/community_factory.rb"
-require "#{Rails.root}/spec/factories/user_factory.rb"
+
+require Rails.root.join('spec/factories/community_factory.rb')
+require Rails.root.join('spec/factories/user_factory.rb')
 
 # Cypress support to seed data
 class Cypress::FactoriesController < ApplicationController
