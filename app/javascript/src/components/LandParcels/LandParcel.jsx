@@ -6,14 +6,14 @@ import { useHistory } from 'react-router-dom';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { ParcelsQuery, LandParcel } from '../../graphql/queries';
-import Loading from '../../shared/Loading';
+import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
 import CreateLandParcel from './CreateLandParcel';
 import LandParcelModal from './LandParcelModal';
 import { UpdateProperty } from '../../graphql/mutations';
 import MessageAlert from '../MessageAlert';
-import { formatError } from '../../utils/helpers';
+import { formatError, propAccessor } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';
@@ -103,8 +103,36 @@ export default function LandParcelPage() {
     }
     setMessageAlert('');
   }
+  const filterFields = {
+    owner: 'owner',
+    parcelType: 'parcel_type',
+    plotNumber: 'parcel_number',
+  };
 
+  function handleQueryOnChange(selectedOptions) {
+    if (selectedOptions) {
+      const andConjugate = selectedOptions.logic?.and;
+      const orConjugate = selectedOptions.logic?.or;
+      const availableConjugate = andConjugate || orConjugate;
 
+      if (availableConjugate) {
+        const conjugate = andConjugate ? 'AND' : 'OR';
+        let property = '';
+        let value = null;
+        const queryText = availableConjugate
+          .map(option => {
+            const operator = Object.keys(option)[0];
+            const [inputFilterProperty, inputFilterValue] = propAccessor(option, operator);
+
+            property = filterFields[inputFilterProperty.var];
+            value = inputFilterValue;
+            return `${property}:'${value}'`;
+          })
+          .join(` ${conjugate} `);
+        setSearchValue(queryText);
+      }
+    }
+  }
 
   const InitialConfig = MaterialConfig;
   const queryBuilderConfig = {
@@ -112,20 +140,20 @@ export default function LandParcelPage() {
     fields: {
       owner: {
         label: 'Owner',
-        type: 'select',
-        valueSources: ['value'],
-        fieldSettings: {
-          listValues: data?.fetchLandParcel.map(u => {
-            return { value: u.parcelNumber, title: u.parcelNumber };
-          })
-        }
-      },
-      properties: {
-        label: "Land Properties",
         type: 'text',
         valueSources: ['value'],
         excludeOperators: ['not_equal']
-      }
+      },
+      parcelType: {
+        label: 'Parcel Type',
+        type: 'text',
+        valueSources: ['value']
+      },
+      plotNumber: {
+        label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
     }
   };
 
@@ -139,15 +167,15 @@ export default function LandParcelPage() {
         properties: {
           field: 'owner',
           operator: 'select_equals',
-          value: [''],
+          value: ['owner'],
           valueSrc: ['value'],
-          valueType: ['select']
+          valueType: ['text']
         }
       }
     }
   };
 
-  if (loading || parcelDataLoading) return <Loading />;
+  if (parcelDataLoading) return <Loading />;
 
   if (error) {
     return <ErrorPage title={error.message} />;
@@ -190,12 +218,12 @@ export default function LandParcelPage() {
                 width: '100%',
                 position: 'absolute',
                 zIndex: 1,
-                marginTop: -2,
-                marginLeft: '-4.5%'
+                marginTop: 4,
+                marginLeft: '-7.5%'
               }}
             >
               <QueryBuilder
-                handleOnChange={() => {}}
+                handleOnChange={handleQueryOnChange}
                 builderConfig={queryBuilderConfig}
                 initialQueryValue={queryBuilderInitialValue}
                 addRuleLabel="Add filter"
@@ -207,7 +235,8 @@ export default function LandParcelPage() {
 
         <ParcelPageTitle />
         <br />
-        {data?.fetchLandParcel.map(parcel => (
+        { loading && <Spinner /> }
+        {!loading && data?.fetchLandParcel.map(parcel => (
           <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
         ))}
         <div className="d-flex justify-content-center">
@@ -218,7 +247,7 @@ export default function LandParcelPage() {
                   Previous
                 </a>
               </li>
-              <li className={`page-item ${data.fetchLandParcel.length < limit && 'disabled'}`}>
+              <li className={`page-item ${data?.fetchLandParcel.length < limit && 'disabled'}`}>
                 <a className="page-link" onClick={handleNextPage} href="#">
                   Next
                 </a>

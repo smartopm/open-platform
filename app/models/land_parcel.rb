@@ -15,6 +15,6 @@ class LandParcel < ApplicationRecord
 
   search_scope :search do
     attributes :parcel_number, :address1, :address2, :parcel_type
-    attributes accounts: ['accounts.full_name', 'accounts.address1', 'accounts.address2']
+    attributes owner: ['accounts.full_name', 'accounts.address1', 'accounts.address2']
   end
 end
