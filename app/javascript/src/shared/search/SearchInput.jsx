@@ -23,7 +23,7 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
         endAdornment={(
           <InputAdornment position="end">
             { 
-              Boolean(searchValue.length) && (
+              Boolean(searchValue.length) && handleClear &&(
                 <IconButton aria-label="toggle filter visibility" onClick={handleClear} edge="end">
                   <ClearOutlined />
                 </IconButton>
