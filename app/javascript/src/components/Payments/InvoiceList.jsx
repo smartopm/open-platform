@@ -72,7 +72,7 @@ export default function InvoiceList({ currency }) {
         handleSearch={event => setSearchValue(event.target.value)} 
         // Todo: add a proper filter toggle function
         handleFilter={() => {}}
-        // handleClear={() => setSearchValue('')}
+        handleClear={() => setSearchValue('')}
       />
       <br />
       <br />
