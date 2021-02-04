@@ -8,7 +8,7 @@ import { userSubStatus } from '../../utils/constants';
 export default function UserJourney({ data }) {
   return (
     <>
-      {data.user && data.user.substatusLogs.map(({ previousStatus, newStatus, stopDate, startDate }) => (
+      {data.user && data.user?.substatusLogs.map(({ previousStatus, newStatus, stopDate, startDate }) => (
         <Typography variant="body2" style={{marginTop: '10px', marginLeft: '12px'}} key={Math.random()}>
           <b>{data.user.name}</b>
           {' '}
