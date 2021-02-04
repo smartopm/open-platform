@@ -18,7 +18,7 @@ import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';
 
-export default function LandParcelPage() {
+export default function LandParcelList() {
   const limit = 20;
   const [offset, setOffset] = useState(0);
   const [open, setDetailsModalOpen] = useState(false);
