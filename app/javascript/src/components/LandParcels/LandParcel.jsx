@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { Grid, Typography, Container } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { ParcelsQuery, LandParcel } from '../../graphql/queries';
 import Loading from '../../shared/Loading';
@@ -15,6 +16,7 @@ import MessageAlert from '../MessageAlert';
 import { formatError } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
+import QueryBuilder from '../QueryBuilder';
 
 export default function LandParcelPage() {
   const limit = 20;
@@ -25,6 +27,7 @@ export default function LandParcelPage() {
   const [selectedLandParcel, setSelectedLandParcel] = useState({});
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
+  const [showFilter, setShowFilter] = useState(false)
   const history = useHistory();
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
@@ -40,8 +43,8 @@ export default function LandParcelPage() {
     fetchPolicy: 'cache-and-network'
   });
 
-  function handleFilter(){
-    // handle filtering stuff
+  function toggleFilter(){
+    setShowFilter(!showFilter)
   }
 
   useEffect(() => {
@@ -101,6 +104,49 @@ export default function LandParcelPage() {
     setMessageAlert('');
   }
 
+
+
+  const InitialConfig = MaterialConfig;
+  const queryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      owner: {
+        label: 'Owner',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: data?.fetchLandParcel.map(u => {
+            return { value: u.parcelNumber, title: u.parcelNumber };
+          })
+        }
+      },
+      properties: {
+        label: "Land Properties",
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      }
+    }
+  };
+
+  const queryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'owner',
+          operator: 'select_equals',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['select']
+        }
+      }
+    }
+  };
+
   if (loading || parcelDataLoading) return <Loading />;
 
   if (error) {
@@ -133,8 +179,30 @@ export default function LandParcelPage() {
           title='Plot Properties' 
           searchValue={searchValue} 
           handleSearch={event => setSearchValue(event.target.value)} 
-          handleFilter={handleFilter}
+          handleFilter={toggleFilter}
         />
+        {
+          showFilter && (
+            <Grid
+              container
+              justify="flex-end"
+              style={{
+                width: '100%',
+                position: 'absolute',
+                zIndex: 1,
+                marginTop: -2,
+                marginLeft: '-4.5%'
+              }}
+            >
+              <QueryBuilder
+                handleOnChange={() => {}}
+                builderConfig={queryBuilderConfig}
+                initialQueryValue={queryBuilderInitialValue}
+                addRuleLabel="Add filter"
+              />
+            </Grid>
+          )
+        }
         <CreateLandParcel refetch={refetch} />
 
         <ParcelPageTitle />
