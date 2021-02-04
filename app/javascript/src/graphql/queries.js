@@ -476,9 +476,9 @@ export const DiscussionQuery = gql`
   }
 `
 
-export const ParcelQuery = gql`
-  query LandParcel($limit: Int, $offset: Int) {
-    fetchLandParcel(limit: $limit, offset: $offset) {
+export const ParcelsQuery = gql`
+  query LandParcel($query: String, $limit: Int, $offset: Int) {
+    fetchLandParcel(query: $query, limit: $limit, offset: $offset) {
       id
       parcelNumber
       address1

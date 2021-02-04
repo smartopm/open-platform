@@ -4,7 +4,7 @@ import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { Grid, Typography, Container } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { ParcelQuery, LandParcel } from '../../graphql/queries';
+import { ParcelsQuery, LandParcel } from '../../graphql/queries';
 import Loading from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
@@ -13,6 +13,8 @@ import LandParcelModal from './LandParcelModal';
 import { UpdateProperty } from '../../graphql/mutations';
 import MessageAlert from '../MessageAlert';
 import { formatError } from '../../utils/helpers';
+import SearchInput from '../../shared/search/SearchInput';
+import useDebounce from '../../utils/useDebounce';
 
 export default function LandParcelPage() {
   const limit = 20;
@@ -20,12 +22,13 @@ export default function LandParcelPage() {
   const [open, setDetailsModalOpen] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  /* eslint-disable no-unused-vars */
   const [selectedLandParcel, setSelectedLandParcel] = useState({});
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
   const history = useHistory();
 
-  const { loading, error, data, refetch } = useQuery(ParcelQuery, {
-    variables: { limit, offset }
+  const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
+    variables: { query: debouncedValue, limit, offset }
   });
 
   const [updateProperty] = useMutation(UpdateProperty);
@@ -36,6 +39,10 @@ export default function LandParcelPage() {
   ] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
   });
+
+  function handleFilter(){
+    // handle filtering stuff
+  }
 
   useEffect(() => {
     const pathName = window.location.pathname;
@@ -106,7 +113,6 @@ export default function LandParcelPage() {
 
   return (
     <>
-      {console.log(data)}
       <Container>
         <LandParcelModal
           open={open}
@@ -121,7 +127,16 @@ export default function LandParcelPage() {
           open={!!messageAlert}
           handleClose={handleMessageAlertClose}
         />
+        <br />
+        <br />
+        <SearchInput 
+          title='Plot Properties' 
+          searchValue={searchValue} 
+          handleSearch={event => setSearchValue(event.target.value)} 
+          handleFilter={handleFilter}
+        />
         <CreateLandParcel refetch={refetch} />
+
         <ParcelPageTitle />
         <br />
         {data?.fetchLandParcel.map(parcel => (
