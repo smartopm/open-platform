@@ -10,15 +10,12 @@ class Wallet < ApplicationRecord
     self.currency = DEFAULT_CURRENCY if currency.nil?
   end
 
-  def settle_pending_balance(amount, _source, _user_id)
+  after_update :settle_invoices, if: proc { saved_changes.key?('balance') }
+
+  def settle_pending_balance(amount)
     if amount > pending_balance
       credited_amount = amount - pending_balance
       update(pending_balance: 0, balance: balance + credited_amount)
-      # user.wallet_transactions.create!({
-      #                                    source: source, destination: 'wallet',
-      #                                    amount: credited_amount, status: 'settled',
-      #                                    user_id: user_id, current_wallet_balance: balance
-      #                                  })
     else
       update(pending_balance: pending_balance - amount)
     end
@@ -31,38 +28,51 @@ class Wallet < ApplicationRecord
   end
 
   def credit_amount(amount)
-    settle_pending_balance(amount, source, user.id)
-    if balance.positive?
-      user.invoices.where('pending_amount > ?', 0).find_each { |inv| make_payment(inv) }
-    end
+    update(balance: balance + amount)
 
     balance
   end
 
   def debit_amount(amount)
-    if balance > amount
-      update(balance: (balance - amount))
+    if balance >= amount
+      update(balance: (balance - amount), pending_balance: (pending_balance - amount))
     else
-      update(balance: 0, pending_balance: (pending_balance + amount - balance))
+      update(balance: 0, pending_balance: pending_balance + amount - balance)
     end
     balance
   end
 
   def make_payment(inv)
-    transaction = create_transaction(inv)
-    payment = Payment.create(payment_type: 'wallet', amount: inv.pending_amount, user_id: user.id)
-    inv.payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
-    inv.update(pending_amount: 0, status: 'paid')
+    payment_amount = inv.pending_amount > balance ? balance : inv.pending_amount
+    update_balance(payment_amount, 'debit')
+    transaction = create_transaction(payment_amount)
+    payment = Payment.create(amount: payment_amount, payment_type: 'wallet', user_id: user.id)
+    payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
+    inv.update(pending_amount: inv.pending_amount - payment_amount)
   end
 
-  def create_transaction(inv)
+  # rubocop:disable Metrics/AbcSize
+  def settle_invoices
+    return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
+
+    user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
+      break unless balance.positive?
+
+      make_payment(invoice)
+      invoice.paid! if invoice.pending_amount.zero?
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def create_transaction(payment_amount)
+    cur_bal = balance.zero? & pending_balance.positive? ? -pending_balance : balance
     user.wallet_transactions.create!({
                                        source: 'wallet',
                                        destination: 'invoice',
-                                       amount: inv.pending_amount,
+                                       amount: payment_amount,
                                        status: 'settled',
                                        user_id: user.id,
-                                       current_wallet_balance: balance,
+                                       current_wallet_balance: cur_bal,
                                      })
   end
 end

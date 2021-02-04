@@ -19,6 +19,7 @@ module Mutations
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find(vals[:user_id])
           remaining_amount = vals[:amount]
+          # Broken : Saurabh
           user.wallet.settle_pending_balance(remaining_amount, vals[:payment_type], user.id)
           transaction = create_transaction(user, vals)
           user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
