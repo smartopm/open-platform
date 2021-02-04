@@ -12,6 +12,7 @@ describe('Invoice Item Component', () => {
   it('should render the invoice item component', async () => {
     const invoiceMock = {
       amount: 200,
+      invoiceNumber: 1,
       dueDate: '2020-09-12',
       status: 'in_progress',
       createdAt: '2020-12-28',

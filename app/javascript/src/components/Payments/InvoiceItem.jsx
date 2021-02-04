@@ -171,6 +171,7 @@ InvoiceItem.propTypes = {
     dueDate: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
+    invoiceNumber: PropTypes.number.isRequired,
     landParcel: PropTypes.shape({ parcelNumber: PropTypes.string.isRequired }),
     createdBy: PropTypes.shape({ name: PropTypes.string.isRequired }),
     payments: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired }))

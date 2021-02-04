@@ -7,6 +7,7 @@ import { invoiceStatus } from '../../utils/constants';
 import InvoiceDetails from './InvoiceDetail';
 
 const invoiceHeader = [
+  { title: 'Invoice Number', col: 1 },
   { title: 'Date Created', col: 1 },
   { title: 'Amount', col: 1 },
   { title: 'Status', col: 1 },
@@ -38,6 +39,7 @@ export default function UserInvoiceItem({ invoice, currency }) {
 
 export function renderInvoices(inv) {
   return {
+    'Invoice Number': <GridText content={inv.invoiceNumber} />,
     'Date Created': <GridText content={`Issued on ${dateToString(inv.createdAt)}`} />,
     Status: <GridText content={inv.status === 'paid' ? `Paid on ${dateToString(inv.updatedAt)}` : invoiceStatus[inv.status]} />,
     Amount: <GridText content={inv.amount} />,
@@ -47,6 +49,7 @@ export function renderInvoices(inv) {
 
 UserInvoiceItem.propTypes = {
   invoice: PropTypes.shape({
+    invoiceNumber: PropTypes.number,
     status: PropTypes.string,
     amount: PropTypes.number,
     createdAt: PropTypes.string
