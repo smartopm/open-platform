@@ -105,8 +105,10 @@ export default function LandParcelPage() {
   }
   const filterFields = {
     owner: 'owner',
+    ownerAddress: 'owner',
     parcelType: 'parcel_type',
     plotNumber: 'parcel_number',
+    parcelAddress: 'address1',
   };
 
   function handleQueryOnChange(selectedOptions) {
@@ -139,7 +141,13 @@ export default function LandParcelPage() {
     ...InitialConfig,
     fields: {
       owner: {
-        label: 'Owner',
+        label: 'Owner\'s Name',
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      ownerAddress: {
+        label: 'Owner\'s Address',
         type: 'text',
         valueSources: ['value'],
         excludeOperators: ['not_equal']
@@ -151,6 +159,11 @@ export default function LandParcelPage() {
       },
       plotNumber: {
         label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      parcelAddress: {
+        label: 'Parcel Address',
         type: 'text',
         valueSources: ['value']
       },
