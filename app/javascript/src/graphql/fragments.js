@@ -57,6 +57,7 @@ export const UserFragment = {
         contactType
       }
       substatusLogs{
+        id
         startDate
         stopDate
         newStatus
