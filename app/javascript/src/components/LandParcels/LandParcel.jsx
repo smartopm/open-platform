@@ -221,6 +221,7 @@ export default function LandParcelPage() {
           searchValue={searchValue} 
           handleSearch={event => setSearchValue(event.target.value)} 
           handleFilter={toggleFilter}
+          handleClear={() => setSearchValue('')}
         />
         {
           showFilter && (
