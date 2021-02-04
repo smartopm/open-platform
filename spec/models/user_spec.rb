@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:acting_event_log) }
     it { is_expected.to have_many(:activity_points) }
     it { is_expected.to have_many(:land_parcels) }
+    it { is_expected.to have_many(:substatus_logs) }
   end
 
   describe 'validations' do
@@ -323,6 +324,37 @@ RSpec.describe User, type: :model do
         expect(EmailMsg).not_to receive(:send_mail_from_db)
         user.send_email_msg
       end
+    end
+  end
+
+  describe 'User substatus change log' do
+    let!(:user) { create(:user_with_community) }
+
+    it { is_expected.to callback(:log_sub_status_change).after(:update) }
+
+    it 'should not create Substatus Log without subsatus change' do
+      user.update(name: 'New Name')
+
+      expect(SubstatusLog.count).to eq 0
+    end
+
+    it 'should create Substatus Log after user substatus is updated' do
+      user.update(sub_status: 'plots_fully_purchased')
+
+      expect(SubstatusLog.count).to eq 1
+      stop_date = SubstatusLog.first&.stop_date
+      expect(stop_date).to be_nil
+    end
+
+    it '#log_sub_status_change should update stop_date only when User changes to new_status' do
+      user.update(sub_status: 'plots_fully_purchased')
+      user.update(sub_status: 'eligible_to_start_construction')
+
+      expect(SubstatusLog.count).to eq 2
+      substatus_log = SubstatusLog.find_by(stop_date: nil)
+      expect(substatus_log).not_to be_nil
+      expect(substatus_log.new_status).to eq 'plots_fully_purchased'
+      expect(substatus_log.previous_status).to be_nil
     end
   end
 end
