@@ -52,6 +52,7 @@ export default function LandParcelModal({
 
   useEffect(() => {
     setDetailsFields(landParcel);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
@@ -100,6 +101,7 @@ export default function LandParcelModal({
     setShowAddress(true);
   };
 
+  // Todo: Put this in a single state
   function setDetailsFields(parcel) {
     setParcelNumber(parcel?.parcelNumber || '');
     setAddress1(parcel?.address1 || '');

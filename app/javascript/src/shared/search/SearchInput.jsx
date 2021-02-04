@@ -24,7 +24,7 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
           <InputAdornment position="end">
             { 
               Boolean(searchValue.length) && handleClear &&(
-                <IconButton aria-label="toggle filter visibility" onClick={handleClear} edge="end">
+                <IconButton aria-label="clear search query" data-testid="clear_search" onClick={handleClear} edge="end">
                   <ClearOutlined />
                 </IconButton>
               )

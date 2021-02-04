@@ -272,55 +272,54 @@ export default function LandParcelPage() {
       </Container>
     </>
   );
+}
 
-  function ParcelPageTitle() {
-    // eslint-disable-next-line no-use-before-define
-    const classes = useStyles();
-    return (
-      <Grid container spacing={0} className={classes.labelTitle}>
-        <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
-            Parcel Number
-          </Typography>
-        </Grid>
-        <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '30px' }}>
-            Address1
-          </Typography>
-        </Grid>
-        <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '30px' }}>
-            Address2
-          </Typography>
-        </Grid>
-        <Grid xs={2} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '15px' }}>
-            city
-          </Typography>
-        </Grid>
-        <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-            Postal Code
-          </Typography>
-        </Grid>
-        <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-            State Province
-          </Typography>
-        </Grid>
-        <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '10px' }}>
-            Country
-          </Typography>
-        </Grid>
-        <Grid xs={1} item>
-          <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-            Parcel Type
-          </Typography>
-        </Grid>
+export function ParcelPageTitle() {
+  const classes = useStyles();
+  return (
+    <Grid container spacing={0} className={classes.labelTitle}>
+      <Grid xs={2} item>
+        <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
+          Parcel Number
+        </Typography>
       </Grid>
-    );
-  }
+      <Grid xs={2} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '30px' }}>
+          Address1
+        </Typography>
+      </Grid>
+      <Grid xs={2} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '30px' }}>
+          Address2
+        </Typography>
+      </Grid>
+      <Grid xs={2} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '15px' }}>
+          city
+        </Typography>
+      </Grid>
+      <Grid xs={1} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
+          Postal Code
+        </Typography>
+      </Grid>
+      <Grid xs={1} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
+          State Province
+        </Typography>
+      </Grid>
+      <Grid xs={1} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '10px' }}>
+          Country
+        </Typography>
+      </Grid>
+      <Grid xs={1} item>
+        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
+          Parcel Type
+        </Typography>
+      </Grid>
+    </Grid>
+  );
 }
 
 const useStyles = makeStyles(() => ({
