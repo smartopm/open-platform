@@ -299,7 +299,7 @@ export default function LandParcelModal({
                 <TextField
                   id={`user-search-${owner.name}`}
                   focused
-                  value={owner.fullName}
+                  value={owner.fullName || ''}
                   label="Owner"
                   name="name"
                   className={classes.textField}
@@ -311,7 +311,7 @@ export default function LandParcelModal({
                 <TextField
                   id={`user-search-${owner.address1}`}
                   focused
-                  value={owner.address1}
+                  value={owner.address1 || ''}
                   label="Address"
                   name="address"
                   className={classes.textField}
