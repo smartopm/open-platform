@@ -31,13 +31,6 @@ export default function RequestForm({ path }) {
     const errors = {}
     if (!name.value) {
       errors.name = 'Name cannot be empty'
-    }
-
-    if (!nrc.value) {
-      errors.nrc = 'NRC cannot be empty'
-    }
-
-    if (!name.value || !nrc.value) {
       setInputValidationMsg(errors)
       return
     }
@@ -126,11 +119,9 @@ export default function RequestForm({ path }) {
                 </label>
                 <TextField
                   className="form-control"
-                  error={!!inputValidationMsg.nrc}
                   {...nrc}
                   name="nrc"
                   inputProps={{ 'data-testid': 'nrc' }}
-                  helperText={inputValidationMsg.nrc}
                 />
               </div>
               <div className="form-group">
