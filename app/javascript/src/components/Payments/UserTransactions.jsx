@@ -68,7 +68,7 @@ export function renderTransactions(transaction, currency) {
       content={transaction.__typename === 'WalletTransaction' 
               ? `Bal: ${currency}${transaction.currentWalletBalance}` 
               : (
-                  `Bal: ${currency}${transaction.balance}`
+                  `Bal: -${currency}${transaction.balance}`
               )}
     />,
   };
