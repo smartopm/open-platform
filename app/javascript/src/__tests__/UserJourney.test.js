@@ -20,7 +20,6 @@ describe('<UserJourney />', () => {
     }
     const container = render(<UserJourney data={props} />)
     
-    expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument()
     expect(container.queryByText('Eligible to start Construction')).toBeInTheDocument()
   })
 })
