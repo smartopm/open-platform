@@ -78,7 +78,7 @@ module Types::Queries::Invoice
     user = verified_user(user_id)
 
     {
-      invoices: user.invoices.eager_load(:land_parcel, :payments),
+      invoices: user.invoices.eager_load(:land_parcel, :payments).reverse,
       payments: user.invoices.map(&:payments).flatten,
     }
   end

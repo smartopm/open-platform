@@ -790,18 +790,20 @@ export const PaymentCreate = gql`
   mutation PaymentCreate(
     $userId: ID!
     $amount: Float!
-    $paymentType: String!
+    $source: String!
+    $status: String
     $bankName: String
     $chequeNumber: String
   ) {
-    paymentCreate(
+    walletTransactionCreate(
       userId: $userId
       amount: $amount
-      paymentType: $paymentType
+      status: $status
+      source: $source
       bankName: $bankName
       chequeNumber: $chequeNumber
     ) {
-      payments {
+      walletTransaction {
         id
       }
     }

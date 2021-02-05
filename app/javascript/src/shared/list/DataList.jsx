@@ -29,13 +29,13 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
           direction="row"
           justify="space-around"
           alignItems="center"
-          className={clickable?.status ? classes.clickable : classes.list}
-          onClick={() => handleClick(item) || null}
+          className={clickable ? classes.clickable : classes.list}
+          onClick={clickable ? () => handleClick(item) : null}
           key={item.id || index}
           spacing={1}
         >
-          <CellData propNames={keys} dataObj={item} />
-        </Grid>
+        <CellData propNames={keys} dataObj={item} />
+      </Grid>
       ))}
     </>
   );
@@ -53,10 +53,7 @@ export function CellData({ propNames, dataObj }) {
 
 DataList.defaultProps = {
   hasHeader: true,
-  clickable: {
-    status: false,
-    onclick: null
-  },
+  clickable: false,
   handleClick: () => {}
 };
 
@@ -81,10 +78,8 @@ DataList.propTypes = {
    * @param {object} clickable used to set the card clickable,
    * it also includes the onClick function when the card is being clicked
    */
-  clickable: PropTypes.shape({
-    status: PropTypes.bool,
-    handelClick: PropTypes.func
-  })
+  clickable: PropTypes.bool,
+  handleClick: PropTypes.func
 };
 
 CellData.propTypes = {
@@ -105,7 +100,6 @@ const useStyles = makeStyles(() => ({
     padding: '15px 0',
     border: '1px solid #ECECEC',
     cursor: 'pointer',
-    textAlign: 'center',
     marginBottom: '10px'
   }
 }));

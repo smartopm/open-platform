@@ -1023,11 +1023,21 @@ export const AllTransactionQuery = gql`
           id
           parcelNumber
         }
+        payments {
+          id
+          amount
+          paymentType
+          paymentStatus
+          createdAt
+          user {
+            id
+            name
+          }
+        }
       }
       payments {
         id
         amount
-        paymentStatus
         paymentType
         createdAt
       }

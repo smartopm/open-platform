@@ -15,12 +15,12 @@ import { formatError } from '../../utils/helpers'
 const initialValues = {
   amount: '',
   transactionType: '',
-  paymentStatus: 'pending',
+  status: 'pending',
   bankName: '',
   chequeNumber: '',
 }
 
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch }){
+export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -34,7 +34,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       variables: {
         userId,
         amount: parseFloat(inputValue.amount),
-        paymentType: inputValue.transactionType,
+        source: inputValue.transactionType,
+        status: inputValue.status,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
       }
@@ -44,6 +45,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       handleModalClose()
       refetch()
       depRefetch()
+      walletRefetch()
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
@@ -123,6 +125,19 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
                   value={inputValue.chequeNumber}
                   onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
                 />
+                <TextField
+                  margin="dense"
+                  id="payment-status"
+                  inputProps={{ "data-testid": "payment-status" }}
+                  label="Payment Status"
+                  value={inputValue.status}
+                  onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
+                  required
+                  select
+                >
+                  <MenuItem value='pending'>Pending</MenuItem>
+                  <MenuItem value='settled'>Settled</MenuItem>
+                </TextField>
               </>
             )
           }
@@ -142,6 +157,7 @@ const useStyles = makeStyles({
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
+  walletRefetch: () => {}
  }
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -149,5 +165,6 @@ PaymentModal.propTypes = {
   userId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
+  walletRefetch: PropTypes.func,
   currency: PropTypes.string.isRequired
 }

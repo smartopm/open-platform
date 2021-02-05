@@ -116,6 +116,7 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         depRefetch={depRefetch}
         currency={currency}
+        walletRefetch={walletRefetch}
       />
       <TabPanel value={tabValue} index="Transactions">
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
@@ -125,7 +126,7 @@ export default function TransactionsList({ userId, user }) {
             key={trans.id}
           />
       ))}
-        {transactionsData?.userDeposits.transactions.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((trans) => (
+        {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
@@ -151,6 +152,7 @@ export default function TransactionsList({ userId, user }) {
         currency={currency} 
         refetch={refetch}
         depRefetch={depRefetch}
+        walletRefetch={walletRefetch}
       />
       <CenteredContent>
         <Paginate
