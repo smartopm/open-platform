@@ -23,7 +23,7 @@ export default function UserInvoiceItem({ invoice, currency }) {
         keys={invoiceHeader}
         data={[renderInvoices(invoice)]}
         hasHeader={false}
-        clickable={{ status: true }}
+        clickable
         handleClick={() => setOpen(true)}
       />
       <InvoiceDetails

@@ -32,7 +32,7 @@ export default function UserTransactionsList({ transaction, currency }) {
         keys={transactionHeader} 
         data={[renderTransactions(transaction, currency)]} 
         hasHeader={false} 
-        clickable={{status: true}}
+        clickable
         handleClick={() => setOpen(true)} 
       />
       <TransactionDetails 
