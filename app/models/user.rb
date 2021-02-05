@@ -90,6 +90,7 @@ class User < ApplicationRecord
   has_many :post_tags, through: :post_tag_users
   has_many :wallet_transactions, dependent: :destroy
   has_many :wallets, dependent: :destroy
+  has_many :substatus_logs, dependent: :destroy
   has_one_attached :avatar
   has_one_attached :document
 
@@ -121,6 +122,7 @@ class User < ApplicationRecord
   validate :phone_number_valid?
   after_create :add_notification_preference
   before_save :ensure_default_state_and_type
+  after_update :log_sub_status_change
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -522,6 +524,36 @@ class User < ApplicationRecord
               community.labels.create!(short_desc: pref)
       user_labels.create!(label_id: label.id)
     end
+  end
+
+  def log_sub_status_change
+    return sub_status_log if saved_changes.present? && saved_changes.key?('sub_status')
+  end
+
+  def sub_status_log
+    sub_status_changes = saved_changes['sub_status']
+
+    start_date = current_time_in_timezone
+    previous_status = sub_status_changes.first
+    new_status = sub_status_changes.last
+    stop_date = nil
+
+    if previous_status.present? && new_status != previous_status
+      stop_date = current_time_in_timezone
+    end
+
+    create_sub_status_log(start_date, previous_status, new_status, stop_date)
+  end
+
+  def create_sub_status_log(start_date, previous_status, new_status, stop_date)
+    SubstatusLog.create(
+      start_date: start_date,
+      previous_status: previous_status,
+      new_status: new_status,
+      stop_date: stop_date,
+      user_id: id,
+      community_id: self[:community_id],
+    )
   end
 end
 # rubocop:enable Metrics/ClassLength

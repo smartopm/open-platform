@@ -258,7 +258,7 @@ export default function UserInformation({
         </TabPanel>
         {['admin'].includes(userType) && (
           <TabPanel value={tabValue} index="CustomerJourney">
-            <UserJourney />
+            <UserJourney data={data} />
           </TabPanel>
         )}
 
