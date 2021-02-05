@@ -31,7 +31,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
             justify="space-around"
             alignItems="center"
             className={classes.clickable}
-            onClick={() => handleClick(item) || null}
+            onClick={() => handleClick(item)}
             key={item.id || index}
             spacing={1}
           >
