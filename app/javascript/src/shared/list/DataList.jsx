@@ -24,18 +24,32 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
     <>
       {hasHeader && <ListHeader headers={keys} />}
       {data.map((item, index) => (
-        <Grid
-          container
-          direction="row"
-          justify="space-around"
-          alignItems="center"
-          className={clickable?.status ? classes.clickable : classes.list}
-          onClick={() => handleClick(item) || null}
-          key={item.id || index}
-          spacing={1}
-        >
+        clickable.status ? (
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+            className={classes.clickable}
+            onClick={() => handleClick(item) || null}
+            key={item.id || index}
+            spacing={1}
+          >
           <CellData propNames={keys} dataObj={item} />
         </Grid>
+        ) : (
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+            className={classes.list}
+            key={item.id || index}
+            spacing={1}
+          >
+          <CellData propNames={keys} dataObj={item} />
+        </Grid>
+        )
       ))}
     </>
   );
@@ -105,7 +119,6 @@ const useStyles = makeStyles(() => ({
     padding: '15px 0',
     border: '1px solid #ECECEC',
     cursor: 'pointer',
-    textAlign: 'center',
     marginBottom: '10px'
   }
 }));

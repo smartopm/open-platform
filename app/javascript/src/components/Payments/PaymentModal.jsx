@@ -35,6 +35,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         userId,
         amount: parseFloat(inputValue.amount),
         paymentType: inputValue.transactionType,
+        paymentStatus: inputValue.paymentStatus,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
       }
@@ -90,6 +91,19 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
               }}
             required
           />
+          {/* <TextField
+            margin="dense"
+            id="payment-status"
+            inputProps={{ "data-testid": "payment-status" }}
+            label="Payment Status"
+            value={inputValue.paymentStatus}
+            onChange={(event) => setInputValue({...inputValue, paymentStatus: event.target.value})}
+            required
+            select
+          >
+            <MenuItem value='pending'>Pending</MenuItem>
+            <MenuItem value='settled'>Settled</MenuItem>
+          </TextField> */}
           <TextField
             margin="dense"
             id="transaction-type"

@@ -791,6 +791,7 @@ export const PaymentCreate = gql`
     $userId: ID!
     $amount: Float!
     $paymentType: String!
+    $paymentStatus: String!
     $bankName: String
     $chequeNumber: String
   ) {
@@ -798,6 +799,7 @@ export const PaymentCreate = gql`
       userId: $userId
       amount: $amount
       paymentType: $paymentType
+      paymentStatus: $paymentStatus
       bankName: $bankName
       chequeNumber: $chequeNumber
     ) {

@@ -88,7 +88,7 @@ export default function TransactionsList({ userId, user }) {
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   return (
     <div>
-      {console.log(transactionsData)}
+      {console.log(invPayData)}
       <CenteredContent>
         <StyledTabs
           value={tabValue}

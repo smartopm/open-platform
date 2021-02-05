@@ -13,7 +13,13 @@ const transactionHeader = [
   { title: 'Description', col: 1 },
   { title: 'Status', col: 1 },
   { title: 'Amount', col: 1 },
+  { title: 'Balance', col: 1 },
 ];
+
+const payStatus = {
+  cash: 'Cash',
+  'cheque/cashier_cheque': 'Cheque or CashierCheque'
+}
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
 
@@ -42,10 +48,29 @@ export default function UserTransactionsList({ transaction, currency }) {
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Date Created': <GridText col={4} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
-    Description: <GridText col={4} content={`${transaction.source === 'wallet' ? 'Invoice settlement' : 'Deposit' }`} />,
-    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? invoiceStatus[transaction.status] : 'In-Progress'} />,
-    Amount: <GridText col={4} content={`${currency}${transaction.amount}`} />,
+    'Date Created': <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
+    // eslint-disable-next-line no-nested-ternary
+    Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? 'Invoice' : transaction.currentWalletBalance === 0 ? 'Invoice Settlement' : 'Deposit' }`} />,
+    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : payStatus[transaction.source]}` : 'In-Progress'} />,
+    Amount:  <GridText 
+      col={3} 
+      content={transaction.__typename === 'WalletTransaction' 
+            ? `${currency}${transaction.amount}` 
+            : (
+              <div>
+                <Text content={`Amount: ${currency}${transaction.amount}`} />
+                <Text content={`Pending Amount: ${currency}${transaction.pendingAmount}`} />
+              </div>
+              )}
+    />, 
+    Balance: <GridText 
+      col={3} 
+      content={transaction.__typename === 'WalletTransaction' 
+              ? `Bal: ${currency}${transaction.currentWalletBalance}` 
+              : (
+                  `Bal: ${currency}${transaction.balance}`
+              )}
+    />,
   };
 }
 
