@@ -50,7 +50,7 @@ export function renderTransactions(transaction, currency) {
   return {
     'Date Created': <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
     // eslint-disable-next-line no-nested-ternary
-    Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? 'Invoice' : transaction.currentWalletBalance === 0 ? 'Invoice Settlement' : 'Deposit' }`} />,
+    Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? 'Invoice' : transaction.currentWalletBalance === 0 ? 'Invoice Settlement' : transaction.source === 'wallet' ? 'Partial settlement' : 'Deposit' }`} />,
     Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : payStatus[transaction.source]}` : 'In-Progress'} />,
     Amount:  <GridText 
       col={3} 
