@@ -90,6 +90,7 @@ class User < ApplicationRecord
   has_many :post_tags, through: :post_tag_users
   has_many :wallet_transactions, dependent: :destroy
   has_many :wallets, dependent: :destroy
+  has_many :payment_plans
   has_one_attached :avatar
   has_one_attached :document
 
