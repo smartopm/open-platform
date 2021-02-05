@@ -34,9 +34,11 @@ export default function UserJourney({ data }) {
         <b>{userSubStatus[String(newStatus)]}</b>
         {' '}
         between
+        {' '}
         {startDate}
         {' '}
         and
+        {' '}
         {stopDate}
       </>
     )
