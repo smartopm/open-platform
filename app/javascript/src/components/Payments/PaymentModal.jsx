@@ -15,7 +15,7 @@ import { formatError } from '../../utils/helpers'
 const initialValues = {
   amount: '',
   transactionType: '',
-  paymentStatus: 'pending',
+  status: 'pending',
   bankName: '',
   chequeNumber: '',
 }
@@ -34,8 +34,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       variables: {
         userId,
         amount: parseFloat(inputValue.amount),
-        paymentType: inputValue.transactionType,
-        paymentStatus: inputValue.paymentStatus,
+        source: inputValue.transactionType,
+        status: inputValue.status,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
       }
@@ -91,19 +91,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
               }}
             required
           />
-          {/* <TextField
-            margin="dense"
-            id="payment-status"
-            inputProps={{ "data-testid": "payment-status" }}
-            label="Payment Status"
-            value={inputValue.paymentStatus}
-            onChange={(event) => setInputValue({...inputValue, paymentStatus: event.target.value})}
-            required
-            select
-          >
-            <MenuItem value='pending'>Pending</MenuItem>
-            <MenuItem value='settled'>Settled</MenuItem>
-          </TextField> */}
           <TextField
             margin="dense"
             id="transaction-type"
@@ -138,6 +125,19 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
                   value={inputValue.chequeNumber}
                   onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
                 />
+                <TextField
+                  margin="dense"
+                  id="payment-status"
+                  inputProps={{ "data-testid": "payment-status" }}
+                  label="Payment Status"
+                  value={inputValue.status}
+                  onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
+                  required
+                  select
+                >
+                  <MenuItem value='pending'>Pending</MenuItem>
+                  <MenuItem value='settled'>Settled</MenuItem>
+                </TextField>
               </>
             )
           }

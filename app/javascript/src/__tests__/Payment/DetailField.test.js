@@ -15,7 +15,6 @@ describe('Detail Component', () => {
           <DetailField title='Some Title' value='Some Value' />
         </MockedProvider>
       </BrowserRouter>)
-    expect(container.queryByTestId('title').textContent).toContain('Some Title')
-    expect(container.queryByTestId('value').textContent).toContain('Some Value')
+    expect(container.queryByTestId('text-field').value).toContain('Some Value')
   })
 })

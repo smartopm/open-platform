@@ -32,7 +32,7 @@ module Types::Queries::Deposit
 
     pending_invoices = cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
     {
-      transactions: user.wallet_transactions,
+      transactions: user.wallet_transactions.reverse,
       pending_invoices: pending_invoices,
     }
   end

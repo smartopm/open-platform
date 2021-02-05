@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
@@ -9,6 +9,7 @@ import { Spinner } from '../../shared/Loading'
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
 describe('Transaction Details Component', () => {
+  afterEach(cleanup)
   it('should render the transaction details component', async () => {
     const dataMock = {
       amount: 200,
@@ -28,9 +29,9 @@ describe('Transaction Details Component', () => {
       </BrowserRouter>)
 
     await waitFor(() => {
-      expect(container.queryByText('k200')).toBeInTheDocument();
-      expect(container.queryByText('in_progress')).toBeInTheDocument();
-      expect(container.queryByText('2020-12-28')).toBeInTheDocument();
+      expect(container.queryAllByTestId('text-field')[0].value).toContain('k200')
+      expect(container.queryAllByTestId('text-field')[1].value).toContain('in_progress')
+      expect(container.queryAllByTestId('text-field')[2].value).toContain('2020-12-28')
     },
     { timeout: 500 }
     ) 

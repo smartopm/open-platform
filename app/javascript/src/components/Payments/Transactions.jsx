@@ -88,7 +88,6 @@ export default function TransactionsList({ userId, user }) {
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   return (
     <div>
-      {console.log(invPayData)}
       <CenteredContent>
         <StyledTabs
           value={tabValue}
@@ -127,7 +126,7 @@ export default function TransactionsList({ userId, user }) {
             key={trans.id}
           />
       ))}
-        {transactionsData?.userDeposits.transactions.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((trans) => (
+        {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}

@@ -6,7 +6,7 @@ export default function DetailsField({ title, value }){
   return(
     <>
       <div>
-        <TextField disabled id={`${value}-id`} style={{width: '350px', margin: '23px'}} label={title} value={value} />
+        <TextField disabled id={`${value}-id`} inputProps={{'data-testid': 'text-field'}} style={{width: '350px', margin: '23px'}} label={title} value={value} />
       </div>
     </>
   )
