@@ -2,7 +2,7 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import { act, render } from '@testing-library/react'
-import LandParcelLegendContent from '../components/Map/LandParcelLegendContent'
+import LandParcelLegendContent from '../../components/Map/LandParcelLegendContent'
 
 describe('<LandParcelLegendContent />', () => {
 

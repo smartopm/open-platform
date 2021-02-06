@@ -70,7 +70,9 @@ export default function InvoiceList({ currency }) {
         title='Invoices' 
         searchValue={searchValue} 
         handleSearch={event => setSearchValue(event.target.value)} 
-        handleFilter={handleFilter}
+        // Todo: add a proper filter toggle function
+        handleFilter={() => {}}
+        handleClear={() => setSearchValue('')}
       />
       <br />
       <br />

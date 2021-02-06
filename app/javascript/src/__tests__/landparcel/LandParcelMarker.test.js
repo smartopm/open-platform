@@ -2,7 +2,7 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import { act, render } from '@testing-library/react'
-import LandParcelMarker from '../components/Map/LandParcelMarker'
+import LandParcelMarker from '../../components/Map/LandParcelMarker'
 
 describe('<LandParcelMarker />', () => {
   const markerProps = {

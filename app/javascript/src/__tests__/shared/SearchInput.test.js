@@ -17,4 +17,18 @@ describe('Search Input component', () => {
     expect(container.queryAllByText('Search for Some searchable title')[0]).toBeInTheDocument();
     expect(container.queryAllByText('Search for Some searchable title')).toHaveLength(2);
   });
+  it('should include a clear search query icon', () => {
+    const onChange = jest.fn();
+    const searchContainer = render(
+      <SearchInput
+        title="Some searchable title"
+        searchValue="query"
+        handleSearch={onChange}
+        handleFilter={() => {}}
+        handleClear={() => {}}
+      />
+    );
+    expect(searchContainer.queryByTestId('clear_search')).toBeInTheDocument();
+    expect(searchContainer.queryByTestId('clear_search')).not.toBeDisabled();
+  })
 });

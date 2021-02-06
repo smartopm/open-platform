@@ -10,6 +10,7 @@ module Types::Queries::LandParcel
       description 'Get all land parcel entries'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :query, String, required: false
     end
 
     # Get land parcel details that belongs to a user
@@ -29,11 +30,11 @@ module Types::Queries::LandParcel
     end
   end
 
-  def fetch_land_parcel(offset: 0, limit: 100)
+  def fetch_land_parcel(query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    context[:site_community].land_parcels.eager_load(:valuations, :accounts).limit(limit)
-                            .offset(offset)
+    context[:site_community].land_parcels.search(query).eager_load(:valuations, :accounts)
+                            .limit(limit).offset(offset)
   end
 
   def user_land_parcel(user_id:)
