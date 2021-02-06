@@ -25,7 +25,7 @@ class EventLog < ApplicationRecord
                       shift_start shift_end user_referred post_read post_shared
                       task_create task_update note_comment_create note_comment_update
                       form_create form_update form_publish form_submit form_update_submit
-                      visit_request invoice_change payment_change].freeze
+                      visit_request invoice_change deposit_change].freeze
   validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
   # Only log user activity if we haven't seen them
@@ -133,8 +133,8 @@ class EventLog < ApplicationRecord
     "#{acting_user_name} changed an invoice"
   end
 
-  def payment_change_to_sentence
-    "#{acting_user_name} changed a payment"
+  def deposit_change_to_sentence
+    "#{acting_user_name} made a deposit"
   end
 
   def form_publish_to_sentence

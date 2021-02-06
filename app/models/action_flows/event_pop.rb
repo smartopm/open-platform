@@ -49,13 +49,12 @@ module ActionFlows
         'previous_status' => '',
         'current_status' => '',
       },
-      'Payment' => {
+      'Deposit' => {
         'amount' => '',
         'status' => '',
-        'invoice_user_name' => '',
-        'invoice_user_email' => '',
-        'invoice_status' => '',
-        'invoice_amount' => '',
+        'user_name' => '',
+        'user_email' => '',
+        'creator' => '',
       },
     }.freeze
 

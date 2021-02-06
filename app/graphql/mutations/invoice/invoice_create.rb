@@ -22,7 +22,7 @@ module Mutations
           context[:current_user].generate_events(
             'invoice_change',
             invoice,
-            { from_status: nil, to_status: invoice.status }
+            { from_status: '', to_status: invoice.status }
           )
           return { invoice: invoice.reload }
         end

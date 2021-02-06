@@ -89,25 +89,21 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
   if (ruleFieldsData.data) {
     ruleFieldsData.data.ruleFields.forEach(field => {
-      if (
-        ['invoice_previous_status', 'invoice_current_status', 'payment_invoice_status'].includes(
-          field
-        )
-      ) {
+      if (['invoice_previous_status', 'invoice_current_status'].includes(field)) {
         addQuerySelectMenu(field, {
-          '': '',
           in_progress: 'In Progress',
           paid: 'Paid',
           late: 'Late',
-          cancelled: 'Cancelled'
+          cancelled: 'Cancelled',
+          '': 'Null'
         });
-      } else if (field === 'payment_status') {
+      } else if (field === 'deposit_status') {
         addQuerySelectMenu(field, {
-          '': '',
           settled: 'Settled',
           pending: 'Pending',
           denied: 'Denied',
-          cancelled: 'Cancelled'
+          cancelled: 'Cancelled',
+          '': 'Null'
         });
       } else {
         ruleFieldsConfig[field] = {
@@ -335,9 +331,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   return (
                     <FormControl fullWidth>
                       <InputLabel id={`select-${actionField.name}`}>
-                        {`Select ${capitalize(
-                        actionField.name
-                      )}`}
+                        {`Select ${capitalize(actionField.name)}`}
                       </InputLabel>
                       <Select
                         labelId={`select-${actionField.name}`}
@@ -360,9 +354,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   return (
                     <FormControl fullWidth>
                       <InputLabel id={`select-${actionField.name}`}>
-                        {`Select ${capitalize(
-                        actionField.name
-                      )}`}
+                        {`Select ${capitalize(actionField.name)}`}
                       </InputLabel>
                       <Select
                         labelId={`select-${actionField.name}`}
