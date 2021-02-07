@@ -27,6 +27,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
   const [createPayment] = useMutation(PaymentCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  // const [promptOpen, setPromptOpen] = useState(false)
   
   function handleSubmit(event) {
     event.preventDefault()
@@ -46,6 +47,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       refetch()
       depRefetch()
       walletRefetch()
+      // setPromptOpen(true)
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { Button, Typography } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import InvoiceModal from './invoiceModal'
@@ -69,6 +69,11 @@ export default function TransactionsList({ userId, user }) {
     setOpen(false)
   }
 
+  function handlePaymentOpen() {
+    history.push(`/user/${userId}?tab=Payments&payments=new`)
+    setPayOpen(true)
+  }
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return
@@ -99,7 +104,7 @@ export default function TransactionsList({ userId, user }) {
         </StyledTabs>
         <div style={{marginLeft: '100px'}}> 
           <Button variant="text">{`Balance: ${currency}${walletData.userBalance}`}</Button>
-          <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
+          <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => handlePaymentOpen()} />
           {
             authState.user?.userType === 'admin' && (
               <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
