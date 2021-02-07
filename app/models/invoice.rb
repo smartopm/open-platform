@@ -21,6 +21,7 @@ class Invoice < ApplicationRecord
 
   search_scope :search do
     attributes :status
+    attributes :invoice_number
     attributes land_parcel: ['land_parcel.parcel_number']
     attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number']
     attributes user: ['user.name', 'user.email', 'user.phone_number']
