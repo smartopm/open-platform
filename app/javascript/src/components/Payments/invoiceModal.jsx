@@ -28,9 +28,6 @@ export default function InvoiceModal({ open, handleModalClose, userId, refetch, 
   const [createInvoice] = useMutation(InvoiceCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-  // const [openPayment, setOpenPayment] = useState(false)
-  // const [pay, setPay] = useState(false)
-  // const [invoiceData, setInvoiceData] = useState(null)
   const [isError, setIsError] = useState(false)
   const [submitting, setIsSubmitting] = useState(false)
 
