@@ -464,7 +464,7 @@ ActiveRecord::Schema.define(version: 2021_02_05_112746) do
   create_table "payment_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "land_parcel_id", null: false
-    t.string "type"
+    t.string "plan_type"
     t.datetime "start_date"
     t.integer "status"
     t.string "percentage"
