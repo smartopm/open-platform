@@ -390,14 +390,13 @@ export default function LandParcelModal({
             <AddMoreButton title="New Owner" handleAdd={addOwnership} />
           </>
         )}
-
         {
           showPaymentPlan && (
             <>
               <br />
               <Text content="Purchase Plan" /> 
               <PaymentPlanForm 
-                landParcelId={landParcel.id}
+                landParcel={landParcel}
               />
             </>
             )

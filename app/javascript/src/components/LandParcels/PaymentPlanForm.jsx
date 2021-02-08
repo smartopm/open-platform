@@ -13,11 +13,11 @@ const initialPlanState = {
   planType: '',
   percentage: '',
   startDate: new Date(),
-  showPaymentPlan: false
+  userId: '',
 }
-export default function PaymentPlanForm({ landParcelId }) {
+export default function PaymentPlanForm({ landParcel }) {
   const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState)
-  console.log(landParcelId)
+  console.log(landParcel)
   console.log('I appeared yeahhhh')
 
   function handleOnChange(event) {
@@ -41,6 +41,28 @@ export default function PaymentPlanForm({ landParcelId }) {
       >
         <MenuItem value="lease">Lease</MenuItem>
         <MenuItem value="other">Other</MenuItem>
+      </TextField>
+
+      <TextField
+        autoFocus
+        margin="normal"
+        id="purchase_plan_owner"
+        inputProps={{ 'data-testid': 'payment_plan_owner' }}
+        label="Choose Payment Plan User"
+        value={paymentPlanState.userId}
+        onChange={handleOnChange}
+        name="userId"
+        style={{ width: '100%' }}
+        required
+        select
+      >
+        {
+          landParcel.accounts.map(user => (
+            <MenuItem key={user.id} value={user.id}>
+              {user.fullName}
+            </MenuItem>
+          ))
+        }
       </TextField>
       <TextField
         autoFocus
@@ -83,5 +105,6 @@ export default function PaymentPlanForm({ landParcelId }) {
 }
 
 PaymentPlanForm.propTypes = {
-  landParcelId: PropTypes.string.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    landParcel: PropTypes.object.isRequired
 };
