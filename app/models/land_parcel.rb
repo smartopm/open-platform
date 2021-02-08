@@ -7,7 +7,7 @@ class LandParcel < ApplicationRecord
   has_many :accounts, through: :land_parcel_accounts
   has_many :valuations, -> { order(start_date: :asc) },
            dependent: :destroy, inverse_of: :land_parcel
-  has_one :payment_plans, dependent: :destroy
+  has_one :payment_plan, dependent: :destroy
 
   validates :parcel_number, uniqueness: true
   default_scope { order(created_at: :desc) }
