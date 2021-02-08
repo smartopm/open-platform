@@ -88,7 +88,9 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
             "form_update_submit",
             "user_login",
             "form_submit",
-            "note_comment_update"
+            "note_comment_update",
+            "deposit_create",
+            "invoice_change"
           ]
         }
       }
