@@ -65,14 +65,13 @@ class Wallet < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
 
   def create_transaction(payment_amount)
-    cur_bal = balance.zero? & pending_balance.positive? ? -pending_balance : balance
     user.wallet_transactions.create!({
                                        source: 'wallet',
                                        destination: 'invoice',
                                        amount: payment_amount,
                                        status: 'settled',
                                        user_id: user.id,
-                                       current_wallet_balance: cur_bal,
+                                       current_wallet_balance: balance,
                                      })
   end
 end
