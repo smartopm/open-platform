@@ -106,7 +106,6 @@ export default function LandParcelPage() {
 
   return (
     <>
-      {console.log(data)}
       <Container>
         <LandParcelModal
           open={open}
