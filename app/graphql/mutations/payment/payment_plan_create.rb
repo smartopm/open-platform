@@ -4,7 +4,6 @@ module Mutations
     module Payment
       # Create a new PaymentPlan for a land
       class PaymentPlanCreate < BaseMutation
-        argument :user_id, ID, required: true
         argument :land_parcel_id, ID, required: true
         argument :status, Integer, required: true
         argument :plan_type, String, required: true
@@ -14,9 +13,13 @@ module Mutations
         field :payment_plan, Types::PaymentPlanType, null: true
   
         def resolve(vals)
-          user = context[:site_community].users.find(vals[:user_id])
-          raise GraphQL::ExecutionError, 'User not found' if user.nil?
-          payment_plan = user.payment_plans.create!(vals.except(:user_id))
+          accounts = context[:site_community].land_parcels.find(vals[:land_parcel_id])&.accounts
+          raise GraphQL::ExecutionError, 'LandParcel has no owner' if accounts.nil?
+
+          user = context[:site_community].users.find_by(id: accounts.first.user_id)
+          raise GraphQL::ExecutionError, 'Owner not found' if user.nil?
+
+          payment_plan = user.payment_plans.create!(vals)
           return { payment_plan: payment_plan } if payment_plan.persisted?
   
           raise GraphQL::ExecutionError, payment_plan.errors.full_messages
