@@ -10,5 +10,6 @@ class AddPaymentPlan < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
+    add_index :payment_plans, [:user_id, :land_parcel_id], :unique => true
   end
 end
