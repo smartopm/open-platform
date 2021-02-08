@@ -353,7 +353,7 @@ export default function LandParcelModal({
                   onKeyDown={userSearch}
                   name="address"
                   className={classes.textField}
-                  style={{ marginBottom: '15px' }}
+                  style={{ marginBottom: '15px', width: '100%' }}
                 />
               )}
               {search && data && currentIndex === index && (
