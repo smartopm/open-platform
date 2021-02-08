@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MenuItem, TextField } from '@material-ui/core';
+import { Button, MenuItem, TextField } from '@material-ui/core';
 import DatePickerDialog from '../DatePickerDialog';
 import { paymentPlanStatus } from '../../utils/constants';
 
@@ -62,6 +62,7 @@ export default function PaymentPlanForm({ planState, updatePlanState }) {
         label="Start Date"
         required
       />
+      <Button variant="text" color="primary">Save Plan</Button>
     </>
   );
 }
@@ -70,7 +71,7 @@ PaymentPlanForm.propTypes = {
   planState: PropTypes.shape({
     status: PropTypes.string,
     planType: PropTypes.string,
-    startDate: PropTypes.string,
+    startDate: PropTypes.instanceOf(Date),
     percentage: PropTypes.string
   }).isRequired,
   updatePlanState: PropTypes.func.isRequired
