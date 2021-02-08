@@ -8,7 +8,7 @@ import {
   IconButton,
   RadioGroup,
   Radio,
-  FormControlLabel
+  FormControlLabel,
 } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
 import { CustomizedDialogs } from '../Dialog';
@@ -18,7 +18,16 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 import { currencies } from '../../utils/constants';
 import { UsersLiteQuery } from '../../graphql/queries';
 import AddMoreButton from '../../shared/buttons/AddMoreButton';
+import Text from '../../shared/Text';
+import PaymentPlanForm from './PaymentPlanForm';
 
+const initialPlanState = {
+  status: '',
+  planType: '',
+  percentage: '',
+  startDate: new Date(),
+  showPaymentPlan: false
+}
 export default function LandParcelModal({
   open,
   handelClose,
@@ -42,6 +51,7 @@ export default function LandParcelModal({
   const [ownershipFields, setOwnershipFields] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState)
 
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
@@ -387,6 +397,26 @@ export default function LandParcelModal({
             <AddMoreButton title="New Owner" handleAdd={addOwnership} />
           </>
         )}
+        <br />
+        <Text content="Purchase Plan" /> 
+
+        {
+            paymentPlanState.showPaymentPlan && (
+              <PaymentPlanForm 
+                planState={paymentPlanState} 
+                updatePlanState={setPaymentPlanState}
+              />
+            )
+        }
+
+        {
+          (modalType === 'new' || isEditing) && (
+            <AddMoreButton 
+              title={`${paymentPlanState.showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`} 
+              handleAdd={() => setPaymentPlanState({...paymentPlanState, showPaymentPlan: !paymentPlanState.showPaymentPlan})}
+            />
+          )
+        }
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
         {modalType === 'details' &&
@@ -467,7 +497,6 @@ export default function LandParcelModal({
     </CustomizedDialogs>
   );
 }
-
 
 const useStyles = makeStyles(() => ({
   parcelForm: {
