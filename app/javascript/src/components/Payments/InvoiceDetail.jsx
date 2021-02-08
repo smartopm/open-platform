@@ -16,7 +16,7 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
       >
         <DetailsField
           title='Invoice Number'
-          value={data?.invoiceNumber}
+          value={`#${data?.invoiceNumber}`}
         />
         <DetailsField
           title='Issued Date'

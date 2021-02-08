@@ -123,7 +123,7 @@ export function renderInvoices(invoices, currency) {
     return {
       'Invoice Number': (
         <Grid item xs={4} md={1} data-testid="invoice_number">
-          {invoice.invoiceNumber}
+          {`#${invoice.invoiceNumber}`}
         </Grid>
       ),
       'CreatedBy': (
