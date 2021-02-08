@@ -18,8 +18,9 @@ import useDebounce from '../../utils/useDebounce';
 import Text from '../../shared/Text';
 
 const invoiceHeaders = [
+  { title: 'Invoice Number', col: 1 },
   { title: 'CreatedBy', col: 2 },
-  { title: 'Parcel Number', col: 2 },
+  { title: 'Parcel Number', col: 1 },
   { title: 'Amount', col: 2 },
   { title: 'Issued date', col: 1 },
   { title: 'Due date', col: 1 },
@@ -66,10 +67,10 @@ export default function InvoiceList({ currency }) {
 
   return (
     <>
-      <SearchInput 
-        title='Invoices' 
-        searchValue={searchValue} 
-        handleSearch={event => setSearchValue(event.target.value)} 
+      <SearchInput
+        title='Invoices'
+        searchValue={searchValue}
+        handleSearch={event => setSearchValue(event.target.value)}
         // Todo: add a proper filter toggle function
         handleFilter={() => {}}
         handleClear={() => setSearchValue('')}
@@ -120,13 +121,18 @@ export default function InvoiceList({ currency }) {
 export function renderInvoices(invoices, currency) {
   return invoices.map(invoice => {
     return {
+      'Invoice Number': (
+        <Grid item xs={4} md={1} data-testid="invoice_number">
+          {`#${invoice.invoiceNumber}`}
+        </Grid>
+      ),
       'CreatedBy': (
         <Grid item xs={4} md={2} data-testid="created_by">
           {invoice.user.name}
         </Grid>
       ),
       'Parcel Number': (
-        <Grid item xs={4} md={2} data-testid="parcel_number">
+        <Grid item xs={4} md={1} data-testid="parcel_number">
           {invoice.landParcel.parcelNumber}
         </Grid>
       ),
@@ -139,7 +145,7 @@ export function renderInvoices(invoices, currency) {
       'Issued date': (
         <Grid item xs={4} md={2}>
           <Text content={`Issued: ${dateToString(invoice.createdAt)}`} />
-          {invoice.status === 'paid' && invoice.payments.length 
+          {invoice.status === 'paid' && invoice.payments.length
             ? <Text content={`Paid: ${dateToString(invoice.payments[0]?.createdAt)} `} /> : null}
         </Grid>
       ),

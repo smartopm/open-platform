@@ -39,7 +39,7 @@ export default function UserInvoiceItem({ invoice, currency }) {
 
 export function renderInvoices(inv) {
   return {
-    'Invoice Number': <GridText content={inv.invoiceNumber} />,
+    'Invoice Number': <GridText content={`#${inv.invoiceNumber}`} />,
     'Date Created': <GridText content={`Issued on ${dateToString(inv.createdAt)}`} />,
     Status: <GridText content={inv.status === 'paid' ? `Paid on ${dateToString(inv.updatedAt)}` : invoiceStatus[inv.status]} />,
     Amount: <GridText content={inv.amount} />,

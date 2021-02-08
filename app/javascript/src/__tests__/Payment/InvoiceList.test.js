@@ -106,6 +106,7 @@ describe('Invoice Item Component', () => {
 
     await waitFor(
       () => {
+        expect(container.queryAllByTestId('invoice_number')[0].textContent).toContain('#123');
         expect(container.queryAllByTestId('created_by')[0].textContent).toContain('joe');
         expect(container.queryAllByTestId('invoice_amount')[0].textContent).toContain('k23423423');
         expect(container.queryAllByTestId('parcel_number')[0].textContent).toContain('Plot-1343');
@@ -119,6 +120,7 @@ describe('Invoice Item Component', () => {
   it('should check if renderInvoices works as expected', () => {
     const results = renderInvoices(invoices, 'k');
     expect(results).toBeInstanceOf(Array);
+    expect(results[0]).toHaveProperty('Invoice Number');
     expect(results[0]).toHaveProperty('Parcel Number');
     expect(results[0]).toHaveProperty('Amount');
     expect(results[0]).toHaveProperty('Due date');

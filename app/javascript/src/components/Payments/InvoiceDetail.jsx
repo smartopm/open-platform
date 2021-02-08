@@ -15,6 +15,10 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
         title='Invoice Details'
       >
         <DetailsField
+          title='Invoice Number'
+          value={`#${data?.invoiceNumber}`}
+        />
+        <DetailsField
           title='Issued Date'
           value={dateToString(data?.createdAt)}
         />
@@ -35,7 +39,7 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
             <Typography variant="h6" align="center" color='primary'>Invoice Payment Details</Typography>
             {data.payments.map((pay) => (
               <div style={{display: 'flex', margin: '15px 23px', borderBottom: '1px solid #9E9E9E', paddingBottom: '5px', color: '#9E9E9E'}} key={pay.id}>
-                <Typography style={{marginRight: '20px'}}> 
+                <Typography style={{marginRight: '20px'}}>
                   {`Paid: ${dateToString(pay.createdAt)}`}
                 </Typography>
                 <Typography style={{marginRight: '10px'}}>
