@@ -16,11 +16,16 @@ module Mutations
         def resolve(vals)
           user = context[:site_community].users.find(vals[:user_id])
           raise GraphQL::ExecutionError, 'User not found' if user.nil?
-  
           payment_plan = user.payment_plans.create!(vals.except(:user_id))
           return { payment_plan: payment_plan } if payment_plan.persisted?
   
           raise GraphQL::ExecutionError, payment_plan.errors.full_messages
+        end
+
+        # make sure there is no other active payment_plans for a given land_parcel
+        def validate_land_parcel(land_parcel_id)
+          plans = context[:site_community].land_parcels.find(land_parcel_id).payment_plans
+          return false if plans.active.present?
         end
   
         def authorized?(_vals)

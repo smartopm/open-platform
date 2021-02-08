@@ -52,6 +52,7 @@ export default function LandParcelModal({
 
   useEffect(() => {
     setDetailsFields(landParcel);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {

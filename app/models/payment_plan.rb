@@ -6,6 +6,5 @@ class PaymentPlan < ApplicationRecord
    belongs_to :land_parcel
 
    enum status: { active: 0, cancelled: 1, deleted: 2}
-   validates :land_parcel_id, uniqueness: true
 end
   
