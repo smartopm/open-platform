@@ -17,15 +17,7 @@ module Mutations
       def resolve(vals)
         vals = vals.merge(created_by: context[:current_user])
         invoice = context[:site_community].invoices.create(vals)
-
-        if invoice.persisted?
-          context[:current_user].generate_events(
-            'invoice_change',
-            invoice,
-            { from_status: '', to_status: invoice.status }
-          )
-          return { invoice: invoice.reload }
-        end
+        return { invoice: invoice.reload } if invoice.persisted?
 
         raise GraphQL::ExecutionError, invoice.errors.full_messages
       end

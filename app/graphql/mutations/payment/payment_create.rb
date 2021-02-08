@@ -22,7 +22,6 @@ module Mutations
           # This mutation needs tobe replaced with walletTransactionCreate : Saurabh
           user.wallet.settle_pending_balance(remaining_amount, vals[:payment_type], user.id)
           transaction = create_transaction(user, vals)
-          context[:current_user].generate_events('deposit_change', transaction)
           user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
             break unless remaining_amount.positive?
 

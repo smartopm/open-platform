@@ -5,9 +5,9 @@ require 'host_env'
 module ActionFlows
   module Events
     # Task Update Event to handle related action
-    class DepositChangeEvent < ActionFlows::EventPop
-      EVENT_TYPE = 'deposit_change'
-      EVENT_DESC = 'Deposit Update and Create'
+    class DepositCreateEvent < ActionFlows::EventPop
+      EVENT_TYPE = 'deposit_create'
+      EVENT_DESC = 'Deposit Create'
 
       def self.event_metadata
         {
