@@ -15,7 +15,7 @@ import { currencies } from '../../utils/constants'
 import UserTransactionsList from './UserTransactions'
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
 import UserInvoiceItem from './UserInvoiceItem'
-import ButtonComponent from '../../shared/Button'
+import ButtonComponent from '../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
 export default function TransactionsList({ userId, user }) {

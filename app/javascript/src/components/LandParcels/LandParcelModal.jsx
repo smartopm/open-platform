@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,13 +5,11 @@ import { useLazyQuery } from 'react-apollo';
 import {
   TextField,
   InputAdornment,
-  Typography,
   IconButton,
   RadioGroup,
   Radio,
   FormControlLabel
 } from '@material-ui/core';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { DeleteOutline } from '@material-ui/icons';
 import { CustomizedDialogs } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
@@ -21,6 +17,7 @@ import DatePickerDialog from '../DatePickerDialog';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import { currencies } from '../../utils/constants';
 import { UsersLiteQuery } from '../../graphql/queries';
+import AddMoreButton from '../../shared/buttons/AddMoreButton';
 
 export default function LandParcelModal({
   open,
@@ -386,14 +383,9 @@ export default function LandParcelModal({
         ))}
 
         {(modalType === 'new' || isEditing) && (
-          <div className={classes.addIcon} role="button" onClick={addOwnership}>
-            <AddCircleOutlineIcon />
-            <div style={{ marginLeft: '6px', color: 'secondary' }}>
-              <Typography align="center" variant="caption">
-                New Owner
-              </Typography>
-            </div>
-          </div>
+          <>
+            <AddMoreButton title="New Owner" handleAdd={addOwnership} />
+          </>
         )}
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
@@ -470,20 +462,12 @@ export default function LandParcelModal({
               </div>
             </div>
           ))}
-        {(modalType === 'new' || isEditing) && (
-          <div className={classes.addIcon} role="button" onClick={addValuation}>
-            <AddCircleOutlineIcon />
-            <div style={{ marginLeft: '6px', color: 'secondary' }}>
-              <Typography align="center" variant="caption">
-                Add Valuation
-              </Typography>
-            </div>
-          </div>
-        )}
+        {(modalType === 'new' || isEditing) && <AddMoreButton title="Add Valuation" handleAdd={addValuation} />}
       </TabPanel>
     </CustomizedDialogs>
   );
 }
+
 
 const useStyles = makeStyles(() => ({
   parcelForm: {
@@ -491,12 +475,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     width: '400px',
     marginBottom: '30px'
-  },
-  addIcon: {
-    display: 'flex',
-    marginTop: '20px',
-    color: '#6CAA9F',
-    cursor: 'pointer'
   },
   removeIcon: {
     marginTop: '25px',
