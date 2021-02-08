@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, MenuItem, TextField } from '@material-ui/core';
 import DatePickerDialog from '../DatePickerDialog';
 import { paymentPlanStatus } from '../../utils/constants';
+// list all owners of the land parcel
+// pass a land_parcel
+// lazy query list of owners of
+// pick one owner
 
-export default function PaymentPlanForm({ planState, updatePlanState }) {
-  function update(event) {
+const initialPlanState = {
+  status: '',
+  planType: '',
+  percentage: '',
+  startDate: new Date(),
+  showPaymentPlan: false
+}
+export default function PaymentPlanForm({ landParcelId }) {
+  const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState)
+  console.log(landParcelId)
+  console.log('I appeared yeahhhh')
+
+  function handleOnChange(event) {
     const { name, value } = event.target;
-    updatePlanState({ ...planState, [name]: value });
+    setPaymentPlanState({ ...paymentPlanState, [name]: value });
   }
   return (
     <>
@@ -17,8 +32,8 @@ export default function PaymentPlanForm({ planState, updatePlanState }) {
         id="purchase_plan"
         inputProps={{ 'data-testid': 'purchase_plan' }}
         label="Purchase Plan"
-        value={planState.planType}
-        onChange={update}
+        value={paymentPlanState.planType}
+        onChange={handleOnChange}
         name="planType"
         style={{ width: '100%' }}
         required
@@ -33,8 +48,8 @@ export default function PaymentPlanForm({ planState, updatePlanState }) {
         id="status"
         inputProps={{ 'data-testid': 'status' }}
         label="Status"
-        value={planState.status}
-        onChange={update}
+        value={paymentPlanState.status}
+        onChange={handleOnChange}
         name="status"
         style={{ width: '100%' }}
         required
@@ -51,14 +66,14 @@ export default function PaymentPlanForm({ planState, updatePlanState }) {
         id="percentage"
         label="Percentage"
         inputProps={{ 'data-testid': 'percentage' }}
-        value={planState.percentage}
-        onChange={update}
+        value={paymentPlanState.percentage}
+        onChange={handleOnChange}
         name="percentage"
         style={{ width: '100%' }}
       />
       <DatePickerDialog
-        selectedDate={planState.startDate}
-        handleDateChange={date => updatePlanState({ ...planState, startDate: date })}
+        selectedDate={paymentPlanState.startDate}
+        handleDateChange={date => setPaymentPlanState({ ...paymentPlanState, startDate: date })}
         label="Start Date"
         required
       />
@@ -68,11 +83,5 @@ export default function PaymentPlanForm({ planState, updatePlanState }) {
 }
 
 PaymentPlanForm.propTypes = {
-  planState: PropTypes.shape({
-    status: PropTypes.string,
-    planType: PropTypes.string,
-    startDate: PropTypes.instanceOf(Date),
-    percentage: PropTypes.string
-  }).isRequired,
-  updatePlanState: PropTypes.func.isRequired
+  landParcelId: PropTypes.string.isRequired,
 };

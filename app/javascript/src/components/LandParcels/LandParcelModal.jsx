@@ -21,13 +21,6 @@ import AddMoreButton from '../../shared/buttons/AddMoreButton';
 import Text from '../../shared/Text';
 import PaymentPlanForm from './PaymentPlanForm';
 
-const initialPlanState = {
-  status: '',
-  planType: '',
-  percentage: '',
-  startDate: new Date(),
-  showPaymentPlan: false
-}
 export default function LandParcelModal({
   open,
   handelClose,
@@ -51,7 +44,7 @@ export default function LandParcelModal({
   const [ownershipFields, setOwnershipFields] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState)
+  const [showPaymentPlan, setShowPaymentPlan] = useState(false)
 
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
@@ -399,23 +392,22 @@ export default function LandParcelModal({
         )}
 
         {
-          paymentPlanState.showPaymentPlan && (
+          showPaymentPlan && (
             <>
               <br />
               <Text content="Purchase Plan" /> 
               <PaymentPlanForm 
-                planState={paymentPlanState} 
-                updatePlanState={setPaymentPlanState}
+                landParcelId={landParcel.id}
               />
             </>
             )
         }
 
         {
-          (modalType === 'new' || isEditing) && (
+          (isEditing) && (
             <AddMoreButton 
-              title={`${paymentPlanState.showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`} 
-              handleAdd={() => setPaymentPlanState({...paymentPlanState, showPaymentPlan: !paymentPlanState.showPaymentPlan})}
+              title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`} 
+              handleAdd={() => setShowPaymentPlan(!showPaymentPlan)}
             />
           )
         }
