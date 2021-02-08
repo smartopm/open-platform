@@ -34,14 +34,13 @@ class Invoice < ApplicationRecord
       user.wallet.update_balance(amount, 'debit')
       return if current_payment.zero?
 
-      cur_bal = user.wallet.balance.zero? ? -user.wallet.pending_balance : user.wallet.balance
       transaction = user.wallet_transactions.create!({
                                                        source: 'wallet',
                                                        destination: 'invoice',
                                                        amount: current_payment,
                                                        status: 'settled',
                                                        user_id: user.id,
-                                                       current_wallet_balance: cur_bal,
+                                                       current_wallet_balance: user.wallet.balance,
                                                      })
       payment = Payment.create(amount: current_payment, payment_type: 'wallet', user_id: user.id)
       payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
