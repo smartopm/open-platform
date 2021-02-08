@@ -19,7 +19,7 @@ export default function InvoiceTiles({ invoiceData, filter, currentTile }) {
 
   return Object.entries(invoiceStatus).map(([key, val]) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
-      {['in_progress', 'settled'].includes(key) ? null : (
+      {['in_progress', 'settled', 'pending'].includes(key) ? null : (
         <AnalyticsCard
           filter={() => filter(key)}
           title={val}
