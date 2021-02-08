@@ -2,9 +2,8 @@
 
 # PaymentPlan
 class PaymentPlan < ApplicationRecord
-   belongs_to :user
-   belongs_to :land_parcel
+  belongs_to :user
+  belongs_to :land_parcel
 
-   enum status: { active: 0, cancelled: 1, deleted: 2}
+  enum status: { active: 0, cancelled: 1, deleted: 2 }
 end
-  
