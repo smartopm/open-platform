@@ -23,8 +23,10 @@ RSpec.describe Invoice, type: :model do
   describe 'callbacks' do
     let!(:user) { create(:user_with_community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
-    let(:invoice) { create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-      status: 'in_progress', invoice_number: '1234', created_by: user) }
+    let(:invoice) do
+      create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
+                       status: 'in_progress', invoice_number: '1234', created_by: user)
+    end
 
     it 'should call generate_event_log on save' do
       expect(invoice).to receive(:generate_event_log)
