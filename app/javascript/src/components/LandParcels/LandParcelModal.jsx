@@ -397,15 +397,17 @@ export default function LandParcelModal({
             <AddMoreButton title="New Owner" handleAdd={addOwnership} />
           </>
         )}
-        <br />
-        <Text content="Purchase Plan" /> 
 
         {
-            paymentPlanState.showPaymentPlan && (
+          paymentPlanState.showPaymentPlan && (
+            <>
+              <br />
+              <Text content="Purchase Plan" /> 
               <PaymentPlanForm 
                 planState={paymentPlanState} 
                 updatePlanState={setPaymentPlanState}
               />
+            </>
             )
         }
 
