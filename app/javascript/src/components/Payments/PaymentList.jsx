@@ -105,7 +105,13 @@ export function renderPayments(payments, currency) {
       ),
       PaymentType: (
         <Grid item xs={4} md={2} data-testid="payment_type">
-          <span>{payment.paymentType === 'wallet' ? 'cash' : payment.paymentType}</span>
+          <span>
+            {
+            ['wallet', 'cash'].includes(payment.paymentType)
+            ? 'cash deposit'
+            :  payment.paymentType
+          }
+          </span>
         </Grid>
       ),
       Amount: (
