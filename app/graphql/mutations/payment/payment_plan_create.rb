@@ -18,13 +18,11 @@ module Mutations
         raise GraphQL::ExecutionError, 'User not found' if user.nil?
 
         payment_plan = user.payment_plans.create!(vals.except(:user_id))
-
-        rescue ActiveRecord::RecordNotUnique
-          raise GraphQL::ExecutionError, 'Payment Plan for this landparcel already exist'
-
         return { payment_plan: payment_plan } if payment_plan.persisted?
 
         raise GraphQL::ExecutionError, payment_plan.errors.full_messages
+      rescue ActiveRecord::RecordNotUnique
+        raise GraphQL::ExecutionError, 'Payment Plan for this landparcel already exist'
       end
 
       def authorized?(_vals)
