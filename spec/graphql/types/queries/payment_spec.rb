@@ -9,7 +9,7 @@ RSpec.describe Types::Queries::Payment do
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-                       status: 'in_progress')
+                       status: 'in_progress', created_by: user)
     end
     let!(:payment_one) do
       user.payments.create(amount: 100, payment_type: 'cash',

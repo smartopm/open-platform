@@ -25,6 +25,7 @@ module Mutations
               { destination: 'wallet', status: status, community_id: context[:site_community]&.id },
             ),
           )
+          context[:current_user].generate_events('deposit_create', transaction)
           update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
           return { wallet_transaction: transaction } if transaction.persisted?
         end

@@ -9,11 +9,11 @@ RSpec.describe Types::Queries::Invoice do
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-                       status: 'in_progress', invoice_number: '1234')
+                       status: 'in_progress', invoice_number: '1234', created_by: user)
     end
     let!(:invoice_two) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-                       status: 'late')
+                       status: 'late', created_by: user)
     end
 
     let(:invoices_query) do
