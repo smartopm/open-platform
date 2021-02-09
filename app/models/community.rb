@@ -23,6 +23,8 @@ class Community < ApplicationRecord
   has_many :invoices, dependent: :destroy
   has_many :email_templates, dependent: :destroy
   has_many :substatus_logs, dependent: :destroy
+  has_many :wallet_transactions, dependent: :destroy
+  has_many :payments, dependent: :destroy
 
   VALID_CURRENCIES = %w[zambian_kwacha].freeze
 
