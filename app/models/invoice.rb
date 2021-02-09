@@ -10,7 +10,9 @@ class Invoice < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
 
   before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
+  after_update -> { generate_event_log(:update) }
   after_create :collect_payment_from_wallet
+  after_create :generate_event_log
 
   has_many :payment_invoices, dependent: :destroy
   has_many :payments, through: :payment_invoices
@@ -74,5 +76,18 @@ class Invoice < ApplicationRecord
     return if pending_amount.positive? || status.eql?('paid')
 
     paid!
+  end
+
+  def generate_event_log(action_type = :create)
+    previous_status = ''
+    if action_type == :update && saved_changes.key?('status')
+      previous_status = saved_changes['status'].first
+    end
+
+    created_by.generate_events(
+      'invoice_change',
+      self,
+      { from_status: previous_status, to_status: status },
+    )
   end
 end

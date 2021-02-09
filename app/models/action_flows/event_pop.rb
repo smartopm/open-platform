@@ -41,6 +41,21 @@ module ActionFlows
         'status' => '',
         'has_status_changed' => '',
       },
+      'Invoice' => {
+        'amount' => '',
+        'user_name' => '',
+        'user_email' => '',
+        'due_date' => '',
+        'previous_status' => '',
+        'current_status' => '',
+      },
+      'Deposit' => {
+        'amount' => '',
+        'status' => '',
+        'user_name' => '',
+        'user_email' => '',
+        'creator' => '',
+      },
     }.freeze
 
     attr_accessor :data_set
