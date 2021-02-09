@@ -9,6 +9,7 @@ class Payment < ApplicationRecord
   has_many :invoices, through: :payment_invoices
 
   search_scope :search do
+    attributes :cheque_number, :amount, :bank_name, :payment_type, :created_at
     attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
 
