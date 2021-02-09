@@ -58,6 +58,7 @@ export default function PaymentList({ currency }) {
         searchValue={searchValue} 
         handleSearch={event => setSearchValue(event.target.value)} 
         handleFilter={handleFilter} 
+        handleClear={() => setSearchValue('')}
       />
       <br />
       <br />

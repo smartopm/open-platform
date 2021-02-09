@@ -19,6 +19,7 @@ module Mutations
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find(vals[:user_id])
           remaining_amount = vals[:amount]
+          # This mutation needs tobe replaced with walletTransactionCreate : Saurabh
           user.wallet.settle_pending_balance(remaining_amount, vals[:payment_type], user.id)
           transaction = create_transaction(user, vals)
           user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
@@ -37,12 +38,19 @@ module Mutations
 
       def extract_payment(inv, amount, user, payment_type, transaction_id)
         payment_amount = amount > inv.pending_amount ? inv.pending_amount : amount
-        payment = ::Payment.create(
-          amount: payment_amount, payment_type: payment_type, user_id: user.id,
-        )
+        payment = create_payment(payment_amount, payment_type, user)
         inv.payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction_id)
         inv.update(pending_amount: (inv.pending_amount - payment_amount))
         amount - payment_amount
+      end
+
+      def create_payment(payment_amount, payment_type, user)
+        ::Payment.create(
+          amount: payment_amount,
+          payment_type: payment_type,
+          user_id: user.id,
+          community_id: user.community_id,
+        )
       end
 
       # rubocop:disable Metrics/MethodLength

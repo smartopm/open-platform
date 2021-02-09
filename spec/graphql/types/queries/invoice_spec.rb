@@ -9,7 +9,7 @@ RSpec.describe Types::Queries::Invoice do
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-                       status: 'in_progress')
+                       status: 'in_progress', invoice_number: '1234')
     end
     let!(:invoice_two) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
@@ -18,8 +18,10 @@ RSpec.describe Types::Queries::Invoice do
 
     let(:invoices_query) do
       <<~GQL
-        query {
-          invoices {
+        query invoices (
+          $query: String
+        ) {
+          invoices(query: $query) {
               id
               landParcel {
                 id
@@ -76,7 +78,7 @@ RSpec.describe Types::Queries::Invoice do
     end
 
     it 'should retrieve list of invoices' do
-      result = DoubleGdpSchema.execute(invoices_query, context: {
+      result = DoubleGdpSchema.execute(invoices_query, variables: { query: '' }, context: {
                                          current_user: user,
                                          site_community: user.community,
                                        }).as_json
@@ -85,8 +87,19 @@ RSpec.describe Types::Queries::Invoice do
       expect([invoice_one.id, invoice_two.id]).to include(result.dig('data', 'invoices', 0, 'id'))
     end
 
+    it 'should apply search if query is supplied' do
+      result = DoubleGdpSchema.execute(invoices_query, variables: { query: '1234' }, context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+      puts invoice_one.to_json
+      expect(result.dig('errors', 0, 'message')).to be_nil
+      expect(result.dig('data', 'invoices').length).to eql 1
+      expect(result.dig('data', 'invoices', 0, 'id')).to eql invoice_one.id
+    end
+
     it 'should not retrieve list of invoices if user is not admin' do
-      result = DoubleGdpSchema.execute(invoices_query, context: {
+      result = DoubleGdpSchema.execute(invoices_query, variables: { query: '' }, context: {
                                          current_user: another_user,
                                          site_community: another_user.community,
                                        }).as_json

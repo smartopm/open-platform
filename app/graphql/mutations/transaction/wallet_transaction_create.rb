@@ -7,7 +7,6 @@ module Mutations
       argument :user_id, ID, required: true
       argument :amount, Float, required: true
       argument :source, String, required: true
-      argument :destination, String, required: true
       argument :bank_name, String, required: false
       argument :cheque_number, String, required: false
       argument :status, String, required: false
@@ -15,22 +14,28 @@ module Mutations
       field :wallet_transaction, Types::WalletTransactionType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:user_id]) ||
                  context[:current_user]
-          transaction = user.wallet_transactions.create!(vals.except(:user_id))
-          transaction.settled! if vals[:source] == 'cash'
-          update_wallet_balance(user, vals[:amount], transaction) if transaction.settled?
+          status = vals[:source] == 'cash' ? 'settled' : vals[:status]
+          transaction = user.wallet_transactions.create!(
+            vals.except(:user_id).merge(
+              { destination: 'wallet', status: status, community_id: context[:site_community]&.id },
+            ),
+          )
+          update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
           return { wallet_transaction: transaction } if transaction.persisted?
         end
         raise GraphQL::ExecutionError, transaction.errors.full_messages
       end
-
       # rubocop:enable Metrics/AbcSize
-      def update_wallet_balance(user, amount, transaction)
-        balance = user.wallet.update_balance(amount)
-        transaction.update(current_wallet_balance: balance)
+      # rubocop:enable Metrics/MethodLength
+
+      def update_wallet_balance(user, transaction, amount)
+        transaction.update(current_wallet_balance: user.wallet.balance + amount)
+        user.wallet.update_balance(amount)
       end
 
       def authorized?(_vals)

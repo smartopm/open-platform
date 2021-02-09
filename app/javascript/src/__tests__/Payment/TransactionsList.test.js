@@ -71,7 +71,18 @@ describe('Transactions Component', () => {
               landParcel: {
                 id: 'f280159d-ac71-4c22-997a-07fd07344c94',
                 parcelNumber: 'Test123'
-              }
+              },
+              payments: [{
+                id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+                amount: '300',
+                paymentType: 'cash',
+                paymentStatus: 'settled',
+                createdAt: '2021-01-21',
+                user: {
+                  id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+                  name: 'a name'
+                }
+              }]
             }],
             payments: [{
               amount: 344,

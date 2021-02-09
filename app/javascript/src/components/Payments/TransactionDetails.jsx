@@ -16,6 +16,7 @@ export  default function TransactionDetails({ data, detailsOpen, handleClose, cu
     settled: 'Settled',
     paymentType: 'Payment Type',
     paymentStatus: 'Payment Status',
+    pendingAmount: 'Pending Amount'
   };
   return (
     <>
@@ -26,12 +27,12 @@ export  default function TransactionDetails({ data, detailsOpen, handleClose, cu
       >
         {
           Object.entries(data).filter(([key]) => ( 
-            key !== 'updatedAt' && key !== 'id' && key !== '__typename' && key !== 'destination' && key !== 'pendingAmount' && key !== 'paymentStatus')).map(([key, val]) => (
+            key !== 'updatedAt' && key !== 'id' && key !== '__typename' && key !== 'destination' && key !== 'paymentStatus')).map(([key, val]) => (
               <DetailsField
                 key={key}
                 title={propAccessor(detailsField, key)}
                 // eslint-disable-next-line no-nested-ternary
-                value={key === 'createdAt' ? dateToString(val) : key === ('amount' || 'currentWalletBalance' || 'balance') ? `${currency}${val}` : val}
+                value={key === 'createdAt' ? dateToString(val) : key === ('amount' || 'currentWalletBalance' || 'balance' || 'pendingAmount') ? `${currency}${val}` : val}
               />
           ))
         }

@@ -12,6 +12,7 @@ module Types
     field :cheque_number, String, null: true
     field :current_wallet_balance, Float, null: true
     field :user, Types::UserType, null: false
+    field :community, Types::CommunityType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end

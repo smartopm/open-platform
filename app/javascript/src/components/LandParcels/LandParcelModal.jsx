@@ -101,6 +101,7 @@ export default function LandParcelModal({
     setShowAddress(true);
   };
 
+  // Todo: Put this in a single state
   function setDetailsFields(parcel) {
     setParcelNumber(parcel?.parcelNumber || '');
     setAddress1(parcel?.address1 || '');
@@ -300,7 +301,7 @@ export default function LandParcelModal({
                 <TextField
                   id={`user-search-${owner.name}`}
                   focused
-                  value={owner.fullName}
+                  value={owner.fullName || ''}
                   label="Owner"
                   name="name"
                   className={classes.textField}
@@ -312,7 +313,7 @@ export default function LandParcelModal({
                 <TextField
                   id={`user-search-${owner.address1}`}
                   focused
-                  value={owner.address1}
+                  value={owner.address1 || ''}
                   label="Address"
                   name="address"
                   className={classes.textField}

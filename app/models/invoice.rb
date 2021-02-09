@@ -21,6 +21,7 @@ class Invoice < ApplicationRecord
 
   search_scope :search do
     attributes :status
+    attributes :invoice_number
     attributes land_parcel: ['land_parcel.parcel_number']
     attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number']
     attributes user: ['user.name', 'user.email', 'user.phone_number']
@@ -41,13 +42,23 @@ class Invoice < ApplicationRecord
                                                        status: 'settled',
                                                        user_id: user.id,
                                                        current_wallet_balance: user.wallet.balance,
+                                                       community_id: user.community_id,
                                                      })
-      payment = Payment.create(amount: current_payment, payment_type: 'wallet', user_id: user.id)
+      payment = create_payment(current_payment, user)
       payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
     end
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
+
+  def create_payment(payment_amount, user)
+    Payment.create(
+      amount: payment_amount,
+      payment_type: 'wallet',
+      user_id: user.id,
+      community_id: user.community_id,
+    )
+  end
 
   def settle_amount
     pending_amount = amount - user.wallet.balance

@@ -12,7 +12,8 @@ describe("User information component loads",()=>{
             name : "Yoram",
             state : "Valid",
             userType : "admin",
-            formUsers: []
+            formUsers: [],
+            substatusLogs: [],
         }
     }
 

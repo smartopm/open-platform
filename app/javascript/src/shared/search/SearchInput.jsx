@@ -6,10 +6,10 @@ import {
   InputLabel,
   OutlinedInput
 } from '@material-ui/core';
-import { FilterListOutlined } from '@material-ui/icons';
+import { ClearOutlined, FilterListOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 
-export default function SearchInput({ title, searchValue, handleSearch, handleFilter }) {
+export default function SearchInput({ title, searchValue, handleSearch, handleFilter, handleClear }) {
   return (
     <FormControl fullWidth variant="outlined">
       <InputLabel htmlFor="outlined-adornment-filter">{`Search for ${title}`}</InputLabel>
@@ -22,6 +22,13 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
         placeholder="Type your search query"
         endAdornment={(
           <InputAdornment position="end">
+            { 
+              Boolean(searchValue.length) && handleClear &&(
+                <IconButton aria-label="clear search query" data-testid="clear_search" onClick={handleClear} edge="end">
+                  <ClearOutlined />
+                </IconButton>
+              )
+            }
             <IconButton aria-label="toggle filter visibility" onClick={handleFilter} edge="end">
               <FilterListOutlined />
             </IconButton>
@@ -33,9 +40,14 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
   );
 }
 
+SearchInput.defaultProps = {
+  handleClear: () => {}
+}
+
 SearchInput.propTypes = {
     title: PropTypes.string.isRequired,
     searchValue: PropTypes.string.isRequired,
     handleSearch: PropTypes.func.isRequired,
-    handleFilter: PropTypes.func.isRequired
+    handleFilter: PropTypes.func.isRequired,
+    handleClear: PropTypes.func,
 }

@@ -10,10 +10,16 @@ import TransactionDetails from './TransactionDetails'
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
-  { title: 'Invoice Number', col: 1 },
+  { title: 'Description', col: 1 },
   { title: 'Status', col: 1 },
   { title: 'Amount', col: 1 },
+  { title: 'Balance', col: 1 },
 ];
+
+const payStatus = {
+  cash: 'Cash',
+  'cheque/cashier_cheque': 'Cheque or CashierCheque'
+}
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
 
@@ -26,7 +32,7 @@ export default function UserTransactionsList({ transaction, currency }) {
         keys={transactionHeader} 
         data={[renderTransactions(transaction, currency)]} 
         hasHeader={false} 
-        clickable={{status: true}}
+        clickable
         handleClick={() => setOpen(true)} 
       />
       <TransactionDetails 
@@ -42,10 +48,29 @@ export default function UserTransactionsList({ transaction, currency }) {
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Date Created': <GridText col={4} content={transaction.status === 'settled' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
-    'Invoice Number': <GridText col={4} content={`${transaction.transactionNumber || transaction.__typename === 'WalletTransaction' ? 'Deposit' : 'Invoice' }`} />,
-    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : transaction.source}` : 'In-Progress'} />,
-    Amount: <GridText col={4} content={`${currency}${transaction.amount}`} />,
+    'Date Created': <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
+    // eslint-disable-next-line no-nested-ternary
+    Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? 'Invoice' : transaction.currentWalletBalance === 0 ? 'Invoice Settlement' : transaction.source === 'wallet' ? 'Partial settlement' : 'Deposit' }`} />,
+    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : payStatus[transaction.source]}` : 'In-Progress'} />,
+    Amount:  <GridText 
+      col={3} 
+      content={transaction.__typename === 'WalletTransaction' 
+            ? `${currency}${transaction.amount}` 
+            : (
+              <div>
+                <Text content={`Amount: ${currency}${transaction.amount}`} />
+                <Text content={`Pending Amount: ${currency}${transaction.pendingAmount}`} />
+              </div>
+              )}
+    />, 
+    Balance: <GridText 
+      col={3} 
+      content={transaction.__typename === 'WalletTransaction' 
+              ? `Bal: ${currency}${transaction.currentWalletBalance}` 
+              : (
+                  `Bal: ${currency}-${transaction.balance}`
+              )}
+    />,
   };
 }
 

@@ -5,6 +5,7 @@ class WalletTransaction < ApplicationRecord
   include SearchCop
 
   belongs_to :user
+  belongs_to :community
   has_one :payment_invoice, dependent: :destroy
 
   search_scope :search do
