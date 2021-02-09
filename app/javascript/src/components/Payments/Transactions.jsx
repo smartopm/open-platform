@@ -102,12 +102,14 @@ export default function TransactionsList({ userId, user }) {
           <StyledTab label="Invoices" value="Invoices" />
           <StyledTab label="Transactions" value="Transactions" />
         </StyledTabs>
-        <div style={{marginLeft: '100px'}}> 
+        <div style={{marginLeft: '100px', display: 'flex'}}> 
           <Button variant="text">{`Balance: ${currency}${walletData.userBalance}`}</Button>
-          <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => handlePaymentOpen()} />
           {
             authState.user?.userType === 'admin' && (
-              <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+              <div>
+                <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+                <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => handlePaymentOpen()} />
+              </div>
             )
           }
           

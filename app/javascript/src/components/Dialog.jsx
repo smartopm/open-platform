@@ -7,7 +7,11 @@ import {
   Dialog,
   DialogContentText,
   DialogTitle,
-  Divider
+  Divider,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
@@ -157,6 +161,32 @@ export function DetailsDialog({ handleClose, open, title, children }){
   )
 }
 
+export function FullScreenDialog({ handleClose, open, title, children }){
+  const classes = useStyles()
+  return(
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      fullScreen
+    >
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton edge="start" color="white" onClick={handleClose} aria-label="close">
+            <CloseIcon style={{color: 'white'}} />
+          </IconButton>
+          <Typography variant="h6" color='white' className={classes.print}>
+            {title}
+          </Typography>
+          <Button autoFocus color="inherit" onClick={handleClose} className={classes.print}>
+            Print
+          </Button>
+        </Toolbar>
+      </AppBar>
+      {children}
+    </Dialog>
+  )
+}
+
 export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
   const classes = useStyles()
   return (
@@ -215,7 +245,15 @@ export const useStyles = makeStyles({
     marginTop: '2px',
     marginLeft: '200px',
     cursor: 'pointer'
-  }
+  },
+  appBar: {
+    position: 'relative',
+  },
+  print: {
+    marginLeft: '500px',
+    width: '30px',
+    flex: 1
+  },
 })
 
 ActionDialog.defaultProps = {
@@ -228,6 +266,17 @@ ActionDialog.propTypes = {
   message: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['warning', 'confirm']),
   handleOnSave: PropTypes.func.isRequired,
+}
+
+FullScreenDialog.defaultProps = {
+  children: {}
+}
+
+FullScreenDialog.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node
 }
 
 DetailsDialog.defaultProps = {

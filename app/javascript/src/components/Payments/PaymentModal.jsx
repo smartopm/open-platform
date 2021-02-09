@@ -10,6 +10,7 @@ import { CustomizedDialogs } from '../Dialog'
 import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import { formatError } from '../../utils/helpers'
+import ReceiptModal from './ReceiptModal'
 
 
 const initialValues = {
@@ -27,7 +28,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
   const [createPayment] = useMutation(PaymentCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-  // const [promptOpen, setPromptOpen] = useState(false)
+  const [promptOpen, setPromptOpen] = useState(false)
+  const [paymentData, setPaymentData] = useState({})
   
   function handleSubmit(event) {
     event.preventDefault()
@@ -40,19 +42,20 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
       }
-    }).then(() => {
+    }).then((res) => {
       setMessageAlert('Payment made successfully')
       setIsSuccessAlert(true)
       handleModalClose()
       refetch()
       depRefetch()
       walletRefetch()
-      // setPromptOpen(true)
+      setPaymentData(res.data.walletTransactionCreate.walletTransaction)
+      setPromptOpen(true)
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
-      history.push(`/user/${userId}`)
+      history.push(`/user/${userId}?tab=payments`)
     })
   }
 
@@ -63,6 +66,11 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
     setMessageAlert('')
   }
 
+  function handlePromptClose() {
+    setPromptOpen(false)
+    history.push(`/user/${userId}?tab=payments`)
+  }
+
   return(
     <>
       <MessageAlert
@@ -71,6 +79,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
+      <ReceiptModal open={promptOpen} handleClose={() => handlePromptClose()} paymentData={paymentData} />
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
