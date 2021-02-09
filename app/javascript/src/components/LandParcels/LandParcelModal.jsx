@@ -312,7 +312,7 @@ export default function LandParcelModal({
           !isEditing &&
           (landParcel?.accounts?.length ? (
             landParcel?.accounts.map(owner => (
-              <div key={owner.id}>
+              <div key={owner.id} className={classes.parcelForm}>
                 <TextField
                   id={`user-search-${owner.name}`}
                   focused
@@ -343,7 +343,7 @@ export default function LandParcelModal({
           ))}
         {ownershipFields?.map((_field, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={index} style={{ display: 'flex' }}>
+          <div key={index} style={{ display: 'flex', marginBottom: '30px' }}>
             <div>
               <TextField
                 id={`user-search-${index}`}
