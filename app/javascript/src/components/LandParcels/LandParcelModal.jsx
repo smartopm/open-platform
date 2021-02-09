@@ -404,7 +404,7 @@ export default function LandParcelModal({
         }
 
         {
-          (isEditing) && (
+          (Boolean(landParcel?.accounts?.length) && isEditing) && (
             <AddMoreButton 
               title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`} 
               handleAdd={() => setShowPaymentPlan(!showPaymentPlan)}
