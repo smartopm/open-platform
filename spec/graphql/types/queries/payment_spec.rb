@@ -13,12 +13,14 @@ RSpec.describe Types::Queries::Payment do
     end
     let!(:payment_one) do
       user.payments.create(amount: 100, payment_type: 'cash',
-                           invoice_id: invoice_one.id)
+                           invoice_id: invoice_one.id,
+                           community_id: user.community_id)
     end
 
     let!(:payment_two) do
       user.payments.create(amount: 200, payment_type: 'cash',
-                           invoice_id: invoice_one.id)
+                           invoice_id: invoice_one.id,
+                           community_id: user.community_id)
     end
 
     let(:payments_query) do

@@ -42,16 +42,17 @@ class Wallet < ApplicationRecord
     balance
   end
 
+  # rubocop:disable Metrics/AbcSize
   def make_payment(inv)
     payment_amount = inv.pending_amount > balance ? balance : inv.pending_amount
     update_balance(payment_amount, 'debit')
     transaction = create_transaction(payment_amount)
-    payment = Payment.create(amount: payment_amount, payment_type: 'wallet', user_id: user.id)
+    payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
+                             user_id: user.id, community_id: user.community_id)
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
     inv.update(pending_amount: inv.pending_amount - payment_amount)
   end
 
-  # rubocop:disable Metrics/AbcSize
   def settle_invoices
     return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
 
@@ -72,6 +73,7 @@ class Wallet < ApplicationRecord
                                        status: 'settled',
                                        user_id: user.id,
                                        current_wallet_balance: balance,
+                                       community_id: user.community_id,
                                      })
   end
 end

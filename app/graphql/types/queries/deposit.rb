@@ -17,9 +17,9 @@ module Types::Queries::Deposit
   end
 
   def deposit(deposit_id:)
-    return ::WalletTransaction.find(deposit_id) if context[:current_user]&.admin?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    raise GraphQL::ExecutionError, 'Unauthorized'
+    context[:site_community].wallet_transactions.find(deposit_id)
   end
 
   # rubocop:disable Metrics/AbcSize

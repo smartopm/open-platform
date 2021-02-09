@@ -21,7 +21,9 @@ module Mutations
                  context[:current_user]
           status = vals[:source] == 'cash' ? 'settled' : vals[:status]
           transaction = user.wallet_transactions.create!(
-            vals.except(:user_id).merge({ destination: 'wallet', status: status }),
+            vals.except(:user_id).merge(
+              { destination: 'wallet', status: status, community_id: context[:site_community]&.id },
+            ),
           )
           update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
           return { wallet_transaction: transaction } if transaction.persisted?

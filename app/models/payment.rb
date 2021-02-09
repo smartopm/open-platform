@@ -5,6 +5,7 @@ class Payment < ApplicationRecord
   include SearchCop
 
   belongs_to :user
+  belongs_to :community
   has_many :payment_invoices, dependent: :destroy
   has_many :invoices, through: :payment_invoices
 

@@ -24,7 +24,7 @@ module Types::Queries::Payment
   end
 
   def payment(payment_id:)
-    return ::Payment.find(payment_id) if context[:current_user]&.admin?
+    return context[:site_community].payments.find(payment_id) if context[:current_user]&.admin?
 
     raise GraphQL::ExecutionError, 'Unauthorized'
   end
@@ -47,6 +47,7 @@ module Types::Queries::Payment
   def payments(query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    ::Payment.search(query).eager_load(:invoices, :user).limit(limit).offset(offset)
+    context[:site_community].payments.search(query).eager_load(:invoices, :user)
+                            .limit(limit).offset(offset)
   end
 end
