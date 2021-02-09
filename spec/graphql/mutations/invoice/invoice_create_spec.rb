@@ -43,10 +43,11 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'landParcel', 'id'),
       ).to eql land_parcel.id
-      expect(result.dig('data', 'invoiceCreate', 'invoice', 'amount')).to eql user.wallet.pending_balance
+      expect(
+        result.dig('data', 'invoiceCreate', 'invoice', 'amount'),
+      ).to eql user.wallet.pending_balance
       expect(result['errors']).to be_nil
     end
-
 
     let(:invoice_create) do
       <<~GQL
@@ -70,12 +71,15 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
         status: %w[in_progress].sample,
       }
       result = DoubleGdpSchema.execute(invoice_create, variables: variables,
-                                              context: {
-                                                current_user: admin,
-                                                site_community: user.community,
-                                              }).as_json
+                                                       context: {
+                                                         current_user: admin,
+                                                         site_community: user.community,
+                                                       }).as_json
       expect(result.dig('data', 'invoiceCreate', 'invoice', 'id')).not_to be_nil
       expect(result.dig('data', 'invoiceCreate', 'invoice', 'status')).to eql 'paid'
+      expect(user.wallet.balance).to eql 0.0
+      expect(user_with_balance.wallet_transactions.count).to eql 1
+      expect(user_with_balance.payments.count).to eql 1
       expect(result['errors']).to be_nil
     end
   end
