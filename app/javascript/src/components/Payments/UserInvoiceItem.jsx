@@ -22,7 +22,7 @@ export default function UserInvoiceItem({ invoice, currency }) {
     <div>
       <DataList
         keys={invoiceHeader}
-        data={[renderInvoices(invoice)]}
+        data={[renderInvoices(invoice, currency)]}
         hasHeader={false}
         clickable
         handleClick={() => setOpen(true)}
@@ -37,12 +37,12 @@ export default function UserInvoiceItem({ invoice, currency }) {
   );
 }
 
-export function renderInvoices(inv) {
+export function renderInvoices(inv, currency) {
   return {
     'Invoice Number': <GridText content={`#${inv.invoiceNumber}`} />,
     'Date Created': <GridText content={`Issued on ${dateToString(inv.createdAt)}`} />,
     Status: <GridText content={inv.status === 'paid' ? `Paid on ${dateToString(inv.updatedAt)}` : invoiceStatus[inv.status]} />,
-    Amount: <GridText content={inv.amount} />,
+    Amount: <GridText content={`${currency}${inv.amount}`} />,
     'Plot Number': <GridText content={inv.landParcel.parcelNumber} />
   };
 }
