@@ -41,23 +41,41 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
         startDate: '2021-02-13',
         status: 1,
         planType: 'lease',
-        percentage: '50%'
+        percentage: '50%',
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: user.community,
-                                                 }).as_json
+                                                              context: {
+                                                                current_user: admin,
+                                                                site_community: user.community,
+                                                              }).as_json
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'id')).not_to be_nil
 
-      # make sure there is no duplicate payment plan   
-      other_result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
-                                                context: {
-                                                current_user: admin,
-                                                site_community: user.community,
-                                                }).as_json
-      expect(other_result.dig('errors', 0, 'message')).to eql 'Payment Plan for this landparcel already exist'
+      # make sure there is no duplicate payment plan
+      b_result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
+                                                                context: {
+                                                                  current_user: admin,
+                                                                  site_community: user.community,
+                                                                }).as_json
+      expect(b_result.dig('errors', 0, 'message'))
+        .to eql 'Payment Plan for this landparcel already exist'
+    end
+    it 'should validate given variables inputs' do
+      variables = {
+        landParcelId: land_parcel.id,
+        userId: user.id,
+        startDate: '2021-02-13',
+        status: '1',
+        planType: 'lease',
+        percentage: '50%',
+      }
+      result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
+                                                              context: {
+                                                                current_user: admin,
+                                                                site_community: user.community,
+                                                              }).as_json
+      expect(result.dig('errors', 0, 'message'))
+        .to include 'Variable $status of type Int! was provided invalid value'
     end
   end
 end
