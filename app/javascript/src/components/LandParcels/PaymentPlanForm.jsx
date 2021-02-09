@@ -121,7 +121,16 @@ export default function PaymentPlanForm({ landParcel }) {
       {
         mutationInfo.loading
         ? <Spinner />
-        : <Button variant="text" color="primary" onClick={handleSubmit}>Save Plan</Button>
+        : (
+          <Button 
+            variant="text" 
+            color="primary" 
+            onClick={handleSubmit}
+            data-testid="submit_btn"
+          >
+            Save Plan
+          </Button>
+)
       }
     </>
   );
