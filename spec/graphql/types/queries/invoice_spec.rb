@@ -92,7 +92,6 @@ RSpec.describe Types::Queries::Invoice do
                                          current_user: user,
                                          site_community: user.community,
                                        }).as_json
-      puts invoice_one.to_json
       expect(result.dig('errors', 0, 'message')).to be_nil
       expect(result.dig('data', 'invoices').length).to eql 1
       expect(result.dig('data', 'invoices', 0, 'id')).to eql invoice_one.id
