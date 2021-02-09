@@ -20,6 +20,7 @@ import { UsersLiteQuery } from '../../graphql/queries';
 import AddMoreButton from '../../shared/buttons/AddMoreButton';
 import Text from '../../shared/Text';
 import PaymentPlanForm from './PaymentPlanForm';
+import { LandPaymentPlanQuery } from '../../graphql/queries/landparcel';
 
 export default function LandParcelModal({
   open,
@@ -52,6 +53,7 @@ export default function LandParcelModal({
 
   useEffect(() => {
     setDetailsFields(landParcel);
+    fetchPaymentPlan({ landParcelId: landParcel.id })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -61,6 +63,8 @@ export default function LandParcelModal({
     fetchPolicy: 'no-cache'
   });
 
+  const [fetchPaymentPlan, { data: paymentPlanData, loading }] = useLazyQuery(LandPaymentPlanQuery)
+  console.log(paymentPlanData, loading)
   function addOwnership() {
     setOwnershipFields([...ownershipFields, { name: '', address: '' }]);
   }
@@ -391,26 +395,22 @@ export default function LandParcelModal({
             <AddMoreButton title="New Owner" handleAdd={addOwnership} />
           </>
         )}
-        {
-          showPaymentPlan && (
-            <>
-              <br />
-              <Text content="Purchase Plan" /> 
-              <PaymentPlanForm 
-                landParcel={landParcel}
-              />
-            </>
-            )
-        }
+        {showPaymentPlan && (
+          <>
+            <br />
+            <Text content="Purchase Plan" />
+            <PaymentPlanForm landParcel={landParcel} />
+          </>
+        )}
 
-        {
-          (Boolean(landParcel?.accounts?.length) && isEditing) && (
-            <AddMoreButton 
-              title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`} 
+        {Boolean(landParcel?.accounts?.length) &&
+          isEditing &&
+          !paymentPlanData?.landParcelPaymentPlan && (
+            <AddMoreButton
+              title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`}
               handleAdd={() => setShowPaymentPlan(!showPaymentPlan)}
             />
-          )
-        }
+          )}
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
         {modalType === 'details' &&
@@ -486,7 +486,9 @@ export default function LandParcelModal({
               </div>
             </div>
           ))}
-        {(modalType === 'new' || isEditing) && <AddMoreButton title="Add Valuation" handleAdd={addValuation} />}
+        {(modalType === 'new' || isEditing) && (
+          <AddMoreButton title="Add Valuation" handleAdd={addValuation} />
+        )}
       </TabPanel>
     </CustomizedDialogs>
   );

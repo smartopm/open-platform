@@ -29,14 +29,14 @@ module Types::Queries::LandParcel
       description 'Get all land parcel Geo Data'
     end
 
-    field :land_parcel_payment_plan, [Types::PaymentPlanType], null: true do
+    field :land_parcel_payment_plan, Types::PaymentPlanType, null: true do
       description 'Get payment plan for a land_parcel'
-      argument :id, GraphQL::Types::ID, required: true
+      argument :land_parcel_id, GraphQL::Types::ID, required: true
     end
   end
 
   def fetch_land_parcel(query: nil, offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].land_parcels.search(query).eager_load(:valuations, :accounts)
                             .limit(limit).offset(offset)
@@ -65,13 +65,13 @@ module Types::Queries::LandParcel
                             .map { |p| geo_data(p) }
   end
 
-  def land_parcel_payment_plan(id:)
+  def land_parcel_payment_plan(land_parcel_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    parcel = context[:site_community].land_parcels.find_by(id: id)
-    raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?
+    parcel = context[:site_community].land_parcels.find_by(id: land_parcel_id)
+    raise GraphQL::ExecutionError, 'LandParcel not found' if parcel.nil?
 
-    parcel.payment_plans.active
+    parcel.payment_plan
   end
 
   def geo_data(parcel)
