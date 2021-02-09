@@ -7,7 +7,7 @@ import PaymentReceipt from './PaymentReceipt'
 
 export default function ReceiptModal({ open, handleClose, paymentData }){
   const classes = useStyles();
-  const [paymentReceipt, setPaymentReceipt] = useState(true)
+  const [paymentReceipt, setPaymentReceipt] = useState(false)
 
   function handlePaymentReceipt() {
     setPaymentReceipt(true)
