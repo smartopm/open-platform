@@ -46,7 +46,7 @@ export default function PaymentPlanForm({ landParcel }) {
         autoFocus
         margin="normal"
         id="purchase_plan"
-        inputProps={{ 'data-testid': 'purchase_plan' }}
+        aria-label="purchase_plan"
         label="Purchase Plan"
         value={paymentPlanState.planType}
         onChange={handleOnChange}
@@ -55,15 +55,15 @@ export default function PaymentPlanForm({ landParcel }) {
         required
         select
       >
-        <MenuItem value="lease">Lease</MenuItem>
-        <MenuItem value="other">Other</MenuItem>
+        <MenuItem key="lease_" value="lease">Lease</MenuItem>
+        <MenuItem key="other" value="other">Other</MenuItem>
       </TextField>
 
       <TextField
         autoFocus
         margin="normal"
         id="purchase_plan_owner"
-        inputProps={{ 'data-testid': 'payment_plan_owner' }}
+        aria-label="payment_plan_owner"
         label="Choose Payment Plan User"
         value={paymentPlanState.userId}
         onChange={handleOnChange}
@@ -84,7 +84,7 @@ export default function PaymentPlanForm({ landParcel }) {
         autoFocus
         margin="normal"
         id="status"
-        inputProps={{ 'data-testid': 'status' }}
+        aria-label="status"
         label="Status"
         value={paymentPlanState.status}
         onChange={handleOnChange}
@@ -103,7 +103,7 @@ export default function PaymentPlanForm({ landParcel }) {
         margin="normal"
         id="percentage"
         label="Percentage"
-        inputProps={{ 'data-testid': 'percentage' }}
+        aria-label="percentage"
         value={paymentPlanState.percentage}
         onChange={handleOnChange}
         name="percentage"
