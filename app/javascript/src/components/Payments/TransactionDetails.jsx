@@ -23,7 +23,7 @@ export  default function TransactionDetails({ data, detailsOpen, handleClose, cu
       <DetailsDialog
         handleClose={handleClose}
         open={detailsOpen}
-        title={title}
+        title={`${title} Details`}
       >
         {
           Object.entries(data).filter(([key]) => ( 

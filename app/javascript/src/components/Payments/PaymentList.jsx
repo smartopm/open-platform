@@ -105,12 +105,18 @@ export function renderPayments(payments, currency) {
       ),
       PaymentType: (
         <Grid item xs={4} md={2} data-testid="payment_type">
-          <span>{payment.paymentType}</span>
+          <span>
+            {
+            ['wallet', 'cash'].includes(payment.paymentType)
+            ? 'cash deposit'
+            :  payment.paymentType
+          }
+          </span>
         </Grid>
       ),
       Amount: (
         <Grid item xs={4} md={2}>
-          <span>{`Paid ${currency}${payment.amount || 0}`}</span>
+          <span>{`${currency}${payment.amount || 0}`}</span>
         </Grid>
       ),
       'chequeNumber': (

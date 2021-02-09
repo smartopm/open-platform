@@ -136,7 +136,7 @@ export default function TransactionsList({ userId, user }) {
       </TabPanel>
       <TabPanel value={tabValue} index="Invoices">
         {
-          invPayData?.invoicesWithTransactions.invoices.map((inv) => (
+          invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem
               key={inv.id} 
               invoice={inv}
