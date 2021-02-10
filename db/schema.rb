@@ -461,8 +461,22 @@ ActiveRecord::Schema.define(version: 2021_02_10_080020) do
     t.index ["wallet_transaction_id"], name: "index_payment_invoices_on_wallet_transaction_id"
   end
 
-  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "payment_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
+    t.uuid "land_parcel_id", null: false
+    t.string "plan_type"
+    t.datetime "start_date"
+    t.integer "status"
+    t.string "percentage"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["land_parcel_id"], name: "index_payment_plans_on_land_parcel_id"
+    t.index ["user_id", "land_parcel_id"], name: "index_payment_plans_on_user_id_and_land_parcel_id", unique: true
+    t.index ["user_id"], name: "index_payment_plans_on_user_id"
+  end
+
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
     t.uuid "invoice_id"
     t.string "payment_type"
     t.float "amount"
@@ -681,6 +695,8 @@ ActiveRecord::Schema.define(version: 2021_02_10_080020) do
   add_foreign_key "payment_invoices", "invoices"
   add_foreign_key "payment_invoices", "payments"
   add_foreign_key "payment_invoices", "wallet_transactions"
+  add_foreign_key "payment_plans", "land_parcels"
+  add_foreign_key "payment_plans", "users"
   add_foreign_key "payments", "communities"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"

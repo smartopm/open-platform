@@ -65,6 +65,12 @@ export const subStatus = {
   7: 'Workers on Site',
 };
 
+export const paymentPlanStatus = {
+  0: 'active',
+  1: 'cancelled',
+  2: 'deleted'
+}
+
 export const paymentStatusColor = {
   pending: '#3493FB',
   settled: '#66A69B',
