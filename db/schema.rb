@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_09_081044) do
+ActiveRecord::Schema.define(version: 2021_02_10_080020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -625,6 +625,7 @@ ActiveRecord::Schema.define(version: 2021_02_09_081044) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "community_id", default: "ec7625ee-0bfe-4dcb-9a37-831fc77fa302", null: false
+    t.string "transaction_number"
     t.index ["community_id"], name: "index_wallet_transactions_on_community_id"
     t.index ["user_id"], name: "index_wallet_transactions_on_user_id"
   end

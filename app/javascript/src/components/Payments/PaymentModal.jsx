@@ -103,7 +103,29 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
           >
             <MenuItem value='cash'>Cash</MenuItem>
             <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
+            <MenuItem value='mobile_money'>Mobile Money</MenuItem>
+            <MenuItem value='bank_transfer'>Bank Transfer</MenuItem>
+            <MenuItem value='pos'>Point of Sale</MenuItem>
           </TextField>
+          {
+            inputValue.transactionType !== 'cash' && (
+              <>
+                <TextField
+                  margin="dense"
+                  id="payment-status"
+                  inputProps={{ "data-testid": "payment-status" }}
+                  label="Payment Status"
+                  value={inputValue.status}
+                  onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
+                  required
+                  select
+                >
+                  <MenuItem value='pending'>Pending</MenuItem>
+                  <MenuItem value='settled'>Settled</MenuItem>
+                </TextField>
+              </>
+            )
+          }
           {
             inputValue.transactionType === 'cheque/cashier_cheque' && (
               <>
@@ -125,19 +147,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
                   value={inputValue.chequeNumber}
                   onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
                 />
-                <TextField
-                  margin="dense"
-                  id="payment-status"
-                  inputProps={{ "data-testid": "payment-status" }}
-                  label="Payment Status"
-                  value={inputValue.status}
-                  onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
-                  required
-                  select
-                >
-                  <MenuItem value='pending'>Pending</MenuItem>
-                  <MenuItem value='settled'>Settled</MenuItem>
-                </TextField>
               </>
             )
           }
