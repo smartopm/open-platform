@@ -203,7 +203,7 @@ export default function LandParcelList() {
       <Container>
         <LandParcelModal
           open={open}
-          handelClose={handleDetailsModalClose}
+          handleClose={handleDetailsModalClose}
           modalType="details"
           landParcel={selectedLandParcel}
           handleSubmit={handleSubmit}

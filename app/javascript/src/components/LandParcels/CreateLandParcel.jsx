@@ -67,7 +67,7 @@ export default function CreateLandParcel({ refetch }) {
       </Button>
       <LandParcelModal
         open={open}
-        handelClose={closeNewParcelModal}
+        handleClose={closeNewParcelModal}
         handleSubmit={handleSubmit}
         modalType='new'
       />

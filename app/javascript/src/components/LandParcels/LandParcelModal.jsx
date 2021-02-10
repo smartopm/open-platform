@@ -25,7 +25,7 @@ import PaymentPlan from './PaymentPlan';
 
 export default function LandParcelModal({
   open,
-  handelClose,
+  handleClose,
   handleSubmit,
   modalType,
   landParcel
@@ -66,7 +66,7 @@ export default function LandParcelModal({
     fetchPolicy: 'no-cache'
   });
 
-  const [fetchPaymentPlan, {data: paymentPlanData, called}] = useLazyQuery(LandPaymentPlanQuery, {
+  const [fetchPaymentPlan, {data: paymentPlanData, called, refetch}] = useLazyQuery(LandPaymentPlanQuery, {
     variables: { landParcelId:  landParcel?.id}
   })
 
@@ -124,6 +124,12 @@ export default function LandParcelModal({
     setValuationFields([]);
     setOwnershipFields([]);
     setIsEditing(false);
+  }
+
+  function cleanUpOnModalClosing(){
+    setIsEditing(false);
+    setShowPaymentPlan(false);
+    handleClose()
   }
 
   function handleParcelSubmit() {
@@ -201,7 +207,7 @@ export default function LandParcelModal({
   return (
     <CustomizedDialogs
       open={open}
-      handleModal={handelClose}
+      handleModal={cleanUpOnModalClosing}
       dialogHeader={modalType === 'new' ? 'New Property' : `Parcel ${landParcel.parcelNumber}`}
       handleBatchFilter={handleParcelSubmit}
       saveAction={saveActionText()}
@@ -409,11 +415,11 @@ export default function LandParcelModal({
             /> 
           )
         }
-        {showPaymentPlan && (
+        {showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && (
           <>
             <br />
             <Text content="Purchase Plan" />
-            <PaymentPlanForm landParcel={landParcel} />
+            <PaymentPlanForm landParcel={landParcel} refetch={refetch} />
           </>
         )}
         {
@@ -537,7 +543,7 @@ LandParcelModal.defaultProps = {
 
 LandParcelModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  handelClose: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func,
   modalType: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types

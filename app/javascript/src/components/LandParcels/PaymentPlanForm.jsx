@@ -18,7 +18,7 @@ const initialPlanState = {
   startDate: new Date(),
   userId: '',
 }
-export default function PaymentPlanForm({ landParcel }) {
+export default function PaymentPlanForm({ landParcel, refetch }) {
   const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState)
   const [createPaymentPlan] = useMutation(LandPaymentPlanCreateMutation)
   const [mutationInfo, setMutationInfo] = useState({ loading: false,  isError: false, message: null })
@@ -35,6 +35,7 @@ export default function PaymentPlanForm({ landParcel }) {
       )
       .then(() => {
         setMutationInfo({...mutationInfo, message: 'Payment plan created successfully', loading: false})
+        refetch()
       })
       .catch(error => {
         setMutationInfo({isError: true, message: error.message, loading: false})
@@ -116,9 +117,6 @@ export default function PaymentPlanForm({ landParcel }) {
         required
       />
       {
-        mutationInfo.message
-      }
-      {
         mutationInfo.loading
         ? <Spinner />
         : (
@@ -130,7 +128,11 @@ export default function PaymentPlanForm({ landParcel }) {
           >
             Save Plan
           </Button>
-)
+          )
+      }
+      <br />
+      {
+        mutationInfo.message
       }
     </>
   );
@@ -138,5 +140,6 @@ export default function PaymentPlanForm({ landParcel }) {
 
 PaymentPlanForm.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
-    landParcel: PropTypes.object.isRequired
+    landParcel: PropTypes.object.isRequired,
+    refetch: PropTypes.func.isRequired
 };

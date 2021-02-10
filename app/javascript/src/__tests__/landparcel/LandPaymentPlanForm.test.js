@@ -16,9 +16,10 @@ describe('PaymentPlanForm Component', () => {
     ]
   };
   it('should correctly with text inputs', () => {
+    const refetch = jest.fn();
     const container = render(
       <MockedProvider mocks={[]}>
-        <PaymentPlanForm landParcel={landParcel} />
+        <PaymentPlanForm landParcel={landParcel} refetch={refetch}  />
       </MockedProvider>
       );
       // check if it renders as expected
