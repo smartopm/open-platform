@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_09_081044) do
-
+ActiveRecord::Schema.define(version: 2021_02_10_111827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -327,7 +326,7 @@ ActiveRecord::Schema.define(version: 2021_02_09_081044) do
     t.uuid "user_id"
     t.uuid "created_by_id"
     t.float "pending_amount"
-    t.bigint "invoice_number", default: -> { "nextval('global_seq'::regclass)" }
+    t.integer "invoice_number"
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"

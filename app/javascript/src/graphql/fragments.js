@@ -118,3 +118,66 @@ export const NotesFragment = {
     }
   `
 }
+
+export const SubStatusDistributionFragment = {
+  publicFields: gql`
+    fragment SubStatusDistributionFields on SubStatusDistribution {
+      plotsFullyPurchased {
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      eligibleToStartConstruction{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      floorPlanPurchased{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      constructionApproved{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      constructionInProgress{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      constructionCompleted{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      census{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+      workersOnSite{
+        between0to10Days
+        between11to30Days
+        between31to50Days
+        between51to150Days
+        over151Days
+      }
+    }
+  `
+}

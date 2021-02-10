@@ -1,22 +1,22 @@
 // This component will house the customer journey dashboard
 import React,  { Fragment } from 'react';
 import PropTypes from 'prop-types'
-import { ListItemText, ListItemSecondaryAction, ListItem, List } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
+import { ListItemText, ListItemSecondaryAction, ListItem, List, makeStyles } from '@material-ui/core';
 import { userSubStatusDurationLookup } from '../../utils/constants';
 
 export default function SubStatusTimeDistributionReport({ userSubStatus }) {
   const classes = useStyles();
+
   return (
     <>
-     {Object.entries(userSubStatus).map(([key, subStatus]) => (
+      {Object.entries(userSubStatus).map(([key, subStatus]) => (
         <Fragment key={key}>
           <div className={classes.statusSection}>
             <div className={classes.titleSection}>
               <h5 className={classes.title}>{subStatus}</h5>
             </div>
-            {Object.entries(userSubStatusDurationLookup).map(([key, duration]) => (
-              <Fragment key={key}>
+            {Object.entries(userSubStatusDurationLookup).map(([objKey, duration]) => (
+              <Fragment key={objKey}>
                 <List dense>
                   <ListItem style={{ height: 16, cursor: 'pointer' }}>
                     <ListItemText primary={duration} />
@@ -25,7 +25,7 @@ export default function SubStatusTimeDistributionReport({ userSubStatus }) {
                 </List>
               </Fragment>
             ))}
-                </div>
+          </div>
         </Fragment>
      ))}
     </>
@@ -49,5 +49,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 SubStatusTimeDistributionReport.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   userSubStatus: PropTypes.object.isRequired,
 }

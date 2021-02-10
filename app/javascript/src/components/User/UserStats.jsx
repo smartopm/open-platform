@@ -9,8 +9,9 @@ import { userSubStatus } from '../../utils/constants';
 import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
 
 export default function UserStats() {
-  const { loading, data, error } = useQuery(SubStatusQuery);
   const classes = useStyles();
+  const { loading, data, error } = useQuery(SubStatusQuery);
+
   return (
     <>
       <div className={classes.statusSection}>

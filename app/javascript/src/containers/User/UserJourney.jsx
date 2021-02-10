@@ -15,7 +15,6 @@ export default function UserJourney({ data }) {
         {' '}
         <b>{userSubStatus[String(newStatus)]}</b>
         {' '}
-        at
         {startDate}
       </>
     )
