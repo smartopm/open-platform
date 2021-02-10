@@ -33,7 +33,6 @@ import { propAccessor, useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
   data,
-  parcelData,
   onLogEntry,
   authState,
   sendOneTimePasscode,
@@ -251,7 +250,6 @@ export default function UserInformation({
         )}
         <TabPanel value={tabValue} index="Payments">
           <Transactions
-            data={parcelData}
             userId={userId}
             user={authState.user}
           />
@@ -308,12 +306,6 @@ UserInformation.propTypes = {
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   accountData: PropTypes.shape({ user: User }).isRequired,
   accountRefetch: PropTypes.func.isRequired,
-  parcelData: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      parcelNumber: PropTypes.string.isRequired
-    })
-  ).isRequired
 }
 
 const styles = StyleSheet.create({
