@@ -21,7 +21,7 @@ const initialValues = {
   chequeNumber: '',
 }
 
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch }){
+export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch, comImage, comName }){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -79,7 +79,13 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <ReceiptModal open={promptOpen} handleClose={() => handlePromptClose()} paymentData={paymentData} />
+      <ReceiptModal 
+        open={promptOpen} 
+        handleClose={() => handlePromptClose()} 
+        paymentData={paymentData} 
+        comName={comName}
+        comImage={comImage}
+      />
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}

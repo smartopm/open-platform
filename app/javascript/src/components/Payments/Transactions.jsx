@@ -160,6 +160,8 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         depRefetch={depRefetch}
         walletRefetch={walletRefetch}
+        comImage={user?.community.imageUrl}
+        comName={user?.community.name}
       />
       <CenteredContent>
         <Paginate
@@ -180,6 +182,8 @@ TransactionsList.propTypes = {
     id: PropTypes.string,
     userType: PropTypes.string,
     community: PropTypes.shape({
+      imageUrl: PropTypes.string,
+      name: PropTypes.string,
       currency: PropTypes.string
     }).isRequired
   }).isRequired
