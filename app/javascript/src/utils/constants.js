@@ -72,6 +72,11 @@ export const userSubStatusDurationLookup = {
   between51to150Days: 'number of users between 51 - 150 days',
   over151Days: 'number of users over 151 days',
 };
+export const paymentPlanStatus = {
+  0: 'active',
+  1: 'cancelled',
+  2: 'deleted'
+}
 
 export const paymentStatusColor = {
   pending: '#3493FB',

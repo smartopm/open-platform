@@ -22,10 +22,27 @@ RSpec.describe Types::Queries::LandParcel do
         })
     end
 
+    let(:land_parcel_plan_query) do
+      %(query {
+          landParcelPaymentPlan(landParcelId:"#{land_parcel.id}"){
+            id
+            status
+          }
+        })
+    end
+    let(:another_land_parcel_plan_query) do
+      %(query {
+          landParcelPaymentPlan(landParcelId:"random34u23432421"){
+            id
+            status
+          }
+        })
+    end
+
     it 'should retrieve list of all land parcels' do
       result = DoubleGdpSchema.execute(fetch_land_parcel_query,
                                        context: {
-                                         current_user: current_user,
+                                         current_user: admin_user,
                                          site_community: admin_user.community,
                                        }).as_json
       expect(result.dig('data', 'fetchLandParcel').length).to eql 1
@@ -33,6 +50,43 @@ RSpec.describe Types::Queries::LandParcel do
       expect(result.dig('data', 'fetchLandParcel', 0, 'address1')).to eql 'This address'
       expect(result.dig('data', 'fetchLandParcel', 0, 'longX')).to eql 28.234
       expect(result.dig('data', 'fetchLandParcel', 0, 'latY')).to eql(-15.234)
+    end
+
+    it 'should not retrieve list of all land parcels if user is not admin' do
+      result = DoubleGdpSchema.execute(fetch_land_parcel_query,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+
+    it 'should query the payment plan for a landparcel' do
+      result = DoubleGdpSchema.execute(land_parcel_plan_query,
+                                       context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'landParcelPaymentPlan')).to be_nil
+      expect(result.dig('data', 'landParcelPaymentPlan', 'id')).to be_nil
+      expect(result['errors']).to be_nil
+    end
+    it 'should return landparcel not found when it doesnt exist' do
+      result = DoubleGdpSchema.execute(another_land_parcel_plan_query,
+                                       context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'LandParcel not found'
+    end
+
+    it 'should not query the payment plan for a landparcel when not admin' do
+      result = DoubleGdpSchema.execute(land_parcel_plan_query,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
 
     it 'should raise unauthorized error when no current-user' do

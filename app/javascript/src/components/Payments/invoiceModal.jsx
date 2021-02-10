@@ -17,7 +17,7 @@ import { UserLandParcel } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 
 const initialValues = {
-  status: '',
+  status: 'in_progress',
   parcelId: '',
   selectedDate: new Date(),
   amount: '',
@@ -33,6 +33,9 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
   const [openPayment, setOpenPayment] = useState(false)
   const [pay, setPay] = useState(false)
   const [invoiceData, setInvoiceData] = useState(null)
+  const [isError, setIsError] = useState(false)
+  const [submitting, setIsSubmitting] = useState(false)
+
   const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcel,{
     variables: { userId },
     errorPolicy: 'all',
@@ -41,6 +44,12 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
 
   const handleSubmit = event => {
     event.preventDefault()
+
+    if (!inputValue.parcelId || !inputValue.amount) {
+      setIsError(true)
+      setIsSubmitting(true)
+      return
+    }
     createInvoice({
       variables: {
         landParcelId: inputValue.parcelId,
@@ -127,6 +136,8 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
             onChange={(event) => setInputValue({...inputValue, parcelId: event.target.value})}
             required
             select
+            error={isError && submitting && !inputValue.parcelId}
+            helperText={isError && !inputValue.parcelId && 'Plot No is required'}
           >
             {data?.userLandParcel.map(land => (
               <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
@@ -151,6 +162,8 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
                 step: '0.01'
               }}
             required
+            error={isError && submitting && !inputValue.amount}
+            helperText={isError && !inputValue.amount && 'amount is required'}
           />
           <TextField
             margin="dense"

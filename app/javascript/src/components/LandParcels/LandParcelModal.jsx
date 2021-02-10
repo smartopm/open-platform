@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,13 +5,11 @@ import { useLazyQuery } from 'react-apollo';
 import {
   TextField,
   InputAdornment,
-  Typography,
   IconButton,
   RadioGroup,
   Radio,
-  FormControlLabel
+  FormControlLabel,
 } from '@material-ui/core';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { DeleteOutline } from '@material-ui/icons';
 import { CustomizedDialogs } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
@@ -21,10 +17,15 @@ import DatePickerDialog from '../DatePickerDialog';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import { currencies } from '../../utils/constants';
 import { UsersLiteQuery } from '../../graphql/queries';
+import AddMoreButton from '../../shared/buttons/AddMoreButton';
+import Text from '../../shared/Text';
+import PaymentPlanForm from './PaymentPlanForm';
+import { LandPaymentPlanQuery } from '../../graphql/queries/landparcel';
+import PaymentPlan from './PaymentPlan';
 
 export default function LandParcelModal({
   open,
-  handelClose,
+  handleClose,
   handleSubmit,
   modalType,
   landParcel
@@ -42,9 +43,10 @@ export default function LandParcelModal({
   const [valuationFields, setValuationFields] = useState([]);
   const [search, setSearch] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
-  const [ownershipFields, setOwnershipFields] = useState([]);
+  const [ownershipFields, setOwnershipFields] = useState(['']);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [showPaymentPlan, setShowPaymentPlan] = useState(false)
 
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
@@ -52,6 +54,9 @@ export default function LandParcelModal({
 
   useEffect(() => {
     setDetailsFields(landParcel);
+    if (open) {
+      fetchPaymentPlan()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -60,6 +65,10 @@ export default function LandParcelModal({
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
+
+  const [fetchPaymentPlan, {data: paymentPlanData, called, refetch}] = useLazyQuery(LandPaymentPlanQuery, {
+    variables: { landParcelId:  landParcel?.id}
+  })
 
   function addOwnership() {
     setOwnershipFields([...ownershipFields, { name: '', address: '' }]);
@@ -115,6 +124,12 @@ export default function LandParcelModal({
     setValuationFields([]);
     setOwnershipFields([]);
     setIsEditing(false);
+  }
+
+  function cleanUpOnModalClosing(){
+    setIsEditing(false);
+    setShowPaymentPlan(false);
+    handleClose()
   }
 
   function handleParcelSubmit() {
@@ -192,7 +207,7 @@ export default function LandParcelModal({
   return (
     <CustomizedDialogs
       open={open}
-      handleModal={handelClose}
+      handleModal={cleanUpOnModalClosing}
       dialogHeader={modalType === 'new' ? 'New Property' : `Parcel ${landParcel.parcelNumber}`}
       handleBatchFilter={handleParcelSubmit}
       saveAction={saveActionText()}
@@ -354,7 +369,7 @@ export default function LandParcelModal({
                   onKeyDown={userSearch}
                   name="address"
                   className={classes.textField}
-                  style={{ marginBottom: '15px' }}
+                  style={{ marginBottom: '15px', width: '100%' }}
                 />
               )}
               {search && data && currentIndex === index && (
@@ -387,15 +402,41 @@ export default function LandParcelModal({
         ))}
 
         {(modalType === 'new' || isEditing) && (
-          <div className={classes.addIcon} role="button" onClick={addOwnership}>
-            <AddCircleOutlineIcon />
-            <div style={{ marginLeft: '6px', color: 'secondary' }}>
-              <Typography align="center" variant="caption">
-                New Owner
-              </Typography>
-            </div>
-          </div>
+          <>
+            <AddMoreButton title="New Owner" handleAdd={addOwnership} />
+          </>
         )}
+        <br />
+        {
+          (called && paymentPlanData?.landParcelPaymentPlan) && (
+            <PaymentPlan 
+              percentage={paymentPlanData?.landParcelPaymentPlan.percentage} 
+              type={paymentPlanData?.landParcelPaymentPlan.planType}
+            /> 
+          )
+        }
+        {showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && (
+          <>
+            <br />
+            <Text content="Purchase Plan" />
+            <PaymentPlanForm landParcel={landParcel} refetch={refetch} />
+          </>
+        )}
+        {
+        /* 
+          Only show add purchase plan button when: 
+            - landparcel has owner
+            - landparcel doesn't have an existing payment plan
+        */
+        }
+        {Boolean(landParcel?.accounts?.length &&
+          isEditing) &&
+          (called && !paymentPlanData?.landParcelPaymentPlan) && (
+            <AddMoreButton
+              title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`}
+              handleAdd={() => setShowPaymentPlan(!showPaymentPlan)}
+            />
+          )}
       </TabPanel>
       <TabPanel value={tabValue} index="Valuation History">
         {modalType === 'details' &&
@@ -472,14 +513,7 @@ export default function LandParcelModal({
             </div>
           ))}
         {(modalType === 'new' || isEditing) && (
-          <div className={classes.addIcon} role="button" onClick={addValuation}>
-            <AddCircleOutlineIcon />
-            <div style={{ marginLeft: '6px', color: 'secondary' }}>
-              <Typography align="center" variant="caption">
-                Add Valuation
-              </Typography>
-            </div>
-          </div>
+          <AddMoreButton title="Add Valuation" handleAdd={addValuation} />
         )}
       </TabPanel>
     </CustomizedDialogs>
@@ -492,12 +526,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     width: '400px',
     marginBottom: '30px'
-  },
-  addIcon: {
-    display: 'flex',
-    marginTop: '20px',
-    color: '#6CAA9F',
-    cursor: 'pointer'
   },
   removeIcon: {
     marginTop: '25px',
@@ -515,7 +543,7 @@ LandParcelModal.defaultProps = {
 
 LandParcelModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  handelClose: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func,
   modalType: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types

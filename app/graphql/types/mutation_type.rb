@@ -120,6 +120,7 @@ module Types
 
     # payments
     field :payment_create, mutation: Mutations::Payment::PaymentCreate
+    field :payment_plan_create, mutation: Mutations::Payment::PaymentPlanCreate
 
     # transactions
     field :wallet_transaction_create, mutation: Mutations::Transaction::WalletTransactionCreate
