@@ -61,7 +61,7 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     context[:site_community].land_parcels.where.not(geom: nil)
-                            .eager_load(:valuations, :accounts, :payment_plans)
+                            .eager_load(:valuations, :accounts)
                             .map { |p| geo_data(p) }
   end
 
