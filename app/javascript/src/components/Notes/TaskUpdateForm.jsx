@@ -317,7 +317,7 @@ export default function TaskForm({
               placeholder="Describe the task here"
               style={{ width: '100%' }}
               onChange={e => setDescription(e.target.value)}
-              value={description}
+              value={description || ''}
               multiline
               fullWidth
               rows={2}
