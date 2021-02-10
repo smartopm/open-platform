@@ -182,12 +182,17 @@ const useStyles = makeStyles({
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
-  walletRefetch: () => {}
+  walletRefetch: () => {},
+  userData: {}
  }
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
+  userData: PropTypes.shape({
+    name: PropTypes.string,
+    transactionNumber: PropTypes.number,
+  }),
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
