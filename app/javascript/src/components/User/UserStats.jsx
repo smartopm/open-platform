@@ -2,14 +2,17 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
-import { SubStatusQuery } from '../../graphql/queries';
+import { SubStatusQuery, SubStatusDistributionReportQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { StatusList } from '../../shared/Status';
 import { userSubStatus } from '../../utils/constants';
+import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
 
 export default function UserStats() {
-  const { loading, data, error } = useQuery(SubStatusQuery);
   const classes = useStyles();
+  const { loading, data, error } = useQuery(SubStatusQuery);
+  const { data: subStatusDistributionData } = useQuery(SubStatusDistributionReportQuery);
+
   return (
     <>
       <div className={classes.statusSection}>
@@ -23,6 +26,12 @@ export default function UserStats() {
           <StatusList data={data?.substatusQuery} statuses={userSubStatus} />
         )}
       </div>
+      {subStatusDistributionData && (
+        <SubStatusTimeDistributionReport 
+          userSubStatus={userSubStatus} 
+          subStatusDistributionData={subStatusDistributionData}
+        />
+)}
     </>
   );
 }

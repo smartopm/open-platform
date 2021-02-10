@@ -65,6 +65,13 @@ export const subStatus = {
   7: 'Workers on Site',
 };
 
+export const userSubStatusDurationLookup = {
+  between0to10Days: 'number of users between 0 - 10 days',
+  between11to30Days: 'number of users between 11 - 30 days',
+  between31to50Days: 'number of users between 31 - 50 days',
+  between51to150Days: 'number of users between 51 - 150 days',
+  over151Days: 'number of users over 151 days',
+};
 export const paymentPlanStatus = {
   0: 'active',
   1: 'cancelled',

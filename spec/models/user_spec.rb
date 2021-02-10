@@ -330,7 +330,7 @@ RSpec.describe User, type: :model do
   describe 'User substatus change log' do
     let!(:user) { create(:user_with_community) }
 
-    it { is_expected.to callback(:log_sub_status_change).after(:update) }
+    it { is_expected.to callback(:log_sub_status_change).before(:update) }
 
     it 'should not create Substatus Log without subsatus change' do
       user.update(name: 'New Name')

@@ -420,6 +420,21 @@ RSpec.describe Types::Queries::User do
           })
     end
 
+    let(:substatus_distribution_query) do
+      %(
+          query substatusDistributionQuery {
+            substatusDistributionQuery {
+              plotsFullyPurchased{
+                between0to10Days
+                between11to30Days
+                between31to50Days
+                between51to150Days
+                over151Days
+              }
+            }
+          })
+    end
+
     it 'returns users count based on the query' do
       result = DoubleGdpSchema.execute(query, context: {
                                          current_user: admin_user,
@@ -453,6 +468,27 @@ RSpec.describe Types::Queries::User do
 
     it 'should not query the substatus report when user is not admin' do
       result = DoubleGdpSchema.execute(substatus_query, context: {
+                                         current_user: client_user,
+                                         site_community: client_user.community,
+                                       }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
+
+    it 'should query the substatus distribution report' do
+      result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased')).not_to be_nil
+      expect(
+        result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased', 'between0to10Days'),
+      ).to eq 0
+    end
+
+    it 'should not query the substatus distribution report when user is not admin' do
+      result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
                                          current_user: client_user,
                                          site_community: client_user.community,
                                        }).as_json
