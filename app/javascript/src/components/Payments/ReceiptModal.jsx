@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DetailsDialog } from '../Dialog'
 import PaymentReceipt from './PaymentReceipt'
 
-export default function ReceiptModal({ open, handleClose, paymentData, comImage, comName }){
+export default function ReceiptModal({ open, handleClose, paymentData, comImage, comName, token }){
   const classes = useStyles();
   const [paymentReceipt, setPaymentReceipt] = useState(false)
 
@@ -35,6 +35,7 @@ export default function ReceiptModal({ open, handleClose, paymentData, comImage,
         handleClose={() => handleReceiptClose()}
         comImage={comImage} 
         comName={comName}
+        token={token}
       />
     </>
   )

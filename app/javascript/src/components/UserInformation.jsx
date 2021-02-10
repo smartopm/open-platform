@@ -252,6 +252,7 @@ export default function UserInformation({
           <Transactions
             userId={userId}
             user={authState.user}
+            token={authState.token}
           />
         </TabPanel>
         {['admin'].includes(userType) && (
@@ -299,7 +300,7 @@ const User = PropTypes.shape({
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
   onLogEntry: PropTypes.func.isRequired,
-  authState: PropTypes.shape({ user: User }).isRequired,
+  authState: PropTypes.shape({ user: User, token: PropTypes.string }).isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
