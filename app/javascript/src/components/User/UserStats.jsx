@@ -6,6 +6,7 @@ import { SubStatusQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { StatusList } from '../../shared/Status';
 import { userSubStatus } from '../../utils/constants';
+import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
 
 export default function UserStats() {
   const { loading, data, error } = useQuery(SubStatusQuery);
@@ -23,6 +24,7 @@ export default function UserStats() {
           <StatusList data={data?.substatusQuery} statuses={userSubStatus} />
         )}
       </div>
+      <SubStatusTimeDistributionReport userSubStatus={userSubStatus} />
     </>
   );
 }

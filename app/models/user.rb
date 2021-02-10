@@ -122,7 +122,7 @@ class User < ApplicationRecord
   validate :phone_number_valid?
   after_create :add_notification_preference
   before_save :ensure_default_state_and_type
-  after_update :log_sub_status_change
+  before_update :log_sub_status_change, if: :sub_status_changed?
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -527,11 +527,11 @@ class User < ApplicationRecord
   end
 
   def log_sub_status_change
-    return sub_status_log if saved_changes.present? && saved_changes.key?('sub_status')
+    return sub_status_log if changes_to_save.present? && changes_to_save.key?('sub_status')
   end
 
   def sub_status_log
-    sub_status_changes = saved_changes['sub_status']
+    sub_status_changes = changes_to_save['sub_status']
 
     start_date = current_time_in_timezone
     previous_status = sub_status_changes.first
@@ -542,7 +542,9 @@ class User < ApplicationRecord
       stop_date = current_time_in_timezone
     end
 
-    create_sub_status_log(start_date, previous_status, new_status, stop_date)
+    latest_substatus = create_sub_status_log(start_date, previous_status, new_status, stop_date)
+
+    self[:latest_substatus_id] = latest_substatus[:id]
   end
 
   def create_sub_status_log(start_date, previous_status, new_status, stop_date)

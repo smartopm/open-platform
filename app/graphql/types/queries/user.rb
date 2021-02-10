@@ -64,6 +64,10 @@ module Types::Queries::User
     field :substatus_query, Types::SubstatusType, null: false do
       description 'Get report of users per substatus'
     end
+
+    field :substatus_distribution_query, Types::SubstatusDistributionReportType, null: true do
+      description 'Get substatus distribution report'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -192,6 +196,20 @@ module Types::Queries::User
 
     users = context[:site_community].users
     users.group(:sub_status).count
+  end
+
+  def substatus_distribution_query
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    users_by_latest_substatus = context[:site_community]
+                                .users
+                                .joins(
+                                  'INNER JOIN substatus_logs
+                                   ON users.latest_substatus_id = substatus_logs.id',
+                                )
+                                .select('substatus_logs.*', 'users.*')
+
+    SubstatusLog.create_time_distribution_report(users_by_latest_substatus)
   end
 end
 # rubocop:enable Metrics/ModuleLength

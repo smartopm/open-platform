@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2021_02_09_081044) do
 
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -326,7 +327,7 @@ ActiveRecord::Schema.define(version: 2021_02_09_081044) do
     t.uuid "user_id"
     t.uuid "created_by_id"
     t.float "pending_amount"
-    t.integer "invoice_number"
+    t.bigint "invoice_number", default: -> { "nextval('global_seq'::regclass)" }
     t.index ["community_id"], name: "index_invoices_on_community_id"
     t.index ["created_by_id"], name: "index_invoices_on_created_by_id"
     t.index ["land_parcel_id"], name: "index_invoices_on_land_parcel_id"
@@ -589,6 +590,7 @@ ActiveRecord::Schema.define(version: 2021_02_09_081044) do
     t.datetime "followup_at"
     t.integer "sub_status"
     t.string "address"
+    t.uuid "latest_substatus_id"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
