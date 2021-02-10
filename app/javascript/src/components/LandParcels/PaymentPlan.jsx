@@ -6,7 +6,7 @@ import Text from '../../shared/Text';
 export default function PaymentPlan({ type, percentage }) {
   const classes = useStyles()
   return (
-    <div className={classes.planStyles}>
+    <div className={classes.planStyles} data-testid="payment_plan">
       <Text content={`Plan: ${type}/${percentage} of latest valuation`} />
     </div>
   );
