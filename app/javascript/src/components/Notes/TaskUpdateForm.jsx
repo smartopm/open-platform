@@ -347,6 +347,15 @@ export default function TaskForm({
               </Select>
             </FormControl>
             <br />
+            <FormHelperText>Task user</FormHelperText>
+            <UserChip
+              user={{
+                name: userData.user,
+                id: userData.userId,
+                imageUrl: userData.imageUrl
+              }}
+            />
+            <br />
             <div>
               <FormHelperText>Pick a due date</FormHelperText>
               <DatePickerDialog
