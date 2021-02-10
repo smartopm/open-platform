@@ -21,6 +21,7 @@ import AddMoreButton from '../../shared/buttons/AddMoreButton';
 import Text from '../../shared/Text';
 import PaymentPlanForm from './PaymentPlanForm';
 import { LandPaymentPlanQuery } from '../../graphql/queries/landparcel';
+import PaymentPlan from './PaymentPlan';
 
 export default function LandParcelModal({
   open,
@@ -42,7 +43,7 @@ export default function LandParcelModal({
   const [valuationFields, setValuationFields] = useState([]);
   const [search, setSearch] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
-  const [ownershipFields, setOwnershipFields] = useState([]);
+  const [ownershipFields, setOwnershipFields] = useState(['']);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [showPaymentPlan, setShowPaymentPlan] = useState(false)
@@ -53,7 +54,9 @@ export default function LandParcelModal({
 
   useEffect(() => {
     setDetailsFields(landParcel);
-    fetchPaymentPlan({ landParcelId: landParcel.id })
+    if (open) {
+      fetchPaymentPlan()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
@@ -63,8 +66,10 @@ export default function LandParcelModal({
     fetchPolicy: 'no-cache'
   });
 
-  const [fetchPaymentPlan, { data: paymentPlanData, loading }] = useLazyQuery(LandPaymentPlanQuery)
-  console.log(paymentPlanData, loading)
+  const [fetchPaymentPlan, {data: paymentPlanData, called}] = useLazyQuery(LandPaymentPlanQuery, {
+    variables: { landParcelId:  landParcel?.id}
+  })
+
   function addOwnership() {
     setOwnershipFields([...ownershipFields, { name: '', address: '' }]);
   }
@@ -395,6 +400,15 @@ export default function LandParcelModal({
             <AddMoreButton title="New Owner" handleAdd={addOwnership} />
           </>
         )}
+        <br />
+        {
+          (called && paymentPlanData?.landParcelPaymentPlan) && (
+            <PaymentPlan 
+              percentage={paymentPlanData?.landParcelPaymentPlan.percentage} 
+              type={paymentPlanData?.landParcelPaymentPlan.planType}
+            /> 
+          )
+        }
         {showPaymentPlan && (
           <>
             <br />
@@ -402,10 +416,16 @@ export default function LandParcelModal({
             <PaymentPlanForm landParcel={landParcel} />
           </>
         )}
-
-        {Boolean(landParcel?.accounts?.length) &&
-          isEditing &&
-          !paymentPlanData?.landParcelPaymentPlan && (
+        {
+        /* 
+          Only show add purchase plan button when: 
+            - landparcel has owner
+            - landparcel doesn't have an existing payment plan
+        */
+        }
+        {Boolean(landParcel?.accounts?.length &&
+          isEditing) &&
+          (called && !paymentPlanData?.landParcelPaymentPlan) && (
             <AddMoreButton
               title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`}
               handleAdd={() => setShowPaymentPlan(!showPaymentPlan)}

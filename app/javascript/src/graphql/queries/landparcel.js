@@ -9,6 +9,7 @@ export const LandPaymentPlanQuery = gql`
       status
       planType
       startDate
+      percentage
     }
   }
 `;
