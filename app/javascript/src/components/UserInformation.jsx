@@ -252,7 +252,6 @@ export default function UserInformation({
           <Transactions
             userId={userId}
             user={authState.user}
-            token={authState.token}
             userData={data.user}
           />
         </TabPanel>
@@ -301,7 +300,7 @@ const User = PropTypes.shape({
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
   onLogEntry: PropTypes.func.isRequired,
-  authState: PropTypes.shape({ user: User, token: PropTypes.string }).isRequired,
+  authState: PropTypes.shape({ user: User }).isRequired,
   sendOneTimePasscode: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
