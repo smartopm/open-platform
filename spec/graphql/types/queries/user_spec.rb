@@ -483,7 +483,7 @@ RSpec.describe Types::Queries::User do
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased')).not_to be_nil
       expect(
-        result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased', 'between0to10Days')
+        result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased', 'between0to10Days'),
       ).to eq 0
     end
 

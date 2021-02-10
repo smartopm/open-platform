@@ -34,7 +34,7 @@ RSpec.describe CustomerJourneyReport do
 
     distribution_report = CustomerJourneyReport
                           .generate_substatus_time_distribution(data)
-    
+
     expect(distribution_report).not_to be_nil
     expect(distribution_report[:plots_fully_purchased][:between51to150Days]).to eq 2
   end

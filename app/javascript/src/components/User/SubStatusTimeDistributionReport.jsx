@@ -3,24 +3,30 @@ import React,  { Fragment } from 'react';
 import PropTypes from 'prop-types'
 import { ListItemText, ListItemSecondaryAction, ListItem, List, makeStyles } from '@material-ui/core';
 import { userSubStatusDurationLookup } from '../../utils/constants';
+import { toCamelCase } from '../../utils/helpers';
 
-export default function SubStatusTimeDistributionReport({ userSubStatus }) {
+export default function SubStatusTimeDistributionReport({ userSubStatus, subStatusDistributionData }) {
   const classes = useStyles();
+  const data = subStatusDistributionData?.substatusDistributionQuery
+
+  console.log(data)
 
   return (
     <>
-      {Object.entries(userSubStatus).map(([key, subStatus]) => (
-        <Fragment key={key}>
+      {data && Object.entries(userSubStatus).map(([userSubStatusKey, subStatus]) => (
+        <Fragment key={userSubStatusKey}>
           <div className={classes.statusSection}>
             <div className={classes.titleSection}>
               <h5 className={classes.title}>{subStatus}</h5>
             </div>
-            {Object.entries(userSubStatusDurationLookup).map(([objKey, duration]) => (
-              <Fragment key={objKey}>
+            {Object.entries(userSubStatusDurationLookup).map(([durationLookupKey, duration]) => (
+              <Fragment key={durationLookupKey}>
                 <List dense>
                   <ListItem style={{ height: 16, cursor: 'pointer' }}>
                     <ListItemText primary={duration} />
-                    <ListItemSecondaryAction>{0}</ListItemSecondaryAction>
+                    <ListItemSecondaryAction>
+                      {data[String(toCamelCase(userSubStatusKey))][String(durationLookupKey)] || 0}
+                    </ListItemSecondaryAction>
                   </ListItem>
                 </List>
               </Fragment>
@@ -48,7 +54,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+SubStatusTimeDistributionReport.defaultProps = {
+  subStatusDistributionData: {},
+}
+
+/* eslint-disable react/forbid-prop-types */
 SubStatusTimeDistributionReport.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   userSubStatus: PropTypes.object.isRequired,
+  subStatusDistributionData: PropTypes.object,
 }

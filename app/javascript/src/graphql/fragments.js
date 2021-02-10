@@ -119,9 +119,9 @@ export const NotesFragment = {
   `
 }
 
-export const SubStatusDistributionFragment = {
+export const SubstatusDistributionReportFragment = {
   publicFields: gql`
-    fragment SubStatusDistributionFields on SubStatusDistribution {
+    fragment SubstatusDistributionReportFields on SubstatusDistributionReport {
       plotsFullyPurchased {
         between0to10Days
         between11to30Days

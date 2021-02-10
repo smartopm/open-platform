@@ -1,6 +1,6 @@
 /* eslint-disable */
 import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment, NotesFragment, SubStatusDistributionFragment 
+import { UserFragment, EntryRequestFragment, NotesFragment, SubstatusDistributionReportFragment 
 } from './fragments'
 
 export const UserQuery = gql`
@@ -1013,10 +1013,10 @@ query subStatus {
 export const SubStatusDistributionReportQuery = gql`
 query substatusDistributionQuery {
   substatusDistributionQuery {
-    ...SubStatusDistributionFields
+    ...SubstatusDistributionReportFields
   }
 }
-${SubStatusDistributionFragment.publicFields}
+${SubstatusDistributionReportFragment.publicFields}
 `
 export const AllTransactionQuery = gql`
   query InvoicesWithTransactions($userId: ID!) {
