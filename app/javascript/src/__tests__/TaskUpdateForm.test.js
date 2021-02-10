@@ -60,7 +60,8 @@ describe('task form component', () => {
     expect(container.queryByText(/Mark task as complete/i)).not.toBeDisabled()
     expect(container.queryByText('tolulope O.')).toBeInTheDocument()
     expect(container.queryByText('another_user')).toBeInTheDocument()
-    expect(container.queryAllByTestId('user_chip').length).toBe(2)
+    expect(container.queryByText('Task user')).toBeInTheDocument()
+    expect(container.queryAllByTestId('user_chip').length).toBe(3)
     expect(container.queryByTestId('mark_task_complete_checkbox')).toBeInTheDocument()
     expect(container.queryByText(/Task Body/i)).toBeInTheDocument() // for the toggler
     expect(submitBtn.textContent).toContain('Update Task')
