@@ -12,9 +12,14 @@ class WalletTransaction < ApplicationRecord
     attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
 
+  before_create do
+    self.transaction_number = (SecureRandom.hex(8) + Time.zone.now.to_i.to_s)
+  end
+
   before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }
 
-  VALID_SOURCES = ['cash', 'cheque/cashier_cheque', 'wallet'].freeze
+  VALID_SOURCES = ['cash', 'cheque/cashier_cheque', 'wallet',
+                   'mobile_money', 'bank_transfer', 'pos'].freeze
 
   validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }
   validates :bank_name, :cheque_number, presence: true,
