@@ -18,7 +18,7 @@ import UserInvoiceItem from './UserInvoiceItem'
 import ButtonComponent from '../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
-export default function TransactionsList({ userId, user, token }) {
+export default function TransactionsList({ userId, user, userData }) {
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
@@ -160,9 +160,7 @@ export default function TransactionsList({ userId, user, token }) {
         refetch={refetch}
         depRefetch={depRefetch}
         walletRefetch={walletRefetch}
-        comImage={user?.community?.imageUrl}
-        comName={user?.community?.name}
-        token={token}
+        userData={userData}
       />
       <CenteredContent>
         <Paginate
@@ -177,12 +175,13 @@ export default function TransactionsList({ userId, user, token }) {
   )
 }
 TransactionsList.defaultProps = {
-  token: ''
+  userData: {}
 }
 
 TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
-  token: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  userData: PropTypes.object,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,

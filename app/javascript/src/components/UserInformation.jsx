@@ -253,6 +253,7 @@ export default function UserInformation({
             userId={userId}
             user={authState.user}
             token={authState.token}
+            userData={data.user}
           />
         </TabPanel>
         {['admin'].includes(userType) && (
