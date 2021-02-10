@@ -9,8 +9,6 @@ export default function SubStatusTimeDistributionReport({ userSubStatus, subStat
   const classes = useStyles();
   const data = subStatusDistributionData?.substatusDistributionQuery
 
-  console.log(data)
-
   return (
     <>
       {data && Object.entries(userSubStatus).map(([userSubStatusKey, subStatus]) => (
