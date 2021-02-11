@@ -6,14 +6,11 @@ import DatePickerDialog from '../DatePickerDialog';
 import { paymentPlanStatus } from '../../utils/constants';
 import { LandPaymentPlanCreateMutation } from '../../graphql/mutations/land_parcel';
 import { Spinner } from '../../shared/Loading';
-// list all owners of the land parcel
-// pass a land_parcel
-// lazy query list of owners of
-// pick one owner
+import { formatError } from '../../utils/helpers';
 
 const initialPlanState = {
   status: '',
-  planType: '',
+  planType: 'lease',
   percentage: '',
   startDate: new Date(),
   userId: '',
@@ -22,6 +19,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
   const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState)
   const [createPaymentPlan] = useMutation(LandPaymentPlanCreateMutation)
   const [mutationInfo, setMutationInfo] = useState({ loading: false,  isError: false, message: null })
+  const [errorInfo, setErrorInfo] = useState({isError: false, isSubmitting: false})
 
   function handleOnChange(event) {
     const { name, value } = event.target;
@@ -29,6 +27,19 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
   }
 
   function handleSubmit(){
+    const values = Object.values(paymentPlanState)
+
+    function isNotValid(element) {
+      if (Number.isInteger(element) || element instanceof Date ) {
+        return false;
+      }
+      return !element;
+    }
+    const isAnyInValid = values.some(isNotValid)    
+    if (isAnyInValid) {
+      setErrorInfo({ isError: true, isSubmitting: true });
+      return
+    }
     setMutationInfo({...mutationInfo, loading: true})
     createPaymentPlan(
       { variables: { ...paymentPlanState, landParcelId: landParcel.id }}
@@ -38,7 +49,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         refetch()
       })
       .catch(error => {
-        setMutationInfo({isError: true, message: error.message, loading: false})
+        setMutationInfo({isError: true, message: formatError(error.message), loading: false})
       })
   }
   return (
@@ -72,6 +83,8 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         style={{ width: '100%' }}
         required
         select
+        error={errorInfo.isError && !paymentPlanState.userId}
+        helperText={errorInfo.isError && !paymentPlanState.userId && 'User is required'}
       >
         {
           landParcel.accounts.map(account => (
@@ -93,6 +106,8 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         style={{ width: '100%' }}
         required
         select
+        error={errorInfo.isError && !Number.isInteger(paymentPlanState.status)}
+        helperText={errorInfo.isError && !paymentPlanState.status && 'Status is required'}
       >
         {Object.entries(paymentPlanStatus).map(([key, val]) => (
           <MenuItem key={key} value={Number(key)}>
@@ -109,6 +124,8 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         onChange={handleOnChange}
         name="percentage"
         style={{ width: '100%' }}
+        error={errorInfo.isError && !paymentPlanState.percentage}
+        helperText={errorInfo.isError && !paymentPlanState.percentage && 'Percentage is required'}
       />
       <DatePickerDialog
         selectedDate={paymentPlanState.startDate}
