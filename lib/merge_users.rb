@@ -20,7 +20,8 @@ class MergeUsers
   def self.merge(user_id, duplicate_id)
     %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
        DiscussionUser Discussion EntryRequest Feedback FormUser Message
-       NoteComment NoteHistory Note TimeSheet UserFormProperty].each do |table_name|
+       NoteComment NoteHistory Note Payment PostTagUser SubstatusLog TimeSheet
+       UserFormProperty WalletTransaction Wallet].each do |table_name|
       table_name.constantize.where(user_id: user_id).update(user_id: duplicate_id)
 
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
@@ -86,7 +87,8 @@ class MergeUsers
 
     %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
        DiscussionUser Discussion EntryRequest Feedback FormUser Message
-       NoteComment NoteHistory Note TimeSheet UserFormProperty ActivityLog].each do |table_name|
+       NoteComment NoteHistory Note Payment PostTagUser SubstatusLog TimeSheet
+       UserFormProperty WalletTransaction Wallet].each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
       raise StandardError, 'Update Failed'
