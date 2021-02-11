@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc 'sync user data with substatus_logs'
 namespace :db do
   task sync_users_with_substatus_logs: :environment do
@@ -12,7 +14,7 @@ namespace :db do
         puts "skipped for user with id: #{u[:id]}. Substatus Log already exists"
         next
       end
-      
+
       new_substatus_log = SubstatusLog.create!(
         new_status: u[:sub_status],
         start_date: u[:updated_at].to_datetime.in_time_zone('Africa/Lusaka'),
@@ -21,8 +23,8 @@ namespace :db do
         previous_status: nil,
         stop_date: nil,
       )
-      
-      if(new_substatus_log.present?)
+
+      if new_substatus_log.present?
         u.update!(latest_substatus_id: new_substatus_log[:id])
         puts "sync successful for user with id #{u[:id]}."
       end
