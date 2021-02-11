@@ -57,10 +57,10 @@ export function renderTransactions(transaction, currency) {
       content={transaction.__typename === 'WalletTransaction' 
             ? `${currency}${transaction.amount}` 
             : (
-              <div>
+              <>
                 <Text content={`Amount: ${currency}${transaction.amount}`} />
                 <Text content={`Pending Amount: ${currency}${transaction.pendingAmount}`} />
-              </div>
+              </>
               )}
     />, 
     Balance: <GridText 
