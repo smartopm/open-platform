@@ -88,7 +88,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       >
         {
           landParcel.accounts.map(account => (
-            <MenuItem key={account.id} value={account.user.id}>
+            <MenuItem key={account.user.id} value={account.user.id}>
               {account.fullName}
             </MenuItem>
           ))

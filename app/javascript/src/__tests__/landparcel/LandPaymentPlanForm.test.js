@@ -41,5 +41,12 @@ describe('PaymentPlanForm Component', () => {
 
       fireEvent.select(purchase_plan.querySelector('input'), { target: { value: 'lease'}})
       expect(purchase_plan.querySelector('input').value).toBe('lease')
+      // we shouldn't have validation errors before attempting to submit
+      expect(percentage.textContent).not.toContain('Percentage is required')
+      fireEvent.click(submit_btn)
+      // check for validation errors after attempting to save
+      expect(percentage.textContent).toContain('Percentage is required')
+      expect(payment_plan_owner.textContent).toContain('User is required')
+      expect(status.textContent).toContain('Status is required')
   })
 });
