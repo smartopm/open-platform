@@ -2,9 +2,14 @@
 
 # Customer Journey Report
 class CustomerJourneyReport
+  def self.generate_substatus_time_distribution
+    rows = execute_aggregate_time_distribution_query(aggregate_time_lapse_sql)
+
+    create_distribution_report(rows)
+  end
+
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
-  def self.generate_substatus_time_distribution(data)
+  def self.create_distribution_report(rows)
     hash = {
       plots_fully_purchased: Hash.new(0),
       eligible_to_start_construction: Hash.new(0),
@@ -16,21 +21,21 @@ class CustomerJourneyReport
       workers_on_site: Hash.new(0),
     }
 
-    data.each do |u|
-      no_of_days = no_of_days_since_latest_substatus(u[:start_date])
+    rows.present? && rows.each do |row|
+      sub_status, time_lapse, count = row
 
-      range = time_distribution(no_of_days)
-
-      hash[u[:sub_status].to_sym][range[:time_lapse].to_sym] += range[:increment]
+      hash[sub_status.to_sym][time_lapse.to_sym] = count
     end
 
     hash
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable  Metrics/MethodLength
 
-  # rubocop:disable Metrics/MethodLength
-  def self.time_distribution(no_of_days)
+  def self.execute_aggregate_time_distribution_query(sql)
+    User.connection.select_all(sql).rows
+  end
+
+  def self.aggregate_time_lapse_sql
     time_lapse_range = {
       from0to10: 'between0to10Days',
       from11to30: 'between11to30Days',
@@ -39,28 +44,24 @@ class CustomerJourneyReport
       over151: 'over151Days',
     }
 
-    case no_of_days
-    when 0..10
-      { time_lapse: time_lapse_range[:from0to10], increment: 1 }
-    when 11..30
-      { time_lapse: time_lapse_range[:from11to30], increment: 1 }
-    when 31..50
-      { time_lapse: time_lapse_range[:from31to50], increment: 1 }
-    when 51..150
-      { time_lapse: time_lapse_range[:from51to150], increment: 1 }
-    when no_of_days >= 151
-      { time_lapse: time_lapse_range[:over151], increment: 1 }
-    end
-  end
-  # rubocop:enable Metrics/MethodLength
-
-  def self.current_datetime_in_time_zone
-    DateTime.now.in_time_zone('Africa/Lusaka')
-  end
-
-  def self.no_of_days_since_latest_substatus(start_date)
-    return 0 if start_date.blank?
-
-    (current_datetime_in_time_zone - start_date).to_i / (24 * 60 * 60)
+    <<~QUERY
+      SELECT ssl.new_status,
+      CASE
+        WHEN DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date)>= 0
+            AND DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) <= 10 THEN '#{time_lapse_range[:from0to10]}'
+        WHEN DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) >= 11
+            AND DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) <= 30 THEN '#{time_lapse_range[:from11to30]}'
+        WHEN DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) >= 31
+            AND DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) <= 50 THEN '#{time_lapse_range[:from31to50]}'
+        WHEN DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) >= 51
+            AND DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date) <= 150 THEN '#{time_lapse_range[:from51to150]}'
+        WHEN DATE_PART('day', CURRENT_TIMESTAMP - ssl.start_date)>= 151 THEN '#{time_lapse_range[:over151]}'
+      END bucket,
+      COUNT(*)
+      FROM substatus_logs ssl
+      INNER JOIN users ON ssl.id = users.latest_substatus_id
+      WHERE ssl.new_status IS NOT NULL
+      GROUP BY ssl.new_status, bucket
+    QUERY
   end
 end

@@ -201,15 +201,7 @@ module Types::Queries::User
   def substatus_distribution_query
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    users_by_latest_substatus = context[:site_community]
-                                .users
-                                .joins(
-                                  'INNER JOIN substatus_logs
-                                   ON users.latest_substatus_id = substatus_logs.id',
-                                )
-                                .select('substatus_logs.*', 'users.*')
-
-    SubstatusLog.create_time_distribution_report(users_by_latest_substatus)
+    SubstatusLog.create_time_distribution_report
   end
 end
 # rubocop:enable Metrics/ModuleLength
