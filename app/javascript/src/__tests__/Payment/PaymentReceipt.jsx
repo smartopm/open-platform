@@ -24,7 +24,7 @@ describe('It should test the payment receipt modal component', () => {
 
   const open = true
 
-  const handleModalClose = jest.fn
+  const handleModalClose = jest.fn()
 
   it('it should render payment receipt modal', () => {
     const container = render(
