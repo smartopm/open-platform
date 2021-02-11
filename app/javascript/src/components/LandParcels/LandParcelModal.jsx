@@ -342,6 +342,9 @@ export default function LandParcelModal({
               <Autocomplete
                 style={{ width: "100%" }}
                 id="address-input"
+                inputProps={{
+                  'data-testid': 'owner'
+                }}
                 options={filteredOwnerList(data?.usersLite)}
                 getOptionLabel={option => option?.name}
                 getOptionSelected={(option, value) => option.name === value.name}
@@ -351,9 +354,6 @@ export default function LandParcelModal({
                   <TextField
                     {...params}
                     label="Add owner"
-                    inputProps={{
-                      'data-testid': 'owner'
-                    }}
                     style={{ width: "100%" }}
                     name="name"
                     onChange={event => onChangeOwnershipField(event, index)}
@@ -363,7 +363,6 @@ export default function LandParcelModal({
                   )}
               />
               <TextField
-                focused
                 id={`user-search-${index}`}
                 inputProps={{
                   'data-testid': 'owner-address'
