@@ -209,8 +209,8 @@ export const UsersDetails = gql`
 `
 
 export const UsersLiteQuery = gql`
-  query usersLite($query: String!) {
-    usersLite(query: $query) {
+  query usersLite($query: String!, $limit: Int) {
+    usersLite(query: $query, limit: $limit) {
       id
       name
       imageUrl

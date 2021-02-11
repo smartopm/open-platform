@@ -47,6 +47,7 @@ module Types::Queries::User
     field :users_lite, [Types::UserType], null: true do
       description 'Get a list of admins for a community'
       argument :query, String, required: true
+      argument :limit, Integer, required: false
     end
 
     # Get activity-point of a user for the current week

@@ -58,7 +58,7 @@ export default function LandParcelModal({
   }, [open]);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: debouncedValue },
+    variables: { query: debouncedValue, limit: 10 },
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
@@ -190,6 +190,12 @@ export default function LandParcelModal({
       return 'Edit Parcel';
     }
     return 'Save';
+  }
+
+  function filteredOwnerList(users) {
+    if (!users) return [];
+    const currentOwners = (landParcel?.accounts.map((account) => account.user.Id) || []).concat(ownershipFields.map((field) => field.userId))
+    return users.filter((user) => !currentOwners?.includes(user.id))
   }
 
   return (
@@ -337,7 +343,7 @@ export default function LandParcelModal({
                 data-testid="owner"
                 style={{ width: "100%" }}
                 id="address-input"
-                options={data?.usersLite || []}
+                options={filteredOwnerList(data?.usersLite)}
                 getOptionLabel={option => option?.name}
                 getOptionSelected={(option, value) => option.name === value.name}
                 value={ownershipFields[Number(index)]}
