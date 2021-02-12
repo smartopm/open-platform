@@ -32,7 +32,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
               <br />
               TransactionId: 
               {' '}
-              {userData?.transactionNumber || Math.floor(1000 + Math.random() * 9000)}
+              {paymentData?.transactionNumber || '-'}
             </div>
             <div style={{margin: '200px 50px 10px 50px'}}>
               <Grid container spacing={1}>
@@ -105,13 +105,13 @@ PaymentReceipt.defaultProps = {
     currentWalletBalance: PropTypes.number,
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
+    transactionNumber: PropTypes.string,
     user: PropTypes.shape({
       name: PropTypes.string
     })
   }),
   userData: PropTypes.shape({
-    name: PropTypes.string,
-    transactionNumber: PropTypes.number,
+    name: PropTypes.string
   }),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,

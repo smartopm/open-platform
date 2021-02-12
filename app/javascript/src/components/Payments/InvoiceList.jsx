@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { Grid, List } from '@material-ui/core';
 import { useHistory } from 'react-router';
@@ -16,15 +17,15 @@ import Label from '../../shared/label/Label';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import Text from '../../shared/Text';
+import ListHeader from '../../shared/list/ListHeader';
 
 const invoiceHeaders = [
-  { title: 'Invoice Number', col: 1 },
-  { title: 'CreatedBy', col: 2 },
-  { title: 'Parcel Number', col: 1 },
-  { title: 'Amount', col: 2 },
-  { title: 'Issued date', col: 1 },
-  { title: 'Due date', col: 1 },
-  { title: 'Invoice Status', col: 2 }
+  { title: 'Issue Date', col: 3 },
+  { title: 'User', col: 4 },
+  { title: 'Description', col: 4 },
+  { title: 'Amount', col: 3 },
+  { title: 'Payment Date', col: 3 },
+  { title: 'Status', col: 4 }
 ];
 export default function InvoiceList({ currency }) {
   const history = useHistory();
@@ -89,12 +90,15 @@ export default function InvoiceList({ currency }) {
         loading ? (
           <Spinner />
         ) :(
-          <DataList
-            keys={invoiceHeaders}
-            data={renderInvoices(invoicesData?.invoices, currency)}
-            hasHeader={false}
-          />
-)
+          <div>
+            <ListHeader headers={invoiceHeaders} />
+            <DataList
+              keys={invoiceHeaders}
+              data={renderInvoices(invoicesData?.invoices, currency)}
+              hasHeader={false}
+            />
+          </div>
+)       
         }
       </List>
 
@@ -121,45 +125,48 @@ export default function InvoiceList({ currency }) {
 export function renderInvoices(invoices, currency) {
   return invoices.map(invoice => {
     return {
-      'Invoice Number': (
-        <Grid item xs={4} md={1} data-testid="invoice_number">
-          {`#${invoice.invoiceNumber}`}
+      'Issue Date': (
+        <Grid item xs={3} md={2} data-testid="issue_date">
+          <Text content={dateToString(invoice.createdAt)} />
         </Grid>
       ),
-      'CreatedBy': (
+      'User': (
         <Grid item xs={4} md={2} data-testid="created_by">
           {invoice.user.name}
         </Grid>
       ),
-      'Parcel Number': (
-        <Grid item xs={4} md={1} data-testid="parcel_number">
-          {invoice.landParcel.parcelNumber}
+      'Description': (
+        <Grid item xs={4} md={2} data-testid="description">
+          <Text content={`Invoice Number #${invoice.invoiceNumber}`} /> 
+          <br />
+          <Text color='primary' content={`Plot Number #${invoice.landParcel.parcelNumber}`} />
         </Grid>
       ),
       Amount: (
-        <Grid item xs={4} md={2} data-testid="invoice_amount">
-          <Text content={`Amount: ${currency}${invoice.amount}`} />
-          { invoice.status === 'in_progress' && <Text content={`Amount Paid: ${currency}${invoice.amount - invoice.pendingAmount}`} /> }
+        <Grid item xs={3} md={2} data-testid="invoice_amount">
+          <Text content={`${currency}${invoice.amount}`} />
         </Grid>
       ),
-      'Issued date': (
-        <Grid item xs={4} md={2}>
-          <Text content={`Issued: ${dateToString(invoice.createdAt)}`} />
+      'Payment Date': (
+        <Grid item xs={3} md={2}>
           {invoice.status === 'paid' && invoice.payments.length
-            ? <Text content={`Paid: ${dateToString(invoice.payments[0]?.createdAt)} `} /> : null}
+            ? <Text content={dateToString(invoice.payments[0]?.createdAt)} /> : '-'}
+          
         </Grid>
       ),
-      'Due date': (
-        <Grid item xs={4} md={2}>
-          <Text content={`Due: ${dateToString(invoice.dueDate)}`} />
-        </Grid>
-      ),
-      'Invoice Status': (
-        <Grid item xs={4} md={2} data-testid="invoice_status">
-          <Label
-            title={propAccessor(invoiceStatus, invoice.status)}
-            color={propAccessor(InvoiceStatusColor, invoice.status)}
-          />
+      'Status': (
+        <Grid item xs={4} md={2} data-testid="status">
+          {new Date(invoice.dueDate) < new Date().setHours(0,0,0,0) && invoice.status === 'in_progress' ? (
+            <Label
+              title='Due'
+              color='#B63422'
+            />
+          ) : (
+            <Label
+              title={propAccessor(invoiceStatus, invoice.status)}
+              color={propAccessor(InvoiceStatusColor, invoice.status)}
+            />
+          ) }
         </Grid>
       )
     };

@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Grid } from '@material-ui/core';
 import DataList from '../../shared/list/DataList';
 import Text, { GridText } from '../../shared/Text';
 import { dateToString } from '../DateContainer';
-import { invoiceStatus } from '../../utils/constants';
+import Label from '../../shared/label/Label';
 import InvoiceDetails from './InvoiceDetail';
+import { invoiceStatus } from '../../utils/constants';
+import { InvoiceStatusColor, propAccessor } from '../../utils/helpers';
 
 const invoiceHeader = [
-  { title: 'Invoice Number', col: 1 },
-  { title: 'Date Created', col: 1 },
-  { title: 'Amount', col: 1 },
-  { title: 'Status', col: 1 },
-  { title: 'Plot Number', col: 1 },
+  { title: 'Issue Date', col: 4 },
+  { title: 'Description', col: 4 },
+  { title: 'Amount', col: 3 },
+  { title: 'Payment Date', col: 3 },
+  { title: 'Status', col: 4 }
 ];
 export default function UserInvoiceItem({ invoice, currency }) {
   const [open, setOpen] = useState(false);
@@ -39,11 +42,36 @@ export default function UserInvoiceItem({ invoice, currency }) {
 
 export function renderInvoices(inv, currency) {
   return {
-    'Invoice Number': <GridText content={`#${inv.invoiceNumber}`} />,
-    'Date Created': <GridText content={`Issued on ${dateToString(inv.createdAt)}`} />,
-    Status: <GridText content={inv.status === 'paid' ? `Paid on ${dateToString(inv.updatedAt)}` : invoiceStatus[inv.status]} />,
+    'Issue Date': <GridText content={dateToString(inv.createdAt)} />,
+    'Description': (
+      <Grid item xs={4} md={2} data-testid="description">
+        <Text content={`Invoice Number #${inv.invoiceNumber}`} /> 
+        <br />
+        <Text color='primary' content={`Plot Number #${inv.landParcel.parcelNumber}`} />
+      </Grid>
+    ),
     Amount: <GridText content={`${currency}${inv.amount}`} />,
-    'Plot Number': <GridText content={inv.landParcel.parcelNumber} />
+    'Payment Date': (
+      <Grid item xs={3} md={2}>
+        {inv.status === 'paid' && inv.payments.length
+          ? <Text content={dateToString(inv.payments[0]?.createdAt)} /> : '-'}
+      </Grid>
+    ),
+    'Status': (
+      <Grid item xs={4} md={2} data-testid="status">
+        {new Date(inv.dueDate) < new Date().setHours(0,0,0,0) && inv.status === 'in_progress' ? (
+          <Label
+            title='Due'
+            color='#B63422'
+          />
+        ) : (
+          <Label
+            title={propAccessor(invoiceStatus, inv.status)}
+            color={propAccessor(InvoiceStatusColor, inv.status)}
+          />
+        ) }
+      </Grid>
+    ),
   };
 }
 

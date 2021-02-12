@@ -10,7 +10,7 @@ export default function Label({ color, title }) {
         padding: '9px',
         color: 'white',
         borderRadius: '15px',
-        width: '100%'
+        width: '60%'
       }}
     >
       {title}

@@ -10,6 +10,7 @@ module Types
     field :status, String, null: false
     field :bank_name, String, null: true
     field :cheque_number, String, null: true
+    field :transaction_number, String, null: true
     field :current_wallet_balance, Float, null: true
     field :user, Types::UserType, null: false
     field :community, Types::CommunityType, null: false

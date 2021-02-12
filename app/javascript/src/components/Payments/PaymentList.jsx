@@ -12,10 +12,11 @@ import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import { Spinner } from '../../shared/Loading';
 import Paginate from '../Paginate';
+import ListHeader from '../../shared/list/ListHeader';
 
 const paymentHeaders = [
-  { title: 'Paid date', col: 1 },
-  { title: 'CreatedBy', col: 2 },
+  { title: 'User', col: 2 },
+  { title: 'Deposit Date', col: 1 },
   { title: 'PaymentType', col: 1 },
   { title: 'Amount', col: 2 },
   { title: 'chequeNumber', col: 2 }
@@ -66,11 +67,14 @@ export default function PaymentList({ currency }) {
           loading 
           ? <Spinner /> 
           : (
-            <DataList
-              keys={paymentHeaders}
-              data={renderPayments(data?.payments, currency)}
-              hasHeader={false}
-            />
+            <div>
+              <ListHeader headers={paymentHeaders} />
+              <DataList
+                keys={paymentHeaders}
+                data={renderPayments(data?.payments, currency)}
+                hasHeader={false}
+              />
+            </div>
           )
         }
       {
@@ -93,14 +97,14 @@ export default function PaymentList({ currency }) {
 export function renderPayments(payments, currency) {
   return payments?.map(payment => {
     return {
-      'Paid date': (
-        <Grid item xs={4} md={2}>
-          {dateToString(payment.createdAt)}
+      'User': (
+        <Grid item xs={2} md={2} data-testid="created_by">
+          {payment.user.name}
         </Grid>
       ),
-      'CreatedBy': (
-        <Grid item xs={4} md={2} data-testid="created_by">
-          {payment.user.name}
+      'Deposit Date': (
+        <Grid item xs={1} md={2}>
+          {dateToString(payment.createdAt)}
         </Grid>
       ),
       PaymentType: (

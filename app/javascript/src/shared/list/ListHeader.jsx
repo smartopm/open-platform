@@ -15,10 +15,12 @@ export default function ListHeader({ headers }) {
       className={classes.heading}
     >
       {headers.map(header => (
-        <Grid item xs={header.col} key={header.title}>
-          <Typography className={classes.typography}>
-            {['Select', 'Menu'].includes(header.title) ? null : header.title}
-          </Typography>
+        <Grid item xs={header.col || true} md={2} key={header.title}>
+          <b>
+            <Typography variant='body2' className={classes.typography}>
+              {['Select', 'Menu'].includes(header.title) ? null : header.title}
+            </Typography>
+          </b>
         </Grid>
       ))}
     </Grid>
@@ -41,6 +43,6 @@ const useStyles = makeStyles(() => ({
     border: '1px solid #ECECEC'
   },
   typography: {
-    marginLeft: 30
+    fontWeight: 'bold'
   }
 }));

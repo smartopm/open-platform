@@ -1,29 +1,22 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Grid, Tooltip } from '@material-ui/core';
 import DataList from '../../shared/list/DataList';
 import Text, { GridText } from '../../shared/Text';
 import { dateToString } from '../DateContainer';
 import CenteredContent from '../CenteredContent';
-import { invoiceStatus } from '../../utils/constants'
+import Label from '../../shared/label/Label';
 import TransactionDetails from './TransactionDetails'
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
   { title: 'Description', col: 1 },
-  { title: 'Status', col: 1 },
   { title: 'Amount', col: 1 },
   { title: 'Balance', col: 1 },
+  { title: 'Status', col: 1 }
 ];
 
-const payStatus = {
-  cash: 'Cash',
-  mobile_money: 'Mobile Money',
-  pos: 'Point of Sale',
-  'cheque/cashier_cheque': 'Cheque or CashierCheque',
-  'bank_transfer/eft': 'Bank Transfer - EFT',
-  'bank_transfer/cash_deposit': 'Bank Transfer - Cash Deposit',
-}
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)
 
@@ -52,29 +45,42 @@ export default function UserTransactionsList({ transaction, currency }) {
 
 export function renderTransactions(transaction, currency) {
   return {
-    'Date Created': <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Paid on ${dateToString(transaction.createdAt)}` : `Issued on ${dateToString(transaction.createdAt)}`} />,
+    'Date Created': <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Deposit date ${dateToString(transaction.createdAt)}` : `Issue date ${dateToString(transaction.createdAt)}`} />,
     // eslint-disable-next-line no-nested-ternary
-    Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? 'Invoice' : transaction.source === 'wallet' ? 'Invoice settlement' : 'Deposit' }`} />,
-    Status: <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `${invoiceStatus[transaction.status]}/${transaction.source === 'wallet' ? 'from-balance' : payStatus[transaction.source]}` : 'In-Progress'} />,
-    Amount:  <GridText 
+    Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? `Invoice ${transaction.invoiceNumber}` : transaction.source === 'wallet' ? 'Invoice' : 'Deposit' }`} />,
+    Amount: (
+      <Grid item xs={3} md={2} data-testid="description">
+        {transaction.__typename === 'WalletTransaction' ? (
+          <Text content={`${currency}${transaction.amount}`} /> 
+        ) : (
+          <Tooltip placement="top" title="Pending Amount">
+            <span style={{fontSize: '0.75rem'}}>{`**${currency}${transaction.pendingAmount}`}</span>
+          </Tooltip>
+        )}
+      </Grid>), 
+    Balance: <GridText
+      statusColor={transaction.__typename !== 'WalletTransaction' && '#D65252'}
       col={3} 
       content={transaction.__typename === 'WalletTransaction' 
-            ? `${currency}${transaction.amount}` 
-            : (
-              <>
-                <Text content={`Amount: ${currency}${transaction.amount}`} />
-                <Text content={`Pending Amount: ${currency}${transaction.pendingAmount}`} />
-              </>
-              )}
-    />, 
-    Balance: <GridText 
-      col={3} 
-      content={transaction.__typename === 'WalletTransaction' 
-              ? `Bal: ${currency}${transaction.currentWalletBalance}` 
+              ? `${currency}${transaction.currentWalletBalance}` 
               : (
-                  `Bal: ${currency}-${transaction.balance}`
+                  `-${currency}${transaction.balance}`
               )}
     />,
+    'Status': (
+      <Grid item xs={4} md={2} data-testid="status">
+        {transaction.__typename === 'WalletTransaction' ? (
+          <Label
+            title='Paid'
+            color='#58B71B'
+          />
+        ) : (
+          <Label
+            title='Unpaid'
+            color='#EF6F51'
+          />
+        )}
+      </Grid>)
   };
 }
 

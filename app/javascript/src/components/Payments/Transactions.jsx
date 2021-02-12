@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { Button } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import InvoiceModal from './invoiceModal'
@@ -17,6 +17,7 @@ import { StyledTabs, StyledTab, TabPanel } from '../Tabs'
 import UserInvoiceItem from './UserInvoiceItem'
 import ButtonComponent from '../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
+import ListHeader from '../../shared/list/ListHeader';
 
 export default function TransactionsList({ userId, user, userData }) {
   const history = useHistory()
@@ -51,6 +52,22 @@ export default function TransactionsList({ userId, user, userData }) {
       errorPolicy: 'all'
     }
   )
+
+  const transactionHeader = [
+    { title: 'Deposit/Issue date', col: 4 },
+    { title: 'Description', col: 4 },
+    { title: 'Amount', col: 3 },
+    { title: 'Balance', col: 3 },
+    { title: 'Status', col: 4 }
+  ];
+
+  const invoiceHeader = [
+    { title: 'Issue Date', col: 4 },
+    { title: 'Description', col: 4 },
+    { title: 'Amount', col: 3 },
+    { title: 'Payment Date', col: 3 },
+    { title: 'Status', col: 4 }
+  ];
 
   const currency = currencies[user.community.currency] || ''
   const [tabValue, setTabValue] = useState('Invoices')
@@ -93,7 +110,22 @@ export default function TransactionsList({ userId, user, userData }) {
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   return (
     <div>
-      <CenteredContent>
+      <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
+        <Typography variant='caption'>Total Balance</Typography>
+        <div style={{display: 'flex', flexDirection: 'row' }}>
+          <Typography style={{marginTop: '50px'}} variant="caption" color='primary'>{currency}</Typography>
+          <Typography variant="h2" color='primary'>{walletData.userBalance}</Typography>
+        </div>
+      </div>
+      {
+            authState.user?.userType === 'admin' && (
+              <div style={{marginLeft: '20px'}}>
+                <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
+                <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+              </div>
+            )
+          }
+      <div style={{marginLeft: '20px'}}>
         <StyledTabs
           value={tabValue}
           onChange={handleChange}
@@ -102,19 +134,7 @@ export default function TransactionsList({ userId, user, userData }) {
           <StyledTab label="Invoices" value="Invoices" />
           <StyledTab label="Transactions" value="Transactions" />
         </StyledTabs>
-        <div style={{marginLeft: '100px', display: 'flex'}}> 
-          <Button variant="text">{`Balance: ${currency}${walletData.userBalance}`}</Button>
-          {
-            authState.user?.userType === 'admin' && (
-              <div>
-                <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
-                <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => handlePaymentOpen()} />
-              </div>
-            )
-          }
-          
-        </div>
-      </CenteredContent>
+      </div>
       <InvoiceModal
         open={open}
         handleModalClose={handleModalClose}
@@ -126,22 +146,24 @@ export default function TransactionsList({ userId, user, userData }) {
         walletRefetch={walletRefetch}
       />
       <TabPanel value={tabValue} index="Transactions">
+        <ListHeader headers={transactionHeader} />
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
             key={trans.id}
           />
-      ))}
+        ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
             currency={currency}
             key={trans?.id}
           />
-      ))}
+        ))}
       </TabPanel>
       <TabPanel value={tabValue} index="Invoices">
+        <ListHeader headers={invoiceHeader} />
         {
           invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem
