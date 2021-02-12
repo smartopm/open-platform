@@ -14,6 +14,10 @@ module Mutations
 
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:id])
+        if vals[:status] == 'delete'
+          # find the task and delete it
+          FormUser.find_by(form_id: vals[:id]).note.update(flagged: false)
+        end
         if form.update(vals.except(:id))
           context[:current_user].generate_events('form_publish', form, action: vals[:status])
 
