@@ -9,6 +9,7 @@ module Mutations
       argument :source, String, required: true
       argument :bank_name, String, required: false
       argument :cheque_number, String, required: false
+      argument :transaction_number, String, required: false
       argument :status, String, required: false
 
       field :wallet_transaction, Types::WalletTransactionType, null: true
@@ -19,11 +20,12 @@ module Mutations
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:user_id]) ||
                  context[:current_user]
-          status = vals[:source] == 'cash' ? 'settled' : vals[:status]
           transaction = user.wallet_transactions.create!(
-            vals.except(:user_id).merge(
-              { destination: 'wallet', status: status, community_id: context[:site_community]&.id },
-            ),
+            vals.except(:user_id).merge({
+                                          destination: 'wallet',
+                                          status: 'settled',
+                                          community_id: context[:site_community]&.id,
+                                        }),
           )
           context[:current_user].generate_events('deposit_create', transaction)
           update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?

@@ -18,6 +18,7 @@ const initialValues = {
   status: 'pending',
   bankName: '',
   chequeNumber: '',
+  transactionNumber: '',
 }
 
 export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch }){
@@ -38,6 +39,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         status: inputValue.status,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
+        transactionNumber: inputValue.transactionNumber,
       }
     }).then(() => {
       setMessageAlert('Payment made successfully')
@@ -104,28 +106,19 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
             <MenuItem value='cash'>Cash</MenuItem>
             <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
             <MenuItem value='mobile_money'>Mobile Money</MenuItem>
-            <MenuItem value='bank_transfer'>Bank Transfer</MenuItem>
+            <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
+            <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
             <MenuItem value='pos'>Point of Sale</MenuItem>
           </TextField>
-          {
-            inputValue.transactionType !== 'cash' && (
-              <>
-                <TextField
-                  margin="dense"
-                  id="payment-status"
-                  inputProps={{ "data-testid": "payment-status" }}
-                  label="Payment Status"
-                  value={inputValue.status}
-                  onChange={(event) => setInputValue({...inputValue, status: event.target.value})}
-                  required
-                  select
-                >
-                  <MenuItem value='pending'>Pending</MenuItem>
-                  <MenuItem value='settled'>Settled</MenuItem>
-                </TextField>
-              </>
-            )
-          }
+          <TextField
+            autoFocus
+            margin="dense"
+            id="transaction-number"
+            label="Transaction Number"
+            type='string'
+            value={inputValue.transactionNumber}
+            onChange={(event) => setInputValue({...inputValue, transactionNumber: event.target.value})}
+          />
           {
             inputValue.transactionType === 'cheque/cashier_cheque' && (
               <>
