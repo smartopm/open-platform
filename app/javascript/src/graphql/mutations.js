@@ -373,16 +373,6 @@ export const DeleteNoteComment = gql`
   }
 `
 
-export const AddPlotNumber = gql`
-  mutation AddPlotNumber($userId: ID!, $accountId: ID, $parcelNumber: String!) {
-    landParcel(userId: $userId, accountId: $accountId, parcelNumber: $parcelNumber) {
-      landParcel {
-        id
-      }
-    }
-  }
-`
-
 export const AddNewProperty = gql`
 mutation AddNewProperty($parcelNumber: String!,
   $address1: String,
@@ -450,14 +440,6 @@ mutation UpdateProperty($id: ID!,
     }
   }
 }
-`
-
-export const EditPlotNumber = gql`
-  mutation EditPlotNumber($id: ID!, $parcelNumber: String!) {
-    landParcelUpdate(id: $id, parcelNumber: $parcelNumber) {
-      landParcelUpdate
-    }
-  }
 `
 
 export const LabelMerge = gql`
