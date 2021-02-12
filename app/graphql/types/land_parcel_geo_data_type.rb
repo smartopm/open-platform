@@ -3,6 +3,7 @@
 module Types
   # Land Parcel GeoData Type
   class LandParcelGeoDataType < Types::BaseObject
+    field :id, ID, null: false
     field :parcel_number, String, null: false
     field :parcel_type, String, null: true
     field :long_x, Float, null: true

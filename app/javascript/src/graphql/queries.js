@@ -513,6 +513,7 @@ export const ParcelsQuery = gql`
 export const LandParcelGeoData = gql`
   query landParcelGeoData {
     landParcelGeoData {
+      id
       parcelNumber
       parcelType
       latY

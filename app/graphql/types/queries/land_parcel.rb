@@ -76,6 +76,7 @@ module Types::Queries::LandParcel
 
   def geo_data(parcel)
     {
+      id: parcel[:id],
       parcel_type: parcel[:parcel_type],
       parcel_number: parcel[:parcel_number],
       lat_y: parcel[:lat_y],
