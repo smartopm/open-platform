@@ -18,7 +18,11 @@ const transactionHeader = [
 
 const payStatus = {
   cash: 'Cash',
-  'cheque/cashier_cheque': 'Cheque or CashierCheque'
+  mobile_money: 'Mobile Money',
+  pos: 'Point of Sale',
+  'cheque/cashier_cheque': 'Cheque or CashierCheque',
+  'bank_transfer/eft': 'Bank Transfer - EFT',
+  'bank_transfer/cash_deposit': 'Bank Transfer - Cash Deposit',
 }
 export default function UserTransactionsList({ transaction, currency }) {
   const [open, setOpen] = useState(false)

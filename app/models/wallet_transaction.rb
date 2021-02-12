@@ -22,7 +22,7 @@ class WalletTransaction < ApplicationRecord
                                         if: -> { source.eql?('cheque/cashier_cheque') }
   validates :transaction_number, format: { with: /\A[A-Za-z0-9]*\z/i,
                                            message: 'Transaction Number should be Alphanumeric' }
-  validates :transaction_number, length: { maximum: 35, allow_blank: true }
+  validates :transaction_number, uniqueness: true, length: { maximum: 35, allow_blank: true }
 
   enum status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
 
