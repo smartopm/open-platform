@@ -39,9 +39,10 @@ describe('Land Parcel Modal Component', () => {
     expect(valuationAmount.value).toBe('200')
 
     fireEvent.click(container.queryByText('New Owner'))
-    const owner = container.queryByTestId('owner')
-    fireEvent.change(owner, { target: { value: 'Owner Name' } })
-    expect(owner.value).toBe('Owner Name')
+    const ownerAddress = container.queryByTestId('owner-address')
+    fireEvent.change(ownerAddress, { target: { value: 'Owner Address' } })
+    expect(ownerAddress.value).toBe('Owner Address')
+    expect(container.queryByTestId("owner")).toBeDefined();
   })
 
   it('it should not allow adding new items if in "details" mode until edit-btn is clicked', () => {

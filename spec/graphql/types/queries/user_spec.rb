@@ -46,6 +46,9 @@ RSpec.describe Types::Queries::User do
              community_id: current_user.community_id)
     end
     let!(:admin) { create(:admin_user, community_id: current_user.community_id, email: 'ab@dc.ef') }
+    let!(:another_admin) do
+      create(:admin_user, community_id: current_user.community_id, email: 'cd@dc.ef')
+    end
 
     let(:query) do
       %(query {
@@ -91,8 +94,8 @@ RSpec.describe Types::Queries::User do
 
     let(:admins_query) do
       %(
-        query usersLite($query: String!){
-          usersLite(query: $query) {
+        query usersLite($query: String!, $limit: Int){
+          usersLite(query: $query, limit: $limit) {
             id
             name
           }
@@ -108,6 +111,17 @@ RSpec.describe Types::Queries::User do
     it 'returns list of admins' do
       variables = {
         query: 'user_type: admin',
+      }
+      result = DoubleGdpSchema.execute(admins_query, variables: variables,
+                                                     context: { current_user: admin }).as_json
+      expect(result.dig('data', 'usersLite', 0, 'id')).to_not be_nil
+      expect(result.dig('data', 'usersLite', 0, 'name')).to_not be_nil
+      expect(result.dig('data', 'usersLite').length).to eql 2 # only one admin
+    end
+
+    it 'returns limited number of users if limit is supplied' do
+      variables = {
+        query: 'user_type: admin', limit: 1
       }
       result = DoubleGdpSchema.execute(admins_query, variables: variables,
                                                      context: { current_user: admin }).as_json
@@ -251,7 +265,7 @@ RSpec.describe Types::Queries::User do
                                                       current_user: admin,
                                                     }).as_json
       expect(result['errors']).to be_nil
-      expect(result.dig('data', 'users').length).to eql 1
+      expect(result.dig('data', 'users').length).to eql 2
     end
 
     it 'should search by email of a user' do
@@ -275,7 +289,7 @@ RSpec.describe Types::Queries::User do
                                                       current_user: admin,
                                                     }).as_json
       expect(result['errors']).to be_nil
-      expect(result.dig('data', 'users').length).to eql 10
+      expect(result.dig('data', 'users').length).to eql 11
     end
 
     it 'should return all users when no user type is specified' do
@@ -286,7 +300,7 @@ RSpec.describe Types::Queries::User do
                                                     context: {
                                                       current_user: admin,
                                                     }).as_json
-      expect(result.dig('data', 'users').length).to eql 10
+      expect(result.dig('data', 'users').length).to eql 11
       expect(result['errors']).to be_nil
     end
   end

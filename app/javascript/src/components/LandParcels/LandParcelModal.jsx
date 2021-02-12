@@ -6,11 +6,9 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
 } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { CustomizedDialogs } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import DatePickerDialog from '../DatePickerDialog';
@@ -22,6 +20,7 @@ import Text from '../../shared/Text';
 import PaymentPlanForm from './PaymentPlanForm';
 import { LandPaymentPlanQuery } from '../../graphql/queries/landparcel';
 import PaymentPlan from './PaymentPlan';
+import useDebounce from '../../utils/useDebounce';
 
 export default function LandParcelModal({
   open,
@@ -41,13 +40,11 @@ export default function LandParcelModal({
   const [country, setCountry] = useState('');
   const [tabValue, setTabValue] = useState('Details');
   const [valuationFields, setValuationFields] = useState([]);
-  const [search, setSearch] = useState(false);
-  const [showAddress, setShowAddress] = useState(false);
   const [ownershipFields, setOwnershipFields] = useState(['']);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [showPaymentPlan, setShowPaymentPlan] = useState(false)
-
+  const [showPaymentPlan, setShowPaymentPlan] = useState(false);
+  const debouncedValue = useDebounce(ownershipFields[Number(currentIndex)]?.name, 500);
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
   const isFormReadOnly = modalType === 'details' && !isEditing;
@@ -61,7 +58,7 @@ export default function LandParcelModal({
   }, [open]);
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: ownershipFields[Number(currentIndex)]?.name },
+    variables: { query: debouncedValue, limit: 10 },
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
@@ -84,12 +81,9 @@ export default function LandParcelModal({
     setOwnershipFields(fields);
   }
 
-  function userSearch(e, index) {
-    if (e.keyCode === 13) {
+  function userSearch(index) {
       setCurrentIndex(Number(index));
-      setSearch(true);
       searchUser();
-    }
   }
 
   function removeOwnership(index) {
@@ -98,16 +92,10 @@ export default function LandParcelModal({
     setOwnershipFields([...ownershipOptions]);
   }
 
-  const handleOwnershipChange = (event, index) => {
+  const handleOwnershipChange = (selected, index) => {
     const fields = [...ownershipFields];
-    fields[Number(index)] = {
-      name: data?.usersLite[event.target.value].name,
-      address: data?.usersLite[event.target.value].address,
-      userId: data?.usersLite[event.target.value].id
-    };
+    fields[Number(index)] = { ...fields[Number(index)], name: selected?.name, userId: selected?.id };
     setOwnershipFields(fields);
-    setSearch(false);
-    setShowAddress(true);
   };
 
   // Todo: Put this in a single state
@@ -202,6 +190,12 @@ export default function LandParcelModal({
       return 'Edit Parcel';
     }
     return 'Save';
+  }
+
+  function filteredOwnerList(users) {
+    if (!users) return [];
+    const currentOwners = (landParcel?.accounts.map((account) => account.user.Id) || []).concat(ownershipFields.map((field) => field.userId))
+    return users.filter((user) => !currentOwners?.includes(user.id))
   }
 
   return (
@@ -312,7 +306,7 @@ export default function LandParcelModal({
           !isEditing &&
           (landParcel?.accounts?.length ? (
             landParcel?.accounts.map(owner => (
-              <div key={owner.id}>
+              <div key={owner.id} className={classes.parcelForm}>
                 <TextField
                   id={`user-search-${owner.name}`}
                   focused
@@ -343,51 +337,43 @@ export default function LandParcelModal({
           ))}
         {ownershipFields?.map((_field, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={index} style={{ display: 'flex' }}>
-            <div>
-              <TextField
-                id={`user-search-${index}`}
-                helperText="Enter name of the user and Press enter to search"
-                autoFocus
-                value={ownershipFields[Number(index)].name}
-                label="Owner"
-                onChange={event => onChangeOwnershipField(event, index)}
-                onKeyDown={e => userSearch(e, index)}
-                name="name"
-                className={classes.textField}
+          <div key={index} style={{ display: 'flex', marginBottom: '30px' }}>
+            <div style={{ width: "100%" }}>
+              <Autocomplete
+                style={{ width: "100%" }}
+                id="address-input"
                 inputProps={{
                   'data-testid': 'owner'
                 }}
+                options={filteredOwnerList(data?.usersLite)}
+                getOptionLabel={option => option?.name}
+                getOptionSelected={(option, value) => option.name === value.name}
+                value={ownershipFields[Number(index)]}
+                onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Add owner"
+                    style={{ width: "100%" }}
+                    name="name"
+                    onChange={event => onChangeOwnershipField(event, index)}
+                      // eslint-disable-next-line no-unused-vars
+                    onKeyDown={(_e) => userSearch(index)}
+                  />
+                  )}
               />
-              {showAddress && (
-                <TextField
-                  focused
-                  id={`user-search-${index}`}
-                  value={ownershipFields[Number(index)].address}
-                  label="Address"
-                  onChange={event => onChangeOwnershipField(event, index)}
-                  onKeyDown={userSearch}
-                  name="address"
-                  className={classes.textField}
-                  style={{ marginBottom: '15px', width: '100%' }}
-                />
-              )}
-              {search && data && currentIndex === index && (
-                <RadioGroup
-                  aria-label="user"
-                  name="user"
-                  onChange={event => handleOwnershipChange(event, index)}
-                >
-                  {data?.usersLite.map((user, i) => (
-                    <FormControlLabel
-                      value={i}
-                      control={<Radio />}
-                      label={user.name}
-                      key={user.id}
-                    />
-                  ))}
-                </RadioGroup>
-              )}
+              <TextField
+                id={`user-search-${index}`}
+                inputProps={{
+                  'data-testid': 'owner-address'
+                }}
+                value={ownershipFields[Number(index)].address}
+                label="Address"
+                onChange={event => onChangeOwnershipField(event, index)}
+                name="address"
+                className={classes.textField}
+                style={{ marginBottom: '15px' }}
+              />
             </div>
             <div className={classes.removeIcon}>
               <IconButton
@@ -409,10 +395,10 @@ export default function LandParcelModal({
         <br />
         {
           (called && paymentPlanData?.landParcelPaymentPlan) && (
-            <PaymentPlan 
-              percentage={paymentPlanData?.landParcelPaymentPlan.percentage} 
+            <PaymentPlan
+              percentage={paymentPlanData?.landParcelPaymentPlan.percentage}
               type={paymentPlanData?.landParcelPaymentPlan.planType}
-            /> 
+            />
           )
         }
         {showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && (
@@ -423,8 +409,8 @@ export default function LandParcelModal({
           </>
         )}
         {
-        /* 
-          Only show add purchase plan button when: 
+        /*
+          Only show add purchase plan button when:
             - landparcel has owner
             - landparcel doesn't have an existing payment plan
         */
