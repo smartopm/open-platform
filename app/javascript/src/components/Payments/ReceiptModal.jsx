@@ -23,6 +23,7 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
         title='Generate Receipt'
         open={open}
         handleClose={handleClose}
+        noActionButton
       >
         <div className={classes.buttons}>
           <Button 
@@ -60,7 +61,7 @@ const useStyles = makeStyles({
   buttons: {
     display: 'flex',
     justifyContent: 'center',
-    margin: '30px 0'
+    margin: '30px'
   }
 });
 

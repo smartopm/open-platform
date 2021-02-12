@@ -56,7 +56,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       handleModalClose()
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
-      history.push(`/user/${userId}?tab=payments`)
+      history.push(`/user/${userId}?tab=Payments`)
     })
   }
 
@@ -69,7 +69,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
 
   function handlePromptClose() {
     setPromptOpen(false)
-    history.push(`/user/${userId}?tab=payments`)
+    history.push(`/user/${userId}?tab=Payments`)
   }
 
   return(

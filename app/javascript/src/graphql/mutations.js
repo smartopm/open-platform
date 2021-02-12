@@ -810,6 +810,7 @@ export const PaymentCreate = gql`
         status
         bankName
         chequeNumber
+        transactionNumber
         currentWalletBalance
         createdAt
         user {

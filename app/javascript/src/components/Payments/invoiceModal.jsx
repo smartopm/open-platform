@@ -63,12 +63,12 @@ export default function InvoiceModal({ open, handleModalClose, userId, refetch, 
       depRefetch()
       walletRefetch()
       handleModalClose()
-      history.push(`/user/${userId}?tab=payments`)
+      history.push(`/user/${userId}?tab=Payments`)
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
-      history.push(`/user/${userId}?tab=payments`)
+      history.push(`/user/${userId}?tab=Payments`)
     })
   }
 

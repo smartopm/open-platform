@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
+import CloseIcon from '@material-ui/icons/Close';
 import {
   DialogContent,
   DialogActions,
@@ -137,7 +138,7 @@ export function CustomizedDialogs({
   )
 }
 
-export function DetailsDialog({ handleClose, open, title, children }){
+export function DetailsDialog({ handleClose, open, title, children, noActionButton }){
   const classes = useStyles()
   return(
     <Dialog
@@ -155,11 +156,13 @@ export function DetailsDialog({ handleClose, open, title, children }){
       <Divider />
       {children}
       <Divider />
-      <DialogActions style={{ margin: '10px' }}>
-        <Button onClick={handleClose} variant="outlined" color="secondary">
-          Cancel
-        </Button>
-      </DialogActions>
+      {!noActionButton && (
+        <DialogActions style={{ margin: '10px' }}>
+          <Button onClick={handleClose} variant="outlined" color="secondary">
+            Cancel
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   )
 }
@@ -283,14 +286,16 @@ FullScreenDialog.propTypes = {
 }
 
 DetailsDialog.defaultProps = {
-  children: {}
+  children: {},
+  noActionButton: null
 }
 
 DetailsDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
-  children: PropTypes.node
+  children: PropTypes.node,
+  noActionButton: PropTypes.bool
 }
 
 ModalDialog.propTypes = {
