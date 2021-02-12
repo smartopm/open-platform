@@ -10,6 +10,7 @@ import { CustomizedDialogs } from '../Dialog'
 import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import { formatError } from '../../utils/helpers'
+import ReceiptModal from './ReceiptModal'
 
 
 const initialValues = {
@@ -20,14 +21,15 @@ const initialValues = {
   chequeNumber: '',
   transactionNumber: '',
 }
-
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch }){
+export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch, userData}){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
   const [createPayment] = useMutation(PaymentCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [promptOpen, setPromptOpen] = useState(false)
+  const [paymentData, setPaymentData] = useState({})
   
   function handleSubmit(event) {
     event.preventDefault()
@@ -41,18 +43,20 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         chequeNumber: inputValue.chequeNumber,
         transactionNumber: inputValue.transactionNumber,
       }
-    }).then(() => {
+    }).then((res) => {
       setMessageAlert('Payment made successfully')
       setIsSuccessAlert(true)
       handleModalClose()
       refetch()
       depRefetch()
       walletRefetch()
+      setPaymentData(res.data.walletTransactionCreate.walletTransaction)
+      setPromptOpen(true)
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
-      history.push(`/user/${userId}`)
+      history.push(`/user/${userId}?tab=payments`)
     })
   }
 
@@ -63,6 +67,11 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
     setMessageAlert('')
   }
 
+  function handlePromptClose() {
+    setPromptOpen(false)
+    history.push(`/user/${userId}?tab=payments`)
+  }
+
   return(
     <>
       <MessageAlert
@@ -70,6 +79,13 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         message={messageAlert}
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
+      />
+      <ReceiptModal 
+        open={promptOpen} 
+        handleClose={() => handlePromptClose()} 
+        paymentData={paymentData} 
+        userData={userData}
+        currency={currency}
       />
       <CustomizedDialogs
         open={open}
@@ -159,12 +175,17 @@ const useStyles = makeStyles({
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
-  walletRefetch: () => {}
+  walletRefetch: () => {},
+  userData: {}
  }
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
+  userData: PropTypes.shape({
+    name: PropTypes.string,
+    transactionNumber: PropTypes.number,
+  }),
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,

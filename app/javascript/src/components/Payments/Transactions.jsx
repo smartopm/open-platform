@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { Button, Typography } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import InvoiceModal from './invoiceModal'
@@ -18,7 +18,7 @@ import UserInvoiceItem from './UserInvoiceItem'
 import ButtonComponent from '../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
-export default function TransactionsList({ userId, user }) {
+export default function TransactionsList({ userId, user, userData }) {
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
@@ -69,6 +69,11 @@ export default function TransactionsList({ userId, user }) {
     setOpen(false)
   }
 
+  function handlePaymentOpen() {
+    history.push(`/user/${userId}?tab=Payments&payments=new`)
+    setPayOpen(true)
+  }
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return
@@ -97,12 +102,14 @@ export default function TransactionsList({ userId, user }) {
           <StyledTab label="Invoices" value="Invoices" />
           <StyledTab label="Transactions" value="Transactions" />
         </StyledTabs>
-        <div style={{marginLeft: '100px'}}> 
+        <div style={{marginLeft: '100px', display: 'flex'}}> 
           <Button variant="text">{`Balance: ${currency}${walletData.userBalance}`}</Button>
-          <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
           {
             authState.user?.userType === 'admin' && (
-              <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+              <div>
+                <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+                <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => handlePaymentOpen()} />
+              </div>
             )
           }
           
@@ -153,6 +160,7 @@ export default function TransactionsList({ userId, user }) {
         refetch={refetch}
         depRefetch={depRefetch}
         walletRefetch={walletRefetch}
+        userData={userData}
       />
       <CenteredContent>
         <Paginate
@@ -166,13 +174,20 @@ export default function TransactionsList({ userId, user }) {
     </div>
   )
 }
+TransactionsList.defaultProps = {
+  userData: {}
+}
 
 TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  userData: PropTypes.object,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
     community: PropTypes.shape({
+      imageUrl: PropTypes.string,
+      name: PropTypes.string,
       currency: PropTypes.string
     }).isRequired
   }).isRequired

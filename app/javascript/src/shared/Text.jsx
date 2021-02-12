@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-import { oneOfType, number, bool, string  } from 'prop-types';
+import { oneOfType, number, bool, string, node  } from 'prop-types';
 import { textProps } from './types/text';
 
 export default function Text({ content, otherProps }) {
@@ -33,5 +33,5 @@ Text.propTypes = textProps;
 GridText.propTypes = {
   ...textProps,
   col: oneOfType([number, bool]),
-  content: oneOfType([number, string]) 
+  content: oneOfType([number, string, node]) 
 };

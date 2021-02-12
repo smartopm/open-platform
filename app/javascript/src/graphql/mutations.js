@@ -807,6 +807,17 @@ export const PaymentCreate = gql`
     ) {
       walletTransaction {
         id
+        source
+        amount
+        status
+        bankName
+        chequeNumber
+        currentWalletBalance
+        createdAt
+        user {
+          id
+          name
+        }
       }
     }
   }

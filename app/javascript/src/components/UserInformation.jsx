@@ -252,6 +252,7 @@ export default function UserInformation({
           <Transactions
             userId={userId}
             user={authState.user}
+            userData={data.user}
           />
         </TabPanel>
         {['admin'].includes(userType) && (

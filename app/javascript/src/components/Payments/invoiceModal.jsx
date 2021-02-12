@@ -6,13 +6,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { CustomizedDialogs } from '../Dialog'
 import DatePickerDialog from '../DatePickerDialog'
 import { formatError } from '../../utils/helpers'
 import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
-import PaymentModal from './PaymentModal'
 import { UserLandParcel } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 
@@ -23,16 +21,13 @@ const initialValues = {
   amount: '',
   note: ''
 }
-export default function InvoiceModal({ open, handleModalClose, userId, creatorId, refetch, currency, depRefetch, walletRefetch }) {
+export default function InvoiceModal({ open, handleModalClose, userId, refetch, currency, depRefetch, walletRefetch }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
   const [createInvoice] = useMutation(InvoiceCreate)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-  const [openPayment, setOpenPayment] = useState(false)
-  const [pay, setPay] = useState(false)
-  const [invoiceData, setInvoiceData] = useState(null)
   const [isError, setIsError] = useState(false)
   const [submitting, setIsSubmitting] = useState(false)
 
@@ -60,33 +55,21 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
         status: inputValue.status,
         userId
       }
-    }).then((res) => {
+    }).then(() => {
       setMessageAlert('Invoice added successfully')
       setIsSuccessAlert(true)
       setInputValue(initialValues)
       refetch()
       depRefetch()
       walletRefetch()
-      if (pay) {
-        handleModalClose()
-        setInvoiceData(res.data.invoiceCreate.invoice)
-        setOpenPayment(true)
-        history.push(`/user/${userId}/invoices/${res.data.invoiceCreate.invoice.id}/add_payment`)
-      } else {
-        handleModalClose()
-        history.push(`/user/${userId}`)
-      }
+      handleModalClose()
+      history.push(`/user/${userId}?tab=payments`)
     }).catch((err) => {
       handleModalClose()
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
-      history.push(`/user/${userId}`)
+      history.push(`/user/${userId}?tab=payments`)
     })
-  }
-
-  function handlePaymentModalClose(){
-    setOpenPayment(false)
-    history.push(`/user/${userId}`)
   }
 
   function handleMessageAlertClose(_event, reason) {
@@ -94,10 +77,6 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
       return
     }
     setMessageAlert('')
-  }
-
-  function handleChange(event){
-    setPay(event.target.checked)
   }
 
   useEffect(() => {
@@ -198,21 +177,8 @@ export default function InvoiceModal({ open, handleModalClose, userId, creatorId
             onChange={(event) => setInputValue({...inputValue, note: event.target.value})}
             multiline
           />
-          <FormControlLabel
-            control={<Checkbox checked={pay} onChange={handleChange} name="pay" />}
-            label="Make payment now"
-          />
         </div>
       </CustomizedDialogs>
-      <PaymentModal
-        open={openPayment}
-        handleModalClose={handlePaymentModalClose}
-        invoiceData={invoiceData}
-        userId={userId}
-        creatorId={creatorId}
-        refetch={refetch}
-        currency={currency}
-      />
     </>
   )
 }
@@ -229,7 +195,6 @@ InvoiceModal.propTypes = {
   userId: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  creatorId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func.isRequired,
   walletRefetch: PropTypes.func.isRequired, 
