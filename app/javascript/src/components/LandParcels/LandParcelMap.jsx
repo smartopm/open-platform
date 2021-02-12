@@ -35,6 +35,11 @@ function geoJSONPlotStyle(feature) {
 export default function LandParcelMap({ handlePlotClick, geoData }){
   const featureCollection = { type: 'FeatureCollection',  features: [] }
 
+  function handleOnPlotClick({ target }){
+   const { properties: { id } } = target.feature
+   handlePlotClick({ id })
+  }
+
   /* eslint-disable consistent-return */
   function onEachLandParcelFeature(feature, layer){
     if(feature.properties.parcel_no && feature.properties.parcel_type){
@@ -49,9 +54,11 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         plotSold,
       }
   
+      layer.on({
+        click: handleOnPlotClick,
+      })
       const markerContents = renderToString(<LandParcelMarker key={id} markerProps={markerProps} />)
-      
-      handlePlotClick({ id })
+
       return layer.bindPopup(markerContents)
     }
   }
