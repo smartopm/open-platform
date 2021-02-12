@@ -13,8 +13,11 @@ describe('Transaction Details Component', () => {
   it('should render the transaction details component', async () => {
     const dataMock = {
       amount: 200,
-      status: 'in_progress',
+      pendingAmount: 300,
       createdAt: '2020-12-28',
+      dueDate: '2020-12-28',
+      invoiceNumber: '1234',
+      balance: '30'
     }
 
     const loader = render(<Spinner />)
@@ -30,8 +33,12 @@ describe('Transaction Details Component', () => {
 
     await waitFor(() => {
       expect(container.queryAllByTestId('text-field')[0].value).toContain('k200')
-      expect(container.queryAllByTestId('text-field')[1].value).toContain('in_progress')
-      expect(container.queryAllByTestId('text-field')[2].value).toContain('2020-12-28')
+      expect(container.queryAllByTestId('text-field')[1].value).toContain('300')
+      expect(container.queryAllByTestId('text-field')[2].value).toContain('1234')
+      expect(container.queryAllByTestId('text-field')[3].value).toContain('Unpaid')
+      expect(container.queryAllByTestId('text-field')[4].value).toContain('2020-12-28')
+      expect(container.queryAllByTestId('text-field')[5].value).toContain('2020-12-28')
+      expect(container.queryByText('Invoice')).toBeInTheDocument()
     },
     { timeout: 500 }
     ) 

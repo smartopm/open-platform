@@ -75,10 +75,10 @@ describe('Payment List Item Component', () => {
   it('should check if renderPayments works as expected', () => {
     const results = renderPayments(payments, 'k');
     expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('Amount');
-    expect(results[0]).toHaveProperty('Paid date');
-    expect(results[0]).toHaveProperty('chequeNumber');
+    expect(results[0]).toHaveProperty('User');
+    expect(results[0]).toHaveProperty('Deposit Date');
     expect(results[0]).toHaveProperty('PaymentType');
-    expect(results[0]).toHaveProperty('CreatedBy');
+    expect(results[0]).toHaveProperty('Amount');
+    expect(results[0]).toHaveProperty('chequeNumber');
   });
 });

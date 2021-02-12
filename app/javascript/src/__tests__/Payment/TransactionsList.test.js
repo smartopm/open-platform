@@ -19,26 +19,30 @@ describe('Transactions Component', () => {
       },
       result: {
         data: {
-          userWalletTransactions: [
-            {
-              amount: 100,
-              status: 'settled',
+          userDeposits: {
+            transactions: [{
+              amount: 200,
+              source: 'cash',
+              destination: 'invoice',
               createdAt: '2021-01-26',
               updatedAt: '2021-01-26',
               currentWalletBalance: 200,
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-              chequeNumber: null
-            },
-            {
-              amount: 344,
-              status: 'settled',
-              createdAt: '2020-12-23',
-              updatedAt: '2021-01-27',
-              currentWalletBalance: null,
-              id: 'ec289778-8d32-4ec6-ba69-313058e61c19',
-              chequeNumber: null
-            }
-          ]
+              user: {
+                id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+                name: 'some name'
+              }
+            }],
+            pendingInvoices: [{
+              amount: 200,
+              pendingAmount: 200,
+              invoiceNumber: 2315,
+              dueDate: '2021-01-26',
+              balance: 300,
+              createdAt: '2021-01-26',
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94' 
+            }]
+          }
         }
       }
     };
@@ -65,7 +69,8 @@ describe('Transactions Component', () => {
               amount: 200,
               status: 'paid',
               createdAt: '2021-01-21',
-              invoiceNumber: '123',
+              dueDate: '2021-01-21',
+              invoiceNumber: 123,
               updatedAt: '2021-01-21',
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               landParcel: {
@@ -86,10 +91,8 @@ describe('Transactions Component', () => {
             }],
             payments: [{
               amount: 344,
-              paymentStatus: 'settled',
               paymentType: 'cash',
               createdAt: '2020-12-23',
-              updatedAt: '2021-01-21',
               id: 'ec289778-8d32-4ec6-ba69-313058e61c19'
               }]
           }
@@ -122,8 +125,8 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('Paid on 2021-01-21')).toBeInTheDocument();
-        expect(container.queryByText('Issued on 2021-01-21')).toBeInTheDocument();
+        expect(container.queryByText('Issue Date')).toBeInTheDocument();
+        expect(container.queryByText('Payment Date')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

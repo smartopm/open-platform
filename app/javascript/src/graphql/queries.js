@@ -1027,6 +1027,7 @@ export const AllTransactionQuery = gql`
         status
         createdAt
         invoiceNumber
+        dueDate
         updatedAt
         landParcel {
           id
@@ -1065,17 +1066,22 @@ export const TransactionQuery = gql`
     userDeposits(userId: $userId) {
       transactions {
         amount
-        status
         source
         destination
         createdAt
         updatedAt
         currentWalletBalance
         id
+        user {
+          id
+          name
+        }
       }
       pendingInvoices {
         amount
         pendingAmount
+        invoiceNumber
+        dueDate
         balance
         createdAt
         id

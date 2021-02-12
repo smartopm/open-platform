@@ -91,15 +91,15 @@ const useStyles = makeStyles(() => ({
   // TODO: use colors from the theme
   list: {
     backgroundColor: '#FFFFFF',
-    padding: '15px 0',
+    padding: '10px 0',
     border: '1px solid #ECECEC',
     marginBottom: '10px'
   },
   clickable: {
     backgroundColor: '#FFFFFF',
-    padding: '15px 0',
+    padding: '10px 0',
     border: '1px solid #ECECEC',
     cursor: 'pointer',
-    marginBottom: '10px'
+    marginBottom: '7px'
   }
 }));

@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import CloseIcon from '@material-ui/icons/Close';
 import { titleize } from '../utils/helpers'
 
 export function ModalDialog({
@@ -152,10 +151,15 @@ export function DetailsDialog({ handleClose, open, title, children }){
         className={classes.detailTitle}
       >
         {title}
-        <CloseIcon className={classes.close} onClick={() => handleClose()} />
       </DialogTitle>
       <Divider />
       {children}
+      <Divider />
+      <DialogActions style={{ margin: '10px' }}>
+        <Button onClick={handleClose} variant="outlined" color="secondary">
+          Cancel
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }
