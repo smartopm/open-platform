@@ -119,7 +119,6 @@ module Types
     field :invoice_create, mutation: Mutations::Invoice::InvoiceCreate
 
     # payments
-    field :payment_create, mutation: Mutations::Payment::PaymentCreate
     field :payment_plan_create, mutation: Mutations::Payment::PaymentPlanCreate
 
     # transactions

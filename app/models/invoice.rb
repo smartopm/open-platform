@@ -84,7 +84,7 @@ class Invoice < ApplicationRecord
       previous_status = saved_changes['status'].first
     end
 
-    created_by.generate_events(
+    created_by&.generate_events(
       'invoice_change',
       self,
       { from_status: previous_status, to_status: status },
