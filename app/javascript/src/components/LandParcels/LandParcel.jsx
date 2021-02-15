@@ -5,7 +5,7 @@ import { Grid, Typography, Container } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { ParcelsQuery, LandParcel } from '../../graphql/queries';
+import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
@@ -15,6 +15,8 @@ import { UpdateProperty } from '../../graphql/mutations';
 import MessageAlert from '../MessageAlert';
 import { formatError, propAccessor } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
+import Toggler from '../Campaign/ToggleButton'
+import LandParcelMap from './LandParcelMap'
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';
 
@@ -29,10 +31,15 @@ export default function LandParcelList() {
   const debouncedValue = useDebounce(searchValue, 500);
   const [showFilter, setShowFilter] = useState(false)
   const history = useHistory();
+  const [type, setType] = useState('plots')
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue, limit, offset }
   });
+
+  const { data: geoData } = useQuery(LandParcelGeoData, {
+    fetchPolicy: 'cache-and-network'
+  })
 
   const [updateProperty] = useMutation(UpdateProperty);
 
@@ -42,6 +49,10 @@ export default function LandParcelList() {
   ] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
   });
+
+  const handleType = (_event, value) => {
+    setType(value)
+  }
 
   function toggleFilter(){
     setShowFilter(!showFilter)
@@ -245,30 +256,48 @@ export default function LandParcelList() {
             </Grid>
           )
         }
-        <CreateLandParcel refetch={refetch} />
 
-        <ParcelPageTitle />
         <br />
-        { loading && <Spinner /> }
-        {!loading && data?.fetchLandParcel.map(parcel => (
-          <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
-        ))}
-        <div className="d-flex justify-content-center">
-          <nav aria-label="center Page navigation">
-            <ul className="pagination">
-              <li className={`page-item ${offset < limit && 'disabled'}`}>
-                <a className="page-link" onClick={handlePreviousPage} href="#">
-                  Previous
-                </a>
-              </li>
-              <li className={`page-item ${data?.fetchLandParcel.length < limit && 'disabled'}`}>
-                <a className="page-link" onClick={handleNextPage} href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <br />
+        <Toggler
+          type={type}
+          handleType={handleType}
+          data={{
+          type: 'plots',
+          antiType: 'map'
+        }}
+        />
+
+        {type === 'plots' ? 
+        (
+          <>
+            <CreateLandParcel refetch={refetch} />
+            <ParcelPageTitle />
+            <br />
+            { loading && <Spinner /> }
+            {!loading && data?.fetchLandParcel.map(parcel => (
+              <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
+          ))}
+            <div className="d-flex justify-content-center">
+              <nav aria-label="center Page navigation">
+                <ul className="pagination">
+                  <li className={`page-item ${offset < limit && 'disabled'}`}>
+                    <a className="page-link" onClick={handlePreviousPage} href="#">
+                      Previous
+                    </a>
+                  </li>
+                  <li className={`page-item ${data?.fetchLandParcel.length < limit && 'disabled'}`}>
+                    <a className="page-link" onClick={handleNextPage} href="#">
+                      Next
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </>
+        ):(
+          <LandParcelMap handlePlotClick={onParcelClick} geoData={geoData?.landParcelGeoData} />
+        )}
       </Container>
     </>
   );
