@@ -29,7 +29,7 @@ const initialData = {
   date: { value: null },
   radio: { value: {label: '', checked: null} }
 }
-// This is for the submitted from 
+
 export default function FormUpdate({ formId, userId, authState }) {
 
   const [properties, setProperties] = useState(initialData)
