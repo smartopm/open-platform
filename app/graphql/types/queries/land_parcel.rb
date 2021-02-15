@@ -75,14 +75,14 @@ module Types::Queries::LandParcel
   end
 
   def geo_data(parcel)
-    {
-      id: parcel[:id],
+    { id: parcel[:id],
       parcel_type: parcel[:parcel_type],
       parcel_number: parcel[:parcel_number],
       lat_y: parcel[:lat_y],
       long_x: parcel[:long_x],
       geom: parcel[:geom],
       plot_sold: parcel.accounts.present?,
-    }
+      accounts: parcel.accounts,
+      valuations: parcel.valuations }
   end
 end
