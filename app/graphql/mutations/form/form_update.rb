@@ -14,7 +14,7 @@ module Mutations
 
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:id])
-        update_tasks if vals[:status] == 'deleted'
+        update_tasks(form) if vals[:status] == 'deleted'
         if form.update(vals.except(:id))
           context[:current_user].generate_events('form_publish', form, action: vals[:status])
 
@@ -24,7 +24,7 @@ module Mutations
         raise GraphQL::ExecutionError, form.errors.full_messages
       end
 
-      def update_tasks
+      def update_tasks(form)
         form_user_ids = form.form_users.pluck(:id)
         context[:site_community].notes.where(form_user_id: form_user_ids).update(flagged: false)
       end
