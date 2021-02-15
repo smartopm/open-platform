@@ -1,11 +1,8 @@
 import React from 'react'
-import { renderToString } from 'react-dom/server';
 import PropTypes from 'prop-types'
-import Typography from '@material-ui/core/Typography';
-import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
-import NkwashiCoverageData from '../../data/nkwashi_coverage_boundary.json'
-import LandParcelMarker from '../Map/LandParcelMarker'
-import { checkValidGeoJSON } from '../../utils/helpers'
+import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
+import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
+import { checkValidGeoJSON, getHexColor } from '../../utils/helpers'
 import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants'
 
 const { attribution, openStreetMap, centerPoint: { nkwashi } } = mapTiles
@@ -16,10 +13,12 @@ function getColor(plotSold){
 
 function geoJSONStyle(feature) {
   return {
-    color: feature.properties.stroke,
-    weight: feature.properties['stroke-width'],
-    fillOpacity: feature.properties['fill-opacity'],
-    fillColor: feature.properties.fill
+    weight: 1,
+    opacity: 1,
+    color: 'white',
+    dashArray: "3",
+    fillOpacity: 0.7,
+    fillColor: getHexColor(feature && Number(feature.properties.estimated_population))
   }
 }
 
@@ -36,30 +35,22 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   const featureCollection = { type: 'FeatureCollection',  features: [] }
 
   function handleOnPlotClick({ target }){
-   const { properties: { id } } = target.feature
-   handlePlotClick({ id })
+   const { properties: { id, parcel_no: parcelNumber, parcel_type: parcelType } } = target.feature
+   return (target.feature && handlePlotClick({ id, parcelNumber, parcelType }))
   }
 
   /* eslint-disable consistent-return */
   function onEachLandParcelFeature(feature, layer){
     if(feature.properties.parcel_no && feature.properties.parcel_type){
-      const { id, long_x: longX, lat_y: latY, parcel_no: parcelNumber, parcel_type: parcelType, plot_sold: plotSold 
-      } = feature.properties
-
-      const markerProps = {
-        geoLatY: parseFloat(latY) || 0,
-        geoLongX: parseFloat(longX) || 0,
-        parcelNumber,
-        parcelType,
-        plotSold,
-      }
-  
       layer.on({
         click: handleOnPlotClick,
       })
-      const markerContents = renderToString(<LandParcelMarker key={id} markerProps={markerProps} />)
+    }
+  }
 
-      return layer.bindPopup(markerContents)
+  function onEachSuburbLayerFeature(feature, layer){
+    if(feature.properties.estimated_population && feature.properties.sub_urban){
+     return layer.bindPopup(feature.properties.sub_urban)
     }
   }
 
@@ -131,12 +122,14 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
               />
             </FeatureGroup>
           </LayersControl.Overlay>
-          <LayersControl.Overlay name="Nkwashi Coverage Area">
+          <LayersControl.Overlay name="Nkwashi Sub-urban Areas">
             <FeatureGroup>
-              <Popup>
-                <Typography variant="body2">Nkwashi Estate</Typography>
-              </Popup>
-              <GeoJSON key={Math.random()} data={NkwashiCoverageData} style={geoJSONStyle} />
+              <GeoJSON
+                key={Math.random()}
+                data={NkwashiSuburbBoundaryData}
+                style={geoJSONStyle}
+                onEachFeature={onEachSuburbLayerFeature}
+              />
             </FeatureGroup>
           </LayersControl.Overlay>
         </LayersControl>
