@@ -3,6 +3,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 // import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import DatePickerDialog from '../DatePickerDialog' 
@@ -31,27 +32,33 @@ export default function GenerateReport(){
           width='15%'
           handleDateChange={(date) => setEndDate(date)}
         />
-      </div>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="transaction-type">Transaction Type</InputLabel>
-        <Select
-          labelId="tras-label"
-          id="trans-select"
-          value={transType}
-          onChange={(e) => setTransType(e.target.value)}
-          label="Transaction Type"
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="transaction-type">Transaction Type</InputLabel>
+          <Select
+            id="trans-select"
+            value={transType}
+            onChange={(e) => setTransType(e.target.value)}
+            label="Transaction Type"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value='cash'>Cash</MenuItem>
+            <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
+            <MenuItem value='mobile_money'>Mobile Money</MenuItem>
+            <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
+            <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
+            <MenuItem value='pos'>Point of Sale</MenuItem>
+          </Select>
+        </FormControl>
+        <Button 
+          variant="contained" 
+          color="primary"
+          style={{marginTop: '20px'}}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value='cash'>Cash</MenuItem>
-          <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
-          <MenuItem value='mobile_money'>Mobile Money</MenuItem>
-          <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
-          <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
-          <MenuItem value='pos'>Point of Sale</MenuItem>
-        </Select>
-      </FormControl>
+          Generate Report
+        </Button>
+      </div>
     </>
   )
 }
@@ -59,5 +66,9 @@ export default function GenerateReport(){
 const useStyles = makeStyles(() => ({
   searchField: {
     margin: '30px'
+  },
+  formControl: {
+    width: '200px',
+    margin: '15px 4px'
   },
 }));
