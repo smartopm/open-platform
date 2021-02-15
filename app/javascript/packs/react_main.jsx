@@ -94,6 +94,7 @@ import LandParcel from '../src/containers/LandParcels/LandParcel'
 import CommentsPage from '../src/containers/Comments/CommentPage'
 import CommunitySettings from '../src/containers/Settings/CommunitySettings'
 import Payments from '../src/containers/Payment/Payments'
+import AccountingDashboard from '../src/containers/Accounting/AccountingDashboard'
 import StatsPage from '../src/containers/User/StatsPage'
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
@@ -334,6 +335,7 @@ const App = () => {
                             <Route path="/users/import" component={UsersImport} />
                             <Route path="/users/stats" component={StatsPage} />
                             <Route path="/messages" component={AllMessages} />
+                            <Route path="/accounting_dashboard" component={AccountingDashboard} />
                             <Route
                               path="/showroom_logs"
                               component={ShowroomLogs}

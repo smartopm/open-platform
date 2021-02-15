@@ -25,6 +25,7 @@ import PeopleIcon from '@material-ui/icons/People'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import LandscapeIcon from '@material-ui/icons/Landscape';
 import PaymentIcon from '@material-ui/icons/Payment';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -275,6 +276,12 @@ export default function Homepage({ authState }) {
       title: 'Payments',
       path: '/payments',
       icon: <PaymentIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
+      title: 'Accounting Dashboard',
+      path: '/accounting_dashboard',
+      icon: <DashboardIcon fontSize="large" />,
       access: ['admin']
     },
     {

@@ -21,6 +21,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           label={label}
           format="yyyy-MM-dd"
           placeholder="YYYY-MM-DD"
+          inputVariant='outlined'
           value={selectedDate}
           name={label}
           required={required}
