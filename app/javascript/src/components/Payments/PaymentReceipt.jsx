@@ -27,7 +27,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
               <br />
               Date:  
               {' '}
-              {dateToString(new Date())} 
+              {paymentData.createdAt ? dateToString(paymentData.createdAt) : null} 
               {' '}
               <br />
               TransactionId: 
@@ -106,6 +106,7 @@ PaymentReceipt.defaultProps = {
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
     transactionNumber: PropTypes.string,
+    createdAt: PropTypes.string,
     user: PropTypes.shape({
       name: PropTypes.string
     })
