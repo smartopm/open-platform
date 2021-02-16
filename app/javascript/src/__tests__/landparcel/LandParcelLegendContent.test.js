@@ -6,7 +6,7 @@ import LandParcelLegendContent from '../../components/Map/LandParcelLegendConten
 
 describe('<LandParcelLegendContent />', () => {
 
-  it('should render Land Parcel Legend Content', async () => {
+  it('should render Land Property Legend Content', async () => {
     
     let container;
     await act(async () => {

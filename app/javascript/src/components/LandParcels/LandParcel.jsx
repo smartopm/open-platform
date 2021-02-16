@@ -164,7 +164,7 @@ export default function LandParcelList() {
         excludeOperators: ['not_equal']
       },
       parcelType: {
-        label: 'Parcel Type',
+        label: 'Property Type',
         type: 'text',
         valueSources: ['value']
       },
@@ -174,7 +174,7 @@ export default function LandParcelList() {
         valueSources: ['value']
       },
       parcelAddress: {
-        label: 'Parcel Address',
+        label: 'Property Address',
         type: 'text',
         valueSources: ['value']
       },
@@ -309,7 +309,7 @@ export function ParcelPageTitle() {
     <Grid container spacing={0} className={classes.labelTitle}>
       <Grid xs={2} item>
         <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
-          Parcel Number
+          Property Number
         </Typography>
       </Grid>
       <Grid xs={2} item>
@@ -344,7 +344,7 @@ export function ParcelPageTitle() {
       </Grid>
       <Grid xs={1} item>
         <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-          Parcel Type
+          Property Type
         </Typography>
       </Grid>
     </Grid>

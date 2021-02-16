@@ -266,7 +266,7 @@ export default function Homepage({ authState }) {
       access: ['admin']
     },
     {
-      title: 'Parcels and Properties',
+      title: 'Properties',
       path: '/land_parcels',
       icon: <LandscapeIcon fontSize="large" />,
       access: ['admin']

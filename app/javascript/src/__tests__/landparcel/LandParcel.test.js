@@ -41,13 +41,13 @@ describe('It should test the comment component', () => {
 // This should be replaced with DataList component
   it('should check for parcel title', () => {
     const container = render(<ParcelPageTitle />)
-    expect(container.queryByText("Parcel Number")).toBeInTheDocument()
+    expect(container.queryByText("Property Number")).toBeInTheDocument()
     expect(container.queryByText("Address1")).toBeInTheDocument()
     expect(container.queryByText("Address2")).toBeInTheDocument()
     expect(container.queryByText("Postal Code")).toBeInTheDocument()
     expect(container.queryByText("city")).toBeInTheDocument()
     expect(container.queryByText("State Province")).toBeInTheDocument()
     expect(container.queryByText("Country")).toBeInTheDocument()
-    expect(container.queryByText("Parcel Type")).toBeInTheDocument()
+    expect(container.queryByText("Property Type")).toBeInTheDocument()
   })
 });

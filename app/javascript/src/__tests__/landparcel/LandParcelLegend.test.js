@@ -5,7 +5,7 @@ import { act, render } from '@testing-library/react'
 import LandParcelLegend from '../../components/Map/LandParcelLegend'
 
 describe('<LandParcelLegend />', () => {
-  it('should render Land Parcel', async () => {
+  it('should render Land Property', async () => {
     
     let container;
     await act(async () => {

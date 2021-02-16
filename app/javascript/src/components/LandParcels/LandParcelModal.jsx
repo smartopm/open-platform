@@ -187,7 +187,7 @@ export default function LandParcelModal({
       if (isEditing) {
         return 'Save Changes';
       }
-      return 'Edit Parcel';
+      return 'Edit Property';
     }
     return 'Save';
   }
@@ -202,7 +202,7 @@ export default function LandParcelModal({
     <CustomizedDialogs
       open={open}
       handleModal={cleanUpOnModalClosing}
-      dialogHeader={modalType === 'new' ? 'New Property' : `Parcel ${landParcel.parcelNumber}`}
+      dialogHeader={modalType === 'new' ? 'New Property' : `Property ${landParcel.parcelNumber}`}
       handleBatchFilter={handleParcelSubmit}
       saveAction={saveActionText()}
     >
@@ -221,7 +221,7 @@ export default function LandParcelModal({
               'data-testid': 'parcel-number',
               readOnly: isFormReadOnly
             }}
-            label="Parcel Number"
+            label="Property Number"
             type="text"
             value={parcelNumber}
             onChange={e => setParcelNumber(e.target.value)}
@@ -278,7 +278,7 @@ export default function LandParcelModal({
           <TextField
             margin="dense"
             id="parcel-type"
-            label="Parcel Type"
+            label="Property Type"
             inputProps={{
               'data-testid': 'parcel-type',
               readOnly: isFormReadOnly

@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
 import LandParcelModal from '../../components/LandParcels/LandParcelModal'
 
-describe('Land Parcel Modal Component', () => {
+describe('Land Property Modal Component', () => {
   it('it should render tabs', () => {
     const props = {
       open: true,
@@ -65,7 +65,7 @@ describe('Land Parcel Modal Component', () => {
     expect(container.queryByText('Add Valuation')).toBeNull()
     expect(container.queryByText('New Owner')).toBeNull()
 
-    fireEvent.click(container.queryByText('Edit Parcel'))
+    fireEvent.click(container.queryByText('Edit Property'))
     expect(container.queryByText('Add Valuation')).toBeInTheDocument()
     expect(container.queryByText('New Owner')).toBeInTheDocument()
 
