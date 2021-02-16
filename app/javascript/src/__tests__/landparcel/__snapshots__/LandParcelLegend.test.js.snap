@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<LandParcelLegend /> should render Land Parcel 1`] = `
+exports[`<LandParcelLegend /> should render Land Property 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>

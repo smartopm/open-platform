@@ -9,7 +9,7 @@ import { LandParcel as LandParcelQuery, ParcelsQuery } from '../../graphql/queri
 import { Spinner } from '../../shared/Loading';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-describe('Land Parcel Page', () => {
+describe('Land Property Page', () => {
   it('renders land parcel page', async () => {
     const container = render(
       <MockedProvider addTypename={false}>
@@ -18,7 +18,7 @@ describe('Land Parcel Page', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(container.queryByText('Parcels and Properties')).toBeInTheDocument();
+    expect(container.queryByText('Properties')).toBeInTheDocument();
   });
 
   it('should test for landparcel queries', async () => {

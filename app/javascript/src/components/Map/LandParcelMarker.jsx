@@ -19,12 +19,12 @@ export default function LandParcelMarker({markerProps}) {
         />
         <CardContent>
           <Typography variant='body2' color="textSecondary" component="p">
-            Parcel No:
+            Property No:
             {' '}
             {markerProps.parcelNumber || ''}
           </Typography>
           <Typography variant='body2' color="textSecondary" component="p">
-            Parcel Type:
+            Property Type:
             {' '}
             {(markerProps.parcelType && markerProps.parcelType.toUpperCase()) || ''}
           </Typography>

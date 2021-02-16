@@ -93,12 +93,12 @@ export default function UserPlotMap({ plotData }){
               <Popup key={Math.random()}>
                 <Typography variant='body1'>My Plot Details</Typography>
                 <Typography variant='body2'>
-                  Parcel No:
+                  Property No:
                   {' '}
                   {parcelNumber || ''}
                 </Typography>
                 <Typography variant='body2'>
-                  Parcel Type:
+                  Property Type:
                   {' '}
                   {(parcelType && parcelType.toUpperCase()) || ''}
                 </Typography>
