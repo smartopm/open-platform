@@ -10,5 +10,7 @@ module Types
     field :lat_y, Float, null: true
     field :geom, GraphQL::Types::JSON, null: true
     field :plot_sold, Boolean, null: true
+    field :valuations, [Types::ValuationType], null: true
+    field :accounts, [Types::AccountType], null: true
   end
 end

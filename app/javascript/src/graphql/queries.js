@@ -520,6 +520,20 @@ export const LandParcelGeoData = gql`
       longX
       geom
       plotSold
+      valuations {
+        id
+        amount
+        startDate
+        createdAt
+      }
+      accounts {
+        id
+        fullName
+        address1
+        user {
+          id
+        }
+      }
     }
   }
 `
