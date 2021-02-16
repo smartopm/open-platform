@@ -12,17 +12,21 @@ module Mutations
 
       field :form, Types::FormType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:id])
-        update_tasks(form) if vals[:status] == 'deleted'
-        if form.update(vals.except(:id))
-          context[:current_user].generate_events('form_publish', form, action: vals[:status])
+        ActiveRecord::Base.transaction do
+          update_tasks(form) if vals[:status] == 'deleted'
+          if form.update!(vals.except(:id))
+            context[:current_user].generate_events('form_publish', form, action: vals[:status])
 
-          return { form: form }
+            return { form: form }
+          end
+
+          raise GraphQL::ExecutionError, form.errors.full_messages
         end
-
-        raise GraphQL::ExecutionError, form.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def update_tasks(form)
         form_user_ids = form.form_users.pluck(:id)
