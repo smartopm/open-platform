@@ -23,6 +23,7 @@ export default function GenerateReport(){
           selectedDate={startDate}
           width='15%'
           handleDateChange={(date) => setStartDate(date)}
+          inputVariant
         />
         {' '}
         <DatePickerDialog
@@ -31,6 +32,7 @@ export default function GenerateReport(){
           selectedDate={endDate}
           width='15%'
           handleDateChange={(date) => setEndDate(date)}
+          inputVariant
         />
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="transaction-type">Transaction Type</InputLabel>
