@@ -947,6 +947,7 @@ export const InvoicesQuery = gql`
       user {
         id
         name
+        imageUrl
       }
       landParcel {
         id
@@ -1125,11 +1126,14 @@ export const TransactionsQuery = gql`
       status
       createdAt
       updatedAt
+      destination
+      source
       currentWalletBalance
       id
       user {
         id
         name
+        imageUrl
       }
     }
   }

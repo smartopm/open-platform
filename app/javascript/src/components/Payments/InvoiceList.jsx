@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { Grid, List } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
 import { string } from 'prop-types';
@@ -20,7 +21,7 @@ import Text from '../../shared/Text';
 import ListHeader from '../../shared/list/ListHeader';
 
 const invoiceHeaders = [
-  { title: 'Issue Date', col: 3 },
+  { title: 'Issue Date', col: 2 },
   { title: 'User', col: 4 },
   { title: 'Description', col: 4 },
   { title: 'Amount', col: 3 },
@@ -62,6 +63,7 @@ export default function InvoiceList({ currency }) {
       history.push(`/payments?page=${pageNumber + limit}&status=${status}`);
     }
   }
+  if (loading) return <Spinner />
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -87,9 +89,8 @@ export default function InvoiceList({ currency }) {
       </Grid>
       <List>
         {
-        loading ? (
-          <Spinner />
-        ) :(
+          invoicesData?.invoices.length && invoicesData?.invoices.length > 0 ?
+        (
           <div>
             <ListHeader headers={invoiceHeaders} />
             <DataList
@@ -98,7 +99,9 @@ export default function InvoiceList({ currency }) {
               hasHeader={false}
             />
           </div>
-)       
+        ) : (
+          <CenteredContent>No Invoices Available</CenteredContent>
+        )      
         }
       </List>
 
@@ -126,13 +129,16 @@ export function renderInvoices(invoices, currency) {
   return invoices.map(invoice => {
     return {
       'Issue Date': (
-        <Grid item xs={3} md={2} data-testid="issue_date">
+        <Grid item xs={2} md={2} data-testid="issue_date">
           <Text content={dateToString(invoice.createdAt)} />
         </Grid>
       ),
       'User': (
         <Grid item xs={4} md={2} data-testid="created_by">
-          {invoice.user.name}
+          <div style={{display: 'flex'}}>
+            <Avatar src={invoice.user.imageUrl} alt="avatar-image" />
+            <span style={{margin: '7px'}}>{invoice.user.name}</span>
+          </div>
         </Grid>
       ),
       'Description': (

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import { PaymentsQuery } from '../../graphql/queries';
+import { TransactionsQuery } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
 import { formatError, useParamsQuery } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
@@ -13,13 +14,13 @@ import useDebounce from '../../utils/useDebounce';
 import { Spinner } from '../../shared/Loading';
 import Paginate from '../Paginate';
 import ListHeader from '../../shared/list/ListHeader';
+import { paymentType } from '../../utils/constants';
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
   { title: 'Deposit Date', col: 1 },
-  { title: 'PaymentType', col: 1 },
-  { title: 'Amount', col: 2 },
-  { title: 'chequeNumber', col: 2 }
+  { title: 'Payment Type', col: 1 },
+  { title: 'Amount', col: 2 }
 ];
 
 export default function PaymentList({ currency }) {
@@ -31,7 +32,7 @@ export default function PaymentList({ currency }) {
   const history = useHistory()
 
   const pageNumber = Number(page);
-  const { loading, data, error } = useQuery(PaymentsQuery, {
+  const { loading, data, error } = useQuery(TransactionsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -39,16 +40,22 @@ export default function PaymentList({ currency }) {
 
   function handleFilter(){}
 
+  let paymentList
+  if (data?.transactions) {
+    paymentList = data.transactions.filter((fil) => fil.destination === 'wallet')
+  }
+
   function paginate(action) {
     if (action === 'prev') {
       if (pageNumber < limit) return;
       history.push(`/payments?tab=payment&page=${pageNumber - limit}`);
     } else if (action === 'next') {
-      if (data?.payments.length < limit) return;
+      if (data?.transactions.length < limit) return;
       history.push(`/payments?tab=payment&page=${pageNumber + limit}`);
     }
   }
 
+  if (loading) return <Spinner />
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -63,29 +70,27 @@ export default function PaymentList({ currency }) {
       />
       <br />
       <br />
+      {paymentList.length && paymentList.length > 0 ? (
+        <div>
+          <ListHeader headers={paymentHeaders} />
+          <DataList
+            keys={paymentHeaders}
+            data={renderPayments(paymentList, currency)}
+            hasHeader={false}
+          />
+        </div>
+      ) : (
+        <CenteredContent>No Payments Available</CenteredContent>
+      )}
       {
-          loading 
-          ? <Spinner /> 
-          : (
-            <div>
-              <ListHeader headers={paymentHeaders} />
-              <DataList
-                keys={paymentHeaders}
-                data={renderPayments(data?.payments, currency)}
-                hasHeader={false}
-              />
-            </div>
-          )
-        }
-      {
-          data?.payments.length >= limit && (
+          paymentList.length >= limit && (
             <CenteredContent>
               <Paginate
                 offSet={pageNumber}
                 limit={limit}
                 active={pageNumber >= 1}
                 handlePageChange={paginate}
-                count={data?.payments.length}
+                count={data?.transactions.length}
               />
             </CenteredContent>
           )
@@ -99,7 +104,10 @@ export function renderPayments(payments, currency) {
     return {
       'User': (
         <Grid item xs={2} md={2} data-testid="created_by">
-          {payment.user.name}
+          <div style={{display: 'flex'}}>
+            <Avatar src={payment.user.imageUrl} alt="avatar-image" />
+            <span style={{margin: '7px'}}>{payment.user.name}</span>
+          </div>
         </Grid>
       ),
       'Deposit Date': (
@@ -107,13 +115,13 @@ export function renderPayments(payments, currency) {
           {dateToString(payment.createdAt)}
         </Grid>
       ),
-      PaymentType: (
+      'Payment Type': (
         <Grid item xs={4} md={2} data-testid="payment_type">
           <span>
             {
-            ['wallet', 'cash'].includes(payment.paymentType)
-            ? 'cash deposit'
-            :  payment.paymentType
+            ['cash'].includes(payment.source)
+            ? 'Cash Deposit'
+            :  paymentType[payment.source]
           }
           </span>
         </Grid>
@@ -121,18 +129,6 @@ export function renderPayments(payments, currency) {
       Amount: (
         <Grid item xs={4} md={2}>
           <span>{`${currency}${payment.amount || 0}`}</span>
-        </Grid>
-      ),
-      'chequeNumber': (
-        <Grid item xs={4} md={2} data-testid="payment_cheque">
-          <span>
-            {
-          // eslint-disable-next-line no-nested-ternary
-          payment.paymentType === 'cash' 
-            ? '-'
-            : payment.chequeNumber ? `${payment.bankName} - ${payment.chequeNumber}` : '-'
-          }
-          </span>
         </Grid>
       )
     };

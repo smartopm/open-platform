@@ -78,6 +78,14 @@ export const paymentPlanStatus = {
   2: 'deleted'
 }
 
+export const paymentType = {
+  'cheque/cashier_cheque': 'Cheque/Cashier Cheque',
+  mobile_money: 'Mobile Money',
+  'bank_transfer/cash_deposit': 'Bank Transfer/Cash Deposit',
+  'bank_transfer/eft': 'Bank Transfer/EFT',
+  pos: 'Point of Sale'
+};
+
 export const paymentStatusColor = {
   pending: '#3493FB',
   settled: '#66A69B',
