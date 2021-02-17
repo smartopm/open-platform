@@ -36,16 +36,13 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
             </div>
             <div style={{margin: '200px 50px 10px 50px'}}>
               <Grid container spacing={1}>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <b>Payment Mode</b>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <b>Amount Paid</b>
                 </Grid>
-                <Grid item xs={3}>
-                  <b>Balance</b>
-                </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <b>Currency</b>
                 </Grid>
               </Grid>
@@ -53,16 +50,13 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
             <Divider style={{margin: '0 50px'}} />
             <div style={{margin: '10px 50px 10px 50px'}}>
               <Grid container spacing={1}>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   {paymentData?.source}
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   {paymentData?.amount}
                 </Grid>
-                <Grid item xs={3}>
-                  {paymentData?.currentWalletBalance}
-                </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   {currency}
                 </Grid>
               </Grid>
