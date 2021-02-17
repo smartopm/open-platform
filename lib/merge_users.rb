@@ -18,10 +18,7 @@ class MergeUsers
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   def self.merge(user_id, duplicate_id)
-    %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
-       DiscussionUser Discussion EntryRequest Feedback FormUser Message
-       NoteComment NoteHistory Note Payment PostTagUser SubstatusLog TimeSheet
-       UserFormProperty WalletTransaction Wallet].each do |table_name|
+    models_with_user_id.each do |table_name|
       table_name.constantize.where(user_id: user_id).update(user_id: duplicate_id)
 
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
@@ -85,10 +82,7 @@ class MergeUsers
     end
     raise StandardError, 'Update Failed' if EventLog.where(acting_user_id: user_id).any?
 
-    %w[ActivityPoint AssigneeNote Business Account Comment ContactInfo
-       DiscussionUser Discussion EntryRequest Feedback FormUser Message
-       NoteComment NoteHistory Note Payment PostTagUser SubstatusLog TimeSheet
-       UserFormProperty WalletTransaction Wallet].each do |table_name|
+    models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
       raise StandardError, 'Update Failed'
@@ -100,4 +94,10 @@ class MergeUsers
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
+
+  def self.models_with_user_id
+    ActiveRecord::Base.connection.tables.select do |table|
+      table.classify.constantize.column_names.include?('user_id') rescue nil
+    end.compact.map(&:classify) - %w[UserLabel ActivityLog]
+  end
 end
