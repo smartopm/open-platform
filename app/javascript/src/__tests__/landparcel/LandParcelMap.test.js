@@ -3,7 +3,7 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { act, render } from '@testing-library/react'
-import LandParcelMap from '../components/LandParcels/LandParcelMap'
+import LandParcelMap from '../../components/LandParcels/LandParcelMap'
 
 jest.mock('react-leaflet')
 describe('LandParcelMap', () => {

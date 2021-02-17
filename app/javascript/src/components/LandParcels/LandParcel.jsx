@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
-import { Grid, Typography, Container } from '@material-ui/core';
+import { Grid, Typography, Container, Link } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
+import RoomIcon from '@material-ui/icons/Room';
 import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
@@ -32,6 +33,7 @@ export default function LandParcelList() {
   const [showFilter, setShowFilter] = useState(false)
   const history = useHistory();
   const [type, setType] = useState('plots')
+  const [viewResultsOnMap, setViewResultsOnMap] = useState(false);
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue, limit, offset }
@@ -67,8 +69,10 @@ export default function LandParcelList() {
       setSelectedLandParcel(parcelData?.landParcel || {});
       setDetailsModalOpen(true);
     }
+
+    setViewResultsOnMap(!!debouncedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, parcelData]);
+  }, [data, parcelData, debouncedValue]);
 
   function handleNextPage() {
     setOffset(offset + limit);
@@ -85,6 +89,17 @@ export default function LandParcelList() {
     setSelectedLandParcel(landParcel);
     history.push(`/land_parcels/${landParcel.id}`);
     setDetailsModalOpen(true);
+  }
+
+  function onViewResultsOnMapClick(){
+    setViewResultsOnMap(true);
+    setType('map')
+  }
+
+  function canViewSearchResultsOnMap(){
+    return (
+      debouncedValue && !loading && data?.fetchLandParcel.some(({ geom }) => geom)
+    )
   }
 
   function handleDetailsModalClose() {
@@ -271,7 +286,23 @@ export default function LandParcelList() {
         {type === 'plots' ? 
         (
           <>
-            <CreateLandParcel refetch={refetch} />
+            <Grid container spacing={0}>
+              <Grid xs={6} item>
+                {canViewSearchResultsOnMap() && (
+                  <Typography>
+                    <RoomIcon size="small" />
+                    <Link 
+                      component="button"
+                      variant="body2"
+                      onClick={onViewResultsOnMapClick}
+                    >
+                      View results on map
+                    </Link>
+                  </Typography>
+                )}
+              </Grid>
+              <Grid xs={6} item><CreateLandParcel refetch={refetch} /></Grid>
+            </Grid>
             <ParcelPageTitle />
             <br />
             { loading && <Spinner /> }
@@ -296,7 +327,19 @@ export default function LandParcelList() {
             </div>
           </>
         ):(
-          <LandParcelMap handlePlotClick={onParcelClick} geoData={geoData?.landParcelGeoData} />
+          <>
+            {viewResultsOnMap ? (
+              <LandParcelMap
+                handlePlotClick={onParcelClick}
+                geoData={data?.fetchLandParcel}
+              />
+            ) : (
+              <LandParcelMap
+                handlePlotClick={onParcelClick}
+                geoData={geoData?.landParcelGeoData}
+              />
+            )}
+          </>
         )}
       </Container>
     </>
