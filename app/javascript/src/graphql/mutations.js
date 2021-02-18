@@ -1012,7 +1012,7 @@ export const UpdateActionFlow = gql`
   }
 `
 
-export const generateCurrentMonthInvoices = gql`
+export const GenerateCurrentMonthInvoices = gql`
   mutation autogenerateInvoice {
     autogenerateInvoice {
       invoices {
