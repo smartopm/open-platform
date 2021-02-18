@@ -35,6 +35,7 @@ class WalletTransaction < ApplicationRecord
   end
   # rubocop:enable Style/ParenthesesAroundCondition
 
+  # rubocop:disable Metrics/MethodLength
   def self.payment_stat(com)
     WalletTransaction.connection.select_all(
       "select
@@ -57,11 +58,15 @@ class WalletTransaction < ApplicationRecord
           AND DATE_PART('day', CURRENT_TIMESTAMP - wall.created_at) <= 80 THEN '71-80'
           WHEN DATE_PART('day', CURRENT_TIMESTAMP - wall.created_at)>= 81
           AND DATE_PART('day', CURRENT_TIMESTAMP - wall.created_at) <= 90 THEN '81-90'
-        END no_of_days, 
+        END no_of_days,
         sum(CASE WHEN wall.source='cash' THEN 1 END) as cash,
         sum(CASE WHEN wall.source='mobile_money' THEN 1 END) as mobile_money,
         sum(CASE WHEN wall.source='bank_transfer/cash_deposit' THEN 1 END) as bank_transfer,
         sum(CASE WHEN wall.source='bank_transfer/eft' THEN 1 END) as eft,
-        sum(CASE WHEN wall.source='pos' THEN 1 END) as pos from wallet_transactions wall where wall.community_id='#{com}' AND wall.destination = 'wallet' group by no_of_days")
+        sum(CASE WHEN wall.source='pos' THEN 1 END)
+        as pos from wallet_transactions wall where wall.community_id='#{com}'
+        AND wall.destination = 'wallet' group by no_of_days",
+    )
   end
+  # rubocop:enable Metrics/MethodLength
 end

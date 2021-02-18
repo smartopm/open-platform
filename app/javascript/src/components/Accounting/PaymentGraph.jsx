@@ -37,9 +37,9 @@ export default function PaymentGraph(){
           <YAxis />
           <Line type="monotone" dataKey="cash" stroke="#8884d8" />
           <Line type="monotone" dataKey="mobileMoney" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="bankTransfer" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="eft" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="pos" stroke="#82ca9d" />
+          <Line type="monotone" dataKey="bankTransfer" stroke="#E79040" />
+          <Line type="monotone" dataKey="eft" stroke="#3493FB" />
+          <Line type="monotone" dataKey="pos" stroke="#E74540" />
         </LineChart>
       </div>
     </div>
