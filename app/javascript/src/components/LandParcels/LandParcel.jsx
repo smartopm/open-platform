@@ -34,6 +34,7 @@ export default function LandParcelList() {
   const history = useHistory();
   const [type, setType] = useState('plots')
   const [viewResultsOnMap, setViewResultsOnMap] = useState(false);
+  const [searchResultsGeoData, setSearchResultsGeoData] = useState([]);
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue, limit, offset }
@@ -71,6 +72,11 @@ export default function LandParcelList() {
     }
 
     setViewResultsOnMap(!!debouncedValue)
+
+    if(debouncedValue && viewResultsOnMap){
+      getSearchResultsForMap()
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, parcelData, debouncedValue]);
 
@@ -94,6 +100,22 @@ export default function LandParcelList() {
   function onViewResultsOnMapClick(){
     setViewResultsOnMap(true);
     setType('map')
+  }
+
+  function getSearchResultsForMap(){
+    const searchResults = (!loading &&
+      data?.fetchLandParcel
+        .map(landParcel => {
+          const property = {...landParcel }
+          if(property.geom && property.accounts.length){
+            property.plotSold = true
+          }
+
+          return property;
+        })
+    )
+
+    setSearchResultsGeoData(searchResults)
   }
 
   function canViewSearchResultsOnMap(){
@@ -331,7 +353,7 @@ export default function LandParcelList() {
             {viewResultsOnMap ? (
               <LandParcelMap
                 handlePlotClick={onParcelClick}
-                geoData={data?.fetchLandParcel}
+                geoData={searchResultsGeoData}
               />
             ) : (
               <LandParcelMap
