@@ -103,8 +103,8 @@ export default function LandParcelList() {
   }
 
   function getSearchResultsForMap(){
-    const searchResults = (!loading &&
-      data?.fetchLandParcel
+    const searchResults = (!loading && data.fetchLandParcel &&
+      data.fetchLandParcel
         .map(landParcel => {
           const property = {...landParcel }
           if(property.geom && property.accounts.length){
@@ -113,9 +113,9 @@ export default function LandParcelList() {
 
           return property;
         })
-    )
+    ) || []
 
-    setSearchResultsGeoData(searchResults)
+    setSearchResultsGeoData([...searchResults])
   }
 
   function canViewSearchResultsOnMap(){
