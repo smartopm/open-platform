@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { TransactionsQuery } from '../../graphql/queries';
+import { PaymentStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import PaymentGraph from '../../components/Accounting/PaymentGraph';
 
@@ -12,20 +12,25 @@ describe('Payment Graph Component', () => {
     {
       noOfDays: '10-20',
       cash: 20,
-      mobileMoney: 30
+      mobileMoney: 30,
+      bankTransfer: 10,
+      eft: 50,
+      pos: 49
     },
     {
       noOfDays: '21-30',
       cash: 30,
-      mobileMoney: 20
+      mobileMoney: 20,
+      bankTransfer: 10,
+      eft: 50,
+      pos: 49
     }
   ];
   it('should render the payment graph component', async () => {
     const mock = [
       {
         request: {
-          query: TransactionsQuery,
-          variables: { limit: 50, offset: 0, query: '' }
+          query: PaymentStats
         },
         result: {
           data: {

@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { TransactionsQuery } from '../../graphql/queries';
+import { InvoicesStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import InvoiceGraph from '../../components/Accounting/InvoiceGraph';
 
@@ -22,8 +22,7 @@ describe('Invoice Graph Component', () => {
     const mock = [
       {
         request: {
-          query: TransactionsQuery,
-          variables: { limit: 50, offset: 0, query: '' }
+          query: InvoicesStats
         },
         result: {
           data: {
