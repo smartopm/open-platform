@@ -50,6 +50,10 @@ module Types::Queries::Invoice
     field :invoice_autogeneration_data, Types::InvoiceAutogenerationDataType, null: false do
       description 'returns stats for monthly invoice autogeneration'
     end
+    
+    field :invoice_accounting_stats, [Types::InvoiceAccountingStatType], null: false do
+      description 'return stats of all unpaid invoices'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -115,6 +119,8 @@ module Types::Queries::Invoice
       number_of_invoices: payment_plans.count,
       total_amount: calculate_total_amount(payment_plans),
     }
+  def invoice_accounting_stats
+    Invoice.invoice_stat(context[:site_community].id)
   end
 
   # It would be good to put this elsewhere to use it in other queries

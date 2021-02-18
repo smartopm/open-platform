@@ -28,6 +28,10 @@ module Types::Queries::Wallet
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
+      description 'return stats of all unpaid invoices'
+    end
   end
 
   def user_wallets(user_id: nil, offset: 0, limit: 100)
@@ -46,6 +50,10 @@ module Types::Queries::Wallet
 
     ::WalletTransaction.search(query).eager_load(:user).order(created_at: :desc)
                        .limit(limit).offset(offset)
+  end
+
+  def payment_accounting_stats
+    WalletTransaction.payment_stat(context[:site_community].id)
   end
 
   # It would be good to put this elsewhere to use it in other queries

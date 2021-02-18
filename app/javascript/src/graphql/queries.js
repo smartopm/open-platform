@@ -960,6 +960,28 @@ export const InvoiceStatsQuery = gql`
   }
 `
 
+export const InvoicesStats = gql`
+  query InvoicesStats {
+    invoiceAccountingStats {
+      noOfDays
+      noOfInvoices
+    }
+  }
+`
+
+export const PaymentStats = gql`
+  query PaymentStats {
+    paymentAccountingStats {
+      noOfDays
+      cash
+      mobileMoney
+      bankTransfer
+      eft
+      pos
+    }
+  }
+`
+
 export const LandParcel = gql`
   query landParcel($id: ID!) {
     landParcel(id: $id) {

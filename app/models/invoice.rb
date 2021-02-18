@@ -74,6 +74,20 @@ class Invoice < ApplicationRecord
     amount
   end
 
+  def self.invoice_stat(com)
+    Invoice.connection.select_all(
+      "select
+        CASE
+          WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 0
+                AND DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date) <= 30 THEN '00-30'
+          WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 31
+                AND DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date) <= 45 THEN '31-45'
+          WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 46
+                AND DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date) <= 60 THEN '46-60'
+          WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 61 THEN '61+'
+        END no_of_days, count(*) as no_of_invoices from invoices inv where inv.community_id='#{com}' AND inv.status !=1 group by no_of_days")
+  end
+
   def modify_status
     return if pending_amount.positive? || status.eql?('paid')
 
