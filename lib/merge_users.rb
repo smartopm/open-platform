@@ -97,7 +97,9 @@ class MergeUsers
 
   def self.models_with_user_id
     ActiveRecord::Base.connection.tables.select do |table|
-      table.classify.constantize.column_names.include?('user_id') rescue nil
+      table.classify.constantize.column_names.include?('user_id')
+    rescue StandardError
+      nil
     end.compact.map(&:classify) - %w[UserLabel ActivityLog]
   end
 end
