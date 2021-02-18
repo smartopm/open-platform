@@ -1,11 +1,8 @@
 import React from 'react'
 import Nav from '../../components/Nav'
 import Accounting from '../../components/Accounting/AccountingDashboard'
-// import { Context } from '../Provider/AuthStateProvider'
 
 export default function AccountingDashboard(){
-        // const authState = useContext(Context)
-   
     return (
       <div>
         <>
