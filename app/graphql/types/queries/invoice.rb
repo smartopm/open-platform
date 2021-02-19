@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # invoice queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Invoice
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -44,6 +45,10 @@ module Types::Queries::Invoice
 
     field :invoice_stats, Types::InvoiceStatType, null: false do
       description 'return stats based on status of invoices'
+    end
+
+    field :invoice_autogeneration_data, Types::InvoiceAutogenerationDataType, null: false do
+      description 'returns stats for monthly invoice autogeneration'
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -101,6 +106,17 @@ module Types::Queries::Invoice
     }
   end
 
+  def invoice_autogeneration_data
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    month = Time.zone.now.month
+    payment_plans = ::PaymentPlan.where('extract(month from start_date) = ?', month)
+    {
+      number_of_invoices: payment_plans.count,
+      total_amount: calculate_total_amount(payment_plans),
+    }
+  end
+
   # It would be good to put this elsewhere to use it in other queries
 
   def verified_user(user_id)
@@ -126,4 +142,17 @@ module Types::Queries::Invoice
     pending_invoices
   end
   # rubocop:enable Metrics/AbcSize
+
+  def calculate_total_amount(payment_plans)
+    amount = 0
+    payment_plans.each do |payment_plan|
+      land_parcel = payment_plan.land_parcel
+      valuation = land_parcel.valuations&.where('start_date <= ?', Time.zone.now)&.first
+      next if valuation.nil?
+
+      amount += ((payment_plan.percentage.to_i * valuation.amount) / 12)
+    end
+    amount
+  end
 end
+# rubocop:enable Metrics/ModuleLength
