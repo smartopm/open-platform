@@ -5,7 +5,7 @@ import InvoiceGraph from './InvoiceGraph'
 import PaymentGraph from './PaymentGraph'
 import { useParamsQuery } from '../../utils/helpers';
 
-export default function AccountingDashboard({ userId }) {
+export default function AccountingDashboard({ userId, currency }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
   const history = useHistory()
@@ -23,10 +23,10 @@ export default function AccountingDashboard({ userId }) {
       </StyledTabs>
 
       <TabPanel value={value} index='invoice'>
-        <InvoiceGraph userId={userId} />
+        <InvoiceGraph userId={userId} currency={currency} />
       </TabPanel>
       <TabPanel value={value} index='payment'>
-        <PaymentGraph userId={userId} />
+        <PaymentGraph userId={userId} currency={currency} />
       </TabPanel>
     </>
   )

@@ -8,7 +8,7 @@ import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
 import InvoiceStatDetails from './InvoiceStatDetails'
 
-export default function InvoiceGraph({ userId }){
+export default function InvoiceGraph({ userId, currency }){
   const [query, setQuery] = useState(null)
   const { loading, data, error } = useQuery(InvoicesStats, {
     fetchPolicy: 'cache-and-network'
@@ -58,7 +58,7 @@ export default function InvoiceGraph({ userId }){
         </div>
       </div>
       <div>
-        <InvoiceStatDetails data={invoicesStatData} />
+        <InvoiceStatDetails data={invoicesStatData?.invoicesStatDetails} currency={currency}  />
       </div>
     </>
   )
