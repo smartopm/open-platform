@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { shape } from 'prop-types';
 import { useHistory } from 'react-router';
 import { useMutation } from 'react-apollo'
+import Button from '@material-ui/core/Button'
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import InvoiceList from './InvoiceList';
 import authStateProps from '../../shared/types/authState';
-import Button from '@material-ui/core/Button'
 import CenteredContent from '../CenteredContent'
 import { GenerateCurrentMonthInvoices } from '../../graphql/mutations'
-import { formatError } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 import PaymentList from './PaymentList';
 import { currencies } from '../../utils/constants';
-import { useParamsQuery } from '../../utils/helpers';
+import MessageAlert from "../MessageAlert"
 
 export default function TabbedPayments({ authState }) {
   const path = useParamsQuery();
@@ -38,8 +38,21 @@ export default function TabbedPayments({ authState }) {
     })
   }
 
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+    setMessageAlert('')
+  }
+
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <StyledTabs value={value} onChange={handleChange} aria-label="request tabs" centered>
         <StyledTab label="Invoices" value='invoice' />
         <StyledTab label="Payments" value='payment' />
