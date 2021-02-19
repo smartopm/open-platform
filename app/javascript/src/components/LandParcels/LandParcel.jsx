@@ -71,6 +71,7 @@ export default function LandParcelList() {
     }
 
     setViewResultsOnMap(!!debouncedValue)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, parcelData, debouncedValue]);
 

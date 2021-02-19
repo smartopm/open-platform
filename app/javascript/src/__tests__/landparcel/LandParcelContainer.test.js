@@ -32,6 +32,7 @@ describe('Land Property Page', () => {
       stateProvince: 'LaLagos',
       country: 'EAC Country',
       parcelType: '232',
+      plotSold: true,
       latY: null,
       longX: null,
       geom: null,
