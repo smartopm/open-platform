@@ -1156,3 +1156,12 @@ export const PaymentsQuery = gql`
       }
     }
 `
+
+export const InvoiceAutogenerationData = gql`
+  query invoiceAutogenerationData {
+    invoiceAutogenerationData {
+      numberOfInvoices
+      totalAmount
+    }
+  }
+`

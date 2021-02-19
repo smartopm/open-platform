@@ -1,16 +1,19 @@
 /* eslint-disable */
 import React, { useState } from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
 import { GenerateCurrentMonthInvoices } from '../../graphql/mutations'
+import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent'
 import MessageAlert from "../MessageAlert"
 import { formatError } from '../../utils/helpers'
+import { InvoiceAutogenerationData } from '../../graphql/queries'
 
 export default function AutogenerateInvoice() {
   const [generateCurrentMonthInvoices] = useMutation(GenerateCurrentMonthInvoices)
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const { loading, data, error } = useQuery(InvoiceAutogenerationData)
 
   function handleInvoiceGenerate() {
     generateCurrentMonthInvoices({}).then(() => {
@@ -27,6 +30,11 @@ export default function AutogenerateInvoice() {
     }
     setMessageAlert('')
   }
+  if (loading) return <Spinner />
+
+  if (error) {
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  }
 
   return (
     <>
@@ -40,10 +48,10 @@ export default function AutogenerateInvoice() {
         This will generate all invoices for this month.
       </Typography>
       <Typography variant="body1">
-        Number of invoices for this month: 1
+        Number of invoices for this month: {data.invoiceAutogenerationData.numberOfInvoices}
       </Typography>
       <Typography variant="body1">
-        Total amount for invoices this month: 100
+        Total amount for invoices this month: k{data.invoiceAutogenerationData.totalAmount.toFixed(2)}
       </Typography>
       <Grid
         container
