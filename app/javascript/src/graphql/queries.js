@@ -982,6 +982,27 @@ export const PaymentStats = gql`
   }
 `
 
+export const InvoicesStatsDetails = gql`
+  query InvoicesStatsDetails($userId: ID!, $query: String) {
+    invoicesStatDetails(userId: $userId, query: $query) {
+      id
+      amount
+      status
+      invoiceNumber
+      dueDate
+      createdAt
+      user {
+        id
+        name
+      }
+      landParcel {
+        id
+        parcelNumber
+      }
+    }
+  }
+`
+
 export const LandParcel = gql`
   query landParcel($id: ID!) {
     landParcel(id: $id) {
