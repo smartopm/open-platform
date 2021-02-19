@@ -1,122 +1,75 @@
 /* eslint-disable no-use-before-define */
-import React, { useState, useContext } from 'react'
-import { useMutation } from 'react-apollo'
-import { StyleSheet, css } from 'aphrodite'
-import { useHistory } from 'react-router-dom'
-import { Button, Grid } from '@material-ui/core'
-import Nav from '../components/Nav'
-import { ImportCreate } from '../graphql/mutations'
-import CenteredContent from '../components/CenteredContent'
-import Loading from '../shared/Loading'
-import { sanitizeText, pluralizeCount, propAccessor } from '../utils/helpers'
-import { Context } from "./Provider/AuthStateProvider"
-import MessageAlert from "../components/MessageAlert"
+import React, { useState, useContext } from 'react';
+import { useMutation } from 'react-apollo';
+import { StyleSheet, css } from 'aphrodite';
+import { useHistory } from 'react-router-dom';
+import { Button, Grid } from '@material-ui/core';
+import Nav from '../components/Nav';
+import { ImportCreate } from '../graphql/mutations';
+import CenteredContent from '../components/CenteredContent';
+import Loading from '../shared/Loading';
+import { Context } from './Provider/AuthStateProvider';
+import MessageAlert from '../components/MessageAlert';
 
 export default function UsersImport() {
-  const [importCreate] = useMutation(ImportCreate)
-  const [csvString, setCsvString] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [errorSummary, setErrorSummary] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const history = useHistory()
-  const { token } = useContext(Context)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
+  const [importCreate] = useMutation(ImportCreate);
+  const [csvString, setCsvString] = useState('');
+  const [csvFileName, setCsvFileName] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
+  const { token } = useContext(Context);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
 
   function createImport() {
-    setIsLoading(true)
+    setIsLoading(true);
     importCreate({
-      variables: { csvString }
+      variables: { csvString, csvFileName }
     })
-      .then(res => {
-        formatResponseMessage(res.data.usersImport)
-        setIsLoading(false)
+      .then(() => {
+        setIsLoading(false);
+        setMessageAlert(
+          "Your import is currently being processed. You'll receive a mail when it's done."
+        );
+        setIsSuccessAlert(true);
       })
       .catch(err => {
-        setIsLoading(false)
-        setMessageAlert(err.message)
-        setIsSuccessAlert(false)
-      })
+        setIsLoading(false);
+        setMessageAlert(err.message);
+        setIsSuccessAlert(false);
+      });
   }
 
   function onCancel() {
-    return history.push('/users')
+    return history.push('/users');
   }
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
-      return
+      return;
     }
-    setMessageAlert('')
+    setMessageAlert('');
   }
 
   function processCsv(evt) {
-    const file = evt.target.files[0]
-    if (errorMessage) setErrorMessage(null)
-    if (errorSummary) setErrorSummary(null)
+    const file = evt.target.files[0];
+    if (errorMessage) setErrorMessage(null);
 
     if (!file) {
-      setCsvString('')
-      return
+      setCsvString('');
+      return;
     }
-    const reader = new FileReader()
+    const reader = new FileReader();
+    setCsvFileName(file.name);
     // eslint-disable-next-line func-names
     reader.onload = function(e) {
-      setCsvString(e.target.result)
-    }
-    reader.readAsText(file)
+      setCsvString(e.target.result);
+    };
+    reader.readAsText(file);
   }
 
-  function formatResponseMessage({
-    errors,
-    noOfDuplicates,
-    noOfInvalid,
-    noOfValid
-  }) {
-    if (noOfDuplicates + noOfInvalid === 0) {
-      setErrorMessage('Import was successful')
-      return
-    }
-
-    if (noOfDuplicates > 0) {
-      setErrorSummary(
-        `${duplicateStatement(noOfDuplicates)},
-        ${noOfValid} ${pluralizeCount(noOfValid, 'user')} will be added,
-        ${invalidStatement(noOfInvalid)}.`
-      )
-    }
-
-    const parsedErrors = JSON.parse(errors)
-    const errorRows = Object.keys(parsedErrors)
-    if (errorRows.length > 0) {
-      let message = ''
-      errorRows.forEach(row => {
-        message += `Row ${row}: <br>`
-        propAccessor(parsedErrors, row).forEach(err => {
-          message += `&nbsp; ${err} <br>`
-        })
-      })
-      setErrorMessage(message)
-    }
-  }
-
-  function duplicateStatement(duplicatesNumber) {
-    let statement = `${duplicatesNumber} user already exists`
-    if (duplicatesNumber > 1) {
-      statement = `${duplicatesNumber} users already exist`
-    }
-    return statement
-  }
-
-  function invalidStatement(invalidNumber) {
-    let statement = `${invalidNumber} user has errors`
-    if (invalidNumber > 1) {
-      statement = `${invalidNumber} users have errors`
-    }
-    return statement
-  }
-
-  const hasErrors = errorMessage || errorSummary
+  const hasErrors = errorMessage;
 
   return (
     <>
@@ -127,10 +80,10 @@ export default function UsersImport() {
         handleClose={handleMessageAlertClose}
       />
       <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
-      <Grid container style={{margin: '5px auto', width: '95%'}}>
+      <Grid container style={{ margin: '5px auto', width: '95%' }}>
         <Grid item md={6}>
-          You can upload a .csv file with users. The following are the expected
-          fields with examples, and the column headers should be specified accordingly:
+          You can upload a .csv file with users. The following are the expected fields with
+          examples, and the column headers should be specified accordingly:
           <ol>
             <li> Name: i.e John Doe </li>
             <li> Email primary: i.e john@gmail.com </li>
@@ -143,69 +96,58 @@ export default function UsersImport() {
             <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li> Notes on client: i.e Here&apos;s a new note </li>
           </ol>
-          You can click
+          You can click 
           {' '}
           <a href={`/csv_import_sample/download?token=${token}`}>here</a>
           {' '}
-          to
-          download a sample csv file.
+          to download
+          a sample csv file.
         </Grid>
-        <Grid item md={6} style={{margin: '5px auto'}}>
+        <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (
             <Loading />
-      ) : (
-        <div>
-          <div className="text-center">{errorSummary}</div>
-          {errorMessage && (
-            <div className={css(styles.errorContainer)}>
-              <div
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                  __html: sanitizeText(errorMessage)
-                }}
-              />
+          ) : (
+            <div>
+              <Grid container justify="center" style={{ marginTop: '200px' }}>
+                <input
+                  accept=".csv"
+                  className={css(styles.inputField)}
+                  id="contained-button-file"
+                  data-testid="csv-input"
+                  type="file"
+                  onChange={processCsv}
+                />
+              </Grid>
+              <br />
+              {csvString.length > 0 && !hasErrors && (
+                <CenteredContent>
+                  <Button
+                    variant="contained"
+                    aria-label="business_cancel"
+                    color="secondary"
+                    className={css(styles.cancelBtn)}
+                    onClick={onCancel}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    aria-label="business_submit"
+                    color="primary"
+                    onClick={createImport}
+                    className={css(styles.importBtn)}
+                  >
+                    Import
+                  </Button>
+                </CenteredContent>
+              )}
             </div>
           )}
-          <Grid container justify="center" style={{ marginTop: '200px' }}>
-            <input
-              accept=".csv"
-              className={css(styles.inputField)}
-              id="contained-button-file"
-              data-testid="csv-input"
-              type="file"
-              onChange={processCsv}
-            />
-          </Grid>
-          <br />
-          {csvString.length > 0 && !hasErrors && (
-            <CenteredContent>
-              <Button
-                variant="contained"
-                aria-label="business_cancel"
-                color="secondary"
-                className={css(styles.cancelBtn)}
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                type="submit"
-                aria-label="business_submit"
-                color="primary"
-                onClick={createImport}
-                className={css(styles.importBtn)}
-              >
-                Import
-              </Button>
-            </CenteredContent>
-          )}
-        </div>
-      )}
         </Grid>
       </Grid>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -225,13 +167,5 @@ const styles = StyleSheet.create({
   inputField: {
     width: '201px',
     overflow: 'hidden'
-  },
-
-  errorContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    maxHeight: '300px',
-    overflowY: 'scroll',
-    margin: '5vh 0 -20vh 0'
   }
-})
+});
