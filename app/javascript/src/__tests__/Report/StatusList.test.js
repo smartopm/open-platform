@@ -12,8 +12,6 @@ describe('Status List Component', () => {
     constructionApproved: null,
     constructionInProgress: null,
     constructionCompleted: 1,
-    census: 0,
-    workersOnSite: 0,
   };
 
   it('should render a list of status with correct count', () => {

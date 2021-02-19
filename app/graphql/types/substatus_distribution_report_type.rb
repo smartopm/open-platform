@@ -9,7 +9,5 @@ module Types
     field :construction_approved, Types::SubstatusDistributionType, null: true
     field :construction_in_progress, Types::SubstatusDistributionType, null: true
     field :construction_completed, Types::SubstatusDistributionType, null: true
-    field :census, Types::SubstatusDistributionType, null: true
-    field :workers_on_site, Types::SubstatusDistributionType, null: true
   end
 end

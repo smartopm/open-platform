@@ -23,8 +23,6 @@ describe('Substatus component', () => {
             constructionApproved: 0,
             constructionInProgress: 0,
             constructionCompleted: 0,
-            census: 0,
-            workersOnSite: 0,
           }
         }
       }

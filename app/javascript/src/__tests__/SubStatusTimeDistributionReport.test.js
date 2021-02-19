@@ -49,20 +49,6 @@ describe('<SubStatusTimeDistributionReport />', () => {
             between31to50Days: 0,
             between51to150Days: 0,
             over151Days: 0,
-          },
-          census: {
-            between0to10Days: 0,
-            between11to30Days: 0,
-            between31to50Days: 0,
-            between51to150Days: 0,
-            over151Days: 0,
-          },
-          workersOnSite: {
-            between0to10Days: 0,
-            between11to30Days: 0,
-            between31to50Days: 0,
-            between51to150Days: 0,
-            over151Days: 0,
           }
       }
     }

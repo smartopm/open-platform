@@ -50,8 +50,6 @@ export const userSubStatus = {
   construction_approved: 'Construction Approved',
   construction_in_progress: 'Construction in Progress',
   construction_completed: 'Construction Completed',
-  census: 'Census',
-  workers_on_site: 'Workers on Site',
 };
 
 export const subStatus = {
@@ -61,8 +59,6 @@ export const subStatus = {
   3: 'Construction Approved',
   4: 'Construction in Progress',
   5: 'Construction Completed',
-  6: 'Census',
-  7: 'Workers on Site',
 };
 
 export const userSubStatusDurationLookup = {
