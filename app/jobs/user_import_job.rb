@@ -19,7 +19,7 @@ class UserImportJob < ApplicationJob
     ActiveRecord::Base.transaction do
       csv.each_with_index do |row, index|
         name       = row['Name']&.strip
-        email      = row['Email primary']&.strip.blank? ? nil : row['Email primary']&.strip
+        email      = row['Email primary']&.strip.presence
         phone      = row['Phone number primary']&.strip
         phone1     = row['Phone number secondary 1']&.strip
         phone2     = row['Phone number secondary 2']&.strip

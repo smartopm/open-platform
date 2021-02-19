@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 
+# rubocop:disable Layout/LineLength
 RSpec.describe UserImportJob, type: :job do
   let!(:non_admin) { create(:user_with_community) }
   let!(:user) { create(:admin_user, community_id: non_admin.community_id) }
@@ -30,3 +31,4 @@ RSpec.describe UserImportJob, type: :job do
     end
   end
 end
+# rubocop:enable Layout/LineLength

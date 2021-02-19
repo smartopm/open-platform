@@ -22,9 +22,9 @@ RSpec.describe Mutations::User::Import do
       csv_string = "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here"
       variables = {
         csvString: csv_string,
-        csvFileName: "My File.csv",
+        csvFileName: 'My File.csv',
       }
-      expect(UserImportJob).to receive(:perform_later).with(csv_string, "My File.csv", user)
+      expect(UserImportJob).to receive(:perform_later).with(csv_string, 'My File.csv', user)
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
@@ -36,7 +36,7 @@ RSpec.describe Mutations::User::Import do
     it "raises 'Unauthorized' error if user is not logged in" do
       variables = {
         csvString: "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here",
-        csvFileName: "My File.csv",
+        csvFileName: 'My File.csv',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -49,7 +49,7 @@ RSpec.describe Mutations::User::Import do
     it "raises 'Unauthorized' error if user is not an admin" do
       variables = {
         csvString: "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here",
-        csvFileName: "My File.csv",
+        csvFileName: 'My File.csv',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
