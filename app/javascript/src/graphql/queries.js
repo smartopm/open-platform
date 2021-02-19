@@ -492,6 +492,7 @@ export const ParcelsQuery = gql`
       latY
       longX
       geom
+      plotSold
       createdAt
       valuations {
         id

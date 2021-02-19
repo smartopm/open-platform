@@ -20,5 +20,10 @@ module Types
     field :read_at, GraphQL::Types::ISO8601DateTime, null: true
     field :valuations, [Types::ValuationType], null: false
     field :accounts, [Types::AccountType], null: false
+    field :plot_sold, Boolean, null: true
+
+    def plot_sold
+      object.accounts.present?
+    end
   end
 end
