@@ -41,7 +41,7 @@ const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
   { title: 'User', col: 4 },
   { title: 'Description', col: 4 },
-  { title: 'Amount', col: 3 },
+  { title: 'Amount', col: 3, align: true },
   { title: 'Payment Date', col: 3 },
   { title: 'Status', col: 4 }
 ];

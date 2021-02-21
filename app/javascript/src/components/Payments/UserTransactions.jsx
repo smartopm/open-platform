@@ -50,7 +50,7 @@ export function renderTransactions(transaction, currencyData) {
     // eslint-disable-next-line no-nested-ternary
     Description: <GridText col={4} content={`${transaction.__typename !== 'WalletTransaction' ? `Invoice ${transaction.invoiceNumber}` : transaction.source === 'wallet' ? 'Invoice' : 'Deposit' }`} />,
     Amount: (
-      <Grid item xs={3} md={2} data-testid="description">
+      <Grid item xs={3} md={1} style={{textAlign: 'right'}} data-testid="description">
         {transaction.__typename === 'WalletTransaction' ? (
           <Text content={formatMoney(currencyData, transaction.amount)} /> 
         ) : (

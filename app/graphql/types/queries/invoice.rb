@@ -57,7 +57,7 @@ module Types::Queries::Invoice
 
     field :invoices_stat_details, [Types::InvoiceType], null: false do
       argument :user_id, GraphQL::Types::ID, required: true
-      argument :query, GraphQL::Types::String, required: false
+      argument :query, GraphQL::Types::String, required: true
       description 'return list of all unpaid invoices'
     end
   end

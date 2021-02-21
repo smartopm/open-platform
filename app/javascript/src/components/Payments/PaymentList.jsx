@@ -18,12 +18,13 @@ import ListHeader from '../../shared/list/ListHeader';
 import { paymentType } from '../../utils/constants';
 import TransactionDetails from './TransactionDetails';
 import currency from '../../shared/types/currency';
+import Text from '../../shared/Text';
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
   { title: 'Deposit Date', col: 1 },
   { title: 'Payment Type', col: 1 },
-  { title: 'Amount', col: 2 }
+  { title: 'Amount', col: 2, align: true }
 ];
 
 export default function PaymentList({ currencyData }) {
@@ -113,18 +114,17 @@ export function renderPayment(payment, currencyData) {
       ),
       'Deposit Date': (
         <Grid item xs={1} md={2}>
-          {dateToString(payment.createdAt)}
+          <Text content={dateToString(payment.createdAt)} />
         </Grid>
       ),
       'Payment Type': (
         <Grid item xs={4} md={2} data-testid="payment_type">
-          <span>
-            {
+          <Text content={
             ['cash'].includes(payment.source)
             ? 'Cash Deposit'
             :  paymentType[payment.source]
-          }
-          </span>
+            }
+          />
         </Grid>
       ),
       Amount: (

@@ -8,6 +8,7 @@ import { Spinner } from '../../shared/Loading';
 import InvoiceGraph from '../../components/Accounting/InvoiceGraph';
 
 describe('Invoice Graph Component', () => {
+  const userId = 'hwi28y4igb3uygfjhb3u'
   const invoiceAccountingStats = [
     {
       noOfDays: '10-20',
@@ -35,7 +36,7 @@ describe('Invoice Graph Component', () => {
     const container = render(
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
-          <InvoiceGraph />
+          <InvoiceGraph userId={userId} currency='k' />
         </BrowserRouter>
       </MockedProvider>
     );
