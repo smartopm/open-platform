@@ -372,3 +372,19 @@ export function getHexColor (range) {
     : '#FFEDA0'
   )
 }
+
+/**
+ * @description format numbers in browser depending on the user's community
+ * @param {String} currency
+ * @param {Number} amount
+ * @param {String} locale -optional
+ * @returns {String} formatted amount in user's locale
+ */
+
+ export function formatMoney(currency, amount, locale="ZM") {
+  var formatted = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(amount);
+  return formatted;
+ }
