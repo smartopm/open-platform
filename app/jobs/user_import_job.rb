@@ -3,6 +3,7 @@
 # Execute user bulk import
 class UserImportJob < ApplicationJob
   queue_as :default
+  sidekiq_options retry: false
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
