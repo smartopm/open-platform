@@ -14,7 +14,7 @@ module Mutations
         invoices = []
         payment_plans.each do |payment_plan|
           land_parcel = payment_plan.land_parcel
-          valuation = land_parcel.valuations&.where('start_date <= ?', Time.zone.now)&.first
+          valuation = land_parcel.valuations&.latest
           next if valuation.nil?
 
           inv = create_invoice(payment_plan, land_parcel, valuation)

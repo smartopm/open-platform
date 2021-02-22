@@ -15,6 +15,8 @@ RSpec.describe Types::Queries::Invoice do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
                        status: 'late', created_by: user)
     end
+    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
+    let!(:payment_plan) { create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id) }
 
     let(:invoices_query) do
       <<~GQL
@@ -72,6 +74,17 @@ RSpec.describe Types::Queries::Invoice do
           userInvoices(userId: $userId, limit: $limit, offset: $offset) {
             id
             amount
+          }
+        }
+      GQL
+    end
+
+    let(:invoice_autogeneration_data_query) do
+      <<~GQL
+        query invoiceAutogenerationData {
+          invoiceAutogenerationData {
+            numberOfInvoices
+            totalAmount
           }
         }
       GQL
@@ -152,6 +165,18 @@ RSpec.describe Types::Queries::Invoice do
                                        }).as_json
       expect(result.dig('data', 'userInvoices')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should  get invoice count per status' do
+      result = DoubleGdpSchema.execute(invoice_autogeneration_data_query, context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to be_nil
+      expect(result.dig('data', 'invoiceAutogenerationData', 'numberOfInvoices')).to eql 1
+      expect(
+        result.dig('data', 'invoiceAutogenerationData', 'totalAmount').floor,
+      ).to eql ((payment_plan.percentage.to_i * valuation.amount) / 12).floor
     end
   end
 end
