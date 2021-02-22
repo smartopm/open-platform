@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { useHistory } from 'react-router';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import InvoiceGraph from './InvoiceGraph'
 import PaymentGraph from './PaymentGraph'
 import { useParamsQuery } from '../../utils/helpers';
 
-export default function AccountingDashboard({ userId, currency }) {
+export default function AccountingDashboard({currency}) {
   const path = useParamsQuery();
   const tab = path.get('tab');
   const history = useHistory()
@@ -23,11 +24,15 @@ export default function AccountingDashboard({ userId, currency }) {
       </StyledTabs>
 
       <TabPanel value={value} index='invoice'>
-        <InvoiceGraph userId={userId} currency={currency} />
+        <InvoiceGraph currency={currency} />
       </TabPanel>
       <TabPanel value={value} index='payment'>
-        <PaymentGraph userId={userId} currency={currency} />
+        <PaymentGraph currency={currency} />
       </TabPanel>
     </>
   )
+}
+
+AccountingDashboard.propTypes = {
+  currency: PropTypes.string.isRequired
 }

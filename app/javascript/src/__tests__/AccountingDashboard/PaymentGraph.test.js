@@ -8,7 +8,6 @@ import { Spinner } from '../../shared/Loading';
 import PaymentGraph from '../../components/Accounting/PaymentGraph';
 
 describe('Payment Graph Component', () => {
-  const userId = 'hwi28y4igb3uygfjhb3u'
   const paymentAccountingStats = [
     {
       noOfDays: '10-20',
@@ -44,7 +43,7 @@ describe('Payment Graph Component', () => {
     const container = render(
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
-          <PaymentGraph userId={userId} currency='k' />
+          <PaymentGraph currency='k' />
         </BrowserRouter>
       </MockedProvider>
     );

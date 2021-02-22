@@ -3,7 +3,7 @@
 # wallet queries
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
-
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -34,7 +34,6 @@ module Types::Queries::Wallet
     end
 
     field :payment_stat_details, [Types::WalletTransactionType], null: false do
-      argument :user_id, GraphQL::Types::ID, required: true
       argument :query, GraphQL::Types::String, required: true
       argument :type, GraphQL::Types::String, required: true
       description 'return list of all payments according to their payment type'
@@ -58,17 +57,23 @@ module Types::Queries::Wallet
     ::WalletTransaction.search(query).eager_load(:user).order(created_at: :desc)
                        .limit(limit).offset(offset)
   end
+  # rubocop:enable Metrics/BlockLength
 
-  def payment_stat_details(user_id:, query:, type:)
+  # rubocop:disable Metrics/AbcSize
+  def payment_stat_details(query:, type:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+
     payments = context[:site_community].wallet_transactions
     split_query = query.split('-')
     if query == '00-10'
-      payments.where("created_at >= ? AND source = ?", split_query.last.to_i.days.ago, type)
+      payments.where('created_at >= ? AND source = ?', split_query.last.to_i.days.ago, type)
     else
-      payments.where("created_at <= ? AND created_at >= ? AND source = ?", split_query.first.to_i.days.ago, split_query.last.to_i.days.ago, type)
+      payments.where('created_at <= ? AND created_at >= ? AND source = ?',
+                     split_query.first.to_i.days.ago,
+                     split_query.last.to_i.days.ago, type)
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def payment_accounting_stats
     WalletTransaction.payment_stat(context[:site_community].id)

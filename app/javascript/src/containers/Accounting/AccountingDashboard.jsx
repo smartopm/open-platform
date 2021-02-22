@@ -11,7 +11,7 @@ export default function AccountingDashboard(){
       <div>
         <>
           <Nav navName="Accounting Report" menuButton="back" backTo="/" />
-          <Accounting userId={authState.user.id} currency={currency} />
+          <Accounting currency={currency} />
         </>
       </div>
     )

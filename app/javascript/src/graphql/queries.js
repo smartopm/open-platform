@@ -983,8 +983,8 @@ export const PaymentStats = gql`
 `
 
 export const InvoicesStatsDetails = gql`
-  query InvoicesStatsDetails($userId: ID!, $query: String!) {
-    invoicesStatDetails(userId: $userId, query: $query) {
+  query InvoicesStatsDetails($query: String!) {
+    invoicesStatDetails(query: $query) {
       id
       amount
       status
@@ -1004,8 +1004,8 @@ export const InvoicesStatsDetails = gql`
 `
 
 export const PaymentStatsDetails = gql`
-  query PaymentStatsDetails($userId: ID!, $query: String!, $type: String!) {
-    paymentStatDetails(userId: $userId, query: $query, type: $type) {
+  query PaymentStatsDetails($query: String!, $type: String!) {
+    paymentStatDetails(query: $query, type: $type) {
       amount
       source
       createdAt

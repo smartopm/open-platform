@@ -10,7 +10,7 @@ import { formatError } from '../../utils/helpers';
 import PaymentStatDetails from './PaymentStatDetails'
 
 
-export default function PaymentGraph({ userId, currency }){
+export default function PaymentGraph({ currency }){
   const stroke = {
     "#8884d8": 'cash',
     "#82ca9d": 'mobile_money',
@@ -25,7 +25,7 @@ export default function PaymentGraph({ userId, currency }){
   });
 
   const [loadPaymentDetail, {  error: statError, data: statData } ] = useLazyQuery(PaymentStatsDetails,{
-    variables: { userId, query, type },
+    variables: { query, type },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   })
@@ -86,6 +86,5 @@ export default function PaymentGraph({ userId, currency }){
 }
 
 PaymentGraph.propTypes = {
-  userId: PropTypes.string.isRequired,
   currency: PropTypes.string.isRequired
 }

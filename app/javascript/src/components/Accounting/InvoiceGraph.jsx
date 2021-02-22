@@ -9,7 +9,7 @@ import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
 import InvoiceStatDetails from './InvoiceStatDetails'
 
-export default function InvoiceGraph({ userId, currency }){
+export default function InvoiceGraph({currency }){
   const [query, setQuery] = useState(null)
   const [activeIndex, setActiveIndex] = useState(null)
   const { loading, data, error } = useQuery(InvoicesStats, {
@@ -23,7 +23,7 @@ export default function InvoiceGraph({ userId, currency }){
   }
 
   const [loadInvoiceDetail, {  error: statError, data: invoicesStatData } ] = useLazyQuery(InvoicesStatsDetails,{
-    variables: { userId, query },
+    variables: { query },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   })
@@ -79,6 +79,5 @@ export default function InvoiceGraph({ userId, currency }){
 }
 
 InvoiceGraph.propTypes = {
-  userId: PropTypes.string.isRequired,
   currency: PropTypes.string.isRequired
 }

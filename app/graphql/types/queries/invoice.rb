@@ -56,13 +56,11 @@ module Types::Queries::Invoice
     end
 
     field :invoices_stat_details, [Types::InvoiceType], null: false do
-      argument :user_id, GraphQL::Types::ID, required: true
       argument :query, GraphQL::Types::String, required: true
       description 'return list of all unpaid invoices'
     end
   end
   # rubocop:enable Metrics/BlockLength
-
   def invoices(status: nil, query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
@@ -104,19 +102,23 @@ module Types::Queries::Invoice
     cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
   end
 
-  def invoices_stat_details(user_id:, query:)
+  # rubocop:disable Metrics/MethodLength
+  def invoices_stat_details(query:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+
     invoices = context[:site_community].invoices
-    if query == '00-30'
-      invoices.where("due_date >= ? AND status !=1", 30.days.ago)
-    elsif query == '31-45'
-      invoices.where("due_date <= ? AND due_date >= ? AND status !=1", 31.days.ago, 45.days.ago)
-    elsif query == '46-60'
-      invoices.where("due_date <= ? AND due_date >= ? AND status !=1", 46.days.ago, 60.days.ago)
+    case query
+    when '00-30'
+      invoices.where('due_date >= ? AND status !=1', 30.days.ago)
+    when '31-45'
+      invoices.where('due_date <= ? AND due_date >= ? AND status !=1', 31.days.ago, 45.days.ago)
+    when '46-60'
+      invoices.where('due_date <= ? AND due_date >= ? AND status !=1', 46.days.ago, 60.days.ago)
     else
-      invoices.where("due_date <= ? AND status !=1", 61.days.ago)
+      invoices.where('due_date <= ? AND status !=1', 61.days.ago)
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
