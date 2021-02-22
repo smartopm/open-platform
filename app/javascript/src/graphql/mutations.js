@@ -949,12 +949,9 @@ export const FormUserCreateMutation = gql`
 `
 
 export const ImportCreate = gql`
-  mutation usersImport($csvString: String!) {
-    usersImport(csvString: $csvString) {
-      errors,
-      noOfDuplicates,
-      noOfValid,
-      noOfInvalid
+  mutation usersImport($csvString: String!, $csvFileName: String!) {
+    usersImport(csvString: $csvString, csvFileName: $csvFileName) {
+      success
     }
   }
 `
