@@ -164,20 +164,6 @@ export const SubstatusDistributionReportFragment = {
         between51to150Days
         over151Days
       }
-      census{
-        between0to10Days
-        between11to30Days
-        between31to50Days
-        between51to150Days
-        over151Days
-      }
-      workersOnSite{
-        between0to10Days
-        between11to30Days
-        between31to50Days
-        between51to150Days
-        over151Days
-      }
     }
   `
 }

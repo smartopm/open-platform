@@ -1022,8 +1022,6 @@ query subStatus {
     constructionApproved
     constructionInProgress
     constructionCompleted
-    census
-    workersOnSite
   }
 }
 `

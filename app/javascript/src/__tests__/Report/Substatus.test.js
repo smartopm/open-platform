@@ -23,8 +23,6 @@ describe('Substatus component', () => {
             constructionApproved: 0,
             constructionInProgress: 0,
             constructionCompleted: 0,
-            census: 0,
-            workersOnSite: 0,
           }
         }
       }
@@ -48,15 +46,14 @@ describe('Substatus component', () => {
       expect(container.queryByText('Construction Approved')).toBeInTheDocument();
       expect(container.queryByText('Construction in Progress')).toBeInTheDocument();
       expect(container.queryByText('Construction Completed')).toBeInTheDocument();
-      expect(container.queryByText('Census')).toBeInTheDocument();
     }, 200);
   });
 });
 
 describe('StatusCount component', () => {
   it('should render status count', () => {
-    const container = render(<StatusCount title="Applied" count={1} handleFilter={jest.fn()} />);
-    expect(container.queryAllByText('Applied')[0]).toBeInTheDocument();
+    const container = render(<StatusCount title="Plots Fully Purchased" count={1} handleFilter={jest.fn()} />);
+    expect(container.queryAllByText('Plots Fully Purchased')[0]).toBeInTheDocument();
     expect(container.queryAllByText('1')[0]).toBeInTheDocument();
   });
 });
