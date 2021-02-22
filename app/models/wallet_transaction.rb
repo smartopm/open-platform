@@ -61,7 +61,8 @@ class WalletTransaction < ApplicationRecord
         END no_of_days,
         sum(CASE WHEN wall.source='cash' THEN wall.amount END) as cash,
         sum(CASE WHEN wall.source='mobile_money' THEN wall.amount END) as mobile_money,
-        sum(CASE WHEN wall.source='bank_transfer/cash_deposit' THEN wall.amount END) as bank_transfer,
+        sum(CASE WHEN wall.source='bank_transfer/cash_deposit' THEN wall.amount END)
+            as bank_transfer,
         sum(CASE WHEN wall.source='bank_transfer/eft' THEN wall.amount END) as eft,
         sum(CASE WHEN wall.source='pos' THEN wall.amount END)
         as pos from wallet_transactions wall where wall.community_id='#{com}'

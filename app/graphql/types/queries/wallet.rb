@@ -32,12 +32,6 @@ module Types::Queries::Wallet
     field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
       description 'return stats of all unpaid invoices'
     end
-
-    field :payment_stat_details, [Types::WalletTransactionType], null: false do
-      argument :query, GraphQL::Types::String, required: true
-      argument :type, GraphQL::Types::String, required: true
-      description 'return list of all payments according to their payment type'
-    end
   end
 
   def user_wallets(user_id: nil, offset: 0, limit: 100)
@@ -58,22 +52,6 @@ module Types::Queries::Wallet
                        .limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/BlockLength
-
-  # rubocop:disable Metrics/AbcSize
-  def payment_stat_details(query:, type:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
-
-    payments = context[:site_community].wallet_transactions
-    split_query = query.split('-')
-    if query == '00-10'
-      payments.where('created_at >= ? AND source = ?', split_query.last.to_i.days.ago, type)
-    else
-      payments.where('created_at <= ? AND created_at >= ? AND source = ?',
-                     split_query.first.to_i.days.ago,
-                     split_query.last.to_i.days.ago, type)
-    end
-  end
-  # rubocop:enable Metrics/AbcSize
 
   def payment_accounting_stats
     WalletTransaction.payment_stat(context[:site_community].id)

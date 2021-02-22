@@ -1,47 +1,22 @@
-import React, { useState } from 'react'
-import { useQuery, useLazyQuery } from 'react-apollo';
+import React from 'react'
+import { useQuery } from 'react-apollo';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from 'recharts';
 import Typography from '@material-ui/core/Typography';
-import PropTypes from 'prop-types'
-import { PaymentStats, PaymentStatsDetails } from '../../graphql/queries';
+import { PaymentStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
-import PaymentStatDetails from './PaymentStatDetails'
 import GraphTitle from './GraphTitle'
 
 
-export default function PaymentGraph({ currency }){
-  const stroke = {
-    "#8884d8": 'cash',
-    "#82ca9d": 'mobile_money',
-    "#E79040": 'bank_transfer/cash_deposit',
-    "#3493FB": 'bank_transfer/eft',
-    "#E74540": 'pos'
-  }
-  const [query, setQuery] = useState(null)
-  const [type, setType] = useState(null)
+export default function PaymentGraph(){
   const { loading, data, error } = useQuery(PaymentStats, {
     fetchPolicy: 'cache-and-network'
   });
 
-  const [loadPaymentDetail, {  error: statError, data: statData } ] = useLazyQuery(PaymentStatsDetails,{
-    variables: { query, type },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network'
-  })
-
-  function handleClick(e){
-    setType(stroke[e.stroke])
-    setQuery(e.points[0].payload.noOfDays)
-    loadPaymentDetail()
-  }
   if (loading) return <Spinner />
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  }
-  if (statError) {
-    return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
   return (
     <>
@@ -68,11 +43,11 @@ export default function PaymentGraph({ currency }){
                   <XAxis dataKey="noOfDays" />
                   <YAxis />
                   <Legend />
-                  <Line cursor="pointer" type="monotone" dataKey="cash" stroke="#8884d8" onClick={handleClick} />
-                  <Line cursor="pointer" type="monotone" dataKey="mobileMoney" stroke="#82ca9d" onClick={handleClick} />
-                  <Line cursor="pointer" type="monotone" dataKey="bankTransfer" stroke="#E79040" onClick={handleClick} />
-                  <Line cursor="pointer" type="monotone" dataKey="eft" stroke="#3493FB" onClick={handleClick} />
-                  <Line cursor="pointer" type="monotone" dataKey="pos" stroke="#E74540" onClick={handleClick} />
+                  <Line type="monotone" dataKey="cash" stroke="#8884d8" />
+                  <Line type="monotone" dataKey="mobileMoney" stroke="#82ca9d" />
+                  <Line type="monotone" dataKey="bankTransfer" stroke="#E79040" />
+                  <Line type="monotone" dataKey="eft" stroke="#3493FB" />
+                  <Line type="monotone" dataKey="pos" stroke="#E74540" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -81,13 +56,6 @@ export default function PaymentGraph({ currency }){
         <CenteredContent>No data available</CenteredContent>
       ) }
       </div>
-      {statData && (
-        <PaymentStatDetails data={statData.paymentStatDetails} currency={currency} />
-      )}
     </>
   )
-}
-
-PaymentGraph.propTypes = {
-  currency: PropTypes.string.isRequired
 }

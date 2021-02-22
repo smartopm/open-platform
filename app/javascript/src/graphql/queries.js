@@ -1003,21 +1003,6 @@ export const InvoicesStatsDetails = gql`
   }
 `
 
-export const PaymentStatsDetails = gql`
-  query PaymentStatsDetails($query: String!, $type: String!) {
-    paymentStatDetails(query: $query, type: $type) {
-      amount
-      source
-      createdAt
-      id
-      user {
-        id
-        name
-      }
-    }
-  }
-`
-
 export const LandParcel = gql`
   query landParcel($id: ID!) {
     landParcel(id: $id) {
