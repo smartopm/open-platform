@@ -17,7 +17,6 @@ RSpec.describe ImportLog, type: :model do
     it { is_expected.to belong_to(:user) }
   end
 
-
   describe 'callbacks' do
     it { is_expected.to callback(:send_import_status_email).after(:create) }
   end

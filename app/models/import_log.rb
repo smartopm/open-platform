@@ -11,13 +11,22 @@ class ImportLog < ApplicationRecord
 
   private
 
+  # rubocop:disable Metrics/MethodLength
   def send_import_status_email
     template = community.email_templates.find_by(name: 'user_import')
-    message = failed ? import_error_message(import_errors) : 'All users have been created successfully.'
+    message = if failed
+                import_error_message(import_errors)
+              else
+                'All users have been created successfully.'
+              end
 
-    template_data = [{ key: '%message%', value: message }, { key: '%app_url%', value: "#{ENV['HOST']}/" }]
+    template_data = [
+      { key: '%message%', value: message },
+      { key: '%app_url%', value: "#{ENV['HOST']}/" },
+    ]
     EmailMsg.send_mail_from_db(user.email, template, template_data)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def import_error_message(user_import_errors)
     message_string = 'The following errors occurred: <br><br>'
@@ -28,7 +37,7 @@ class ImportLog < ApplicationRecord
       end
     end
 
-    message_string += "<br>Fix the errors and try again."
+    message_string += '<br>Fix the errors and try again.'
     message_string
   end
 end
