@@ -8,6 +8,7 @@ import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
 import InvoiceStatDetails from './InvoiceStatDetails'
+import GraphTitle from './GraphTitle'
 
 export default function InvoiceGraph({currency }){
   const [query, setQuery] = useState(null)
@@ -43,6 +44,7 @@ export default function InvoiceGraph({currency }){
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
               <Typography variant='body1' color='primary'>Invoicing Dashboard</Typography>
             </div>
+            <GraphTitle title='Number of Invoices/Number of days' />
             <div style={{padding: '30px', background: '#FFF'}}>
               <ResponsiveContainer width="100%" height={500}>
                 <BarChart

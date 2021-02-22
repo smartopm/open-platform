@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery, useLazyQuery } from 'react-apollo';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from 'recharts';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types'
 import { PaymentStats, PaymentStatsDetails } from '../../graphql/queries';
@@ -8,6 +8,7 @@ import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
 import PaymentStatDetails from './PaymentStatDetails'
+import GraphTitle from './GraphTitle'
 
 
 export default function PaymentGraph({ currency }){
@@ -50,6 +51,7 @@ export default function PaymentGraph({ currency }){
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
               <Typography variant='body1' color='primary'>Payment Dashboard</Typography>
             </div>
+            <GraphTitle title='Total Amount Paid/Number of days' />
             <div style={{padding: '30px', background: '#FFF'}}>
               <ResponsiveContainer width="100%" height={500}>
                 <LineChart
@@ -65,11 +67,12 @@ export default function PaymentGraph({ currency }){
                 >
                   <XAxis dataKey="noOfDays" />
                   <YAxis />
+                  <Legend />
                   <Line cursor="pointer" type="monotone" dataKey="cash" stroke="#8884d8" onClick={handleClick} />
-                  <Line type="monotone" dataKey="mobileMoney" stroke="#82ca9d" onClick={handleClick} />
-                  <Line type="monotone" dataKey="bankTransfer" stroke="#E79040" onClick={handleClick} />
-                  <Line type="monotone" dataKey="eft" stroke="#3493FB" onClick={handleClick} />
-                  <Line type="monotone" dataKey="pos" stroke="#E74540" onClick={handleClick} />
+                  <Line cursor="pointer" type="monotone" dataKey="mobileMoney" stroke="#82ca9d" onClick={handleClick} />
+                  <Line cursor="pointer" type="monotone" dataKey="bankTransfer" stroke="#E79040" onClick={handleClick} />
+                  <Line cursor="pointer" type="monotone" dataKey="eft" stroke="#3493FB" onClick={handleClick} />
+                  <Line cursor="pointer" type="monotone" dataKey="pos" stroke="#E74540" onClick={handleClick} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
