@@ -3,7 +3,6 @@
 # wallet queries
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
-  # rubocop:disable Metrics/BlockLength
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -51,7 +50,6 @@ module Types::Queries::Wallet
     ::WalletTransaction.search(query).eager_load(:user).order(created_at: :desc)
                        .limit(limit).offset(offset)
   end
-  # rubocop:enable Metrics/BlockLength
 
   def payment_accounting_stats
     WalletTransaction.payment_stat(context[:site_community].id)
