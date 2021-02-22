@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
 import {
   Button,
@@ -9,6 +10,7 @@ import {
   DialogContent,
   Grid,
   List,
+  IconButton
 } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -38,6 +40,7 @@ import ListHeader from '../../shared/list/ListHeader';
 import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
+import MenuList from '../../shared/MenuList';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -47,7 +50,10 @@ const invoiceHeaders = [
   { title: 'Payment Date', col: 3 },
   { title: 'Status', col: 4 }
 ];
-export default function InvoiceList({ currencyData }) {
+export default function InvoiceList({ currencyData, userType }) {
+  const menuList = [
+    { content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick}
+  ]
   const history = useHistory();
   const path = useParamsQuery();
   const limit = 50;
@@ -60,6 +66,20 @@ export default function InvoiceList({ currencyData }) {
   const [query, setQuery] = useState('')
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+
+  function handleOpenMenu(event) {
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleClose() {
+    setAnchorEl(null)
+  }
+
+  function handleClick() {
+    console.log('got here')
+  }
 
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue },
