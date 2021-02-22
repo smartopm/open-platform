@@ -19,10 +19,15 @@ class CustomerJourneyReport
       construction_completed: Hash.new(0),
     }
 
-    rows.present? && rows.each do |row|
-      sub_status, time_lapse, count = row
+    begin
+      rows.present? && rows.each do |row|
+        sub_status, time_lapse, count = row
 
-      hash[sub_status.to_sym][time_lapse.to_sym] = count
+        hash[sub_status.to_sym][time_lapse.to_sym] = count
+      end
+    rescue StandardError
+      # Eat the exception. do nothing
+      # TODO: Victor/Nicolas, DB data update on users with 'census', 'WOS' substatues
     end
 
     hash
