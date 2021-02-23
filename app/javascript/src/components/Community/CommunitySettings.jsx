@@ -299,6 +299,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setCurrency(event.target.value)}
           name="currency"
           margin="normal"
+          inputProps={{ "data-testid": "currency"}}
         >
           {Object.entries(currencies).map(([key, val]) => (
             <MenuItem key={key} value={key}>
@@ -315,6 +316,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setLocale(event.target.value)}
           name="locale"
           margin="normal"
+          inputProps={{ "data-testid": "locale"}}
         >
           {locales.map((loc) => (
             <MenuItem key={loc} value={loc}>
