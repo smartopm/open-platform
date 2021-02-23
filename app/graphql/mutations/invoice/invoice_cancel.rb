@@ -10,9 +10,9 @@ module Mutations
 
       def resolve(vals)
         invoice = context[:site_community].invoices
-        ActiveRecord::Base.transaction do
-          
-        end
+        raise GraphQL::ExecutionError, 'Invoice can not be cancelled' if invoice.paid?
+
+        invoice.cancelled!
 
         raise GraphQL::ExecutionError, invoice.errors.full_messages
       end
