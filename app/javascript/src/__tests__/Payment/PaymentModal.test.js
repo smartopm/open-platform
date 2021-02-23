@@ -35,7 +35,7 @@ describe('It should test the payment modal component', () => {
     )
 
     expect(container.getByTestId("transaction-type")).toBeInTheDocument()
-    expect(container.getByTestId("amount")).toBeInTheDocument()
+    expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
 
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })

@@ -30,9 +30,17 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   const [messageAlert, setMessageAlert] = useState('')
   const [promptOpen, setPromptOpen] = useState(false)
   const [paymentData, setPaymentData] = useState({})
-  
+  const [isError, setIsError] = useState(false)
+  const [submitting, setIsSubmitting] = useState(false)
+
   function handleSubmit(event) {
     event.preventDefault()
+
+    if (!inputValue.amount || !inputValue.transactionType) {
+      setIsError(true)
+      setIsSubmitting(true)
+      return
+    }
     createPayment({
       variables: {
         userId,
@@ -108,6 +116,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 step: 0.01
               }}
             required
+            error={isError && submitting && !inputValue.amount}
+            helperText={isError && !inputValue.amount && 'amount is required'}
           />
           <TextField
             margin="dense"
@@ -118,6 +128,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
             onChange={(event) => setInputValue({...inputValue, transactionType: event.target.value})}
             required
             select
+            error={isError && submitting && !inputValue.transactionType}
+            helperText={isError && !inputValue.transactionType && 'TransactionType is required'}
           >
             <MenuItem value='cash'>Cash</MenuItem>
             <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
