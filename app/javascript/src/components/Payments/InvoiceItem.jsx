@@ -57,7 +57,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         userId={userId}
         creatorId={creatorId}
         refetch={refetch}
-        currency={currencyData.currency}
+        currencyData={currencyData}
       />
       <DetailsDialog
         handleClose={() => setDetailsOpen(false)}

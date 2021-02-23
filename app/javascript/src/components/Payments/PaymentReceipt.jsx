@@ -5,8 +5,9 @@ import Divider from '@material-ui/core/Divider';
 import { FullScreenDialog } from '../Dialog'
 import Logo from '../../../../assets/images/logo.png'
 import { dateToString } from '../DateContainer';
+import { extractCurrency, formatMoney } from '../../utils/helpers';
 
-export default function PaymentReceipt({ paymentData, open, handleClose, userData, currency }){
+export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }){
   return (
     <>
       <div>
@@ -54,10 +55,10 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   {paymentData?.source}
                 </Grid>
                 <Grid item xs={4}>
-                  {paymentData?.amount}
+                  {formatMoney(currencyData, paymentData?.amount)}
                 </Grid>
                 <Grid item xs={4}>
-                  {currency}
+                  {extractCurrency(currencyData)}
                 </Grid>
               </Grid>
             </div>
@@ -110,5 +111,8 @@ PaymentReceipt.defaultProps = {
   }),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired,
 }

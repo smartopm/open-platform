@@ -387,3 +387,11 @@ export function getHexColor (range) {
   }).format(amount);
   return formatted;
  }
+
+ export function extractCurrency(currencyData) {
+   const parts = new Intl.NumberFormat(currencyData.locale, {
+     style: 'currency',
+     currency: currencyData.currency
+   }).formatToParts();
+   return parts[0]?.value;
+ }

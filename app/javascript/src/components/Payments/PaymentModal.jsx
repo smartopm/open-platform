@@ -9,7 +9,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { CustomizedDialogs } from '../Dialog'
 import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
-import { formatError } from '../../utils/helpers'
+import { extractCurrency, formatError } from '../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
 
 
@@ -21,7 +21,7 @@ const initialValues = {
   chequeNumber: '',
   transactionNumber: '',
 }
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch, userData}){
+export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -85,7 +85,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         handleClose={() => handlePromptClose()} 
         paymentData={paymentData} 
         userData={userData}
-        currency={currency}
+        currencyData={currencyData}
       />
       <CustomizedDialogs
         open={open}
@@ -103,7 +103,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
-            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+            startAdornment: <InputAdornment position="start">{extractCurrency(currencyData)}</InputAdornment>,
                 "data-testid": "amount",
                 step: 0.01
               }}
@@ -189,5 +189,8 @@ PaymentModal.propTypes = {
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 }

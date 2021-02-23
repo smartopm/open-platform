@@ -143,7 +143,7 @@ export default function TransactionsList({ userId, user, userData }) {
         creatorId={user.id}
         refetch={refetch}
         depRefetch={depRefetch}
-        currency={currency}
+        currencyData={currencyData}
         walletRefetch={walletRefetch}
       />
       <TabPanel value={tabValue} index="Transactions">
@@ -179,7 +179,7 @@ export default function TransactionsList({ userId, user, userData }) {
         open={payOpen}
         handleModalClose={() => setPayOpen(false)}
         userId={userId}
-        currency={currency} 
+        currencyData={currencyData} 
         refetch={refetch}
         depRefetch={depRefetch}
         walletRefetch={walletRefetch}
