@@ -61,6 +61,10 @@ class Invoice < ApplicationRecord
     )
   end
 
+  def modify_balance(amount)
+    user.wallet.settle_pending_balance(amount)
+  end
+
   def settle_amount
     pending_amount = amount - user.wallet.balance
     if pending_amount.positive?
