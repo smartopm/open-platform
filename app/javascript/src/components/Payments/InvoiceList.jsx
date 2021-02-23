@@ -41,6 +41,8 @@ import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
 import MenuList from '../../shared/MenuList';
+import { InvoiceCancel } from '../../graphql/mutations'
+import MessageAlert from "../MessageAlert"
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -68,6 +70,9 @@ export default function InvoiceList({ currencyData, userType }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const [cancelInvoice] = useMutation(InvoiceCancel)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
 
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
@@ -77,11 +82,23 @@ export default function InvoiceList({ currencyData, userType }) {
     setAnchorEl(null)
   }
 
-  function handleClick() {
-    console.log('got here')
+  function handleClick(invoiceId) {
+    cancelInvoice({
+      variables: {
+        invoiceId
+      }
+    }).then(() => {
+      setMessageAlert('Invoice successfully cancelled')
+      setIsSuccessAlert(true)
+      refetch()
+    })
+    .catch((err) => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+    })
   }
 
-  const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
+  const { loading, data: invoicesData, error, refetch } = useQuery(InvoicesQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'

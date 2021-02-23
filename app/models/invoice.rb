@@ -61,7 +61,8 @@ class Invoice < ApplicationRecord
     )
   end
 
-  def modify_balance(amount)
+  def modify_balance
+    return unless cancelled?
     user.wallet.settle_pending_balance(amount)
   end
 

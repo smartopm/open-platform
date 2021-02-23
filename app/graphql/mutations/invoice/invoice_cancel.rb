@@ -6,13 +6,13 @@ module Mutations
     class InvoiceCancel < BaseMutation
       argument :invoice_id, ID, required: true
 
-      field :invoice_cancel, Types::InvoiceType, null: true
+      field :invoice, Types::InvoiceType, null: true
 
-      def resolve(vals)
-        invoice = context[:site_community].invoices
-        raise GraphQL::ExecutionError, 'Invoice can not be cancelled' if invoice.paid?
+      def resolve(invoice_id:)
+        invoice = context[:site_community].invoices.find_by(id: invoice_id)
+        raise GraphQL::ExecutionError, 'Invoice can not be cancelled' if invoice.paid? || invoice.nil? || invoice.cancelled?
 
-        invoice.cancelled!
+        return { invoice: invoice.reload } if invoice.cancelled!
 
         raise GraphQL::ExecutionError, invoice.errors.full_messages
       end
