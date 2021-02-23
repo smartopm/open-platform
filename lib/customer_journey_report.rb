@@ -19,15 +19,14 @@ class CustomerJourneyReport
       construction_completed: Hash.new(0),
     }
 
-    begin
-      rows.present? && rows.each do |row|
-        sub_status, time_lapse, count = row
+    rows.present? && rows.each do |row|
+      sub_status, time_lapse, count = row
 
+      begin
         hash[sub_status.to_sym][time_lapse.to_sym] = count
+      rescue StandardError
+        # Do nothing
       end
-    rescue StandardError
-      # Eat the exception. do nothing
-      # TODO: Victor/Nicolas, DB data update on users with 'census', 'WOS' substatues
     end
 
     hash
@@ -63,7 +62,7 @@ class CustomerJourneyReport
       COUNT(*)
       FROM substatus_logs ssl
       INNER JOIN users ON ssl.id = users.latest_substatus_id
-      WHERE ssl.new_status IS NOT NULL
+      WHERE ssl.new_status IS NOT NULL AND ssl.community_id = users.community_id
       GROUP BY ssl.new_status, bucket
     QUERY
   end
