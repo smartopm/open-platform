@@ -4,12 +4,12 @@ import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
-import { string } from 'prop-types';
+import PropTypes from 'prop-types';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor } from '../../utils/helpers';
+import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor, formatMoney } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { invoiceStatus } from '../../utils/constants';
 import InvoiceTiles from './InvoiceTiles';
@@ -28,7 +28,7 @@ const invoiceHeaders = [
   { title: 'Payment Date', col: 3 },
   { title: 'Status', col: 4 }
 ];
-export default function InvoiceList({ currency }) {
+export default function InvoiceList({ currencyData }) {
   const history = useHistory();
   const path = useParamsQuery();
   const limit = 50;
@@ -95,7 +95,7 @@ export default function InvoiceList({ currency }) {
             <ListHeader headers={invoiceHeaders} />
             <DataList
               keys={invoiceHeaders}
-              data={renderInvoices(invoicesData?.invoices, currency)}
+              data={renderInvoices(invoicesData?.invoices, currencyData)}
               hasHeader={false}
             />
           </div>
@@ -122,10 +122,10 @@ export default function InvoiceList({ currency }) {
  *
  * @param {object} invoices list of tasks
  * @param {function} handleOpenMenu a function that opens the menu for each task
- * @param {String} currency community currency
+ * @param {object} currencyData community currencyData current and locale
  * @returns {object} an object with properties that DataList component uses to render
  */
-export function renderInvoices(invoices, currency) {
+export function renderInvoices(invoices, currencyData) {
   return invoices.map(invoice => {
     return {
       'Issue Date': (
@@ -150,7 +150,8 @@ export function renderInvoices(invoices, currency) {
       ),
       Amount: (
         <Grid item xs={3} md={2} data-testid="invoice_amount">
-          <Text content={`${currency}${invoice.amount}`} />
+          {/* <Text content={`${currency}${invoice.amount}`} /> */}
+          <Text content={formatMoney(currencyData, invoice.amount)} />
         </Grid>
       ),
       'Payment Date': (
@@ -179,5 +180,8 @@ export function renderInvoices(invoices, currency) {
   });
 }
 InvoiceList.propTypes = {
-  currency: string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 };

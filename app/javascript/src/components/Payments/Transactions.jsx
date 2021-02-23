@@ -151,14 +151,14 @@ export default function TransactionsList({ userId, user, userData }) {
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
-            currency={currency}
+            currencyData={currencyData}
             key={trans.id}
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
-            currency={currency}
+            currencyData={currencyData}
             key={trans?.id}
           />
         ))}
