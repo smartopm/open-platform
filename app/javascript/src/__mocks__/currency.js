@@ -1,0 +1,1 @@
+export default { currency: 'USD', locale: 'en-US'}

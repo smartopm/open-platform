@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PaymentModal from '../../components/Payments/PaymentModal'
+import currency from '../../__mocks__/currency'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the payment modal component', () => {
@@ -23,7 +24,12 @@ describe('It should test the payment modal component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <PaymentModal open={open} invoiceData={invoiceData} handleModalClose={handleModalClose} />
+          <PaymentModal 
+            open={open} 
+            invoiceData={invoiceData} 
+            handleModalClose={handleModalClose}
+            currencyData={currency}
+          />
         </MockedProvider>
       </BrowserRouter>
     )

@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { TransactionsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import PaymentList, { renderPayments } from '../../components/Payments/PaymentList';
+import currency from '../../__mocks__/currency';
 
 describe('Payment List Item Component', () => {
   const transactions = [
@@ -58,7 +59,7 @@ describe('Payment List Item Component', () => {
     const container = render(
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
-          <PaymentList currency="k" />
+          <PaymentList currencyData={currency} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -77,7 +78,7 @@ describe('Payment List Item Component', () => {
     );
   });
   it('should check if renderPayments works as expected', () => {
-    const results = renderPayments(transactions, 'k');
+    const results = renderPayments(transactions, currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('User');
     expect(results[0]).toHaveProperty('Deposit Date');

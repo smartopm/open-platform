@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import TransactionDetails from '../../components/Payments/TransactionDetails'
 import { Spinner } from '../../shared/Loading'
+import currency from '../../__mocks__/currency'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
@@ -27,12 +28,17 @@ describe('Transaction Details Component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <TransactionDetails data={dataMock} currency="k" detailsOpen handleClose={jest.fn} />
+          <TransactionDetails 
+            data={dataMock} 
+            currencyData={currency} 
+            detailsOpen 
+            handleClose={jest.fn}
+          />
         </MockedProvider>
       </BrowserRouter>)
 
     await waitFor(() => {
-      expect(container.queryAllByTestId('text-field')[0].value).toContain('k200')
+      expect(container.queryAllByTestId('text-field')[0].value).toContain('$200.00')
       expect(container.queryAllByTestId('text-field')[1].value).toContain('300')
       expect(container.queryAllByTestId('text-field')[2].value).toContain('1234')
       expect(container.queryAllByTestId('text-field')[3].value).toContain('Unpaid')

@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import InvoiceList, { renderInvoices } from '../../components/Payments/InvoiceList';
+import currency from '../../__mocks__/currency';
 
 describe('Invoice Item Component', () => {
   const invoices = [
@@ -97,7 +98,7 @@ describe('Invoice Item Component', () => {
     const container = render(
       <MockedProvider mocks={invoiceMock} addTypename={false}>
         <BrowserRouter>
-          <InvoiceList currency="k" />
+          <InvoiceList currencyData={currency} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -109,13 +110,13 @@ describe('Invoice Item Component', () => {
     await waitFor(
       () => {
         expect(container.queryAllByTestId('created_by')[0].textContent).toContain('joe');
-        expect(container.queryAllByTestId('invoice_amount')[0].textContent).toContain('k23423423');
+        expect(container.queryAllByTestId('invoice_amount')[0].textContent).toContain('$23,423,423');
       },
       { timeout: 100 }
     );
   });
   it('should check if renderInvoices works as expected', () => {
-    const results = renderInvoices(invoices, 'k');
+    const results = renderInvoices(invoices, currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Issue Date');
     expect(results[0]).toHaveProperty('User');
