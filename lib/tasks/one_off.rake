@@ -2,7 +2,7 @@
 
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
-namespace :one_off do
+namespace :import do
   desc 'Run one-off tasks'
   task create_import_template: :environment do
     user_import_template = %q{
