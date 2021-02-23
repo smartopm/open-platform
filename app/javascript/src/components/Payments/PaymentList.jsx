@@ -21,10 +21,10 @@ import currency from '../../shared/types/currency';
 import Text from '../../shared/Text';
 
 const paymentHeaders = [
-  { title: 'User', col: 2 },
-  { title: 'Deposit Date', col: 1 },
-  { title: 'Payment Type', col: 1 },
-  { title: 'Amount', col: 2, align: true }
+  { title: 'User', col: 2, align: 'left' },
+  { title: 'Deposit Date', col: 1, align: 'left' },
+  { title: 'Payment Type', col: 1, align: 'left' },
+  { title: 'Amount', col: 2, align: 'right' }
 ];
 
 export default function PaymentList({ currencyData }) {

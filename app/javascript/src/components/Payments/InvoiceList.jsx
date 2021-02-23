@@ -38,12 +38,12 @@ import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 
 const invoiceHeaders = [
-  { title: 'Issue Date', col: 2 },
-  { title: 'User', col: 4 },
-  { title: 'Description', col: 4 },
-  { title: 'Amount', col: 3, align: true },
-  { title: 'Payment Date', col: 3 },
-  { title: 'Status', col: 4 }
+  { title: 'Issue Date', col: 2, align: 'left' },
+  { title: 'User', col: 4, align: 'left' },
+  { title: 'Description', col: 4, align: 'left' },
+  { title: 'Amount', col: 3, align: 'right' },
+  { title: 'Payment Date', col: 3, align: 'left' },
+  { title: 'Status', col: 4, align: 'left' }
 ];
 export default function InvoiceList({ currencyData }) {
   const history = useHistory();

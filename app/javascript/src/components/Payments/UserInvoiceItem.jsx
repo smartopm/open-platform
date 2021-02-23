@@ -12,7 +12,7 @@ import { formatMoney, InvoiceStatusColor, propAccessor } from '../../utils/helpe
 const invoiceHeader = [
   { title: 'Issue Date', col: 4 },
   { title: 'Description', col: 4 },
-  { title: 'Amount', col: 3, align: true },
+  { title: 'Amount', col: 3 },
   { title: 'Payment Date', col: 3 },
   { title: 'Status', col: 4 }
 ];
@@ -42,7 +42,7 @@ export default function UserInvoiceItem({ invoice, currencyData }) {
 
 export function renderInvoices(inv, currencyData) {
   return {
-    'Issue Date': <GridText content={dateToString(inv.createdAt)} />,
+    'Issue Date': <GridText content={dateToString(inv.createdAt)} col={4} />,
     'Description': (
       <Grid item xs={4} md={2} data-testid="description">
         <Text content={`Invoice Number #${inv.invoiceNumber}`} /> 

@@ -12,9 +12,9 @@ export default function Text({ content, color, align, otherProps }) {
   );
 }
 
-export function GridText({ content, otherProps, col, statusColor, align }) {
+export function GridText({ content, otherProps, col, statusColor }) {
   return (
-    <Grid xs={col || true} md={align ? 1 : 2} style={statusColor ? {color: statusColor} : statusColor && align ? {textAlign: 'right', color: statusColor} : null} item>
+    <Grid xs={col || true} md={2} style={statusColor ? {color: statusColor} : null} item>
       <Text content={content} {...otherProps} />
     </Grid>
   );

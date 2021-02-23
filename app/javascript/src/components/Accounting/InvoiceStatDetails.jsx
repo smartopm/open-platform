@@ -9,10 +9,10 @@ import DataList from '../../shared/list/DataList';
 
 export default function InvoiceStatDetails({ data, currency }){
   const invoiceHeaders = [
-    { title: 'Client Name', col: 4 },
-    { title: 'Invoice Description', col: 4 },
-    { title: 'Date Issue/Due Date', col: 4 },
-    { title: 'Amount', col: 4, align: true }
+    { title: 'Client Name', col: 4, align: 'left' },
+    { title: 'Invoice Description', col: 4, align: 'left' },
+    { title: 'Date Issue/Due Date', col: 4, align: 'left' },
+    { title: 'Amount', col: 4, align: 'right' }
   ];
   return (
     <div style={{margin: '10px 125px 0 150px'}}>

@@ -109,13 +109,13 @@ module Types::Queries::Invoice
     invoices = context[:site_community].invoices
     case query
     when '00-30'
-      invoices.where('due_date >= ? AND status !=1', 30.days.ago)
+      invoices.not_paid.where('due_date >= ?', 30.days.ago)
     when '31-45'
-      invoices.where('due_date <= ? AND due_date >= ? AND status !=1', 31.days.ago, 45.days.ago)
+      invoices.not_paid.where('due_date <= ? AND due_date >= ?', 31.days.ago, 45.days.ago)
     when '46-60'
-      invoices.where('due_date <= ? AND due_date >= ? AND status !=1', 46.days.ago, 60.days.ago)
+      invoices.not_paid.where('due_date <= ? AND due_date >= ?', 46.days.ago, 60.days.ago)
     else
-      invoices.where('due_date <= ? AND status !=1', 61.days.ago)
+      invoices.not_paid.where('due_date <= ?', 61.days.ago)
     end
   end
   # rubocop:enable Metrics/MethodLength
