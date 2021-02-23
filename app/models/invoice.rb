@@ -46,7 +46,6 @@ class Invoice < ApplicationRecord
                                                        user_id: user.id,
                                                        current_wallet_balance: user.wallet.balance,
                                                        community_id: user.community_id,
-                                                       depositor_id: user.id,
                                                      })
       payment = create_payment(current_payment, user)
       payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)

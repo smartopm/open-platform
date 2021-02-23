@@ -18,17 +18,17 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
-          depositor = context[:site_community].users.find_by(id: vals[:user_id])
-          transaction = context[:current_user].wallet_transactions.create!(
+          user = context[:site_community].users.find_by(id: vals[:user_id])
+          transaction = user.wallet_transactions.create!(
             vals.except(:user_id).merge({
                                           destination: 'wallet',
                                           status: 'settled',
                                           community_id: context[:site_community]&.id,
-                                          depositor_id: depositor&.id,
+                                          depositor_id: context[:current_user].id,
                                         }),
           )
           context[:current_user].generate_events('deposit_create', transaction)
-          update_wallet_balance(depositor, transaction, vals[:amount]) if transaction.settled?
+          update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
           return { wallet_transaction: transaction } if transaction.persisted?
         end
         raise GraphQL::ExecutionError, transaction.errors.full_messages

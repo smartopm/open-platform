@@ -74,7 +74,6 @@ class Wallet < ApplicationRecord
                                        user_id: user.id,
                                        current_wallet_balance: balance,
                                        community_id: user.community_id,
-                                       depositor_id: user.id,
                                      })
   end
 end
