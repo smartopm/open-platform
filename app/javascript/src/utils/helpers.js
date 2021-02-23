@@ -381,7 +381,7 @@ export function getHexColor (range) {
  * @returns {String} formatted amount in user's locale
  */
 
- export function formatMoney(currency, amount, locale="ZM") {
+ export function formatMoney(currency, amount, locale="en-ZM") {
   var formatted = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
