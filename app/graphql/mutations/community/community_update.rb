@@ -10,6 +10,7 @@ module Mutations
       argument :support_whatsapp, GraphQL::Types::JSON, required: false
       argument :image_blob_id, String, required: false
       argument :currency, String, required: false
+      argument :locale, String, required: false
 
       field :community, Types::CommunityType, null: true
 
