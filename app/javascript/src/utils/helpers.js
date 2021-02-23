@@ -388,6 +388,11 @@ export function getHexColor (range) {
   return formatted;
  }
 
+ /**
+  * 
+  * @param {object} currencyData currency and locale
+  * @description it gets the currency from the locale, so instead of USD or ZMW, it gives $ or K
+  */
  export function extractCurrency(currencyData) {
    const parts = new Intl.NumberFormat(currencyData.locale, {
      style: 'currency',
