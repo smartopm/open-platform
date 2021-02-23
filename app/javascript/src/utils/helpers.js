@@ -375,16 +375,15 @@ export function getHexColor (range) {
 
 /**
  * @description format numbers in browser depending on the user's community
- * @param {String} currency
+ * @param {object} currencyData locale and currency
  * @param {Number} amount
- * @param {String} locale -optional
  * @returns {String} formatted amount in user's locale
  */
 
- export function formatMoney(currency, amount, locale="en-ZM") {
-  var formatted = new Intl.NumberFormat(locale, {
+ export function formatMoney(currencyData, amount) {
+   const formatted = new Intl.NumberFormat(currencyData.locale || 'en-ZM', {
     style: 'currency',
-    currency,
+    currency: currencyData.currency,
   }).format(amount);
   return formatted;
  }

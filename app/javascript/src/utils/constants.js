@@ -208,7 +208,7 @@ export const formStatus = {
 };
 
 export const currencies = {
-  zambian_kwacha: 'k'
+  zambian_kwacha: 'ZMW'
 };
 export const locales = [
   'en-IN',
