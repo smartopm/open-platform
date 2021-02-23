@@ -5,7 +5,7 @@ class Valuation < ApplicationRecord
   belongs_to :land_parcel
   validates :amount, :start_date, presence: true
   validate :start_date_cannot_be_in_the_past, :amount_limit
-  scope :latest, -> { where('start_date <= ?', Time.zone.now)&.first }
+  scope :latest, -> { where('start_date <= ?', Time.zone.now).order(start_date: :desc).first }
 
   private
 
