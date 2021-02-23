@@ -210,6 +210,13 @@ export const formStatus = {
 export const currencies = {
   zambian_kwacha: 'k'
 };
+export const locales = [
+  'en-IN',
+  'en-NG',
+  'en-UK',
+  'en-US',
+  'en-ZM',
+]
 
 export const mapTiles = {
   attribution:
