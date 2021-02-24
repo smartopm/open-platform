@@ -73,6 +73,7 @@ export default function InvoiceList({ currencyData, userType }) {
   const open = Boolean(anchorEl)
   const [modalOpen, setModalOpen] = useState(false)
   const [invoiceId, setInvoiceId] = useState(false)
+  const [name, setName] = useState('')
   const [cancelInvoice] = useMutation(InvoiceCancel)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
@@ -85,8 +86,10 @@ export default function InvoiceList({ currencyData, userType }) {
     setAnchorEl(null)
   }
 
-  function handleClick(invId) {
+  function handleClick(invId, nam){
     setInvoiceId(invId)
+    setName(nam)
+    setModalOpen(true)
   }
 
   function handleOnClick() {
@@ -97,6 +100,7 @@ export default function InvoiceList({ currencyData, userType }) {
     }).then(() => {
       setMessageAlert('Invoice successfully cancelled')
       setIsSuccessAlert(true)
+      setModalOpen(false)
       refetch()
     })
     .catch((err) => {

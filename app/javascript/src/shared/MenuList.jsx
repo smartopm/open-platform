@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
+import PropTypes from 'prop-types'
 import { Menu, MenuItem } from '@material-ui/core';
 
 export default function MenuList({
@@ -32,7 +32,7 @@ export default function MenuList({
           id={index}
           key={index}
           style={menu.color ? {color: menu.color} : null}
-          onClick={() => menu.handleClick(anchorEl.getAttribute('dataid'))}
+          onClick={() => menu.handleClick(anchorEl.getAttribute('dataid'), anchorEl.getAttribute('userName'))}
         >
           {menu.content}
         </MenuItem>
@@ -40,4 +40,16 @@ export default function MenuList({
       )}
     </Menu>
   );
+}
+
+MenuList.defaultProps = {
+  anchorEl: {},
+}
+
+MenuList.propTypes = {
+  list: PropTypes.arrayOf(PropTypes.object).isRequired,
+  open: PropTypes.bool.isRequired,
+  anchorEl: PropTypes.object,
+  handleClose: PropTypes.func.isRequired,
+  userType: PropTypes.string.isRequired
 }
