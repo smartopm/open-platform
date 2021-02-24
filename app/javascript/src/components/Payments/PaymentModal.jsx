@@ -211,15 +211,15 @@ export default function PaymentModal({
 export function PaymentDetails({ inputValue }) {
   return (
     <div>
-      <Typography variant="subtitle1" align="center" key="amount">
+      <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
         Amount:
         <b>{` ${inputValue.amount}`}</b>
       </Typography>
-      <Typography variant="subtitle1" align="center" key="type">
+      <Typography variant="subtitle1" data-testid="type" align="center" key="type">
         Transaction Type:
         <b>{` ${inputValue.transactionType}`}</b>
       </Typography>
-      <Typography variant="subtitle1" align="center" key="number">
+      <Typography variant="subtitle1" data-testid="transactionNumber" align="center" key="number">
         {inputValue.transactionNumber && (
           <>
             Transaction Number:
@@ -227,7 +227,7 @@ export function PaymentDetails({ inputValue }) {
           </>
         )}
       </Typography>
-      <Typography variant="subtitle1" align="center" key="bankName">
+      <Typography variant="subtitle1" data-testid="bankName" align="center" key="bankName">
         {inputValue.bankName && (
           <>
             Bank Name:
@@ -235,7 +235,7 @@ export function PaymentDetails({ inputValue }) {
           </>
         )}
       </Typography>
-      <Typography variant="subtitle1" align="center" key="cheque">
+      <Typography variant="subtitle1" data-testid="chequeNumber" align="center" key="cheque">
         {inputValue.chequeNumber && (
           <>
             Cheque Number:
