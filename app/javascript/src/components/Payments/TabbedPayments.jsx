@@ -29,7 +29,7 @@ export default function TabbedPayments({ authState }) {
       </StyledTabs>
 
       <TabPanel value={value} index='invoice'>
-        <InvoiceList currency={currencyData} userType={authState?.user?.userType} />
+        <InvoiceList currencyData={currencyData} userType={authState?.user?.userType} />
       </TabPanel>
       <TabPanel value={value} index='payment'>
         <PaymentList currencyData={currencyData} />
