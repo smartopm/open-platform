@@ -59,8 +59,8 @@ class Wallet < ApplicationRecord
     user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
       break unless balance.positive?
 
-      make_payment(invoice)
-      invoice.paid! if invoice.pending_amount.zero?
+      make_payment(invoice) unless invoice.cancelled?
+      invoice.paid! unless invoice.pending_amount.nonzero? && invoice.cancelled?
     end
   end
   # rubocop:enable Metrics/AbcSize

@@ -43,6 +43,7 @@ import InvoiceGraph from './InvoiceGraph'
 import MenuList from '../../shared/MenuList';
 import { InvoiceCancel } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
+import DeleteDialog from '../Business/DeleteDialogue'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -70,6 +71,8 @@ export default function InvoiceList({ currencyData, userType }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [invoiceId, setInvoiceId] = useState(false)
   const [cancelInvoice] = useMutation(InvoiceCancel)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
@@ -82,7 +85,11 @@ export default function InvoiceList({ currencyData, userType }) {
     setAnchorEl(null)
   }
 
-  function handleClick(invoiceId) {
+  function handleClick(invId) {
+    setInvoiceId(invId)
+  }
+
+  function handleOnClick() {
     cancelInvoice({
       variables: {
         invoiceId
