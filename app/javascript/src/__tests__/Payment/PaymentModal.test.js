@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PaymentModal from '../../components/Payments/PaymentModal'
+import currency from '../../__mocks__/currency'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the payment modal component', () => {
@@ -23,13 +24,18 @@ describe('It should test the payment modal component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <PaymentModal open={open} invoiceData={invoiceData} handleModalClose={handleModalClose} />
+          <PaymentModal 
+            open={open} 
+            invoiceData={invoiceData} 
+            handleModalClose={handleModalClose}
+            currencyData={currency}
+          />
         </MockedProvider>
       </BrowserRouter>
     )
 
     expect(container.getByTestId("transaction-type")).toBeInTheDocument()
-    expect(container.getByTestId("amount")).toBeInTheDocument()
+    expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
 
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })

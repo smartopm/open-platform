@@ -9,7 +9,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { CustomizedDialogs } from '../Dialog'
 import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
-import { formatError } from '../../utils/helpers'
+import { extractCurrency, formatError } from '../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
 
 
@@ -21,7 +21,7 @@ const initialValues = {
   chequeNumber: '',
   transactionNumber: '',
 }
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch, userData}){
+export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -30,9 +30,17 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
   const [messageAlert, setMessageAlert] = useState('')
   const [promptOpen, setPromptOpen] = useState(false)
   const [paymentData, setPaymentData] = useState({})
-  
+  const [isError, setIsError] = useState(false)
+  const [submitting, setIsSubmitting] = useState(false)
+
   function handleSubmit(event) {
     event.preventDefault()
+
+    if (!inputValue.amount || !inputValue.transactionType) {
+      setIsError(true)
+      setIsSubmitting(true)
+      return
+    }
     createPayment({
       variables: {
         userId,
@@ -85,7 +93,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         handleClose={() => handlePromptClose()} 
         paymentData={paymentData} 
         userData={userData}
-        currency={currency}
+        currencyData={currencyData}
       />
       <CustomizedDialogs
         open={open}
@@ -103,11 +111,13 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
-            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+            startAdornment: <InputAdornment position="start">{extractCurrency(currencyData)}</InputAdornment>,
                 "data-testid": "amount",
                 step: 0.01
               }}
             required
+            error={isError && submitting && !inputValue.amount}
+            helperText={isError && !inputValue.amount && 'amount is required'}
           />
           <TextField
             margin="dense"
@@ -118,6 +128,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
             onChange={(event) => setInputValue({...inputValue, transactionType: event.target.value})}
             required
             select
+            error={isError && submitting && !inputValue.transactionType}
+            helperText={isError && !inputValue.transactionType && 'TransactionType is required'}
           >
             <MenuItem value='cash'>Cash</MenuItem>
             <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
@@ -189,5 +201,8 @@ PaymentModal.propTypes = {
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 }

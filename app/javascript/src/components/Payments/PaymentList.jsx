@@ -6,7 +6,7 @@ import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { TransactionsQuery } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
-import { formatError, useParamsQuery } from '../../utils/helpers';
+import { formatError, formatMoney, useParamsQuery } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
@@ -23,7 +23,7 @@ const paymentHeaders = [
   { title: 'Amount', col: 2 }
 ];
 
-export default function PaymentList({ currency }) {
+export default function PaymentList({ currencyData }) {
   const limit = 50;
   const path = useParamsQuery();
   const page = path.get('page');
@@ -42,7 +42,7 @@ export default function PaymentList({ currency }) {
 
   let paymentList
   if (data?.transactions) {
-    paymentList = data.transactions.filter((fil) => fil.destination === 'wallet')
+    paymentList = data.transactions.filter((fil) => fil?.destination === 'wallet')
   }
 
   function paginate(action) {
@@ -75,7 +75,7 @@ export default function PaymentList({ currency }) {
           <ListHeader headers={paymentHeaders} />
           <DataList
             keys={paymentHeaders}
-            data={renderPayments(paymentList, currency)}
+            data={renderPayments(paymentList, currencyData)}
             hasHeader={false}
           />
         </div>
@@ -99,7 +99,7 @@ export default function PaymentList({ currency }) {
   );
 }
 
-export function renderPayments(payments, currency) {
+export function renderPayments(payments, currencyData) {
   return payments?.map(payment => {
     return {
       'User': (
@@ -128,7 +128,7 @@ export function renderPayments(payments, currency) {
       ),
       Amount: (
         <Grid item xs={4} md={2}>
-          <span>{`${currency}${payment.amount || 0}`}</span>
+          <span>{formatMoney(currencyData, payment.amount)}</span>
         </Grid>
       )
     };
@@ -136,5 +136,8 @@ export function renderPayments(payments, currency) {
 }
 
 PaymentList.propTypes = {
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 };

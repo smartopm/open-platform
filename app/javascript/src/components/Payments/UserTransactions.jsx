@@ -8,6 +8,7 @@ import { dateToString } from '../DateContainer';
 import CenteredContent from '../CenteredContent';
 import Label from '../../shared/label/Label';
 import TransactionDetails from './TransactionDetails'
+import { formatMoney } from '../../utils/helpers';
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
@@ -17,7 +18,7 @@ const transactionHeader = [
   { title: 'Status', col: 1 }
 ];
 
-export default function UserTransactionsList({ transaction, currency }) {
+export default function UserTransactionsList({ transaction, currencyData }) {
   const [open, setOpen] = useState(false)
 
   if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
@@ -27,7 +28,7 @@ export default function UserTransactionsList({ transaction, currency }) {
     <div>
       <DataList 
         keys={transactionHeader} 
-        data={[renderTransactions(transaction, currency)]} 
+        data={[renderTransactions(transaction, currencyData)]} 
         hasHeader={false} 
         clickable
         handleClick={() => setOpen(true)} 
@@ -36,14 +37,14 @@ export default function UserTransactionsList({ transaction, currency }) {
         detailsOpen={open} 
         handleClose={() => setOpen(false)} 
         data={transaction}
-        currency={currency}
+        currencyData={currencyData}
         title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
       />
     </div>
   )
 }
 
-export function renderTransactions(transaction, currency) {
+export function renderTransactions(transaction, currencyData) {
   return {
     'Date Created': <GridText col={4} content={transaction.__typename === 'WalletTransaction' ? `Deposit date ${dateToString(transaction.createdAt)}` : `Issue date ${dateToString(transaction.createdAt)}`} />,
     // eslint-disable-next-line no-nested-ternary
@@ -51,10 +52,10 @@ export function renderTransactions(transaction, currency) {
     Amount: (
       <Grid item xs={3} md={2} data-testid="description">
         {transaction.__typename === 'WalletTransaction' ? (
-          <Text content={`${currency}${transaction.amount}`} /> 
+          <Text content={formatMoney(currencyData, transaction.amount)} /> 
         ) : (
           <Tooltip placement="top" title="Pending Amount">
-            <span style={{fontSize: '0.75rem'}}>{`**${currency}${transaction.pendingAmount}`}</span>
+            <span style={{fontSize: '0.75rem'}}>{formatMoney(currencyData, transaction.pendingAmount)}</span>
           </Tooltip>
         )}
       </Grid>), 
@@ -62,9 +63,9 @@ export function renderTransactions(transaction, currency) {
       statusColor={transaction.__typename !== 'WalletTransaction' && '#D65252'}
       col={3} 
       content={transaction.__typename === 'WalletTransaction' 
-              ? `${currency}${transaction.currentWalletBalance}` 
+              ? formatMoney(currencyData, transaction.currentWalletBalance)
               : (
-                  `-${currency}${transaction.balance}`
+                  `-${formatMoney(currencyData, transaction.balance)}`
               )}
     />,
     'Status': (
@@ -87,5 +88,8 @@ export function renderTransactions(transaction, currency) {
 UserTransactionsList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   transaction: PropTypes.object.isRequired,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired,
 };

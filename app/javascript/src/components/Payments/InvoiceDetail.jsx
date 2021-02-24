@@ -5,8 +5,9 @@ import { DetailsDialog } from '../Dialog'
 import DetailsField from './DetailField'
 import { invoiceStatus } from '../../utils/constants';
 import { dateToString } from '../DateContainer';
+import { formatMoney } from '../../utils/helpers';
 
-export  default function InvoiceDetails({ data, detailsOpen, handleClose, currency }){
+export  default function InvoiceDetails({ data, detailsOpen, handleClose, currencyData }){
   return (
     <>
       <DetailsDialog
@@ -24,7 +25,7 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
         />
         <DetailsField
           title='Amount'
-          value={`${currency}${data?.amount}`}
+          value={formatMoney(currencyData, data?.amount)}
         />
         <DetailsField
           title='Status'
@@ -43,7 +44,7 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
                   {`Paid: ${dateToString(pay.createdAt)}`}
                 </Typography>
                 <Typography style={{marginRight: '10px'}}>
-                  {`${currency}${pay.amount}`}
+                  {formatMoney(currencyData, pay.amount)}
                 </Typography>
                 <Typography style={{marginRight: '10px'}}>
                   {pay.paymentType}
@@ -63,7 +64,10 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
 InvoiceDetails.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object.isRequired,
-  currency: PropTypes.string.isRequired,
+  currencyData: PropTypes.shape({
+      currency: PropTypes.string,
+      locale: PropTypes.string
+  }).isRequired,
   detailsOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired
 };
