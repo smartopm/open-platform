@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
@@ -45,6 +45,13 @@ export default function PaymentModal({
     event.preventDefault();
     setIsConfirm(true);
   }
+
+  // reset bank details when transaction type is changed
+  // To avoid wrong details with wrong transaction type e.g: Cheque Number when paid using cash
+  useEffect(() => {
+    setInputValue({ ...inputValue, bankName: '', chequeNumber: '' })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue.transactionType])
 
   function cancelPayment() {
     if (isConfirm) {
