@@ -49,6 +49,7 @@ MenuList.defaultProps = {
 MenuList.propTypes = {
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   open: PropTypes.bool.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
   userType: PropTypes.string.isRequired
