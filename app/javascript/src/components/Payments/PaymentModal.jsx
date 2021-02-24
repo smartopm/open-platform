@@ -110,7 +110,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         cancelAction={isConfirm ? 'Go Back' : 'Cancel'}
       >
         {
-          isConfirm ? <PaymentDetails />
+          isConfirm ? <PaymentDetails inputValue={inputValue} />
         : (
           <>
             <div className={classes.invoiceForm}>
@@ -188,21 +188,32 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
   )
 }
 
-export function PaymentDetails(){
+export function PaymentDetails({ inputValue }){
   return (
-    <>
-      <ul>
-        <Typography variant="subtitle1" align="center" key='amount'>
-          Amount: k3000
-        </Typography>
-        <Typography variant="subtitle1" align="center" key='type'>
-          Transaction Type: Cash
-        </Typography>
-        <Typography variant="subtitle1" align="center" key='number'>
-          Transaction Number: 2934239432
-        </Typography>
-      </ul>
-    </>
+    <div>
+      <Typography variant="subtitle1" align="center" key='amount'>
+        Amount:
+        <b>{inputValue.amount}</b>
+      </Typography>
+      <Typography variant="subtitle1" align="center" key='type'>
+        {`Transaction Type: <b>${inputValue.transactionType}</b>`}
+      </Typography>
+      <Typography variant="subtitle1" align="center" key='number'>
+        {
+            inputValue.transactionNumber && `Transaction Number: ${inputValue.transactionNumber}`
+          }
+      </Typography>
+      <Typography variant="subtitle1" align="center" key='bankName'>
+        {
+            inputValue.bankName && `Bank Name: ${inputValue.bankName}`
+          }
+      </Typography>
+      <Typography variant="subtitle1" align="center" key='cheque'>
+        {
+            inputValue.chequeNumber && `Cheque Number: ${inputValue.chequeNumber}`
+          }
+      </Typography>
+    </div>
   )
 }
 
@@ -213,6 +224,17 @@ const useStyles = makeStyles({
     width: '500px'
   }
 });
+
+PaymentDetails.propTypes = {
+  inputValue: PropTypes.shape({
+    amount: PropTypes.string.isRequired,
+    transactionType: PropTypes.string.isRequired,
+    status: PropTypes.string,
+    bankName: PropTypes.string,
+    chequeNumber: PropTypes.string,
+    transactionNumber: PropTypes.string,
+  }).isRequired
+}
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
