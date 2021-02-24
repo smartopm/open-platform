@@ -11,9 +11,6 @@ class UserImportJob < ApplicationJob
   # rubocop:disable Metrics/PerceivedComplexity
   def perform(csv_string, csv_file_name, current_user)
     errors = {}
-    no_of_duplicates = 0
-    no_of_invalid = 0
-    no_of_valid = 0
 
     csv = CSV.new(csv_string, headers: true)
     ActiveRecord::Base.transaction do
@@ -30,9 +27,14 @@ class UserImportJob < ApplicationJob
         notes      = row['Notes on client']&.strip
         phone_list = [phone, phone1, phone2].reject(&:blank?)
 
-        if user_already_present?(email, phone_list)
-          errors[index + 1] = ['User already exists']
-          no_of_duplicates += 1
+        dup_user = duplicate_user(email, phone_list, current_user.community)
+        if dup_user.present?
+          labels.each do |lab|
+            unless dup_user.labels.find_by(short_desc: lab)
+              dup_user.labels.create!(community: dup_user.community, short_desc: lab)
+            end
+          end
+
           next
         end
 
@@ -55,21 +57,16 @@ class UserImportJob < ApplicationJob
           user.labels << label unless user.labels.exists?(label.id)
         end
 
-        if user.save
-          no_of_valid += 1
-        else
-          errors[index + 1] = user.errors.full_messages
-          no_of_invalid += 1
-        end
+        errors[index + 1] = user.errors.full_messages unless user.save
       end
 
-      raise ActiveRecord::Rollback if !errors.empty? || no_of_duplicates.positive?
+      raise ActiveRecord::Rollback unless errors.empty?
     end
 
     current_user.import_logs.create!(
       import_errors: errors.to_json,
       file_name: csv_file_name,
-      failed: (!errors.empty? || no_of_duplicates.positive?),
+      failed: !errors.empty?,
       community: current_user.community,
     )
   end
@@ -81,14 +78,14 @@ class UserImportJob < ApplicationJob
 
   private
 
-  def user_already_present?(email, phone_list)
-    ::User.where.not(email: nil).where(email: email).or(
-      ::User.where(phone_number: phone_list),
-    ).present? ||
-      ::User.joins(:contact_infos).where(contact_infos:
+  def duplicate_user(email, phone_list, community)
+    ::User.where.not(email: nil).where(email: email, community: community).or(
+      ::User.where(phone_number: phone_list, community: community),
+    ).first ||
+      ::User.where(community: community).joins(:contact_infos).where(contact_infos:
         { contact_type: 'email', info: email }).or(
-          ::User.joins(:contact_infos).where(contact_infos:
+          ::User.where(community: community).joins(:contact_infos).where(contact_infos:
           { contact_type: 'phone', info: phone_list }),
-        ).present?
+        ).first
   end
 end
