@@ -381,9 +381,9 @@ export function getHexColor (range) {
  */
 
  export function formatMoney(currencyData, amount) {
-   const formatted = new Intl.NumberFormat(currencyData.locale || 'en-ZM', {
+   const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
     style: 'currency',
-    currency: currencyData.currency,
+    currency: currencyData?.currency,
   }).format(amount);
   return formatted;
  }
@@ -394,9 +394,9 @@ export function getHexColor (range) {
   * @description it gets the currency from the locale, so instead of USD or ZMW, it gives $ or K
   */
  export function extractCurrency(currencyData) {
-   const parts = new Intl.NumberFormat(currencyData.locale, {
+   const parts = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
      style: 'currency',
-     currency: currencyData.currency
+     currency: currencyData?.currency
    }).formatToParts();
    return parts[0]?.value;
  }
