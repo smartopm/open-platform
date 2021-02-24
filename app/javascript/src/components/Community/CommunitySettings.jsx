@@ -13,7 +13,7 @@ import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../MessageAlert';
 import { useFileUpload } from '../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
-import { currencies } from '../../utils/constants';
+import { currencies, locales } from '../../utils/constants';
 import ImageAuth from '../../shared/ImageAuth';
 
 export default function CommunitySettings({ data, token, refetch }) {
@@ -40,6 +40,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [inputImg, setInputImg] = useState('');
   const [fileName, setFileName] = useState('');
   const [currency, setCurrency] = useState('');
+  const [locale, setLocale] = useState('en-ZM');
   const [showCropper, setShowCropper] = useState(false);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -160,7 +161,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         supportEmail: emailOptions,
         supportWhatsapp: whatsappOptions,
         imageBlobId: signedBlobId,
-        currency
+        currency,
+        locale
       }
     })
       .then(() => {
@@ -183,6 +185,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     setNumberOptions(data.supportNumber || [numbers]);
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setCurrency(data.currency);
+    setLocale(data.locale);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -295,10 +298,29 @@ export default function CommunitySettings({ data, token, refetch }) {
           value={currency}
           onChange={event => setCurrency(event.target.value)}
           name="currency"
+          margin="normal"
+          inputProps={{ "data-testid": "currency"}}
         >
           {Object.entries(currencies).map(([key, val]) => (
             <MenuItem key={key} value={key}>
               {val}
+            </MenuItem>
+          ))}
+        </TextField>
+        <br />
+        <TextField
+          style={{ width: '200px' }}
+          select
+          label="Set Locale"
+          value={locale}
+          onChange={event => setLocale(event.target.value)}
+          name="locale"
+          margin="normal"
+          inputProps={{ "data-testid": "locale"}}
+        >
+          {locales.map((loc) => (
+            <MenuItem key={loc} value={loc}>
+              {loc}
             </MenuItem>
           ))}
         </TextField>
@@ -327,7 +349,8 @@ CommunitySettings.propTypes = {
     supportEmail: PropTypes.arrayOf(PropTypes.object),
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     imageUrl: PropTypes.string,
-    currency: PropTypes.string
+    currency: PropTypes.string,
+    locale: PropTypes.string
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired

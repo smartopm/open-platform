@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PaymentModal, { PaymentDetails } from '../../components/Payments/PaymentModal'
+import currency from '../../__mocks__/currency'
 
 // jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the payment modal component', () => {
@@ -23,13 +24,18 @@ describe('It should test the payment modal component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <PaymentModal open={open} invoiceData={invoiceData} handleModalClose={handleModalClose} />
+          <PaymentModal 
+            open={open} 
+            invoiceData={invoiceData} 
+            handleModalClose={handleModalClose}
+            currencyData={currency}
+          />
         </MockedProvider>
       </BrowserRouter>
     )
 
     expect(container.getByTestId("transaction-type")).toBeInTheDocument()
-    expect(container.getByTestId("amount")).toBeInTheDocument()
+    expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
 
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })
@@ -47,9 +53,9 @@ describe('Test Payment Details Screen', () => {
   }
   it('it should render payment details ', () => {
     const container = render(
-      <PaymentDetails inputValue={inputValue} />
+      <PaymentDetails inputValue={inputValue} currencyData={currency} />
     )
-    expect(container.queryByTestId('amount').textContent).toContain('Amount: 200')
+    expect(container.queryByTestId('amount').textContent).toContain('Amount: $200.00')
     expect(container.queryByTestId('type').textContent).toContain('Transaction Type: cash')
     expect(container.queryByTestId('transactionNumber').textContent).toContain('Transaction Number: R45F112')
     expect(container.queryByTestId('chequeNumber').textContent).toContain('Cheque Number: 423-22223-099')

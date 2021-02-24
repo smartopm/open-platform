@@ -372,3 +372,31 @@ export function getHexColor (range) {
     : '#FFEDA0'
   )
 }
+
+/**
+ * @description format numbers in browser depending on the user's community
+ * @param {object} currencyData locale and currency
+ * @param {Number} amount
+ * @returns {String} formatted amount in user's locale
+ */
+
+ export function formatMoney(currencyData, amount) {
+   const formatted = new Intl.NumberFormat(currencyData.locale || 'en-ZM', {
+    style: 'currency',
+    currency: currencyData.currency,
+  }).format(amount);
+  return formatted;
+ }
+
+ /**
+  * 
+  * @param {object} currencyData currency and locale
+  * @description it gets the currency from the locale, so instead of USD or ZMW, it gives $ or K
+  */
+ export function extractCurrency(currencyData) {
+   const parts = new Intl.NumberFormat(currencyData.locale, {
+     style: 'currency',
+     currency: currencyData.currency
+   }).formatToParts();
+   return parts[0]?.value;
+ }

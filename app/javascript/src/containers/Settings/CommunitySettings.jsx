@@ -3,7 +3,7 @@ import {  useQuery } from 'react-apollo'
 import CommunitySettingsPage from '../../components/Community/CommunitySettings'
 import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
-import { CommunityQuery } from '../../graphql/queries'
+import { CommunityQuery } from '../../graphql/queries/community'
 import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 

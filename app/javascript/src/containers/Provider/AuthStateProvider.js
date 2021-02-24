@@ -39,6 +39,7 @@ const QUERY = gql`
         supportWhatsapp
         imageUrl
         currency
+        locale
       }
     }
   }

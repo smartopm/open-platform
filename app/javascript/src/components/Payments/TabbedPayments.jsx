@@ -14,6 +14,7 @@ export default function TabbedPayments({ authState }) {
   const [value, setValue] = useState(tab || 'invoice');
   const history = useHistory()
   const currency = currencies[authState.user?.community.currency] || '';
+  const currencyData = {currency, locale: authState.user?.community.locale }
 
   function handleChange(_event, newValue) {
     history.push(`/payments?tab=${newValue}`);
@@ -27,10 +28,10 @@ export default function TabbedPayments({ authState }) {
       </StyledTabs>
 
       <TabPanel value={value} index='invoice'>
-        <InvoiceList currency={currency} />
+        <InvoiceList currencyData={currencyData} />
       </TabPanel>
       <TabPanel value={value} index='payment'>
-        <PaymentList currency={currency} />
+        <PaymentList currencyData={currencyData} />
       </TabPanel>
     </>
   );

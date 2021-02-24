@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import InvoiceModal from './invoiceModal'
-import { formatError, useParamsQuery } from '../../utils/helpers'
+import { formatError, formatMoney, useParamsQuery } from '../../utils/helpers'
 import { TransactionQuery, AllTransactionQuery, UserBalance } from '../../graphql/queries'
 import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
@@ -36,7 +36,6 @@ export default function TransactionsList({ userId, user, userData }) {
       errorPolicy: 'all'
     }
   )
-
   const { loading: walletLoading, data: walletData, error: walletError, refetch: walletRefetch } = useQuery(
     UserBalance,
     {
@@ -70,6 +69,8 @@ export default function TransactionsList({ userId, user, userData }) {
   ];
 
   const currency = currencies[user.community.currency] || ''
+  const { locale } = user.community
+  const currencyData = { currency, locale }
   const [tabValue, setTabValue] = useState('Invoices')
 
   function handleModalOpen() {
@@ -113,8 +114,8 @@ export default function TransactionsList({ userId, user, userData }) {
       <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
         <Typography variant='caption'>Total Balance</Typography>
         <div style={{display: 'flex', flexDirection: 'row' }}>
-          <Typography style={{marginTop: '50px'}} variant="caption" color='primary'>{currency}</Typography>
-          <Typography variant="h2" color='primary'>{walletData.userBalance}</Typography>
+          {/* <Typography style={{marginTop: '50px'}} variant="caption" color='primary'>{currency}</Typography> */}
+          <Typography variant="h2" color='primary'>{formatMoney(currencyData, walletData.userBalance)}</Typography>
         </div>
       </div>
       {
@@ -142,7 +143,7 @@ export default function TransactionsList({ userId, user, userData }) {
         creatorId={user.id}
         refetch={refetch}
         depRefetch={depRefetch}
-        currency={currency}
+        currencyData={currencyData}
         walletRefetch={walletRefetch}
       />
       <TabPanel value={tabValue} index="Transactions">
@@ -150,14 +151,14 @@ export default function TransactionsList({ userId, user, userData }) {
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
-            currency={currency}
+            currencyData={currencyData}
             key={trans.id}
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
-            currency={currency}
+            currencyData={currencyData}
             key={trans?.id}
           />
         ))}
@@ -169,7 +170,7 @@ export default function TransactionsList({ userId, user, userData }) {
             <UserInvoiceItem
               key={inv.id} 
               invoice={inv}
-              currency={currency}
+              currencyData={currencyData}
             />
           ))
         }
@@ -178,7 +179,7 @@ export default function TransactionsList({ userId, user, userData }) {
         open={payOpen}
         handleModalClose={() => setPayOpen(false)}
         userId={userId}
-        currency={currency} 
+        currencyData={currencyData} 
         refetch={refetch}
         depRefetch={depRefetch}
         walletRefetch={walletRefetch}
@@ -210,7 +211,8 @@ TransactionsList.propTypes = {
     community: PropTypes.shape({
       imageUrl: PropTypes.string,
       name: PropTypes.string,
-      currency: PropTypes.string
+      currency: PropTypes.string,
+      locale: PropTypes.string
     }).isRequired
   }).isRequired
 }

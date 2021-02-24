@@ -12,8 +12,9 @@ import { invoiceStatus } from '../../utils/constants'
 import { DetailsDialog } from '../Dialog'
 import DetailsField from './DetailField'
 import DataList from '../../shared/list/DataList';
+import { formatMoney } from '../../utils/helpers'
 
-export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType, currency }) {
+export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType, currencyData }) {
   const classes = useStyles();
   const history = useHistory()
   const [open, setOpen] = useState(false)
@@ -42,7 +43,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
   function outstandingPay() {
     const payAmount = invoice?.payments?.map(pay => pay.amount).reduce((prev, curr) => prev + curr, 0)
     if (invoice.amount - payAmount > 0 && invoice.status !== 'cancelled') {
-      return `**outanding payment is ${currency}${invoice.amount - payAmount}`
+      return `**outanding payment is ${formatMoney(currencyData, invoice.amount - payAmount)}`
     }
     return ''
   }
@@ -56,7 +57,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         userId={userId}
         creatorId={creatorId}
         refetch={refetch}
-        currency={currency}
+        currencyData={currencyData}
       />
       <DetailsDialog
         handleClose={() => setDetailsOpen(false)}
@@ -69,7 +70,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         />
         <DetailsField
           title='Amount'
-          value={`${currency}${invoice?.amount}`} 
+          value={formatMoney(currencyData, invoice?.amount)} 
         />
         <DetailsField
           title='Date Created'
@@ -100,7 +101,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
       </DetailsDialog>
       <DataList
         keys={keys}
-        data={[renderInvoices(invoice, userType, currency, handleOpenPayment)]}
+        data={[renderInvoices(invoice, userType, currencyData, handleOpenPayment)]}
         hasHeader={false}
         clickable={{status: true, onclick: handleDetailsOpen}}
       /> 
@@ -108,7 +109,7 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
   )
 }
 
-export function renderInvoices(invoice, userType, currency, handleOpenPayment) {
+export function renderInvoices(invoice, userType, currencyData, handleOpenPayment) {
   function createdBy() {
     if (invoice?.createdBy === null) {
       return 'Not Available'
@@ -116,12 +117,12 @@ export function renderInvoices(invoice, userType, currency, handleOpenPayment) {
     return invoice?.createdBy?.name
   }
 
-  return (
-    {
+  return {
       'Amount': (
         <Grid item xs={2} data-testid="amount"> 
-          {currency}
-          {invoice?.amount} 
+          {
+            formatMoney(currencyData, invoice?.amount)
+          }
         </Grid>
       ),
       'LandParcel': (
@@ -160,7 +161,6 @@ export function renderInvoices(invoice, userType, currency, handleOpenPayment) {
         </Grid>
       )
     }
-  )
 } 
 
 InvoiceItem.propTypes = {
@@ -180,7 +180,10 @@ InvoiceItem.propTypes = {
   creatorId: PropTypes.string.isRequired,
   userType: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired,
 }
 
 const useStyles = makeStyles(() => ({

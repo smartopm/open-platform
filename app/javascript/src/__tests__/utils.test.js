@@ -13,7 +13,9 @@ import {
   formatError,
   generateId,
   propAccessor,
-  toCamelCase
+  toCamelCase,
+  formatMoney,
+  extractCurrency
 } from '../utils/helpers'
 
 const message =
@@ -190,5 +192,18 @@ describe('titleize', () => {
   it('should return a converted string to camelCase', () => {
     expect(toCamelCase('snake_case')).toBe('snakeCase')
     expect(toCamelCase('snake_case_again_and_again')).toBe('snakeCaseAgainAndAgain')
+  })
+})
+
+describe('currency', () => {
+  const details = {
+    locale: 'en-US',
+    currency: 'USD'
+  }
+  it('should return the correctly formatted amount', () => {
+    expect(formatMoney(details, 100)).toBe('$100.00')
+  })
+  it('should get the currency from the given locale', () => {
+    expect(extractCurrency(details)).toBe('$')
   })
 })
