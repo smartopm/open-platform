@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { Typography } from '@material-ui/core';
 import { CustomizedDialogs } from '../Dialog'
 import { PaymentCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
@@ -30,7 +31,20 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
   const [messageAlert, setMessageAlert] = useState('')
   const [promptOpen, setPromptOpen] = useState(false)
   const [paymentData, setPaymentData] = useState({})
+  const [isConfirm, setIsConfirm] = useState(false)
+
+  function confirm(event){
+    event.preventDefault()
+    setIsConfirm(true)
+  }
   
+  function cancelPayment(){
+    if (isConfirm) {
+      setIsConfirm(false)
+      return
+    }
+    handleModalClose()
+  }
   function handleSubmit(event) {
     event.preventDefault()
     createPayment({
@@ -89,53 +103,59 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
       />
       <CustomizedDialogs
         open={open}
-        handleModal={handleModalClose}
-        dialogHeader='Make a Payment'
-        handleBatchFilter={handleSubmit}
+        handleModal={cancelPayment}
+        dialogHeader={isConfirm ? 'You are about to make a payment with following details' : 'Make a Payment'}
+        handleBatchFilter={isConfirm ? handleSubmit : confirm}
+        saveAction={isConfirm ? 'Confirm' : 'Pay'}
+        cancelAction={isConfirm ? 'Go Back' : 'Cancel'}
       >
-        <div className={classes.invoiceForm}>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="amount"
-            label="Amount"
-            type='number'
-            value={inputValue.amount}
-            onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
-            InputProps={{
+        {
+          isConfirm ? <PaymentDetails />
+        : (
+          <>
+            <div className={classes.invoiceForm}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="amount"
+                label="Amount"
+                type='number'
+                value={inputValue.amount}
+                onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
+                InputProps={{
             startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
                 "data-testid": "amount",
                 step: 0.01
               }}
-            required
-          />
-          <TextField
-            margin="dense"
-            id="transaction-type"
-            inputProps={{ "data-testid": "transaction-type" }}
-            label="Transaction Type"
-            value={inputValue.transactionType}
-            onChange={(event) => setInputValue({...inputValue, transactionType: event.target.value})}
-            required
-            select
-          >
-            <MenuItem value='cash'>Cash</MenuItem>
-            <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
-            <MenuItem value='mobile_money'>Mobile Money</MenuItem>
-            <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
-            <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
-            <MenuItem value='pos'>Point of Sale</MenuItem>
-          </TextField>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="transaction-number"
-            label="Transaction Number"
-            type='string'
-            value={inputValue.transactionNumber}
-            onChange={(event) => setInputValue({...inputValue, transactionNumber: event.target.value})}
-          />
-          {
+                required
+              />
+              <TextField
+                margin="dense"
+                id="transaction-type"
+                inputProps={{ "data-testid": "transaction-type" }}
+                label="Transaction Type"
+                value={inputValue.transactionType}
+                onChange={(event) => setInputValue({...inputValue, transactionType: event.target.value})}
+                required
+                select
+              >
+                <MenuItem value='cash'>Cash</MenuItem>
+                <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
+                <MenuItem value='mobile_money'>Mobile Money</MenuItem>
+                <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
+                <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
+                <MenuItem value='pos'>Point of Sale</MenuItem>
+              </TextField>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="transaction-number"
+                label="Transaction Number"
+                type='string'
+                value={inputValue.transactionNumber}
+                onChange={(event) => setInputValue({...inputValue, transactionNumber: event.target.value})}
+              />
+              {
             inputValue.transactionType === 'cheque/cashier_cheque' && (
               <>
                 <TextField
@@ -159,8 +179,29 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
               </>
             )
           }
-        </div>
+            </div>
+          </>
+      )
+}
       </CustomizedDialogs>
+    </>
+  )
+}
+
+export function PaymentDetails(){
+  return (
+    <>
+      <ul>
+        <Typography variant="subtitle1" align="center" key='amount'>
+          Amount: k3000
+        </Typography>
+        <Typography variant="subtitle1" align="center" key='type'>
+          Transaction Type: Cash
+        </Typography>
+        <Typography variant="subtitle1" align="center" key='number'>
+          Transaction Number: 2934239432
+        </Typography>
+      </ul>
     </>
   )
 }
