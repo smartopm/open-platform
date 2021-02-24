@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { useMutation } from 'react-apollo'
-import { useHistory } from 'react-router-dom'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useMutation } from 'react-apollo';
+import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { Typography } from '@material-ui/core';
-import { CustomizedDialogs } from '../Dialog'
-import { PaymentCreate } from '../../graphql/mutations'
-import MessageAlert from "../MessageAlert"
-import { formatError } from '../../utils/helpers'
-import ReceiptModal from './ReceiptModal'
-
+import { CustomizedDialogs } from '../Dialog';
+import { PaymentCreate } from '../../graphql/mutations';
+import MessageAlert from '../MessageAlert';
+import { formatError } from '../../utils/helpers';
+import ReceiptModal from './ReceiptModal';
 
 const initialValues = {
   amount: '',
@@ -20,33 +19,42 @@ const initialValues = {
   status: 'pending',
   bankName: '',
   chequeNumber: '',
-  transactionNumber: '',
-}
-export default function PaymentModal({ open, handleModalClose, userId, currency, refetch, depRefetch, walletRefetch, userData}){
+  transactionNumber: ''
+};
+export default function PaymentModal({
+  open,
+  handleModalClose,
+  userId,
+  currency,
+  refetch,
+  depRefetch,
+  walletRefetch,
+  userData
+}) {
   const classes = useStyles();
-  const history = useHistory()
-  const [inputValue, setInputValue] = useState(initialValues)
-  const [createPayment] = useMutation(PaymentCreate)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
-  const [promptOpen, setPromptOpen] = useState(false)
-  const [paymentData, setPaymentData] = useState({})
-  const [isConfirm, setIsConfirm] = useState(false)
+  const history = useHistory();
+  const [inputValue, setInputValue] = useState(initialValues);
+  const [createPayment] = useMutation(PaymentCreate);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [paymentData, setPaymentData] = useState({});
+  const [isConfirm, setIsConfirm] = useState(false);
 
-  function confirm(event){
-    event.preventDefault()
-    setIsConfirm(true)
+  function confirm(event) {
+    event.preventDefault();
+    setIsConfirm(true);
   }
-  
-  function cancelPayment(){
+
+  function cancelPayment() {
     if (isConfirm) {
-      setIsConfirm(false)
-      return
+      setIsConfirm(false);
+      return;
     }
-    handleModalClose()
+    handleModalClose();
   }
   function handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
     createPayment({
       variables: {
         userId,
@@ -55,38 +63,40 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         status: inputValue.status,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
-        transactionNumber: inputValue.transactionNumber,
+        transactionNumber: inputValue.transactionNumber
       }
-    }).then((res) => {
-      setMessageAlert('Payment made successfully')
-      setIsSuccessAlert(true)
-      handleModalClose()
-      refetch()
-      depRefetch()
-      walletRefetch()
-      setPaymentData(res.data.walletTransactionCreate.walletTransaction)
-      setPromptOpen(true)
-    }).catch((err) => {
-      handleModalClose()
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
-      history.push(`/user/${userId}?tab=Payments`)
     })
+      .then(res => {
+        setMessageAlert('Payment made successfully');
+        setIsSuccessAlert(true);
+        handleModalClose();
+        refetch();
+        depRefetch();
+        walletRefetch();
+        setPaymentData(res.data.walletTransactionCreate.walletTransaction);
+        setPromptOpen(true);
+      })
+      .catch(err => {
+        handleModalClose();
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
+        history.push(`/user/${userId}?tab=Payments`);
+      });
   }
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
-      return
+      return;
     }
-    setMessageAlert('')
+    setMessageAlert('');
   }
 
   function handlePromptClose() {
-    setPromptOpen(false)
-    history.push(`/user/${userId}?tab=Payments`)
+    setPromptOpen(false);
+    history.push(`/user/${userId}?tab=Payments`);
   }
 
-  return(
+  return (
     <>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
@@ -94,24 +104,26 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <ReceiptModal 
-        open={promptOpen} 
-        handleClose={() => handlePromptClose()} 
-        paymentData={paymentData} 
+      <ReceiptModal
+        open={promptOpen}
+        handleClose={() => handlePromptClose()}
+        paymentData={paymentData}
         userData={userData}
         currency={currency}
       />
       <CustomizedDialogs
         open={open}
         handleModal={cancelPayment}
-        dialogHeader={isConfirm ? 'You are about to make a payment with following details' : 'Make a Payment'}
+        dialogHeader={
+          isConfirm ? 'You are about to make a payment with following details' : 'Make a Payment'
+        }
         handleBatchFilter={isConfirm ? handleSubmit : confirm}
         saveAction={isConfirm ? 'Confirm' : 'Pay'}
         cancelAction={isConfirm ? 'Go Back' : 'Cancel'}
       >
-        {
-          isConfirm ? <PaymentDetails inputValue={inputValue} />
-        : (
+        {isConfirm ? (
+          <PaymentDetails inputValue={inputValue} />
+        ) : (
           <>
             <div className={classes.invoiceForm}>
               <TextField
@@ -119,102 +131,113 @@ export default function PaymentModal({ open, handleModalClose, userId, currency,
                 margin="dense"
                 id="amount"
                 label="Amount"
-                type='number'
+                type="number"
                 value={inputValue.amount}
-                onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
+                onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
                 InputProps={{
-            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-                "data-testid": "amount",
-                step: 0.01
-              }}
+                  startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                  'data-testid': 'amount',
+                  step: 0.01
+                }}
                 required
               />
               <TextField
                 margin="dense"
                 id="transaction-type"
-                inputProps={{ "data-testid": "transaction-type" }}
+                inputProps={{ 'data-testid': 'transaction-type' }}
                 label="Transaction Type"
                 value={inputValue.transactionType}
-                onChange={(event) => setInputValue({...inputValue, transactionType: event.target.value})}
+                onChange={event =>
+                  setInputValue({ ...inputValue, transactionType: event.target.value })}
                 required
                 select
               >
-                <MenuItem value='cash'>Cash</MenuItem>
-                <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
-                <MenuItem value='mobile_money'>Mobile Money</MenuItem>
-                <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
-                <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
-                <MenuItem value='pos'>Point of Sale</MenuItem>
+                <MenuItem value="cash">Cash</MenuItem>
+                <MenuItem value="cheque/cashier_cheque">Cheque/Cashier Cheque</MenuItem>
+                <MenuItem value="mobile_money">Mobile Money</MenuItem>
+                <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
+                <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
+                <MenuItem value="pos">Point of Sale</MenuItem>
               </TextField>
               <TextField
                 autoFocus
                 margin="dense"
                 id="transaction-number"
                 label="Transaction Number"
-                type='string'
+                type="string"
                 value={inputValue.transactionNumber}
-                onChange={(event) => setInputValue({...inputValue, transactionNumber: event.target.value})}
+                onChange={event =>
+                  setInputValue({ ...inputValue, transactionNumber: event.target.value })}
               />
-              {
-            inputValue.transactionType === 'cheque/cashier_cheque' && (
-              <>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="bank-name"
-                  label="Bank Name"
-                  type='string'
-                  value={inputValue.bankName}
-                  onChange={(event) => setInputValue({...inputValue, bankName: event.target.value})}
-                />
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="cheque-number"
-                  label="Cheque Number"
-                  type='string'
-                  value={inputValue.chequeNumber}
-                  onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
-                />
-              </>
-            )
-          }
+              {inputValue.transactionType === 'cheque/cashier_cheque' && (
+                <>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="bank-name"
+                    label="Bank Name"
+                    type="string"
+                    value={inputValue.bankName}
+                    onChange={event =>
+                      setInputValue({ ...inputValue, bankName: event.target.value })}
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="cheque-number"
+                    label="Cheque Number"
+                    type="string"
+                    value={inputValue.chequeNumber}
+                    onChange={event =>
+                      setInputValue({ ...inputValue, chequeNumber: event.target.value })}
+                  />
+                </>
+              )}
             </div>
           </>
-      )
-}
+        )}
       </CustomizedDialogs>
     </>
-  )
+  );
 }
 
-export function PaymentDetails({ inputValue }){
+export function PaymentDetails({ inputValue }) {
   return (
     <div>
-      <Typography variant="subtitle1" align="center" key='amount'>
+      <Typography variant="subtitle1" align="center" key="amount">
         Amount:
-        <b>{inputValue.amount}</b>
+        <b>{` ${inputValue.amount}`}</b>
       </Typography>
-      <Typography variant="subtitle1" align="center" key='type'>
-        {`Transaction Type: <b>${inputValue.transactionType}</b>`}
+      <Typography variant="subtitle1" align="center" key="type">
+        Transaction Type:
+        <b>{` ${inputValue.transactionType}`}</b>
       </Typography>
-      <Typography variant="subtitle1" align="center" key='number'>
-        {
-            inputValue.transactionNumber && `Transaction Number: ${inputValue.transactionNumber}`
-          }
+      <Typography variant="subtitle1" align="center" key="number">
+        {inputValue.transactionNumber && (
+          <>
+            Transaction Number:
+            <b>{` ${inputValue.transactionNumber}`}</b>
+          </>
+        )}
       </Typography>
-      <Typography variant="subtitle1" align="center" key='bankName'>
-        {
-            inputValue.bankName && `Bank Name: ${inputValue.bankName}`
-          }
+      <Typography variant="subtitle1" align="center" key="bankName">
+        {inputValue.bankName && (
+          <>
+            Bank Name:
+            <b>{` ${inputValue.bankName}`}</b>
+          </>
+        )}
       </Typography>
-      <Typography variant="subtitle1" align="center" key='cheque'>
-        {
-            inputValue.chequeNumber && `Cheque Number: ${inputValue.chequeNumber}`
-          }
+      <Typography variant="subtitle1" align="center" key="cheque">
+        {inputValue.chequeNumber && (
+          <>
+            Cheque Number:
+            <b>{` ${inputValue.chequeNumber}`}</b>
+          </>
+        )}
       </Typography>
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles({
@@ -232,25 +255,25 @@ PaymentDetails.propTypes = {
     status: PropTypes.string,
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
-    transactionNumber: PropTypes.string,
+    transactionNumber: PropTypes.string
   }).isRequired
-}
+};
 
 PaymentModal.defaultProps = {
   depRefetch: () => {},
   walletRefetch: () => {},
   userData: {}
- }
+};
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   userData: PropTypes.shape({
     name: PropTypes.string,
-    transactionNumber: PropTypes.number,
+    transactionNumber: PropTypes.number
   }),
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
   currency: PropTypes.string.isRequired
-}
+};
