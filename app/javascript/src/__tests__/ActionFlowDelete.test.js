@@ -37,8 +37,7 @@ describe('action flow delete component', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText('Delete Action Flow')).toBeInTheDocument()
-    expect(container.queryByText('Are you sure you want to delete this Action Flow ?')).toBeInTheDocument()
+    expect(container.queryByText('Are you sure you want to delete this Action Flow?')).toBeInTheDocument()
 
     fireEvent.click(container.queryByTestId('confirm_action'))
     await waitFor(() => {

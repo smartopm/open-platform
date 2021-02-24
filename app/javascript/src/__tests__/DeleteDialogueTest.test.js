@@ -14,7 +14,6 @@ describe('It should render the dialog box for delete', () => {
       />
     )
     it('It should render with dialog', () => {
-      expect(container.queryByText('Delete Business')).toBeInTheDocument()
-      expect(container.queryByText('Are you sure you want to delete this business ?')).toBeInTheDocument()
+      expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
     });
 });
