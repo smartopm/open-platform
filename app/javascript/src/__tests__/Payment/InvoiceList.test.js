@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import InvoiceList, { renderInvoices } from '../../components/Payments/InvoiceList';
+import InvoiceList, { renderInvoice } from '../../components/Payments/InvoiceList';
 import currency from '../../__mocks__/currency';
 
 describe('Invoice Item Component', () => {
@@ -115,8 +115,8 @@ describe('Invoice Item Component', () => {
       { timeout: 100 }
     );
   });
-  it('should check if renderInvoices works as expected', () => {
-    const results = renderInvoices(invoices, currency);
+  it('should check if renderInvoice works as expected', () => {
+    const results = renderInvoice(invoices[0], currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Issue Date');
     expect(results[0]).toHaveProperty('User');

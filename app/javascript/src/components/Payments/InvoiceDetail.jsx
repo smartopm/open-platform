@@ -50,7 +50,7 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
                   {pay.paymentType}
                 </Typography>
                 <Typography>
-                  {pay.user.name}
+                  {pay.user?.name}
                 </Typography>
               </div>
             ))}
