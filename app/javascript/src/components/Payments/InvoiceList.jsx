@@ -1,11 +1,18 @@
 /* eslint-disable no-nested-ternary */
-import React, { Fragment, useState } from 'react';
-import { Grid, List } from '@material-ui/core';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
-import { Link } from 'react-router-dom';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Grid,
+  List,
+} from '@material-ui/core'
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
@@ -28,6 +35,7 @@ import Text from '../../shared/Text';
 import InvoiceDetails from './InvoiceDetail';
 import ListHeader from '../../shared/list/ListHeader';
 import currencyTypes from '../../shared/types/currency';
+import AutogenerateInvoice from './AutogenerateInvoice';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -47,6 +55,7 @@ export default function InvoiceList({ currencyData }) {
   const [currentTile, setCurrentTile] = useState(status || '');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
+  const [isDialogOpen, setDialogOpen] = useState(false)
 
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
     variables: { limit, offset: pageNumber, status, query: debouncedValue },
@@ -62,6 +71,10 @@ export default function InvoiceList({ currencyData }) {
     setCurrentTile(key);
     const state = key === 'inProgress' ? 'in_progress' : key;
     history.push(`/payments?page=0&status=${state}`);
+  }
+
+  function handleGenerateDialog() {
+    setDialogOpen(!isDialogOpen)
   }
 
   function paginate(action) {
@@ -80,14 +93,50 @@ export default function InvoiceList({ currencyData }) {
 
   return (
     <>
-      <SearchInput
-        title="Invoices"
-        searchValue={searchValue}
-        handleSearch={event => setSearchValue(event.target.value)}
-        // Todo: add a proper filter toggle function
-        handleFilter={() => {}}
-        handleClear={() => setSearchValue('')}
-      />
+      <Grid container>
+        <Grid item xs={12} sm={10}>
+          <SearchInput
+            title='Invoices'
+            searchValue={searchValue}
+            handleSearch={event => setSearchValue(event.target.value)}
+            // Todo: add a proper filter toggle function
+            handleFilter={() => {}}
+            handleClear={() => setSearchValue('')}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Dialog
+            open={isDialogOpen}
+            fullWidth
+            maxWidth="md"
+            scroll="paper"
+            onClose={handleGenerateDialog}
+            aria-labelledby="generate_invoices"
+          >
+            <DialogTitle id="generate_invoices_dialog">
+              <CenteredContent>
+                <span>Generate Monthly Invoices</span>
+              </CenteredContent>
+            </DialogTitle>
+            <DialogContent>
+              <AutogenerateInvoice close={handleGenerateDialog} />
+            </DialogContent>
+          </Dialog>
+          {true && (
+            <CenteredContent>
+              <Button 
+                variant="contained" 
+                data-testid="invoice-generate-button" 
+                color="primary" 
+                onClick={handleGenerateDialog}
+                style={{marginLeft: '5px', marginTop: '10px'}}
+              >
+                Create Monthly Invoices
+              </Button>
+            </CenteredContent>
+          )}
+        </Grid>
+      </Grid>
       <br />
       <br />
       <Grid container spacing={3}>
