@@ -4,6 +4,7 @@ import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import { useQuery } from 'react-apollo';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
@@ -138,10 +139,12 @@ export function renderInvoice(invoice, currencyData) {
       ),
       User: (
         <Grid item xs={4} md={2} data-testid="created_by">
-          <div style={{ display: 'flex' }}>
-            <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
-            <span style={{ margin: '7px' }}>{invoice.user?.name}</span>
-          </div>
+          <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
+            <div style={{ display: 'flex' }}>
+              <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
+              <span style={{ margin: '7px' }}>{invoice.user?.name}</span>
+            </div>
+          </Link>
         </Grid>
       ),
       Description: (

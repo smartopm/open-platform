@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { TransactionsQuery } from '../../graphql/queries';
@@ -102,10 +103,12 @@ export function renderPayment(payment, currencyData) {
     return [{
       'User': (
         <Grid item xs={2} md={2} data-testid="created_by">
-          <div style={{display: 'flex'}}>
-            <Avatar src={payment.user.imageUrl} alt="avatar-image" />
-            <span style={{margin: '7px'}}>{payment.user.name}</span>
-          </div>
+          <Link to={`/user/${payment.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
+            <div style={{display: 'flex'}}>
+              <Avatar src={payment.user.imageUrl} alt="avatar-image" />
+              <span style={{margin: '7px'}}>{payment.user.name}</span>
+            </div>
+          </Link>
         </Grid>
       ),
       'Deposit Date': (
