@@ -25,6 +25,7 @@ import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import Text from '../../shared/Text';
 import InvoiceDetails from './InvoiceDetail';
+import ListHeader from '../../shared/list/ListHeader';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -95,6 +96,7 @@ export default function InvoiceList({ currencyData }) {
         />
       </Grid>
       <List>
+        <ListHeader headers={invoiceHeaders} />
         {invoicesData?.invoices.length && invoicesData?.invoices.length > 0 
         ? 
           invoicesData?.invoices.map((invoice) => (
@@ -192,7 +194,7 @@ export function InvoiceItem({invoice, currencyData}){
       <DataList
         keys={invoiceHeaders}
         data={renderInvoice(invoice, currencyData)}
-        hasHeader
+        hasHeader={false}
         clickable
         handleClick={() => setDetailsOpen(true)}
       />
