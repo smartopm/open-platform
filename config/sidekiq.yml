@@ -1,3 +1,4 @@
+:max_retries: 0
 :schedule:
   points_auto_alert:
     cron: '00 9 * * 4 Africa/Lusaka'

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DetailsDialog } from '../Dialog'
 import PaymentReceipt from './PaymentReceipt'
 
-export default function ReceiptModal({ open, handleClose, paymentData, userData, currency }){
+export default function ReceiptModal({ open, handleClose, paymentData, userData, currencyData }){
   const classes = useStyles();
   const [paymentReceipt, setPaymentReceipt] = useState(false)
 
@@ -51,7 +51,7 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
         open={paymentReceipt} 
         handleClose={() => handleReceiptClose()}
         userData={userData}
-        currency={currency}
+        currencyData={currencyData}
       />
     </>
   )
@@ -86,5 +86,8 @@ ReceiptModal.defaultProps = {
   }),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 }

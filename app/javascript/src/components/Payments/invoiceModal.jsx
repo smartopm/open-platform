@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { CustomizedDialogs } from '../Dialog'
 import DatePickerDialog from '../DatePickerDialog'
-import { formatError } from '../../utils/helpers'
+import { extractCurrency, formatError } from '../../utils/helpers'
 import { InvoiceCreate } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import { UserLandParcel } from '../../graphql/queries'
@@ -21,7 +21,7 @@ const initialValues = {
   amount: '',
   note: ''
 }
-export default function InvoiceModal({ open, handleModalClose, userId, refetch, currency, depRefetch, walletRefetch }) {
+export default function InvoiceModal({ open, handleModalClose, userId, refetch, currencyData, depRefetch, walletRefetch }) {
   const classes = useStyles();
   const history = useHistory()
   const [inputValue, setInputValue] = useState(initialValues)
@@ -135,7 +135,7 @@ export default function InvoiceModal({ open, handleModalClose, userId, refetch, 
             value={inputValue.amount}
             onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
             InputProps={{
-            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+            startAdornment: <InputAdornment position="start">{extractCurrency(currencyData)}</InputAdornment>,
                 "data-testid": "amount",
                 type: "number",
                 step: '0.01'
@@ -198,5 +198,8 @@ InvoiceModal.propTypes = {
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func.isRequired,
   walletRefetch: PropTypes.func.isRequired, 
-  currency: PropTypes.string.isRequired,
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 }

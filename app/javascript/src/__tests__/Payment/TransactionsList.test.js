@@ -102,7 +102,8 @@ describe('Transactions Component', () => {
     const user = {
       id: '939453bef34-f3',
       community: {
-        currency: 'zambian_kwacha'
+        currency: 'zambian_kwacha',
+        locale: 'en-ZM'
       }
     };
 

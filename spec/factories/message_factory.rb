@@ -7,6 +7,8 @@ FactoryBot.define do
 
   factory :message do
     receiver { 'Mark Test' }
+    category { 'email' }
+    sender { user }
     message { generate(:t_message) }
   end
 end

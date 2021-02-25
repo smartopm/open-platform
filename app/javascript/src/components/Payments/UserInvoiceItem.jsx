@@ -7,7 +7,7 @@ import { dateToString } from '../DateContainer';
 import Label from '../../shared/label/Label';
 import InvoiceDetails from './InvoiceDetail';
 import { invoiceStatus } from '../../utils/constants';
-import { InvoiceStatusColor, propAccessor } from '../../utils/helpers';
+import { formatMoney, InvoiceStatusColor, propAccessor } from '../../utils/helpers';
 
 const invoiceHeader = [
   { title: 'Issue Date', col: 4 },
@@ -16,7 +16,7 @@ const invoiceHeader = [
   { title: 'Payment Date', col: 3 },
   { title: 'Status', col: 4 }
 ];
-export default function UserInvoiceItem({ invoice, currency }) {
+export default function UserInvoiceItem({ invoice, currencyData }) {
   const [open, setOpen] = useState(false);
   if (!Object.keys(invoice).length) {
     return <Text content="No Invoice Available" align="center" />;
@@ -25,7 +25,7 @@ export default function UserInvoiceItem({ invoice, currency }) {
     <div>
       <DataList
         keys={invoiceHeader}
-        data={[renderInvoices(invoice, currency)]}
+        data={[renderInvoices(invoice, currencyData)]}
         hasHeader={false}
         clickable
         handleClick={() => setOpen(true)}
@@ -34,13 +34,13 @@ export default function UserInvoiceItem({ invoice, currency }) {
         detailsOpen={open}
         handleClose={() => setOpen(false)}
         data={invoice}
-        currency={currency}
+        currencyData={currencyData}
       />
     </div>
   );
 }
 
-export function renderInvoices(inv, currency) {
+export function renderInvoices(inv, currencyData) {
   return {
     'Issue Date': <GridText content={dateToString(inv.createdAt)} />,
     'Description': (
@@ -50,7 +50,7 @@ export function renderInvoices(inv, currency) {
         <Text color='primary' content={`Plot Number #${inv.landParcel.parcelNumber}`} />
       </Grid>
     ),
-    Amount: <GridText content={`${currency}${inv.amount}`} />,
+    Amount: <GridText content={formatMoney(currencyData, inv.amount)} />,
     'Payment Date': (
       <Grid item xs={3} md={2}>
         {inv.status === 'paid' && inv.payments.length
@@ -82,5 +82,8 @@ UserInvoiceItem.propTypes = {
     amount: PropTypes.number,
     createdAt: PropTypes.string
   }).isRequired,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 };

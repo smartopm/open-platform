@@ -113,8 +113,6 @@ class User < ApplicationRecord
     construction_approved: 3,
     construction_in_progress: 4,
     construction_completed: 5,
-    census: 6,
-    workers_on_site: 7,
   }
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }

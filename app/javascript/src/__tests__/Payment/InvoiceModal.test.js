@@ -45,7 +45,14 @@ describe('It should test the invoice modal component', () => {
     const container = render(
       <MockedProvider mocks={[landParcelMock]} addTypename={false}>
         <BrowserRouter>
-          <InvoiceModal open={open} data={data} userId={user.userId} handleModalClose={handleModalClose} userType={user.userType} />
+          <InvoiceModal 
+            open={open} 
+            data={data} 
+            userId={user.userId} 
+            handleModalClose={handleModalClose} 
+            userType={user.userType}
+            currencyData={{ currency: 'ZMW', locale: 'en-ZM'}}
+          />
         </BrowserRouter>
       </MockedProvider> 
     )

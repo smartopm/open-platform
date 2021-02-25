@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import InvoiceItem from '../../components/Payments/InvoiceItem'
 import { Spinner } from '../../shared/Loading'
+import currency from '../../__mocks__/currency'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
@@ -32,13 +33,17 @@ describe('Invoice Item Component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <InvoiceItem invoice={invoiceMock} userType="client" currency="k" />
+          <InvoiceItem 
+            invoice={invoiceMock} 
+            userType="client" 
+            currencyData={currency}
+          />
         </MockedProvider>
       </BrowserRouter>)
 
     await waitFor(() => {
       // shows the invoice status when user is not admin
-      expect(container.queryByTestId('amount').textContent).toContain('k200')
+      expect(container.queryByTestId('amount').textContent).toContain('$200')
       expect(container.queryByTestId('duedate').textContent).toContain('2020-09-12')
       expect(container.queryByTestId('landparcel').textContent).toContain('Plot-123')
       expect(container.queryByTestId('pay-button')).toBeNull()
@@ -61,7 +66,11 @@ describe('Invoice Item Component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <InvoiceItem invoice={invoiceMock} userType="admin" currency="k" />
+          <InvoiceItem 
+            invoice={invoiceMock} 
+            userType="admin" 
+            currencyData={currency}
+          />
         </MockedProvider>
       </BrowserRouter>)
     // shows make payment button when user is admin

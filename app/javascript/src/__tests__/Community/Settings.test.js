@@ -58,5 +58,14 @@ describe('Community settings page ', () => {
     expect(container.queryAllByLabelText('remove')).toHaveLength(5)
     fireEvent.click(container.queryAllByLabelText('remove')[0])
     expect(container.queryAllByLabelText('remove')).toHaveLength(4)
+
+    expect(container.queryByTestId('locale')).toBeInTheDocument()
+    expect(container.queryByTestId('currency')).toBeInTheDocument()
+
+    fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' }})
+    expect(container.queryByTestId('locale').value).toBe('en-US')
+
+    fireEvent.select(container.queryByTestId('currency'), { target: { value: 'ZMW' }})
+    expect(container.queryByTestId('currency').value).toBe('ZMW')
   })
 })

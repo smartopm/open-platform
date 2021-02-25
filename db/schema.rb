@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_19_142829) do
+ActiveRecord::Schema.define(version: 2021_02_23_082219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2021_02_19_142829) do
     t.json "support_email"
     t.json "support_whatsapp"
     t.string "currency"
+    t.string "locale"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 

@@ -9,7 +9,5 @@ module Types
     field :construction_approved, Integer, null: true
     field :construction_in_progress, Integer, null: true
     field :construction_completed, Integer, null: true
-    field :census, Integer, null: true
-    field :workers_on_site, Integer, null: true
   end
 end
