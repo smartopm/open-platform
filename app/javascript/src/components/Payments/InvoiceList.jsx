@@ -26,6 +26,7 @@ import useDebounce from '../../utils/useDebounce';
 import Text from '../../shared/Text';
 import InvoiceDetails from './InvoiceDetail';
 import ListHeader from '../../shared/list/ListHeader';
+import currencyTypes from '../../shared/types/currency';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -200,11 +201,6 @@ export function InvoiceItem({invoice, currencyData}){
       />
     </div>
   )
-}
-
-const currencyTypes = {
-  currency: PropTypes.string,
-  locale: PropTypes.string
 }
 InvoiceList.propTypes = {
   currencyData: PropTypes.shape({ ...currencyTypes }).isRequired

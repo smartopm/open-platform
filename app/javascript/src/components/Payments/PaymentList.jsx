@@ -15,6 +15,8 @@ import { Spinner } from '../../shared/Loading';
 import Paginate from '../Paginate';
 import ListHeader from '../../shared/list/ListHeader';
 import { paymentType } from '../../utils/constants';
+import TransactionDetails from './TransactionDetails';
+import currency from '../../shared/types/currency';
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -70,16 +72,13 @@ export default function PaymentList({ currencyData }) {
       />
       <br />
       <br />
-      {paymentList.length && paymentList.length > 0 ? (
-        <div>
-          <ListHeader headers={paymentHeaders} />
-          <DataList
-            keys={paymentHeaders}
-            data={renderPayments(paymentList, currencyData)}
-            hasHeader={false}
-          />
-        </div>
-      ) : (
+      <ListHeader headers={paymentHeaders} />
+      {paymentList.length && paymentList.length > 0 
+      ?  
+      paymentList.map(payment => (
+        <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
+      ))
+      : (
         <CenteredContent>No Payments Available</CenteredContent>
       )}
       {
@@ -99,9 +98,8 @@ export default function PaymentList({ currencyData }) {
   );
 }
 
-export function renderPayments(payments, currencyData) {
-  return payments?.map(payment => {
-    return {
+export function renderPayment(payment, currencyData) {
+    return [{
       'User': (
         <Grid item xs={2} md={2} data-testid="created_by">
           <div style={{display: 'flex'}}>
@@ -131,13 +129,39 @@ export function renderPayments(payments, currencyData) {
           <span>{formatMoney(currencyData, payment.amount)}</span>
         </Grid>
       )
-    };
-  });
+    }]
+}
+
+
+export function TransactionItem({transaction, currencyData}){
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  return (
+    <div>
+      <TransactionDetails 
+        detailsOpen={detailsOpen} 
+        handleClose={() => setDetailsOpen(false)} 
+        data={transaction}
+        currencyData={currencyData}
+        // eslint-disable-next-line no-underscore-dangle
+        title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
+      />
+      <DataList
+        keys={paymentHeaders}
+        data={renderPayment(transaction, currencyData)}
+        hasHeader={false}
+        clickable
+        handleClick={() => setDetailsOpen(true)}
+      />
+    </div>
+  )
 }
 
 PaymentList.propTypes = {
-  currencyData: PropTypes.shape({
-    currency: PropTypes.string,
-    locale: PropTypes.string
-  }).isRequired
+  currencyData: PropTypes.shape({ ...currency }).isRequired
 };
+
+TransactionItem.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  transaction: PropTypes.object.isRequired,
+  currencyData: PropTypes.shape({ ...currency }).isRequired
+}
