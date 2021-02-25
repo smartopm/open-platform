@@ -3,10 +3,10 @@ import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import PaymentModal from '../../components/Payments/PaymentModal'
+import PaymentModal, { PaymentDetails } from '../../components/Payments/PaymentModal'
 import currency from '../../__mocks__/currency'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+// jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the payment modal component', () => {
   const invoiceData =
       {
@@ -42,3 +42,24 @@ describe('It should test the payment modal component', () => {
     expect(transactionInput.value).toBe('cash')
   });
 });
+
+describe('Test Payment Details Screen', () => {
+  const inputValue = {
+    amount: '200',
+    transactionType: 'cash',
+    bankName: 'Standard',
+    chequeNumber: '423-22223-099',
+    transactionNumber: 'R45F112'
+  }
+  it('it should render payment details ', () => {
+    const container = render(
+      <PaymentDetails inputValue={inputValue} currencyData={currency} />
+    )
+    expect(container.queryByTestId('amount').textContent).toContain('Amount: $200.00')
+    expect(container.queryByTestId('type').textContent).toContain('Transaction Type: cash')
+    expect(container.queryByTestId('transactionNumber').textContent).toContain('Transaction Number: R45F112')
+    expect(container.queryByTestId('chequeNumber').textContent).toContain('Cheque Number: 423-22223-099')
+    expect(container.queryByTestId('bankName').textContent).toContain('Bank Name: Standard')
+
+  });
+})

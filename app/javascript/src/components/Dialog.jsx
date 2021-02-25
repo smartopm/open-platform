@@ -102,7 +102,8 @@ export function CustomizedDialogs({
   dialogHeader,
   subHeader,
   saveAction,
-  disableActionBtn
+  disableActionBtn,
+  cancelAction
 }) {
   const classes = useStyles()
   return (
@@ -122,7 +123,7 @@ export function CustomizedDialogs({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleModal} variant="outlined" color="secondary">
-          Cancel
+          {cancelAction}
         </Button>
         <Button
           data-testid="custom-dialog-button"
@@ -312,7 +313,8 @@ CustomizedDialogs.defaultProps = {
   subHeader: '',
   children: {},
   saveAction: 'Save',
-  disableActionBtn: false
+  disableActionBtn: false,
+  cancelAction: 'Cancel'
 }
 
 CustomizedDialogs.propTypes = {
@@ -323,6 +325,7 @@ CustomizedDialogs.propTypes = {
   dialogHeader: PropTypes.string,
   subHeader: PropTypes.string,
   saveAction: PropTypes.string,
+  cancelAction: PropTypes.string,
   disableActionBtn: PropTypes.bool
 }
 
