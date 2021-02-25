@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { TransactionsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import PaymentList, { renderPayments } from '../../components/Payments/PaymentList';
+import PaymentList, { renderPayment } from '../../components/Payments/PaymentList';
 import currency from '../../__mocks__/currency';
 
 describe('Payment List Item Component', () => {
@@ -77,8 +77,8 @@ describe('Payment List Item Component', () => {
       { timeout: 100 }
     );
   });
-  it('should check if renderPayments works as expected', () => {
-    const results = renderPayments(transactions, currency);
+  it('should check if renderPayment works as expected', () => {
+    const results = renderPayment(transactions[0], currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('User');
     expect(results[0]).toHaveProperty('Deposit Date');
