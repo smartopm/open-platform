@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Valuation, type: :model do
+  let!(:user) { create(:user_with_community) }
+  let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:start_date).of_type(:date) }
@@ -18,10 +21,15 @@ RSpec.describe Valuation, type: :model do
     it { is_expected.to belong_to(:land_parcel) }
   end
 
-  describe 'custom validations' do
-    let!(:user) { create(:user_with_community) }
-    let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+  describe 'scopes' do
+    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
 
+    it 'fetches the latest applicable valuation record' do
+      expect(Valuation.latest.id).to eql valuation.id
+    end
+  end
+
+  describe 'custom validations' do
     it 'fails validation with large amount' do
       valuation = described_class.create(
         amount: 20_000_000_000,
