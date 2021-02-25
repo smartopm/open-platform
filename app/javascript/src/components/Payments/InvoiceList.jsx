@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
@@ -9,7 +9,13 @@ import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import { formatError, useParamsQuery, InvoiceStatusColor, propAccessor, formatMoney } from '../../utils/helpers';
+import {
+  formatError,
+  useParamsQuery,
+  InvoiceStatusColor,
+  propAccessor,
+  formatMoney
+} from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { invoiceStatus } from '../../utils/constants';
 import InvoiceTiles from './InvoiceTiles';
@@ -18,7 +24,7 @@ import Label from '../../shared/label/Label';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import Text from '../../shared/Text';
-import ListHeader from '../../shared/list/ListHeader';
+import InvoiceDetails from './InvoiceDetail';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -48,6 +54,7 @@ export default function InvoiceList({ currencyData }) {
     fetchPolicy: 'cache-and-network'
   });
 
+
   function handleFilter(key) {
     setCurrentTile(key);
     const state = key === 'inProgress' ? 'in_progress' : key;
@@ -63,7 +70,7 @@ export default function InvoiceList({ currencyData }) {
       history.push(`/payments?page=${pageNumber + limit}&status=${status}`);
     }
   }
-  if (loading) return <Spinner />
+  if (loading) return <Spinner />;
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -71,7 +78,7 @@ export default function InvoiceList({ currencyData }) {
   return (
     <>
       <SearchInput
-        title='Invoices'
+        title="Invoices"
         searchValue={searchValue}
         handleSearch={event => setSearchValue(event.target.value)}
         // Todo: add a proper filter toggle function
@@ -88,21 +95,14 @@ export default function InvoiceList({ currencyData }) {
         />
       </Grid>
       <List>
-        {
-          invoicesData?.invoices.length && invoicesData?.invoices.length > 0 ?
-        (
-          <div>
-            <ListHeader headers={invoiceHeaders} />
-            <DataList
-              keys={invoiceHeaders}
-              data={renderInvoices(invoicesData?.invoices, currencyData)}
-              hasHeader={false}
-            />
-          </div>
-        ) : (
+        {invoicesData?.invoices.length && invoicesData?.invoices.length > 0 
+        ? 
+          invoicesData?.invoices.map((invoice) => (
+            <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
+          ))
+        : (
           <CenteredContent>No Invoices Available</CenteredContent>
-        )      
-        }
+        )}
       </List>
 
       <CenteredContent>
@@ -125,63 +125,90 @@ export default function InvoiceList({ currencyData }) {
  * @param {object} currencyData community currencyData current and locale
  * @returns {object} an object with properties that DataList component uses to render
  */
-export function renderInvoices(invoices, currencyData) {
-  return invoices.map(invoice => {
-    return {
+export function renderInvoice(invoice, currencyData) {
+  return [
+    {
       'Issue Date': (
         <Grid item xs={2} md={2} data-testid="issue_date">
-          <Text content={dateToString(invoice.createdAt)} />
+          <Text content={dateToString(invoice?.createdAt)} />
         </Grid>
       ),
-      'User': (
+      User: (
         <Grid item xs={4} md={2} data-testid="created_by">
-          <div style={{display: 'flex'}}>
-            <Avatar src={invoice.user.imageUrl} alt="avatar-image" />
-            <span style={{margin: '7px'}}>{invoice.user.name}</span>
+          <div style={{ display: 'flex' }}>
+            <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
+            <span style={{ margin: '7px' }}>{invoice.user?.name}</span>
           </div>
         </Grid>
       ),
-      'Description': (
+      Description: (
         <Grid item xs={4} md={2} data-testid="description">
-          <Text content={`Invoice Number #${invoice.invoiceNumber}`} /> 
+          <Text content={`Invoice Number #${invoice.invoiceNumber}`} />
           <br />
-          <Text color='primary' content={`Plot Number #${invoice.landParcel.parcelNumber}`} />
+          <Text color="primary" content={`Plot Number #${invoice.landParcel.parcelNumber}`} />
         </Grid>
       ),
       Amount: (
         <Grid item xs={3} md={2} data-testid="invoice_amount">
-          {/* <Text content={`${currency}${invoice.amount}`} /> */}
           <Text content={formatMoney(currencyData, invoice.amount)} />
         </Grid>
       ),
       'Payment Date': (
         <Grid item xs={3} md={2}>
-          {invoice.status === 'paid' && invoice.payments.length
-            ? <Text content={dateToString(invoice.payments[0]?.createdAt)} /> : '-'}
-          
+          {invoice.status === 'paid' && invoice.payments.length ? (
+            <Text content={dateToString(invoice.payments[0]?.createdAt)} />
+          ) : (
+            '-'
+          )}
         </Grid>
       ),
-      'Status': (
+      Status: (
         <Grid item xs={4} md={2} data-testid="status">
-          {new Date(invoice.dueDate) < new Date().setHours(0,0,0,0) && invoice.status === 'in_progress' ? (
-            <Label
-              title='Due'
-              color='#B63422'
-            />
+          {new Date(invoice.dueDate) < new Date().setHours(0, 0, 0, 0) &&
+          invoice.status === 'in_progress' ? (
+            <Label title="Due" color="#B63422" />
           ) : (
             <Label
               title={propAccessor(invoiceStatus, invoice.status)}
               color={propAccessor(InvoiceStatusColor, invoice.status)}
             />
-          ) }
+          )}
         </Grid>
       )
-    };
-  });
+    }
+  ];
+}
+
+export function InvoiceItem({invoice, currencyData}){
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  return (
+    <div>
+      <InvoiceDetails
+        detailsOpen={detailsOpen}
+        handleClose={() => setDetailsOpen(false)}
+        data={invoice}
+        currencyData={currencyData}
+      />
+      <DataList
+        keys={invoiceHeaders}
+        data={renderInvoice(invoice, currencyData)}
+        hasHeader
+        clickable
+        handleClick={() => setDetailsOpen(true)}
+      />
+    </div>
+  )
+}
+
+const currencyTypes = {
+  currency: PropTypes.string,
+  locale: PropTypes.string
 }
 InvoiceList.propTypes = {
-  currencyData: PropTypes.shape({
-    currency: PropTypes.string,
-    locale: PropTypes.string
-  }).isRequired
+  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired
 };
+InvoiceItem.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  invoice: PropTypes.object.isRequired,
+  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired
+}
