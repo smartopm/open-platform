@@ -122,19 +122,17 @@ export default function InvoiceList({ currencyData }) {
               <AutogenerateInvoice close={handleGenerateDialog} />
             </DialogContent>
           </Dialog>
-          {true && (
-            <CenteredContent>
-              <Button 
-                variant="contained" 
-                data-testid="invoice-generate-button" 
-                color="primary" 
-                onClick={handleGenerateDialog}
-                style={{marginLeft: '5px', marginTop: '10px'}}
-              >
-                Create Monthly Invoices
-              </Button>
-            </CenteredContent>
-          )}
+          <CenteredContent>
+            <Button 
+              variant="contained" 
+              data-testid="invoice-generate-button" 
+              color="primary" 
+              onClick={handleGenerateDialog}
+              style={{marginLeft: '5px', marginTop: '10px'}}
+            >
+              Create Monthly Invoices
+            </Button>
+          </CenteredContent>
         </Grid>
       </Grid>
       <br />
