@@ -36,9 +36,20 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
 
   function handleOnPlotClick({ target }){
    const { 
-     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, accounts, valuations }
+     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations }
     } = target.feature
-   return (target.feature && handlePlotClick({ id, parcelNumber, parcelType, accounts, valuations }))
+   return (target.feature && 
+      handlePlotClick({
+        id,
+        parcelNumber,
+        parcelType,
+        longX,
+        latY,
+        geom: JSON.stringify(target.feature),
+        accounts,
+        valuations
+      })
+    )
   }
 
   /* eslint-disable consistent-return */
@@ -105,13 +116,15 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
           </LayersControl.BaseLayer>
           <LayersControl.Overlay checked name="Nkwashi Land Parcels">
             <FeatureGroup>
-              {geoData?.map(({ id, geom, parcelNumber, parcelType, plotSold, accounts, valuations }) => {
+              {geoData?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations }) => {
                 if(checkValidGeoJSON(geom)){
                   const feature = JSON.parse(geom)
                   feature.properties.id = id
                   feature.properties.parcel_no = parcelNumber
                   feature.properties.parcel_type = parcelType
                   feature.properties.plot_sold = plotSold
+                  feature.properties.long_x = longX
+                  feature.properties.lat_y = latY
                   feature.properties.accounts = accounts
                   feature.properties.valuations = valuations
 

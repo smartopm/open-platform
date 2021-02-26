@@ -8,7 +8,9 @@ import '@testing-library/jest-dom/extend-expect';
 import { LandParcel as LandParcelQuery, ParcelsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 
+jest.mock('leaflet');
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+
 describe('Land Property Page', () => {
   it('renders land parcel page', async () => {
     const container = render(

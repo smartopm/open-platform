@@ -411,6 +411,9 @@ mutation UpdateProperty($id: ID!,
   $stateProvince: String,
   $parcelType: String,
   $country: String,
+  $longX: Float,
+  $latY: Float,
+  $geom: JSON,
   $valuationFields: JSON
   $ownershipFields: JSON) {
     propertyUpdate(id: $id,
@@ -422,6 +425,9 @@ mutation UpdateProperty($id: ID!,
     stateProvince: $stateProvince,
     parcelType: $parcelType,
     country: $country,
+    longX: $longX,
+    latY: $latY,
+    geom: $geom,
     valuationFields: $valuationFields,
     ownershipFields: $ownershipFields) {
       landParcel {

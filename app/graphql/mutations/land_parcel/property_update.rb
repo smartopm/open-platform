@@ -13,6 +13,9 @@ module Mutations
       argument :state_province, String, required: false
       argument :parcel_type, String, required: false
       argument :country, String, required: false
+      argument :long_x, Float, required: false
+      argument :lat_y, Float, required: false
+      argument :geom, GraphQL::Types::JSON, required: false
       argument :valuation_fields, GraphQL::Types::JSON, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
 
