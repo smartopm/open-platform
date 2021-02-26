@@ -944,6 +944,13 @@ export const InvoicesQuery = gql`
         id
         createdAt
         amount
+        paymentType
+        paymentStatus
+        createdAt
+        user {
+          id
+          name
+        }
       }
     }
   }
