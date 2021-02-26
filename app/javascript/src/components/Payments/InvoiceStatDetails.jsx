@@ -8,8 +8,10 @@ import ListHeader from '../../shared/list/ListHeader';
 import Text from '../../shared/Text';
 import { dateToString } from '../DateContainer';
 import DataList from '../../shared/list/DataList';
+import currencyTypes from '../../shared/types/currency';
+import { formatMoney } from '../../utils/helpers';
 
-export default function InvoiceStatDetails({ data, currency }){
+export default function InvoiceStatDetails({ data, currencyData }){
   const invoiceHeaders = [
     { title: 'Client Name', col: 4 },
     { title: 'Invoice Description', col: 4 },
@@ -22,14 +24,14 @@ export default function InvoiceStatDetails({ data, currency }){
       <ListHeader headers={invoiceHeaders} />
       <DataList
         keys={invoiceHeaders}
-        data={renderInvoices(data, currency)}
+        data={renderInvoices(data, currencyData)}
         hasHeader={false}
       />
     </div>
   )
 }
 
-export function renderInvoices(data, currency) {
+export function renderInvoices(data, currencyData) {
   return data.map(invoice => {
     return {
       'Client Name': (
@@ -56,7 +58,7 @@ export function renderInvoices(data, currency) {
       ),
       Amount: (
         <Grid item xs={4} md={2} data-testid="amount">
-          <Text content={`${currency}${invoice.amount}`} />
+          <Text content={formatMoney(currencyData, invoice.amount)} />
         </Grid>
       )
     };
@@ -75,5 +77,5 @@ InvoiceStatDetails.propTypes = {
       name: PropTypes.string.isRequired
        })
   })).isRequired,
-  currency: PropTypes.string.isRequired
+  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired
 }
