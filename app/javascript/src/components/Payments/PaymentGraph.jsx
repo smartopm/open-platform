@@ -1,6 +1,7 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from 'recharts';
+import PropTypes from 'prop-types'
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Typography from '@material-ui/core/Typography';
 import { PaymentStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
@@ -9,7 +10,7 @@ import { formatError } from '../../utils/helpers';
 import GraphTitle from './GraphTitle'
 
 
-export default function PaymentGraph(){
+export default function PaymentGraph({ handleClick }){
   const { loading, data, error } = useQuery(PaymentStats, {
     fetchPolicy: 'cache-and-network'
   });
@@ -26,10 +27,10 @@ export default function PaymentGraph(){
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
               <Typography variant='body1' color='primary'>Payment Dashboard</Typography>
             </div>
-            <GraphTitle title='Total Amount Paid/Number of days' />
+            <GraphTitle title='Total Amount Paid/Date' />
             <div style={{padding: '30px', background: '#FFF'}}>
-              <ResponsiveContainer width="100%" height={500}>
-                <LineChart
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart
                   width={1000}
                   height={400}
                   data={data.paymentAccountingStats}
@@ -40,15 +41,17 @@ export default function PaymentGraph(){
                     bottom: 5,
                   }}
                 >
-                  <XAxis dataKey="noOfDays" />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="trxDate" />
                   <YAxis />
+                  <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="cash" stroke="#8884d8" />
-                  <Line type="monotone" dataKey="mobileMoney" stroke="#82ca9d" />
-                  <Line type="monotone" dataKey="bankTransfer" stroke="#E79040" />
-                  <Line type="monotone" dataKey="eft" stroke="#3493FB" />
-                  <Line type="monotone" dataKey="pos" stroke="#E74540" />
-                </LineChart>
+                  <Bar cursor="pointer" stackId="a" dataKey="cash" fill="#8884d8" onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="mobileMoney" fill="#82ca9d" onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="bankTransfer" fill="#E79040" onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="eft" fill="#3493FB" onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="pos" fill="#744db8" onClick={handleClick} />
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
@@ -59,3 +62,7 @@ export default function PaymentGraph(){
     </>
   )
 }
+
+PaymentGraph.propTypes = {
+  handleClick: PropTypes.func.isRequired
+};

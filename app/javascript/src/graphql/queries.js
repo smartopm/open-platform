@@ -972,7 +972,7 @@ export const InvoicesStats = gql`
 export const PaymentStats = gql`
   query PaymentStats {
     paymentAccountingStats {
-      noOfDays
+      trxDate
       cash
       mobileMoney
       bankTransfer
@@ -998,6 +998,22 @@ export const InvoicesStatsDetails = gql`
       landParcel {
         id
         parcelNumber
+      }
+    }
+  }
+`
+
+export const PaymentStatsDetails = gql`
+  query PaymentStatsDetails($query: String!) {
+    paymentStatDetails(query: $query) {
+      id
+      amount
+      source
+      createdAt
+      user {
+        id
+        name
+        imageUrl
       }
     }
   }

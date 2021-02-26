@@ -9,14 +9,14 @@ import DataList from '../../shared/list/DataList';
 
 export default function InvoiceStatDetails({ data, currency }){
   const invoiceHeaders = [
-    { title: 'Client Name', col: 4, align: 'left' },
-    { title: 'Invoice Description', col: 4, align: 'left' },
-    { title: 'Date Issue/Due Date', col: 4, align: 'left' },
-    { title: 'Amount', col: 4, align: 'right' }
+    { title: 'Client Name', col: 4 },
+    { title: 'Invoice Description', col: 4 },
+    { title: 'Date Issue/Due Date', col: 4 },
+    { title: 'Amount', col: 4 }
   ];
   return (
-    <div style={{margin: '10px 125px 0 150px'}}>
-      <DetailHeading title='Invoices' />
+    <div>
+      <DetailHeading title='Outstanding Invoices' />
       <ListHeader headers={invoiceHeaders} />
       <DataList
         keys={invoiceHeaders}
@@ -48,7 +48,7 @@ export function renderInvoices(data, currency) {
         </Grid>
       ),
       Amount: (
-        <Grid item xs={4} md={1} data-testid="amount" style={{textAlign: 'right'}}>
+        <Grid item xs={4} md={2} data-testid="amount">
           <Text content={`${currency}${invoice.amount}`} />
         </Grid>
       )

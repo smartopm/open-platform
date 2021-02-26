@@ -15,7 +15,7 @@ export default function ListHeader({ headers }) {
       className={classes.heading}
     >
       {headers.map(header => (
-        <Grid item xs={header.col || true} md={header.align === 'right' ? 1 : 2} key={header.title} style={{textAlign: header.align}}>
+        <Grid item xs={header.col || true} md={2} key={header.title}>
           <b>
             <Typography variant='body2' className={classes.typography}>
               {['Select', 'Menu'].includes(header.title) ? null : header.title}

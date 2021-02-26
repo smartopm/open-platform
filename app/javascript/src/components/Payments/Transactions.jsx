@@ -53,19 +53,19 @@ export default function TransactionsList({ userId, user, userData }) {
   )
 
   const transactionHeader = [
-    { title: 'Deposit/Issue date', col: 4, align: 'left' },
-    { title: 'Description', col: 4, align: 'left' },
-    { title: 'Amount', col: 3, align: 'right' },
-    { title: 'Balance', col: 3, align: 'right' },
-    { title: 'Status', col: 4, align: 'left' }
+    { title: 'Deposit/Issue date', col: 4 },
+    { title: 'Description', col: 4 },
+    { title: 'Amount', col: 3 },
+    { title: 'Balance', col: 3 },
+    { title: 'Status', col: 4 }
   ];
 
   const invoiceHeader = [
-    { title: 'Issue Date', col: 4, align: 'left' },
-    { title: 'Description', col: 4, align: 'left' },
-    { title: 'Amount', col: 3, align: 'right' },
-    { title: 'Payment Date', col: 3, align: 'left' },
-    { title: 'Status', col: 4, align: 'left' }
+    { title: 'Issue Date', col: 4 },
+    { title: 'Description', col: 4 },
+    { title: 'Amount', col: 3 },
+    { title: 'Payment Date', col: 3 },
+    { title: 'Status', col: 4 }
   ];
 
   const currency = currencies[user.community.currency] || ''
