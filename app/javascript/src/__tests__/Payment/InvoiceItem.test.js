@@ -17,6 +17,7 @@ describe('Invoice Item Component', () => {
       dueDate: '2020-09-12',
       status: 'in_progress',
       createdAt: '2020-12-28',
+      id: '9485rjdsfiu34',
       landParcel: {
         parcelNumber: 'Plot-123'
       },

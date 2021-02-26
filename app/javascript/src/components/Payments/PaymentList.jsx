@@ -1,11 +1,12 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'react-apollo';
+import { useQuery, useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import { TransactionsQuery } from '../../graphql/queries';
+import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
 import { formatError, formatMoney, useParamsQuery } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
@@ -18,10 +19,12 @@ import ListHeader from '../../shared/list/ListHeader';
 import { paymentType } from '../../utils/constants';
 import TransactionDetails from './TransactionDetails';
 import currency from '../../shared/types/currency';
+import Text from '../../shared/Text';
+import PaymentGraph from './PaymentGraph'
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
-  { title: 'Deposit Date', col: 1 },
+  { title: 'Deposit Date', col: 1},
   { title: 'Payment Type', col: 1 },
   { title: 'Amount', col: 2 }
 ];
@@ -32,6 +35,8 @@ export default function PaymentList({ currencyData }) {
   const page = path.get('page');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
+  const [listType, setListType] = useState('nongraph')
+  const [query, setQuery] = useState('')
   const history = useHistory()
 
   const pageNumber = Number(page);
@@ -58,28 +63,67 @@ export default function PaymentList({ currencyData }) {
     }
   }
 
+  function setGraphQuery(qu){
+    setQuery(qu.trxDate)
+    loadPaymentDetail()
+    setListType('graph')
+  }
+
+  function setsearch(event){
+    setSearchValue(event)
+    setListType('nongraph')
+  }
+
+  function setSearchClear(){
+    setSearchValue('')
+    setListType('nongraph')
+  }
+
+  const [loadPaymentDetail, { loading: payLoading, error: statError, data: paymentStatData } ] = useLazyQuery(PaymentStatsDetails,{
+    variables: { query },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  })
+
   if (loading) return <Spinner />
+  if (payLoading) return null
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  }
+  if (statError) {
+    return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
   return (
     <div>
       <SearchInput 
         title='Payments' 
         searchValue={searchValue} 
-        handleSearch={event => setSearchValue(event.target.value)} 
+        handleSearch={event => setsearch(event.target.value)} 
         handleFilter={handleFilter} 
-        handleClear={() => setSearchValue('')}
+        handleClear={() => setSearchClear()}
       />
       <br />
       <br />
-      <ListHeader headers={paymentHeaders} />
-      {paymentList.length && paymentList.length > 0 
-      ?  
-      paymentList.map(payment => (
-        <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
-      ))
-      : (
+      <PaymentGraph handleClick={setGraphQuery} />
+      {listType === 'graph' && paymentStatData?.paymentStatDetails.length && paymentStatData?.paymentStatDetails.length > 0 ? (
+        <div>
+          <ListHeader headers={paymentHeaders} />
+          {
+            paymentStatData.paymentStatDetails.map(payment => (
+              <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
+            ))
+          }
+        </div>
+      ) : paymentList.length && paymentList.length > 0 ? (
+        <div>
+          <ListHeader headers={paymentHeaders} />
+          {
+            paymentList.map(payment => (
+              <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
+            ))
+          }
+        </div>
+      ) : (
         <CenteredContent>No Payments Available</CenteredContent>
       )}
       {
@@ -113,18 +157,17 @@ export function renderPayment(payment, currencyData) {
       ),
       'Deposit Date': (
         <Grid item xs={1} md={2}>
-          {dateToString(payment.createdAt)}
+          <Text content={dateToString(payment.createdAt)} />
         </Grid>
       ),
       'Payment Type': (
         <Grid item xs={4} md={2} data-testid="payment_type">
-          <span>
-            {
+          <Text content={
             ['cash'].includes(payment.source)
             ? 'Cash Deposit'
             :  paymentType[payment.source]
-          }
-          </span>
+            }
+          />
         </Grid>
       ),
       Amount: (

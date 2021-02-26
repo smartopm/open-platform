@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
-import { useQuery } from 'react-apollo';
 import {
   Button,
   Dialog,
@@ -13,9 +12,10 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useQuery, useLazyQuery } from 'react-apollo';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
-import { InvoicesQuery, InvoiceStatsQuery } from '../../graphql/queries';
+import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import {
   formatError,
@@ -26,7 +26,6 @@ import {
 } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import { invoiceStatus } from '../../utils/constants';
-import InvoiceTiles from './InvoiceTiles';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
 import SearchInput from '../../shared/search/SearchInput';
@@ -36,6 +35,8 @@ import InvoiceDetails from './InvoiceDetail';
 import ListHeader from '../../shared/list/ListHeader';
 import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
+import InvoiceGraph from './InvoiceGraph'
+import InvoiceStatDetails from './InvoiceStatDetails'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -52,30 +53,43 @@ export default function InvoiceList({ currencyData }) {
   const page = path.get('page');
   const status = path.get('status');
   const pageNumber = Number(page);
-  const [currentTile, setCurrentTile] = useState(status || '');
   const [searchValue, setSearchValue] = useState('');
+  const [listType, setListType] = useState('nongraph')
   const debouncedValue = useDebounce(searchValue, 500);
   const [isDialogOpen, setDialogOpen] = useState(false)
+  const [query, setQuery] = useState('')
 
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
     variables: { limit, offset: pageNumber, status, query: debouncedValue },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-  const invoiceStats = useQuery(InvoiceStatsQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
-
-
-  function handleFilter(key) {
-    setCurrentTile(key);
-    const state = key === 'inProgress' ? 'in_progress' : key;
-    history.push(`/payments?page=0&status=${state}`);
-  }
 
   function handleGenerateDialog() {
     setDialogOpen(!isDialogOpen)
   }
+
+  function setGraphQuery(qu){
+    setQuery(qu.noOfDays)
+    loadInvoiceDetail()
+    setListType('graph')
+  }
+
+  function setsearch(event){
+    setSearchValue(event)
+    setListType('nongraph')
+  }
+
+  function setSearchClear(){
+    setSearchValue('')
+    setListType('nongraph')
+  }
+
+  const [loadInvoiceDetail, {  error: statError, data: invoicesStatData } ] = useLazyQuery(InvoicesStatsDetails,{
+    variables: { query },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  })
 
   function paginate(action) {
     if (action === 'prev') {
@@ -90,6 +104,9 @@ export default function InvoiceList({ currencyData }) {
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
+  if (statError) {
+    return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
+  }
 
   return (
     <>
@@ -98,10 +115,10 @@ export default function InvoiceList({ currencyData }) {
           <SearchInput
             title='Invoices'
             searchValue={searchValue}
-            handleSearch={event => setSearchValue(event.target.value)}
+            handleSearch={event => setsearch(event.target.value)}
             // Todo: add a proper filter toggle function
             handleFilter={() => {}}
-            handleClear={() => setSearchValue('')}
+            handleClear={() => setSearchClear()}
           />
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -140,22 +157,26 @@ export default function InvoiceList({ currencyData }) {
       <br />
       <br />
       <Grid container spacing={3}>
-        <InvoiceTiles
-          invoiceData={invoiceStats || []}
-          filter={handleFilter}
-          currentTile={currentTile}
-        />
+        <InvoiceGraph handleClick={setGraphQuery} />
       </Grid>
       <List>
-        <ListHeader headers={invoiceHeaders} />
-        {invoicesData?.invoices.length && invoicesData?.invoices.length > 0 
-        ? 
-          invoicesData?.invoices.map((invoice) => (
-            <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
-          ))
-        : (
+        {
+          listType === 'graph' && invoicesStatData?.invoicesStatDetails.length && invoicesStatData?.invoicesStatDetails.length > 0 ?
+        (
+          <InvoiceStatDetails data={invoicesStatData?.invoicesStatDetails} currencyData={currencyData} />
+        ) : listType === 'nongraph' && invoicesData?.invoices.length && invoicesData?.invoices.length > 0 ? (
+          <div>
+            <ListHeader headers={invoiceHeaders} />
+            {
+              invoicesData?.invoices.map((invoice) => (
+                <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
+              ))
+            }
+          </div>
+        ) : (
           <CenteredContent>No Invoices Available</CenteredContent>
-        )}
+        )
+        }
       </List>
 
       <CenteredContent>

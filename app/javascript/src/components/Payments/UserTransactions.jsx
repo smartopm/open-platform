@@ -11,11 +11,11 @@ import TransactionDetails from './TransactionDetails'
 import { formatMoney } from '../../utils/helpers';
 
 const transactionHeader = [
-  { title: 'Date Created', col: 1 },
-  { title: 'Description', col: 1 },
-  { title: 'Amount', col: 1 },
-  { title: 'Balance', col: 1 },
-  { title: 'Status', col: 1 }
+  { title: 'Date Created', col: 1, align: 'left' },
+  { title: 'Description', col: 1, align: 'left' },
+  { title: 'Amount', col: 1, align: 'right' },
+  { title: 'Balance', col: 1, align: 'right' },
+  { title: 'Status', col: 1, align: 'left' }
 ];
 
 export default function UserTransactionsList({ transaction, currencyData }) {

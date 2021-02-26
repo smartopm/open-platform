@@ -3,7 +3,6 @@
 # wallet queries
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
-
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -28,6 +27,15 @@ module Types::Queries::Wallet
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :payment_stat_details, [Types::WalletTransactionType], null: true do
+      description 'Get list of all transactions in a particular day'
+      argument :query, String, required: false
+    end
+
+    field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
+      description 'return stats of all unpaid invoices'
+    end
   end
 
   def user_wallets(user_id: nil, offset: 0, limit: 100)
@@ -46,6 +54,15 @@ module Types::Queries::Wallet
 
     ::WalletTransaction.search(query).eager_load(:user).order(created_at: :desc)
                        .limit(limit).offset(offset)
+  end
+
+  def payment_accounting_stats
+    context[:site_community].wallet_transactions.payment_stat
+  end
+
+  def payment_stat_details(query:)
+    context[:site_community].wallet_transactions
+                            .where(created_at: Date.parse(query).all_day, destination: 'wallet')
   end
 
   # It would be good to put this elsewhere to use it in other queries
