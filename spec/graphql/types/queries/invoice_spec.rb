@@ -7,13 +7,15 @@ RSpec.describe Types::Queries::Invoice do
     let!(:user) { create(:user_with_community, user_type: 'admin') }
     let!(:another_user) { create(:user_with_community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+    let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: user.community) }
+    let!(:payment) { create(:payment, user: user, community_id: user.community.id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-                       status: 'in_progress', invoice_number: '1234', created_by: user)
+                       status: 'in_progress', invoice_number: '1234', created_by: user, amount: 500)
     end
     let!(:invoice_two) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
-                       status: 'late', created_by: user)
+                       status: 'late', created_by: user, amount: 500)
     end
     let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     let!(:payment_plan) { create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id) }
@@ -74,6 +76,27 @@ RSpec.describe Types::Queries::Invoice do
           userInvoices(userId: $userId, limit: $limit, offset: $offset) {
             id
             amount
+          }
+        }
+      GQL
+    end
+    let(:invoices_with_transactions) do
+      <<~GQL
+        query InvoicesWithTransactions($userId: ID!) {
+          invoicesWithTransactions(userId: $userId) {
+            payments {
+              id
+            }
+          }
+        }
+      GQL
+    end
+    let(:pending_invoices) do
+      <<~GQL
+        query pendingInvoices($userId: ID!) {
+          pendingInvoices(userId: $userId) {
+            id
+            balance
           }
         }
       GQL
@@ -177,6 +200,64 @@ RSpec.describe Types::Queries::Invoice do
       expect(
         result.dig('data', 'invoiceAutogenerationData', 'totalAmount').floor,
       ).to eql ((payment_plan.percentage.to_i * valuation.amount) / 12).floor
+    end
+
+    it 'should retrieve invoices for a user with transactions' do
+      PaymentInvoice.create!(
+        payment: payment,
+        invoice: invoice_one,
+        wallet_transaction_id: wallet_transaction.id,
+      )
+      variables = {
+        userId: user.id,
+      }
+      result = DoubleGdpSchema.execute(invoices_with_transactions, variables: variables, context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'invoicesWithTransactions', 'payments', 0, 'id')).to eql payment.id
+      expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should retrieve pending balance of invoices' do
+      variables = {
+        userId: user.id,
+      }
+      result = DoubleGdpSchema.execute(pending_invoices, variables: variables, context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'pendingInvoices', 0, 'id')).to eq invoice_one.id
+      expect(result.dig('data', 'pendingInvoices', 1, 'id')).to eq invoice_two.id
+      expect(result.dig('data', 'pendingInvoices', 0, 'balance')).to eq 500
+      expect(result.dig('data', 'pendingInvoices', 1, 'balance')).to eq 1000
+      expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should raise unauthorized error if current-user is nil' do
+      variables = {
+        userId: user.id,
+      }
+      result = DoubleGdpSchema.execute(pending_invoices, variables: variables, context: {
+                                         current_user: nil,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should raise unauthorized error if current-user is not an admin' do
+      variables = {
+        userId: user.id,
+      }
+      result = DoubleGdpSchema.execute(pending_invoices, variables: variables, context: {
+                                         current_user: another_user,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end

@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe EntryRequest, type: :model do
+  describe 'callbacks' do
+    it { is_expected.to callback(:log_entry).after(:create) }
+  end
+
   describe 'Basic usage' do
     before :each do
       @guard = FactoryBot.create(:user_with_community)
@@ -67,6 +71,21 @@ RSpec.describe EntryRequest, type: :model do
                                                     name: 'Visitor Joe', nrc: '012345')
       expect { @entry_request.deny!(@non_admin) }
         .not_to raise_exception
+    end
+  end
+
+  describe '#send_feedback_link' do
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+
+    it 'sends feedback as sms' do
+      feedback_link = "https://#{ENV['HOST']}/feedback"
+      expect(Sms).to receive(:send).with(
+        '+2347084123467',
+        "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}",
+      )
+      entry_request.send_feedback_link('+2347084123467')
     end
   end
 end
