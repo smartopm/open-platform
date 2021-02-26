@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { InvoicesStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import InvoiceGraph from '../../components/Accounting/InvoiceGraph';
+import InvoiceGraph from '../../components/Payments/InvoiceGraph';
 
 describe('Invoice Graph Component', () => {
   const invoiceAccountingStats = [

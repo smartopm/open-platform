@@ -61,7 +61,8 @@ module Types::Queries::Wallet
   end
 
   def payment_stat_details(query:)
-    context[:site_community].wallet_transactions.where(created_at: Date.parse(query).all_day, destination: 'wallet')
+    context[:site_community].wallet_transactions
+                            .where(created_at: Date.parse(query).all_day, destination: 'wallet')
   end
 
   # It would be good to put this elsewhere to use it in other queries

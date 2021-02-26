@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types'
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Typography from '@material-ui/core/Typography';
 import { PaymentStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';

@@ -5,12 +5,12 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { PaymentStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import PaymentGraph from '../../components/Accounting/PaymentGraph';
+import PaymentGraph from '../../components/Payments/PaymentGraph';
 
 describe('Payment Graph Component', () => {
   const paymentAccountingStats = [
     {
-      noOfDays: '10-20',
+      tnxDate: '2020-10-10',
       cash: 20,
       mobileMoney: 30,
       bankTransfer: 10,
@@ -18,7 +18,7 @@ describe('Payment Graph Component', () => {
       pos: 49
     },
     {
-      noOfDays: '21-30',
+      tnxDate: '2020-10-10',
       cash: 30,
       mobileMoney: 20,
       bankTransfer: 10,

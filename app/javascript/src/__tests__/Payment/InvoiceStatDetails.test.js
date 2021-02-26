@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import InvoiceStatDetails, { renderInvoices } from '../../components/Accounting/InvoiceStatDetails';
+import InvoiceStatDetails, { renderInvoices } from '../../components/Payments/InvoiceStatDetails';
 
 describe('Payment List Item Component', () => {
   const data = [
