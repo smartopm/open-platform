@@ -50,7 +50,7 @@ module Types::Queries::Invoice
     field :invoice_autogeneration_data, Types::InvoiceAutogenerationDataType, null: false do
       description 'returns stats for monthly invoice autogeneration'
     end
-    
+
     field :invoice_accounting_stats, [Types::InvoiceAccountingStatType], null: false do
       description 'return stats of all unpaid invoices'
     end
@@ -142,7 +142,7 @@ module Types::Queries::Invoice
       total_amount: calculate_total_amount(payment_plans),
     }
   end
-  
+
   def invoice_accounting_stats
     Invoice.invoice_stat(context[:site_community].id)
   end
