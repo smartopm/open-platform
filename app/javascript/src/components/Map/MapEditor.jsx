@@ -10,6 +10,8 @@ import 'leaflet-draw/dist/leaflet.draw.css'
 
 const { attribution, centerPoint: { nkwashi } } = mapTiles
 
+  /* eslint-disable no-unused-expressions */
+  /* eslint-disable no-underscore-dangle */
 export default function MapEditor({ handleSaveMapEdit }){
   const feature = { 
     type: 'Feature',
@@ -74,7 +76,6 @@ export default function MapEditor({ handleSaveMapEdit }){
   function initializingMap() {
     const container = L.DomUtil.get('map');
     if(container != null){
-      // eslint-disable-next-line no-underscore-dangle
       container._leaflet_id = null;
     }
   }
@@ -90,18 +91,15 @@ export default function MapEditor({ handleSaveMapEdit }){
       maxZoom: 20
     }).addTo(map);
 
-    const editableLayers  = new L.FeatureGroup();
-    map?.addLayer(editableLayers);
+    const editableLayers  = new L.FeatureGroup().addTo(map);
 
     const drawPluginOptions = getDrawPluginOptions(editableLayers)
 
-    const drawControl = new L.Control.Draw(drawPluginOptions);
-    map?.addControl(drawControl);
+    new L.Control.Draw(drawPluginOptions).addTo(map);
 
     const handleDrawCreated = e => {
       const {layer} = e;
   
-      // eslint-disable-next-line no-underscore-dangle
       createPolygonFromMap({ latLongs: layer._latlngs[0] })
   
       editableLayers.addLayer(layer);
@@ -110,7 +108,6 @@ export default function MapEditor({ handleSaveMapEdit }){
     const handleDrawEdited = e => {
       const {layers} = e;
 
-      // eslint-disable-next-line no-underscore-dangle
       layers.eachLayer(layer => createPolygonFromMap({ latLongs: layer._latlngs[0] }));
     }
 
@@ -134,7 +131,7 @@ export default function MapEditor({ handleSaveMapEdit }){
         onClick={handleSave}
         style={{background: 'none'}}
       >
-        Save
+        Save Coordinates
       </Button>
       <div 
         data-testid="leaflet-map-container"
