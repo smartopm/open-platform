@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(invoice_id:)
         invoice = context[:site_community].invoices.find_by(id: invoice_id)
-        if invoice.paid? || invoice.nil? || invoice.cancelled?
+        if invoice.nil? || invoice.cancelled?
           raise GraphQL::ExecutionError, 'Invoice can not be cancelled'
         end
 
