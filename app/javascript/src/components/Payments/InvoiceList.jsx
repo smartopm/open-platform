@@ -115,10 +115,10 @@ export default function InvoiceList({ currencyData }) {
           <SearchInput
             title='Invoices'
             searchValue={searchValue}
-            handleSearch={event => setSearchValue(event.target.value)}
+            handleSearch={event => setsearch(event.target.value)}
             // Todo: add a proper filter toggle function
             handleFilter={() => {}}
-            handleClear={() => setSearchValue('')}
+            handleClear={() => setSearchClear()}
           />
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -154,14 +154,6 @@ export default function InvoiceList({ currencyData }) {
           )}
         </Grid>
       </Grid>
-      <SearchInput
-        title='Invoices'
-        searchValue={searchValue}
-        handleSearch={event => setsearch(event.target.value)}
-        // Todo: add a proper filter toggle function
-        handleFilter={() => {}}
-        handleClear={() => setSearchClear()}
-      />
       <br />
       <br />
       <Grid container spacing={3}>

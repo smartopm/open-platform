@@ -1,5 +1,7 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
+import { Link } from 'react-router-dom';
+import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types'
 import DetailHeading from './DetailHeading'
 import ListHeader from '../../shared/list/ListHeader';
@@ -32,7 +34,12 @@ export function renderInvoices(data, currency) {
     return {
       'Client Name': (
         <Grid item xs={4} md={2} data-testid="client_name">
-          <Text content={invoice?.user?.name} />
+          <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
+            <div style={{ display: 'flex' }}>
+              <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
+              <span style={{ margin: '7px' }}>{invoice.user?.name}</span>
+            </div>
+          </Link>
         </Grid>
       ),
       'Invoice Description': (

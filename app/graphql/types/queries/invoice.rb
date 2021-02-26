@@ -141,6 +141,8 @@ module Types::Queries::Invoice
       number_of_invoices: payment_plans.count,
       total_amount: calculate_total_amount(payment_plans),
     }
+  end
+  
   def invoice_accounting_stats
     Invoice.invoice_stat(context[:site_community].id)
   end
