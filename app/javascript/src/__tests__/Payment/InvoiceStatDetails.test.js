@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import InvoiceStatDetails, { renderInvoices } from '../../components/Payments/InvoiceStatDetails';
+import currency from '../../__mocks__/currency'
 
 describe('Payment List Item Component', () => {
   const data = [
@@ -24,15 +25,14 @@ describe('Payment List Item Component', () => {
   it('should render the invoice stat component component', async () => {
     const container = render(
       <BrowserRouter>
-        <InvoiceStatDetails currency="k" data={data} />
+        <InvoiceStatDetails currencyData={currency} data={data} />
       </BrowserRouter>
     );
       expect(container.queryAllByTestId('client_name')[0].textContent).toContain('joe');
       expect(container.queryAllByTestId('description')[0].textContent).toContain('test-123');
-      expect(container.queryAllByTestId('amount')[0].textContent).toContain('k100');
   });
   it('should check if renderInvoices works as expected', () => {
-    const results = renderInvoices(data, 'k');
+    const results = renderInvoices(data, currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Client Name');
     expect(results[0]).toHaveProperty('Invoice Description');
