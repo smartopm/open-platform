@@ -36,7 +36,7 @@ export default function TaskUpdate() {
     refetch()
   }
 
-  if (authState.user.userType !== 'admin') {
+  if (authState?.user?.userType !== 'admin') {
     return <Redirect push to="/" />
   }
   if (loading) return <Loading />
