@@ -6,8 +6,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import { allFeedback } from '../../graphql/queries';
 import AllFeedback from '../../containers/Activity/AllFeedback';
 
-
-
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('Feedback Component', () => {
