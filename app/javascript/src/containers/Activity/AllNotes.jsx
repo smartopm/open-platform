@@ -56,14 +56,14 @@ export default function Notes() {
         ) : (
           <>
             <br />
-            <p className="text-center">No Notes Yet</p>
+            <p className="text-center" data-testid='no-notes-txt'>No Notes Yet</p>
           </>
         )}
         <div className="d-flex justify-content-center">
           <nav aria-label="center Page navigation">
             <ul className="pagination">
               <li className={`page-item ${offset < limit && 'disabled'}`}>
-                <a className="page-link" onClick={handlePreviousPage} href="#">
+                <a className="page-link" onClick={handlePreviousPage} href="#" data-testid="prev-link">
                   Previous
                 </a>
               </li>
@@ -71,7 +71,7 @@ export default function Notes() {
                 className={`page-item ${data.allNotes.length < limit &&
                   'disabled'}`}
               >
-                <a className="page-link" onClick={handleNextPage} href="#">
+                <a className="page-link" onClick={handleNextPage} href="#" data-testid="next-link">
                   Next
                 </a>
               </li>
