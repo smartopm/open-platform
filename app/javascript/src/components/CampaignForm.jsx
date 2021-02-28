@@ -141,7 +141,7 @@ function handleTemplateDialog(status){
       .then(() => refetch())
       .catch((err) => setErrorMsg(err.message))
   }
-  if (authState.user.userType !== 'admin') {
+  if (authState?.user?.userType !== 'admin') {
     return <Redirect push to="/" />
   }
   if (!loading && !formData.loaded && data) {
@@ -151,7 +151,7 @@ function handleTemplateDialog(status){
     <div className="container">
       {/* only show this when no template is selected */}
       <EmailBuilderDialog open={templateDialogOpen} handleClose={handleTemplateDialog} />
-      
+
       <Snackbar
         open={isSubmitted}
         autoHideDuration={3000}
@@ -160,7 +160,7 @@ function handleTemplateDialog(status){
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         message={`Campaign ${id ? 'updated' : 'created'} sucessfully`}
       />
-      <form onSubmit={handleSubmit} aria-label="campaign-form">
+      <form onSubmit={handleSubmit} aria-label="campaign-form" data-testid='campaign-form'>
         <Toggler
           type={campaignType}
           handleType={handleCampaignType}
@@ -208,8 +208,8 @@ function handleTemplateDialog(status){
         />
         {formData.campaignType === 'email' && (
           <>
-            <TemplateList 
-              value={formData.emailTemplatesId} 
+            <TemplateList
+              value={formData.emailTemplatesId}
               handleValue={handleTemplateValue}
               createTemplate={handleTemplateDialog}
               shouldRefecth={isUpdated}

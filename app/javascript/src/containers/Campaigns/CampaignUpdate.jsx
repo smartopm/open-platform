@@ -17,7 +17,7 @@ export default function CampaignUpdate({ match }) {
     errorPolicy: 'all'
   })
 
-  if (authState.user.userType !== 'admin') {
+  if (authState?.user?.userType !== 'admin') {
     return <Redirect push to="/" />
   }
   if (loading) return <Loading />
