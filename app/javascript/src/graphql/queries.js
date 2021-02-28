@@ -960,6 +960,65 @@ export const InvoiceStatsQuery = gql`
   }
 `
 
+export const InvoicesStats = gql`
+  query InvoicesStats {
+    invoiceAccountingStats {
+      noOfDays
+      noOfInvoices
+    }
+  }
+`
+
+export const PaymentStats = gql`
+  query PaymentStats {
+    paymentAccountingStats {
+      trxDate
+      cash
+      mobileMoney
+      bankTransfer
+      eft
+      pos
+    }
+  }
+`
+
+export const InvoicesStatsDetails = gql`
+  query InvoicesStatsDetails($query: String!) {
+    invoicesStatDetails(query: $query) {
+      id
+      amount
+      status
+      invoiceNumber
+      dueDate
+      createdAt
+      user {
+        id
+        name
+      }
+      landParcel {
+        id
+        parcelNumber
+      }
+    }
+  }
+`
+
+export const PaymentStatsDetails = gql`
+  query PaymentStatsDetails($query: String!) {
+    paymentStatDetails(query: $query) {
+      id
+      amount
+      source
+      createdAt
+      user {
+        id
+        name
+        imageUrl
+      }
+    }
+  }
+`
+
 export const LandParcel = gql`
   query landParcel($id: ID!) {
     landParcel(id: $id) {
@@ -1139,4 +1198,13 @@ export const PaymentsQuery = gql`
         }
       }
     }
+`
+
+export const InvoiceAutogenerationData = gql`
+  query invoiceAutogenerationData {
+    invoiceAutogenerationData {
+      numberOfInvoices
+      totalAmount
+    }
+  }
 `

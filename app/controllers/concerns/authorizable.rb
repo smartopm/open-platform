@@ -22,8 +22,9 @@ module Authorizable
   def current_community
     community_list = { 'app.doublegdp.com' => 'Nkwashi',
                        'double-gdp-staging.herokuapp.com' => 'Nkwashi',
-                       'femoza.doublegdp.com' => 'Femoza',
-                       'femoza-staging.doublegdp.com' => 'Femoza', 'dev.dgdp.site' => 'Femoza' }
+                       'demo.doublegdp.com' => 'Doublegdp',
+                       'demo-staging.doublegdp.com' => 'Doublegdp',
+                       'dev.dgdp.site' => 'Doublegdp' }
 
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
       @site_community = Community.find_by(name: 'Nkwashi')

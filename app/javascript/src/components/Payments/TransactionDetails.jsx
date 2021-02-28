@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import { useLocation } from 'react-router-dom';
 import { DetailsDialog } from '../Dialog';
 import DetailsField from './DetailField';
 import { dateToString } from '../DateContainer';
@@ -9,6 +10,7 @@ import { formatMoney } from '../../utils/helpers';
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData }) {
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
+  const { pathname } = useLocation()
   return (
     <>
       <DetailsDialog
@@ -16,12 +18,16 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         open={detailsOpen}
         title={data.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}
       >
-        <div style={{ marginLeft: '20px' }}>
-          <Typography variant="caption">Current Wallet Balance</Typography>
-          <Typography color="primary" variant="h5">
-            {formatMoney(currencyData, balance)}
-          </Typography>
-        </div>
+        {
+          pathname !== '/payments' && (
+            <div style={{ marginLeft: '20px' }}>
+              <Typography variant="caption">Current Wallet Balance</Typography>
+              <Typography color="primary" variant="h5">
+                {formatMoney(currencyData, balance)}
+              </Typography>
+            </div>
+          )
+        }
         <DetailsField title="Amount" value={formatMoney(currencyData, data?.amount)} />
         {data.balance && (
           <div>

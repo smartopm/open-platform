@@ -33,7 +33,7 @@ class Community < ApplicationRecord
 
   DOMAINS_COMMUNITY_MAP = {
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
-    'Femoza': ['doublegdp.com', 'femoza.com'],
+    'Doublegdp': ['doublegdp.com'],
   }.freeze
 
   IMAGE_ATTACHMENTS = {

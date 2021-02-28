@@ -3,7 +3,6 @@
 # wallet queries
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
-
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -29,10 +28,13 @@ module Types::Queries::Wallet
       argument :query, String, required: false
     end
 
-    # Get transaction's receipt
-    field :transaction_receipt, Types::PaymentType, null: true do
-      description 'Get a receipt for a transaction'
-      argument :transaction_id, GraphQL::Types::ID, required: true
+    field :payment_stat_details, [Types::WalletTransactionType], null: true do
+      description 'Get list of all transactions in a particular day'
+      argument :query, String, required: false
+    end
+
+    field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
+      description 'return stats of all unpaid invoices'
     end
   end
 
@@ -54,10 +56,13 @@ module Types::Queries::Wallet
                        .limit(limit).offset(offset)
   end
 
-  def transaction_receipt(transaction_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+  def payment_accounting_stats
+    context[:site_community].wallet_transactions.payment_stat
+  end
 
-    context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
+  def payment_stat_details(query:)
+    context[:site_community].wallet_transactions
+                            .where(created_at: Date.parse(query).all_day, destination: 'wallet')
   end
 
   # It would be good to put this elsewhere to use it in other queries

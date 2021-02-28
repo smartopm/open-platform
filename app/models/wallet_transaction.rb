@@ -34,4 +34,29 @@ class WalletTransaction < ApplicationRecord
     self.current_wallet_balance = user.wallet.update_balance(amount)
   end
   # rubocop:enable Style/ParenthesesAroundCondition
+
+  # rubocop:disable Metrics/MethodLength
+  def self.payment_stat
+    WalletTransaction.connection.select_all(
+      "select
+      date(wallet_transactions.created_at at time zone 'utc' at time zone communities.timezone)
+      as trx_date,
+      sum(CASE WHEN wallet_transactions.source='cash'
+      THEN wallet_transactions.amount ELSE 0 END) as cash,
+      sum(CASE WHEN wallet_transactions.source='mobile_money'
+      THEN wallet_transactions.amount ELSE 0 END) as mobile_money,
+      sum(CASE WHEN wallet_transactions.source='pos'
+      THEN wallet_transactions.amount ELSE 0 END) as pos,
+      sum(CASE WHEN wallet_transactions.source='bank_transfer/cash_deposit'
+      THEN wallet_transactions.amount ELSE 0 END) as bank_transfer,
+      sum(CASE WHEN wallet_transactions.source='bank_transfer/eft'
+      THEN wallet_transactions.amount ELSE 0 END) as eft
+     from wallet_transactions inner join communities
+     on wallet_transactions.community_id = communities.id
+     where destination = 'wallet'
+     and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '60 days')
+     group by trx_date order by trx_date",
+    )
+  end
+  # rubocop:enable Metrics/MethodLength
 end

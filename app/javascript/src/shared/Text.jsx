@@ -1,11 +1,12 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { oneOfType, number, bool, string, node  } from 'prop-types';
 import { textProps } from './types/text';
 
-export default function Text({ content, color, otherProps }) {
+export default function Text({ content, color, align, otherProps }) {
   return (
-    <Typography variant='caption' color={color} gutterBottom {...otherProps}>
+    <Typography variant='caption' color={color} align={align} gutterBottom {...otherProps}>
       {content}
     </Typography>
   );

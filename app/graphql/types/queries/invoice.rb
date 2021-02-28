@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # invoice queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Invoice
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -45,9 +46,21 @@ module Types::Queries::Invoice
     field :invoice_stats, Types::InvoiceStatType, null: false do
       description 'return stats based on status of invoices'
     end
+
+    field :invoice_autogeneration_data, Types::InvoiceAutogenerationDataType, null: false do
+      description 'returns stats for monthly invoice autogeneration'
+    end
+
+    field :invoice_accounting_stats, [Types::InvoiceAccountingStatType], null: false do
+      description 'return stats of all unpaid invoices'
+    end
+
+    field :invoices_stat_details, [Types::InvoiceType], null: false do
+      argument :query, GraphQL::Types::String, required: true
+      description 'return list of all unpaid invoices'
+    end
   end
   # rubocop:enable Metrics/BlockLength
-
   def invoices(status: nil, query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
@@ -89,6 +102,24 @@ module Types::Queries::Invoice
     cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
   end
 
+  # rubocop:disable Metrics/MethodLength
+  def invoices_stat_details(query:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+
+    invoices = context[:site_community].invoices
+    case query
+    when '00-30'
+      invoices.not_paid.where('due_date >= ?', 30.days.ago)
+    when '31-45'
+      invoices.not_paid.where('due_date <= ? AND due_date >= ?', 31.days.ago, 45.days.ago)
+    when '46-60'
+      invoices.not_paid.where('due_date <= ? AND due_date >= ?', 46.days.ago, 60.days.ago)
+    else
+      invoices.not_paid.where('due_date <= ?', 61.days.ago)
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
+
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
@@ -99,6 +130,21 @@ module Types::Queries::Invoice
       in_progress: invoices.in_progress.count,
       cancelled: invoices.cancelled.count,
     }
+  end
+
+  def invoice_autogeneration_data
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    month = Time.zone.now.month
+    payment_plans = ::PaymentPlan.where('extract(month from start_date) = ?', month)
+    {
+      number_of_invoices: payment_plans.count,
+      total_amount: calculate_total_amount(payment_plans),
+    }
+  end
+
+  def invoice_accounting_stats
+    Invoice.invoice_stat(context[:site_community].id)
   end
 
   # It would be good to put this elsewhere to use it in other queries
@@ -126,4 +172,17 @@ module Types::Queries::Invoice
     pending_invoices
   end
   # rubocop:enable Metrics/AbcSize
+
+  def calculate_total_amount(payment_plans)
+    amount = 0
+    payment_plans.each do |payment_plan|
+      land_parcel = payment_plan.land_parcel
+      valuation = land_parcel.valuations&.latest
+      next if valuation.nil?
+
+      amount += ((payment_plan.percentage.to_i * valuation.amount) / 12)
+    end
+    amount
+  end
 end
+# rubocop:enable Metrics/ModuleLength

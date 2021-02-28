@@ -42,7 +42,7 @@ export default function UserInvoiceItem({ invoice, currencyData }) {
 
 export function renderInvoices(inv, currencyData) {
   return {
-    'Issue Date': <GridText content={dateToString(inv.createdAt)} />,
+    'Issue Date': <GridText content={dateToString(inv.createdAt)} col={4} />,
     'Description': (
       <Grid item xs={4} md={2} data-testid="description">
         <Text content={`Invoice Number #${inv.invoiceNumber}`} /> 

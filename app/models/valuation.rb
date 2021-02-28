@@ -6,6 +6,10 @@ class Valuation < ApplicationRecord
   validates :amount, :start_date, presence: true
   validate :start_date_cannot_be_in_the_past, :amount_limit
 
+  def self.latest
+    where('start_date <= ?', Time.zone.now).order(start_date: :desc).first
+  end
+
   private
 
   def start_date_cannot_be_in_the_past
