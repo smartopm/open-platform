@@ -9,7 +9,7 @@ export default function CommunityForms() {
   return (
     <div>
       <Nav navName="Permits and Request Forms" menuButton="back" backTo="/" />
-      <Forms userType={authState.user.userType} />
+      <Forms userType={authState?.user?.userType} />
     </div>
   )
 }

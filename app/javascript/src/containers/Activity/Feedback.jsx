@@ -86,6 +86,7 @@ export function Feedback(props) {
                             onClick={handleThumbDown}
                             className={classes.thumbDownButton}
                             aria-label='Thumb Down'
+                            data-testid="thumbdown-icon"
                         >
                             <ThumbDownIcon className={classes.largeIcon} />
                         </IconButton>
@@ -95,6 +96,7 @@ export function Feedback(props) {
                             onClick={handleThumbUp}
                             className={classes.thumbUpButton}
                             aria-label='Thumb Up'
+                            data-testid="thumbup-icon"
                         >
                             {
                                 isSubmitting ? <CircularProgress size={70} /> : <ThumbUpIcon className={classes.largeIcon} />
@@ -105,7 +107,7 @@ export function Feedback(props) {
                 <br />
                 <br />
                 {isTextAreaOpen && (
-                    <form>
+                    <form data-testid='feedback-form'>
                         <div className='form-group'>
                             <label htmlFor='feedback'>
                                 We value your feedback. Do you have a suggestion on how we can

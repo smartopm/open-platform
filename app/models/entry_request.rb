@@ -123,6 +123,7 @@ class EntryRequest < ApplicationRecord
       log_showroom_entry
     else
       log_entry_start
+
     end
   end
 

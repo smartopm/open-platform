@@ -53,4 +53,66 @@ RSpec.describe Campaign, type: :model do
   describe 'validations' do
     it { is_expected.to validate_inclusion_of(:campaign_type).in_array(%w[email sms]) }
   end
+
+  describe '#send_messages' do
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community: user.community) }
+    let!(:campaign) { create(:campaign, community_id: user.community.id, campaign_type: 'sms') }
+
+    it 'creates a new message' do
+      prev_message_count = Message.count
+      allow(Sms).to receive(:send).and_return(OpenStruct.new({ messages: [] }))
+
+      campaign.send_messages(admin, user)
+
+      expect(Message.count).to eq(prev_message_count + 1)
+    end
+  end
+
+  describe '#send_email' do
+    let!(:user) { create(:user_with_community) }
+    let!(:template) { create(:email_template, community: user.community) }
+    let!(:campaign) do
+      create(:campaign,
+             community_id: user.community.id, campaign_type: 'email',
+             email_templates_id: template.id)
+    end
+
+    it 'invokes send_mail_from_db on EmailMsg' do
+      template_data = [{ key: '%community%', value: user.community.name }]
+
+      expect(EmailMsg).to receive(:send_mail_from_db).with(
+        'nurudeen@gmail.com',
+        template,
+        template_data,
+      )
+      campaign.send_email('nurudeen@gmail.com')
+    end
+  end
+
+  describe '#run_campaign' do
+    let!(:user) { create(:user_with_community, name: 'Mutale Chibwe', state: 'valid') }
+    let!(:campaign) { create(:campaign, community_id: user.community.id) }
+
+    it 'invokes CampaignMetricsJob' do
+      expect(CampaignMetricsJob).to receive(:set).with(
+        wait: 2.hours,
+      ).and_return(CampaignMetricsJob)
+      campaign.run_campaign
+    end
+  end
+
+  describe '#expired?' do
+    let!(:user) { create(:user_with_community) }
+
+    it 'returns true' do
+      campaign = create(:campaign, community_id: user.community.id, start_time: 10.days.ago)
+      expect(campaign.expired?).to eq(true)
+    end
+
+    it 'returns false' do
+      campaign = create(:campaign, community_id: user.community.id, start_time: 10.days.from_now)
+      expect(campaign.expired?).to eq(false)
+    end
+  end
 end

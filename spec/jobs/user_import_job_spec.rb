@@ -21,7 +21,7 @@ RSpec.describe UserImportJob, type: :job do
       expect(UserImportJob).to have_been_enqueued.with(csv_string, 'A File.csv', user)
     end
 
-    it 'should update assignee_note reminder_job_id with new job id' do
+    it 'should create new users' do
       prev_user_count = User.count
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
 

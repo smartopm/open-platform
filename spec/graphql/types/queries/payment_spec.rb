@@ -45,6 +45,17 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
+    let(:user_payments_query) do
+      <<~GQL
+        query {
+            userPayments(userId: "#{user.id}") {
+                id
+                amount
+              }
+          }
+      GQL
+    end
+
     it 'should retrieve list of payments' do
       result = DoubleGdpSchema.execute(payments_query, context: {
                                          current_user: user,
@@ -71,6 +82,56 @@ RSpec.describe Types::Queries::Payment do
       expect(result.dig('data', 'payment', 'id')).to eql payment_one.id
       expect(result.dig('data', 'payment', 'amount')).to eql 100.0
       expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should raise unauthorized error if current-user is nil' do
+      result = DoubleGdpSchema.execute(payment_query, context: {
+                                         current_user: nil,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should raise unauthorized error if current-user is not an admin' do
+      result = DoubleGdpSchema.execute(payment_query, context: {
+                                         current_user: another_user,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should retrieve user payments' do
+      result = DoubleGdpSchema.execute(user_payments_query,
+                                       variables: { userId: user.id },
+                                       context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'userPayments')).to be_empty
+      expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should raise an unauthorized error if current-user is nil' do
+      result = DoubleGdpSchema.execute(user_payments_query,
+                                       variables: { userId: user.id },
+                                       context: {
+                                         current_user: nil,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should raise an unauthorized error if current-user is not an admin' do
+      result = DoubleGdpSchema.execute(user_payments_query,
+                                       variables: { userId: user.id },
+                                       context: {
+                                         current_user: another_user,
+                                         site_community: user.community,
+                                       }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end

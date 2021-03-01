@@ -151,7 +151,7 @@ module Types::Queries::Invoice
 
   def verified_user(user_id)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.id == user_id ||
                                                          context[:current_user].admin?
 
     user = User.allowed_users(context[:current_user]).find(user_id)

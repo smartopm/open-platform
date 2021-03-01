@@ -18,7 +18,7 @@ export default function Notifications() {
     })
 
     const { data, loading: labelsLoading, error } = useQuery(UserLabelsQuery, {
-        variables: { userId: authState.user.id }
+        variables: { userId: authState?.user?.id }
     })
     const [loading, setLoading] = useState(false)
     const [snackBarOpen, setOpenSnackBar] = useState(false)
