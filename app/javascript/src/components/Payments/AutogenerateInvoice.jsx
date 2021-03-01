@@ -47,14 +47,14 @@ export default function AutogenerateInvoice({ currencyData, close }) {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <Typography variant="body1">
+      <Typography variant="body1" data-testid="title_msg">
         This will generate all invoices for this month.
       </Typography>
-      <Typography variant="body1">
-        {` Number of invoices for this month: ${data.invoiceAutogenerationData.numberOfInvoices}`}
+      <Typography variant="body1" data-testid="number_invoices">
+        {` Number of invoices for this month: ${data?.invoiceAutogenerationData.numberOfInvoices}`}
       </Typography>
-      <Typography variant="body1">
-        {`Total amount for invoices this month: ${formatMoney(currencyData, data.invoiceAutogenerationData.totalAmount)}`}
+      <Typography variant="body1" data-testid="invoices_amount">
+        {`Total amount for invoices this month: ${formatMoney(currencyData, data?.invoiceAutogenerationData.totalAmount)}`}
       </Typography>
       <Grid
         container
