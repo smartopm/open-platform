@@ -36,7 +36,6 @@ import ListHeader from '../../shared/list/ListHeader';
 import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
-import InvoiceStatDetails from './InvoiceStatDetails'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
