@@ -21,7 +21,7 @@ const transactionHeader = [
   { title: 'Menu', col: 1 },
 ];
 
-export default function UserTransactionsList({ transaction, currencyData, userData }) {
+export default function UserTransactionsList({ transaction, currencyData, userData, userType }) {
   const [open, setOpen] = useState(false)
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -62,7 +62,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
     handleTransactionMenu,
     anchorEl,
     open: anchorElOpen,
-    userType: 'admin',
+    userType,
     handleClose
   }
   return (
@@ -186,12 +186,14 @@ UserTransactionsList.propTypes = {
   }).isRequired,
   userData: PropTypes.shape({
     name: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  userType: PropTypes.string.isRequired
 };
 
 
 
 // temporal menuList
+// this will be removed after merging with @tolulope's changes
 export function MenuList({
   list,
   anchorEl,

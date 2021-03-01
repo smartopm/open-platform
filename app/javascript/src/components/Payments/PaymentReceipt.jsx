@@ -54,7 +54,9 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
             <div style={{margin: '10px 50px 10px 50px'}}>
               <Grid container spacing={1}>
                 <Grid item xs={4}>
-                  {paymentData?.source}
+                  {paymentData?.source === 'wallet' 
+                  ? 'cash'
+                  : paymentData?.source}
                 </Grid>
                 <Grid item xs={4}>
                   {formatMoney(currencyData, paymentData?.amount)}

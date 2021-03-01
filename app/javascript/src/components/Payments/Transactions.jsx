@@ -153,6 +153,7 @@ export default function TransactionsList({ userId, user, userData }) {
             currencyData={currencyData}
             key={trans.id}
             userData={userData}
+            userType={authState.user?.userType}
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
@@ -161,6 +162,7 @@ export default function TransactionsList({ userId, user, userData }) {
             currencyData={currencyData}
             key={trans?.id}
             userData={userData}
+            userType={authState.user?.userType}
           />
         ))}
       </TabPanel>
