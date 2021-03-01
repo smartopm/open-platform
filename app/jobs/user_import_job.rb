@@ -78,14 +78,17 @@ class UserImportJob < ApplicationJob
 
   private
 
+  # rubocop:disable Metrics/AbcSize
   def duplicate_user(email, phone_list, community)
-    ::User.where.not(email: nil).where(email: email, community: community).or(
-      ::User.where(phone_number: phone_list, community: community),
-    ).first ||
+    users = User.arel_table
+    ::User.where.not(email: nil).where(community: community).where(
+      users[:email].matches("#{email}%"),
+    ).or(::User.where(phone_number: phone_list, community: community)).first ||
       ::User.where(community: community).joins(:contact_infos).where(contact_infos:
         { contact_type: 'email', info: email }).or(
           ::User.where(community: community).joins(:contact_infos).where(contact_infos:
           { contact_type: 'phone', info: phone_list }),
         ).first
   end
+  # rubocop:enable Metrics/AbcSize
 end
