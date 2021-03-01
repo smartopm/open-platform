@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
