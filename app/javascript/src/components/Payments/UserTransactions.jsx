@@ -152,15 +152,20 @@ export function renderTransactions(transaction, currencyData, menuData) {
     ),
     Menu: (
       <Grid item xs={1}>
-        <IconButton
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={(event) => menuData.handleTransactionMenu(event, transaction)}
-        >
-          <MoreHorizOutlined />
-        </IconButton>
+        {
+          transaction.__typename === 'WalletTransaction'
+          ? (
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={(event) => menuData.handleTransactionMenu(event, transaction)}
+            >
+              <MoreHorizOutlined />
+            </IconButton>
+          )
+          : null
+        }
         <MenuList
-          // open={menuData.open && menuData.anchorEl.getAttribute('dataid') === transaction.id}
           open={menuData.open}
           anchorEl={menuData.anchorEl}
           userType={menuData.userType}
