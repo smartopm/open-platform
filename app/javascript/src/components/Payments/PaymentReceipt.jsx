@@ -31,9 +31,11 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
               {paymentData.createdAt ? dateToString(paymentData.createdAt) : null} 
               {' '}
               <br />
-              TransactionId: 
-              {' '}
-              {paymentData?.transactionNumber || '-'}
+              {
+                paymentData.transactionNumber 
+                  ? `TransactionId: ${paymentData.transactionNumber}`
+                  : null
+              }
             </div>
             <div style={{margin: '200px 50px 10px 50px'}}>
               <Grid container spacing={1}>

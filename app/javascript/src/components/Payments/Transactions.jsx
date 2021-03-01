@@ -114,7 +114,6 @@ export default function TransactionsList({ userId, user, userData }) {
       <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
         <Typography variant='caption'>Total Balance</Typography>
         <div style={{display: 'flex', flexDirection: 'row' }}>
-          {/* <Typography style={{marginTop: '50px'}} variant="caption" color='primary'>{currency}</Typography> */}
           <Typography variant="h2" color='primary'>{formatMoney(currencyData, walletData.userBalance)}</Typography>
         </div>
       </div>
@@ -153,6 +152,7 @@ export default function TransactionsList({ userId, user, userData }) {
             transaction={trans || {}} 
             currencyData={currencyData}
             key={trans.id}
+            userData={userData}
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
@@ -160,6 +160,7 @@ export default function TransactionsList({ userId, user, userData }) {
             transaction={trans || {}} 
             currencyData={currencyData}
             key={trans?.id}
+            userData={userData}
           />
         ))}
       </TabPanel>

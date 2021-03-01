@@ -10,6 +10,7 @@ import CenteredContent from '../CenteredContent';
 import Label from '../../shared/label/Label';
 import TransactionDetails from './TransactionDetails'
 import { formatMoney } from '../../utils/helpers';
+import PaymentReceipt from './PaymentReceipt';
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
@@ -20,8 +21,9 @@ const transactionHeader = [
   { title: 'Menu', col: 1 },
 ];
 
-export default function UserTransactionsList({ transaction, currencyData }) {
+export default function UserTransactionsList({ transaction, currencyData, userData }) {
   const [open, setOpen] = useState(false)
+  const [receiptOpen, setReceiptOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
 
@@ -41,16 +43,14 @@ export default function UserTransactionsList({ transaction, currencyData }) {
   }
 
   function handleTransactionMenu(event){
-    // console.log(id)
     event.stopPropagation()
-    // setOpen(false)
-    // console.log(transaction)
     setAnchorEl(event.currentTarget)
   }
 
   function handleOpenReceipt(){
-    // event.stopPropagation()
     setOpen(false)
+    setReceiptOpen(!receiptOpen)
+    handleClose()
   }
 
   function handleClose() {
@@ -80,6 +80,13 @@ export default function UserTransactionsList({ transaction, currencyData }) {
         data={transaction}
         currencyData={currencyData}
         title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
+      />
+      <PaymentReceipt 
+        paymentData={transaction} 
+        open={receiptOpen} 
+        handleClose={handleOpenReceipt}
+        userData={userData}
+        currencyData={currencyData}
       />
     </div>
   )
@@ -148,7 +155,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
         <IconButton
           aria-controls="simple-menu"
           aria-haspopup="true"
-          onClick={(event) => menuData.handleTransactionMenu(event)}
+          onClick={(event) => menuData.handleTransactionMenu(event, transaction)}
         >
           <MoreHorizOutlined />
         </IconButton>
@@ -172,6 +179,9 @@ UserTransactionsList.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
+  userData: PropTypes.shape({
+    name: PropTypes.string.isRequired
+  }).isRequired
 };
 
 
