@@ -31,7 +31,7 @@ export default function CustodianLogs() {
     }
   }
 
-  if (!['admin', 'custodian'].includes(authState.user.userType)) {
+  if (!['admin', 'custodian'].includes(authState.user?.userType)) {
     history.push('/')
   }
   if (loading) return <Spinner />

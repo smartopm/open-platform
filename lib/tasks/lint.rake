@@ -7,7 +7,7 @@ namespace :lint do
   end
   desc 'lint and autofix the project'
   task fix: :environment do
-    sh 'bundle exec rubocop -a'
+    sh 'bundle exec rubocop -A'
   end
 end
 

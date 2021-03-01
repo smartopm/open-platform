@@ -10,11 +10,11 @@ import ErrorPage from '../../components/Error'
 export default function CommunitySettings(){
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(CommunityQuery, {
-    variables: { id: authState.user.community.id },
+    variables: { id: authState?.user?.community?.id },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
-  
+
   if (loading) return <Loading />
   if (error) return <ErrorPage />
   return (
@@ -25,7 +25,7 @@ export default function CommunitySettings(){
         backTo='/'
       />
       <div className="container">
-        <CommunitySettingsPage data={data.community} refetch={refetch} token={authState.token} /> 
+        <CommunitySettingsPage data={data.community} refetch={refetch} token={authState.token} />
       </div>
     </>
   )

@@ -136,4 +136,36 @@ RSpec.describe Mutations::EntryRequest do
       expect(result['errors']).to be_nil
     end
   end
+
+  describe 'acknowledging an entry request' do
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+
+    let(:query) do
+      <<~GQL
+        mutation EntryRequestAcknowledgeMutation($id: ID!) {
+          result: entryRequestAcknowledge(id: $id) {
+            entryRequest {
+              id
+              acknowledged
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'returns an acknowledged entry request' do
+      variables = {
+        id: entry_request.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'acknowledged')).to eql true
+      expect(result['errors']).to be_nil
+    end
+  end
 end

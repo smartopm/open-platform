@@ -33,7 +33,7 @@ export function FeedbackSuccess(props) {
         <div>
             <Nav navName='Feedback' menuButton='cancel' backTo="/" />
             <div className={`container ${css(style.feedbackPage)}`}>
-                <p className='text-center'>Thank you for your feedback</p>
+                <p className='text-center' data-testid='feedback-txt'>Thank you for your feedback</p>
                 <div className="row justify-content-around">
                     <div className="">
                         <IconButton className={classes.checkedIcon} aria-label="Check Icon">

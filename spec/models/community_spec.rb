@@ -24,4 +24,22 @@ RSpec.describe Community, type: :model do
     community.save
     expect(community.default_users).to_not be_empty
   end
+
+  describe '#notify_slack' do
+    let!(:community) { create(:community, slack_webhook_url: 'https://something.com') }
+
+    it 'invokes Slack class' do
+      expect(Slack).to receive(:new).with(
+        'https://something.com',
+      )
+      community.notify_slack('Helloo')
+    end
+
+    it "sends to Rollbar if there's exception" do
+      err = StandardError.new('One stupid error!')
+      allow(Slack).to receive(:new).and_raise(err)
+      expect(Rollbar).to receive(:error).with(err)
+      community.notify_slack('Helloo')
+    end
+  end
 end

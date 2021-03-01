@@ -52,8 +52,8 @@ module Types::Queries::Wallet
   def transactions(offset: 0, limit: 100, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:site_community].wallet_transactions.search(query).eager_load(:user).order(created_at: :desc)
-                            .limit(limit).offset(offset)
+    context[:site_community].wallet_transactions.search(query).eager_load(:user)
+                            .order(created_at: :desc).limit(limit).offset(offset)
   end
 
   def payment_accounting_stats
@@ -67,8 +67,8 @@ module Types::Queries::Wallet
 
   # It would be good to put this elsewhere to use it in other queries
   def verified_user(user_id)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].id == user_id ||
-                                                         context[:current_user].admin?
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.id == user_id ||
+                                                         context[:current_user]&.admin?
 
     user = User.allowed_users(context[:current_user]).find(user_id)
     raise GraphQL::ExecutionError, 'User not found' if user.blank?

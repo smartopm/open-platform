@@ -12,7 +12,7 @@ export default function Labels(){
           menuButton="back"
           backTo='/'
         />
-        <LabelList userType={authState.user.userType} />
+        <LabelList userType={authState?.user?.userType} />
       </>
     )
 }

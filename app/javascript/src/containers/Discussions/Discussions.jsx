@@ -34,9 +34,6 @@ export default function Discussions() {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const authState = useContext(AuthStateContext)
-  const {
-    user: { userType }
-  } = authState
 
   function openModal() {
     setOpen(!open)
@@ -115,7 +112,7 @@ export default function Discussions() {
         <DiscussionList
           data={data.discussions}
           refetch={refetch}
-          isAdmin={authState.user.userType === 'admin'}
+          isAdmin={authState?.user?.userType === 'admin'}
         />
         {data.discussions.length >= limit && (
           <CenteredContent>
@@ -124,7 +121,7 @@ export default function Discussions() {
             </Button>
           </CenteredContent>
         )}
-        {userType === 'admin' && (
+        {authState?.user?.userType === 'admin' && (
           <FloatButton
             title="Create discussion topic"
             handleClick={openModal}
