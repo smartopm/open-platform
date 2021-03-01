@@ -21,7 +21,6 @@ export function GridText({ content, col, statusColor, ...otherProps }) {
 }
 
 Text.defaultProps = {
-  otherProps: {},
   content: null
 };
 
