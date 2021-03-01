@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
 import CreateLandParcel from '../components/LandParcels/CreateLandParcel'
 
-describe('Land Property Component', () => {
+describe.skip('Land Property Component', () => {
   it('it should render add property form', () => {
       const refetch = jest.fn()
     const container = render(
