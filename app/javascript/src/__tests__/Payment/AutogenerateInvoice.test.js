@@ -7,7 +7,7 @@ import { InvoiceAutogenerationData } from '../../graphql/queries';
 import currency from '../../__mocks__/currency'
 import { Spinner } from '../../shared/Loading';
 
-describe('Detail Component', () => {
+describe('Autogenerate Component', () => {
   const mock = {
     request: {
       query: InvoiceAutogenerationData
