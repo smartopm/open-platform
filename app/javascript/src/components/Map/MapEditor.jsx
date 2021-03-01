@@ -5,7 +5,6 @@ import L from 'leaflet'
 import 'leaflet-draw'
 import { getDrawPluginOptions } from '../../utils/helpers'
 import { mapTiles } from '../../utils/constants'
-import 'leaflet-draw/dist/leaflet.draw.css'
 
 const { attribution, centerPoint: { nkwashi } } = mapTiles
   /* eslint-disable no-unused-expressions */
