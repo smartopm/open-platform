@@ -4,7 +4,7 @@ import { Grid, Typography } from '@material-ui/core';
 import { oneOfType, number, bool, string, node  } from 'prop-types';
 import { textProps } from './types/text';
 
-export default function Text({ content, color, align, otherProps }) {
+export default function Text({ content, color, align, ...otherProps }) {
   return (
     <Typography variant='caption' color={color} align={align} gutterBottom {...otherProps}>
       {content}
@@ -12,7 +12,7 @@ export default function Text({ content, color, align, otherProps }) {
   );
 }
 
-export function GridText({ content, otherProps, col, statusColor }) {
+export function GridText({ content, col, statusColor, ...otherProps }) {
   return (
     <Grid xs={col || true} md={2} style={statusColor ? {color: statusColor} : null} item>
       <Text content={content} {...otherProps} />

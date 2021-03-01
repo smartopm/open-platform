@@ -107,6 +107,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Description: (
       <GridText
         col={4}
+        data-testid="description"
         content={`${
           // eslint-disable-next-line no-nested-ternary
           transaction.__typename !== 'WalletTransaction'
@@ -118,7 +119,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       />
     ),
     Amount: (
-      <Grid item xs={3} md={2} data-testid="description">
+      <Grid item xs={3} md={2} data-testid="amount">
         {transaction.__typename === 'WalletTransaction' ? (
           <Text content={formatMoney(currencyData, transaction.amount)} />
         ) : (
@@ -134,6 +135,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       <GridText
         statusColor={transaction.__typename !== 'WalletTransaction' && '#D65252'}
         col={3}
+        data-testid="balance"
         content={
           transaction.__typename === 'WalletTransaction'
             ? formatMoney(currencyData, transaction.currentWalletBalance)
@@ -158,6 +160,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
+              data-testid="receipt-menu"
               onClick={(event) => menuData.handleTransactionMenu(event, transaction)}
             >
               <MoreHorizOutlined />
