@@ -159,14 +159,21 @@ export default function InvoiceList({ currencyData }) {
       </Grid>
       <List>
         {
-          listType === 'graph' && invoicesStatData?.invoicesStatDetails.length && invoicesStatData?.invoicesStatDetails.length > 0 ?
+          listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length && invoicesStatData?.invoicesStatDetails?.length > 0 ?
         (
-          <InvoiceStatDetails data={invoicesStatData?.invoicesStatDetails} currencyData={currencyData} />
+          <div>
+            <ListHeader headers={invoiceHeaders} />
+            {
+              invoicesStatData.invoicesStatDetails.map((invoice) => (
+                <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
+              ))
+            }
+          </div>
         ) : listType === 'nongraph' && invoicesData?.invoices.length && invoicesData?.invoices.length > 0 ? (
           <div>
             <ListHeader headers={invoiceHeaders} />
             {
-              invoicesData?.invoices.map((invoice) => (
+              invoicesData.invoices.map((invoice) => (
                 <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
               ))
             }

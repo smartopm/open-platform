@@ -4,18 +4,15 @@ import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Typography from '@material-ui/core/Typography';
 import { PaymentStats } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
-import GraphTitle from './GraphTitle'
 
 
 export default function PaymentGraph({ handleClick }){
-  const { loading, data, error } = useQuery(PaymentStats, {
+  const { data, error } = useQuery(PaymentStats, {
     fetchPolicy: 'cache-and-network'
   });
 
-  if (loading) return <Spinner />
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -25,9 +22,8 @@ export default function PaymentGraph({ handleClick }){
         {data?.paymentAccountingStats && data?.paymentAccountingStats?.length ? (
           <div>
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
-              <Typography variant='body1' color='primary'>Payment Dashboard</Typography>
+              <Typography variant='body1' color='primary'>Total Amount Paid By Date</Typography>
             </div>
-            <GraphTitle title='Total Amount Paid/Date' />
             <div style={{padding: '30px', background: '#FFF'}}>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart

@@ -13,7 +13,6 @@ import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
-import { Spinner } from '../../shared/Loading';
 import Paginate from '../Paginate';
 import ListHeader from '../../shared/list/ListHeader';
 import { paymentType } from '../../utils/constants';
@@ -40,7 +39,7 @@ export default function PaymentList({ currencyData }) {
   const history = useHistory()
 
   const pageNumber = Number(page);
-  const { loading, data, error } = useQuery(TransactionsQuery, {
+  const { data, error } = useQuery(TransactionsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -79,14 +78,12 @@ export default function PaymentList({ currencyData }) {
     setListType('nongraph')
   }
 
-  const [loadPaymentDetail, { loading: payLoading, error: statError, data: paymentStatData } ] = useLazyQuery(PaymentStatsDetails,{
+  const [loadPaymentDetail, { error: statError, data: paymentStatData } ] = useLazyQuery(PaymentStatsDetails,{
     variables: { query },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   })
 
-  if (loading) return <Spinner />
-  if (payLoading) return null
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -105,7 +102,7 @@ export default function PaymentList({ currencyData }) {
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
-      {listType === 'graph' && paymentStatData?.paymentStatDetails.length && paymentStatData?.paymentStatDetails.length > 0 ? (
+      {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
         <div>
           <ListHeader headers={paymentHeaders} />
           {
@@ -114,7 +111,7 @@ export default function PaymentList({ currencyData }) {
             ))
           }
         </div>
-      ) : paymentList.length && paymentList.length > 0 ? (
+      ) : paymentList?.length && paymentList?.length > 0 ? (
         <div>
           <ListHeader headers={paymentHeaders} />
           {
@@ -127,14 +124,14 @@ export default function PaymentList({ currencyData }) {
         <CenteredContent>No Payments Available</CenteredContent>
       )}
       {
-          paymentList.length >= limit && (
+          paymentList?.length >= limit && (
             <CenteredContent>
               <Paginate
                 offSet={pageNumber}
                 limit={limit}
                 active={pageNumber >= 1}
                 handlePageChange={paginate}
-                count={data?.transactions.length}
+                count={data?.transactions?.length}
               />
             </CenteredContent>
           )
