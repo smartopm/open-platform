@@ -4,9 +4,12 @@ import { render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
-// import CreateLandParcel from '../components/LandParcels/CreateLandParcel'
+import 'leaflet'
+import 'leaflet-draw'
+import CreateLandParcel from '../components/LandParcels/CreateLandParcel'
 
-describe.skip('Land Property Component', () => {
+jest.mock('leaflet-draw')
+describe('Land Property Component', () => {
   it('it should render add property form', () => {
       const refetch = jest.fn()
     const container = render(

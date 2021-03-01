@@ -3,8 +3,11 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { act, render } from '@testing-library/react'
-// import MapEditor from '../../components/Map/MapEditor'
+import 'leaflet'
+import 'leaflet-draw'
+import MapEditor from '../../components/Map/MapEditor'
 
+jest.mock('leaflet-draw')
 describe.skip('MapEditor', () => {
   it('should mount component correctly', async () => {
     const props = {

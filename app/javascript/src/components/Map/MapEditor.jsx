@@ -86,13 +86,13 @@ export default function MapEditor({ handleSaveMapEdit }){
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution,
       maxZoom: 20
-    }).addTo(map);
+    })?.addTo(map);
 
-    const editableLayers  = new L.FeatureGroup().addTo(map);
+    const editableLayers  = new L.FeatureGroup()?.addTo(map);
 
     const drawPluginOptions = getDrawPluginOptions(editableLayers)
 
-    new L.Control.Draw(drawPluginOptions).addTo(map);
+    new L.Control.Draw(drawPluginOptions)?.addTo(map);
 
     const handleDrawCreated = e => {
       const {layer} = e;

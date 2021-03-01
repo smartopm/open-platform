@@ -3,14 +3,17 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
-// import LandParcelPage from '../../containers/LandParcels/LandParcel';
-// import LandParcelList from '../../components/LandParcels/LandParcel';
+import 'leaflet'
+import 'leaflet-draw'
+import LandParcelPage from '../../containers/LandParcels/LandParcel';
+import LandParcelList from '../../components/LandParcels/LandParcel';
 import '@testing-library/jest-dom/extend-expect';
 import { LandParcel as LandParcelQuery, ParcelsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-describe.skip('Land Property Page', () => {
+jest.mock('leaflet-draw')
+describe('Land Property Page', () => {
   it('renders land parcel page', async () => {
     const container = render(
       <MockedProvider addTypename={false}>

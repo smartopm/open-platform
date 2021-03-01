@@ -4,9 +4,12 @@ import { render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
-// import LandParcelModal from '../../components/LandParcels/LandParcelModal'
+import 'leaflet'
+import 'leaflet-draw'
+import LandParcelModal from '../../components/LandParcels/LandParcelModal'
 
-describe.skip('Land Property Modal Component', () => {
+jest.mock('leaflet-draw')
+describe('Land Property Modal Component', () => {
   it('it should render tabs', () => {
     const props = {
       open: true,
