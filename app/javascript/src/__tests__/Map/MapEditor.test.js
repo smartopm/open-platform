@@ -8,7 +8,7 @@ import 'leaflet-draw'
 import MapEditor from '../../components/Map/MapEditor'
 
 jest.mock('leaflet-draw')
-describe.skip('MapEditor', () => {
+describe('MapEditor', () => {
   it('should mount component correctly', async () => {
     const props = {
       handleSaveMapEdit: jest.fn(),
