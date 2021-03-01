@@ -136,7 +136,7 @@ export default function InvoiceList({ currencyData }) {
               </CenteredContent>
             </DialogTitle>
             <DialogContent>
-              <AutogenerateInvoice close={handleGenerateDialog} />
+              <AutogenerateInvoice close={handleGenerateDialog} currencyData={currencyData} />
             </DialogContent>
           </Dialog>
           <CenteredContent>

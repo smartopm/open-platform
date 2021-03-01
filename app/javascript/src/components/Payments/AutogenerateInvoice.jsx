@@ -1,15 +1,16 @@
-/* eslint-disable */
 import React, { useState } from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
 import { GenerateCurrentMonthInvoices } from '../../graphql/mutations'
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent'
 import MessageAlert from "../MessageAlert"
-import { formatError } from '../../utils/helpers'
+import { formatError, formatMoney } from '../../utils/helpers'
 import { InvoiceAutogenerationData } from '../../graphql/queries'
+import currency from '../../shared/types/currency';
 
-export default function AutogenerateInvoice() {
+export default function AutogenerateInvoice({ currencyData, close }) {
   const [generateCurrentMonthInvoices] = useMutation(GenerateCurrentMonthInvoices)
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
@@ -19,6 +20,8 @@ export default function AutogenerateInvoice() {
     generateCurrentMonthInvoices({}).then(() => {
       setMessageAlert('Invoices Generated')
       setIsSuccessAlert(true)
+      // show the message for a second before autoclosing the dialog
+      setTimeout(() =>close(), 1000)
     }).catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
@@ -44,14 +47,14 @@ export default function AutogenerateInvoice() {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <Typography variant="body1">
+      <Typography variant="body1" data-testid="title_msg">
         This will generate all invoices for this month.
       </Typography>
-      <Typography variant="body1">
-        Number of invoices for this month: {data.invoiceAutogenerationData.numberOfInvoices}
+      <Typography variant="body1" data-testid="number_invoices">
+        {` Number of invoices for this month: ${data?.invoiceAutogenerationData.numberOfInvoices}`}
       </Typography>
-      <Typography variant="body1">
-        Total amount for invoices this month: k{data.invoiceAutogenerationData.totalAmount.toFixed(2)}
+      <Typography variant="body1" data-testid="invoices_amount">
+        {`Total amount for invoices this month: ${formatMoney(currencyData, data?.invoiceAutogenerationData.totalAmount)}`}
       </Typography>
       <Grid
         container
@@ -74,4 +77,9 @@ export default function AutogenerateInvoice() {
       <br />
     </>
   )
+}
+
+AutogenerateInvoice.propTypes = {
+  currencyData: PropTypes.shape({ ...currency}).isRequired,
+  close: PropTypes.func.isRequired
 }
