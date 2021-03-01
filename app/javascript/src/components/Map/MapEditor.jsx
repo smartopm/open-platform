@@ -7,9 +7,7 @@ import { getDrawPluginOptions } from '../../utils/helpers'
 import { mapTiles } from '../../utils/constants'
 import 'leaflet-draw/dist/leaflet.draw.css'
 
-
 const { attribution, centerPoint: { nkwashi } } = mapTiles
-
   /* eslint-disable no-unused-expressions */
   /* eslint-disable no-underscore-dangle */
 export default function MapEditor({ handleSaveMapEdit }){
