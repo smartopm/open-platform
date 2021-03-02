@@ -14,6 +14,13 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   function handleSubmit(){
 
   }
+
+  function handleChange(event){
+    console.log(event.target.name)
+    console.log(event.target.value)
+  }
+
+
   return (
     <>
       <CustomizedDialogs
@@ -55,14 +62,21 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               editable={isEditing}
               title="Payment Type"
               value={data?.source === 'wallet' ? 'From-balance' : data?.source}
+              handleChange={handleChange}
             />
             <DetailsField
               editable={isEditing}
               title="Payment Date"
               value={dateToString(data?.createdAt)}
+              handleChange={handleChange}
+            />
+            <DetailsField 
+              editable={isEditing} 
+              title="Status" 
+              value="Paid"
+              handleChange={handleChange}
             />
             <DetailsField editable={false} title="Payment Made By" value={data?.user?.name} />
-            <DetailsField editable={isEditing} title="Status" value="Paid" />
           </div>
         )}
       </CustomizedDialogs>

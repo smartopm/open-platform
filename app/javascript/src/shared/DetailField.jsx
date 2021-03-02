@@ -14,6 +14,7 @@ export default function DetailsField({ title, value, editable, handleChange }) {
           label={title}
           value={value}
           onChange={handleChange}
+          name={title?.replace(' ', '')}
         />
       </div>
     </>
