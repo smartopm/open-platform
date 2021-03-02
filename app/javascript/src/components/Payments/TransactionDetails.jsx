@@ -8,9 +8,9 @@ import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
 
-export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData }) {
+export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
   return (
     <>
       <DetailsDialog
@@ -18,45 +18,55 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         open={detailsOpen}
         title={data.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}
       >
-        {
-          pathname !== '/payments' && (
-            <div style={{ marginLeft: '20px' }}>
-              <Typography variant="caption">Current Wallet Balance</Typography>
-              <Typography color="primary" variant="h5">
-                {formatMoney(currencyData, balance)}
-              </Typography>
-            </div>
-          )
-        }
-        <DetailsField title="Amount" value={formatMoney(currencyData, data?.amount)} />
+        {pathname !== '/payments' && (
+          <div style={{ marginLeft: '20px' }}>
+            <Typography variant="caption">Current Wallet Balance</Typography>
+            <Typography color="primary" variant="h5">
+              {formatMoney(currencyData, balance)}
+            </Typography>
+          </div>
+        )}
+        <DetailsField editable={false} title="Amount" value={formatMoney(currencyData, data?.amount)} />
         {data.balance && (
           <div>
             <DetailsField
               title="Pending Amount"
               value={formatMoney(currencyData, data?.pendingAmount)}
+              editable={false}
             />
-            <DetailsField title="Invoice Number" value={data?.invoiceNumber} />
-            <DetailsField title="Status" value="Unpaid" />
-            <DetailsField title="Issued Date" value={dateToString(data?.createdAt)} />
-            <DetailsField title="Due Date" value={dateToString(data?.dueDate)} />
+            <DetailsField editable={false} title="Invoice Number" value={data?.invoiceNumber} />
+            <DetailsField editable={false} title="Status" value="Unpaid" />
+            <DetailsField
+              editable={false}
+              title="Issued Date"
+              value={dateToString(data?.createdAt)}
+            />
+            <DetailsField editable={false} title="Due Date" value={dateToString(data?.dueDate)} />
           </div>
         )}
         {data.__typename === 'WalletTransaction' && (
           <div>
             <DetailsField
+              editable={isEditing}
               title="Payment Type"
               value={data?.source === 'wallet' ? 'From-balance' : data?.source}
             />
-            <DetailsField title="Payment Date" value={dateToString(data?.createdAt)} />
-            <DetailsField title="Payment Made By" value={data?.user?.name} />
-            <DetailsField title="Status" value="Paid" />
+            <DetailsField
+              editable={isEditing}
+              title="Payment Date"
+              value={dateToString(data?.createdAt)}
+            />
+            <DetailsField editable={false} title="Payment Made By" value={data?.user?.name} />
+            <DetailsField editable={isEditing} title="Status" value="Paid" />
           </div>
         )}
       </DetailsDialog>
     </>
   );
 }
-
+TransactionDetails.defaultProps = {
+  isEditing: false
+}
 TransactionDetails.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object.isRequired,
@@ -65,5 +75,6 @@ TransactionDetails.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   detailsOpen: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool,
   handleClose: PropTypes.func.isRequired
 };

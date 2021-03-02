@@ -25,6 +25,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const [open, setOpen] = useState(false)
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
   const anchorElOpen = Boolean(anchorEl)
 
   const menuList = [
@@ -55,11 +56,19 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   }
 
   function handleOpenEdit(){
-    
+    setOpen(true)
+    setIsEditing(true)
+    handleClose()
   }
 
   function handleClose() {
     setAnchorEl(null)
+  }
+
+  function handleOpenDetails(){
+    // in case the user had earlier opened with the editing menu
+    setIsEditing(false)
+    setOpen(true)
   }
 
   const menuData = {
@@ -77,7 +86,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         data={[renderTransactions(transaction, currencyData, menuData)]} 
         hasHeader={false} 
         clickable={!anchorElOpen}
-        handleClick={() => setOpen(true)} 
+        handleClick={handleOpenDetails} 
       />
       <TransactionDetails 
         detailsOpen={open} 
@@ -85,6 +94,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         data={transaction}
         currencyData={currencyData}
         title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
+        isEditing={isEditing}
       />
       <PaymentReceipt 
         paymentData={transaction} 
