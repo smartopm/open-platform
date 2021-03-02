@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { useLocation } from 'react-router-dom';
-import { DetailsDialog } from '../Dialog';
+import { CustomizedDialogs } from '../Dialog';
 import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
@@ -11,12 +11,17 @@ import { formatMoney } from '../../utils/helpers';
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
   const { pathname } = useLocation();
+  function handleSubmit(){
+
+  }
   return (
     <>
-      <DetailsDialog
-        handleClose={handleClose}
+      <CustomizedDialogs
+        handleModal={handleClose}
         open={detailsOpen}
-        title={data.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}
+        dialogHeader={data.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}
+        handleBatchFilter={handleSubmit}
+        actionable={isEditing}
       >
         {pathname !== '/payments' && (
           <div style={{ marginLeft: '20px' }}>
@@ -60,7 +65,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             <DetailsField editable={isEditing} title="Status" value="Paid" />
           </div>
         )}
-      </DetailsDialog>
+      </CustomizedDialogs>
     </>
   );
 }
