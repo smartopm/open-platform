@@ -2,7 +2,9 @@ import dompurify from 'dompurify';
 
 import { sentencizeAction, titleize, pluralizeCount, 
 capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor } from '../../utils/helpers'
+forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
+getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+} from '../../utils/helpers'
 
 jest.mock('dompurify')
 describe('helper methods', () => {
@@ -165,6 +167,16 @@ describe('helper methods', () => {
     describe('#getHexColor', () => {
       it('should return HEX color string', () => {
         expect(getHexColor(200)).toEqual('#FC4E2A');
+      });
+    });
+
+    describe('#getDrawPluginOptions', () => {
+      it('should return draw plugin config option', () => {
+        expect(getDrawPluginOptions({})).toHaveProperty(
+          'position',
+          'draw',
+          'edit',
+        );
       });
     });
 });

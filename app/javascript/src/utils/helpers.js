@@ -400,3 +400,37 @@ export function getHexColor (range) {
    }).formatToParts();
    return parts[0]?.value;
  }
+
+ /**
+ * 
+ * @param {object} featureGroup leaflet map layer
+ * @return {object} plugin config
+ * @description Creates a plugin config for leaflet draw control 
+ */
+export function getDrawPluginOptions (featureGroup) {
+  return ({
+      position: 'topright',
+      draw: {
+        polygon: {
+          allowIntersection: false,
+          drawError: {
+            color: '#e1e100',
+            message: '<strong>Oh snap!<strong> you can\'t draw that!'
+          },
+          shapeOptions: {
+            color: '#97009c'
+          }
+        },
+        // disable toolbar item by setting it to false
+        polyline: false,
+        circle: false,
+        rectangle: false,
+        marker: false,
+        circlemarker: false,
+        },
+      edit: {
+        featureGroup,
+        remove: true
+      }
+    })
+}

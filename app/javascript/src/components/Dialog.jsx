@@ -194,6 +194,26 @@ export function FullScreenDialog({ handleClose, open, children, handleSubmit }){
   )
 }
 
+export function MapEditorFullScreenDialog({ handleClose, open, children }){
+  const classes = useStyles()
+  return(
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      fullScreen
+    >
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton edge="start" onClick={handleClose} aria-label="close">
+            <CloseIcon style={{color: 'white'}} />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      {children}
+    </Dialog>
+  )
+}
+
 export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
   const classes = useStyles()
   return (
@@ -336,6 +356,12 @@ ModalDialog.defaultProps = {
 }
 
 ReasonInputModal.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired
+}
+
+MapEditorFullScreenDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
