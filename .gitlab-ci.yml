@@ -2,7 +2,7 @@ stages:
   - build
   - test
   - report
-  - e2e
+  # - e2e
   - staging
   - deploy
 
