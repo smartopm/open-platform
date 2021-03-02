@@ -7,7 +7,7 @@ import { InvoicesStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
-import GraphTitle from './GraphTitle'
+import GraphTitle from '../../shared/GraphTitle';
 
 export default function InvoiceGraph({ handleClick }){
   const { loading, data, error } = useQuery(InvoicesStats, {

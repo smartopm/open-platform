@@ -3,13 +3,13 @@ import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types'
-import DetailHeading from './DetailHeading'
 import ListHeader from '../../shared/list/ListHeader';
 import Text from '../../shared/Text';
 import { dateToString } from '../DateContainer';
 import DataList from '../../shared/list/DataList';
 import currencyTypes from '../../shared/types/currency';
 import { formatMoney } from '../../utils/helpers';
+import DetailHeading from '../../shared/DetailHeading';
 
 export default function InvoiceStatDetails({ data, currencyData }){
   const invoiceHeaders = [

@@ -7,12 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types'
 import { dateToString } from '../DateContainer'
-import PaymentModal from './PaymentModal'
 import { invoiceStatus } from '../../utils/constants'
 import { DetailsDialog } from '../Dialog'
-import DetailsField from './DetailField'
 import DataList from '../../shared/list/DataList';
 import { formatMoney } from '../../utils/helpers'
+import PaymentModal from './UserTransactions/PaymentModal'
+import DetailsField from '../../shared/DetailField'
 
 export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType, currencyData }) {
   const classes = useStyles();

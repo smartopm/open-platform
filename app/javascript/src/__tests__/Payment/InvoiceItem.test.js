@@ -7,8 +7,6 @@ import InvoiceItem from '../../components/Payments/InvoiceItem'
 import { Spinner } from '../../shared/Loading'
 import currency from '../../__mocks__/currency'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
-
 describe('Invoice Item Component', () => {
   it('should render the invoice item component', async () => {
     const invoiceMock = {

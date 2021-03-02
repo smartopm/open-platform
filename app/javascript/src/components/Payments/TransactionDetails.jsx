@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { useLocation } from 'react-router-dom';
 import { DetailsDialog } from '../Dialog';
-import DetailsField from './DetailField';
+import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
 

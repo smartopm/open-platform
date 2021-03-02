@@ -3,9 +3,9 @@ import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import InvoiceModal from '../../components/Payments/invoiceModal'
 import { generateId } from '../../utils/helpers'
 import { UserLandParcel } from '../../graphql/queries'
+import InvoiceModal from '../../components/Payments/UserTransactions/invoiceModal'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the invoice modal component', () => {

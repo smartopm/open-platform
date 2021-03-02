@@ -5,10 +5,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import Typography from '@material-ui/core/Typography';
 import { PaymentStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
+import GraphTitle from '../../shared/GraphTitle';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
-import GraphTitle from './GraphTitle'
-
 
 export default function PaymentGraph({ handleClick }){
   const { loading, data, error } = useQuery(PaymentStats, {

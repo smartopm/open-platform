@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { DetailsDialog } from '../Dialog'
-import DetailsField from './DetailField'
 import { invoiceStatus } from '../../utils/constants';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
+import DetailsField from '../../shared/DetailField';
 
 export  default function InvoiceDetails({ data, detailsOpen, handleClose, currencyData }){
   return (

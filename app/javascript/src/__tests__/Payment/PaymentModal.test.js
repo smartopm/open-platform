@@ -3,10 +3,9 @@ import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import PaymentModal, { PaymentDetails } from '../../components/Payments/PaymentModal'
+import PaymentModal, { PaymentDetails } from '../../components/Payments/UserTransactions/PaymentModal'
 import currency from '../../__mocks__/currency'
 
-// jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the payment modal component', () => {
   const invoiceData =
       {

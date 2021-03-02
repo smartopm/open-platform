@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { DetailsDialog } from '../Dialog'
-import PaymentReceipt from './PaymentReceipt'
+import PaymentReceipt from './UserTransactions/PaymentReceipt'
 
 export default function ReceiptModal({ open, handleClose, paymentData, userData, currencyData }){
   const classes = useStyles();

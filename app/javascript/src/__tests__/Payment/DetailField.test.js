@@ -1,20 +1,11 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
-import { MockedProvider } from '@apollo/react-testing'
-import { BrowserRouter } from 'react-router-dom/'
-import DetailField from '../../components/Payments/DetailField'
-
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+import React from 'react';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import DetailsField from '../../shared/DetailField';
 
 describe('Detail Component', () => {
   it('renders correctly', () => {
-    const container = render(
-      <BrowserRouter>
-        <MockedProvider>
-          <DetailField title='Some Title' value='Some Value' />
-        </MockedProvider>
-      </BrowserRouter>)
-    expect(container.queryByTestId('text-field').value).toContain('Some Value')
-  })
-})
+    const container = render(<DetailsField title="Some Title" value="Some Value" />);
+    expect(container.queryByTestId('text-field').value).toContain('Some Value');
+  });
+});
