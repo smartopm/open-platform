@@ -20,7 +20,7 @@ export default function InvoiceGraph({ handleClick }){
   return (
     <>
       <div style={{width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'}}>
-        {data?.invoiceAccountingStats && data?.invoiceAccountingStats?.length ? (
+        {data?.invoiceAccountingStats && data?.invoiceAccountingStats?.length && (
           <div>
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
               <Typography variant='body1' color='primary'>Number of Outstanding Invoices by Number of days</Typography>
@@ -47,8 +47,6 @@ export default function InvoiceGraph({ handleClick }){
               </ResponsiveContainer>
             </div>
           </div>
-        ) : (
-          <CenteredContent>No data available</CenteredContent>
         )}
       </div>
     </>

@@ -19,7 +19,7 @@ export default function PaymentGraph({ handleClick }){
   return (
     <>
       <div style={{width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'}}>
-        {data?.paymentAccountingStats && data?.paymentAccountingStats?.length ? (
+        {data?.paymentAccountingStats && data?.paymentAccountingStats?.length && (
           <div>
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
               <Typography variant='body1' color='primary'>Total Amount Paid By Date</Typography>
@@ -51,9 +51,7 @@ export default function PaymentGraph({ handleClick }){
               </ResponsiveContainer>
             </div>
           </div>
-      ) : (
-        <CenteredContent>No data available</CenteredContent>
-      ) }
+      )}
       </div>
     </>
   )

@@ -20,6 +20,7 @@ import TransactionDetails from './TransactionDetails';
 import currency from '../../shared/types/currency';
 import Text from '../../shared/Text';
 import PaymentGraph from './PaymentGraph'
+import { Spinner } from '../../shared/Loading';
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -39,7 +40,7 @@ export default function PaymentList({ currencyData }) {
   const history = useHistory()
 
   const pageNumber = Number(page);
-  const { data, error } = useQuery(TransactionsQuery, {
+  const { loading, data, error } = useQuery(TransactionsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -87,6 +88,9 @@ export default function PaymentList({ currencyData }) {
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
+
+  if (loading) return <Spinner />;
+  
   if (statError) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
