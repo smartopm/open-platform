@@ -28,7 +28,8 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const anchorElOpen = Boolean(anchorEl)
 
   const menuList = [
-    { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt}
+    { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt},
+    { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenReceipt}
   ]
 
   useEffect(() => {
