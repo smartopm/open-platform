@@ -82,6 +82,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         depRefetch();
         walletRefetch();
         setPaymentData(res.data.walletTransactionCreate.walletTransaction);
+        setInputValue(initialValues)
         setPromptOpen(true);
       })
       .catch(err => {
@@ -172,7 +173,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 <MenuItem value='pos'>Point of Sale</MenuItem>
               </TextField>
               <TextField
-                autoFocus
                 margin="dense"
                 id="transaction-number"
                 label="Transaction Number"
