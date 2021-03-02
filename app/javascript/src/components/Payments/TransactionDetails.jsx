@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { useLocation } from 'react-router-dom';
@@ -8,18 +8,29 @@ import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
 
+
+
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
+  
+  const initialValues = {
+    PaymentType: data?.source === 'wallet' ? 'From-balance' : data?.source,
+    PaymentDate: '',
+    TransactionNumber: '',
+    Status: 'Paid',
+  }
+
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
   const { pathname } = useLocation();
-  function handleSubmit(){
+  const [inputValues, setInputValues] = useState({ ...initialValues })
 
+  function handleSubmit(){
+    console.log(...inputValues)
   }
 
   function handleChange(event){
-    console.log(event.target.name)
-    console.log(event.target.value)
+    const { name, value } = event.target
+    setInputValues({ ...inputValues, [name]: value})
   }
-
 
   return (
     <>
@@ -61,7 +72,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             <DetailsField
               editable={isEditing}
               title="Payment Type"
-              value={data?.source === 'wallet' ? 'From-balance' : data?.source}
+              value={inputValues.PaymentType}
               handleChange={handleChange}
             />
             <DetailsField
@@ -73,7 +84,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             <DetailsField 
               editable={isEditing} 
               title="Status" 
-              value="Paid"
+              value={inputValues.Status}
               handleChange={handleChange}
             />
             <DetailsField editable={false} title="Payment Made By" value={data?.user?.name} />
