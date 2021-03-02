@@ -1138,6 +1138,9 @@ export const TransactionQuery = gql`
         createdAt
         updatedAt
         currentWalletBalance
+        chequeNumber
+        bankName
+        transactionNumber
         id
         user {
           id
