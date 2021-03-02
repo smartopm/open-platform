@@ -35,6 +35,8 @@ module Types::Queries::Wallet
 
     field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
       description 'return stats of all unpaid invoices'
+    end
+    
     # Get transaction's receipt
     field :transaction_receipt, Types::PaymentType, null: true do
       description 'Get a receipt for a transaction'
@@ -67,6 +69,8 @@ module Types::Queries::Wallet
   def payment_stat_details(query:)
     context[:site_community].wallet_transactions
                             .where(created_at: Date.parse(query).all_day, destination: 'wallet')
+  end
+
   def transaction_receipt(transaction_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
