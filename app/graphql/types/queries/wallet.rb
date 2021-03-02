@@ -3,6 +3,7 @@
 # wallet queries
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -36,7 +37,14 @@ module Types::Queries::Wallet
     field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
       description 'return stats of all unpaid invoices'
     end
+
+    # Get transaction's receipt
+    field :transaction_receipt, Types::PaymentType, null: true do
+      description 'Get a receipt for a transaction'
+      argument :transaction_id, GraphQL::Types::ID, required: true
+    end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def user_wallets(user_id: nil, offset: 0, limit: 100)
     user = verified_user(user_id)
@@ -53,7 +61,8 @@ module Types::Queries::Wallet
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].wallet_transactions.search(query).eager_load(:user)
-                            .order(created_at: :desc).limit(limit).offset(offset)
+                            .order(created_at: :desc)
+                            .limit(limit).offset(offset)
   end
 
   def payment_accounting_stats
@@ -63,6 +72,14 @@ module Types::Queries::Wallet
   def payment_stat_details(query:)
     context[:site_community].wallet_transactions
                             .where(created_at: Date.parse(query).all_day, destination: 'wallet')
+  end
+
+  def transaction_receipt(transaction_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+
+    # rubocop:disable Metrics/SafeNavigationChain
+    context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
+    # rubocop:enable Metrics/SafeNavigationChain
   end
 
   # It would be good to put this elsewhere to use it in other queries

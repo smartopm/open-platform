@@ -7,7 +7,6 @@ import { InvoicesStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import { formatError } from '../../utils/helpers';
-import GraphTitle from './GraphTitle'
 
 export default function InvoiceGraph({ handleClick }){
   const { loading, data, error } = useQuery(InvoicesStats, {
@@ -21,12 +20,11 @@ export default function InvoiceGraph({ handleClick }){
   return (
     <>
       <div style={{width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'}}>
-        {data?.invoiceAccountingStats && data?.invoiceAccountingStats?.length ? (
+        {data?.invoiceAccountingStats && data?.invoiceAccountingStats?.length && (
           <div>
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
-              <Typography variant='body1' color='primary'>Invoicing Dashboard</Typography>
+              <Typography variant='body1' color='primary'>Number of Outstanding Invoices by Number of days</Typography>
             </div>
-            <GraphTitle title='Number of Outstanding Invoices/Number of days' />
             <div style={{padding: '30px', background: '#FFF'}}>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
@@ -49,8 +47,6 @@ export default function InvoiceGraph({ handleClick }){
               </ResponsiveContainer>
             </div>
           </div>
-        ) : (
-          <CenteredContent>No data available</CenteredContent>
         )}
       </div>
     </>

@@ -6,6 +6,7 @@ RSpec.describe WalletTransaction, type: :model do
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:depositor_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:amount).of_type(:float) }
     it { is_expected.to have_db_column(:current_wallet_balance).of_type(:float) }
     it { is_expected.to have_db_column(:status).of_type(:integer) }
