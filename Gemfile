@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '>=2.6.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '6.0.3.1'
+gem 'rails', '6.0.3.5'
 # Use sqlite3 as the database for Active Record
 gem 'pg', '~> 1.1.4'
 # Use Puma as the app server
@@ -42,7 +42,9 @@ gem "aws-sdk-s3", require: false
 
 # Auth stuff
 gem "omniauth-google-oauth2", "~> 0.8.0"
-gem "devise", "~> 4.7"
+gem 'omniauth-rails_csrf_protection'
+# https://github.com/heartcombo/devise/pull/5327
+gem "devise", github: "heartcombo/devise", branch: "master"
 gem 'jwt'
 gem "omniauth-facebook", "~> 8.0.0"
 

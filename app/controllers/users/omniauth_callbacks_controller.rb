@@ -2,13 +2,14 @@
 
 # Our omniauth controller for Google oauth callbacks
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  def passthru
-    redirect_to user_google_oauth2_omniauth_authorize_path
-  end
+  skip_before_action :verify_authenticity_token, only: %i[ google_oauth2]
+  # def passthru
+  #   redirect_to user_google_oauth2_omniauth_authorize_path
+  # end
 
-  def fblogin
-    redirect_to user_facebook_omniauth_authorize_path
-  end
+  # def fblogin
+  #   # redirect_to user_facebook_omniauth_authorize_path
+  # end
 
   def google_oauth2
     @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
