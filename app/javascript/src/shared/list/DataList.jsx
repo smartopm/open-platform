@@ -3,6 +3,8 @@
 /* eslint-disable */
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
@@ -12,6 +14,8 @@ import CenteredContent from '../../components/CenteredContent';
 // Todo: @tolu re-enable eslint and identify which prop is being used and which is not
 export default function DataList({ keys, data, hasHeader, clickable, handleClick }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
   if (hasHeader && keys.length !== Object.keys(data[0]).length) {
     throw new Error(
       'headers must have same length as number of columns in the data prop or set hasHeader to false'
@@ -22,21 +26,31 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
   }
   return (
     <>
-      {hasHeader && <ListHeader headers={keys} />}
-      {data.map((item, index) => (
-        <Grid
-          container
-          direction="row"
-          justify="space-around"
-          alignItems="center"
-          className={clickable ? classes.clickable : classes.list}
-          onClick={clickable ? () => handleClick(item) : null}
-          key={item.id || index}
-          spacing={1}
-        >
-        <CellData propNames={keys} dataObj={item} />
-      </Grid>
-      ))}
+      {
+        matches ? (
+          <div>
+            <div></div>
+            <div></div>
+          </div>
+        ) : (
+          <div>
+            {hasHeader && <ListHeader headers={keys} />}
+            {data.map((item, index) => (
+              <Grid
+                container
+                direction="row"
+                justify="space-around"
+                alignItems="center"
+                className={clickable ? classes.clickable : classes.list}
+                onClick={clickable ? () => handleClick(item) : null}
+                key={item.id || index}
+                spacing={1}
+              >
+                <CellData propNames={keys} dataObj={item} />
+              </Grid>
+            ))}
+          </div>
+        )}
     </>
   );
 }
@@ -50,6 +64,19 @@ export function CellData({ propNames, dataObj }) {
     </Fragment>
   ));
 }
+
+// export function MobileCellData({ propNames, dataObj }) {
+//   return propNames.map(prop => (
+//     <Fragment
+//       key={prop.title} 
+//     >
+//       <div>
+
+//       </div>
+//       {propAccessor(dataObj, prop.title)}
+//     </Fragment>
+//   ));
+// }
 
 DataList.defaultProps = {
   hasHeader: true,
