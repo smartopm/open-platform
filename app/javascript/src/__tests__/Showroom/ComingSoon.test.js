@@ -1,20 +1,22 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
-import { MockedProvider } from '@apollo/react-testing';
 import ComingSoon from '../../containers/showroom/ComingSoon';
 
 describe('ComingSoon Component', () => {
   it('renders ComingSoon texts', () => {
+    const historyMock = { push: jest.fn() }
     const container = render(
-      <MockedProvider>
-        <BrowserRouter>
-          <ComingSoon />
-        </BrowserRouter>
-      </MockedProvider>
+      <BrowserRouter>
+        <ComingSoon history={historyMock} />
+      </BrowserRouter>
     );
 
     expect(container.getByText(/Thanks for coming in! Our team will help/)).toBeInTheDocument();
+    expect(container.queryByTestId('go_back_btn').textContent).toContain('Go Back')
+    fireEvent.click(container.queryByTestId('go_back_btn'))
+    expect(historyMock.push).toBeCalled()
+    expect(historyMock.push).toBeCalledWith('/sh_reason')
   });
 });

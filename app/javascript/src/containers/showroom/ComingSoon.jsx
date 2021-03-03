@@ -28,6 +28,7 @@ export default function ComingSoon({ history }) {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
+          data-testid="go_back_btn"
         >
           Go Back
         </Button>

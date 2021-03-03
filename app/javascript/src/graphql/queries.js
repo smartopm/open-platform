@@ -1188,6 +1188,8 @@ export const TransactionsQuery = gql`
       source
       currentWalletBalance
       id
+      bankName
+      chequeNumber
       user {
         id
         name

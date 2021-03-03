@@ -43,7 +43,9 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   })
 
   useEffect(() => {
-    changeLogs.refetch()
+    if (changeLogs) {
+      changeLogs.refetch()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabValue])
 

@@ -24,6 +24,7 @@ export default function VisitingReason({ history }) {
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_entry")}
+          data-testid="visit_btn"
         >
           Visiting the Nkwashi Showroom
         </Button>
@@ -32,6 +33,7 @@ export default function VisitingReason({ history }) {
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_soon")}
+          data-testid="payment_btn"
         >
           Payments & Account Management
         </Button>
@@ -40,6 +42,7 @@ export default function VisitingReason({ history }) {
           variant="contained"
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_soon")}
+          data-testid="other"
         >
           Other
         </Button>

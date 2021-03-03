@@ -29,6 +29,7 @@ export default function ShowRoom({ history }) {
           variant="contained"
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
+          data-testid="checkin_btn"
         >
           Press Here to Check-In
         </Button>

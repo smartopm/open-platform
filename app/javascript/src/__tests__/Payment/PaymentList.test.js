@@ -19,6 +19,8 @@ describe('Payment List Item Component', () => {
       source: 'cash',
       currentWalletBalance: 0,
       id: '162f751-83a1-6d59569',
+      bankName:'some bank',
+      chequeNumber: '38473',
       user: {
         id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
         name: 'joe m',
@@ -34,6 +36,8 @@ describe('Payment List Item Component', () => {
       source: 'cash',
       currentWalletBalance: 0,
       id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
+      bankName:'some bank',
+      chequeNumber: '38473',
       user: {
         id: 'a54d6184-b10e-4865-bee7-7957701d423d',
         name: 'Another somebodyy',
