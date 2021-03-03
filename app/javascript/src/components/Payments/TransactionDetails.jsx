@@ -22,12 +22,11 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const initialValues = {
     PaymentType: data?.source === 'wallet' ? 'From-balance' : data?.source,
     PaymentDate: '',
-    TransactionNumber: '',
+    TransactionNumber: data.transactionNumber,
     Status: 'Paid',
-    BankName: '',
-    ChequeNumber: '',
+    BankName: data.bankName,
+    ChequeNumber: data.chequeNumber,
   }
-
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
   const { pathname } = useLocation();
   const [inputValues, setInputValues] = useState({ ...initialValues })
@@ -155,6 +154,24 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               value={inputValues.Status}
               handleChange={handleChange}
             />
+            {
+              inputValues.PaymentType === 'cheque/cashier_cheque' && (
+                <> 
+                  <DetailsField 
+                    editable={isEditing} 
+                    title="Bank Name" 
+                    value={inputValues.BankName}
+                    handleChange={handleChange}
+                  />
+                  <DetailsField 
+                    editable={isEditing} 
+                    title="Cheque Number" 
+                    value={inputValues.ChequeNumber}
+                    handleChange={handleChange}
+                  />
+                </>
+              )
+            }
             <DetailsField editable={false} title="Payment Made By" value={data?.user?.name} />
           </div>
         )}
