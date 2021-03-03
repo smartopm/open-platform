@@ -1146,6 +1146,10 @@ export const TransactionQuery = gql`
           id
           name
         }
+        depositor {
+          id
+          name
+        }
       }
       pendingInvoices {
         amount

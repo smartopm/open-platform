@@ -31,6 +31,10 @@ describe('Transactions Component', () => {
               user: {
                 id: 'f280159d-ac71-4c22-997a-07fd07344c94',
                 name: 'some name'
+              },
+              depositor: {
+                id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+                name: 'some depositor name'
               }
             }],
             pendingInvoices: [{
