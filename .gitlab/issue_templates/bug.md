@@ -10,7 +10,7 @@
 (What you should see instead)
 
 
-#### Stakeholder
+#### Who should verify on Staging?
 (Copy person who should verify the fix or acceptance criteria)
 
 

@@ -805,6 +805,10 @@ export const PaymentCreate = gql`
           id
           name
         }
+        depositor {
+          id
+          name
+        }
       }
     }
   }

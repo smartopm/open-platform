@@ -8,10 +8,13 @@ import currency from '../../__mocks__/currency';
 
 describe('It should test the payment receipt modal component', () => {
   const paymentData = {
-    amount: '1000',
+    amount: 1000,
     source: 'cash',
     currentWalletBalance: 100,
     user: {
+      name: 'some name'
+    },
+    depositor: {
       name: 'some name'
     }
   };

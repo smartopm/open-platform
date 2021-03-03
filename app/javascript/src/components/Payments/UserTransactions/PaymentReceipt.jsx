@@ -69,7 +69,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
             <div style={{margin: '50px'}}>
               <b>Cashier:</b> 
               {' '}
-              {paymentData?.user?.name}
+              {paymentData?.depositor?.name || '-'}
             </div>
             {paymentData?.source === 'cheque/cashier_cheque' && (
             <div style={{margin: '0 0 50px 50px'}}>
@@ -107,6 +107,9 @@ PaymentReceipt.defaultProps = {
     transactionNumber: PropTypes.string,
     createdAt: PropTypes.string,
     user: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    depositor: PropTypes.shape({
       name: PropTypes.string
     })
   }),

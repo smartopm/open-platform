@@ -6,7 +6,7 @@
 ### Benefits (For whom and why.)
 
 
-#### Stakeholder (Person who should verify the use case acceptance criteria)
+#### Person who should verify on Staging
 
 
 
@@ -16,8 +16,6 @@ Engineer checklist:
 - [ ] example 2
 
 
-Stakeholder checklist (same list as Engineer checklist):
+Verification by another Engineer:
 - [ ] example 1
 - [ ] example 2
-
-Stakeholder checklist is used for signoff on the issue.
