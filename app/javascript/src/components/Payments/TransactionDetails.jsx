@@ -7,6 +7,7 @@ import { CustomizedDialogs } from '../Dialog';
 import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
+import { StyledTab, StyledTabs, TabPanel } from '../Tabs';
 
 
 
@@ -22,6 +23,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
   const { pathname } = useLocation();
   const [inputValues, setInputValues] = useState({ ...initialValues })
+  const [tabValue, setTabValue] = useState('Details');
 
   function handleSubmit(){
     console.log(...inputValues)
@@ -30,6 +32,10 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   function handleChange(event){
     const { name, value } = event.target
     setInputValues({ ...inputValues, [name]: value})
+  }
+
+  function handleTabChange(_event, value){
+    setTabValue(value);
   }
 
   return (
@@ -41,7 +47,13 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         handleBatchFilter={handleSubmit}
         actionable={isEditing}
       >
-        {pathname !== '/payments' && (
+        <StyledTabs value={tabValue} onChange={handleTabChange} aria-label="land parcel tabs">
+          <StyledTab label="Details" value="Details" />
+          <StyledTab label="Edit Log" value="Log" />
+        </StyledTabs>
+
+        <TabPanel value={tabValue} index="Details">
+          {pathname !== '/payments' && (
           <div style={{ marginLeft: '20px' }}>
             <Typography variant="caption">Current Wallet Balance</Typography>
             <Typography color="primary" variant="h5">
@@ -49,8 +61,8 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             </Typography>
           </div>
         )}
-        <DetailsField editable={false} title="Amount" value={formatMoney(currencyData, data?.amount)} />
-        {data.balance && (
+          <DetailsField editable={false} title="Amount" value={formatMoney(currencyData, data?.amount)} />
+          {data.balance && (
           <div>
             <DetailsField
               title="Pending Amount"
@@ -67,7 +79,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             <DetailsField editable={false} title="Due Date" value={dateToString(data?.dueDate)} />
           </div>
         )}
-        {data.__typename === 'WalletTransaction' && (
+          {data.__typename === 'WalletTransaction' && (
           <div>
             <DetailsField
               editable={isEditing}
@@ -90,6 +102,10 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             <DetailsField editable={false} title="Payment Made By" value={data?.user?.name} />
           </div>
         )}
+        </TabPanel>
+        <TabPanel value={tabValue} index="EditLog">
+          Log
+        </TabPanel>
       </CustomizedDialogs>
     </>
   );
