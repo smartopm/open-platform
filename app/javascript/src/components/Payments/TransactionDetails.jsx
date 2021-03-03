@@ -7,9 +7,10 @@ import { useLocation } from 'react-router-dom';
 import { CustomizedDialogs } from '../Dialog';
 import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
-import { formatMoney } from '../../utils/helpers';
+import { formatError, formatMoney } from '../../utils/helpers';
 import { StyledTab, StyledTabs, TabPanel } from '../Tabs';
 import { WalletTransactionUpdate } from '../../graphql/mutations/transactions';
+import MessageAlert from '../MessageAlert';
 
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
@@ -19,18 +20,40 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     PaymentDate: '',
     TransactionNumber: '',
     Status: 'Paid',
+    BankName: '',
+    ChequeNumber: '',
   }
 
   const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
   const { pathname } = useLocation();
   const [inputValues, setInputValues] = useState({ ...initialValues })
   const [tabValue, setTabValue] = useState('Details');
-  // eslint-disable-next-line no-unused-vars
   const [updateTransaction] = useMutation(WalletTransactionUpdate)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [response, setResponse] = useState({ isError: false, message: '' })
+
 
   function handleSubmit(){
-    console.log(...inputValues)
-    console.log(data)
+    setIsSubmitting(true)
+    updateTransaction({
+      variables: {
+        id: data.id,
+        source: inputValues.PaymentType,
+        status: inputValues.Status,
+        bankName: inputValues.BankName,
+        chequeNumber: inputValues.ChequeNumber,
+        transactionNumber: inputValues.TransactionNumber
+      }
+    })
+    .then(() => {
+      setIsSubmitting(false)
+      setResponse({ ...response, message: 'Successfully Updated Payment' })
+      handleClose()
+    })
+    .catch(err => {
+      setIsSubmitting(false)
+      setResponse({ isError: true, message: formatError(err.message) })
+    })
   }
 
   function handleChange(event){
@@ -42,14 +65,29 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     setTabValue(value);
   }
 
+  function handleAlertClose(_event, reason){
+    if (reason === 'clickaway') {
+      return;
+    }
+    setResponse({ ...response, message: '' })
+  }
+
   return (
     <>
+      <MessageAlert
+        type={response.isError ? 'error' : 'success'}
+        message={response.message}
+        open={!!response.message}
+        handleClose={handleAlertClose}
+      />
+      
       <CustomizedDialogs
         handleModal={handleClose}
         open={detailsOpen}
         dialogHeader={data.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}
         handleBatchFilter={handleSubmit}
         actionable={isEditing}
+        saveAction={isSubmitting ? 'Saving ...' : 'Save'}
       >
         <StyledTabs value={tabValue} onChange={handleTabChange} aria-label="land parcel tabs">
           <StyledTab label="Details" value="Details" />

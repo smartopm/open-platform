@@ -5,11 +5,11 @@ module Mutations
     # update transactions
     class WalletTransactionUpdate < BaseMutation
       argument :id, ID, required: true
+      argument :source, String, required: true
       argument :bank_name, String, required: false
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
       argument :status, String, required: false
-      argument :source, String, required: true
 
       field :wallet_transaction, Types::WalletTransactionType, null: false
 

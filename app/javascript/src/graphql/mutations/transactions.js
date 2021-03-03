@@ -13,7 +13,7 @@ mutation transaction($userId: ID!, $amount: Int!, $source: String!, $destination
 export const WalletTransactionUpdate = gql`
   mutation updateTransaction(
     $id: ID!
-    $source: String
+    $source: String!
     $bankName: String
     $transactionNumber: String
     $chequeNumber: String
