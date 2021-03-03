@@ -36,9 +36,9 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const [response, setResponse] = useState({ isError: false, message: '' })
   const changeLogs = useQuery(AllEventLogsQuery, {
     variables: {
+      subject: ['payment_update'],
       refId: data.id,
       refType: 'WalletTransaction',
-      subject: 'payment_update'
     }
   })
 
@@ -89,7 +89,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
 
   if (changeLogs.loading) return <Spinner />
   if (changeLogs.error) return <CenteredContent>{formatError(changeLogs?.error.message)}</CenteredContent>
-  
+
   return (
     <>
       <MessageAlert

@@ -2,7 +2,7 @@ import React from 'react'
 import { startOfToday, startOfWeek, startOfYesterday } from 'date-fns'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import EventTimeLine from '../components/TimeLine'
+import EventTimeLine from '../shared/TimeLine'
 
 describe('Event Timeline component', () => {
   const data = [
@@ -31,6 +31,6 @@ describe('Event Timeline component', () => {
   })
   it('shouldnt break when there is no data provided', () => {
     const { getByText } = render(<EventTimeLine data={[]} />)
-    expect(getByText('No Events Yet')).toBeInTheDocument()
+    expect(getByText('No Changes Made')).toBeInTheDocument()
   })
 })

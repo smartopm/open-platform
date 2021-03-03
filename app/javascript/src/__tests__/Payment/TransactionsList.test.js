@@ -110,7 +110,7 @@ describe('Transactions Component', () => {
     const container = render(
       <MockedProvider
         mocks={[transactionsMock, pendingInvoicesMock, pendingDepositMock]}
-        addTypename={false}
+        addTypename
       >
         <AuthStateProvider>
           <BrowserRouter>

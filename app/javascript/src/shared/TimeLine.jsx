@@ -12,7 +12,7 @@ import { dateFormatter } from '../components/DateContainer'
 
 export default function EventTimeLine({ data }) {
   if (!data || !data.length) {
-    return <span>No Changes Yet</span>
+    return <span>No Changes Made</span>
   }
   return (
     <Timeline style={{ marginLeft: '-95%' }}>

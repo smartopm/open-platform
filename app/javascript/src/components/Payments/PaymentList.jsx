@@ -114,7 +114,7 @@ export default function PaymentList({ currencyData }) {
             ))
           }
         </div>
-      ) : paymentList.length && paymentList.length > 0 ? (
+      ) : paymentList?.length && paymentList?.length > 0 ? (
         <div>
           <ListHeader headers={paymentHeaders} />
           {
@@ -127,7 +127,7 @@ export default function PaymentList({ currencyData }) {
         <CenteredContent>No Payments Available</CenteredContent>
       )}
       {
-          paymentList.length >= limit && (
+          paymentList?.length >= limit && (
             <CenteredContent>
               <Paginate
                 offSet={pageNumber}
