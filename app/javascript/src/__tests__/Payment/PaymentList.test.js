@@ -31,7 +31,7 @@ describe('Payment List Item Component', () => {
       createdAt: '2021-03-01T09:55:05Z',
       updatedAt: '2021-03-01T09:55:05Z',
       destination: 'invoice',
-      source: 'wallet',
+      source: 'cash',
       currentWalletBalance: 0,
       id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
       user: {
@@ -39,7 +39,6 @@ describe('Payment List Item Component', () => {
         name: 'Another somebodyy',
         imageUrl: null
       },
-      __typename: 'WalletTransaction'
     }
   ];
   it('should render the invoice item component', async () => {
@@ -59,7 +58,7 @@ describe('Payment List Item Component', () => {
         query: AllEventLogsQuery,
         variables: {
           subject: ['payment_update'],
-          refId: '5e246346-50d8-4c1f-9b90',
+          refId: '162f751-83a1-6d59569',
           refType: 'WalletTransaction'
         }
       },
@@ -68,7 +67,7 @@ describe('Payment List Item Component', () => {
           result: {
             id: '385u9432n384ujdf',
             createdAt: '2021-03-03T12:40:38Z',
-            refId: '5e246346-50d8-4c1f-9b90',
+            refId: '162f751-83a1-6d59569',
             refType: 'WalletTransaction',
             subject: 'payment_update',
             sentence: 'Joe made changes to this payment',
@@ -99,7 +98,8 @@ describe('Payment List Item Component', () => {
       () => {
         expect(container.queryAllByTestId('created_by')[0].textContent).toContain('joe');
         expect(container.queryAllByTestId('payment_type')[0].textContent).toContain('Cash');
-        expect(container.queryAllByTestId('payment_type')[1].textContent).toContain('Cash');
+        expect(container.queryAllByTestId('payment_type')).toHaveLength(1)
+        expect(container.queryAllByTestId('payment_amount')).toHaveLength(1)
       },
       { timeout: 100 }
     );
