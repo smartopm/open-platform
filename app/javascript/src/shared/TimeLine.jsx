@@ -8,11 +8,11 @@ import TimelineDot from '@material-ui/lab/TimelineDot'
 import CreateIcon from '@material-ui/icons/Create'
 import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { dateFormatter } from './DateContainer'
+import { dateFormatter } from '../components/DateContainer'
 
 export default function EventTimeLine({ data }) {
   if (!data || !data.length) {
-    return <span>No Events Yet</span>
+    return <span>No Changes Yet</span>
   }
   return (
     <Timeline style={{ marginLeft: '-95%' }}>

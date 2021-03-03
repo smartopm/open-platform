@@ -13,7 +13,7 @@ import FormPropertyCreateForm from './FormPropertyCreateForm'
 import { FormUpdateMutation } from '../../graphql/mutations/forms'
 import { formStatus } from '../../utils/constants'
 import Toggler from '../Campaign/ToggleButton'
-import FormTimeline from '../TimeLine'
+import FormTimeline from '../../shared/TimeLine'
 import { ActionDialog } from '../Dialog'
 import { formatError } from '../../utils/helpers'
 

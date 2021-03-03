@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { CustomizedDialogs } from '../Dialog';
 import DetailsField from '../../shared/DetailField';
@@ -11,6 +11,10 @@ import { formatError, formatMoney } from '../../utils/helpers';
 import { StyledTab, StyledTabs, TabPanel } from '../Tabs';
 import { WalletTransactionUpdate } from '../../graphql/mutations/transactions';
 import MessageAlert from '../MessageAlert';
+import { AllEventLogsQuery } from '../../graphql/queries';
+import { Spinner } from '../../shared/Loading';
+import CenteredContent from '../CenteredContent';
+import EventTimeLine from '../../shared/TimeLine';
 
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
@@ -31,7 +35,13 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const [updateTransaction] = useMutation(WalletTransactionUpdate)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [response, setResponse] = useState({ isError: false, message: '' })
-
+  const changeLogs = useQuery(AllEventLogsQuery, {
+    variables: {
+      refId: data.id,
+      refType: 'WalletTransaction',
+      subject: 'payment_update'
+    }
+  })
 
   function handleSubmit(){
     setIsSubmitting(true)
@@ -63,6 +73,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
 
   function handleTabChange(_event, value){
     setTabValue(value);
+    changeLogs.refetch()
   }
 
   function handleAlertClose(_event, reason){
@@ -72,6 +83,9 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     setResponse({ ...response, message: '' })
   }
 
+  if (changeLogs.loading) return <Spinner />
+  if (changeLogs.error) return <CenteredContent>{formatError(changeLogs?.error.message)}</CenteredContent>
+  
   return (
     <>
       <MessageAlert
@@ -80,7 +94,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         open={!!response.message}
         handleClose={handleAlertClose}
       />
-      
+
       <CustomizedDialogs
         handleModal={handleClose}
         open={detailsOpen}
@@ -146,7 +160,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         )}
         </TabPanel>
         <TabPanel value={tabValue} index="Log">
-          Log
+          <EventTimeLine data={changeLogs.data?.result} />
         </TabPanel>
       </CustomizedDialogs>
     </>
