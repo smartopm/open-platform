@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { useMutation, useQuery } from 'react-apollo';
@@ -42,6 +42,12 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     }
   })
 
+  useEffect(() => {
+    changeLogs.refetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabValue])
+
+
   function handleSubmit(){
     setIsSubmitting(true)
     updateTransaction({
@@ -72,7 +78,6 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
 
   function handleTabChange(_event, value){
     setTabValue(value);
-    changeLogs.refetch()
   }
 
   function handleAlertClose(_event, reason){
