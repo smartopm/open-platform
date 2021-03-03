@@ -111,11 +111,11 @@ export function renderTransactions(transaction, currencyData, menuData) {
   return {
     'Date Created': (
       <GridText
-        col={4}
+        col={12}
         content={
           transaction.__typename === 'WalletTransaction'
-            ? `Deposit date ${dateToString(transaction.createdAt)}`
-            : `Issue date ${dateToString(transaction.createdAt)}`
+            ? dateToString(transaction.createdAt)
+            : dateToString(transaction.createdAt)
         }
       />
     ),

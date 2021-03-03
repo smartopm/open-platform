@@ -29,8 +29,21 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
       {
         matches ? (
           <div>
-            <div></div>
-            <div></div>
+            {data.map((item, index) => (
+              <div 
+                key={item.id || index} 
+                style={{display: 'flex', padding: '10px'}}
+                className={clickable ? classes.clickable : classes.list}
+                onClick={clickable ? () => handleClick(item) : null}
+              >
+                <div style={{marginRight: '5px'}}>
+                  <MobileCellData propNames={keys.slice(0, 2)} dataObj={item} />
+                </div>
+                <div>
+                  <MobileCellData propNames={keys.slice(2, keys.length)} dataObj={item} />
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div>
@@ -65,18 +78,16 @@ export function CellData({ propNames, dataObj }) {
   ));
 }
 
-// export function MobileCellData({ propNames, dataObj }) {
-//   return propNames.map(prop => (
-//     <Fragment
-//       key={prop.title} 
-//     >
-//       <div>
-
-//       </div>
-//       {propAccessor(dataObj, prop.title)}
-//     </Fragment>
-//   ));
-// }
+export function MobileCellData({ propNames, dataObj }) {
+  return propNames.filter(prop => prop.title !== 'Status' && prop.title !== 'Menu').map(prop => (
+    <Fragment
+      key={prop.title} 
+    >
+      <div style={{ fontWeight: 'bold'}}>{prop.title}</div>
+     {propAccessor(dataObj, prop.title)}
+    </Fragment>
+  ));
+}
 
 DataList.defaultProps = {
   hasHeader: true,
