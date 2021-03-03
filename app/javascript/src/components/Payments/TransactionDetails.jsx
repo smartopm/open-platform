@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import { useMutation } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { CustomizedDialogs } from '../Dialog';
 import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
 import { formatMoney } from '../../utils/helpers';
 import { StyledTab, StyledTabs, TabPanel } from '../Tabs';
-
+import { WalletTransactionUpdate } from '../../graphql/mutations/transactions';
 
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
@@ -24,9 +25,12 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const { pathname } = useLocation();
   const [inputValues, setInputValues] = useState({ ...initialValues })
   const [tabValue, setTabValue] = useState('Details');
+  // eslint-disable-next-line no-unused-vars
+  const [updateTransaction] = useMutation(WalletTransactionUpdate)
 
   function handleSubmit(){
     console.log(...inputValues)
+    console.log(data)
   }
 
   function handleChange(event){
@@ -103,7 +107,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
           </div>
         )}
         </TabPanel>
-        <TabPanel value={tabValue} index="EditLog">
+        <TabPanel value={tabValue} index="Log">
           Log
         </TabPanel>
       </CustomizedDialogs>
