@@ -51,11 +51,10 @@ class User < ApplicationRecord
 
     return relat.where(user_type: allowed_user_types)
   }
-  scope :by_phone_number, ->(number) { where('phone_number IN (?)', number&.split(',')) }
-  scope :by_type, ->(user_type) { where('user_type IN (?)', user_type&.split(',')) }
+  scope :by_phone_number, ->(number) { where(phone_number: number&.split(',')) }
+  scope :by_type, ->(user_type) { where(user_type: user_type&.split(',')) }
   scope :by_labels, lambda { |label|
-                      joins(:labels).where('labels.short_desc IN (?)',
-                                           label&.split(','))
+                      joins(:labels).where(labels: { short_desc: label&.split(',') })
                     }
 
   belongs_to :community, dependent: :destroy
@@ -96,6 +95,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_one_attached :document
 
+  before_save :ensure_default_state_and_type
   after_create :send_email_msg
 
   # Track changes to the User
@@ -122,7 +122,6 @@ class User < ApplicationRecord
   validates :name, presence: true
   validate :phone_number_valid?
   after_create :add_notification_preference
-  before_save :ensure_default_state_and_type
   before_update :log_sub_status_change, if: :sub_status_changed?
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]

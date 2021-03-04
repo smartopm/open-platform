@@ -9,10 +9,11 @@ class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :created_by, class_name: 'User', optional: true
 
-  before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
-  after_update -> { generate_event_log(:update) }
+  before_validation :invoice_not_present_for_month
   after_create :collect_payment_from_wallet, if: proc { persisted? }
   after_create :generate_event_log, if: proc { persisted? }
+  before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
+  after_update -> { generate_event_log(:update) }
 
   has_many :payment_invoices, dependent: :destroy
   has_many :payments, through: :payment_invoices
@@ -27,8 +28,6 @@ class Invoice < ApplicationRecord
     attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number']
     attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
-
-  before_validation :invoice_not_present_for_month
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
@@ -77,7 +76,7 @@ class Invoice < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def self.invoice_stat(com)
     Invoice.connection.select_all(
-      "select
+      sanitize_sql("select
         CASE
           WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 0
                 AND DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date) <= 30 THEN '00-30'
@@ -88,7 +87,7 @@ class Invoice < ApplicationRecord
           WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 61 THEN '61+'
         END no_of_days, count(*) as no_of_invoices
         from invoices inv where inv.community_id='#{com}'
-        AND inv.status !=1 group by no_of_days",
+        AND inv.status !=1 group by no_of_days"),
     )
   end
   # rubocop:enable Metrics/MethodLength

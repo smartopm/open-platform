@@ -21,8 +21,10 @@ class Message < ApplicationRecord
 
   class Unauthorized < StandardError; end
 
+  # rubocop:disable Metrics/MethodLength
   def self.users_newest_msgs(query, off, lmt, comid, filt)
-    Message.find_by_sql(["SELECT messages.* FROM messages
+    Message.find_by_sql(
+      sanitize_sql(["SELECT messages.* FROM messages
      INNER JOIN ( SELECT user_id, max(messages.created_at) as max_date FROM messages
      INNER JOIN users ON users.id = messages.user_id INNER JOIN users senders_messages
      ON senders_messages.id = messages.sender_id WHERE ((users.community_id=?
@@ -31,8 +33,10 @@ class Message < ApplicationRecord
      OR users.phone_number ILIKE ? OR messages.message ILIKE ?)" + category_query(filt[:cat]) + ")
      GROUP BY messages.user_id ORDER BY max_date DESC LIMIT ? OFFSET ?) max_list
      ON messages.created_at = max_list.max_date ORDER BY max_list.max_date DESC"] +
-     Array.new(2, comid) + Array.new(5, "%#{query}%") + [lmt, off])
+     Array.new(2, comid) + Array.new(5, "%#{query}%") + [lmt, off]),
+    )
   end
+  # rubocop:enable Metrics/MethodLength
 
   def mark_as_read
     update(is_read: true, read_at: DateTime.now) unless is_read

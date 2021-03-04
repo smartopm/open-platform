@@ -10,7 +10,7 @@ class NoteComment < ApplicationRecord
   after_create :log_create_event
   after_update :log_update_event
 
-  default_scope { where('status != ?', 'deleted').order(created_at: :desc) }
+  default_scope { where.not(status: 'deleted').order(created_at: :desc) }
 
   belongs_to :note_entity, polymorphic: true, optional: true
 
