@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { act, render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
@@ -77,4 +77,29 @@ describe('Land Property Modal Component', () => {
     fireEvent.change(parcelNumber, { target: { value: '12345' } })
     expect(parcelNumber.value).toBe('12345')
   })
+
+  it('should show merge action dialog', async () => {
+    const props = {
+      open: true,
+      handelClose: jest.fn,
+      modalType: 'details',
+      landParcel: {
+        id: '1u2y3y4',
+        parcelNumber: '15800'
+      },
+      confirmMergeOpen: true,
+    }
+    let container;
+    await act(async () => {
+      container = render(
+        <MockedProvider>
+          <BrowserRouter>
+            <LandParcelModal {...props} />
+          </BrowserRouter>
+        </MockedProvider>)
+    })
+
+    expect(container.getByText(/parcel number already exists. do you want to merge/gi)).toBeTruthy()
+    expect(container.getByText(/proceed/i)).toBeTruthy()
+  });
 })
