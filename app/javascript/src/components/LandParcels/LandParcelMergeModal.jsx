@@ -7,7 +7,12 @@ export default function LandParcelMergeModal({ open, mergeData, handleClose, han
   return (
     <>
       {mergeData && (
-        <LandParcelMergeFullScreenModal open={open} handleClose={handleClose} title='Land Parcel Merge Dialog' handleSubmit={handleSubmit}>
+        <LandParcelMergeFullScreenModal
+          open={open}
+          handleClose={handleClose}
+          title='Land Parcel Merge Dialog'
+          handleSubmit={handleSubmit}
+        >
           <h3>You are about to merge these two properties!</h3>
           <br />
           <br />
