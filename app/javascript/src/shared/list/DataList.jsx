@@ -4,8 +4,7 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
@@ -36,11 +35,15 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
                 className={clickable ? classes.clickable : classes.list}
                 onClick={clickable ? () => handleClick(item) : null}
               >
-                <div style={{marginRight: '5px'}}>
+                <div style={{marginRight: '10px', width: '50%'}}>
                   <MobileCellData propNames={keys.slice(0, 2)} dataObj={item} />
+                  <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Status'}} />
+                </div>
+                <div style={{marginRight: '3px', width: '40%'}}>
+                  <MobileCellData propNames={keys.slice(2, keys.length)} dataObj={item} />
                 </div>
                 <div>
-                  <MobileCellData propNames={keys.slice(2, keys.length)} dataObj={item} />
+                  <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Menu'}} />
                 </div>
               </div>
             ))}
@@ -78,13 +81,20 @@ export function CellData({ propNames, dataObj }) {
   ));
 }
 
-export function MobileCellData({ propNames, dataObj }) {
-  return propNames.filter(prop => prop.title !== 'Status' && prop.title !== 'Menu').map(prop => (
+export function MobileCellData({ propNames, dataObj, singlePropName }) {
+  let names = propNames.filter(prop => prop.title !== 'Status' && prop.title !== 'Menu')
+  if (singlePropName?.status) {
+    names = propNames.filter(prop => prop.title === singlePropName.value)
+  }
+  
+  return names.map(prop => (
     <Fragment
-      key={prop.title} 
+      key={prop.title}
     >
-      <div style={{ fontWeight: 'bold'}}>{prop.title}</div>
-     {propAccessor(dataObj, prop.title)}
+      <div style={{margin: '20px 10px'}}>
+        {!singlePropName && <div style={{ fontWeight: 'bold', fontSize: '13px' }}>{prop.title}</div>}
+        {propAccessor(dataObj, prop.title)}
+      </div>
     </Fragment>
   ));
 }

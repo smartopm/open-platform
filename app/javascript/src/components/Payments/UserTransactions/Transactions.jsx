@@ -4,6 +4,8 @@ import { useQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import InvoiceModal from './invoiceModal'
 import { formatError, formatMoney, useParamsQuery } from '../../../utils/helpers'
 import { TransactionQuery, AllTransactionQuery, UserBalance } from '../../../graphql/queries'
@@ -29,6 +31,8 @@ export default function TransactionsList({ userId, user, userData }) {
   const [offset, setOffset] = useState(Number(page) || 0)
   const [open, setOpen] = useState(!!tab)
   const [payOpen, setPayOpen] = useState(false)
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const { loading, data: transactionsData, error, refetch } = useQuery(
     TransactionQuery,
     {
@@ -57,7 +61,8 @@ export default function TransactionsList({ userId, user, userData }) {
     { title: 'Description', col: 4 },
     { title: 'Amount', col: 3 },
     { title: 'Balance', col: 3 },
-    { title: 'Status', col: 4 }
+    { title: 'Status', col: 4 },
+    { title: 'Menu', col: 4 }
   ];
 
   const invoiceHeader = [
@@ -146,7 +151,7 @@ export default function TransactionsList({ userId, user, userData }) {
         walletRefetch={walletRefetch}
       />
       <TabPanel value={tabValue} index="Transactions">
-        <ListHeader headers={transactionHeader} />
+        {matches && <ListHeader headers={transactionHeader} />}
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList 
             transaction={trans || {}} 
@@ -167,7 +172,7 @@ export default function TransactionsList({ userId, user, userData }) {
         ))}
       </TabPanel>
       <TabPanel value={tabValue} index="Invoices">
-        <ListHeader headers={invoiceHeader} />
+        {matches && <ListHeader headers={invoiceHeader} />}
         {
           invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem

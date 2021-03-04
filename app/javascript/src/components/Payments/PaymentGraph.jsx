@@ -2,6 +2,8 @@ import React from 'react'
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import { PaymentStats } from '../../graphql/queries';
 import CenteredContent from '../CenteredContent';
@@ -12,13 +14,15 @@ export default function PaymentGraph({ handleClick }){
   const { data, error } = useQuery(PaymentStats, {
     fetchPolicy: 'cache-and-network'
   });
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
   return (
     <>
-      <div style={{width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'}}>
+      <div style={matches ? {width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'} : {width: '100%', margin: '10px', border: '1px solid #E7E7E7'}}>
         {data?.paymentAccountingStats && data?.paymentAccountingStats?.length && (
           <div>
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>

@@ -121,7 +121,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
     ),
     Description: (
       <GridText
-        col={4}
+        col={12}
         data-testid="description"
         content={`${
           // eslint-disable-next-line no-nested-ternary
@@ -134,7 +134,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       />
     ),
     Amount: (
-      <Grid item xs={3} md={2} data-testid="amount">
+      <Grid item xs={12} md={2} data-testid="amount">
         {transaction.__typename === 'WalletTransaction' ? (
           <Text content={formatMoney(currencyData, transaction.amount)} />
         ) : (
@@ -149,7 +149,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Balance: (
       <GridText
         statusColor={transaction.__typename !== 'WalletTransaction' && '#D65252'}
-        col={3}
+        col={12}
         data-testid="balance"
         content={
           transaction.__typename === 'WalletTransaction'
@@ -159,7 +159,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       />
     ),
     Status: (
-      <Grid item xs={4} md={2} data-testid="status">
+      <Grid item xs={12} md={2} data-testid="status">
         {transaction.__typename === 'WalletTransaction' ? (
           <Label title="Paid" color="#58B71B" />
         ) : (
@@ -168,7 +168,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       </Grid>
     ),
     Menu: (
-      <Grid item xs={1}>
+      <Grid item xs={12} md={1}>
         {
           transaction.__typename === 'WalletTransaction'
           ? (
