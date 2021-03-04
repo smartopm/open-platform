@@ -214,6 +214,31 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
   )
 }
 
+export function LandParcelMergeFullScreenModal({ handleClose, open, children, handleSubmit }){
+  const classes = useStyles()
+  return(
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      fullScreen
+    >
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton edge="start" onClick={handleClose} aria-label="close">
+            <CloseIcon style={{color: 'white'}} />
+          </IconButton>
+          <div className={classes.print}>
+            {' '}
+          </div>
+          <Button autoFocus color="inherit" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
+            Merge and Save
+          </Button>
+        </Toolbar>
+      </AppBar>
+      {children}
+    </Dialog>
+  )
+}
 export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
   const classes = useStyles()
   return (
@@ -300,6 +325,17 @@ FullScreenDialog.defaultProps = {
 }
 
 FullScreenDialog.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  children: PropTypes.node
+}
+
+LandParcelMergeFullScreenModal.defaultProps = {
+  children: {}
+}
+
+LandParcelMergeFullScreenModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,

@@ -12,7 +12,7 @@ import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
 import CreateLandParcel from './CreateLandParcel';
 import LandParcelModal from './LandParcelModal';
-import { UpdateProperty } from '../../graphql/mutations';
+import { UpdateProperty, MergeProperty } from '../../graphql/mutations';
 import MessageAlert from '../MessageAlert';
 import { formatError, propAccessor } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
@@ -34,6 +34,7 @@ export default function LandParcelList() {
   const history = useHistory();
   const [type, setType] = useState('plots')
   const [viewResultsOnMap, setViewResultsOnMap] = useState(false);
+  const [confirmMergeOpen, setConfirmMergeOpen] = useState(false);
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue, limit, offset }
@@ -44,11 +45,19 @@ export default function LandParcelList() {
   })
 
   const [updateProperty] = useMutation(UpdateProperty);
+  const [mergeProperty] = useMutation(MergeProperty);
 
   const [
     loadParcel,
     { loading: parcelDataLoading, error: parcelDataError, data: parcelData }
   ] = useLazyQuery(LandParcel, {
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const [
+    fetchAllLandParcels, { data: allLandParcelData }
+  ] = useLazyQuery(ParcelsQuery, {
+    variables: { limit: 10000 },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -106,6 +115,7 @@ export default function LandParcelList() {
   function handleDetailsModalClose() {
     history.push('/land_parcels');
     setDetailsModalOpen(false);
+    setConfirmMergeOpen(false)
   }
 
   function handleSubmit(variables) {
@@ -119,8 +129,29 @@ export default function LandParcelList() {
         refetch();
       })
       .catch(err => {
+        const triggerMergeRegex = /parcel number has already been taken/gi
+        if(triggerMergeRegex.test(err.message)){
+          // fetch all landParcels & trigger prompt for merge routine
+          fetchAllLandParcels()
+          setConfirmMergeOpen(true)
+        }
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
+      });
+  }
+
+  function handleMergeLandParcel(variables){
+    mergeProperty({ variables })
+      .then(() => {
+        setMessageAlert('Merge successful');
+        setIsSuccessAlert(true);
+        handleDetailsModalClose();
+        refetch();
+      })
+      .catch(err => {
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
+        handleDetailsModalClose();
       });
   }
 
@@ -234,6 +265,9 @@ export default function LandParcelList() {
           modalType="details"
           landParcel={selectedLandParcel}
           handleSubmit={handleSubmit}
+          landParcels={allLandParcelData?.fetchLandParcel}
+          confirmMergeOpen={confirmMergeOpen}
+          handleSubmitMerge={handleMergeLandParcel}
         />
         <MessageAlert
           type={isSuccessAlert ? 'success' : 'error'}

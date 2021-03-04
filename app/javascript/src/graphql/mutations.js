@@ -447,7 +447,28 @@ mutation UpdateProperty($id: ID!,
   }
 }
 `
-
+export const MergeProperty = gql`
+mutation MergeProperty($id: ID!,
+  $parcelNumber: String!) {
+    propertyMerge(id: $id,
+    parcelNumber: $parcelNumber) {
+      landParcel {
+        id
+        valuations {
+          id
+          amount
+          startDate
+          createdAt
+        }
+        accounts {
+          id
+          fullName
+          address1
+        }
+    }
+  }
+}
+`
 export const LabelMerge = gql`
   mutation LabelMerge($labelId: ID!, $mergeLabelId: ID!) {
     labelMerge(labelId: $labelId, mergeLabelId: $mergeLabelId) {
