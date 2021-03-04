@@ -40,6 +40,7 @@ gem 'sendgrid-ruby'
 # For S3 file uploads in ActiveStorage
 gem "aws-sdk-s3", require: false
 
+gem 'repost'
 # Auth stuff
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem 'omniauth-rails_csrf_protection'
@@ -58,7 +59,7 @@ gem "sidekiq-scheduler", "~> 3.0"
 gem 'serviceworker-rails'
 
 # GraphQL
-gem 'graphql'
+gem 'graphql', "1.11.6"
 gem 'graphiql-rails', group: :development
 gem 'graphql-guard'
 
