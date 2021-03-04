@@ -2,7 +2,7 @@
 
 module Mutations
   module LandParcel
-    # Create a new Land Parcel
+    # Merge land parcel
     class PropertyMerge < BaseMutation
       argument :id, ID, required: true
       argument :parcel_number, String, required: true
