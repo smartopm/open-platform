@@ -499,7 +499,7 @@ class User < ApplicationRecord
   end
 
   def active_payment_plan?
-    payment_plans.active.present?
+    payment_plans.active.present? || wallet_transactions.present? || invoices.present?
   end
 
   private
