@@ -150,10 +150,9 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               handleChange={handleChange}
             />
             <DetailsField
-              editable={isEditing}
+              editable={false}
               title="Payment Date"
               value={dateToString(data?.createdAt)}
-              handleChange={handleChange}
             />
             <DetailsField 
               editable={isEditing} 
@@ -168,6 +167,12 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                     editable={isEditing} 
                     title="Bank Name" 
                     value={inputValues.BankName}
+                    handleChange={handleChange}
+                  />
+                  <DetailsField 
+                    editable={isEditing} 
+                    title="TransactionNumber" 
+                    value={inputValues.TransactionNumber}
                     handleChange={handleChange}
                   />
                   <DetailsField 
