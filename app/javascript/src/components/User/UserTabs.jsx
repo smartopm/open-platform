@@ -17,9 +17,7 @@ export const StyledTab = withStyles({
 
 export default function UserStyledTabs({ tabValue, handleChange, userType }) {
   // Make sure other tabs can show while the query is fetching unless there is an error
-  const { data, loading, error } = useQuery(UserActivePlanQuery, {
-    errorPolicy: 'all'
-  })
+  const { data, loading, error } = useQuery(UserActivePlanQuery)
   if(error) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <StyledTabs
@@ -28,30 +26,30 @@ export default function UserStyledTabs({ tabValue, handleChange, userType }) {
       aria-label="request tabs"
       centered
     >
-      <StyledTab label="Contact" value="Contacts" />
+      <StyledTab label="Contact" value="Contacts" data-testid="tabs" />
       {['admin'].includes(userType) && (
-        <StyledTab label="Notes" value="Notes" />
+        <StyledTab label="Notes" value="Notes" data-testid="tabs" />
       )}
       {['admin'].includes(userType) && (
-        <StyledTab label="Communication" value="Communication" />
+        <StyledTab label="Communication" value="Communication" data-testid="tabs" />
       )}
       {
         !['security_guard', 'custodian'].includes(userType) &&
-        <StyledTab label="Plots" value="Plots" />
+        <StyledTab label="Plots" value="Plots" data-testid="tabs" />
       }
       {
         !['security_guard', 'custodian'].includes(userType) &&
-        <StyledTab label="Forms" value="Forms" />
+        <StyledTab label="Forms" value="Forms" data-testid="tabs" />
       }
 
       {loading ? <Spinner /> : null}
       {
         !loading && userType === 'admin' || data?.userActivePlan 
-        ? <StyledTab label='Payments' value="Payments" />
+        ? <StyledTab label='Payments' value="Payments" data-testid="tabs" />
         : null        
       }
       {['admin'].includes(userType) && (
-      <StyledTab label="Customer Journey" value="CustomerJourney" />
+      <StyledTab label="Customer Journey" value="CustomerJourney" data-testid="tabs" />
       )}
     </StyledTabs>
   )
