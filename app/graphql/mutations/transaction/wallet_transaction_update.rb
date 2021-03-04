@@ -14,12 +14,12 @@ module Mutations
       field :wallet_transaction, Types::WalletTransactionType, null: false
 
       def resolve(vals)
-        transaction = context[:site_community].wallet_transactions.find(vals[:id])
+        transaction = context[:site_community].wallet_transactions.find_by(id: vals[:id])
         raise GraphQL::ExecutionError, 'Payment not found' if transaction.nil?
 
-        ActiveRecord::Base.transaction do
+        if transaction.update(vals)
           context[:current_user].generate_events('payment_update', transaction)
-          return { wallet_transaction: transaction } if transaction.update!(vals)
+          return { wallet_transaction: transaction }
         end
         raise GraphQL::ExecutionError, transaction.errors.full_messages
       end
