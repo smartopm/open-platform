@@ -189,6 +189,23 @@ export default function LandParcelModal({
   }
 
   function getPlotsToMerge({ existingPlot, selectedPlot }){
+    // transfer geo-coordinates to plots with account and no geom
+    if((checkPlotAccountsAndPayments({ plot: selectedPlot }) && !selectedPlot.geom)
+    && (!checkPlotAccountsAndPayments({ plot: existingPlot }) && existingPlot.geom)){
+      return {
+        plotToMerge: { ...selectedPlot, geom: existingPlot.geom },
+        plotToRemove: { ...existingPlot, parcelNumber: getBadPlotName(existingPlot.parcelNumber) }
+      }
+    }
+
+    if((checkPlotAccountsAndPayments({ plot: existingPlot }) && !existingPlot.geom)
+    && (!checkPlotAccountsAndPayments({ plot: selectedPlot }) && selectedPlot.geom)){
+      return {
+        plotToMerge: { ...existingPlot, geom: selectedPlot.geom },
+        plotToRemove: { ...selectedPlot, parcelNumber: getBadPlotName(selectedPlot.parcelNumber) }
+      }
+    }
+
     // keep plot with accounts, payments, or geo-coordinates
     if(selectedPlot.geom || checkPlotAccountsAndPayments({ plot: selectedPlot })){
       return {
