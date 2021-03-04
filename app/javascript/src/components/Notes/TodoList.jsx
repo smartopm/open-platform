@@ -12,9 +12,10 @@ import {
   Button
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { StyleSheet, css } from 'aphrodite';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../graphql/queries';
@@ -33,6 +34,7 @@ import { ModalDialog } from '../Dialog';
 import { pluralizeCount, propAccessor } from '../../utils/helpers';
 import useDebounce from '../../utils/useDebounce';
 import DataList from '../../shared/list/DataList';
+import ListHeaders from '../../shared/list/ListHeader';
 import renderTaskData from './RenderTaskData';
 
 const taskHeader = [
@@ -75,6 +77,8 @@ export default function TodoList({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -482,15 +486,19 @@ export default function TodoList({
             </Grid>
             <br />
             {data?.flaggedNotes.length ? (
-              <DataList
-                keys={taskHeader}
-                data={renderTaskData(
-                  data?.flaggedNotes,
-                  handleChange,
-                  selectedTasks,
-                  handleTaskDetails
-                )}
-              />
+              <div>
+                {matches && <ListHeaders headers={taskHeader} />}
+                <DataList
+                  keys={taskHeader}
+                  data={renderTaskData(
+                    data?.flaggedNotes,
+                    handleChange,
+                    selectedTasks,
+                    handleTaskDetails
+                  )}
+                  hasHeader={false}
+                />
+              </div>
             ) : (
               <CenteredContent>Click a card above to filter</CenteredContent>
             )}

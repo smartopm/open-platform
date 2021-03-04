@@ -10,7 +10,7 @@ import DateContainer, { dateToString } from '../DateContainer';
 export function LinkToUser({ userId, name }) {
   return (
     <Typography gutterBottom>
-      <Link style={{ textDecoration: 'none' }} to={`/user/${userId}`}>
+      <Link style={{ textDecoration: 'none', fontSize: '12px' }} to={`/user/${userId}`}>
         {name}
       </Link>
     </Typography>
@@ -29,7 +29,7 @@ export default function renderTaskData(data, handleChange, selectedTasks, handle
   return data.map(task => {
     return {
       Select: (
-        <Grid item xs={1}>
+        <Grid item xs={12} sm={2}>
           <Checkbox
             checked={selectedTasks.includes(task.id)}
             onChange={() => handleChange(task.id)}
@@ -38,8 +38,8 @@ export default function renderTaskData(data, handleChange, selectedTasks, handle
         </Grid>
       ),
       Task: (
-        <Grid item xs={4}>
-          <Typography variant="subtitle1" gutterBottom>
+        <Grid item xs={12} sm={2}>
+          <Typography variant="caption" gutterBottom>
             <span
               style={{ whiteSpace: 'pre-line' }}
               // eslint-disable-next-line react/no-danger
@@ -51,26 +51,26 @@ export default function renderTaskData(data, handleChange, selectedTasks, handle
         </Grid>
       ),
       'Created By': (
-        <Grid item xs={2}>
+        <Grid item xs={12} sm={2}>
           <LinkToUser name={task.author.name} userId={task.author.id} />
           at &nbsp;
           <DateContainer date={task.createdAt} />
         </Grid>
       ),
       Duedate: (
-        <Grid item xs={1}>
+        <Grid item xs={12} sm={2} style={{fontSize: '12px'}}>
           {task.dueDate ? dateToString(task.dueDate) : ' Never '}
         </Grid>
       ),
       Assignees: (
-        <Grid item xs={2}>
+        <Grid item xs={12} sm={2}>
           {task.assignees.map(user => (
             <LinkToUser key={user.id} name={user.name} userId={user.id} />
           ))}
         </Grid>
       ),
       Menu: (
-        <Grid item xs={1}>
+        <Grid item xs={12} sm={1}>
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"

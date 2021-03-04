@@ -1,6 +1,6 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable */
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -10,7 +10,6 @@ import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
-// Todo: @tolu re-enable eslint and identify which prop is being used and which is not
 export default function DataList({ keys, data, hasHeader, clickable, handleClick }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -29,6 +28,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
         matches ? (
           <div>
             {data.map((item, index) => (
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
               <div 
                 key={item.id || index} 
                 style={{display: 'flex', padding: '10px'}}
@@ -66,7 +66,8 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
               </Grid>
             ))}
           </div>
-        )}
+        )
+}
     </>
   );
 }
@@ -133,6 +134,16 @@ DataList.propTypes = {
 CellData.propTypes = {
   propNames: PropTypes.arrayOf(PropTypes.object).isRequired,
   dataObj: PropTypes.object.isRequired
+};
+
+MobileCellData.defaultProps = {
+  singlePropName: null
+}
+
+MobileCellData.propTypes = {
+  propNames: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dataObj: PropTypes.object.isRequired,
+  singlePropName: PropTypes.object
 };
 
 const useStyles = makeStyles(() => ({
