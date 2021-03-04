@@ -8,7 +8,8 @@ RSpec.describe Mutations::Transaction::WalletTransactionUpdate do
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:user_wallet) { create(:wallet, user: user, balance: 0) }
     let!(:wallet_transaction) do
-      user.community.wallet_transactions.create!(user: user, status: 1, amount: 12.0, source: 'cash')
+      user.community.wallet_transactions.create!(user: user, status: 1, amount: 12.0,
+                                                 source: 'cash')
     end
 
     let(:update_mutation) do
@@ -45,8 +46,10 @@ RSpec.describe Mutations::Transaction::WalletTransactionUpdate do
                                                           site_community: user.community,
                                                         }).as_json
       expect(result['errors']).to be_nil
-      expect(result.dig('data', 'walletTransactionUpdate', 'walletTransaction', 'id')).not_to be_nil
-      expect(result.dig('data', 'walletTransactionUpdate', 'walletTransaction', 'transactionNumber')).to eql '100'
+      expect(result.dig('data', 'walletTransactionUpdate', 'walletTransaction',
+                        'id')).not_to be_nil
+      expect(result.dig('data', 'walletTransactionUpdate', 'walletTransaction',
+                        'transactionNumber')).to eql '100'
     end
   end
 end
