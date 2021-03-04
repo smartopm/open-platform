@@ -1,7 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useQuery } from 'react-apollo'
 import { withStyles, Tab } from '@material-ui/core'
 import { StyledTabs } from "../Tabs"
+import { UserActivePlanQuery } from '../../graphql/queries/user'
+import { Spinner } from '../../shared/Loading'
+import CenteredContent from '../CenteredContent'
+import { formatError } from '../../utils/helpers'
 
 export const StyledTab = withStyles({
   root: {
@@ -11,6 +16,11 @@ export const StyledTab = withStyles({
 })(props => <Tab {...props} />)
 
 export default function UserStyledTabs({ tabValue, handleChange, userType }) {
+  // Make sure other tabs can show while the query is fetching unless there is an error
+  const { data, loading, error } = useQuery(UserActivePlanQuery, {
+    errorPolicy: 'all'
+  })
+  if(error) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   return (
     <StyledTabs
       value={tabValue}
@@ -33,9 +43,12 @@ export default function UserStyledTabs({ tabValue, handleChange, userType }) {
         !['security_guard', 'custodian'].includes(userType) &&
         <StyledTab label="Forms" value="Forms" />
       }
+
+      {loading ? <Spinner /> : null}
       {
-        !['security_guard'].includes(userType) &&
-        <StyledTab label="Payments" value="Payments" />
+        !loading && userType === 'admin' || data?.userActivePlan 
+        ? <StyledTab label='Payments' value="Payments" />
+        : null        
       }
       {['admin'].includes(userType) && (
       <StyledTab label="Customer Journey" value="CustomerJourney" />
