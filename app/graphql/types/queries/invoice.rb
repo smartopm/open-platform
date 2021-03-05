@@ -136,7 +136,9 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     month = Time.zone.now.month
-    payment_plans = ::PaymentPlan.where('extract(month from start_date) = ?', month)
+    payment_plans = ::PaymentPlan.where(
+      'extract(month from start_date) = ? AND generated = ?', month, false
+    )
     {
       number_of_invoices: payment_plans.count,
       total_amount: calculate_total_amount(payment_plans),
