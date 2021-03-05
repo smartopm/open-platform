@@ -78,9 +78,9 @@ module Types::Queries::Wallet
   def transaction_receipt(transaction_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    # rubocop:disable Metrics/SafeNavigationChain
+    # rubocop:disable Lint/SafeNavigationChain
     context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
-    # rubocop:enable Metrics/SafeNavigationChain
+    # rubocop:enable Lint/SafeNavigationChain
   end
 
   # It would be good to put this elsewhere to use it in other queries
