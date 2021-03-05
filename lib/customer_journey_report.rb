@@ -17,6 +17,7 @@ class CustomerJourneyReport
       construction_approved: Hash.new(0),
       construction_in_progress: Hash.new(0),
       construction_completed: Hash.new(0),
+      construction_in_progress_self_build: Hash.new(0),
     }
 
     rows.present? && rows.each do |row|

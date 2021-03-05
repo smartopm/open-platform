@@ -113,6 +113,7 @@ class User < ApplicationRecord
     construction_approved: 3,
     construction_in_progress: 4,
     construction_completed: 5,
+    construction_in_progress_self_build: 6
   }
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
