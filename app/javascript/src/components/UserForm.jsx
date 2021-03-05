@@ -18,7 +18,7 @@ import {
 import DatePickerDialog from './DatePickerDialog'
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider'
 import { UserQuery } from '../graphql/queries'
-import { CreateUserMutation, NonAdminUpdateMutation, UpdateUserMutation } from '../graphql/mutations'
+import { CreateUserMutation, NonAdminUpdateMutation } from '../graphql/mutations'
 import { useFileUpload } from '../graphql/useFileUpload'
 import crudHandler from '../graphql/crud_handler'
 import Loading from '../shared/Loading'
@@ -28,6 +28,7 @@ import FormOptionInput, {
 import { saniteError } from '../utils/helpers'
 import { ModalDialog } from './Dialog'
 import CenteredContent from './CenteredContent'
+import { UpdateUserMutation } from '../graphql/mutations/user'
 
 const initialValues = {
   name: '',
