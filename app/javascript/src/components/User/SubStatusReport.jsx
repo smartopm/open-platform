@@ -26,7 +26,6 @@ export default function SubStatusReportDialog({ handleClose, open, handleFilter 
       fullWidth
       maxWidth="sm"
     >
-      {console.log(data)}
       <DialogTitle className={classes.confirmDialogTitle}>Substatus</DialogTitle>
       {error && error.message}
       {loading ? (
