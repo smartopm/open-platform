@@ -5,6 +5,7 @@ module Types
   class InvoiceTransactionType < Types::BaseObject
     field :payments, [Types::PaymentType], null: false
     field :invoices, [Types::InvoiceType], null: false
-    field :deposits, [Types::WalletTransactionType], null: false
+    field :deposits, [Types::WalletTransactionType], null: true
+    field :payment_plans, [Types::PaymentPlanType], null: false
   end
 end

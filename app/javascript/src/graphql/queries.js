@@ -1118,6 +1118,13 @@ export const AllTransactionQuery = gql`
         paymentType
         createdAt
       }
+      paymentPlans {
+        id
+        startDate
+        planType
+        status
+        percentage
+      }
     }
   }
 `;
