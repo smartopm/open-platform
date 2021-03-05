@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import PaymentPlanDetails from './PaymentPlanDetails';
 
+// eslint-disable-next-line no-unused-vars
 const planHeader = [
   { title: 'Plot Number', col: 4 },
   { title: 'Balance', col: 4 },
@@ -12,11 +13,11 @@ const planHeader = [
 ];
 
 export default function UserPaymentPlanItem({ plan }) {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   return (
     <PaymentPlanDetails
-      detailsOpen={open}
-      handleClose={() => setOpen(false)}
+      // detailsOpen={open}
+      // handleClose={() => setOpen(false)}
       data={plan}
     />
   );
