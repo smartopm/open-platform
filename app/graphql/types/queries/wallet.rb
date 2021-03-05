@@ -66,7 +66,7 @@ module Types::Queries::Wallet
   end
 
   def payment_accounting_stats
-    context[:site_community].wallet_transactions.payment_stat
+    WalletTransaction.payment_stat(context[:site_community])
   end
 
   def payment_stat_details(query:)
