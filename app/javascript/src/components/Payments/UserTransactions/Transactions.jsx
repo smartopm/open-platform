@@ -195,7 +195,7 @@ export default function TransactionsList({ userId, user, userData }) {
           ))
         }
       </TabPanel>
-      <TabPanel value={tabValue} index="Plan">
+      <TabPanel value={tabValue} index="Plans">
         <ListHeader headers={paymentPlan} />
         {
           invPayData?.invoicesWithTransactions.paymentPlans.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((plan) => (

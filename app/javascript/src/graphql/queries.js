@@ -1129,6 +1129,7 @@ export const AllTransactionQuery = gql`
         planType
         status
         percentage
+        createdAt
       }
     }
   }
