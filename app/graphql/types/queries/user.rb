@@ -69,6 +69,10 @@ module Types::Queries::User
     field :substatus_distribution_query, Types::SubstatusDistributionReportType, null: true do
       description 'Get substatus distribution report'
     end
+
+    field :user_active_plan, GraphQL::Types::Boolean, null: true do
+      description 'returns true if a user has an active payment plan'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -203,6 +207,12 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     SubstatusLog.create_time_distribution_report
+  end
+
+  def user_active_plan
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+
+    context[:current_user].active_payment_plan?
   end
 end
 # rubocop:enable Metrics/ModuleLength

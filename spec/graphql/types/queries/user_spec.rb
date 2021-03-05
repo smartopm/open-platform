@@ -101,6 +101,13 @@ RSpec.describe Types::Queries::User do
           }
       })
     end
+    let(:active_plan_query) do
+      %(
+        query plans {
+          userActivePlan
+        }
+      )
+    end
 
     it 'returns all items' do
       current_user.notes.create(author_id: admin.id, body: 'test')
@@ -302,6 +309,22 @@ RSpec.describe Types::Queries::User do
                                                     }).as_json
       expect(result.dig('data', 'users').length).to eql 11
       expect(result['errors']).to be_nil
+    end
+
+    it 'should check if a user has active payment plan' do
+      result = DoubleGdpSchema.execute(active_plan_query,
+                                       context: {
+                                         current_user: admin,
+                                       }).as_json
+      expect(result.dig('data', 'userActivePlan')).to eql false
+      expect(result['errors']).to be_nil
+    end
+    it 'should not check if a user has active payment plan when no user is logged in' do
+      result = DoubleGdpSchema.execute(active_plan_query,
+                                       context: {
+                                         current_user: nil,
+                                       }).as_json
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
     end
   end
 

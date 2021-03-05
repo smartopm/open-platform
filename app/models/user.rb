@@ -498,6 +498,10 @@ class User < ApplicationRecord
     wallets.first.presence || wallets.create(balance: 0, pending_balance: 0)
   end
 
+  def active_payment_plan?
+    payment_plans.active.present? || wallet_transactions.present? || invoices.present?
+  end
+
   private
 
   def current_time_in_timezone
