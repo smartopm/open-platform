@@ -447,7 +447,6 @@ mutation UpdateProperty($id: ID!,
   }
 }
 `
-
 export const LabelMerge = gql`
   mutation LabelMerge($labelId: ID!, $mergeLabelId: ID!) {
     labelMerge(labelId: $labelId, mergeLabelId: $mergeLabelId) {

@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, Room } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { CustomizedDialogs } from '../Dialog';
+import { CustomizedDialogs, ActionDialog } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import DatePickerDialog from '../DatePickerDialog';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
@@ -22,6 +22,7 @@ import PaymentPlanForm from './PaymentPlanForm';
 import { LandPaymentPlanQuery } from '../../graphql/queries/landparcel';
 import PaymentPlan from './PaymentPlan';
 import LandParcelEditCoordinate from './LandParcelEditCoordinate';
+import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 
 export default function LandParcelModal({
@@ -29,7 +30,10 @@ export default function LandParcelModal({
   handleClose,
   handleSubmit,
   modalType,
-  landParcel
+  landParcel,
+  landParcels,
+  confirmMergeOpen,
+  handleSubmitMerge,
 }) {
   const classes = useStyles();
   const [parcelNumber, setParcelNumber] = useState('');
@@ -54,6 +58,8 @@ export default function LandParcelModal({
   const currency = currencies[authState.user?.community.currency] || '';
   const isFormReadOnly = modalType === 'details' && !isEditing;
   const [editCoordinates, setEditCoordinates] = useState(false)
+  const [mergeModalOpen, setMergeModalOpen] = useState(false)
+  const [mergeData, setMergeData] = useState(null)
 
   useEffect(() => {
     setDetailsFields(landParcel);
@@ -126,6 +132,7 @@ export default function LandParcelModal({
   function cleanUpOnModalClosing(){
     setIsEditing(false);
     setShowPaymentPlan(false);
+    setMergeModalOpen(false)
     handleClose()
   }
 
@@ -151,6 +158,92 @@ export default function LandParcelModal({
       geom,
       valuationFields,
       ownershipFields
+    });
+  }
+
+  function handleTriggerMergeRoutine(){
+    // eslint-disable-next-line react/prop-types
+    const existingPlot = landParcels.find(p => p.parcelNumber === parcelNumber)
+    
+    // skip merge when both properties have accounts or payments
+    if(checkPlotAccountsAndPayments({ plot: existingPlot})
+    && checkPlotAccountsAndPayments({ plot: landParcel})
+    ){
+      return cleanUpOnModalClosing()
+    }
+    
+    // skip merge when both plots have geo-coordinates
+    if(landParcel.geom && existingPlot.geom){
+      return cleanUpOnModalClosing()
+    }
+ 
+    const { plotToMerge, plotToRemove } = getPlotsToMerge({ existingPlot, selectedPlot: landParcel })
+
+    setMergeData({ 
+      plotToMerge,
+      plotToRemove,
+      selectedPlot: { ...landParcel },
+      existingPlot
+    })
+    return setMergeModalOpen(true)
+  }
+
+  function getPlotsToMerge({ existingPlot, selectedPlot }){
+    // transfer geo-coordinates to plots with account and no geom
+    if((checkPlotAccountsAndPayments({ plot: selectedPlot }) && !selectedPlot.geom)
+    && (!checkPlotAccountsAndPayments({ plot: existingPlot }) && existingPlot.geom)){
+      return {
+        plotToMerge: { ...selectedPlot, geom: existingPlot.geom },
+        plotToRemove: { ...existingPlot, parcelNumber: getBadPlotName(existingPlot.parcelNumber) }
+      }
+    }
+
+    if((checkPlotAccountsAndPayments({ plot: existingPlot }) && !existingPlot.geom)
+    && (!checkPlotAccountsAndPayments({ plot: selectedPlot }) && selectedPlot.geom)){
+      return {
+        plotToMerge: { ...existingPlot, geom: selectedPlot.geom },
+        plotToRemove: { ...selectedPlot, parcelNumber: getBadPlotName(selectedPlot.parcelNumber) }
+      }
+    }
+
+    // keep plot with accounts, payments, or geo-coordinates
+    if(selectedPlot.geom || checkPlotAccountsAndPayments({ plot: selectedPlot })){
+      return {
+        plotToMerge: { ...selectedPlot },
+        plotToRemove: { ...existingPlot, parcelNumber: getBadPlotName(existingPlot.parcelNumber) }
+      }
+    }
+
+    return {
+      plotToMerge: { ...existingPlot },
+      plotToRemove: { ...selectedPlot, parcelNumber: getBadPlotName(selectedPlot.parcelNumber) }
+    }
+  }
+
+  function getBadPlotName(parcelNo){
+    return `BAD-PLOT-${parcelNo}`
+  }
+
+  function checkPlotAccountsAndPayments({ plot }){
+    return(
+      plot?.accounts.length > 0 || plot?.valuations.length > 0
+    )
+  }
+
+  function handleMergeAndSave(){
+    setMergeModalOpen(false)
+    const { plotToMerge, plotToRemove } = mergeData;
+
+    handleMerge(plotToMerge)
+    setTimeout(() => {
+      handleMerge(plotToRemove)
+    }, 500);
+  }
+
+  function handleMerge(plot){
+    handleSubmitMerge({
+      id: plot.id,
+      parcelNumber: plot.parcelNumber
     });
   }
 
@@ -232,6 +325,13 @@ export default function LandParcelModal({
 
   return (
     <>
+      <ActionDialog
+        open={confirmMergeOpen}
+        type="confirm"
+        message="Parcel Number Already exists. Do you want to merge these plots?"
+        handleClose={cleanUpOnModalClosing}
+        handleOnSave={handleTriggerMergeRoutine}
+      />
       <CustomizedDialogs
         open={open}
         handleModal={cleanUpOnModalClosing}
@@ -335,15 +435,15 @@ export default function LandParcelModal({
             <br />
             <br />
             {!landParcel?.geom && !(modalType === 'new') && (
-              <IconButton
-                onClick={handleEditCoordinatesOpen}
-                aria-label="edit-coordinate"
-              >
-                <Room />
-                  {' '}
-                  {' '}
-                <Typography>Edit Coordinates</Typography>
-              </IconButton>
+            <IconButton
+              onClick={handleEditCoordinatesOpen}
+              aria-label="edit-coordinate"
+            >
+              <Room />
+              {' '}
+              {' '}
+              <Typography>Edit Coordinates</Typography>
+            </IconButton>
             )}
           </div>
         </TabPanel>
@@ -433,9 +533,9 @@ export default function LandParcelModal({
             </div>
           ))}
           {(modalType === 'new' || isEditing) && (
-            <>
-              <AddMoreButton title="New Owner" handleAdd={addOwnership} />
-            </>
+          <>
+            <AddMoreButton title="New Owner" handleAdd={addOwnership} />
+          </>
           )}
           <br />
           {
@@ -447,11 +547,11 @@ export default function LandParcelModal({
             )
           }
           {showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && (
-            <>
-              <br />
-              <Text content="Purchase Plan" />
-              <PaymentPlanForm landParcel={landParcel} refetch={refetch} />
-            </>
+          <>
+            <br />
+            <Text content="Purchase Plan" />
+            <PaymentPlanForm landParcel={landParcel} refetch={refetch} />
+          </>
           )}
           {
           /*
@@ -544,7 +644,7 @@ export default function LandParcelModal({
               </div>
             ))}
           {(modalType === 'new' || isEditing) && (
-            <AddMoreButton title="Add Valuation" handleAdd={addValuation} />
+          <AddMoreButton title="Add Valuation" handleAdd={addValuation} />
           )}
         </TabPanel>
       </CustomizedDialogs>
@@ -553,6 +653,12 @@ export default function LandParcelModal({
         open={editCoordinates}
         handleClose={handleEditCoordinatesClose}
         handleSaveMapEdit={handleSaveMapEdit}
+      />
+      <LandParcelMergeModal
+        open={mergeModalOpen}
+        handleClose={cleanUpOnModalClosing}
+        handleSubmit={handleMergeAndSave}
+        mergeData={mergeData}
       />
     </>
   );
@@ -576,7 +682,10 @@ const useStyles = makeStyles(() => ({
 
 LandParcelModal.defaultProps = {
   handleSubmit: () => {},
-  landParcel: null
+  landParcel: null,
+  landParcels: [],
+  confirmMergeOpen: false,
+  handleSubmitMerge: () => {},
 };
 
 LandParcelModal.propTypes = {
@@ -585,5 +694,19 @@ LandParcelModal.propTypes = {
   handleSubmit: PropTypes.func,
   modalType: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  landParcel: PropTypes.object
+  landParcel: PropTypes.object,
+  landParcels: PropTypes.arrayOf(
+    PropTypes.shape({
+    id: PropTypes.string,
+    parcelNumber: PropTypes.string,
+    address1: PropTypes.string,
+    address2: PropTypes.string,
+    city: PropTypes.string,
+    postalCode: PropTypes.string,
+    stateProvince: PropTypes.string,
+    country: PropTypes.string,
+    parcelType: PropTypes.string
+  })),
+  confirmMergeOpen: PropTypes.bool,
+  handleSubmitMerge: PropTypes.func,
 };
