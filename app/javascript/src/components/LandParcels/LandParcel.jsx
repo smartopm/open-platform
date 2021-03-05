@@ -36,6 +36,7 @@ export default function LandParcelList() {
   const [type, setType] = useState('plots')
   const [viewResultsOnMap, setViewResultsOnMap] = useState(false);
   const [confirmMergeOpen, setConfirmMergeOpen] = useState(false);
+  const [conflictingParcelNumber, setConflictingParcelNumber] = useState('');
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue, limit, offset }
@@ -56,10 +57,10 @@ export default function LandParcelList() {
   });
 
   const [
-    fetchAllLandParcels, { data: allLandParcelData }
+    fetchConflictingLandParcel, { data: conflictingParcelData }
   ] = useLazyQuery(ParcelsQuery, {
-    variables: { limit: 10000 },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    variables: { query: conflictingParcelNumber }
   });
 
   const handleType = (_event, value) => {
@@ -133,7 +134,8 @@ export default function LandParcelList() {
         const triggerMergeRegex = /parcel number has already been taken/gi
         if(triggerMergeRegex.test(err.message)){
           // fetch all landParcels & trigger prompt for merge routine
-          fetchAllLandParcels()
+          setConflictingParcelNumber(variables.parcelNumber)
+          fetchConflictingLandParcel()
           setConfirmMergeOpen(true)
         }
         setMessageAlert(formatError(err.message));
@@ -266,7 +268,7 @@ export default function LandParcelList() {
           modalType="details"
           landParcel={selectedLandParcel}
           handleSubmit={handleSubmit}
-          landParcels={allLandParcelData?.fetchLandParcel}
+          landParcels={conflictingParcelData?.fetchLandParcel}
           confirmMergeOpen={confirmMergeOpen}
           handleSubmitMerge={handleMergeLandParcel}
         />
