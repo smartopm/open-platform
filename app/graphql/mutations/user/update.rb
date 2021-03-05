@@ -17,10 +17,11 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
+      argument :substatus_start_date, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
 
       field :user, Types::UserType, null: true
-
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, 'NotFound' unless user
@@ -28,10 +29,14 @@ module Mutations
         attach_avatars(user, vals)
         log_user_update(user)
         update_secondary_info(user, vals.delete(:secondary_info))
-        return { user: user } if user.update(vals.except(*ATTACHMENTS.keys))
 
+        if user.update(vals.except(*ATTACHMENTS.keys, :substatus_start_date))
+          update_substatus_date(user, vals[:substatus_start_date])
+          return { user: user }
+        end
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
@@ -64,6 +69,14 @@ module Mutations
 
       def own_user?(vals)
         context[:current_user].id == vals[:id]
+      end
+
+      def update_substatus_date(user, start_date)
+        # maintains the time set in user model if no start_date provided
+        return if start_date.nil?
+
+        status = SubstatusLog.find_by(id: user.latest_substatus_id)
+        status&.update!(start_date: start_date)
       end
 
       def authorized?(vals)

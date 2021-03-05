@@ -54,6 +54,7 @@ export const UpdateUserMutation = gql`
     $expiresAt: String
     $subStatus: String
     $address: String
+    $substatusStartDate: String
     $secondaryInfo: [JSON!]
   ) {
     result: userUpdate(
@@ -70,6 +71,7 @@ export const UpdateUserMutation = gql`
       expiresAt: $expiresAt
       subStatus: $subStatus
       address: $address
+      substatusStartDate: $substatusStartDate
       secondaryInfo: $secondaryInfo
     ) {
       user {

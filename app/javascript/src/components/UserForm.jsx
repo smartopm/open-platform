@@ -59,6 +59,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const [modalAction, setModalAction] = React.useState('grant')
   const [msg, setMsg] = React.useState('')
   const [selectedDate, handleDateChange] = React.useState(null)
+  const [subStartDate, handleSubStartDateChange] = React.useState(null)
   const [showResults, setShowResults] = React.useState(false)
   const [submitting, setSubmitting] = React.useState(false)
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
@@ -95,6 +96,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       address: data.primaryAddress,
       avatarBlobId: signedBlobId,
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
+      substatusStartDate: subStartDate ? new Date(subStartDate).toISOString() : null,
       secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)
     }
 
@@ -429,6 +431,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                         ))
                         }
                     </TextField>
+                  </div>
+                  <div>
+                    <DatePickerDialog
+                      selectedDate={subStartDate}
+                      label="Substatus Start Date"
+                      handleDateChange={handleSubStartDateChange}
+                    />
                   </div>
                   <div>
                     <DatePickerDialog
