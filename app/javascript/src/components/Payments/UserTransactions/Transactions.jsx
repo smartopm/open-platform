@@ -18,6 +18,7 @@ import UserTransactionsList from './UserTransactions'
 import { StyledTabs, StyledTab, TabPanel } from '../../Tabs'
 import UserInvoiceItem from './UserInvoiceItem'
 import ButtonComponent from '../../../shared/buttons/Button'
+import UserPaymentPlanItem from '../UserPaymentPlanItem'
 import PaymentModal from './PaymentModal'
 import ListHeader from '../../../shared/list/ListHeader';
 
@@ -73,6 +74,15 @@ export default function TransactionsList({ userId, user, userData }) {
     { title: 'Status', col: 4 }
   ];
 
+  const paymentPlan = [
+    { title: 'Plot Number', col: 4 },
+    { title: 'Balance', col: 4 },
+    { title: 'Start Date', col: 3 },
+    { title: 'Monthly Payments', col: 3 },
+    { title: '% of total valuation', col: 4 },
+    { title: 'End Date', col: 3 }
+  ];
+
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
@@ -114,6 +124,7 @@ export default function TransactionsList({ userId, user, userData }) {
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
+
   return (
     <div>
       <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
@@ -138,6 +149,7 @@ export default function TransactionsList({ userId, user, userData }) {
         >
           <StyledTab label="Invoices" value="Invoices" />
           <StyledTab label="Transactions" value="Transactions" />
+          <StyledTab label="Plans" value="Plans" />
         </StyledTabs>
       </div>
       <InvoiceModal
@@ -179,6 +191,17 @@ export default function TransactionsList({ userId, user, userData }) {
               key={inv.id} 
               invoice={inv}
               currencyData={currencyData}
+            />
+          ))
+        }
+      </TabPanel>
+      <TabPanel value={tabValue} index="Plan">
+        <ListHeader headers={paymentPlan} />
+        {
+          invPayData?.invoicesWithTransactions.paymentPlans.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((plan) => (
+            <UserPaymentPlanItem
+              key={plan.id} 
+              plan={plan}
             />
           ))
         }
