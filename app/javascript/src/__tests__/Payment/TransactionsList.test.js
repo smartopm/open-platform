@@ -130,8 +130,8 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('Issue Date')).toBeInTheDocument();
-        expect(container.queryByText('Payment Date')).toBeInTheDocument();
+        expect(container.queryByText('Invoices')).toBeInTheDocument();
+        expect(container.queryByText('Transactions')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

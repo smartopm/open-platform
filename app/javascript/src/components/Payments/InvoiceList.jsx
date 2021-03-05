@@ -13,6 +13,8 @@ import {
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
@@ -57,6 +59,8 @@ export default function InvoiceList({ currencyData }) {
   const debouncedValue = useDebounce(searchValue, 500);
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
     variables: { limit, offset: pageNumber, status, query: debouncedValue },
@@ -153,15 +157,13 @@ export default function InvoiceList({ currencyData }) {
       </Grid>
       <br />
       <br />
-      <Grid container spacing={3}>
-        <InvoiceGraph handleClick={setGraphQuery} />
-      </Grid>
+      <InvoiceGraph handleClick={setGraphQuery} />
       <List>
         {
           listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length && invoicesStatData?.invoicesStatDetails?.length > 0 ?
         (
           <div>
-            <ListHeader headers={invoiceHeaders} />
+            {matches && <ListHeader headers={invoiceHeaders} />}
             {
               invoicesStatData.invoicesStatDetails.map((invoice) => (
                 <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
@@ -170,7 +172,7 @@ export default function InvoiceList({ currencyData }) {
           </div>
         ) : listType === 'nongraph' && invoicesData?.invoices.length && invoicesData?.invoices.length > 0 ? (
           <div>
-            <ListHeader headers={invoiceHeaders} />
+            {matches && <ListHeader headers={invoiceHeaders} />}
             {
               invoicesData.invoices.map((invoice) => (
                 <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
@@ -207,29 +209,29 @@ export function renderInvoice(invoice, currencyData) {
   return [
     {
       'Issue Date': (
-        <Grid item xs={2} md={2} data-testid="issue_date">
+        <Grid item xs={12} md={2} data-testid="issue_date">
           <Text content={dateToString(invoice?.createdAt)} />
         </Grid>
       ),
       User: (
-        <Grid item xs={4} md={2} data-testid="created_by">
+        <Grid item xs={12} md={2} data-testid="created_by">
           <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{ display: 'flex' }}>
               <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
-              <span style={{ margin: '7px' }}>{invoice.user?.name}</span>
+              <span style={{ margin: '7px', fontSize: '12px' }}>{invoice.user?.name}</span>
             </div>
           </Link>
         </Grid>
       ),
       Description: (
-        <Grid item xs={4} md={2} data-testid="description">
+        <Grid item xs={12} md={2} data-testid="description">
           <Text content={`Invoice Number #${invoice.invoiceNumber}`} />
           <br />
           <Text color="primary" content={`Plot Number #${invoice.landParcel.parcelNumber}`} />
         </Grid>
       ),
       Amount: (
-        <Grid item xs={3} md={2} data-testid="invoice_amount">
+        <Grid item xs={12} md={2} data-testid="invoice_amount">
           <Text content={formatMoney(currencyData, invoice.amount)} />
         </Grid>
       ),
@@ -243,7 +245,7 @@ export function renderInvoice(invoice, currencyData) {
         </Grid>
       ),
       Status: (
-        <Grid item xs={4} md={2} data-testid="status">
+        <Grid item xs={12} md={2} data-testid="status">
           {new Date(invoice.dueDate) < new Date().setHours(0, 0, 0, 0) &&
           invoice.status === 'in_progress' ? (
             <Label title="Due" color="#B63422" />

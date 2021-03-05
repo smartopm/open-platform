@@ -37,10 +37,10 @@ class WalletTransaction < ApplicationRecord
   # rubocop:enable Style/ParenthesesAroundCondition
 
   # rubocop:disable Metrics/MethodLength
-  def self.payment_stat
+  def self.payment_stat(com)
     WalletTransaction.connection.select_all(
       "select
-      date(wallet_transactions.created_at at time zone 'utc' at time zone communities.timezone)
+      date(wallet_transactions.created_at at time zone 'utc' at time zone '#{com.timezone}')
       as trx_date,
       sum(CASE WHEN wallet_transactions.source='cash'
       THEN wallet_transactions.amount ELSE 0 END) as cash,
@@ -52,9 +52,8 @@ class WalletTransaction < ApplicationRecord
       THEN wallet_transactions.amount ELSE 0 END) as bank_transfer,
       sum(CASE WHEN wallet_transactions.source='bank_transfer/eft'
       THEN wallet_transactions.amount ELSE 0 END) as eft
-     from wallet_transactions inner join communities
-     on wallet_transactions.community_id = communities.id
-     where destination = 'wallet'
+     from wallet_transactions
+     where destination = 'wallet' and wallet_transactions.community_id='#{com.id}'
      and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '60 days')
      group by trx_date order by trx_date",
     )

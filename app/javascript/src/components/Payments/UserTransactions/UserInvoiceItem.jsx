@@ -42,9 +42,9 @@ export default function UserInvoiceItem({ invoice, currencyData }) {
 
 export function renderInvoices(inv, currencyData) {
   return {
-    'Issue Date': <GridText content={dateToString(inv.createdAt)} col={4} />,
+    'Issue Date': <GridText content={dateToString(inv.createdAt)} col={12} />,
     'Description': (
-      <Grid item xs={4} md={2} data-testid="description">
+      <Grid item xs={12} md={2} data-testid="description">
         <Text content={`Invoice Number #${inv.invoiceNumber}`} /> 
         <br />
         <Text color='primary' content={`Plot Number #${inv.landParcel.parcelNumber}`} />
@@ -52,13 +52,13 @@ export function renderInvoices(inv, currencyData) {
     ),
     Amount: <GridText content={formatMoney(currencyData, inv.amount)} />,
     'Payment Date': (
-      <Grid item xs={3} md={2}>
+      <Grid item xs={12} md={2}>
         {inv.status === 'paid' && inv.payments.length
           ? <Text content={dateToString(inv.payments[0]?.createdAt)} /> : '-'}
       </Grid>
     ),
     'Status': (
-      <Grid item xs={4} md={2} data-testid="status">
+      <Grid item xs={12} md={2} data-testid="status">
         {new Date(inv.dueDate) < new Date().setHours(0,0,0,0) && inv.status === 'in_progress' ? (
           <Label
             title='Due'

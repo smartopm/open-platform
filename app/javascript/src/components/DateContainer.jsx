@@ -47,7 +47,7 @@ export function dateFormatter(objDate){
 
 export default function DateContainer({ date }) {
   return (
-    <span>
+    <span style={{fontSize: '12px'}}>
       {dateFormatter(date)}
     </span>
   )

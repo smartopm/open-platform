@@ -1,17 +1,19 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable */
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
-// Todo: @tolu re-enable eslint and identify which prop is being used and which is not
 export default function DataList({ keys, data, hasHeader, clickable, handleClick }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
   if (hasHeader && keys.length !== Object.keys(data[0]).length) {
     throw new Error(
       'headers must have same length as number of columns in the data prop or set hasHeader to false'
@@ -22,21 +24,50 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
   }
   return (
     <>
-      {hasHeader && <ListHeader headers={keys} />}
-      {data.map((item, index) => (
-        <Grid
-          container
-          direction="row"
-          justify="space-around"
-          alignItems="center"
-          className={clickable ? classes.clickable : classes.list}
-          onClick={clickable ? () => handleClick(item) : null}
-          key={item.id || index}
-          spacing={1}
-        >
-        <CellData propNames={keys} dataObj={item} />
-      </Grid>
-      ))}
+      {
+        matches ? (
+          <div>
+            {data.map((item, index) => (
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+              <div 
+                key={item.id || index} 
+                style={{display: 'flex', padding: '10px'}}
+                className={clickable ? classes.clickable : classes.list}
+                onClick={clickable ? () => handleClick(item) : null}
+              >
+                <div style={{marginRight: '10px', width: '50%'}}>
+                  <MobileCellData propNames={keys.slice(0, 2)} dataObj={item} />
+                  <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Status'}} />
+                </div>
+                <div style={{marginRight: '3px', width: '40%'}}>
+                  <MobileCellData propNames={keys.slice(2, keys.length)} dataObj={item} />
+                </div>
+                <div>
+                  <MobileCellData propNames={keys} dataObj={item} singlePropName={{status: true, value: 'Menu'}} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {hasHeader && <ListHeader headers={keys} />}
+            {data.map((item, index) => (
+              <Grid
+                container
+                direction="row"
+                justify="space-around"
+                alignItems="center"
+                className={clickable ? classes.clickable : classes.list}
+                onClick={clickable ? () => handleClick(item) : null}
+                key={item.id || index}
+                spacing={1}
+              >
+                <CellData propNames={keys} dataObj={item} />
+              </Grid>
+            ))}
+          </div>
+        )
+}
     </>
   );
 }
@@ -47,6 +78,24 @@ export function CellData({ propNames, dataObj }) {
       key={prop.title} 
     >
       {propAccessor(dataObj, prop.title)}
+    </Fragment>
+  ));
+}
+
+export function MobileCellData({ propNames, dataObj, singlePropName }) {
+  let names = propNames.filter(prop => prop.title !== 'Status' && prop.title !== 'Menu')
+  if (singlePropName?.status) {
+    names = propNames.filter(prop => prop.title === singlePropName.value)
+  }
+  
+  return names.map(prop => (
+    <Fragment
+      key={prop.title}
+    >
+      <div style={{margin: '20px 10px'}}>
+        {!singlePropName && <div style={{ fontWeight: 'bold', fontSize: '13px' }}>{prop.title}</div>}
+        {propAccessor(dataObj, prop.title)}
+      </div>
     </Fragment>
   ));
 }
@@ -85,6 +134,16 @@ DataList.propTypes = {
 CellData.propTypes = {
   propNames: PropTypes.arrayOf(PropTypes.object).isRequired,
   dataObj: PropTypes.object.isRequired
+};
+
+MobileCellData.defaultProps = {
+  singlePropName: null
+}
+
+MobileCellData.propTypes = {
+  propNames: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dataObj: PropTypes.object.isRequired,
+  singlePropName: PropTypes.object
 };
 
 const useStyles = makeStyles(() => ({

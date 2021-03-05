@@ -3,6 +3,8 @@ import { useQuery } from 'react-apollo';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { InvoicesStats } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
@@ -12,6 +14,8 @@ export default function InvoiceGraph({ handleClick }){
   const { loading, data, error } = useQuery(InvoicesStats, {
     fetchPolicy: 'cache-and-network'
   });
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   if (loading) return <Spinner />
   if (error) {
@@ -19,7 +23,7 @@ export default function InvoiceGraph({ handleClick }){
   }
   return (
     <>
-      <div style={{width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'}}>
+      <div style={matches ? {width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'} : {width: '100%', margin: '10px', border: '1px solid #E7E7E7'}}>
         {data?.invoiceAccountingStats && data?.invoiceAccountingStats?.length && (
           <div>
             <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
