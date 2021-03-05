@@ -16,7 +16,7 @@ describe('user detail component', () => {
           id: '34543543rfsf3',
           expiresAt: new Date('03-03-2020'),
           userType: 'admin',
-          subStatus: 'applied'
+          subStatus: 'construction_approved'
         }
       },
       userType: 'admin'
@@ -31,6 +31,6 @@ describe('user detail component', () => {
     expect(container.queryByText('User Name')).toBeInTheDocument()
     expect(container.queryByText('Entry Logs >')).toBeInTheDocument()
     expect(container.queryByText('Already Expired')).toBeInTheDocument()
-    expect(container.queryByTestId('user-sub-status').textContent).toContain('Sub Status: Applied')
+    expect(container.queryByTestId('user-sub-status').textContent).toContain('Sub Status: Construction Approved')
   })
 })
