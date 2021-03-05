@@ -226,7 +226,7 @@ export default function LandParcelModal({
 
   function checkPlotAccountsAndPayments({ plot }){
     return(
-      plot.accounts.length > 0 || plot.valuations.length > 0
+      plot?.accounts.length > 0 || plot?.valuations.length > 0
     )
   }
 
@@ -695,7 +695,8 @@ LandParcelModal.propTypes = {
   modalType: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   landParcel: PropTypes.object,
-  landParcels:  PropTypes.shape({
+  landParcels: PropTypes.arrayOf(
+    PropTypes.shape({
     id: PropTypes.string,
     parcelNumber: PropTypes.string,
     address1: PropTypes.string,
@@ -705,7 +706,7 @@ LandParcelModal.propTypes = {
     stateProvince: PropTypes.string,
     country: PropTypes.string,
     parcelType: PropTypes.string
-  }),
+  })),
   confirmMergeOpen: PropTypes.bool,
   handleSubmitMerge: PropTypes.func,
 };

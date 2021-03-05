@@ -11,7 +11,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
   return (
     <>
       <div>
-        <FullScreenDialog open={open} handleClose={handleClose} title='Payment Receipt' handleSubmit={() => window.print()}>
+        <FullScreenDialog open={open} handleClose={handleClose} title='Payment Receipt' actionText="Print" handleSubmit={() => window.print()}>
           <div>
             <img src={Logo} alt="reciept-logo" height='200' width='500' style={{margin: '20px 500px'}} />
             <div style={{ margin: '50px'}} data-testid='nkwashi'>

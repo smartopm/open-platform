@@ -168,7 +168,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
   )
 }
 
-export function FullScreenDialog({ handleClose, open, children, handleSubmit }){
+export function FullScreenDialog({ handleClose, open, children, actionText, handleSubmit }){
   const classes = useStyles()
   return(
     <Dialog
@@ -185,7 +185,7 @@ export function FullScreenDialog({ handleClose, open, children, handleSubmit }){
             {' '}
           </div>
           <Button autoFocus color="inherit" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
-            Print
+            {actionText}
           </Button>
         </Toolbar>
       </AppBar>
@@ -207,32 +207,6 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
           <IconButton edge="start" onClick={handleClose} aria-label="close">
             <CloseIcon style={{color: 'white'}} />
           </IconButton>
-        </Toolbar>
-      </AppBar>
-      {children}
-    </Dialog>
-  )
-}
-
-export function LandParcelMergeFullScreenModal({ handleClose, open, children, handleSubmit }){
-  const classes = useStyles()
-  return(
-    <Dialog
-      onClose={handleClose}
-      open={open}
-      fullScreen
-    >
-      <AppBar className={classes.appBar}>
-        <Toolbar>
-          <IconButton edge="start" onClick={handleClose} aria-label="close">
-            <CloseIcon style={{color: 'white'}} />
-          </IconButton>
-          <div className={classes.print}>
-            {' '}
-          </div>
-          <Button autoFocus color="inherit" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
-            Merge and Save
-          </Button>
         </Toolbar>
       </AppBar>
       {children}
@@ -328,17 +302,7 @@ FullScreenDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  children: PropTypes.node
-}
-
-LandParcelMergeFullScreenModal.defaultProps = {
-  children: {}
-}
-
-LandParcelMergeFullScreenModal.propTypes = {
-  handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  actionText: PropTypes.string.isRequired,
   children: PropTypes.node
 }
 

@@ -1,16 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardContent, CardHeader, Grid, Typography} from '@material-ui/core';
-import { LandParcelMergeFullScreenModal } from '../Dialog'
+import { FullScreenDialog } from '../Dialog'
 
 export default function LandParcelMergeModal({ open, mergeData, handleClose, handleSubmit }){
   return (
     <>
       {mergeData && (
-        <LandParcelMergeFullScreenModal
+        <FullScreenDialog
           open={open}
           handleClose={handleClose}
           title='Land Parcel Merge Dialog'
+          actionText="Merge and Save"
           handleSubmit={handleSubmit}
         >
           <h3>You are about to merge these two properties!</h3>
@@ -46,7 +47,7 @@ export default function LandParcelMergeModal({ open, mergeData, handleClose, han
               <ConfirmMergeCard title="After Merge (Plot to Remove)" data={mergeData?.plotToRemove} />
             </Grid>
           </Grid>
-        </LandParcelMergeFullScreenModal>
+        </FullScreenDialog>
       )}
     </>
   )
