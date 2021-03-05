@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { renderTransactions } from "../../components/Payments/UserTransactions";
+import { renderTransactions } from "../../components/Payments/UserTransactions/UserTransactions";
 import currency from '../../__mocks__/currency'
 
 describe('Render Transaction', () => {

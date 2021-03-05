@@ -172,7 +172,7 @@ export function renderPayment(payment, currencyData) {
         </Grid>
       ),
       Amount: (
-        <Grid item xs={4} md={2}>
+        <Grid item xs={4} md={2} data-testid="payment_amount">
           <span>{formatMoney(currencyData, payment.amount)}</span>
         </Grid>
       )

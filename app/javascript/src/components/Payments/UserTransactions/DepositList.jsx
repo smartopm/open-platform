@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import DataList from '../../shared/list/DataList';
-import Text, { GridText } from '../../shared/Text';
-import { dateToString } from '../DateContainer';
-import TransactionDetails from './TransactionDetails'
+import DataList from '../../../shared/list/DataList';
+import Text, { GridText } from '../../../shared/Text';
+import { dateToString } from '../../DateContainer';
+import TransactionDetails from '../TransactionDetails'
 
 const depositHeader = [
   { title: 'Amount', col: 1 },

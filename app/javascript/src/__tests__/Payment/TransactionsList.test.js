@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import TransactionsList from '../../components/Payments/Transactions';
+import TransactionsList from '../../components/Payments/UserTransactions/Transactions';
 import { TransactionQuery, UserBalance, AllTransactionQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
@@ -114,7 +114,7 @@ describe('Transactions Component', () => {
     const container = render(
       <MockedProvider
         mocks={[transactionsMock, pendingInvoicesMock, pendingDepositMock]}
-        addTypename={false}
+        addTypename
       >
         <AuthStateProvider>
           <BrowserRouter>

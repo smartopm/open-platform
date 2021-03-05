@@ -2,10 +2,10 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider';
-import { FullScreenDialog } from '../Dialog'
-import Logo from '../../../../assets/images/logo.png'
-import { dateToString } from '../DateContainer';
-import { extractCurrency, formatMoney } from '../../utils/helpers';
+import { FullScreenDialog } from '../../Dialog'
+import Logo from '../../../../../assets/images/logo.png'
+import { dateToString } from '../../DateContainer';
+import { extractCurrency, formatMoney } from '../../../utils/helpers';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }){
   return (

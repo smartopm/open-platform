@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Tooltip, Menu, MenuItem } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
-import DataList from '../../shared/list/DataList';
-import Text, { GridText } from '../../shared/Text';
-import { dateToString } from '../DateContainer';
-import CenteredContent from '../CenteredContent';
-import Label from '../../shared/label/Label';
-import TransactionDetails from './TransactionDetails'
-import { formatMoney } from '../../utils/helpers';
+import DataList from '../../../shared/list/DataList';
+import Text, { GridText } from '../../../shared/Text';
+import { dateToString } from '../../DateContainer';
+import CenteredContent from '../../CenteredContent';
+import Label from '../../../shared/label/Label';
+import TransactionDetails from '../TransactionDetails'
+import { formatMoney } from '../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
 
 const transactionHeader = [
@@ -25,10 +25,12 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const [open, setOpen] = useState(false)
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
   const anchorElOpen = Boolean(anchorEl)
 
   const menuList = [
-    { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt}
+    { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt},
+    { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenEdit}
   ]
 
   useEffect(() => {
@@ -53,8 +55,20 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
     handleClose()
   }
 
+  function handleOpenEdit(){
+    setOpen(true)
+    setIsEditing(true)
+    handleClose()
+  }
+
   function handleClose() {
     setAnchorEl(null)
+  }
+
+  function handleOpenDetails(){
+    // in case the user had earlier opened with the editing menu
+    setIsEditing(false)
+    setOpen(true)
   }
 
   const menuData = {
@@ -72,7 +86,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         data={[renderTransactions(transaction, currencyData, menuData)]} 
         hasHeader={false} 
         clickable={!anchorElOpen}
-        handleClick={() => setOpen(true)} 
+        handleClick={handleOpenDetails} 
       />
       <TransactionDetails 
         detailsOpen={open} 
@@ -80,6 +94,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         data={transaction}
         currencyData={currencyData}
         title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
+        isEditing={isEditing}
       />
       <PaymentReceipt 
         paymentData={transaction} 

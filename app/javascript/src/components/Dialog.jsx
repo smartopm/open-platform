@@ -103,7 +103,8 @@ export function CustomizedDialogs({
   subHeader,
   saveAction,
   disableActionBtn,
-  cancelAction
+  cancelAction,
+  actionable
 }) {
   const classes = useStyles()
   return (
@@ -121,20 +122,24 @@ export function CustomizedDialogs({
         {subHeader ? <DialogContentText>{subHeader}</DialogContentText> : null}
         {children}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleModal} variant="outlined" color="secondary">
-          {cancelAction}
-        </Button>
-        <Button
-          data-testid="custom-dialog-button"
-          onClick={handleBatchFilter}
-          color="primary"
-          variant="contained"
-          disabled={disableActionBtn}
-        >
-          {saveAction || 'Save'}
-        </Button>
-      </DialogActions>
+      {
+        actionable && (
+          <DialogActions>
+            <Button onClick={handleModal} variant="outlined" color="secondary">
+              {cancelAction}
+            </Button>
+            <Button
+              data-testid="custom-dialog-button"
+              onClick={handleBatchFilter}
+              color="primary"
+              variant="contained"
+              disabled={disableActionBtn}
+            >
+              {saveAction || 'Save'}
+            </Button>
+          </DialogActions>
+        )
+      }
     </Dialog>
   )
 }
@@ -334,7 +339,8 @@ CustomizedDialogs.defaultProps = {
   children: {},
   saveAction: 'Save',
   disableActionBtn: false,
-  cancelAction: 'Cancel'
+  cancelAction: 'Cancel',
+  actionable: true
 }
 
 CustomizedDialogs.propTypes = {
@@ -346,7 +352,8 @@ CustomizedDialogs.propTypes = {
   subHeader: PropTypes.string,
   saveAction: PropTypes.string,
   cancelAction: PropTypes.string,
-  disableActionBtn: PropTypes.bool
+  disableActionBtn: PropTypes.bool,
+  actionable: PropTypes.bool
 }
 
 ModalDialog.defaultProps = {

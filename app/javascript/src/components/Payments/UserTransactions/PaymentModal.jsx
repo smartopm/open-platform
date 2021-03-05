@@ -7,10 +7,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { CustomizedDialogs } from '../Dialog'
-import { PaymentCreate } from '../../graphql/mutations'
-import MessageAlert from "../MessageAlert"
-import { extractCurrency, formatError, formatMoney } from '../../utils/helpers'
+import { CustomizedDialogs } from '../../Dialog'
+import { PaymentCreate } from '../../../graphql/mutations'
+import MessageAlert from "../../MessageAlert"
+import { extractCurrency, formatError, formatMoney } from '../../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
 
 

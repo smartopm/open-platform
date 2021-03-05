@@ -25,9 +25,7 @@ import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
-import Transactions from './Payments/Transactions'
-// eslint-disable-next-line no-unused-vars
-import InvoiceList from './Payments/InvoiceList'
+import Transactions from './Payments/UserTransactions/Transactions'
 import UserJourney from '../containers/User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
 
