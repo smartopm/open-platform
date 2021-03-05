@@ -72,6 +72,7 @@ module Types::Queries::Wallet
   def payment_stat_details(query:)
     converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
     context[:site_community].wallet_transactions
+                            .eager_load(:user)
                             .where(created_at: converted_date, destination: 'wallet')
   end
 
