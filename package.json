@@ -101,6 +101,9 @@
     "webpack-bundle-analyzer": "^3.5.1",
     "webpack-dev-server": "^3.8.0"
   },
+  "resolutions": {
+    "lodash": "4.17.21"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
