@@ -61,11 +61,11 @@ class Invoice < ApplicationRecord
     )
   end
 
-  def modify_balance
-    return unless cancelled?
+  # def modify_balance
+  #   return unless cancelled?
 
-    user.wallet.settle_pending_balance(amount)
-  end
+  #   user.wallet.settle_pending_balance(amount)
+  # end
 
   def settle_amount
     pending_amount = amount - user.wallet.balance

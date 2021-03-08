@@ -1142,6 +1142,7 @@ export const TransactionQuery = gql`
         chequeNumber
         bankName
         transactionNumber
+        status
         id
         user {
           id

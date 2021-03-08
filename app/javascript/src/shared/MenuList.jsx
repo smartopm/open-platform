@@ -20,7 +20,7 @@ export default function MenuList({
       anchorEl={anchorEl}
       open={open}
       keepMounted
-      onClose={handleClose}
+      onClose={(event) => handleClose(event)}
       PaperProps={{
           style: {
             width: 200
@@ -32,7 +32,7 @@ export default function MenuList({
           id={index}
           key={index}
           style={menu.color ? {color: menu.color} : null}
-          onClick={() => menu.handleClick(anchorEl.getAttribute('dataid'), anchorEl.getAttribute('name'))}
+          onClick={(event) => menu.handleClick(event, anchorEl.getAttribute('dataid'), anchorEl.getAttribute('name'))}
         >
           {menu.content}
         </MenuItem>

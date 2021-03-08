@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useQuery, useLazyQuery } from 'react-apollo';
+import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../CenteredContent';
@@ -43,15 +43,15 @@ import InvoiceGraph from './InvoiceGraph'
 import MenuList from '../../shared/MenuList';
 import { InvoiceCancel } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
-import DeleteDialog from '../Business/DeleteDialogue'
+import DeleteDialogueBox from '../Business/DeleteDialogue'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
-  { title: 'User', col: 4 },
   { title: 'Description', col: 4 },
   { title: 'Amount', col: 3 },
   { title: 'Payment Date', col: 3 },
-  { title: 'Status', col: 4 }
+  { title: 'Status', col: 4 },
+  { title: 'Menu', col: 4 }
 ];
 export default function InvoiceList({ currencyData, userType }) {
   const menuList = [
@@ -79,20 +79,29 @@ export default function InvoiceList({ currencyData, userType }) {
   const [messageAlert, setMessageAlert] = useState('')
 
   function handleOpenMenu(event) {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
-  function handleClose() {
+  function handleClose(event) {
+    event.stopPropagation()
     setAnchorEl(null)
   }
 
-  function handleClick(invId, nam){
+  function handleClick(event, invId, nam){
+    event.stopPropagation()
     setInvoiceId(invId)
     setName(nam)
     setModalOpen(true)
   }
 
-  function handleOnClick() {
+  function handleDeleteClose(event){
+    event.stopPropagation()
+    setModalOpen(false)
+  }
+
+  function handleOnClick(event) {
+    event.stopPropagation()
     cancelInvoice({
       variables: {
         invoiceId
@@ -140,6 +149,15 @@ export default function InvoiceList({ currencyData, userType }) {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   })
+
+  const menuData = {
+    menuList,
+    handleOpenMenu,
+    anchorEl,
+    open,
+    userType,
+    handleClose
+  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -205,6 +223,14 @@ export default function InvoiceList({ currencyData, userType }) {
       <br />
       <br />
       <InvoiceGraph handleClick={setGraphQuery} />
+      <DeleteDialogueBox 
+        open={modalOpen}
+        handleClose={(event) => handleDeleteClose(event)}
+        handleAction={(event) => handleOnClick(event)}
+        title='Invoice'
+        action='delete'
+        user={name}
+      />
       <List>
         {
           listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length && invoicesStatData?.invoicesStatDetails?.length > 0 ?
@@ -213,7 +239,12 @@ export default function InvoiceList({ currencyData, userType }) {
             {matches && <ListHeader headers={invoiceHeaders} />}
             {
               invoicesStatData.invoicesStatDetails.map((invoice) => (
-                <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
+                <InvoiceItem 
+                  invoice={invoice} 
+                  key={invoice.id} 
+                  currencyData={currencyData}
+                  menuData={menuData}
+                />
               ))
             }
           </div>
@@ -222,7 +253,12 @@ export default function InvoiceList({ currencyData, userType }) {
             {matches && <ListHeader headers={invoiceHeaders} />}
             {
               invoicesData.invoices.map((invoice) => (
-                <InvoiceItem invoice={invoice} key={invoice.id} currencyData={currencyData} />
+                <InvoiceItem 
+                  invoice={invoice} 
+                  key={invoice.id} 
+                  currencyData={currencyData}
+                  menuData={menuData}
+                />
               ))
             }
           </div>
@@ -252,7 +288,7 @@ export default function InvoiceList({ currencyData, userType }) {
  * @param {object} currencyData community currencyData current and locale
  * @returns {object} an object with properties that DataList component uses to render
  */
-export function renderInvoice(invoice, currencyData) {
+export function renderInvoice(invoice, currencyData, menuData) {
   return [
     {
       'Issue Date': (
@@ -260,21 +296,18 @@ export function renderInvoice(invoice, currencyData) {
           <Text content={dateToString(invoice?.createdAt)} />
         </Grid>
       ),
-      User: (
-        <Grid item xs={12} md={2} data-testid="created_by">
-          <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
-            <div style={{ display: 'flex' }}>
-              <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
-              <span style={{ margin: '7px', fontSize: '12px' }}>{invoice.user?.name}</span>
-            </div>
-          </Link>
-        </Grid>
-      ),
       Description: (
         <Grid item xs={12} md={2} data-testid="description">
           <Text content={`Invoice Number #${invoice.invoiceNumber}`} />
           <br />
           <Text color="primary" content={`Plot Number #${invoice.landParcel.parcelNumber}`} />
+          <br />
+          <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
+            <div style={{ display: 'flex', marginTop: '10px'}}>
+              <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
+              <span style={{ margin: '7px', fontSize: '12px' }}>{invoice.user?.name}</span>
+            </div>
+          </Link>
         </Grid>
       ),
       Amount: (
@@ -283,7 +316,7 @@ export function renderInvoice(invoice, currencyData) {
         </Grid>
       ),
       'Payment Date': (
-        <Grid item xs={3} md={2}>
+        <Grid item xs={12} md={2}>
           {invoice.status === 'paid' && invoice.payments.length ? (
             <Text content={dateToString(invoice.payments[0]?.createdAt)} />
           ) : (
@@ -303,12 +336,37 @@ export function renderInvoice(invoice, currencyData) {
             />
           )}
         </Grid>
+      ),
+      Menu: (
+            <Grid item xs={12} md={1} data-testid="menu">
+              {
+                invoice.status !== 'cancelled' && (
+                  <IconButton
+                  aria-label='more-verticon'
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={(event) => menuData.handleOpenMenu(event)}
+                  dataid={invoice.id}
+                  name={invoice.user.name}
+                >
+                  <MoreHorizIcon />
+                </IconButton>
+                )
+              }
+                <MenuList
+                  open={menuData.open && menuData.anchorEl.getAttribute('dataid') === invoice.id}
+                  anchorEl={menuData.anchorEl}
+                  userType={menuData.userType}
+                  handleClose={menuData.handleClose}
+                  list={menuData.menuList}
+                />
+              </Grid>
       )
     }
   ];
 }
 
-export function InvoiceItem({invoice, currencyData}){
+export function InvoiceItem({invoice, currencyData, menuData}){
   const [detailsOpen, setDetailsOpen] = useState(false)
   return (
     <div>
@@ -320,7 +378,7 @@ export function InvoiceItem({invoice, currencyData}){
       />
       <DataList
         keys={invoiceHeaders}
-        data={renderInvoice(invoice, currencyData)}
+        data={renderInvoice(invoice, currencyData, menuData)}
         hasHeader={false}
         clickable
         handleClick={() => setDetailsOpen(true)}

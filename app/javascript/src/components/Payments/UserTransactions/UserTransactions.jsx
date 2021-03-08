@@ -81,6 +81,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   }
   return (
     <div>
+      {console.log(transaction)}
       <DataList 
         keys={transactionHeader} 
         data={[renderTransactions(transaction, currencyData, menuData)]} 
@@ -161,7 +162,10 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Status: (
       <Grid item xs={12} md={2} data-testid="status">
         {transaction.__typename === 'WalletTransaction' ? (
-          <Label title="Paid" color="#58B71B" />
+          <Label 
+            title={transaction.status === 'settled' ? 'Paid' : 'Cancelled'} 
+            color={transaction.status === 'settled' ? '#66A69B' : '#E74540'} 
+          />
         ) : (
           <Label title="Unpaid" color="#EF6F51" />
         )}

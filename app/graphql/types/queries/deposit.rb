@@ -30,7 +30,7 @@ module Types::Queries::Deposit
     user = User.allowed_users(context[:current_user]).find(user_id)
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
-    pending_invoices = cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
+    pending_invoices = cumulate_pending_balance(user.invoices.not_cancelled.where('pending_amount > ?', 0))
     {
       transactions: user.wallet_transactions.reverse,
       pending_invoices: pending_invoices,
