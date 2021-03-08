@@ -14,7 +14,8 @@ module Mutations
           raise GraphQL::ExecutionError, 'Invoice can not be cancelled'
         end
 
-        return { invoice: invoice.reload } if settle_transaction(invoice)
+        settle_transaction(invoice)
+        return { invoice: invoice.reload }
 
         raise GraphQL::ExecutionError, invoice.errors.full_messages
       end
@@ -27,7 +28,7 @@ module Mutations
           amount = sum_payment_amount(invoice)
           user.wallet.settle_pending_balance(amount)
           balance = user.wallet.balance
-          user.wallet_transactions.create(
+          user.wallet_transactions.create!(
             source: 'wallet',
             destination: 'invoice',
             amount: invoice.amount,
