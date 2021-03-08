@@ -15,7 +15,7 @@ module Mutations
         end
 
         settle_transaction(invoice)
-        return { invoice: invoice.reload }
+        { invoice: invoice.reload }
       end
 
       # rubocop:disable Metrics/MethodLength
