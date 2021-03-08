@@ -369,7 +369,7 @@ export function renderInvoice(invoice, currencyData, menuData) {
                 )
               }
           <MenuList
-            open={menuData.open && menuData.anchorEl.getAttribute('dataid') === invoice.id}
+            open={menuData.open && menuData.anchorEl?.getAttribute('dataid') === invoice.id}
             anchorEl={menuData.anchorEl}
             userType={menuData.userType}
             handleClose={menuData.handleClose}
