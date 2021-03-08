@@ -7,6 +7,7 @@ class Invoice < ApplicationRecord
   belongs_to :land_parcel
   belongs_to :community
   belongs_to :user
+  belongs_to :payment_plan, optional: true
   belongs_to :created_by, class_name: 'User', optional: true
 
   before_validation :invoice_not_present_for_month
