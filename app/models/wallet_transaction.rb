@@ -21,8 +21,6 @@ class WalletTransaction < ApplicationRecord
   validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }
   validates :bank_name, :cheque_number, presence: true,
                                         if: -> { source.eql?('cheque/cashier_cheque') }
-  validates :transaction_number, format: { with: /\A[A-Za-z0-9]*\z/i,
-                                           message: 'Transaction Number should be Alphanumeric' }
   validates :transaction_number, uniqueness: true, length: { maximum: 35, allow_blank: true },
                                  if: -> { transaction_number.present? }
 
