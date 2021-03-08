@@ -75,12 +75,10 @@ export default function TransactionsList({ userId, user, userData }) {
   ];
 
   const paymentPlan = [
-    { title: 'Plot Number', col: 4 },
-    { title: 'Balance', col: 4 },
+    { title: 'Plot Number', col: 3 },
+    { title: 'Balance', col: 3 },
     { title: 'Start Date', col: 3 },
-    { title: 'Monthly Payments', col: 3 },
-    { title: '% of total valuation', col: 4 },
-    { title: 'End Date', col: 3 }
+    { title: '% of total valuation', col: 3 },
   ];
 
   const currency = currencies[user.community.currency] || ''
@@ -202,6 +200,7 @@ export default function TransactionsList({ userId, user, userData }) {
             <UserPaymentPlanItem
               key={plan.id} 
               plan={plan}
+              currencyData={currencyData}
             />
           ))
         }
