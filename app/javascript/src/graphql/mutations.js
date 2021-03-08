@@ -927,25 +927,7 @@ mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
   }
 }
 `
-export const LogReadPost = gql`
-  mutation LogReadPost($postId: String!) {
-    logReadPost(postId: $postId) {
-      eventLog {
-        id
-      }
-    }
-  }
-`
 
-export const LogSharedPost = gql`
-  mutation LogSharedPost($postId: String!) {
-    logSharedPost(postId: $postId) {
-      eventLog {
-        id
-      }
-    }
-  }
-`
 export const FormUserCreateMutation = gql`
   mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!){
     formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
