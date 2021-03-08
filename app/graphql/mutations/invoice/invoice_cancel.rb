@@ -16,8 +16,6 @@ module Mutations
 
         settle_transaction(invoice)
         return { invoice: invoice.reload }
-
-        raise GraphQL::ExecutionError, invoice.errors.full_messages
       end
 
       # rubocop:disable Metrics/MethodLength
