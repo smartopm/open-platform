@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, IconButton, Tooltip, Menu, MenuItem } from '@material-ui/core';
+import { Grid, IconButton, Tooltip } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import DataList from '../../../shared/list/DataList';
 import Text, { GridText } from '../../../shared/Text';
@@ -11,6 +11,7 @@ import Label from '../../../shared/label/Label';
 import TransactionDetails from '../TransactionDetails'
 import { formatMoney } from '../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
+import MenuList from '../../../shared/MenuList'
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
@@ -81,7 +82,6 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   }
   return (
     <div>
-      {console.log(transaction)}
       <DataList 
         keys={transactionHeader} 
         data={[renderTransactions(transaction, currencyData, menuData)]} 
@@ -174,7 +174,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Menu: (
       <Grid item xs={12} md={1}>
         {
-          transaction.__typename === 'WalletTransaction' && transaction.destination !== 'invoice'
+          transaction.__typename === 'WalletTransaction' && transaction.status === 'settled' && transaction.destination !== 'invoice'
           ? (
             <IconButton
               aria-controls="simple-menu"
@@ -211,61 +211,3 @@ UserTransactionsList.propTypes = {
   }).isRequired,
   userType: PropTypes.string.isRequired
 };
-
-
-
-// temporal menuList
-// this will be removed after merging with @tolulope's changes
-export function MenuList({
-  list,
-  anchorEl,
-  handleClose,
-  userType,
-  open
-}) {
-  let listData = list
-  if (userType !== 'admin') {
-    listData = list.filter(lis => lis.isAdmin === false) 
-  }
-  return (
-    <Menu
-      id='long-menu'
-      anchorEl={anchorEl}
-      open={open}
-      keepMounted
-      data-testid="menu_list"
-      onClose={handleClose}
-      PaperProps={{
-          style: {
-            width: 200
-          }
-         }}
-    >
-      {listData.map((menu, index) => (
-        <MenuItem
-          id={index}
-          // eslint-disable-next-line react/no-array-index-key
-          key={index}
-          style={menu.color ? {color: menu.color} : null}
-          onClick={(event) => menu.handleClick(event, anchorEl.getAttribute('dataid'), anchorEl.getAttribute('name'))}
-        >
-          {menu.content}
-        </MenuItem>
-        )
-      )}
-    </Menu>
-  );
-}
-
-MenuList.defaultProps = {
-  anchorEl: {},
-}
-
-MenuList.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.object).isRequired,
-  open: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  anchorEl: PropTypes.object,
-  handleClose: PropTypes.func.isRequired,
-  userType: PropTypes.string.isRequired
-}

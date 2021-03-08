@@ -20,6 +20,7 @@ export default function MenuList({
       anchorEl={anchorEl}
       open={open}
       keepMounted
+      data-testid="menu_list"
       onClose={(event) => handleClose(event)}
       PaperProps={{
           style: {

@@ -19,6 +19,7 @@ module Mutations
         raise GraphQL::ExecutionError, invoice.errors.full_messages
       end
 
+      # rubocop:disable Metrics/MethodLength
       def settle_transaction(invoice)
         ActiveRecord::Base.transaction do
           invoice.cancelled!
@@ -27,16 +28,17 @@ module Mutations
           user.wallet.settle_pending_balance(amount)
           balance = user.wallet.balance
           user.wallet_transactions.create(
-                                        source: 'wallet',
-                                        destination: 'invoice',
-                                        amount: invoice.amount,
-                                        status: 'cancelled',
-                                        current_wallet_balance: balance,
-                                        community_id: context[:site_community]
-                                                      .id,
-                                        )
+            source: 'wallet',
+            destination: 'invoice',
+            amount: invoice.amount,
+            status: 'cancelled',
+            current_wallet_balance: balance,
+            community_id: context[:site_community]
+                          .id,
+          )
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def sum_payment_amount(invoice)
         return invoice.amount if invoice.payments.empty?

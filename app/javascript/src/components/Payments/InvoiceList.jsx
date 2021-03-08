@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
@@ -107,6 +108,7 @@ export default function InvoiceList({ currencyData, userType }) {
         invoiceId
       }
     }).then(() => {
+      setAnchorEl(null)
       setMessageAlert('Invoice successfully cancelled')
       setIsSuccessAlert(true)
       setModalOpen(false)
@@ -116,6 +118,13 @@ export default function InvoiceList({ currencyData, userType }) {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
     })
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
   }
 
   const { loading, data: invoicesData, error, refetch } = useQuery(InvoicesQuery, {
@@ -178,6 +187,12 @@ export default function InvoiceList({ currencyData, userType }) {
 
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <Grid container>
         <Grid item xs={12} sm={10}>
           <SearchInput
@@ -338,29 +353,29 @@ export function renderInvoice(invoice, currencyData, menuData) {
         </Grid>
       ),
       Menu: (
-            <Grid item xs={12} md={1} data-testid="menu">
-              {
+        <Grid item xs={12} md={1} data-testid="menu">
+          {
                 invoice.status !== 'cancelled' && (
                   <IconButton
-                  aria-label='more-verticon'
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={(event) => menuData.handleOpenMenu(event)}
-                  dataid={invoice.id}
-                  name={invoice.user.name}
-                >
-                  <MoreHorizIcon />
-                </IconButton>
+                    aria-label='more-verticon'
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={(event) => menuData.handleOpenMenu(event)}
+                    dataid={invoice.id}
+                    name={invoice.user.name}
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
                 )
               }
-                <MenuList
-                  open={menuData.open && menuData.anchorEl.getAttribute('dataid') === invoice.id}
-                  anchorEl={menuData.anchorEl}
-                  userType={menuData.userType}
-                  handleClose={menuData.handleClose}
-                  list={menuData.menuList}
-                />
-              </Grid>
+          <MenuList
+            open={menuData.open && menuData.anchorEl.getAttribute('dataid') === invoice.id}
+            anchorEl={menuData.anchorEl}
+            userType={menuData.userType}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
+          />
+        </Grid>
       )
     }
   ];
@@ -387,10 +402,11 @@ export function InvoiceItem({invoice, currencyData, menuData}){
   )
 }
 InvoiceList.propTypes = {
-  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired
+  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired,
+  userType: PropTypes.string.isRequired
 };
 InvoiceItem.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   invoice: PropTypes.object.isRequired,
-  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired
+  currencyData: PropTypes.shape({ ...currencyTypes }).isRequired,
+  menuData: PropTypes.object.isRequired
 }
