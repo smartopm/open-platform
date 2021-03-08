@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import {
@@ -22,7 +21,7 @@ import { Spinner } from '../../shared/Loading'
 import IframeContainer from '../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
 import Comments from '../../components/Discussion/Comment'
-import { DiscussionMutation, LogReadPost, LogSharedPost } from '../../graphql/mutations'
+import { DiscussionMutation } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
 import TagsComponent from '../../components/NewsPage/Tags'
 import MessageAlert from "../../components/MessageAlert"
@@ -46,23 +45,8 @@ export default function PostPage() {
     variables: { postId: id, limit }
   })
   const [discuss] = useMutation(DiscussionMutation)
-  const [logReadPost] = useMutation(LogReadPost)
-  const [logSharedPost] = useMutation(LogSharedPost)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-
-  useEffect(() => {
-    if (authState.loggedIn) {
-      logReadPost({
-        variables: { postId: id }
-      })
-      .then(res => res)
-      .catch(err => {
-        setMessageAlert(err.message)
-        setIsSuccessAlert(false)
-      })
-    }
-  }, [authState.loggedIn, logReadPost, id])
 
   function createDiscussion(title, discId) {
     setLoading(true)
@@ -103,17 +87,6 @@ export default function PostPage() {
     })
   }
 
-  function onPostShare() {
-    logSharedPost({
-      variables: { postId: id }
-    })
-    .then(res => res)
-    .catch(err => {
-      setMessageAlert(err.message)
-      setIsSuccessAlert(false)
-    })
-  }
-
   if (!response || queryResponse.loading || loading) {
     return <Spinner />
   }
@@ -150,7 +123,6 @@ export default function PostPage() {
             bottom: 80,
             right: 57
           }}
-          doOnShare={onPostShare}
         />
 
         <Fab
