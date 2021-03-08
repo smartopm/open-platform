@@ -20,7 +20,7 @@ class Label < ApplicationRecord
   has_many :campaign_labels, dependent: :destroy
   has_many :campaigns, through: :campaign_labels
 
-  default_scope { where('status != ?', 'deleted') }
+  default_scope { where.not(status: 'deleted') }
 
   def self.with_users(com, limit, offset)
     Label.find_by_sql(["SELECT labels.id, labels.short_desc, labels.color, labels.description,

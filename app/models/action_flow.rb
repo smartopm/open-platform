@@ -11,5 +11,5 @@ class ActionFlow < ApplicationRecord
   validates :event_type, inclusion: { in: VALID_EVENT_TYPES, allow_nil: false }
   # TODO: Find a good way to validate the content of event_action: Nurudeen
 
-  default_scope { where('status != ?', 'deleted') }
+  default_scope { where.not(status: 'deleted') }
 end
