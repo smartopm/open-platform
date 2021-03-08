@@ -21,9 +21,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Link, useHistory } from 'react-router-dom'
 import Avatar from './Avatar'
 import UserActionMenu from './User/UserActionMenu'
-import { titleize } from '../utils/helpers'
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
+import { userSubStatus } from '../utils/constants'
 
 export default function UserItem({
   user,
@@ -181,7 +181,7 @@ export default function UserItem({
                 </Typography>
                 {user.subStatus && (
                   <Typography variant="body2" data-testid="user-substatus">
-                    {titleize(user.subStatus)}
+                    {userSubStatus[user.subStatus]}
                   </Typography>
                 )}
               </Box>

@@ -50,6 +50,7 @@ export const userSubStatus = {
   construction_approved: 'Construction Approved',
   construction_in_progress: 'Construction in Progress',
   construction_completed: 'Construction Completed',
+  construction_in_progress_self_build: 'Construction in Progress (Self Build)'
 };
 
 export const subStatus = {
@@ -59,6 +60,7 @@ export const subStatus = {
   3: 'Construction Approved',
   4: 'Construction in Progress',
   5: 'Construction Completed',
+  6: 'Construction in Progress (Self Build)'
 };
 
 export const userSubStatusDurationLookup = {
