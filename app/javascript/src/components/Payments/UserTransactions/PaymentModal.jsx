@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,18 +9,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { CustomizedDialogs } from '../../Dialog'
 import { PaymentCreate } from '../../../graphql/mutations'
+import { UserLandParcel } from '../../../graphql/queries'
 import MessageAlert from "../../MessageAlert"
 import { extractCurrency, formatError, formatMoney } from '../../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
-
+import { Spinner } from '../../../shared/Loading'
 
 const initialValues = {
   amount: '',
   transactionType: '',
-  status: 'pending',
   bankName: '',
   chequeNumber: '',
   transactionNumber: '',
+  landParcelId: ''
 }
 export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
   const classes = useStyles();
@@ -39,6 +40,12 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
     event.preventDefault();
     setIsConfirm(true);
   }
+
+  const { loading, data: landParcels, error } = useQuery(UserLandParcel, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
 
   // reset bank details when transaction type is changed
   // To avoid wrong details with wrong transaction type e.g: Cheque Number when paid using cash
@@ -68,10 +75,10 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         userId,
         amount: parseFloat(inputValue.amount),
         source: inputValue.transactionType,
-        status: inputValue.status,
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
-        transactionNumber: inputValue.transactionNumber
+        transactionNumber: inputValue.transactionNumber,
+        landParcelId: inputValue.landParcelId
       }
     })
       .then(res => {
@@ -104,6 +111,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
     setPromptOpen(false);
     history.push(`/user/${userId}?tab=Payments`);
   }
+
+  if (loading) return <Spinner />
 
   return (
     <>
@@ -153,6 +162,20 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 error={isError && submitting && !inputValue.amount}
                 helperText={isError && !inputValue.amount && 'amount is required'}
               />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="parcel-number"
+                inputProps={{ "data-testid": "parcel-number" }}
+                label="Plot No"
+                value={inputValue.landParcelId}
+                onChange={(event) => setInputValue({...inputValue, landParcelId: event.target.value})}
+                select
+              >
+                {landParcels.userLandParcel.map(land => (
+                  <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
+                ))}
+              </TextField>
               <TextField
                 margin="dense"
                 id="transaction-type"

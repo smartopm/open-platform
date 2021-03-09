@@ -34,7 +34,7 @@ export default function UserPaymentPlanItem({ plan, currencyData }){
             data={[renderPlan(plan, currencyData)]}
             hasHeader={false} 
             clickable={false}
-            handleClick={() => console.log('aye')}
+            handleClick={() => console.log('click')}
           />
         </AccordionSummary>
         <AccordionDetails>
@@ -58,7 +58,7 @@ export function renderPlan(plan, currencyData) {
     Balance: (
       <GridText
         col={4}
-        content={ formatMoney(currencyData, plan.plotBalance) }
+        content={ formatMoney(currencyData, plan?.plotBalance) }
       />
     ),
     'Start Date': (

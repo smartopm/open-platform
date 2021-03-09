@@ -799,6 +799,7 @@ export const PaymentCreate = gql`
     $bankName: String
     $chequeNumber: String
     $transactionNumber: String
+    $landParcelId: ID!
   ) {
     walletTransactionCreate(
       userId: $userId
@@ -807,6 +808,7 @@ export const PaymentCreate = gql`
       bankName: $bankName
       chequeNumber: $chequeNumber
       transactionNumber: $transactionNumber
+      landParcelId: $landParcelId
     ) {
       walletTransaction {
         id

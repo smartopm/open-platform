@@ -485,7 +485,7 @@ ActiveRecord::Schema.define(version: 2021_03_15_102954) do
     t.uuid "land_parcel_id", null: false
     t.string "plan_type"
     t.datetime "start_date"
-  t.integer "status"
+    t.integer "status"
     t.string "percentage"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
