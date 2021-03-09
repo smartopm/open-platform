@@ -20,7 +20,7 @@ describe('Substatus component', () => {
             plotsFullyPurchased: 4,
             eligibleToStartConstruction: 0,
             floorPlanPurchased: 0,
-            constructionApproved: 0,
+            buildingPermitApproved: 0,
             constructionInProgress: 0,
             constructionCompleted: 0,
           }
@@ -43,7 +43,7 @@ describe('Substatus component', () => {
     await waitFor(() => {
       expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument();
       expect(container.queryByText('Eligible to start Construction')).toBeInTheDocument();
-      expect(container.queryByText('Construction Approved')).toBeInTheDocument();
+      expect(container.queryByText('Building Permit Approved')).toBeInTheDocument();
       expect(container.queryByText('Construction in Progress')).toBeInTheDocument();
       expect(container.queryByText('Construction Completed')).toBeInTheDocument();
     }, 200);
