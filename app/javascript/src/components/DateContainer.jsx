@@ -37,6 +37,7 @@ export function futureDateAndTimeToString(days) {
  * @returns {String}
  */
 export function dateFormatter(objDate){
+  if(!objDate) return null
   // eslint-disable-next-line no-nested-ternary
   return isToday(new Date(objDate))
   ? `Today at ${dateTimeToString(new Date(objDate))}`

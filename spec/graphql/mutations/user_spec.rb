@@ -161,9 +161,11 @@ RSpec.describe Mutations::User do
         mutation UpdateUserMutation(
             $id: ID!,
             $name: String!,
-            $reason: String!,
+            $reason: String,
             $userType: String!,
             $vehicle: String
+            $substatusStartDate: String
+            $subStatus: String
           ) {
           userUpdate(
               id: $id,
@@ -171,6 +173,8 @@ RSpec.describe Mutations::User do
               requestReason: $reason,
               vehicle: $vehicle,
               userType: $userType
+              subStatus: $subStatus
+              substatusStartDate: $substatusStartDate
             ) {
             user {
               id
@@ -232,6 +236,26 @@ RSpec.describe Mutations::User do
                                               }).as_json
       expect(result.dig('data', 'userUpdate', 'user')).to be_nil
       expect(result['errors']).not_to be_empty
+    end
+
+    it 'should create a substatus log' do
+      variables = {
+        id: current_user.id,
+        name: 'joey',
+        userType: 'admin',
+        subStatus: 'floor_plan_purchased',
+        substatusStartDate: '2021-10-10',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: current_user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user')).not_to be_nil
+      expect(result['errors']).to be_nil
+      status = ::SubstatusLog.find_by(user_id: current_user.id)
+      expect(status.start_date).not_to be_nil
+      expect(status.new_status).to eql 'floor_plan_purchased'
     end
   end
 
