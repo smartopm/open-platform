@@ -11,7 +11,7 @@ module Mutations
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
       argument :status, String, required: false
-      argument :land_parcel_id, ID, required: false
+      argument :land_parcel_id, ID, required: true
 
       field :wallet_transaction, Types::WalletTransactionType, null: true
 
@@ -30,8 +30,8 @@ module Mutations
                        }),
           )
           context[:current_user].generate_events('deposit_create', transaction)
+          update_plot_balance(vals[:land_parcel_id], vals[:amount])
           update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
-          update_plot_balance(vals[:land_parcel_id], vals[:amount]) if vals[:land_parcel_id]
           return { wallet_transaction: transaction } if transaction.persisted?
         end
         raise GraphQL::ExecutionError, transaction.errors.full_messages
