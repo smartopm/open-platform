@@ -90,8 +90,8 @@ export const paymentStatusColor = {
 }
 
 export const paymentStatus = {
-  pending: 'Pending',
   settled: 'Settled',
+  pending: 'Pending',
   denied: 'Denied',
   cancelled: 'Cancelled'
 }

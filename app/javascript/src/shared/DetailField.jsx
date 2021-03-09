@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 
-export default function DetailsField({ title, value, editable, handleChange }) {
+export default function DetailsField({ title, value, editable, handleChange, options }) {
   return (
     <>
       <div>
@@ -15,7 +15,10 @@ export default function DetailsField({ title, value, editable, handleChange }) {
           value={value}
           onChange={handleChange}
           name={title?.replace(' ', '')}
-        />
+          select={options?.isSelect}
+        >
+          {options.children}
+        </TextField>
       </div>
     </>
   );
@@ -24,11 +27,17 @@ export default function DetailsField({ title, value, editable, handleChange }) {
 DetailsField.defaultProps = {
   handleChange: () => {},
   editable: false,
+  options: {
+    isSelect: false,
+    children: null
+  },
 }
 
 DetailsField.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   handleChange: PropTypes.func,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
+  options: PropTypes.object
 };

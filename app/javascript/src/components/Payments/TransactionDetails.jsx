@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
+import { MenuItem } from '@material-ui/core';
 import { CustomizedDialogs } from '../Dialog';
 import DetailsField from '../../shared/DetailField';
 import { dateToString } from '../DateContainer';
@@ -15,6 +16,7 @@ import { AllEventLogsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../CenteredContent';
 import EventTimeLine from '../../shared/TimeLine';
+import { paymentStatus } from '../../utils/constants';
 
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
@@ -148,6 +150,17 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               title="Payment Type"
               value={inputValues.PaymentType}
               handleChange={handleChange}
+              options={{
+                isSelect: isEditing,
+                children: [
+                  <MenuItem key="cash" value='cash'>Cash</MenuItem>,
+                  <MenuItem key="cashier_cheque" value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>,
+                  <MenuItem key="mobile_money" value='mobile_money'>Mobile Money</MenuItem>,
+                  <MenuItem key="cash_deposit" value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>,
+                  <MenuItem key="bank_transfer" value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>,
+                  <MenuItem key="pos" value='pos'>Point of Sale</MenuItem>,
+                ]
+              }}
             />
             <DetailsField
               editable={false}
@@ -157,8 +170,16 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             <DetailsField 
               editable={isEditing} 
               title="Status" 
-              value={inputValues.Status}
+              value={!isEditing ? inputValues.Status : 'settled'}
               handleChange={handleChange}
+              options={{
+                isSelect: isEditing,
+                children: Object.entries(paymentStatus).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))
+              }}
             />
             {
               inputValues.PaymentType === 'cheque/cashier_cheque' && (
@@ -184,7 +205,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                 </>
               )
             }
-            <DetailsField editable={false} title="Payment Made By" value={data?.user?.name} />
+            <DetailsField editable={false} title="Payment Made By" value={data?.depositor?.name} />
           </div>
         )}
         </TabPanel>
