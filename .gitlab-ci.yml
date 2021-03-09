@@ -3,6 +3,7 @@ stages:
   - test
   - report
   # - e2e
+  - dev
   - staging
   - deploy
 
@@ -129,6 +130,21 @@ staging:appdeploy:
     url: https://double-gdp-staging.herokuapp.com/
   only:
     - master
+
+dev:deploy:
+  stage: dev
+  allow_failure: false
+  when: on_success
+  script:
+    - echo 'deploying to DEV'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
+    - echo 'deployed to DEV'
+  environment:
+    name: staging
+    url: https://double-gdp-dev.herokuapp.com/
+  # only:
+  #   - new-dev-setup
 
 production:
   stage: deploy
