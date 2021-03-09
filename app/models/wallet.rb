@@ -63,8 +63,8 @@ class Wallet < ApplicationRecord
     return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
 
     user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
-      next if invoice.land_parcel.payment_plan&.plot_balance.zero?
-      
+      next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
+
       bal = invoice.land_parcel.payment_plan&.plot_balance
       payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
       settle_from_plot_balance(invoice, payment_amount)

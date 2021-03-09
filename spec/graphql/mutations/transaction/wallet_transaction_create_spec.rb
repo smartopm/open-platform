@@ -7,18 +7,24 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:user) { create(:user_with_community) }
     let!(:user_wallet) { create(:wallet, user: user, balance: 0) }
+    let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+    let!(:payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 100)
+    end
 
     let(:mutation) do
       <<~GQL
         mutation walletTransactionCreate (
           $userId: ID!,
           $amount: Float!,
-          $source: String!
+          $source: String!,
+          $landParcelId: ID!    
         ) {
           walletTransactionCreate(
             userId: $userId,
             amount: $amount,
-            source: $source
+            source: $source,
+            landParcelId: $landParcelId
           ){
             walletTransaction {
               id
@@ -33,6 +39,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
         userId: user.id,
         amount: 100,
         source: 'cash',
+        landParcelId: land_parcel.id,
       }
 
       result = DoubleGdpSchema.execute(mutation, variables: variables,

@@ -9,6 +9,9 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
     let!(:user_wallet) { create(:wallet, user: user_with_balance, balance: 100) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+    let!(:payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 100)
+    end
 
     let(:query) do
       <<~GQL
