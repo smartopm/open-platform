@@ -41,7 +41,7 @@ class Invoice < ApplicationRecord
   end
 
   def settle_amount
-    pending_amount = amount - land_parcel.payment_plan.plot_balance
+    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
     if pending_amount.positive?
       update(pending_amount: pending_amount)
       return amount - pending_amount
