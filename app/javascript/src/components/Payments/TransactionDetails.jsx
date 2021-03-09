@@ -18,9 +18,7 @@ import CenteredContent from '../CenteredContent';
 import EventTimeLine from '../../shared/TimeLine';
 import { paymentStatus } from '../../utils/constants';
 
-
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
-  
   const initialValues = {
     PaymentType: data?.source === 'wallet' ? 'From-balance' : data?.source,
     PaymentDate: '',
@@ -113,7 +111,11 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
       >
         <StyledTabs value={tabValue} onChange={handleTabChange} aria-label="land parcel tabs">
           <StyledTab label="Details" value="Details" />
-          <StyledTab label="Edit Log" value="Log" />
+          {
+            data.destination === 'wallet' && (
+              <StyledTab label="Edit Log" value="Log" />
+            )
+          }
         </StyledTabs>
 
         <TabPanel value={tabValue} index="Details">
