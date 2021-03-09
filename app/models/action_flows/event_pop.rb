@@ -104,7 +104,7 @@ module ActionFlows
       ActionFlows::Events.constants
                          .map { |const_symbol| ActionFlows::Events.const_get(const_symbol) }
                          .select do |c|
-        !c.ancestors.include?(StandardError) && c.class != Module
+        c.ancestors.exclude?(StandardError) && c.class != Module
       end
     end
 

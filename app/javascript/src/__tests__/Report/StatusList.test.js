@@ -12,13 +12,14 @@ describe('Status List Component', () => {
     constructionApproved: null,
     constructionInProgress: null,
     constructionCompleted: 1,
+    constructionInProgressSelfBuild: null,
   };
 
   it('should render a list of status with correct count', () => {
     const container = render(<StatusList data={list} statuses={userSubStatus} />);
     expect(container.queryAllByText('2')[0]).toBeInTheDocument();
     expect(container.queryAllByText('0')[0]).toBeInTheDocument();
-    expect(container.queryAllByText('0')).toHaveLength(2);
+    expect(container.queryAllByText('0')).toHaveLength(3);
     expect(container.queryAllByText('1')).toHaveLength(2);
     expect(container.queryAllByText('4')).toHaveLength(1);
     expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument();
@@ -26,5 +27,6 @@ describe('Status List Component', () => {
     expect(container.queryByText('Construction Approved')).toBeInTheDocument();
     expect(container.queryByText('Construction in Progress')).toBeInTheDocument();
     expect(container.queryByText('Construction Completed')).toBeInTheDocument();
+    expect(container.queryByText('Construction in Progress (Self Build)')).toBeInTheDocument();
   });
 });

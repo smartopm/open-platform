@@ -13,7 +13,7 @@ module Mutations
         raise GraphQL::ExecutionError, 'Invalid Value' if (preferences - default_preference).any?
 
         unselected_values = context[:current_user].labels
-                                                  .where('short_desc IN (?)', default_preference)
+                                                  .where(short_desc: default_preference)
                                                   .pluck(:short_desc) - preferences
         remove_preference(unselected_values)
         add_preference(preferences)

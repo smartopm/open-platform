@@ -173,7 +173,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
   )
 }
 
-export function FullScreenDialog({ handleClose, open, children, handleSubmit }){
+export function FullScreenDialog({ handleClose, open, children, actionText, handleSubmit }){
   const classes = useStyles()
   return(
     <Dialog
@@ -190,7 +190,7 @@ export function FullScreenDialog({ handleClose, open, children, handleSubmit }){
             {' '}
           </div>
           <Button autoFocus color="inherit" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
-            Print
+            {actionText}
           </Button>
         </Toolbar>
       </AppBar>
@@ -218,7 +218,6 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
     </Dialog>
   )
 }
-
 export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
   const classes = useStyles()
   return (
@@ -308,6 +307,7 @@ FullScreenDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  actionText: PropTypes.string.isRequired,
   children: PropTypes.node
 }
 

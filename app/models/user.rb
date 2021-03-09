@@ -51,11 +51,10 @@ class User < ApplicationRecord
 
     return relat.where(user_type: allowed_user_types)
   }
-  scope :by_phone_number, ->(number) { where('phone_number IN (?)', number&.split(',')) }
-  scope :by_type, ->(user_type) { where('user_type IN (?)', user_type&.split(',')) }
+  scope :by_phone_number, ->(number) { where(phone_number: number&.split(',')) }
+  scope :by_type, ->(user_type) { where(user_type: user_type&.split(',')) }
   scope :by_labels, lambda { |label|
-                      joins(:labels).where('labels.short_desc IN (?)',
-                                           label&.split(','))
+                      joins(:labels).where(labels: { short_desc: label&.split(',') })
                     }
 
   belongs_to :community, dependent: :destroy
@@ -96,6 +95,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_one_attached :document
 
+  before_save :ensure_default_state_and_type
   after_create :send_email_msg
 
   # Track changes to the User
@@ -113,6 +113,7 @@ class User < ApplicationRecord
     construction_approved: 3,
     construction_in_progress: 4,
     construction_completed: 5,
+    construction_in_progress_self_build: 6,
   }
 
   validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
@@ -121,7 +122,6 @@ class User < ApplicationRecord
   validates :name, presence: true
   validate :phone_number_valid?
   after_create :add_notification_preference
-  before_save :ensure_default_state_and_type
   before_update :log_sub_status_change, if: :sub_status_changed?
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -496,6 +496,10 @@ class User < ApplicationRecord
 
   def wallet
     wallets.first.presence || wallets.create(balance: 0, pending_balance: 0)
+  end
+
+  def active_payment_plan?
+    payment_plans.active.present? || wallet_transactions.present? || invoices.present?
   end
 
   private

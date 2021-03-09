@@ -28,6 +28,12 @@ class Cypress::FactoriesController < ApplicationController
   end
 
   def factory_attributes
-    params.fetch(:attributes).permit!.to_h
+    params.fetch(:attributes).permit(
+      :name,
+      :phone_number,
+      :email,
+      :state,
+      :community_id,
+    ).to_h
   end
 end

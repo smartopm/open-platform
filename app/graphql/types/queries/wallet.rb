@@ -66,21 +66,22 @@ module Types::Queries::Wallet
   end
 
   def payment_accounting_stats
-    context[:site_community].wallet_transactions.payment_stat
+    WalletTransaction.payment_stat(context[:site_community])
   end
 
   def payment_stat_details(query:)
     converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
     context[:site_community].wallet_transactions
+                            .eager_load(:user)
                             .where(created_at: converted_date, destination: 'wallet')
   end
 
   def transaction_receipt(transaction_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-    # rubocop:disable Metrics/SafeNavigationChain
+    # rubocop:disable Lint/SafeNavigationChain
     context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
-    # rubocop:enable Metrics/SafeNavigationChain
+    # rubocop:enable Lint/SafeNavigationChain
   end
 
   # It would be good to put this elsewhere to use it in other queries

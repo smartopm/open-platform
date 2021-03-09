@@ -11,7 +11,7 @@ class FormUser < ApplicationRecord
   after_create :log_create_event
   after_update :log_update_event
 
-  default_scope { where('status != ?', 4) }
+  default_scope { where.not(status: 4) }
 
   enum status: { draft: 0, pending: 1, approved: 2, rejected: 3, deleted: 4 }
 

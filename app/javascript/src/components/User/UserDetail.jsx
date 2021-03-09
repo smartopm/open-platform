@@ -6,6 +6,7 @@ import dateutil from '../../utils/dateutil'
 import UserLabels from '../UserLabels'
 import StatusBadge from '../StatusBadge'
 import { titleize } from '../../utils/helpers'
+import { userSubStatus } from '../../utils/constants'
 
 export default function UserDetail({ data, userType }) {
   return (
@@ -14,7 +15,7 @@ export default function UserDetail({ data, userType }) {
       <div className="expires">User Type: {titleize(data.user.userType)}</div>
       {data.user.subStatus && (
         <div data-testid="user-sub-status">
-          Sub Status: {titleize(data.user.subStatus)}
+          Sub Status: {userSubStatus[data.user.subStatus]}
         </div>
       )}
       <div className="expires">

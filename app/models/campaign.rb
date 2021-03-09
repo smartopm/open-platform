@@ -13,7 +13,7 @@ class Campaign < ApplicationRecord
   validates :campaign_type, inclusion: { in: %w[sms email] }
   before_save :clean_message
 
-  scope :existing, -> { where('status != ?', 3) }
+  scope :existing, -> { where.not(status: 3) }
   default_scope { order(created_at: :desc) }
 
   def clean_message

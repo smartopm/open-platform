@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import UserInformation from '../components/UserInformation'
+import { UserActivePlanQuery } from '../graphql/queries/user'
 
 describe("User information component loads",()=>{
     const data = {
@@ -70,31 +71,43 @@ describe("User information component loads",()=>{
         await waitFor(
           () => { expect(getByText('Yoram')).toBeInTheDocument()
                   expect(getByText('Valid')).toBeInTheDocument() },
-          { timeout: 1000 }
+          { timeout: 50 }
         )
     })
-    it('should render tab elemets', async ()=>{
-        const {getByText} = render(
-          <MockedProvider mock={data}>
-            <BrowserRouter>
-              <UserInformation
-                data={data}
-                authState={authstate}
-                accountData={accountData}
-                parcelData={parcelData}
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        )
+    it('should render tab elemets', async () => {
+      const anotherMock = {
+        request: {
+          query: UserActivePlanQuery
+        },
+        result: {
+          data: {
+            userActivePlan: true
+          }
+        }
+      };
+      const { getByText } = render(
+        <MockedProvider mocks={[anotherMock]}>
+          <BrowserRouter>
+            <UserInformation
+              data={data}
+              authState={authstate}
+              accountData={accountData}
+              parcelData={parcelData}
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      );
 
-        await waitFor(
-          () => { expect(getByText('Plots')).toBeInTheDocument()
-          expect(getByText('Communication')).toBeInTheDocument()
-          expect(getByText('Payments')).toBeInTheDocument()
-          expect(getByText('Contact')).toBeInTheDocument() },
-          { timeout: 1000 }
-        )
-    })
+      await waitFor(
+        () => {
+          expect(getByText('Plots')).toBeInTheDocument();
+          expect(getByText('Communication')).toBeInTheDocument();
+          expect(getByText('Payments')).toBeInTheDocument();
+          expect(getByText('Contact')).toBeInTheDocument();
+        },
+        { timeout: 50 }
+      );
+    });
 
     it('should render Menue', async ()=>{
         const {getByText} = render(
@@ -114,7 +127,7 @@ describe("User information component loads",()=>{
           () => { expect(getByText('Print')).toBeInTheDocument()
           expect(getByText('Send One Time Passcode')).toBeInTheDocument()
           expect(getByText('Message Support')).toBeInTheDocument() },
-          { timeout: 1000 }
+          { timeout: 50 }
         )
 
     })

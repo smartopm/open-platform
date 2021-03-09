@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
-import { useMutation } from 'react-apollo'
 import { Pagination } from '@material-ui/lab'
 import PostItem from './PostItem'
 import { dateToString } from '../DateContainer'
@@ -12,7 +11,6 @@ import Categories from './Categories'
 import { wordpressEndpoint } from '../../utils/constants'
 import { ShareButton } from '../ShareButton'
 import { Spinner } from '../../shared/Loading'
-import { LogSharedPost } from '../../graphql/mutations'
 import CenteredContent from '../CenteredContent'
 import { titleize } from '../../utils/helpers'
 
@@ -21,16 +19,7 @@ export default function PostsList() {
     const [page, setPageNumber] = useState(1)
     const limit = 20
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
-    const [logSharedPost] = useMutation(LogSharedPost)
     const currentUrl = window.location.href
-
-    function onPostsShare() {
-      logSharedPost({
-        variables: { postId: slug || 'posts' }
-      })
-      .then(res => res)
-      .catch(err => err.message)
-    }
 
     function loadPostPage(postId) {
         window.location.href = `/news/post/${postId}`
@@ -93,7 +82,7 @@ export default function PostsList() {
             )
           }
         </div>
-        <ShareButton url={currentUrl} doOnShare={onPostsShare} />
+        <ShareButton url={currentUrl} />
       </>
     )
 }

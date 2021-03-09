@@ -106,7 +106,7 @@ module Types::Queries::Invoice
   def invoices_stat_details(query:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    invoices = context[:site_community].invoices
+    invoices = context[:site_community].invoices.eager_load(:user, :land_parcel)
     case query
     when '00-30'
       invoices.not_paid.where('due_date >= ?', 30.days.ago)
@@ -136,7 +136,9 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     month = Time.zone.now.month
-    payment_plans = ::PaymentPlan.where('extract(month from start_date) = ?', month)
+    payment_plans = ::PaymentPlan.where(
+      'extract(month from start_date) = ? AND generated = ?', month, false
+    )
     {
       number_of_invoices: payment_plans.count,
       total_amount: calculate_total_amount(payment_plans),

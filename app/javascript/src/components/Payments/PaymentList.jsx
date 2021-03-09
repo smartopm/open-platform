@@ -5,6 +5,8 @@ import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
 import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
@@ -38,6 +40,8 @@ export default function PaymentList({ currencyData }) {
   const [listType, setListType] = useState('nongraph')
   const [query, setQuery] = useState('')
   const history = useHistory()
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const pageNumber = Number(page);
   const { loading, data, error } = useQuery(TransactionsQuery, {
@@ -108,7 +112,7 @@ export default function PaymentList({ currencyData }) {
       <PaymentGraph handleClick={setGraphQuery} />
       {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
         <div>
-          <ListHeader headers={paymentHeaders} />
+          {matches && <ListHeader headers={paymentHeaders} />}
           {
             paymentStatData.paymentStatDetails.map(payment => (
               <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
@@ -117,7 +121,7 @@ export default function PaymentList({ currencyData }) {
         </div>
       ) : paymentList?.length && paymentList?.length > 0 ? (
         <div>
-          <ListHeader headers={paymentHeaders} />
+          {matches && <ListHeader headers={paymentHeaders} />}
           {
             paymentList.map(payment => (
               <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
@@ -147,22 +151,22 @@ export default function PaymentList({ currencyData }) {
 export function renderPayment(payment, currencyData) {
     return [{
       'User': (
-        <Grid item xs={2} md={2} data-testid="created_by">
+        <Grid item xs={12} md={2} data-testid="created_by">
           <Link to={`/user/${payment.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{display: 'flex'}}>
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
-              <span style={{margin: '7px'}}>{payment.user.name}</span>
+              <span style={{margin: '7px', fontSize: '12px'}}>{payment.user.name}</span>
             </div>
           </Link>
         </Grid>
       ),
       'Deposit Date': (
-        <Grid item xs={1} md={2}>
+        <Grid item xs={12} md={2}>
           <Text content={dateToString(payment.createdAt)} />
         </Grid>
       ),
       'Payment Type': (
-        <Grid item xs={4} md={2} data-testid="payment_type">
+        <Grid item xs={12} md={2} data-testid="payment_type">
           <Text content={
             ['cash'].includes(payment.source)
             ? 'Cash Deposit'
@@ -172,8 +176,8 @@ export function renderPayment(payment, currencyData) {
         </Grid>
       ),
       Amount: (
-        <Grid item xs={4} md={2} data-testid="payment_amount">
-          <span>{formatMoney(currencyData, payment.amount)}</span>
+        <Grid item xs={12} md={2} data-testid="payment_amount">
+          <span style={{fontSize: '12px'}}>{formatMoney(currencyData, payment.amount)}</span>
         </Grid>
       )
     }]

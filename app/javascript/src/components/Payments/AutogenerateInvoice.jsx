@@ -39,6 +39,7 @@ export default function AutogenerateInvoice({ currencyData, close }) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
+  const disable = (data?.invoiceAutogenerationData.numberOfInvoices === 0)
   return (
     <>
       <MessageAlert
@@ -69,6 +70,7 @@ export default function AutogenerateInvoice({ currencyData, close }) {
             color="primary" 
             onClick={handleInvoiceGenerate}
             style={{marginLeft: '5px'}}
+            disabled={disable}
           >
             Generate Invoices
           </Button>

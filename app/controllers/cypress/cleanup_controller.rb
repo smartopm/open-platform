@@ -10,7 +10,9 @@ class Cypress::CleanupController < ApplicationController
     tables = ActiveRecord::Base.connection.tables - %w[ar_internal_metadata]
     tables.delete 'schema_migrations'
     tables.each do |t|
-      ActiveRecord::Base.connection.execute("TRUNCATE #{t} CASCADE")
+      ActiveRecord::Base.connection.execute(
+        ActiveRecord::Base.sanitize_sql("TRUNCATE #{t} CASCADE"),
+      )
     end
 
     head :ok

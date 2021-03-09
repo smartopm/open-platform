@@ -199,4 +199,68 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
+
+  describe 'merging land parcels' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:user_parcel) do
+      create(:land_parcel, community_id: current_user.community_id)
+    end
+    let!(:normal_user) { create(:user_with_community) }
+
+    let(:propertyMergeQuery) do
+      <<~GQL
+        mutation MergeProperty($id: ID!,
+          $parcelNumber: String!) {
+            propertyMerge(id: $id,
+            parcelNumber: $parcelNumber) {
+              landParcel {
+                id
+                valuations {
+                  amount
+                }
+                accounts {
+                  fullName
+                  address1
+                }
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'merges a property and updates parcel number' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: 'BAD-PLOT',
+      }
+
+      result = DoubleGdpSchema.execute(
+        propertyMergeQuery,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      parcel = LandParcel.find(user_parcel.id)
+      expect(parcel.parcel_number).to eq('BAD-PLOT')
+      expect(result['errors']).to be_nil
+    end
+
+    it 'raises an error if non-admin tries to merge a property' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: 'BAD-PLOT',
+      }
+
+      result = DoubleGdpSchema.execute(propertyMergeQuery, variables: variables,
+                                                           context: {
+                                                             current_user: normal_user,
+                                                             site_community: normal_user.community,
+                                                           }).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+  end
 end

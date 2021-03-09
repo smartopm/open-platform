@@ -16,7 +16,7 @@ describe('It displays the user list and interactions', () => {
           notes: [],
           phoneNumber: '0987654123',
           roleName: 'Admin',
-          subStatus: 'architecture_reviewed',
+          subStatus: 'construction_approved',
           labels: [
             {
               id: 'de2392ec-398f-40e2-a983-7caee40b2073',
@@ -80,7 +80,7 @@ describe('It displays the user list and interactions', () => {
       </BrowserRouter>
     )
     expect(container.queryByTestId('user-substatus').textContent).toContain(
-      'Architecture Reviewed'
+      'Construction Approved'
     )
   })
 })

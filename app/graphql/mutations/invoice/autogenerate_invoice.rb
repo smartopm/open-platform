@@ -10,7 +10,9 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       def resolve
         month = Time.zone.now.month
-        payment_plans = ::PaymentPlan.where('extract(month from start_date) = ?', month)
+        payment_plans = ::PaymentPlan.where(
+          'extract(month from start_date) = ? AND generated = ?', month, false
+        )
         invoices = []
         payment_plans.each do |payment_plan|
           land_parcel = payment_plan.land_parcel
@@ -20,6 +22,7 @@ module Mutations
           inv = create_invoice(payment_plan, land_parcel, valuation)
           raise GraphQL::ExecutionError, inv.errors.full_messages unless inv.persisted?
 
+          payment_plan.update(generated: true)
           invoices.push(inv)
         end
         { invoices: invoices }
