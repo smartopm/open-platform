@@ -30,9 +30,10 @@ class UserImportJob < ApplicationJob
         dup_user = duplicate_user(email, phone_list, current_user.community)
         if dup_user.present?
           labels.each do |lab|
-            unless dup_user.labels.find_by(short_desc: lab)
-              dup_user.labels.create!(community: dup_user.community, short_desc: lab)
-            end
+            new_or_existing_label = dup_user.community.labels.find_or_create_by(short_desc: lab)
+            next if dup_user.labels.find_by(id: new_or_existing_label.id)
+
+            UserLabel.create(user: dup_user, label: new_or_existing_label)
           end
 
           next
