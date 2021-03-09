@@ -15,7 +15,7 @@ describe('<SubStatusTimeDistributionReport />', () => {
             between51to150Days: 0,
             over151Days: 0,
           },
-          constructionApproved: {
+          buildingPermitApproved: {
             between0to10Days: 0,
             between11to30Days: 0,
             between31to50Days: 0,
