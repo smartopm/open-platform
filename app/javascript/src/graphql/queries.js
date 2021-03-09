@@ -1124,7 +1124,7 @@ export const AllTransactionQuery = gql`
         planType
         status
         percentage
-        plotBalance
+      plotBalance
         createdAt
         landParcel {
           parcelNumber
