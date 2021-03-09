@@ -14,7 +14,7 @@ class CustomerJourneyReport
       plots_fully_purchased: Hash.new(0),
       eligible_to_start_construction: Hash.new(0),
       floor_plan_purchased: Hash.new(0),
-      construction_approved: Hash.new(0),
+      building_permit_approved: Hash.new(0),
       construction_in_progress: Hash.new(0),
       construction_completed: Hash.new(0),
       construction_in_progress_self_build: Hash.new(0),
