@@ -82,7 +82,7 @@ describe('Invoice Item Component', () => {
       {
         request: {
           query: InvoicesQuery,
-          variables: { status: null, limit: 50, offset: 0, query: '' }
+          variables: { limit: 50, offset: 0, query: '' }
         },
         result: {
           data: {

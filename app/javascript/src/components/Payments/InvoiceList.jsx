@@ -52,7 +52,6 @@ export default function InvoiceList({ currencyData }) {
   const path = useParamsQuery();
   const limit = 50;
   const page = path.get('page');
-  const status = path.get('status');
   const pageNumber = Number(page);
   const [searchValue, setSearchValue] = useState('');
   const [listType, setListType] = useState('nongraph')
@@ -63,7 +62,7 @@ export default function InvoiceList({ currencyData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
-    variables: { limit, offset: pageNumber, status, query: debouncedValue },
+    variables: { limit, offset: pageNumber, query: debouncedValue },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -97,10 +96,10 @@ export default function InvoiceList({ currencyData }) {
   function paginate(action) {
     if (action === 'prev') {
       if (pageNumber < limit) return;
-      history.push(`/payments?page=${pageNumber - limit}&status=${status}`);
+      history.push(`/payments?page=${pageNumber - limit}`);
     } else if (action === 'next') {
       if (invoicesData?.invoices.length < limit) return;
-      history.push(`/payments?page=${pageNumber + limit}&status=${status}`);
+      history.push(`/payments?page=${pageNumber + limit}`);
     }
   }
   if (loading) return <Spinner />;

@@ -11,7 +11,6 @@ module Types::Queries::Invoice
       description 'Get all invoices'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
-      argument :status, String, required: false
       argument :query, String, required: false
     end
 
@@ -61,12 +60,11 @@ module Types::Queries::Invoice
     end
   end
   # rubocop:enable Metrics/BlockLength
-  def invoices(status: nil, query: nil, offset: 0, limit: 100)
+  def invoices(query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].invoices
                             .search(query)
-                            .by_status(status)
                             .eager_load(:land_parcel, :user, :payments)
                             .order(due_date: :desc)
                             .limit(limit)
