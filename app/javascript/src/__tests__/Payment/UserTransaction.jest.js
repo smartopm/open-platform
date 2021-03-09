@@ -6,7 +6,7 @@ describe('Render Transaction', () => {
   const transaction = {
     amount: 200,
     source: 'wallet',
-    destination: 'invoice',
+    destination: 'deposit',
     createdAt: '2021-03-01T09:55:05Z',
     updatedAt: '2021-03-01T09:55:05Z',
     currentWalletBalance: 100,
