@@ -170,7 +170,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Menu: (
       <Grid item xs={12} md={1}>
         {
-          transaction.__typename === 'WalletTransaction'
+          transaction.__typename === 'WalletTransaction' && transaction.destination !== 'invoice'
           ? (
             <IconButton
               aria-controls="simple-menu"
