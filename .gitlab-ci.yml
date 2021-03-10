@@ -130,6 +130,21 @@ staging:appdeploy:
   only:
     - master
 
+dev:deploy:
+  stage: staging
+  allow_failure: false
+  when: on_success
+  script:
+    - echo 'deploying to DEV'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
+    - echo 'deployed to DEV'
+  environment:
+    name: development
+    url: https://double-gdp-dev.herokuapp.com/
+  only:
+    - master
+
 production:
   stage: deploy
   allow_failure: false

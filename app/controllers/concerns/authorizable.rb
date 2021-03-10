@@ -24,7 +24,8 @@ module Authorizable
                        'double-gdp-staging.herokuapp.com' => 'Nkwashi',
                        'demo.doublegdp.com' => 'Doublegdp',
                        'demo-staging.doublegdp.com' => 'Doublegdp',
-                       'dev.dgdp.site' => 'Doublegdp' }
+                       'dev.dgdp.site' => 'Doublegdp',
+                       'double-gdp-dev.herokuapp.com' => 'DAST' }
 
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
       @site_community = Community.find_by(name: 'Nkwashi')
