@@ -3,7 +3,6 @@ stages:
   - test
   - report
   # - e2e
-  - dev
   - staging
   - deploy
 
@@ -132,7 +131,7 @@ staging:appdeploy:
     - master
 
 dev:deploy:
-  stage: dev
+  stage: staging
   allow_failure: false
   when: on_success
   script:
@@ -143,8 +142,8 @@ dev:deploy:
   environment:
     name: development
     url: https://double-gdp-dev.herokuapp.com/
-  # only:
-  #   - new-dev-setup
+  only:
+    - master
 
 production:
   stage: deploy
