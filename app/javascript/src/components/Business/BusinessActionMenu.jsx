@@ -48,6 +48,7 @@ export default function BusinessActionMenu({
               id="delete_button"
               key="delete_user"
               onClick={() => handleDeleteClick()}
+              data-testid="delete_button"
             >
               Delete
             </MenuItem>
@@ -63,7 +64,7 @@ export default function BusinessActionMenu({
             <BusinessDeleteDialogue
               open={openModal}
               handleClose={handleDeleteClick}
-              handleDelete={handleDelete}
+              handleAction={handleDelete}
               title="business"
             />
           </>
