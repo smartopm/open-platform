@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable security/detect-non-literal-fs-filename */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react'
@@ -47,9 +48,7 @@ export default function BusinessProfile({ profileData }) {
     <div className="container">
       <div className="row d-flex justify-content-between">
         <div className="col-4 d-flex justify-content-end align-items-center">
-          {
-                // eslint-disable-next-line
-                }<Avatar user={profileData} style={profileData.imageUrl ? 'big' : 'medium'} />
+          <Avatar user={profileData} style={profileData.imageUrl ? 'big' : 'medium'} />
         </div>
         <div className="col-8 justify-content-around" data-testid="details-holder">
           <Typography variant="h6" arial-label="pf-company-name">
@@ -68,9 +67,9 @@ export default function BusinessProfile({ profileData }) {
 
             <span
               onClick={() => openLink(profileData.homeUrl)}
-              onKeyPress={() => openLink(profileData.homeUrl)}
               role="link"
               tabIndex={0}
+              data-testid="home_url"
             >
               {profileData.homeUrl}
             </span>
@@ -85,6 +84,7 @@ export default function BusinessProfile({ profileData }) {
           value={tabValue}
           onChange={handleChange}
           aria-label="request tabs"
+          data-testid="business_tabs"
           centered
         >
           <StyledTab label="Profile" value="Profile" />
@@ -94,7 +94,7 @@ export default function BusinessProfile({ profileData }) {
         <TabPanel value={tabValue} index="Profile">
 
           <Typography variant="h6">Description</Typography>
-          <Typography variant="body1" arial-label="pf-description">
+          <Typography variant="body1" data-testid="pf-description">
             {profileData.description || 'No Description'}
           </Typography>
 
@@ -102,7 +102,7 @@ export default function BusinessProfile({ profileData }) {
         <TabPanel value={tabValue} index="Operating Hours">
           <div className="d-flex  justify-content-center">
             <div>
-              <Typography variant="h6">
+              <Typography variant="h6" data-testid="operating_hrs">
                 Operating Hours
               </Typography>
               <br />
@@ -129,7 +129,7 @@ export default function BusinessProfile({ profileData }) {
         </TabPanel>
 
         <div className="container d-flex justify-content-center">
-          <Button onClick={handleButtonClick} color="primary">Ask about business</Button>
+          <Button onClick={handleButtonClick} color="primary" data-testid="inquire_btn">Ask about business</Button>
         </div>
       </div>
     </div>
