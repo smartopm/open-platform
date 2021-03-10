@@ -41,7 +41,8 @@ const initialValues = {
   imageUrl: '',
   subStatus: '',
   primaryAddress: '',
-  contactInfos: []
+  contactInfos: [],
+  extRefId: ''
 }
 
 export function formatContactType(value, type) {
@@ -445,6 +446,19 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                       selectedDate={selectedDate}
                       label="Expiration Date"
                       handleDateChange={handleDateChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="bmd-label-static" htmlFor="extRefId">
+                      External Reference ID
+                    </label>
+                    <input
+                      className="form-control"
+                      name="extRefId"
+                      type="text"
+                      onChange={handleInputChange}
+                      value={data.extRefId || ''}
+                      data-testid="ext-ref-id"
                     />
                   </div>
                 </>

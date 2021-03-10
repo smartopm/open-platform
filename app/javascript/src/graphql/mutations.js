@@ -16,6 +16,7 @@ export const CreateUserMutation = gql`
     $documentBlobId: String
     $subStatus: String
     $secondaryInfo: JSON
+    $extRefId: String
   ) {
     result: userCreate(
       name: $name
@@ -30,6 +31,7 @@ export const CreateUserMutation = gql`
       subStatus: $subStatus
       address: $address
       secondaryInfo: $secondaryInfo
+      extRefId: $extRefId
     ) {
       user {
        id
@@ -38,6 +40,50 @@ export const CreateUserMutation = gql`
   }
   `
   // ${UserFragment.publicFields}
+
+export const UpdateUserMutation = gql`
+  mutation UpdateUserMutation(
+    $id: ID!
+    $name: String
+    $email: String
+    $phoneNumber: String
+    $userType: String!
+    $requestReason: String
+    $vehicle: String
+    $state: String
+    $avatarBlobId: String
+    $documentBlobId: String
+    $expiresAt: String
+    $subStatus: String
+    $address: String
+    $secondaryInfo: [JSON!]
+    $extRefId: String
+  ) {
+    result: userUpdate(
+      id: $id
+      name: $name
+      email: $email
+      phoneNumber: $phoneNumber
+      userType: $userType
+      requestReason: $requestReason
+      vehicle: $vehicle
+      state: $state
+      avatarBlobId: $avatarBlobId
+      documentBlobId: $documentBlobId
+      expiresAt: $expiresAt
+      subStatus: $subStatus
+      address: $address
+      secondaryInfo: $secondaryInfo
+      extRefId: $extRefId
+    ) {
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${UserFragment.publicFields}
+`
+
 
 export const NonAdminUpdateMutation = gql`
 mutation UpdateUserMutation(
