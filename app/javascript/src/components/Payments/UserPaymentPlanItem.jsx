@@ -1,30 +1,29 @@
 /* eslint-disable */
 // kindly re-enable eslint here
-import React from 'react'
-import PropTypes from 'prop-types'
-import {
-  Grid, Typography, Accordion, AccordionSummary, AccordionDetails
-} from '@material-ui/core';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CenteredContent from '../CenteredContent'
+import CenteredContent from '../CenteredContent';
 import DataList from '../../shared/list/DataList';
-import { useQuery } from 'react-apollo'
+import { useQuery } from 'react-apollo';
 import { GridText } from '../../shared/Text';
-import { Spinner } from '../../shared/Loading'
+import { Spinner } from '../../shared/Loading';
 import { dateToString } from '../DateContainer';
 import { formatMoney, formatError } from '../../utils/helpers';
-import UserInvoiceItem from './UserInvoiceItem'
-import { PaidInvoicesByPlan } from '../../graphql/queries'
+import UserInvoiceItem from './UserInvoiceItem';
+import { PaidInvoicesByPlan } from '../../graphql/queries';
 import ListHeader from '../../shared/list/ListHeader';
-export default function UserPaymentPlanItem({ plan, currencyData }){
-  const paymentPlanId = plan.id
-  const { loading, data: invoicesByPlan, error, refetch } = useQuery(
-    PaidInvoicesByPlan,
-    {
-      variables: { paymentPlanId },
-      errorPolicy: 'all'
-    }
-  )
+export default function UserPaymentPlanItem({ plans, currencyData }) {
+  console.log(plans);
+  // const paymentPlanId = plan.id
+  // const { loading, data: invoicesByPlan, error, refetch } = useQuery(
+  //   PaidInvoicesByPlan,
+  //   {
+  //     variables: { paymentPlanId },
+  //     errorPolicy: 'all'
+  //   }
+  // )
 
   const planHeader = [
     { title: 'Plot Number', col: 1 },
@@ -42,78 +41,56 @@ export default function UserPaymentPlanItem({ plan, currencyData }){
     { title: 'Status', col: 4 }
   ];
 
-  if (loading) return <Spinner />
-
   return (
     <>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-label="Expand"
-          aria-controls="additional-actions3-content"
-          id="additional-actions3-header"
-        >
-          <DataList
-            keys={planHeader} 
-            data={[renderPlan(plan, currencyData)]}
-            hasHeader={false} 
-            clickable={false}
-            handleClick={() => console.log('click')}
-          />
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography color="textSecondary">
-            <ListHeader headers={invoiceHeader} />
-            {
-              invoicesByPlan?.paidInvoicesByPlan.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
-                <UserInvoiceItem
-                  key={inv.id} 
-                  invoice={inv}
-                  currencyData={currencyData}
-                />
-              ))
-            }
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+      {plans.map(plan => (
+        <Accordion key={plan.id}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-label="Expand"
+            aria-controls="additional-actions3-content"
+            id="additional-actions3-header"
+          >
+            <DataList
+              keys={planHeader}
+              data={[renderPlan(plan, currencyData)]}
+              hasHeader={false}
+              clickable={false}
+              handleClick={() => console.log('click')}
+            />
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography color="textSecondary">
+              <ListHeader headers={invoiceHeader} />
+              {plan.invoices
+                ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map(inv => (
+                  <UserInvoiceItem key={inv.id} invoice={inv} currencyData={currencyData} />
+                ))}
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </>
-  )
+  );
 }
 
 export function renderPlan(plan, currencyData) {
   return {
-    'Plot Number': (
-      <GridText
-        col={4}
-        content={ plan?.landParcel?.parcelNumber }
-      />
-    ),
-    Balance: (
-      <GridText
-        col={4}
-        content={ formatMoney(currencyData, plan?.plotBalance) }
-      />
-    ),
-    'Start Date': (
-      <GridText
-        col={4}
-        content={ dateToString(plan?.startDate) }
-      />
-    ),
-    '% of total valuation': (
-      <GridText
-      col={4}
-      content={ plan?.percentage }
-    />
-    ),
+    'Plot Number': <GridText col={4} content={plan?.landParcel?.parcelNumber} />,
+    Balance: <GridText col={4} content={formatMoney(currencyData, plan?.plotBalance)} />,
+    'Start Date': <GridText col={4} content={dateToString(plan?.startDate)} />,
+    '% of total valuation': <GridText col={4} content={plan?.percentage} />
   };
 }
 UserPaymentPlanItem.propTypes = {
-  plan: PropTypes.shape({
-    plotNumber: PropTypes.number,
-    plotBalance: PropTypes.number,
-    balance: PropTypes.string,
-    startDate: PropTypes.string,
-    createdAt: PropTypes.string
-  }).isRequired
+  plans: PropTypes.arrayOf(
+    PropTypes.shape({
+      plotNumber: PropTypes.number,
+      plotBalance: PropTypes.number,
+      balance: PropTypes.string,
+      startDate: PropTypes.string,
+      createdAt: PropTypes.string
+    })
+  ).isRequired
 };

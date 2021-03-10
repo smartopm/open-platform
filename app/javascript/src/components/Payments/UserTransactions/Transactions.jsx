@@ -195,7 +195,12 @@ export default function TransactionsList({ userId, user, userData }) {
       </TabPanel>
       <TabPanel value={tabValue} index="Plans">
         <ListHeader headers={paymentPlan} />
-        {
+        <UserPaymentPlanItem
+          plans={invPayData?.invoicesWithTransactions.paymentPlans}
+          currencyData={currencyData}
+        />
+
+        {/* {
           invPayData?.invoicesWithTransactions.paymentPlans.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((plan) => (
             <UserPaymentPlanItem
               key={plan.id} 
@@ -203,7 +208,7 @@ export default function TransactionsList({ userId, user, userData }) {
               currencyData={currencyData}
             />
           ))
-        }
+        } */}
       </TabPanel>
       <PaymentModal 
         open={payOpen}
