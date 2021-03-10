@@ -1124,8 +1124,15 @@ export const AllTransactionQuery = gql`
         planType
         status
         percentage
-      plotBalance
+        plotBalance
         createdAt
+        invoices {
+          id
+          amount
+          description
+          status
+          createdAt
+        }
         landParcel {
           parcelNumber
         }
@@ -1189,6 +1196,7 @@ export const PendingInvoicesQuery = gql`
   }
 `;
 
+// TODO: this should be moved out this file
 export const PaidInvoicesByPlan = gql`
   query paidInvoicesByPlan($paymentPlanId: ID!) {
     paidInvoicesByPlan(paymentPlanId: $paymentPlanId) {
