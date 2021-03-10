@@ -110,7 +110,7 @@ class User < ApplicationRecord
     plots_fully_purchased: 0,
     eligible_to_start_construction: 1,
     floor_plan_purchased: 2,
-    construction_approved: 3,
+    building_permit_approved: 3,
     construction_in_progress: 4,
     construction_completed: 5,
     construction_in_progress_self_build: 6,

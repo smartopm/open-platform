@@ -47,7 +47,7 @@ export const userSubStatus = {
   plots_fully_purchased: 'Plots Fully Purchased',
   eligible_to_start_construction: 'Eligible to start Construction',
   floor_plan_purchased: 'Floor Plan Purchased',
-  construction_approved: 'Construction Approved',
+  building_permit_approved: 'Building Permit Approved',
   construction_in_progress: 'Construction in Progress',
   construction_completed: 'Construction Completed',
   construction_in_progress_self_build: 'Construction in Progress (Self Build)'
@@ -57,7 +57,7 @@ export const subStatus = {
   0: 'Plots Fully Purchased',
   1: 'Eligible to start Construction',
   2: 'Floor Plan Purchased',
-  3: 'Construction Approved',
+  3: 'Building Permit Approved',
   4: 'Construction in Progress',
   5: 'Construction Completed',
   6: 'Construction in Progress (Self Build)'

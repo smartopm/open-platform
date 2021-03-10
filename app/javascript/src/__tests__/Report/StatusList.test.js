@@ -9,7 +9,7 @@ describe('Status List Component', () => {
     plotsFullyPurchased: 4,
     eligibleToStartConstruction: 1,
     floorPlanPurchased: 2,
-    constructionApproved: null,
+    buildingPermitApproved: null,
     constructionInProgress: null,
     constructionCompleted: 1,
     constructionInProgressSelfBuild: null,
@@ -24,7 +24,7 @@ describe('Status List Component', () => {
     expect(container.queryAllByText('4')).toHaveLength(1);
     expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument();
     expect(container.queryByText('Eligible to start Construction')).toBeInTheDocument();
-    expect(container.queryByText('Construction Approved')).toBeInTheDocument();
+    expect(container.queryByText('Building Permit Approved')).toBeInTheDocument();
     expect(container.queryByText('Construction in Progress')).toBeInTheDocument();
     expect(container.queryByText('Construction Completed')).toBeInTheDocument();
     expect(container.queryByText('Construction in Progress (Self Build)')).toBeInTheDocument();

@@ -143,7 +143,7 @@ export const SubstatusDistributionReportFragment = {
         between51to150Days
         over151Days
       }
-      constructionApproved{
+      buildingPermitApproved{
         between0to10Days
         between11to30Days
         between31to50Days
