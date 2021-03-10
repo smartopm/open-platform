@@ -45,6 +45,7 @@ module Types
                                                                   user: :id }
     field :substatus_logs, [Types::SubstatusLogType], null: true, visible: { roles: %i[admin],
                                                                              user: :id }
+    field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?

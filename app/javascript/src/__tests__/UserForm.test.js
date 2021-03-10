@@ -21,6 +21,7 @@ describe('UserForm Component', () => {
     expect(container.queryByText('Name')).toBeInTheDocument()
     expect(container.queryByText('Primary Phone Number')).toBeInTheDocument()
     expect(container.queryByText('Primary email address')).toBeInTheDocument()
+    expect(container.queryByText('External Reference ID')).toBeInTheDocument()
     expect(container.queryByText('Primary Address')).toBeInTheDocument()
     expect(container.queryByLabelText('User Type')).toBeInTheDocument()
     expect(container.queryByLabelText('requestReason')).toBeInTheDocument()
@@ -38,7 +39,7 @@ describe('UserForm Component', () => {
         target: { value: '090909090909' }
       })
     })
-    
+
     expect(container.queryByTestId('phoneNumber').value).toContain(
       '090909090909'
     )
@@ -56,7 +57,7 @@ describe('UserForm Component', () => {
         target: { value: '24th street, west' }
       })
     })
-  
+
     expect(container.queryByTestId('address').value).toContain(
       '24th street, west'
     )
@@ -81,7 +82,7 @@ describe('UserForm Component', () => {
     expect(container.queryByText('Primary Phone Number')).toBeInTheDocument()
     expect(container.queryByTestId('phoneNumber')).not.toBeDisabled()
     expect(container.queryByTestId('email')).not.toBeDisabled()
-    
+
     await act(async () => {
       fireEvent.change(container.queryByTestId('username'), {
         target: { value: 'My New Name' }
@@ -94,7 +95,7 @@ describe('UserForm Component', () => {
         target: { value: '090909090909' }
       })
     })
-  
+
     expect(container.queryByTestId('phoneNumber').value).toContain(
     '090909090909'
     )
