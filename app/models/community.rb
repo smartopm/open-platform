@@ -34,6 +34,7 @@ class Community < ApplicationRecord
   DOMAINS_COMMUNITY_MAP = {
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
     'Doublegdp': ['doublegdp.com'],
+    'DAST': ['doublegdp.com'],
   }.freeze
 
   IMAGE_ATTACHMENTS = {
