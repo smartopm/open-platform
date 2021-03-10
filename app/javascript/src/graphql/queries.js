@@ -1195,6 +1195,20 @@ export const PendingInvoicesQuery = gql`
   }
 `;
 
+export const PaidInvoicesByPlan = gql`
+  query paidInvoicesByPlan($paymentPlanId: ID!) {
+    paidInvoicesByPlan(paymentPlanId: $paymentPlanId) {
+      id
+      amount
+      status
+      createdAt
+      landParcel {
+        parcelNumber
+      }
+    }
+  }
+`
+
 export const TransactionsQuery = gql`
   query allTransactions($limit: Int, $offset: Int, $query: String) {
     transactions(limit: $limit, offset: $offset, query: $query) {
