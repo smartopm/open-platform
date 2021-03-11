@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* istanbul ignore file */
 // client
 import { ApolloClient } from 'apollo-client'
 import 'isomorphic-unfetch'
