@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Nav from './Nav';
@@ -23,12 +23,19 @@ const useStyles = makeStyles({
     marginTop: '10px'
   }
 });
-export default function MobileMoney() {
-  const classes = useStyles();
-
+export default function MobileMoneyPage() {
   return (
     <>
       <Nav navName="Mobile Money" menuButton="back" backTo="/contact" />
+      <MobileMoney />
+    </>
+  );
+}
+
+export function MobileMoney() {
+  const classes = useStyles();
+  return (
+    <>
       <Typography paragraph variant="body1" color="textSecondary" className={classes.text1}>
         Nkwashi accepts mobile money!
       </Typography>
