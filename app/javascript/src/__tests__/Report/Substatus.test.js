@@ -38,7 +38,7 @@ describe('Substatus component', () => {
     const loader = render(<Spinner />);
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-    expect(container.queryByText('Substatus')).toBeInTheDocument();
+    expect(container.queryByText('Customer Journey Stage')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(container.queryByText('Plots Fully Purchased')).toBeInTheDocument();

@@ -417,7 +417,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     <TextField
                       id="sub-status"
                       select
-                      label="Substatus"
+                      label="Customer Journey Stage"
                       value={data.subStatus || ''}
                       onChange={handleInputChange}
                       margin="normal"
@@ -437,7 +437,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   <div>
                     <DatePickerDialog
                       selectedDate={subStartDate}
-                      label="Substatus Start Date"
+                      label="Customer Journey Start Date"
                       handleDateChange={handleSubStartDateChange}
                     />
                   </div>

@@ -10,12 +10,12 @@ import { userSubStatus } from '../../utils/constants'
 
 export default function UserDetail({ data, userType }) {
   return (
-    <div className="col-4">
+    <div className="col-6">
       <h5>{data.user.name}</h5>
       <div className="expires">User Type: {titleize(data.user.userType)}</div>
       {data.user.subStatus && (
         <div data-testid="user-sub-status">
-          Sub Status: {userSubStatus[data.user.subStatus]}
+          Customer Journey Stage: <span>{userSubStatus[data.user.subStatus]}</span>
         </div>
       )}
       <div className="expires">
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   badge: {
     margin: '0',
     padding: '0 0.7em',
-    borderRadius: '14px'
+    borderRadius: '14px',
+    width: '50%'
   },
   statusBadgeBanned: {
     border: '1px solid #ed5757',
