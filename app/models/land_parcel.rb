@@ -12,7 +12,7 @@ class LandParcel < ApplicationRecord
   has_one :payment_plan, dependent: :destroy
 
   validates :parcel_number, uniqueness: true
-  default_scope { where.not(deleted_status:  1).order(created_at: :desc) }
+  default_scope { where.not(deleted_status: 1).order(created_at: :desc) }
 
   search_scope :search do
     attributes :parcel_number, :address1, :address2, :parcel_type
