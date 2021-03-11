@@ -11,6 +11,7 @@ import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
 import CreateLandParcel from './CreateLandParcel';
+import CreatePointOfInterest from './CreatePointOfInterest';
 import LandParcelModal from './LandParcelModal';
 import { UpdateProperty } from '../../graphql/mutations';
 import { MergeProperty } from '../../graphql/mutations/land_parcel';
@@ -73,7 +74,7 @@ export default function LandParcelList() {
 
   useEffect(() => {
     const pathName = window.location.pathname;
-    const paths = pathName.match(/^\/land_parcels\/((?!new)\w+)/);
+    const paths = pathName.match(/^\/land_parcels\/((?!new)(?!new_poi)\w+)/);
     if (paths) {
       const urlInfo = pathName.split('/');
       loadParcel({ variables: { id: urlInfo[urlInfo.length - 1] } });
@@ -366,6 +367,12 @@ export default function LandParcelList() {
           </>
         ):(
           <>
+            <Grid container spacing={0}>
+              <Grid xs={6} item />
+              <Grid xs={6} item>
+                <CreatePointOfInterest refetch={refetch} />
+              </Grid>
+            </Grid>
             {viewResultsOnMap ? (
               <LandParcelMap
                 handlePlotClick={onParcelClick}

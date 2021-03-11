@@ -38,7 +38,9 @@ module Types::Queries::LandParcel
   def fetch_land_parcel(query: nil, offset: 0, limit: 100)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:site_community].land_parcels.search(query).eager_load(:valuations, :accounts)
+    context[:site_community].land_parcels
+                            .where(is_poi: false)
+                            .search(query).eager_load(:valuations, :accounts)
                             .limit(limit).offset(offset)
   end
 
@@ -81,6 +83,7 @@ module Types::Queries::LandParcel
       lat_y: parcel[:lat_y],
       long_x: parcel[:long_x],
       geom: parcel[:geom],
+      is_poi: parcel[:is_poi],
       plot_sold: parcel.accounts.present?,
       accounts: parcel.accounts,
       valuations: parcel.valuations }

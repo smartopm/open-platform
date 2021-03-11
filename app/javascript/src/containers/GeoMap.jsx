@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
-import NkwashiPointOfInterestData from '../data/nkwashi_poi_data.json'
 import { LandParcelGeoData } from '../graphql/queries'
 import Nav from '../components/Nav'
 import LandParcelMarker from '../components/Map/LandParcelMarker'
@@ -33,10 +32,10 @@ function geoJSONPlotStyle(feature) {
 
 function geoJSONStyle(feature) {
   return {
-    color: feature.properties.stroke,
-    weight: feature.properties['stroke-width'],
-    fillOpacity: feature.properties['fill-opacity'],
-    fillColor: feature.properties.fill
+    color: feature.properties.stroke || "#f2eeee",
+    weight: feature.properties['stroke-width'] || 1,
+    fillOpacity: feature.properties['fill-opacity'] || 0.5,
+    fillColor: feature.properties.fill || "#10c647"
   }
 }
 
@@ -62,7 +61,10 @@ export default function GeoMap() {
     fetchPolicy: 'cache-and-network'
   })
 
+  const properties = geoData?.landParcelGeoData.filter(({ isPoi }) => !isPoi) || null
+  const poiData = geoData?.landParcelGeoData.filter(({ isPoi }) => isPoi) || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
+  const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
 
   if (loading) return <></>;
 
@@ -129,7 +131,7 @@ export default function GeoMap() {
            </LayersControl.BaseLayer>
            <LayersControl.Overlay name="Nkwashi Land Parcels">
              <FeatureGroup>
-               {geoData && geoData?.landParcelGeoData.map(({ geom, parcelNumber, parcelType, plotSold }) => {
+               {properties && properties.map(({ geom, parcelNumber, parcelType, plotSold }) => {
                 if(checkValidGeoJSON(geom)){
                   // mutate properties, add parcelNo, parcelType
                   const feature = JSON.parse(geom)
@@ -149,26 +151,31 @@ export default function GeoMap() {
              </FeatureGroup>
            </LayersControl.Overlay>
            <LayersControl.Overlay checked name="Nkwashi Points of Interest">
+             {poiData && (
              <FeatureGroup>
-               {NkwashiPointOfInterestData.features.map((poiData, index) => {
-                 const { properties } = poiData
-                 const markerProps = {
-                   geoLatY: properties.lat_y || 0,
-                  geoLongX: properties.long_x || 0,
-                  iconUrl: properties.icon,
-                  poiName: properties.poi_name,
-                }
-                
-                /* eslint-disable react/no-array-index-key */
-               return (<PointsOfInterestMarker key={index} markerProps={markerProps} />)
-             })}
+               {poiData.map(({ geom }, index) => {
+                      if(checkValidGeoJSON(geom)){
+                        const feature = JSON.parse(geom)
+                        const markerProps = {
+                           geoLatY: feature.properties.lat_y || 0,
+                           geoLongX: feature.properties.long_x || 0,
+                           iconUrl: feature.properties.icon || '',
+                           poiName: feature.properties.poi_name || 'Point of Interest',
+                      }
+                      poiFeatureCollection.features.push(feature)
+                      /* eslint-disable react/no-array-index-key */
+                      return (<PointsOfInterestMarker key={index} markerProps={markerProps} />) 
+                    }
+                    return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                  })}
 
                <GeoJSON
                  key={Math.random()}
-                 data={NkwashiPointOfInterestData}
+                 data={poiFeatureCollection}
                  style={geoJSONStyle}
                />
              </FeatureGroup>
+             )}
            </LayersControl.Overlay>
            <LayersControl.Overlay checked name="Nkwashi Sub-urban Areas">
              <FeatureGroup>

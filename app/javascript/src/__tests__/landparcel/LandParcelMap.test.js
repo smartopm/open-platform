@@ -20,8 +20,8 @@ describe('LandParcelMap', () => {
         <MockedProvider>
         <BrowserRouter>
           <LandParcelMap 
-          handlePlotClick={props.handlePlotClick} 
-          geoData={props.geoData}
+            handlePlotClick={props.handlePlotClick} 
+            geoData={props.geoData}
           />
         </BrowserRouter>
       </MockedProvider>

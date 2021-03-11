@@ -263,4 +263,151 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
+
+  describe 'adding and removing points of interest' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:normal_user) { create(:user_with_community) }
+
+    let(:pointOfInterestCreateQuery) do
+      <<~GQL
+        mutation PointOfInterestCreate($longX: Float!,
+          $latY: Float!,
+          $geom: String!) {
+            pointOfInterestCreate(longX: $longX,
+            latY: $latY,
+            geom: $geom) {
+              landParcel {
+                id
+                isPoi
+                parcelType
+                parcelNumber
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:pointOfInterestDeleteQuery) do
+      <<~GQL
+        mutation PointOfInterestDelete($id: ID!) {
+            pointOfInterestDelete(id: $id) {
+              success
+          }
+        }
+      GQL
+    end
+
+    it 'creates a new point of interest' do
+      variables = {
+        longX: 28.643219,
+        latY: -15.50323,
+        geom: '{"type": "feature"}',
+      }
+
+      result = DoubleGdpSchema.execute(
+        pointOfInterestCreateQuery,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      expect(parcel.parcel_number).to match(/poi-\w+/i)
+      expect(parcel.is_poi).to be(true)
+      expect(parcel.parcel_type).to eq('poi')
+      expect(parcel.geom).not_to be_nil
+      expect(result['errors']).to be_nil
+    end
+
+    it 'raises an error if non-admin tries to create a point of interest' do
+      variables = {
+        longX: 28.643219,
+        latY: -15.50323,
+        geom: '{"type": "feature"}',
+      }
+
+      result = DoubleGdpSchema.execute(
+        pointOfInterestCreateQuery,
+        variables: variables,
+        context: {
+          current_user: normal_user,
+          site_community: normal_user.community,
+        },
+      ).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'deletes a point of interest' do
+      variables = {
+        longX: 28.643219,
+        latY: -15.50323,
+        geom: '{"type": "feature"}',
+      }
+
+      result = DoubleGdpSchema.execute(
+        pointOfInterestCreateQuery,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(LandParcel.count).to eq(1)
+
+      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      expect(parcel.parcel_number).to match(/poi-\w+/i)
+      expect(parcel.is_poi).to be(true)
+      expect(parcel.parcel_type).to eq('poi')
+      expect(parcel.geom).not_to be_nil
+      expect(result['errors']).to be_nil
+
+      delete_result = DoubleGdpSchema.execute(
+        pointOfInterestDeleteQuery,
+        variables: { id: parcel.id },
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(delete_result['errors']).to be_nil
+      expect(delete_result.dig('data', 'pointOfInterestDelete', 'success')).to be(true)
+      expect(LandParcel.count).to eq(0)
+    end
+
+    it 'raises an error if non-admin tries to delete a point of interest' do
+      variables = {
+        longX: 28.643219,
+        latY: -15.50323,
+        geom: '{"type": "feature"}',
+      }
+
+      DoubleGdpSchema.execute(
+        pointOfInterestCreateQuery,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(LandParcel.count).to eq(1)
+
+      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      delete_result = DoubleGdpSchema.execute(
+        pointOfInterestDeleteQuery,
+        variables: { id: parcel.id },
+        context: {
+          current_user: normal_user,
+          site_community: normal_user.community,
+        },
+      ).as_json
+
+      expect(delete_result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+  end
 end
