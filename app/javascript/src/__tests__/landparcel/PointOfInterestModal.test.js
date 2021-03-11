@@ -29,9 +29,6 @@ describe('Point Of Interest Modal Component', () => {
     expect(container.queryByTestId('lat_y')).toBeInTheDocument()
     expect(container.queryByTestId('icon-url')).toBeInTheDocument()
 
-    expect(container.queryByText('Save')).toBeNull()
-    expect(container.queryByText('Cancel')).toBeNull()
-
     const poiName = container.getByTestId('poi-name')
     fireEvent.change(poiName, { target: { value: 'Hotel' } })
     expect(poiName.value).toBe('Hotel')
