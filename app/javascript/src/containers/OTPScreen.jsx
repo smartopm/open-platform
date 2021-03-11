@@ -19,7 +19,7 @@ export default function OTPFeedbackScreen({ location }) {
   return (
     <Fragment>
       <Nav navName={userDetails.success ? "One Time Pass code Sent" : 'Error Sending Code'} menuButton="back" backTo="/" />
-      <div className={css(styles.passcodeSection)}>
+      <div className={css(styles.passcodeSection)} data-testid="feedback">
         {
           userDetails.success && <p>
             The One Time Pass code was successfully sent to{' '}
@@ -30,7 +30,7 @@ export default function OTPFeedbackScreen({ location }) {
         <Tooltip title={userDetails.success ? "Click to copy" : ''}>
           <div>
             {userDetails.success && 'Url: '}
-            <span onClick={copyLink} className={css(styles.url)}>
+            <span onClick={copyLink} className={css(styles.url)} data-testid="link_copier">
               {' '}
               {userDetails.url}
             </span>
