@@ -31,6 +31,6 @@ describe('user detail component', () => {
     expect(container.queryByText('User Name')).toBeInTheDocument()
     expect(container.queryByText('Entry Logs >')).toBeInTheDocument()
     expect(container.queryByText('Already Expired')).toBeInTheDocument()
-    expect(container.queryByTestId('user-sub-status').textContent).toContain('Sub Status: Building Permit Approved')
+    expect(container.queryByTestId('user-sub-status').textContent).toContain('Customer Journey Stage: Building Permit Approved')
   })
 })
