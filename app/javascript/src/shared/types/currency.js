@@ -1,6 +1,8 @@
 import { string } from 'prop-types';
 
-export default {
+const currencyType = {
   currency: string,
   locale: string
 };
+
+export default currencyType;
