@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
   badge: {
     margin: '0',
     padding: '0 0.7em',
-    borderRadius: '14px'
+    borderRadius: '14px',
+    width: '50%'
   },
   icon: {
     verticalAlign: 'middle',

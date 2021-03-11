@@ -17,7 +17,7 @@ export default function UserStats() {
     <>
       <div className={classes.statusSection}>
         <div className={classes.titleSection}>
-          <h5 className={classes.title}>Substatus</h5>
+          <h5 className={classes.title}>Customer Journey Stage</h5>
         </div>
         {error && error.message}
         {loading ? (

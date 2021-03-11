@@ -26,7 +26,7 @@ export default function SubStatusReportDialog({ handleClose, open, handleFilter 
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle className={classes.confirmDialogTitle}>Substatus</DialogTitle>
+      <DialogTitle className={classes.confirmDialogTitle}>Customer Journey Stage</DialogTitle>
       {error && error.message}
       {loading ? (
         <Spinner />
