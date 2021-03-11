@@ -10,7 +10,6 @@ import FollowDialogueBox from './FollowDialogueBox'
 import { validateEmail } from "../../utils/helpers"
 
 export default function FollowButton({ discussionId, authState }) {
-  const { user: { name } } = authState
   const id = discussionId
   const [open, setOpen] = useState(false)
   const [emailError, setEmailError] = useState(false)
@@ -42,7 +41,7 @@ export default function FollowButton({ discussionId, authState }) {
  }
  
 
-  const emailBody = `Hi, my name is ${name}. Please update my email address. My correct email is: ${textValue}`
+  const emailBody = `Hi, my name is ${authState.user?.name}. Please update my email address. My correct email is: ${textValue}`
 
   const handleSendEmail = () => {
     const validate = validateEmail(textValue)

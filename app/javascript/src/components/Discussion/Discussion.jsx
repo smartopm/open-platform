@@ -1,23 +1,24 @@
-/* eslint-disable */
-import React, { Fragment, useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   Divider,
   Typography,
   Button,
   Grid
 } from '@material-ui/core'
+import { useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
 import Comment from './Comment'
 import {
   DiscussionCommentsQuery
 } from '../../graphql/queries'
-import { useQuery } from 'react-apollo'
 import DateContainer from '../DateContainer'
 import Loading, { Spinner } from '../../shared/Loading'
-import ErrorPage from '../../components/Error'
+import ErrorPage from "../Error"
 import CenteredContent from '../CenteredContent'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import FollowButton from './FollowButton'
 import Disclaimer from '../Disclaimer'
+import userProps from '../../shared/types/user'
 
 export default function Discussion({ discussionData }) {
   const limit = 20
@@ -43,12 +44,10 @@ export default function Discussion({ discussionData }) {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev
         setLoading(false)
-        return Object.assign({}, prev, {
-          discussComments: [
+        return { ...prev, discussComments: [
             ...prev.discussComments,
             ...fetchMoreResult.discussComments
-          ]
-        })
+          ]}
       }
     })
   }
@@ -60,7 +59,7 @@ export default function Discussion({ discussionData }) {
 
   return (
     <div className="container">
-      <Fragment>
+      <>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography data-testid="disc_title" variant="h6">
@@ -82,7 +81,7 @@ export default function Discussion({ discussionData }) {
             <Divider />
           </Grid>
           <Grid item xs={6}>
-          <FollowButton discussionId={id} authState={authState}/>
+            <FollowButton discussionId={id} authState={authState} />
           </Grid>
           <br />
           <Grid item xs={6}>
@@ -93,11 +92,11 @@ export default function Discussion({ discussionData }) {
           </Grid>
           <Grid item xs={12}>
             <Comment
-              comments={data.discussComments}
+              comments={data?.discussComments}
               discussionId={id}
               refetch={refetch}
             />
-            {data.discussComments.length >= limit && (
+            {data?.discussComments.length >= limit && (
               <CenteredContent>
                 <Button variant="outlined" onClick={fetchMoreComments}>
                   {isLoading ? <Spinner /> : 'Load more comments'}
@@ -106,7 +105,17 @@ export default function Discussion({ discussionData }) {
             )}
           </Grid>
         </Grid>
-      </Fragment>
+      </>
     </div>
   )
+}
+
+Discussion.propTypes = {
+  discussionData: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    user: userProps,
+    description: PropTypes.string,
+    title: PropTypes.string.isRequired
+  }).isRequired,
 }
