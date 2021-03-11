@@ -1,22 +1,20 @@
-/* eslint-disable */
-import React from 'react'
-import { css, StyleSheet } from 'aphrodite'
-import { Link } from 'react-router-dom'
-import { ponisoNumber } from '../utils/constants'
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+
+import React from 'react';
+import { css, StyleSheet } from 'aphrodite';
+import { Link } from 'react-router-dom';
+import { ponisoNumber } from '../utils/constants';
 
 export default function RequestStatus(props) {
   return (
     <div
-      className={`row justify-content-center align-items-center ${css(
-        styles.waitPage
-      )}`}
+      className={`row justify-content-center align-items-center ${css(styles.waitPage)}`}
       style={{
         backgroundColor: props.isDenied ? '#ed5757' : '#69ABA4'
       }}
     >
-      <h1 className={css(styles.title)}>
-        {props.isDenied ? 'Denied' : 'Approved'}
-      </h1>
+      <h1 className={css(styles.title)} data-testid="status">{props.isDenied ? 'Denied' : 'Approved'}</h1>
       <br />
       <div className="col-10 col-sm-10 col-md-6">
         <Link
@@ -34,13 +32,14 @@ export default function RequestStatus(props) {
           <a
             href={`tel:${ponisoNumber}`}
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
+            data-testid="action"
           >
             Call Poniso
           </a>
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 const styles = StyleSheet.create({
   callButton: {
@@ -62,4 +61,4 @@ const styles = StyleSheet.create({
   title: {
     color: '#FFFFFF'
   }
-})
+});
