@@ -33,7 +33,7 @@ export default function Home() {
     <>
       <Nav>
         {['security_guard', 'admin', 'custodian'].includes(
-          authState.user.userType.toLowerCase()
+          authState.user?.userType.toLowerCase()
         ) && (
           <div className={css(styles.inputGroup)}>
             <input

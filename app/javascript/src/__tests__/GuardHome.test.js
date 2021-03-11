@@ -11,7 +11,7 @@ import { HomeGuard as GuardHome } from '../containers/GuardHome';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
-describe('Support main page', () => {
+describe('Home  Guard page', () => {
   const data = {
     user: {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
@@ -23,7 +23,7 @@ describe('Support main page', () => {
       }
     }
   };
-  it('renders the support page correctly', async () => {
+  it('renders the guard home page correctly', async () => {
     const mocks = [
       {
         request: {
@@ -77,7 +77,7 @@ describe('Support main page', () => {
       await act(async () => {
         container = render(
           <ApolloProvider client={createClient}>
-            <Context.Provider value={data.user}>
+            <Context.Provider value={data}>
               <MockedProvider mocks={mocks} addTypename={false}>
                 <BrowserRouter>
                   <GuardHome translate={tMock} />
