@@ -11,12 +11,12 @@ import { HomeGuard as GuardHome } from '../containers/GuardHome';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
-describe('Home  Guard page', () => {
+describe('Home Guard page', () => {
   const data = {
     user: {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
       name: 'Another somebodyy',
-      userType: 'client',
+      userType: 'security_guard',
       expiresAt: null,
       community: {
         supportName: 'Support Officer'
@@ -44,9 +44,8 @@ describe('Home  Guard page', () => {
     ];
 
     const tMock = jest.fn();
-    let container;
     await act(async () => {
-      container = render(
+      render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data.user}>
             <MockedProvider mocks={mocks} addTypename={false}>
@@ -58,8 +57,6 @@ describe('Home  Guard page', () => {
         </ApolloProvider>
       );
     });
-
-    expect(container.queryByTestId('loader')).toBeInTheDocument()
   });
 
   it('should check for errors occured when fetching ', async () => {

@@ -1,9 +1,10 @@
 /* eslint-disable */
-import React from 'react'
-import { NewRequestButton, Results } from '../containers/Search'
-import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
-import { BrowserRouter } from 'react-router-dom'
+import React from 'react';
+import SearchContainer, { NewRequestButton, Results } from '../containers/Search';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { BrowserRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/react-testing';
 
 describe('new request button', () => {
   it('should render the correct button', () => {
@@ -11,11 +12,11 @@ describe('new request button', () => {
       <BrowserRouter>
         <NewRequestButton />
       </BrowserRouter>
-    )
-    expect(container.queryByText('Create a new request')).not.toBeNull()
-    expect(container.queryByText('Create a new request')).toBeInTheDocument()
-  })
-})
+    );
+    expect(container.queryByText('Create a new request')).not.toBeNull();
+    expect(container.queryByText('Create a new request')).toBeInTheDocument();
+  });
+});
 
 describe('search result component', () => {
   it('should return no results when nothing found', () => {
@@ -30,15 +31,15 @@ describe('search result component', () => {
           userType: 'client'
         }
       }
-    }
+    };
     const container = render(
       <BrowserRouter>
         <Results {...props} />
       </BrowserRouter>
-    )
-    expect(container.queryByText('No results found!')).not.toBeNull()
-    expect(container.queryByText('No results found!')).toBeInTheDocument()
-  })
+    );
+    expect(container.queryByText('No results found!')).not.toBeNull();
+    expect(container.queryByText('No results found!')).toBeInTheDocument();
+  });
   it('should return create request button when admin is logged in', () => {
     const props = {
       data: {
@@ -51,14 +52,14 @@ describe('search result component', () => {
           userType: 'admin'
         }
       }
-    }
+    };
     const container = render(
       <BrowserRouter>
         <Results {...props} />
       </BrowserRouter>
-    )
-    expect(container.queryByText('Create a new request')).toBeInTheDocument()
-  })
+    );
+    expect(container.queryByText('Create a new request')).toBeInTheDocument();
+  });
 
   it('should display the returned results', () => {
     const props = {
@@ -87,15 +88,25 @@ describe('search result component', () => {
           userType: 'admin'
         }
       }
-    }
+    };
     const container = render(
       <BrowserRouter>
         <Results {...props} />
       </BrowserRouter>
-    )
-    expect(container.queryByText('Mocked John')).toBeInTheDocument()
-    expect(container.queryByText('Mocked Jane D')).toBeInTheDocument()
-    expect(container.queryByText('pending')).toBeInTheDocument()
-    expect(container.getAllByTestId('link_search_user')).toHaveLength(2)
-  })
-})
+    );
+    expect(container.queryByText('Mocked John')).toBeInTheDocument();
+    expect(container.queryByText('Mocked Jane D')).toBeInTheDocument();
+    expect(container.queryByText('pending')).toBeInTheDocument();
+    expect(container.getAllByTestId('link_search_user')).toHaveLength(2);
+  });
+  it('should render properly', () => {
+    const location = { state: { from: '/somewhere' } };
+    render(
+      <MockedProvider>
+        <BrowserRouter>
+          <SearchContainer location={location} />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+  });
+});
