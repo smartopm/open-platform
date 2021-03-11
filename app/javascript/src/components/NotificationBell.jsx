@@ -19,7 +19,7 @@ export default function NotificationBell({ user, data, messageCount }) {
   const history = useHistory()
   // eslint-disable-next-line consistent-return
   function updateNotification(e){
-    if (user.userType === 'admin') {
+    if (user?.userType === 'admin') {
       history.push('/my_tasks')
     } else {
       if (messageCount?.msgNotificationCount === 0) {
@@ -39,10 +39,10 @@ export default function NotificationBell({ user, data, messageCount }) {
   return (
     <>
       <Badge
-        badgeContent={user.userType === 'admin' ? data?.myTasksCount : messageCount?.msgNotificationCount}
+        badgeContent={user?.userType === 'admin' ? data?.myTasksCount : messageCount?.msgNotificationCount}
         color="secondary"
         className={`${css(
-                    user.userType === 'security_guard'
+                    user?.userType === 'security_guard'
                     ? styles.rightSideIconGuard
                     : styles.rightSideIconAdmin
           )}`}
