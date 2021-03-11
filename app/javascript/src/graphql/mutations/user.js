@@ -20,6 +20,7 @@ export const UpdateUserMutation = gql`
     $address: String
     $substatusStartDate: String
     $secondaryInfo: [JSON!]
+    $extRefId: String
   ) {
     result: userUpdate(
       id: $id
@@ -37,6 +38,7 @@ export const UpdateUserMutation = gql`
       address: $address
       substatusStartDate: $substatusStartDate
       secondaryInfo: $secondaryInfo
+      extRefId: $extRefId
     ) {
       user {
         ...UserFields
