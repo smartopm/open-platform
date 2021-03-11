@@ -92,6 +92,7 @@ import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
 import LandParcel from '../src/containers/LandParcels/LandParcel'
 import CommentsPage from '../src/containers/Comments/CommentPage'
 import CommunitySettings from '../src/containers/Settings/CommunitySettings'
+import MailTemplates from '../src/containers/MailTemplates'
 import Payments from '../src/containers/Payment/Payments'
 import StatsPage from '../src/containers/User/StatsPage'
 // Prevent Google Analytics reporting from staging and dev domains
@@ -365,6 +366,7 @@ const App = () => {
                             <Route path="/comments" exact component={CommentsPage} />
                             <Route path="/community" component={CommunitySettings}  />
                             <Route path="/payments" component={Payments}  />
+                            <Route path="/mail_templates" component={MailTemplates}  />
                             <Route path="/visit_request" component={EntryRequest} />
                           </Switch>
                         </AdminRoutes>

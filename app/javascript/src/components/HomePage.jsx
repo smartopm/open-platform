@@ -278,6 +278,12 @@ export default function Homepage({ authState }) {
       access: ['admin']
     },
     {
+      title: 'Mail Templates',
+      path: '/mail_templates',
+      icon: <PaymentIcon fontSize="large" />,
+      access: ['admin']
+    },
+    {
       title: 'Community Settings',
       path: '/community',
       icon: <SettingsIcon fontSize="large" />,
