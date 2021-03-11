@@ -8,7 +8,7 @@ import EmailBuilderDialog from './EmailBuilderDialog'
 export default function MailTemplateList() {
   const [templateDialogOpen, setDialogOpen] = useState(false)
 
-  function handleTemplateDialog(status){
+  function handleTemplateDialog(){
     setDialogOpen(!templateDialogOpen)
   }
 
