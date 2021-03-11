@@ -19,7 +19,7 @@ function qrCodeAddress(id_card_token) {
 export default function IdCardPage(){
   const authState = useContext(Context)
   const { loading, error, data } = useQuery(UserQuery, {
-    variables: { id: authState.user.id },
+    variables: { id: authState.user?.id },
     errorPolicy: 'all'
   })
   if (loading) return <Loading />
@@ -108,9 +108,10 @@ export function UserIDDetail({ data }) {
             <p>
               <u>Please note the main gate visiting hours:</u> <br />
               <br />
-              Monday - Friday: <b>8:00 - 16:00</b> <br />
+             <span data-testid="visiting_hours"> Monday - Friday: <b>8:00 - 16:00</b> <br />
               Saturday: <b>8:00 - 12:00</b> <br />
               Sunday: <b>Off</b> <br />
+              </span>
             </p>
           </div>
         </div>

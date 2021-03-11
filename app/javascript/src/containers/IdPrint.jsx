@@ -28,6 +28,7 @@ function qrCodeAddress(id_card_token) {
   return linkUrl
 }
 
+/* istanbul ignore next */
 function openImageInNewTab() {
   html2canvas(document.getElementById('idCard'), { allowTaint: true }).then(
     function (canvas) {
@@ -42,14 +43,14 @@ function openImageInNewTab() {
   )
 }
 
-export default ({ match }) => {
+export default function IdPrintPage({ match }){
   let id = match.params.id
   const { loading, error, data } = useQuery(UserQuery, { variables: { id } })
 
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
-  return <Component data={data} />
+  return <UserPrintDetail data={data} />
 }
 
 function toTitleCase(str) {
@@ -58,6 +59,7 @@ function toTitleCase(str) {
   })
 }
 
+/* istanbul ignore next */
 function downloadBtn() {
   html2canvas(document.getElementById('idCard'), { allowTaint: true }).then(
     function (canvas) {
@@ -82,7 +84,7 @@ function downloadBtn() {
   )
 }
 
-export function Component({ data }) {
+export function UserPrintDetail({ data }) {
   return (
     <div>
       <div className="row justify-content-center">
