@@ -88,8 +88,6 @@ describe('Support main page', () => {
         );
       });
 
-      expect(container.queryByTestId('loader')).toBeInTheDocument()
-
       await waitFor(() => {
         expect(container.queryByText('Network error: Something happpened')).toBeInTheDocument();
       }, 50);
