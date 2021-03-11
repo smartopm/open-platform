@@ -70,7 +70,6 @@ describe('requestlist main page', () => {
         </ApolloProvider>
       );
     });
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(container.queryByText('Granted')).toBeInTheDocument();
