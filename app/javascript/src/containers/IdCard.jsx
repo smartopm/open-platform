@@ -16,7 +16,7 @@ function qrCodeAddress(id_card_token) {
   return `${window.location.protocol}//${window.location.hostname}/user/${id_card_token}/${timestamp}/dg`
 }
 
-export default () => {
+export default function IdCardPage(){
   const authState = useContext(Context)
   const { loading, error, data } = useQuery(UserQuery, {
     variables: { id: authState.user.id },
@@ -27,13 +27,18 @@ export default () => {
   if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message} />
   }
-  return <Component data={data} />
+  return (
+    <>
+     <Nav navName="Identity" menuButton="back" backTo="/" />
+      <UserIDDetail data={data} />
+    </>
+  )
 }
 
-export function Component({ data }) {
+export function UserIDDetail({ data }) {
   return (
     <div>
-      <Nav navName="Identity" menuButton="back" backTo="/" />
+     
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
