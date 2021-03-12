@@ -22,9 +22,8 @@ module Mutations
       def settle_transaction(invoice)
         ActiveRecord::Base.transaction do
           invoice.cancelled!
-          user = invoice.reload.user
-          amount = sum_payment_amount(invoice)
-          user.wallet.settle_pending_balance(amount)
+          user = invoice.user
+          user.wallet.settle_pending_balance(invoice.pending_amount)
           balance = user.wallet.balance
           user.wallet_transactions.create!(
             source: 'wallet',
