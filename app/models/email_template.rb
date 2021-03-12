@@ -16,6 +16,8 @@ class EmailTemplate < ApplicationRecord
   end
 
   def extract_variables(text)
+    return if text.nil?
+
     text.scan(/\${(.*?)}/i).flatten
   end
 end
