@@ -58,6 +58,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
 
+  /* istanbul ignore next */
   function handleOnPlotClick({ target }){
    const { 
      properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations }
@@ -76,6 +77,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     )
   }
 
+  /* istanbul ignore next */
   function handlePoiLayerClick({ target }){
     const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY } 
   } = target.feature
@@ -91,11 +93,13 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     })
   }
 
+  /* istanbul ignore next */
   function handleCloseDrawer(){
     setSelectedPoi(null)
     setConfirmDeletePoi(false)
   }
 
+  /* istanbul ignore next */
   function handleClickDelete(){
     deletePointOfInterest({
       variables: { id: selectedPoi.id }
@@ -117,6 +121,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     setMessageAlert('')
   }
 
+   /* istanbul ignore next */
   /* eslint-disable consistent-return */
   function onEachLandParcelFeature(feature, layer){
     if(feature.properties.parcel_no && feature.properties.parcel_type){
@@ -126,12 +131,14 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     }
   }
 
+   /* istanbul ignore next */
   function onEachSuburbLayerFeature(feature, layer){
     if(feature.properties.estimated_population && feature.properties.sub_urban){
      return layer.bindPopup(feature.properties.sub_urban)
     }
   }
 
+   /* istanbul ignore next */
   /* eslint-disable consistent-return */
   function onEachPoiLayerFeature(feature, layer){
     if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
@@ -150,6 +157,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         handleClose={handleCloseDrawer}
         handleOnSave={handleClickDelete}
       />
+      {/* istanbul ignore next */}
       <DrawerDialog anchor="right" open={Boolean(selectedPoi)} onClose={handleCloseDrawer}>
         {selectedPoi ? (
           <>
@@ -217,6 +225,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
           `
             }}
         />
+        {/* istanbul ignore next */}
         <Map
           center={nkwashi}
           zoom={16}
