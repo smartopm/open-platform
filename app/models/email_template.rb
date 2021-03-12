@@ -16,11 +16,6 @@ class EmailTemplate < ApplicationRecord
   end
 
   def extract_variables(text)
-    vars = text.split(' ').map do |word|
-      next unless word.starts_with?('${')
-
-      word[2...word.index('}')]
-    end
-    vars.compact
+    text.scan(/\${(.*?)}/i).flatten
   end
 end
