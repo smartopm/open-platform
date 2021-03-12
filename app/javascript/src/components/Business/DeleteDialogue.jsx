@@ -36,7 +36,7 @@ export default function DeleteDialogueBox({
           <Button onClick={handleClose} color="secondary">
             No
           </Button>
-          <Button onClick={handleAction} color="primary" className={classes.button} autoFocus>
+          <Button onClick={handleAction} color="primary" className={classes.button} autoFocus data-testid="confirm_action">
             Yes
           </Button>
         </DialogActions>

@@ -7,21 +7,19 @@ import { AllEntryRequestsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
 import { dateToString, dateTimeToString } from "../../components/DateContainer";
 
-export default () => {
-  return AllEntryRequests();
-};
 
-const AllEntryRequests = () => {
+export function AllEntryRequests(){
   const { loading, error, data } = useQuery(AllEntryRequestsQuery, {
     fetchPolicy: "no-cache"
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
-  return <IndexComponent data={data} />;
+  return <RequestsList data={data} />;
 };
 
-export function IndexComponent({ data }) {
+
+export function RequestsList({ data }) {
   function logs(entries) {
     return entries.map(entry => (
       <tr data-testid="entry_row" key={entry.id}>
@@ -67,7 +65,7 @@ export function IndexComponent({ data }) {
 
 export function UserComponent({ data }) {
   function logs(entries) {
-    return entries.map(entry => (
+    return entries?.map(entry => (
       <tr key={entry.id}>
         <td>{dateToString(entry.createdAt)}</td>
         <td>{dateTimeToString(new Date(entry.createdAt))}</td>

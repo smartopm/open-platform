@@ -40,7 +40,7 @@ export default function Todo({ history }) {
   const handleDateChange = date => {
     setSelectedDate(new Date(date).toISOString())
   }
-  if (authState.user.userType !== 'admin') {
+  if (authState.user?.userType !== 'admin') {
     // re-route to home
     history.push('/')
   }

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable import/prefer-default-export */
 const createImage = url =>
   new Promise((resolve, reject) => {

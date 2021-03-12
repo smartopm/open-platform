@@ -72,7 +72,7 @@ export default function SupportCard({ handleSendMessage, user }) {
     if (type === 'phone') supportType = 'phone_number'
     if (type === 'mail') supportType = 'email'
     // eslint-disable-next-line no-unused-expressions
-    propAccessor(user.community, supportName)?.forEach(support => {
+    propAccessor(user?.community, supportName)?.forEach(support => {
       if (support.category === 'sales')
         sales.push({
           contact: propAccessor(support, supportType),
@@ -195,7 +195,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             Pay With Mobile Money
           </Button>
         </Grid>
-        {Boolean(user.userType !== 'custodian') && (
+        {Boolean(user?.userType !== 'custodian') && (
           <Grid container direction="row" className={classes.root}>
             <Button
               data-testid="feed"
@@ -209,7 +209,7 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Grid>
         )}
         {!['security_guard', 'custodian'].includes(
-          user.userType.toLowerCase()
+          user?.userType.toLowerCase()
         ) ? (
           <Grid container direction="row" className={classes.root}>
             <Button

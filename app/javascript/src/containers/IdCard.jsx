@@ -16,10 +16,10 @@ function qrCodeAddress(id_card_token) {
   return `${window.location.protocol}//${window.location.hostname}/user/${id_card_token}/${timestamp}/dg`
 }
 
-export default () => {
+export default function IdCardPage(){
   const authState = useContext(Context)
   const { loading, error, data } = useQuery(UserQuery, {
-    variables: { id: authState.user.id },
+    variables: { id: authState.user?.id },
     errorPolicy: 'all'
   })
   if (loading) return <Loading />
@@ -27,13 +27,18 @@ export default () => {
   if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message} />
   }
-  return <Component data={data} />
+  return (
+    <>
+     <Nav navName="Identity" menuButton="back" backTo="/" />
+      <UserIDDetail data={data} />
+    </>
+  )
 }
 
-export function Component({ data }) {
+export function UserIDDetail({ data }) {
   return (
     <div>
-      <Nav navName="Identity" menuButton="back" backTo="/" />
+     
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
@@ -103,9 +108,10 @@ export function Component({ data }) {
             <p>
               <u>Please note the main gate visiting hours:</u> <br />
               <br />
-              Monday - Friday: <b>8:00 - 16:00</b> <br />
+             <span data-testid="visiting_hours"> Monday - Friday: <b>8:00 - 16:00</b> <br />
               Saturday: <b>8:00 - 12:00</b> <br />
               Sunday: <b>Off</b> <br />
+              </span>
             </p>
           </div>
         </div>

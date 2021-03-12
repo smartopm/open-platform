@@ -77,7 +77,7 @@ export function Results({ data, loading, called, authState }) {
         )}
 
         {/* only show this when the user is admin */}
-        {authState.user.userType === 'admin' && <NewRequestButton />}
+        {authState.user?.userType === 'admin' && <NewRequestButton />}
       </div>
     )
   }
@@ -121,7 +121,7 @@ export default function SearchContainer({ location }) {
 
   if (
     !['security_guard', 'admin', 'custodian'].includes(
-      authState.user.userType.toLowerCase()
+      authState.user?.userType.toLowerCase()
     )
   ) {
     return <Redirect to="/" />

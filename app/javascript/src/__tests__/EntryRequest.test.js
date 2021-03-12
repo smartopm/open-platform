@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { IndexComponent } from '../containers/Requests/EntryRequests'
+import { RequestsList } from '../containers/Requests/EntryRequests'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('entry request list', () => {
@@ -31,7 +31,7 @@ describe('entry request list', () => {
         }
       ]
     }
-    const container = render(<IndexComponent data={data} />)
+    const container = render(<RequestsList data={data} />)
     expect(container.queryAllByTestId('entry_row')).toHaveLength(1)
     expect(container.queryByTestId('entry_name').textContent).toContain('A new name')
     expect(container.queryByTestId('entry_phone').textContent).toContain('309475834')

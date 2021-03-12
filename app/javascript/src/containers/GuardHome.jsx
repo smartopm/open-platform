@@ -47,7 +47,7 @@ export function HomeGuard({ translate }) {
   const [redirect, setRedirect] = useState(false)
   const authState = useContext(Context)
   const hideGuardSwitching = false
-  const [id, setId] = React.useState(authState.user.id)
+  const [id, setId] = React.useState(authState.user?.id)
   const { data, loading, error } = useQuery(SecurityGuards)
   const [loginSwitchUser] = useMutation(switchGuards)
 
@@ -170,7 +170,7 @@ export function HomeGuard({ translate }) {
                   styles.cardSize
                 )} card align-self-center text-center`}
               >
-                <Link to={`/id/${authState.user.id}`} className={`card-link`}>
+                <Link to={`/id/${authState.user?.id}`} className={`card-link`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <PersonIcon
@@ -218,7 +218,7 @@ export function HomeGuard({ translate }) {
                       styles.cardSize
                     )} card align-self-center text-center`}
                   >
-                    <Link to={`/timesheet/${authState.user.id}`} className={`card-link`}>
+                    <Link to={`/timesheet/${authState.user?.id}`} className={`card-link`}>
                       <div className="card-body">
                         <h5 className="card-title">
                           <LogEntryIcon

@@ -29,7 +29,6 @@ import UserLogs from '../src/containers/AllLogs/UserLogs'
 import EventLogs from '../src/containers/AllLogs/EventLogs'
 import Search from '../src/containers/Search'
 import UserEdit from '../src/containers/UserEdit'
-import PendingUsers from '../src/containers/PendingUsers'
 import Loading from '../src/shared/Loading.jsx'
 import '../src/i18n'
 import Map from '../src/containers/Map'
@@ -363,11 +362,6 @@ const App = () => {
                             <Route path="/land_parcels" component={LandParcel} />
 
                             <Route path="/new/user" exact component={UserEdit} />
-                            <Route
-                              path="/pending"
-                              exact
-                              component={PendingUsers}
-                            />
                             <Route path="/comments" exact component={CommentsPage} />
                             <Route path="/community" component={CommunitySettings}  />
                             <Route path="/payments" component={Payments}  />

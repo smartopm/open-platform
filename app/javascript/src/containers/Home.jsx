@@ -33,7 +33,7 @@ export default function Home() {
     <>
       <Nav>
         {['security_guard', 'admin', 'custodian'].includes(
-          authState.user.userType.toLowerCase()
+          authState.user?.userType.toLowerCase()
         ) && (
           <div className={css(styles.inputGroup)}>
             <input
@@ -41,6 +41,7 @@ export default function Home() {
               onFocus={inputToSearch}
               type="text"
               placeholder="Search"
+              id="search_input_home"
             />
             <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
             <Link to="/scan">
