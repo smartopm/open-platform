@@ -77,12 +77,21 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
 
 export function renderPlan(plan, currencyData) {
   return {
-    'Plot Number': <GridText col={4} content={plan?.landParcel?.parcelNumber} />,
-    Balance: <GridText col={4} content={formatMoney(currencyData, plan?.plotBalance)} />,
-    'Start Date': <GridText col={4} content={dateToString(plan?.startDate)} />,
-    '% of total valuation': <GridText col={4} content={plan?.percentage} />
+    'Plot Number': <Grid item xs={12} sm={2} data-testid="plot-number"> 
+                      {plan.landParcel.parcelNumber}
+                   </Grid>,
+    Balance: <Grid item xs={12} sm={2} data-testid="balance"> 
+                {formatMoney(currencyData, plan?.plotBalance)}
+             </Grid>,
+    'Start Date': <Grid item xs={12} sm={2} data-testid="start-date"> 
+                    {dateToString(plan.startDate)}
+                  </Grid>,
+    '% of total valuation': <Grid item xs={12} sm={2} data-testid="percentage"> 
+                              {plan.percentage}
+                            </Grid>,
   };
 }
+   
 UserPaymentPlanItem.propTypes = {
   plans: PropTypes.arrayOf(
     PropTypes.shape({
