@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useMutation } from 'react-apollo';
-import { Button, IconButton, List, Divider, ListItem, ListItemText } from '@material-ui/core';
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
+import { Button, Grid, List, Divider, ListItem, ListItemText } from '@material-ui/core';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
-import { PointOfInterestDelete } from '../../graphql/mutations/land_parcel';
+import { LandParcel } from '../../graphql/queries';
+import { PointOfInterestDelete, PointOfInterestImageCreate } from '../../graphql/mutations/land_parcel';
+import { useFileUpload } from '../../graphql/useFileUpload'
 import { checkValidGeoJSON, getHexColor, formatError } from '../../utils/helpers'
 import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants'
 import PointsOfInterestMarker from '../Map/PointsOfInterestMarker'
-import { DrawerDialog, ActionDialog } from '../Dialog'
+import { DrawerDialog, ActionDialog, CustomizedDialogs } from '../Dialog'
 import MessageAlert from "../MessageAlert"
+import ImageAuth from '../../shared/ImageAuth'
 
 const { attribution, openStreetMap, centerPoint: { nkwashi } } = mapTiles
 
@@ -47,16 +50,25 @@ function geoJSONPoiStyle(feature) {
   }
 }
 
-export default function LandParcelMap({ handlePlotClick, geoData }){
+export default function LandParcelMap({ authState, handlePlotClick, geoData }){
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
+  const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);
   const [selectedPoi, setSelectedPoi] = useState(null)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-  const [confirmDeletePoi, setConfirmDeletePoi] = useState('')
+  const [confirmDeletePoi, setConfirmDeletePoi] = useState(false)
+  const [imageUploadComplete, setImageUploadComplete] = useState(true)
+  const [imageDialogOpen, setImageDialogOpen] = useState(false)
   const properties = geoData?.filter(({ isPoi }) => !isPoi) || null
   const poiData = geoData?.filter(({ isPoi }) => isPoi) || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
+
+  const [ loadParcel, { data: parcelData } ] = useLazyQuery(LandParcel, {
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const { onChange: handleFileUpload, status: uploadStatus, signedBlobId } = useFileUpload({ client: useApolloClient() })
 
   /* istanbul ignore next */
   function handleOnPlotClick({ target }){
@@ -91,12 +103,19 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       longX,
       latY,
     })
+
+    loadParcel({ variables: { id } });
   }
 
   /* istanbul ignore next */
   function handleCloseDrawer(){
     setSelectedPoi(null)
     setConfirmDeletePoi(false)
+    setImageUploadComplete(false)
+  }
+
+  function handleImageDialogClose(){
+    setImageDialogOpen(false)
   }
 
   /* istanbul ignore next */
@@ -119,6 +138,20 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       return
     }
     setMessageAlert('')
+  }
+
+  function handleSaveUploadedPhoto(){
+    uploadPoiImage({
+      variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
+    }).then(() => {
+      setMessageAlert('Image Uploaded successfully')
+      setIsSuccessAlert(true)
+      handleCloseDrawer()
+    }).catch((err) => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+      handleCloseDrawer()
+    })
   }
 
    /* istanbul ignore next */
@@ -157,6 +190,20 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         handleClose={handleCloseDrawer}
         handleOnSave={handleClickDelete}
       />
+      <CustomizedDialogs
+        open={imageDialogOpen}
+        handleModal={handleImageDialogClose}
+        dialogHeader='Photo'
+        handleBatchFilter={handleImageDialogClose}
+        actionable={false}
+      >
+        <ImageAuth 
+          imageLink={parcelData?.landParcel?.imageUrl || ''}
+          alt="No Image Found"
+          token={authState.token} 
+          className="img-responsive img-thumbnail"
+        /> 
+      </CustomizedDialogs>
       {/* istanbul ignore next */}
       <DrawerDialog anchor="right" open={Boolean(selectedPoi)} onClose={handleCloseDrawer}>
         {selectedPoi ? (
@@ -184,17 +231,48 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                 <ListItemText primary={selectedPoi.latY} />
               </ListItem>
               <ListItem button>
-                <b>Image:</b>
-                <ListItemText primary="Photo" />
+                <ListItemText primary="View Photo" onClick={() => setImageDialogOpen(true)} />
               </ListItem>
             </List>
             <Divider />
-            <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
-              Delete
-            </Button>
-            <IconButton color="primary" aria-label="upload picture" component="span">
-              <PhotoCameraIcon />
-            </IconButton>
+            <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="flex-start"
+            >
+              <Grid item>
+                <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
+                  Delete
+                </Button>
+              </Grid>
+              <Grid item>
+                <label style={{ marginTop: 5 }} htmlFor="image">
+                  <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    capture
+                    onChange={e => handleFileUpload(e.target.files[0])}
+                    style={{ display: 'none' }}
+                  />
+                  <AddPhotoAlternateIcon
+                    color="primary"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </label>
+              </Grid>
+              {uploadStatus === 'DONE' && (
+                <Grid item>
+                  <span style={{ marginTop: 5, marginRight: 35 }}>
+                    Image uploaded
+                  </span>
+                  <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
+                    Save Changes
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
           </>
            ) : 'No Details'}
       </DrawerDialog>
@@ -326,6 +404,8 @@ LandParcelMap.defaultProps = {
   geoData: []
 }
 LandParcelMap.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  authState: PropTypes.object.isRequired,
   geoData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,

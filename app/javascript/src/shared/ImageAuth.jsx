@@ -4,7 +4,7 @@ import Avatar from '@material-ui/core/Avatar'
 import { useWindowDimensions } from '../utils/customHooks'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
-export default function ImageAuth({ imageLink, token, className, type }) {
+export default function ImageAuth({ imageLink, token, className, type, alt }) {
     const [response, setData] = useState('')
     const { width } = useWindowDimensions()
     // eslint-disable-next-line no-unused-vars
@@ -30,7 +30,7 @@ export default function ImageAuth({ imageLink, token, className, type }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if (type === 'image') {
-    return <img src={response.url} className={className} alt="authenticated link" />
+    return <img src={response.url} className={className} alt={alt} />
   }
   if (type === 'imageAvatar') {
     return <Avatar alt="avatar-image" src={response.url}  />
@@ -40,13 +40,15 @@ export default function ImageAuth({ imageLink, token, className, type }) {
 
 ImageAuth.defaultProps = {
   className: 'img-responsive img-thumbnail',
-  type: 'image'
+  type: 'image',
+  alt: 'authenticated link'
 }
 
 ImageAuth.propTypes = {
   imageLink: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
   type: PropTypes.string,
+  alt: PropTypes.string,
   className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 }
 

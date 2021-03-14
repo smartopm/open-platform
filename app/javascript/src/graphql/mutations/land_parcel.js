@@ -72,3 +72,16 @@ mutation PointOfInterestDelete($id: ID!) {
   }
 }
 `;
+
+export const PointOfInterestImageCreate = gql`
+mutation poiImageUpload($id: ID!, $imageBlobId: String!) {
+  poiImageUpload(id: $id, imageBlobId: $imageBlobId) {
+    landParcel {
+      id
+      isPoi
+      parcelType
+      parcelNumber
+    }
+  }
+}
+`;
