@@ -87,7 +87,7 @@ export default function SubUrbanLayer(){
       style: geoJSONStyle,
       onEachFeature
     })?.addTo(map)
-  })
+  }, [map])
 
   return (
     <>

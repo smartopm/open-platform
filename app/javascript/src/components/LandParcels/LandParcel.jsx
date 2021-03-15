@@ -1,12 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { Grid, Typography, Container, Link } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
 import RoomIcon from '@material-ui/icons/Room';
-import { Context } from '../../containers/Provider/AuthStateProvider'
 import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
@@ -26,7 +25,6 @@ import QueryBuilder from '../QueryBuilder';
 
 export default function LandParcelList() {
   const limit = 20;
-  const authState = useContext(Context)
   const [offset, setOffset] = useState(0);
   const [open, setDetailsModalOpen] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
@@ -379,13 +377,11 @@ export default function LandParcelList() {
               <LandParcelMap
                 handlePlotClick={onParcelClick}
                 geoData={data?.fetchLandParcel}
-                authState={authState}
               />
             ) : (
               <LandParcelMap
                 handlePlotClick={onParcelClick}
                 geoData={geoData?.landParcelGeoData}
-                authState={authState}
               />
             )}
           </>

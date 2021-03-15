@@ -39,15 +39,15 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].land_parcels
-                            .where(is_poi: false)
+                            .search(query)
                             .eager_load(:valuations, :accounts)
                             .with_attached_image
-                            .search(query)
+                            .where(is_poi: false)
                             .limit(limit).offset(offset)
   end
 
   def user_land_parcel(user_id:)
-    raise GraphQL::ExecutionError, 'Uneauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
     context[:site_community].users.find_by(id: user_id)&.land_parcels
   end
@@ -56,9 +56,9 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
     parcel = context[:site_community].land_parcels
-                                     .eager_load(:valuations, :accounts)
-                                     .with_attached_image
-                                     .find_by(id: id)
+                                      .eager_load(:valuations, :accounts)
+                                      .with_attached_image
+                                      .find_by(id: id)
     raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?
 
     parcel

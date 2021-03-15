@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
-import { Button, Grid, List, Divider, ListItem, ListItemText } from '@material-ui/core';
+import { Button, Grid, Divider } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
@@ -11,9 +11,9 @@ import { useFileUpload } from '../../graphql/useFileUpload'
 import { checkValidGeoJSON, getHexColor, formatError } from '../../utils/helpers'
 import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants'
 import PointsOfInterestMarker from '../Map/PointsOfInterestMarker'
-import { DrawerDialog, ActionDialog, CustomizedDialogs } from '../Dialog'
+import { ActionDialog } from '../Dialog'
 import MessageAlert from "../MessageAlert"
-import ImageAuth from '../../shared/ImageAuth'
+import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog'
 
 const { attribution, openStreetMap, centerPoint: { nkwashi } } = mapTiles
 
@@ -50,21 +50,19 @@ function geoJSONPoiStyle(feature) {
   }
 }
 
-export default function LandParcelMap({ authState, handlePlotClick, geoData }){
+export default function LandParcelMap({ handlePlotClick, geoData }){
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
   const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);
   const [selectedPoi, setSelectedPoi] = useState(null)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false)
-  const [imageUploadComplete, setImageUploadComplete] = useState(true)
-  const [imageDialogOpen, setImageDialogOpen] = useState(false)
   const properties = geoData?.filter(({ isPoi }) => !isPoi) || null
   const poiData = geoData?.filter(({ isPoi }) => isPoi) || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
 
-  const [ loadParcel, { data: parcelData } ] = useLazyQuery(LandParcel, {
+  const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
   });
 
@@ -111,11 +109,6 @@ export default function LandParcelMap({ authState, handlePlotClick, geoData }){
   function handleCloseDrawer(){
     setSelectedPoi(null)
     setConfirmDeletePoi(false)
-    setImageUploadComplete(false)
-  }
-
-  function handleImageDialogClose(){
-    setImageDialogOpen(false)
   }
 
   /* istanbul ignore next */
@@ -140,6 +133,7 @@ export default function LandParcelMap({ authState, handlePlotClick, geoData }){
     setMessageAlert('')
   }
 
+   /* istanbul ignore next */
   function handleSaveUploadedPhoto(){
     uploadPoiImage({
       variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
@@ -190,92 +184,57 @@ export default function LandParcelMap({ authState, handlePlotClick, geoData }){
         handleClose={handleCloseDrawer}
         handleOnSave={handleClickDelete}
       />
-      <CustomizedDialogs
-        open={imageDialogOpen}
-        handleModal={handleImageDialogClose}
-        dialogHeader='Photo'
-        handleBatchFilter={handleImageDialogClose}
-        actionable={false}
-      >
-        <ImageAuth 
-          imageLink={parcelData?.landParcel?.imageUrl || ''}
-          alt="No Image Found"
-          token={authState.token} 
-          className="img-responsive img-thumbnail"
-        /> 
-      </CustomizedDialogs>
       {/* istanbul ignore next */}
-      <DrawerDialog anchor="right" open={Boolean(selectedPoi)} onClose={handleCloseDrawer}>
-        {selectedPoi ? (
-          <>
-            <List>
-              <h4>Details</h4>
-              <ListItem>
-                <b>POI:</b>
-                <ListItemText primary={selectedPoi.poiName} />
-              </ListItem>
-              <ListItem>
-                <b>ID:</b>
-                <ListItemText primary={selectedPoi.parcelNumber} />
-              </ListItem>
-              <ListItem>
-                <b>Type:</b>
-                <ListItemText primary={selectedPoi.parcelType} />
-              </ListItem>
-              <ListItem>
-                <b>Longitude X:</b>
-                <ListItemText primary={selectedPoi.longX} />
-              </ListItem>
-              <ListItem>
-                <b>Latitude Y:</b>
-                <ListItemText primary={selectedPoi.latY} />
-              </ListItem>
-              <ListItem button>
-                <ListItemText primary="View Photo" onClick={() => setImageDialogOpen(true)} />
-              </ListItem>
-            </List>
-            <Divider />
-            <Grid
-              container
-              direction="row"
-              justify="space-around"
-              alignItems="flex-start"
-            >
-              <Grid item>
-                <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
-                  Delete
-                </Button>
-              </Grid>
-              <Grid item>
-                <label style={{ marginTop: 5 }} htmlFor="image">
-                  <input
-                    type="file"
-                    name="image"
-                    id="image"
-                    capture
-                    onChange={e => handleFileUpload(e.target.files[0])}
-                    style={{ display: 'none' }}
-                  />
-                  <AddPhotoAlternateIcon
-                    color="primary"
-                    style={{ cursor: 'pointer' }}
-                  />
-                </label>
-              </Grid>
-              {uploadStatus === 'DONE' && (
-                <Grid item>
-                  <span style={{ marginTop: 5, marginRight: 35 }}>
-                    Image uploaded
-                  </span>
-                  <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
-                    Save Changes
-                  </Button>
-                </Grid>
-              )}
+      <PointOfInterestDrawerDialog
+        anchor="right"
+        open={Boolean(selectedPoi)}
+        onClose={handleCloseDrawer}
+        selectedPoi={selectedPoi}
+        imageData={{
+            url: parcelData?.landParcel?.imageUrl,
+            loading: parcelDataLoading,
+          }}
+      >
+        <Divider />
+        <Grid
+          container
+          direction="row"
+          justify="space-around"
+          alignItems="flex-start"
+        >
+          <Grid item>
+            <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
+              Delete
+            </Button>
+          </Grid>
+          <Grid item>
+            <label style={{ marginTop: 5 }} htmlFor="image">
+              <input
+                type="file"
+                name="image"
+                id="image"
+                capture
+                onChange={e => handleFileUpload(e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+              <AddPhotoAlternateIcon
+                color="primary"
+                style={{ cursor: 'pointer' }}
+              />
+            </label>
+          </Grid>
+          {uploadStatus === 'DONE' && (
+            <Grid item>
+              <span style={{ marginTop: 5, marginRight: 35 }}>
+                Image uploaded
+              </span>
+              <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
+                Save Changes
+              </Button>
             </Grid>
-          </>
-           ) : 'No Details'}
-      </DrawerDialog>
+          )}
+        </Grid>
+      </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">
         <style
             // eslint-disable-next-line react/no-danger
@@ -350,7 +309,7 @@ export default function LandParcelMap({ authState, handlePlotClick, geoData }){
             <LayersControl.Overlay name="Nkwashi Points of Interest">
               {poiData && (
               <FeatureGroup>
-                {poiData.map(({ id, geom, parcelNumber, parcelType }, index) => {
+                {poiData.map(({ id, geom, parcelNumber, parcelType }) => {
                         if(checkValidGeoJSON(geom)){
                           const feature = JSON.parse(geom)
                           const markerProps = {
@@ -363,8 +322,7 @@ export default function LandParcelMap({ authState, handlePlotClick, geoData }){
                         feature.properties.parcel_no = parcelNumber
                         feature.properties.parcel_type = parcelType
                         poiFeatureCollection.features.push(feature)
-                        /* eslint-disable react/no-array-index-key */
-                        return (<PointsOfInterestMarker key={index} markerProps={markerProps} />)
+                        return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
                       }
                       return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
                     })}
@@ -405,7 +363,6 @@ LandParcelMap.defaultProps = {
 }
 LandParcelMap.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  authState: PropTypes.object.isRequired,
   geoData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
