@@ -6,7 +6,8 @@ RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
     let!(:current_user) { create(:user_with_community) }
     let!(:land_parcel) do
-      current_user.community.land_parcels.create(address1: 'This address',
+      current_user.community.land_parcels.create(address1: 'This address', parcel_number: 'basic-123',
+                                                 parcel_type: 'basic',
                                                  long_x: 28.234, lat_y: -15.234)
     end
 
