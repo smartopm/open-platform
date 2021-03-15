@@ -9,6 +9,7 @@ module Types
     field :long_x, Float, null: true
     field :lat_y, Float, null: true
     field :geom, GraphQL::Types::JSON, null: true
+    field :is_poi, Boolean, null: true
     field :plot_sold, Boolean, null: true
     field :valuations, [Types::ValuationType], null: true
     field :accounts, [Types::AccountType], null: true

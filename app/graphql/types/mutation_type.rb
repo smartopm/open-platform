@@ -102,6 +102,8 @@ module Types
     field :PropertyCreate, mutation: Mutations::LandParcel::PropertyCreate
     field :property_update, mutation: Mutations::LandParcel::PropertyUpdate
     field :property_merge, mutation: Mutations::LandParcel::PropertyMerge
+    field :point_of_interest_create, mutation: Mutations::LandParcel::PointOfInterestCreate
+    field :point_of_interest_delete, mutation: Mutations::LandParcel::PointOfInterestDelete
 
     # action_flow
     field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
