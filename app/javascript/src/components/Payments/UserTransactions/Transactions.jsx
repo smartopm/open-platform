@@ -18,7 +18,7 @@ import UserTransactionsList from './UserTransactions'
 import { StyledTabs, StyledTab, TabPanel } from '../../Tabs'
 import UserInvoiceItem from './UserInvoiceItem'
 import ButtonComponent from '../../../shared/buttons/Button'
-import UserPaymentPlanItem from '../UserPaymentPlanItem'
+import UserPaymentPlanItem from './UserPaymentPlanItem'
 import PaymentModal from './PaymentModal'
 import ListHeader from '../../../shared/list/ListHeader';
 
