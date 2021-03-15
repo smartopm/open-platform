@@ -10,14 +10,14 @@ import AuthStateProvider, {
 
 function MainApp() {
   const authState = useContext(AuthStateContext);
-  console.log(authState)
+  
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
         {/* If there is no community name we default to DoubleGDP */}
         <title>{authState.user?.community.name || 'DoubleGDP'}</title>
-        <link rel="icon" type="image/png" href={authState.user?.community.imageUrl} sizes="16x16" />
+        <link id="favicon" rel="icon" href={authState.user?.community.imageUrl} type="image/x-icon" />
       </Helmet>
       <App />
     </>
