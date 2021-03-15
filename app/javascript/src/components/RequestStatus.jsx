@@ -34,7 +34,7 @@ export default function RequestStatus(props) {
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
             data-testid="action"
           >
-            Call Poniso
+            Call Manager
           </a>
         </div>
       ) : null}
