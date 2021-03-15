@@ -278,7 +278,7 @@ export default function UserInformation({
               className={`${css(styles.callButton)}`}
               href={`tel:${ponisoNumber}`}
             >
-              Call Poniso
+              Call Manager
             </Button>
           ) : null}
         </div>

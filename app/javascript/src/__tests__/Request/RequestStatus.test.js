@@ -15,7 +15,7 @@ describe('RequestStatus Component', () => {
       </BrowserRouter>
     );
     expect(wrapper.queryByTestId('status').textContent).toContain('Denied');
-    expect(wrapper.queryByTestId('action').textContent).toContain('Call Poniso');
+    expect(wrapper.queryByTestId('action').textContent).toContain('Call Manager');
     expect(wrapper.queryByText('Ok')).toBeInTheDocument()
   });
 });

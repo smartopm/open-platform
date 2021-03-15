@@ -70,7 +70,7 @@ describe("RequestUpdate Component ",() => {
       expect(container.queryByTestId('entry_user_grant')).not.toBeDisabled()
       expect(container.queryByTestId('entry_user_deny').textContent).toContain('Deny')
       expect(container.queryByTestId('entry_user_deny')).not.toBeDisabled()
-      expect(container.queryByTestId('entry_user_call_mgr').textContent).toContain('Call Poniso')
+      expect(container.queryByTestId('entry_user_call_mgr').textContent).toContain('Call Manager')
 
         },
         { timeout: 500 }

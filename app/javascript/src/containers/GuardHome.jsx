@@ -243,7 +243,7 @@ export function HomeGuard({ translate }) {
                         fontSize="large"
                       />
                     </h5>
-                    Call Poniso
+                    Call Manager
                   </div>
                 </a>
               </div>

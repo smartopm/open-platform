@@ -421,7 +421,7 @@ export default function RequestUpdate({ id }) {
                   className={` ${css(styles.callButton)}`}
                   data-testid="entry_user_call_mgr"
                 >
-                  Call Poniso
+                  Call Manager
                 </a>
               </div>
             </div>
