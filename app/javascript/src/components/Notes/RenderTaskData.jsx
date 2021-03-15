@@ -53,7 +53,6 @@ export default function renderTaskData(data, handleChange, selectedTasks, handle
       'Created By': (
         <Grid item xs={12} sm={2}>
           <LinkToUser name={task.author.name} userId={task.author.id} />
-          at &nbsp;
           <DateContainer date={task.createdAt} />
         </Grid>
       ),
