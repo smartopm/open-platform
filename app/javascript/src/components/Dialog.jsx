@@ -12,7 +12,6 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Drawer,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
@@ -255,17 +254,6 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
   )
 }
 
-export function DrawerDialog({ anchor, children, open, onClose }){
-  const classes = useStyles()
-  return (
-    <Drawer anchor={anchor} open={open} onClose={onClose}>
-      <div className={classes.drawer}>
-        {children}
-      </div>
-    </Drawer>
-  )
-}
-
 export const useStyles = makeStyles({
   title: {
     borderBottom: '1px #b8d4d0 solid'
@@ -387,16 +375,4 @@ MapEditorFullScreenDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
-}
-
-DrawerDialog.defaultProps = {
-  children: {},
-  anchor: 'right'
-}
-
-DrawerDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  anchor: PropTypes.string,
-  children: PropTypes.node,
 }

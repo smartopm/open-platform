@@ -57,7 +57,6 @@ mutation PointOfInterestCreate($longX: Float!,
     geom: $geom) {
       landParcel {
         id
-        isPoi
         parcelType
         parcelNumber
     }
@@ -69,6 +68,18 @@ export const PointOfInterestDelete = gql`
 mutation PointOfInterestDelete($id: ID!) {
   pointOfInterestDelete(id: $id) {
     success
+  }
+}
+`;
+
+export const PointOfInterestImageCreate = gql`
+mutation poiImageUpload($id: ID!, $imageBlobId: String!) {
+  poiImageUpload(id: $id, imageBlobId: $imageBlobId) {
+    landParcel {
+      id
+      parcelType
+      parcelNumber
+    }
   }
 }
 `;

@@ -68,7 +68,6 @@ namespace :db do
                              parcel_number: parcel_no,
                              parcel_type: 'poi',
                              geom: f.to_json,
-                             is_poi: true,
                              long_x: long_x,
                              lat_y: lat_y)
         end

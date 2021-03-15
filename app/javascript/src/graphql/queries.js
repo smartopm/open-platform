@@ -506,7 +506,6 @@ export const LandParcelGeoData = gql`
       latY
       longX
       geom
-      isPoi
       plotSold
       valuations {
         id
@@ -1039,6 +1038,11 @@ export const LandParcel = gql`
       stateProvince
       country
       parcelType
+      latY
+      longX
+      geom
+      plotSold
+      imageUrl
       createdAt
       valuations {
         id

@@ -9,6 +9,7 @@ import 'leaflet-draw'
 import ParcelItem from '../../components/LandParcels/LandParcelItem'
 import { ParcelPageTitle } from '../../components/LandParcels/LandParcel'
 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 jest.mock('leaflet-draw')
 describe('It should test the comment component', () => {
   const data = {

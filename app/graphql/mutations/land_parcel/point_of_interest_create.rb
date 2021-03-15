@@ -23,7 +23,6 @@ module Mutations
             long_x: vals[:long_x],
             lat_y: vals[:lat_y],
             geom: vals[:geom],
-            is_poi: true,
           )
 
           { land_parcel: land_parcel }
