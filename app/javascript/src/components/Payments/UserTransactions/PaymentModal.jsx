@@ -36,6 +36,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   const [submitting, setIsSubmitting] = useState(false)
   const [isConfirm, setIsConfirm] = useState(false);
 
+  const { loading, error, data } = useQuery(EmailTemplatesQuery)
+
   function confirm(event) {
     event.preventDefault();
     setIsConfirm(true);
@@ -206,30 +208,47 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 value={inputValue.transactionNumber}
                 onChange={(event) => setInputValue({...inputValue, transactionNumber: event.target.value})}
               />
-              {
-            inputValue.transactionType === 'cheque/cashier_cheque' && (
-              <>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="bank-name"
-                  label="Bank Name"
-                  type='string'
-                  value={inputValue.bankName}
-                  onChange={(event) => setInputValue({...inputValue, bankName: event.target.value})}
-                />
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="cheque-number"
-                  label="Cheque Number"
-                  type='string'
-                  value={inputValue.chequeNumber}
-                  onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
-                />
-              </>
-            )
-          }
+            {
+              inputValue.transactionType === 'cheque/cashier_cheque' && (
+                <>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="bank-name"
+                    label="Bank Name"
+                    type='string'
+                    value={inputValue.bankName}
+                    onChange={(event) => setInputValue({...inputValue, bankName: event.target.value})}
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="cheque-number"
+                    label="Cheque Number"
+                    type='string'
+                    value={inputValue.chequeNumber}
+                    onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
+                  />
+                </>
+              )
+            }
+              <TextField
+                margin="dense"
+                id="mail-template"
+                label="Mail Template"
+                value={inputValue.templateId}
+                onChange={(event) => setInputValue({...inputValue, templateId: event.target.value})}
+                required
+                select
+                error={isError && submitting && !inputValue.templateId}
+                helperText={isError && !inputValue.templateId && 'Template ID is required'}
+              >
+                {data?.emailTemplates.map(template => (
+                  <MenuItem key={template.id} value={template.id}>
+                    {template.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </div>
           </>
         )}

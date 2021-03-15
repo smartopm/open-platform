@@ -7,6 +7,7 @@ class WalletTransaction < ApplicationRecord
   belongs_to :user
   belongs_to :community
   belongs_to :depositor, class_name: 'User', optional: true
+  belongs_to :email_template, optional: true
   has_one :payment_invoice, dependent: :destroy
 
   search_scope :search do

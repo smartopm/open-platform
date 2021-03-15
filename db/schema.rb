@@ -666,8 +666,10 @@ ActiveRecord::Schema.define(version: 2021_03_16_181619) do
     t.uuid "community_id", default: "ec7625ee-0bfe-4dcb-9a37-831fc77fa302", null: false
     t.string "transaction_number"
     t.uuid "depositor_id"
+    t.uuid "email_template_id"
     t.index ["community_id"], name: "index_wallet_transactions_on_community_id"
     t.index ["depositor_id"], name: "index_wallet_transactions_on_depositor_id"
+    t.index ["email_template_id"], name: "index_wallet_transactions_on_email_template_id"
     t.index ["transaction_number"], name: "index_wallet_transactions_on_transaction_number", unique: true
     t.index ["user_id"], name: "index_wallet_transactions_on_user_id"
   end
