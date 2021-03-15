@@ -14,35 +14,24 @@ module Mutations
           raise GraphQL::ExecutionError, 'Invoice can not be cancelled'
         end
 
-        settle_transaction(invoice)
+        ActiveRecord::Base.transaction do
+          invoice.cancelled!
+          refund_amount(invoice)
+        end
         { invoice: invoice.reload }
       end
 
-      # rubocop:disable Metrics/MethodLength
-      def settle_transaction(invoice)
-        ActiveRecord::Base.transaction do
-          invoice.cancelled!
-          user = invoice.user
-          user.wallet.settle_pending_balance(invoice.pending_amount)
-          balance = user.wallet.balance
-          user.wallet_transactions.create!(
-            source: 'wallet',
-            destination: 'invoice',
-            amount: invoice.amount,
-            status: 'cancelled',
-            current_wallet_balance: balance,
-            community_id: context[:site_community]
-                          .id,
-          )
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
-
-      def sum_payment_amount(invoice)
-        return invoice.amount if invoice.payments.empty?
-
-        payment_amount = invoice.payments.sum(&:amount)
-        invoice.amount - payment_amount
+      def refund_amount(invoice)
+        user = invoice.user
+        user.wallet.settle_pending_balance(invoice.amount)
+        user.wallet_transactions.create!(
+          source: 'invoice',
+          destination: 'wallet',
+          amount: invoice.amount,
+          status: 'settled',
+          current_wallet_balance: user.wallet.balance,
+          community_id: invoice.community_id,
+        )
       end
 
       def authorized?(_vals)

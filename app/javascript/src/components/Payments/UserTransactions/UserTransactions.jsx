@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -125,11 +126,10 @@ export function renderTransactions(transaction, currencyData, menuData) {
         col={12}
         data-testid="description"
         content={`${
-          // eslint-disable-next-line no-nested-ternary
           transaction.__typename !== 'WalletTransaction'
             ? `Invoice ${transaction.invoiceNumber}`
             : transaction.source === 'wallet'
-            ? 'Invoice'
+            ? 'Invoice' : transaction.source === 'invoice' ? 'Reversal'
             : 'Deposit'
         }`}
       />
@@ -174,7 +174,8 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Menu: (
       <Grid item xs={12} md={1}>
         {
-          transaction.__typename === 'WalletTransaction' && transaction.status === 'settled' && transaction.destination !== 'invoice'
+          transaction.__typename === 'WalletTransaction' 
+          && transaction.status === 'settled' && transaction.destination !== 'invoice' && transaction.source !== 'invoice'
           ? (
             <IconButton
               aria-controls="simple-menu"

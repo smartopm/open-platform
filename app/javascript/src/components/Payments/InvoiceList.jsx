@@ -309,20 +309,21 @@ export function renderInvoice(invoice, currencyData, menuData) {
       'Issue Date': (
         <Grid item xs={12} md={2} data-testid="issue_date">
           <Text content={dateToString(invoice?.createdAt)} />
+          <br />
         </Grid>
       ),
       Description: (
         <Grid item xs={12} md={2} data-testid="description">
-          <Text content={`Invoice Number #${invoice.invoiceNumber}`} />
-          <br />
-          <Text color="primary" content={`Plot Number #${invoice.landParcel.parcelNumber}`} />
-          <br />
           <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{ display: 'flex', marginTop: '10px'}}>
               <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
               <span style={{ margin: '7px', fontSize: '12px' }}>{invoice.user?.name}</span>
             </div>
           </Link>
+          <br />
+          <Text content={`Invoice #${invoice.invoiceNumber}`} />
+          <br />
+          <Text color="primary" content={`Plot #${invoice.landParcel.parcelNumber}`} />
         </Grid>
       ),
       Amount: (
