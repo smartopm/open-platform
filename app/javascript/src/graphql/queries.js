@@ -1267,3 +1267,9 @@ export const InvoiceAutogenerationData = gql`
     }
   }
 `
+
+export const EmailTemplateVariables = gql`
+  query emailTemplateVariables($templateId: ID!) {
+    emailTemplateVariables(id: $templateId)
+  }
+`;
