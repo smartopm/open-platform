@@ -183,7 +183,7 @@ const Analytics = props => {
   return props.children
 }
 
-const App = () => {
+export const App = () => {
   return (
     <Suspense
       fallback={() => {
@@ -386,7 +386,3 @@ const App = () => {
     </Suspense>
   )
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(<App />, document.getElementById('root'))
-})
