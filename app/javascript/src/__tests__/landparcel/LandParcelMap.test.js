@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { act, render } from '@testing-library/react'
 import LandParcelMap from '../../components/LandParcels/LandParcelMap'
 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 jest.mock('react-leaflet')
 describe('LandParcelMap', () => {
   it('should mount component correctly', async () => {
