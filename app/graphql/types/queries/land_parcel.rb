@@ -56,9 +56,9 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
     parcel = context[:site_community].land_parcels
-                                      .eager_load(:valuations, :accounts)
-                                      .with_attached_image
-                                      .find_by(id: id)
+                                     .eager_load(:valuations, :accounts)
+                                     .with_attached_image
+                                     .find_by(id: id)
     raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?
 
     parcel
