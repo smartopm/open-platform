@@ -16,7 +16,6 @@ module Types
     field :long_x, Float, null: true
     field :lat_y, Float, null: true
     field :geom, GraphQL::Types::JSON, null: true
-    field :is_poi, Boolean, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :read_at, GraphQL::Types::ISO8601DateTime, null: true
     field :valuations, [Types::ValuationType], null: false

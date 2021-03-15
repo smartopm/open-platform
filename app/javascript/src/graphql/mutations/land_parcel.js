@@ -57,7 +57,6 @@ mutation PointOfInterestCreate($longX: Float!,
     geom: $geom) {
       landParcel {
         id
-        isPoi
         parcelType
         parcelNumber
     }
@@ -78,7 +77,6 @@ mutation poiImageUpload($id: ID!, $imageBlobId: String!) {
   poiImageUpload(id: $id, imageBlobId: $imageBlobId) {
     landParcel {
       id
-      isPoi
       parcelType
       parcelNumber
     }

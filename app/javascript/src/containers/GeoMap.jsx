@@ -49,8 +49,8 @@ export default function GeoMap() {
     fetchPolicy: 'cache-and-network'
   });
 
-  const properties = geoData?.landParcelGeoData.filter(({ isPoi }) => !isPoi) || null
-  const poiData = geoData?.landParcelGeoData.filter(({ isPoi }) => isPoi) || null
+  const properties = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType !== 'poi') || null
+  const poiData = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType === 'poi') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
 

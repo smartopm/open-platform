@@ -57,8 +57,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false)
-  const properties = geoData?.filter(({ isPoi }) => !isPoi) || null
-  const poiData = geoData?.filter(({ isPoi }) => isPoi) || null
+  const properties = geoData?.filter(({ parcelType }) => parcelType !== 'poi') || null
+  const poiData = geoData?.filter(({ parcelType }) => parcelType === 'poi') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
 

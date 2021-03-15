@@ -42,7 +42,7 @@ module Types::Queries::LandParcel
                             .search(query)
                             .eager_load(:valuations, :accounts)
                             .with_attached_image
-                            .where(is_poi: false)
+                            .where.not(parcel_type: 'poi')
                             .limit(limit).offset(offset)
   end
 
@@ -89,7 +89,6 @@ module Types::Queries::LandParcel
       lat_y: parcel[:lat_y],
       long_x: parcel[:long_x],
       geom: parcel[:geom],
-      is_poi: parcel[:is_poi],
       plot_sold: parcel.accounts.present?,
       accounts: parcel.accounts,
       valuations: parcel.valuations }

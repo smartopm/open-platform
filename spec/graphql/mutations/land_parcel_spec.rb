@@ -278,7 +278,6 @@ RSpec.describe Mutations::LandParcel do
             geom: $geom) {
               landParcel {
                 id
-                isPoi
                 parcelType
                 parcelNumber
             }
@@ -315,7 +314,6 @@ RSpec.describe Mutations::LandParcel do
 
       parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       expect(parcel.parcel_number).to match(/poi-\w+/i)
-      expect(parcel.is_poi).to be(true)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.geom).not_to be_nil
       expect(result['errors']).to be_nil
@@ -360,7 +358,6 @@ RSpec.describe Mutations::LandParcel do
 
       parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       expect(parcel.parcel_number).to match(/poi-\w+/i)
-      expect(parcel.is_poi).to be(true)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.geom).not_to be_nil
       expect(result['errors']).to be_nil
