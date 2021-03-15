@@ -4,18 +4,22 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle,
+  Divider,
+  IconButton
 } from '@material-ui/core'
+import WarningIcon from '@material-ui/icons/Warning';
+import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
-import { capitalize } from '../../utils/helpers'
 
 export default function DeleteDialogueBox({
   open,
   handleClose,
   handleAction,
   title,
-  action
+  action,
+  user
 }) {
   const classes = useStyles();
   return (
@@ -27,17 +31,22 @@ export default function DeleteDialogueBox({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" className={classes.title}>
-          {`${capitalize(action)} ${capitalize(title)}`} 
+          <WarningIcon style={{paddingTop: '10px'}} />
+          <span style={{fontSize: '14px', margin: '0 30px 0 7px'}}>{ `Are you sure you want to ${action} this ${title}?` }</span>
+          <IconButton style={{paddingTop: '5px', color: '#dc402b'}} onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
-        <DialogContent>
-          { `Are you sure you want to ${action} this ${title} ?` }
+        <DialogContent style={{margin: '30px 0', fontSize: '13px', textAlign: 'center'}}>
+          { `You are about to ${action} ${title} ${user ? `for ${user}` : null}` }
         </DialogContent>
+        <Divider />
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            No
+          <Button onClick={handleClose} color="secondary" variant='outlined'>
+            close
           </Button>
-          <Button onClick={handleAction} color="primary" className={classes.button} autoFocus data-testid="confirm_action">
-            Yes
+          <Button onClick={handleAction} variant='contained' className={classes.button} autoFocus data-testid="confirm_action">
+            {action}
           </Button>
         </DialogActions>
       </Dialog>
@@ -46,7 +55,8 @@ export default function DeleteDialogueBox({
 }
 
 DeleteDialogueBox.defaultProps = {
-  action: 'delete'
+  action: 'delete',
+  user: ''
 }
 
 DeleteDialogueBox.propTypes = {
@@ -54,7 +64,8 @@ DeleteDialogueBox.propTypes = {
   handleClose: PropTypes.func.isRequired,
   handleAction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  action: PropTypes.string
+  action: PropTypes.string,
+  user: PropTypes.string
 }
 
 const useStyles = makeStyles({

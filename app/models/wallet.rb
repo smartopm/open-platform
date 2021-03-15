@@ -56,7 +56,7 @@ class Wallet < ApplicationRecord
   def settle_invoices
     return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
 
-    user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
+    user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
       break unless balance.positive?
 
       make_payment(invoice)

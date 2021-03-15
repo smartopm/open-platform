@@ -777,6 +777,20 @@ export const InvoiceCreate = gql`
   }
 `
 
+export const InvoiceCancel = gql`
+  mutation InvoiceCancel(
+    $invoiceId: ID!
+  ) {
+    invoiceCancel(
+      invoiceId: $invoiceId
+    ) {
+      invoice {
+        id
+      }
+    }
+  }
+`
+
 export const PaymentCreate = gql`
   mutation PaymentCreate(
     $userId: ID!

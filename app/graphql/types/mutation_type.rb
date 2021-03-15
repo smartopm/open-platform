@@ -119,6 +119,7 @@ module Types
 
     # invoice
     field :invoice_create, mutation: Mutations::Invoice::InvoiceCreate
+    field :invoice_cancel, mutation: Mutations::Invoice::InvoiceCancel
     field :autogenerate_invoice, mutation: Mutations::Invoice::AutogenerateInvoice
 
     # payments

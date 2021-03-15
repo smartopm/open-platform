@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MenuList } from '../../components/Payments/UserTransactions/UserTransactions';
+import MenuList from '../../shared/MenuList';
 
 describe('MenuList', () => {
   it('should render the menu properly', () => {
