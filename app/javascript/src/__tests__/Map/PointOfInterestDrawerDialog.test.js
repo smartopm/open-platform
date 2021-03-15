@@ -71,4 +71,41 @@ describe('PointOfInterestDrawerDialog', () => {
 
     expect(container.queryByText(/no details/ig)).toBeTruthy()
   });
+
+  it('should close dialog', async () => {
+    const props = {
+      anchor: 'right',
+      open: false,
+      onClose: jest.fn,
+      imageData: { url: '', loading: false },
+      selectedPoi: {
+        poiName: 'Hotel',
+        parcelNumber: 'poi-123',
+        parcelType: 'poi',
+        longX: 28.123,
+        latY: -15.123,
+      }
+    }
+
+    let container;
+    
+    await act(async () => {
+      container = render(
+        <MockedProvider>
+          <AuthStateProvider>
+            <BrowserRouter>
+              <PointOfInterestDrawerDialog
+                {...props}
+              />
+            </BrowserRouter>
+          </AuthStateProvider>
+        </MockedProvider>
+      )
+    })
+
+    expect(container.queryByText('poi-123')).toBeNull()
+    expect(container.queryByText('Hotel')).toBeNull()
+    expect(container.queryByText('-15.123')).toBeNull()
+    expect(container.queryByText('28.123')).toBeNull()
+  });
 });

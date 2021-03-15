@@ -17,10 +17,12 @@ import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog'
 
 const { attribution, openStreetMap, centerPoint: { nkwashi } } = mapTiles
 
+/* istanbul ignore next */
 function getColor(plotSold){
   return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.available)
 }
 
+/* istanbul ignore next */
 function geoJSONStyle(feature) {
   return {
     weight: 1,
@@ -32,6 +34,7 @@ function geoJSONStyle(feature) {
   }
 }
 
+/* istanbul ignore next */
 function geoJSONPlotStyle(feature) {
   return {
     color: '#f2eeee',
@@ -41,6 +44,7 @@ function geoJSONPlotStyle(feature) {
   }
 }
 
+/* istanbul ignore next */
 function geoJSONPoiStyle(feature) {
   return {
     color: feature.properties.stroke || "#f2eeee",
@@ -126,6 +130,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     })
   }
 
+  /* istanbul ignore next */
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
       return
