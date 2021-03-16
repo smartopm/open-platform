@@ -29,8 +29,6 @@ class Invoice < ApplicationRecord
     attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
 
-  before_validation :invoice_not_present_for_month
-
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       cur_payment = settle_amount
