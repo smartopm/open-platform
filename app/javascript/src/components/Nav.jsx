@@ -121,7 +121,7 @@ export function Component({
       );
     }
     return (
-      <Link to="/">
+      <Link to="/" style={{ textDecoration: 'none' }}>
         <ImageAuth
           imageLink={authState.user?.community.imageUrl}
           token={authState.token}

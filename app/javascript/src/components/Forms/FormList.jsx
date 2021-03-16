@@ -38,7 +38,7 @@ import FloatButton from '../FloatButton'
 import { propAccessor } from '../../utils/helpers'
 
 // here we get existing google forms and we mix them with our own created forms
-export default function FormLinkList({ userType }) {
+export default function FormLinkList({ userType, community }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery)
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
@@ -125,10 +125,9 @@ export default function FormLinkList({ userType }) {
         </DialogContent>
       </Dialog>
       <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
-        <FormLinks />
+        <FormLinks community={community} />
         {data.forms.map(form => (
           <Fragment key={form.id}>
-            <Divider variant="middle" />
             <ListItem
               key={form.id}
               data-testid="community_form"
@@ -176,6 +175,7 @@ export default function FormLinkList({ userType }) {
                 />
               )
             }
+            <Divider variant="middle" />
           </Fragment>
         ))}
       </List>
@@ -303,7 +303,8 @@ FormMenu.propTypes = {
 }
 
 FormLinkList.propTypes = {
-  userType: PropTypes.string.isRequired
+  userType: PropTypes.string.isRequired,
+  community: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

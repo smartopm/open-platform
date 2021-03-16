@@ -152,10 +152,8 @@ describe('Form Component', () => {
           expect(
             container.queryAllByTestId('date-picker')[0]
             ).toHaveTextContent('Dead Line')
-        expect(container.queryAllByAltText('authenticated link')).toHaveLength(1)
-        // expect(container.queryByText('Signature')).toBeInTheDocument()
+        expect(container.queryByTestId('community_name')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
-        // expect(container.queryAllByLabelText('sign_title')[0].textContent).toContain('SIGNATURE')
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByText('Would you rather?')).toBeInTheDocument()

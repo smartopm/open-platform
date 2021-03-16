@@ -47,3 +47,39 @@ mutation MergeProperty($id: ID!,
   }
 }
 `;
+
+export const PointOfInterestCreate = gql`
+mutation PointOfInterestCreate($longX: Float!,
+  $latY: Float!,
+  $geom: String!) {
+    pointOfInterestCreate(longX: $longX,
+    latY: $latY,
+    geom: $geom) {
+      landParcel {
+        id
+        parcelType
+        parcelNumber
+    }
+  }
+}
+`;
+
+export const PointOfInterestDelete = gql`
+mutation PointOfInterestDelete($id: ID!) {
+  pointOfInterestDelete(id: $id) {
+    success
+  }
+}
+`;
+
+export const PointOfInterestImageCreate = gql`
+mutation poiImageUpload($id: ID!, $imageBlobId: String!) {
+  poiImageUpload(id: $id, imageBlobId: $imageBlobId) {
+    landParcel {
+      id
+      parcelType
+      parcelNumber
+    }
+  }
+}
+`;

@@ -7,6 +7,7 @@ describe('Render Transaction', () => {
     amount: 200,
     source: 'wallet',
     destination: 'deposit',
+    status: 'settled',
     createdAt: '2021-03-01T09:55:05Z',
     updatedAt: '2021-03-01T09:55:05Z',
     currentWalletBalance: 100,

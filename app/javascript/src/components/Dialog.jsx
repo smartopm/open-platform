@@ -11,7 +11,7 @@ import {
   Divider,
   AppBar,
   Toolbar,
-  IconButton
+  IconButton,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
@@ -284,6 +284,9 @@ export const useStyles = makeStyles({
     marginLeft: '500px',
     width: '30px',
     flex: 1
+  },
+  drawer: {
+    width: '300px',
   },
 })
 

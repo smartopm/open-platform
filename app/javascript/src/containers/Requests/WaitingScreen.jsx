@@ -71,7 +71,7 @@ export function DeniedScreen() {
           href={`tel:${ponisoNumber}`}
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
-          Call Poniso
+          Call Manager
         </a>
       </div>
       <div className="col-10 col-sm-10">

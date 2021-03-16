@@ -13,4 +13,14 @@ export const CommunityQuery = gql`
       locale
     }
   }
-`
+`;
+
+export const CurrentCommunityQuery = gql`
+  query community {
+    currentCommunity {
+      imageUrl
+      id
+      name
+    }
+  }
+`;

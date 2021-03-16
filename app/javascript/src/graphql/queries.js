@@ -1038,6 +1038,11 @@ export const LandParcel = gql`
       stateProvince
       country
       parcelType
+      latY
+      longX
+      geom
+      plotSold
+      imageUrl
       createdAt
       valuations {
         id
@@ -1161,6 +1166,7 @@ export const TransactionQuery = gql`
         chequeNumber
         bankName
         transactionNumber
+        status
         id
         user {
           id

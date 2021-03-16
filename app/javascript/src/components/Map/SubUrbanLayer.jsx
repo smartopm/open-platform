@@ -19,6 +19,7 @@ function geoJSONStyle(feature) {
 export default function SubUrbanLayer(){
   const { map } = useLeaflet()
 
+  /* istanbul ignore next */
   useEffect(() => {
     // Used to manage control on the map
     const info = L.control()
@@ -29,6 +30,7 @@ export default function SubUrbanLayer(){
       return info.div
     };
 
+    /* istanbul ignore next */
     /* eslint-disable react/prop-types */
     info.update = function(props){
       info.div.innerHTML =
@@ -45,6 +47,7 @@ export default function SubUrbanLayer(){
 
     info.addTo(map)
 
+    /* istanbul ignore next */
     const highlightFeature = function(e) {
       const layer = e.target;
 
@@ -60,15 +63,18 @@ export default function SubUrbanLayer(){
 
     let geojson
 
+    /* istanbul ignore next */
     const resetHighlight = function(e) {
       geojson.resetStyle(e.target)
       info.update()
     };
 
+    /* istanbul ignore next */
     const zoomToFeature = function(e) {
       map.fitBounds(e.target.getBounds())
     };
 
+    /* istanbul ignore next */
     const onEachFeature = (feature, layer) => {
       layer.on({
         mouseover: highlightFeature,
@@ -80,8 +86,8 @@ export default function SubUrbanLayer(){
     geojson = L.geoJson(NkwashiSuburbBoundaryData, {
       style: geoJSONStyle,
       onEachFeature
-    }).addTo(map)
-  })
+    })?.addTo(map)
+  }, [map])
 
   return (
     <>

@@ -12,6 +12,7 @@ class ParcelIndexer
     starter: 'starter',
     standard: 'standard',
     premium: 'premium',
+    poi: 'poi',
   }.freeze
 
   # public interface to handle generation of IDs

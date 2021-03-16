@@ -23,7 +23,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     PaymentType: data?.source === 'wallet' ? 'From-balance' : data?.source,
     PaymentDate: '',
     TransactionNumber: data.transactionNumber,
-    Status: 'Paid',
+    Status: data.status === 'settled' ? 'Paid' : 'Cancelled',
     BankName: data.bankName,
     ChequeNumber: data.chequeNumber,
   }

@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { renderToString } from 'react-dom/server';
-import { useQuery } from 'react-apollo'
-import Typography from '@material-ui/core/Typography';
+import { useQuery, useLazyQuery } from 'react-apollo'
+import { Typography } from '@material-ui/core';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
-import NkwashiPointOfInterestData from '../data/nkwashi_poi_data.json'
-import { LandParcelGeoData } from '../graphql/queries'
+import { LandParcelGeoData, LandParcel } from '../graphql/queries'
 import Nav from '../components/Nav'
 import LandParcelMarker from '../components/Map/LandParcelMarker'
 import PointsOfInterestMarker from '../components/Map/PointsOfInterestMarker'
@@ -14,6 +13,7 @@ import LandParcelLegend from '../components/Map/LandParcelLegend'
 import SubUrbanLayer from '../components/Map/SubUrbanLayer'
 import { checkValidGeoJSON } from '../utils/helpers'
 import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../utils/constants'
+import PointOfInterestDrawerDialog from '../components/Map/PointOfInterestDrawerDialog'
 
 const { attribution, mapboxStreets, mapboxSatellite, openStreetMap, centerPoint: { nkwashi } } = mapTiles
 const { mapbox: mapboxPublicToken } = publicMapToken
@@ -33,13 +33,51 @@ function geoJSONPlotStyle(feature) {
 
 function geoJSONStyle(feature) {
   return {
-    color: feature.properties.stroke,
-    weight: feature.properties['stroke-width'],
-    fillOpacity: feature.properties['fill-opacity'],
-    fillColor: feature.properties.fill
+    color: feature.properties.stroke || "#f2eeee",
+    weight: feature.properties['stroke-width'] || 1,
+    fillOpacity: feature.properties['fill-opacity'] || 0.5,
+    fillColor: feature.properties.fill || "#10c647"
   }
 }
 
+export default function GeoMap() {
+  const [selectedPoi, setSelectedPoi] = useState(null)
+  const { loading, data: geoData } = useQuery(LandParcelGeoData, {
+    fetchPolicy: 'cache-and-network'
+  })
+  const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const properties = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType !== 'poi') || null
+  const poiData = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType === 'poi') || null
+  const featureCollection = { type: 'FeatureCollection',  features: [] }
+  const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
+
+  /* istanbul ignore next */
+  function handleCloseDrawer(){
+    setSelectedPoi(null)
+  }
+
+  /* istanbul ignore next */
+  function handlePoiLayerClick({ target }){
+    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY } 
+  } = target.feature
+
+    setSelectedPoi({
+      id,
+      icon,
+      poiName,
+      parcelNumber,
+      parcelType,
+      longX,
+      latY,
+    })
+
+    loadParcel({ variables: { id } });
+  }
+
+  /* istanbul ignore next */
 /* eslint-disable consistent-return */
 function onEachLandParcelFeature(feature, layer){
   if(feature.properties.parcel_no && feature.properties.parcel_type){
@@ -57,136 +95,157 @@ function onEachLandParcelFeature(feature, layer){
   }
 }
 
-export default function GeoMap() {
-  const { loading, data: geoData } = useQuery(LandParcelGeoData, {
-    fetchPolicy: 'cache-and-network'
-  })
-
-  const featureCollection = { type: 'FeatureCollection',  features: [] }
+  /* istanbul ignore next */
+  /* eslint-disable consistent-return */
+function onEachPoiLayerFeature(feature, layer){
+  if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
+    layer.on({
+      click: handlePoiLayerClick,
+    })
+  }
+}
 
   if (loading) return <></>;
 
    return (
-     <div data-testid="leaflet-map-container">
-       <Nav navName="Explore" menuButton="back" backTo="/" />
-       <style
-         // eslint-disable-next-line react/no-danger
-         dangerouslySetInnerHTML={{
-          __html: `
-      .leaflet-tooltip-top:before, 
-      .leaflet-tooltip-bottom:before, 
-      .leaflet-tooltip-left:before, 
-      .leaflet-tooltip-right:before {
-        border: none !important;
-      }
-      .text-label {
-        font-size: 1.75em;
-        background-color: none;
-        border-color: none;
-        background: none;
-        border: none;
-        box-shadow: none;
-      }
-      .leaflet-container {
-        height: 800px;
-        width: 100%;
-        margin: 0 auto;
-      }
-      `
+     <>
+       {/* istanbul ignore next */}
+       <PointOfInterestDrawerDialog
+         anchor="right"
+         open={Boolean(selectedPoi)}
+         onClose={handleCloseDrawer}
+         selectedPoi={selectedPoi}
+         imageData={{
+          url: parcelData?.landParcel?.imageUrl,
+          loading: parcelDataLoading,
         }}
        />
-
-       <Map
-         center={nkwashi}
-         zoom={13}
-         className={css(styles.mapContainer)}
-         attributionControl
-         zoomControl
-         doubleClickZoom
-         scrollWheelZoom
-         dragging
-         animate
-         easeLinearity={0.35}
-       >
-         <LayersControl position="topleft">
-           <LayersControl.BaseLayer name="Mapbox">
-             <TileLayer
-               attribution={attribution}
-               url={`${mapboxStreets}${mapboxPublicToken}`}
-             />
-           </LayersControl.BaseLayer>
-           <LayersControl.BaseLayer checked name="OSM">
-             <TileLayer
-               attribution={attribution}
-               url={openStreetMap}
-             />
-           </LayersControl.BaseLayer>
-           <LayersControl.BaseLayer name="Satellite">
-             <TileLayer
-               attribution={attribution}
-               url={`${mapboxSatellite}${mapboxPublicToken}`}
-             />
-           </LayersControl.BaseLayer>
-           <LayersControl.Overlay name="Nkwashi Land Parcels">
-             <FeatureGroup>
-               {geoData && geoData?.landParcelGeoData.map(({ geom, parcelNumber, parcelType, plotSold }) => {
-                if(checkValidGeoJSON(geom)){
-                  // mutate properties, add parcelNo, parcelType
-                  const feature = JSON.parse(geom)
-                  feature.properties.parcel_no = parcelNumber
-                  feature.properties.parcel_type = parcelType
-                  feature.properties.plot_sold = plotSold
-                  return featureCollection.features.push(feature)
-                }
-                return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                })}
-               <GeoJSON
-                 key={Math.random()}
-                 data={featureCollection}
-                 style={geoJSONPlotStyle}
-                 onEachFeature={onEachLandParcelFeature}
+       <div data-testid="leaflet-map-container">
+         <Nav navName="Explore" menuButton="back" backTo="/" />
+         <style
+           // eslint-disable-next-line react/no-danger
+           dangerouslySetInnerHTML={{
+            __html: `
+        .leaflet-tooltip-top:before,
+        .leaflet-tooltip-bottom:before,
+        .leaflet-tooltip-left:before,
+        .leaflet-tooltip-right:before {
+          border: none !important;
+        }
+        .text-label {
+          font-size: 1.75em;
+          background-color: none;
+          border-color: none;
+          background: none;
+          border: none;
+          box-shadow: none;
+        }
+        .leaflet-container {
+          height: 800px;
+          width: 100%;
+          margin: 0 auto;
+        }
+        `
+          }}
+         />
+         {/* istanbul ignore next */}
+         <Map
+           center={nkwashi}
+           zoom={13}
+           className={css(styles.mapContainer)}
+           attributionControl
+           zoomControl
+           doubleClickZoom
+           scrollWheelZoom
+           dragging
+           animate
+           easeLinearity={0.35}
+         >
+           <LayersControl position="topleft">
+             <LayersControl.BaseLayer name="Mapbox">
+               <TileLayer
+                 attribution={attribution}
+                 url={`${mapboxStreets}${mapboxPublicToken}`}
                />
-             </FeatureGroup>
-           </LayersControl.Overlay>
-           <LayersControl.Overlay checked name="Nkwashi Points of Interest">
-             <FeatureGroup>
-               {NkwashiPointOfInterestData.features.map((poiData, index) => {
-                 const { properties } = poiData
-                 const markerProps = {
-                   geoLatY: properties.lat_y || 0,
-                  geoLongX: properties.long_x || 0,
-                  iconUrl: properties.icon,
-                  poiName: properties.poi_name,
-                }
-                
-                /* eslint-disable react/no-array-index-key */
-               return (<PointsOfInterestMarker key={index} markerProps={markerProps} />)
-             })}
-
-               <GeoJSON
-                 key={Math.random()}
-                 data={NkwashiPointOfInterestData}
-                 style={geoJSONStyle}
+             </LayersControl.BaseLayer>
+             <LayersControl.BaseLayer checked name="OSM">
+               <TileLayer
+                 attribution={attribution}
+                 url={openStreetMap}
                />
-             </FeatureGroup>
-           </LayersControl.Overlay>
-           <LayersControl.Overlay checked name="Nkwashi Sub-urban Areas">
-             <FeatureGroup>
-               <SubUrbanLayer />
-             </FeatureGroup>
-           </LayersControl.Overlay>
-           <LayersControl.Overlay name="Nkwashi Coverage Area">
-             <FeatureGroup>
-               <Popup>
-                 <Typography variant="body2">Nkwashi Estate</Typography>
-               </Popup>
-               <GeoJSON key={Math.random()} data={NkwashiCoverageData} style={geoJSONStyle} />
-             </FeatureGroup>
-           </LayersControl.Overlay>
-         </LayersControl>
-         <LandParcelLegend />
-       </Map>
-     </div>
+             </LayersControl.BaseLayer>
+             <LayersControl.BaseLayer name="Satellite">
+               <TileLayer
+                 attribution={attribution}
+                 url={`${mapboxSatellite}${mapboxPublicToken}`}
+               />
+             </LayersControl.BaseLayer>
+             <LayersControl.Overlay name="Nkwashi Land Parcels">
+               <FeatureGroup>
+                 {properties && properties.map(({ geom, parcelNumber, parcelType, plotSold }) => {
+                  if(checkValidGeoJSON(geom)){
+                    // mutate properties, add parcelNo, parcelType
+                    const feature = JSON.parse(geom)
+                    feature.properties.parcel_no = parcelNumber
+                    feature.properties.parcel_type = parcelType
+                    feature.properties.plot_sold = plotSold
+                    return featureCollection.features.push(feature)
+                  }
+                  return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                  })}
+                 <GeoJSON
+                   key={Math.random()}
+                   data={featureCollection}
+                   style={geoJSONPlotStyle}
+                   onEachFeature={onEachLandParcelFeature}
+                 />
+               </FeatureGroup>
+             </LayersControl.Overlay>
+             <LayersControl.Overlay name="Nkwashi Points of Interest">
+               <FeatureGroup>
+                 {poiData && poiData.map(({ id, geom, parcelNumber, parcelType }) => {
+                        if(checkValidGeoJSON(geom)){
+                          const feature = JSON.parse(geom)
+                          const markerProps = {
+                             geoLatY: feature.properties.lat_y || 0,
+                             geoLongX: feature.properties.long_x || 0,
+                             iconUrl: feature.properties.icon || '',
+                             poiName: feature.properties.poi_name || 'Point of Interest',
+                        }
+                        feature.properties.id = id
+                        feature.properties.parcel_no = parcelNumber
+                        feature.properties.parcel_type = parcelType
+                        poiFeatureCollection.features.push(feature)
+                        return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
+                      }
+                      return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                    })}
+                 <GeoJSON
+                   key={Math.random()}
+                   data={poiFeatureCollection}
+                   style={geoJSONStyle}
+                   onEachFeature={onEachPoiLayerFeature}
+                 />
+               </FeatureGroup>
+             </LayersControl.Overlay>
+             <LayersControl.Overlay checked name="Nkwashi Sub-urban Areas">
+               <FeatureGroup>
+                 <SubUrbanLayer />
+               </FeatureGroup>
+             </LayersControl.Overlay>
+             <LayersControl.Overlay name="Nkwashi Coverage Area">
+               <FeatureGroup>
+                 <Popup>
+                   <Typography variant="body2">Nkwashi Estate</Typography>
+                 </Popup>
+                 <GeoJSON key={Math.random()} data={NkwashiCoverageData} style={geoJSONStyle} />
+               </FeatureGroup>
+             </LayersControl.Overlay>
+           </LayersControl>
+           <LandParcelLegend />
+         </Map>
+       </div>
+     </>
   )
 }
 

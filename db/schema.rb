@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_10_120352) do
+ActiveRecord::Schema.define(version: 2021_03_15_102954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 2021_03_10_120352) do
     t.uuid "community_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "template_variables"
     t.index ["community_id"], name: "index_email_templates_on_community_id"
     t.index ["name"], name: "index_email_templates_on_name", unique: true
   end
@@ -385,7 +386,9 @@ ActiveRecord::Schema.define(version: 2021_03_10_120352) do
     t.decimal "long_x", precision: 10, scale: 6
     t.decimal "lat_y", precision: 10, scale: 6
     t.json "geom"
+    t.integer "deleted_status", default: 0
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
+    t.index ["deleted_status"], name: "index_land_parcels_on_deleted_status"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
   end
 

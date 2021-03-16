@@ -77,6 +77,7 @@ export default function MapEditor({ handleSaveMapEdit }){
     }
   }
 
+   /* istanbul ignore next */
   useEffect(() => {
     initializingMap() // performs a cleanup for already initialized map
 

@@ -31,7 +31,7 @@ export default function SubUrbanLegendContent(){
     }
 
     legend.addTo(map)
-  })
+  }, [map])
 
   return null
 }
