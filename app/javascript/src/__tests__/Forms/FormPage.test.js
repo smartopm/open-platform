@@ -19,6 +19,6 @@ describe('FormPage Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
   });
 });

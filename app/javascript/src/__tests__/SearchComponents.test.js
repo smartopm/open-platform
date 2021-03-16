@@ -90,9 +90,11 @@ describe('search result component', () => {
       }
     };
     const container = render(
-      <BrowserRouter>
-        <Results {...props} />
-      </BrowserRouter>
+      <MockedProvider>
+        <BrowserRouter>
+          <Results {...props} />
+        </BrowserRouter>
+      </MockedProvider>
     );
     expect(container.queryByText('Mocked John')).toBeInTheDocument();
     expect(container.queryByText('Mocked Jane D')).toBeInTheDocument();
