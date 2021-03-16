@@ -35,7 +35,7 @@ class Wallet < ApplicationRecord
 
   def debit_amount(amount)
     if balance >= amount
-      update(balance: (balance - amount), pending_balance: (pending_balance - amount))
+      update(balance: (balance - amount))
     else
       update(balance: 0, pending_balance: pending_balance + amount - balance)
     end
