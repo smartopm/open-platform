@@ -41,7 +41,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
     setIsConfirm(true);
   }
 
-  const { loading, data: landParcels, error } = useQuery(UserLandParcel, {
+  const { loading, data: landParcels } = useQuery(UserLandParcel, {
     variables: { userId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
