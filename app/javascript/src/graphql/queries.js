@@ -1129,7 +1129,7 @@ export const AllTransactionQuery = gql`
         invoices {
           id
           amount
-          description
+          invoiceNumber
           status
           createdAt
         }
