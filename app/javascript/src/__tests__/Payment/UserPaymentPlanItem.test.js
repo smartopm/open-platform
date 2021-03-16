@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import PaymentPlan, { renderPlan } from "../../components/Payments/UserTransactions/UserPaymentPlanItem";
 import currency from '../../__mocks__/currency'
 
-describe('Render Transaction', () => {
+describe('Render Payment Plan Item', () => {
   const plan = {
     amount: 200,
     percentage: '50',
@@ -30,7 +30,7 @@ describe('Render Transaction', () => {
 
   const plans = [plan];
 
-  it('should render the invoice item component', () => {
+  it('should render the payment plan item component', () => {
     const container = render(
       <BrowserRouter>
         <PaymentPlan plans={plans} currencyData={currency} />
