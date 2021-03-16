@@ -40,7 +40,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt }) {
   if(isLoading || loading) return <Spinner />
   if(!loading && !error && !imageLink || isError) return <span data-testid="community_name" style={{ color: colors.textColor }}>{data?.currentCommunity.name}</span>
   if (type === 'image') {
-    return <img src={response.url} className={className} alt={alt} />
+    return <img data-testid="authenticated_image" src={response.url} className={className} alt={alt} />
   }
   if (type === 'imageAvatar') {
     return <Avatar alt="avatar-image" src={response.url}  />
