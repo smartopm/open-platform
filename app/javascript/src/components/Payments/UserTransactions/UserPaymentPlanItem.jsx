@@ -6,8 +6,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../shared/list/DataList';
 import { dateToString } from '../../DateContainer';
 import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../utils/helpers';
-import UserInvoiceItem from './UserInvoiceItem';
-import ListHeader from '../../../shared/list/ListHeader';
 import Text from '../../../shared/Text';
 import Label from '../../../shared/label/Label';
 import { invoiceStatus } from '../../../utils/constants';
@@ -31,7 +29,6 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
 
   return (
     <>
-      {console.log(plans)}
       {plans.map(plan => (
         <Accordion key={plan.id}>
           <AccordionSummary
@@ -39,6 +36,7 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
             aria-label="Expand"
             id="additional-actions3-header"
             classes={{ content: classes.content }}
+            data-testid="summary"
           >
             <DataList
               keys={planHeader}
@@ -48,24 +46,20 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
             />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
-            <Typography color="textSecondary">
-              {
-                <div>
-                  <Typography color='primary' style={{marginLeft: '30px'}}>Invoices</Typography>
-                </div>
-              }
-              {plan.invoices
+            {plan.invoices && plan.invoices?.length &&
+              <Typography color='primary' style={{margin: '0 0 10px 50px'}}>Invoices</Typography>}
+            {plan.invoices
                 ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .map(inv => (
-                  <DataList
-                    key={inv.id}
-                    keys={invoiceHeader}
-                    data={[renderInvoice(inv, currencyData)]}
-                    hasHeader={false}
-                    clickable={false}
-                  />
+                  <div key={inv.id} style={{margin: '0 50px'}}>
+                    <DataList
+                      keys={invoiceHeader}
+                      data={[renderInvoice(inv, currencyData)]}
+                      hasHeader={false}
+                      clickable={false}
+                    />
+                  </div>
                 ))}
-            </Typography>
           </AccordionDetails>
         </Accordion>
       ))}
@@ -97,8 +91,8 @@ export function renderPlan(plan, currencyData) {
 export function renderInvoice(inv, currencyData) {
   return {
     'Issue Date': (
-      <Grid item xs={12} md={2}>
-        {dateToString(inv.createdAt)}
+      <Grid item xs={12} md={2} data-testid="issue-date">
+        <Text content={dateToString(inv.createdAt)} /> 
         <br />
         <Typography variant='caption' style={{fontWeight: 'bold'}}>Issue Date</Typography>
       </Grid>),
@@ -110,15 +104,15 @@ export function renderInvoice(inv, currencyData) {
       </Grid>
     ),
     Amount: (
-      <Grid item xs={12} md={2} data-testid="description">
+      <Grid item xs={12} md={2} data-testid="amount">
         <Text content={formatMoney(currencyData, inv.amount)} /> 
         <br />
         <Typography variant='caption' style={{fontWeight: 'bold'}}>Amount</Typography>
       </Grid>
     ),
     'Payment Date': (
-      <Grid item xs={12} md={2}>
-        {inv.status === 'paid' && inv.payments.length
+      <Grid item xs={12} md={2} data-testid="payment-date">
+        {inv.status === 'paid' && inv.payments?.length
           ? <Text content={dateToString(inv.payments[0]?.createdAt)} /> : '-'}
         <br />
         <Typography variant='caption' style={{fontWeight: 'bold'}}>Payment Date</Typography>
@@ -151,7 +145,11 @@ UserPaymentPlanItem.propTypes = {
       startDate: PropTypes.string,
       createdAt: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
 };
 
 const useStyles = makeStyles(() => ({
