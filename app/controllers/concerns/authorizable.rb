@@ -6,6 +6,7 @@ module Authorizable
 
   included do
     helper_method :current_member
+    helper_method :current_community
     before_action :current_community
     before_action :set_paper_trail_whodunnit
   end

@@ -7,6 +7,7 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
 import React, { useContext, useEffect, Suspense } from 'react'
+import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
   Switch,
@@ -182,7 +183,7 @@ const Analytics = props => {
   return props.children
 }
 
-export const App = () => {
+const App = () => {
   return (
     <Suspense
       fallback={() => {
@@ -385,3 +386,7 @@ export const App = () => {
     </Suspense>
   )
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(<App />, document.getElementById('root'))
+})

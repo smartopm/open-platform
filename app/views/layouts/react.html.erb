@@ -11,18 +11,18 @@
       gtag('config', 'UA-150647211-2');
     </script>
 
-    <title>DoubleGDP</title>
+    <title><%= current_community.name %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <link rel="manifest" href="/manifest.json"/>
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="theme-color" content=#69ABA4"/>
-    <meta name="description" content="Nkwashi app powered by DoubleGDP"/>
+    <meta name="description" content="<%= current_community.name %> app powered by DoubleGDP"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="application-name" content="DoubleGDP">
+    <meta name="application-name" content="<%= current_community.name %>">
     <meta name="msapplication-TileColor" content="#69ABA4">
-    <meta name="apple-mobile-web-app-title" content="DoubleGDP">
+    <meta name="apple-mobile-web-app-title" content="<%= current_community.name %>">
     <meta property="og:title" content="<%= wordpress_post_info(request.path)[:title].presence || 'Post Page' %>" />
     <meta property="og:image" content="<%= wordpress_post_info(request.path)[:image].presence || 'https://i2.wp.com/doublegdp.wpcomstaging.com/wp-content/uploads/2020/08/20200804_162543.jpg?fit=1008%2C756&ssl=1' %>" />
     <meta property="og:description" content="<%= wordpress_post_info(request.path)[:description].presence || 'Visit the doubleGDP app to see exciting and interesting posts on Nkwashi' %>" />
@@ -40,9 +40,8 @@
     <!-- App Icon -->
     <%# <link href="/images/home_192.png" rel="apple-touch-icon" sizes="192x192" />
     <link href="/images/home_72.png" type="image/png" rel="icon" sizes="72x72" /> %>
-    <link id="favicon" rel="icon" href="<%= asset_path('home_512.png') %>" type="image/x-icon" data-react-helmet="true" />
     <%# <%= favicon_link_tag asset_path('home_512.png') %>
-    <%# <%= favicon_link_tag asset_path('home_512.png'), rel: 'icon' %>
+    <%= favicon_link_tag asset_path('home_512.png'), rel: 'icon' %>
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
@@ -51,7 +50,7 @@
   <body>
     <div id="root">
     </div>
-    <%= javascript_pack_tag 'app' %>
+    <%= javascript_pack_tag 'react_main' %>
       <div class="alert text-center" id="btnSection" role="alert">
         <span id="btn">Click here to add this application to your home screen </span> <span id="closeBtn">close</span>
       </div>
