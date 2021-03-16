@@ -175,7 +175,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
               >
-                {landParcels.userLandParcel.map(land => (
+                {landParcels?.userLandParcel?.map(land => (
                   <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
                 ))}
               </TextField>
