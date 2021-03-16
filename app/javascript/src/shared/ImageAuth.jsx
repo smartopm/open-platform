@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react'
+import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import Avatar from '@material-ui/core/Avatar'
 import { useWindowDimensions } from '../utils/customHooks'
+import { Spinner } from './Loading'
+import { CurrentCommunityQuery } from '../graphql/queries/community'
+import colors from '../themes/nkwashi/colors'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
 export default function ImageAuth({ imageLink, token, className, type, alt }) {
     const [response, setData] = useState('')
+    const { data, error, loading} = useQuery(CurrentCommunityQuery)
     const { width } = useWindowDimensions()
-    // eslint-disable-next-line no-unused-vars
-    const [error, setError] = useState(null)
+    const [isError, setError] = useState(false)
+    const [isLoading, setLoading] = useState(false)
 
   const options = {
     method: 'GET',
@@ -19,16 +24,21 @@ export default function ImageAuth({ imageLink, token, className, type, alt }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
         const result = await fetch(imageLink, options)
         setData(result)
+        setLoading(false)
       } catch (err) {
-        setError(err)
+        setError(true)
+        setLoading(false)
       }
     }
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  if(isLoading || loading) return <Spinner />
+  if(!loading && !error && !imageLink || isError) return <span style={{ color: colors.textColor }}>{data?.currentCommunity.name}</span>
   if (type === 'image') {
     return <img src={response.url} className={className} alt={alt} />
   }
