@@ -1123,6 +1123,26 @@ export const AllTransactionQuery = gql`
         paymentType
         createdAt
       }
+      paymentPlans {
+        id
+        startDate
+        planType
+        status
+        percentage
+        plotBalance
+        createdAt
+        invoices {
+          id
+          amount
+          invoiceNumber
+          status
+          createdAt
+        }
+        landParcel {
+          id
+          parcelNumber
+        }
+      }
     }
   }
 `;
@@ -1182,6 +1202,21 @@ export const PendingInvoicesQuery = gql`
     }
   }
 `;
+
+// TODO: this should be moved out this file
+export const PaidInvoicesByPlan = gql`
+  query paidInvoicesByPlan($paymentPlanId: ID!) {
+    paidInvoicesByPlan(paymentPlanId: $paymentPlanId) {
+      id
+      amount
+      status
+      createdAt
+      landParcel {
+        parcelNumber
+      }
+    }
+  }
+`
 
 export const TransactionsQuery = gql`
   query allTransactions($limit: Int, $offset: Int, $query: String) {

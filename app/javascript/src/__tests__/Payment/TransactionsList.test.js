@@ -98,7 +98,27 @@ describe('Transactions Component', () => {
               paymentType: 'cash',
               createdAt: '2020-12-23',
               id: 'ec289778-8d32-4ec6-ba69-313058e61c19'
-              }]
+            }],
+            paymentPlans: [{
+              percentage: '50',
+              planType: 'lease',
+              createdAt: '2021-03-01T09:55:05Z',
+              plotBalance: 0,
+              startDate: '2021-03-01T09:55:05Z',
+              status: 'active',
+              id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
+              invoices: [{
+                id: 'a54d6184-b10e-4865-bee7-7957701d423d',
+                amount: 500,
+                createdAt: '2021-03-01T09:55:05Z',
+                status: 'paid',
+                invoiceNumber: 123
+              }],
+              landParcel: {
+                id: '233b1634-bf08-4ece-a213-b3f120a1e009',
+                parcelNumber: 'Plot-1343'
+              }
+            }]
           }
         }
       }

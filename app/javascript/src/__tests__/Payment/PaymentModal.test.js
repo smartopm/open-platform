@@ -1,10 +1,12 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PaymentModal, { PaymentDetails } from '../../components/Payments/UserTransactions/PaymentModal'
 import currency from '../../__mocks__/currency'
+import { UserLandParcel } from '../../graphql/queries';
+import { Spinner } from '../../shared/Loading';
 
 describe('It should test the payment modal component', () => {
   const invoiceData =
@@ -19,10 +21,26 @@ describe('It should test the payment modal component', () => {
 
   const handleModalClose = jest.fn
 
-  it('it should render payment modal', () => {
+  const userLandParcel = [{
+    id: '1234',
+    parcelNumber: 'ho2ij3'
+  }]
+
+  it('it should render payment modal', async () => {
+    const mock = [{
+      request: {
+        query: UserLandParcel,
+        variables: {  userId: '279546' }
+      },
+      result: {
+        data: {
+          userLandParcel
+        }
+      }
+    }];
     const container = render(
       <BrowserRouter>
-        <MockedProvider>
+        <MockedProvider mocks={mock}>
           <PaymentModal 
             open={open} 
             invoiceData={invoiceData} 
@@ -32,9 +50,18 @@ describe('It should test the payment modal component', () => {
         </MockedProvider>
       </BrowserRouter>
     )
+    
+    const loader = render(<Spinner />);
 
-    expect(container.getByTestId("transaction-type")).toBeInTheDocument()
-    expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
+    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+
+    await waitFor(
+      () => {
+        expect(container.getByTestId("transaction-type")).toBeInTheDocument()
+        expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
+      },
+      { timeout: 200 }
+    );
 
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })

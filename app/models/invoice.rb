@@ -7,9 +7,10 @@ class Invoice < ApplicationRecord
   belongs_to :land_parcel
   belongs_to :community
   belongs_to :user
+  belongs_to :payment_plan, optional: true
   belongs_to :created_by, class_name: 'User', optional: true
 
-  before_validation :invoice_not_present_for_month
+  before_validation :invoice_not_present_for_month, on: :create
   after_create :collect_payment_from_wallet, if: proc { persisted? }
   after_create :generate_event_log, if: proc { persisted? }
   before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
@@ -28,46 +29,23 @@ class Invoice < ApplicationRecord
     attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
-      current_payment = settle_amount
-      user.wallet.update_balance(amount, 'debit')
-      return if current_payment.zero?
+      cur_payment = settle_amount
+      return user.wallet.update_balance(amount, 'debit') if cur_payment.zero?
 
-      transaction = user.wallet_transactions.create!({
-                                                       source: 'wallet',
-                                                       destination: 'invoice',
-                                                       amount: current_payment,
-                                                       status: 'settled',
-                                                       user_id: user.id,
-                                                       current_wallet_balance: user.wallet.balance,
-                                                       community_id: user.community_id,
-                                                     })
-      payment = create_payment(current_payment, user)
-      payment_invoices.create(payment_id: payment.id, wallet_transaction_id: transaction.id)
+      user.wallet.settle_from_plot_balance(self, cur_payment)
     end
-  end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-
-  def create_payment(payment_amount, user)
-    Payment.create(
-      amount: payment_amount,
-      payment_type: 'wallet',
-      user_id: user.id,
-      community_id: user.community_id,
-    )
   end
 
   def settle_amount
-    pending_amount = amount - user.wallet.balance
+    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
     if pending_amount.positive?
       update(pending_amount: pending_amount)
       return amount - pending_amount
     end
 
+    update(pending_amount: 0)
     paid!
     amount
   end

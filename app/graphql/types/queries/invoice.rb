@@ -42,6 +42,12 @@ module Types::Queries::Invoice
       argument :limit, Integer, required: false
     end
 
+    # Get paid invoices by payment plan id
+    field :paid_invoices_by_plan, [Types::InvoiceType], null: true do
+      description 'Get paid invoices for a user by payment plan'
+      argument :payment_plan_id, GraphQL::Types::ID, required: true
+    end
+
     field :invoice_stats, Types::InvoiceStatType, null: false do
       description 'return stats based on status of invoices'
     end
@@ -91,6 +97,7 @@ module Types::Queries::Invoice
     {
       invoices: user.invoices.eager_load(:land_parcel, :payments).reverse,
       payments: user.invoices.map(&:payments).flatten,
+      payment_plans: user.payment_plans,
     }
   end
 
@@ -98,6 +105,13 @@ module Types::Queries::Invoice
     user = verified_user(user_id)
 
     cumulate_pending_balance(user.invoices.where('pending_amount > ?', 0))
+  end
+
+  def paid_invoices_by_plan(payment_plan_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    plan = ::PaymentPlan.find(payment_plan_id)
+    plan.invoices.paid
   end
 
   # rubocop:disable Metrics/MethodLength

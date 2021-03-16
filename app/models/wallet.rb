@@ -35,7 +35,8 @@ class Wallet < ApplicationRecord
 
   def debit_amount(amount)
     if balance >= amount
-      update(balance: (balance - amount), pending_balance: (pending_balance - amount))
+      pending_bal = amount > pending_balance ? 0 : pending_balance - amount
+      update(balance: (balance - amount), pending_balance: pending_bal)
     else
       update(balance: 0, pending_balance: pending_balance + amount - balance)
     end
@@ -43,24 +44,31 @@ class Wallet < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
-  def make_payment(inv)
-    payment_amount = inv.pending_amount > balance ? balance : inv.pending_amount
-    update_balance(payment_amount, 'debit')
+  def make_payment(inv, payment_amount)
     transaction = create_transaction(payment_amount)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
                              user_id: user.id, community_id: user.community_id)
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
     inv.update(pending_amount: inv.pending_amount - payment_amount)
+    inv.paid! if inv.pending_amount.zero?
+  end
+
+  def settle_from_plot_balance(inv, payment_amount)
+    update_balance(payment_amount, 'debit')
+    bal = inv.land_parcel.payment_plan&.plot_balance
+    inv.land_parcel.payment_plan.update(plot_balance: bal - payment_amount)
+    make_payment(inv, payment_amount)
   end
 
   def settle_invoices
     return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
 
-    user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
-      break unless balance.positive?
+    user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
+      next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
 
-      make_payment(invoice)
-      invoice.paid! if invoice.pending_amount.zero?
+      bal = invoice.land_parcel.payment_plan&.plot_balance
+      payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
+      settle_from_plot_balance(invoice, payment_amount)
     end
   end
   # rubocop:enable Metrics/AbcSize
