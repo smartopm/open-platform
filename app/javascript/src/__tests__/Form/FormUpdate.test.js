@@ -152,7 +152,7 @@ describe('Form Component', () => {
           expect(
             container.queryAllByTestId('date-picker')[0]
             ).toHaveTextContent('Dead Line')
-        expect(container.queryAllByAltText('authenticated link')).toHaveLength(1)
+        expect(container.queryByTestId('community_name')).toBeInTheDocument()
         // expect(container.queryByText('Signature')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
         // expect(container.queryAllByLabelText('sign_title')[0].textContent).toContain('SIGNATURE')

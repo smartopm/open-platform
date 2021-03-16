@@ -38,7 +38,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if(isLoading || loading) return <Spinner />
-  if(!loading && !error && !imageLink || isError) return <span style={{ color: colors.textColor }}>{data?.currentCommunity.name}</span>
+  if(!loading && !error && !imageLink || isError) return <span data-testid="community_name" style={{ color: colors.textColor }}>{data?.currentCommunity.name}</span>
   if (type === 'image') {
     return <img src={response.url} className={className} alt={alt} />
   }
