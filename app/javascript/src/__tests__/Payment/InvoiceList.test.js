@@ -9,14 +9,6 @@ import InvoiceList, { renderInvoice } from '../../components/Payments/InvoiceLis
 import currency from '../../__mocks__/currency';
 
 describe('Invoice Item Component', () => {
-  const menuData = {
-    menuList: [{ content: 'Example', isAdmin: true, color: '', handleClick: jest.fn()}],
-    handleTransactionMenu: jest.fn(),
-    anchorEl: null,
-    open: true,
-    userType: 'admin',
-    handleClose: jest.fn()
-  }
   const invoices = [
     {
       id: '299191a9-dece-4ea5-96a2-1e50424fa38a',
@@ -137,13 +129,12 @@ describe('Invoice Item Component', () => {
     );
   });
   it('should check if renderInvoice works as expected', () => {
-    const results = renderInvoice(invoices[0], currency, menuData);
+    const results = renderInvoice(invoices[0], currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Issue Date');
     expect(results[0]).toHaveProperty('Description');
     expect(results[0]).toHaveProperty('Amount');
     expect(results[0]).toHaveProperty('Payment Date');
     expect(results[0]).toHaveProperty('Status');
-    expect(results[0]).toHaveProperty('Menu');
   });
 });
