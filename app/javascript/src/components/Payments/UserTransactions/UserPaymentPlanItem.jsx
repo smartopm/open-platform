@@ -29,7 +29,7 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
 
   return (
     <>
-      {plans.map(plan => (
+      {plans?.map(plan => (
         <Accordion key={plan.id}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}

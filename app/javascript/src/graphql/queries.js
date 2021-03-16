@@ -1134,6 +1134,7 @@ export const AllTransactionQuery = gql`
           createdAt
         }
         landParcel {
+          id
           parcelNumber
         }
       }

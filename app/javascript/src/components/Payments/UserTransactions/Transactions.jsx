@@ -196,7 +196,7 @@ export default function TransactionsList({ userId, user, userData }) {
       <TabPanel value={tabValue} index="Plans">
         {matches && <ListHeader headers={paymentPlan} />}
         <UserPaymentPlanItem
-          plans={invPayData?.invoicesWithTransactions.paymentPlans}
+          plans={invPayData?.invoicesWithTransactions?.paymentPlans}
           currencyData={currencyData}
         />
       </TabPanel>
