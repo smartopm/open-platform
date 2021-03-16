@@ -56,6 +56,14 @@ module ActionFlows
         'user_email' => '',
         'creator' => '',
       },
+      'Transaction' => {
+        'amount' => '',
+        'status' => '',
+        'source' => '',
+        'destination' => '',
+        'user_name' => '',
+        'user_email' => '',
+      },
     }.freeze
 
     attr_accessor :data_set

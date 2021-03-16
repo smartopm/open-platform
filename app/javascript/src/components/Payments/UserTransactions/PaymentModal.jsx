@@ -36,8 +36,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   const [submitting, setIsSubmitting] = useState(false)
   const [isConfirm, setIsConfirm] = useState(false);
 
-  const { loading, error, data } = useQuery(EmailTemplatesQuery)
-
   function confirm(event) {
     event.preventDefault();
     setIsConfirm(true);
@@ -232,23 +230,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 </>
               )
             }
-              <TextField
-                margin="dense"
-                id="mail-template"
-                label="Mail Template"
-                value={inputValue.templateId}
-                onChange={(event) => setInputValue({...inputValue, templateId: event.target.value})}
-                required
-                select
-                error={isError && submitting && !inputValue.templateId}
-                helperText={isError && !inputValue.templateId && 'Template ID is required'}
-              >
-                {data?.emailTemplates.map(template => (
-                  <MenuItem key={template.id} value={template.id}>
-                    {template.name}
-                  </MenuItem>
-                ))}
-              </TextField>
             </div>
           </>
         )}
