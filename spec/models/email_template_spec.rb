@@ -10,8 +10,8 @@ RSpec.describe EmailTemplate, type: :model do
       variables = { body: ['name'], subject: ['subject_variable'] }.to_json
       community.email_templates.create(
         name: 'Test Email Template',
-        subject: 'This is a ${subject_variable}',
-        body: '<h1> Hello ${name}</h1>',
+        subject: 'This is a %subject_variable%',
+        body: '<h1> Hello %name%</h1>',
       )
       expect(community.email_templates.length).to eql 1
       expect(community.email_templates[0].template_variables).to eql variables
