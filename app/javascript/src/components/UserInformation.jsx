@@ -26,7 +26,7 @@ import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
 import Transactions from './Payments/UserTransactions/Transactions'
-import UserJourney from '../containers/User/UserJourney'
+import UserJourney from './User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
 
 export default function UserInformation({
@@ -255,7 +255,7 @@ export default function UserInformation({
         </TabPanel>
         {['admin'].includes(userType) && (
           <TabPanel value={tabValue} index="CustomerJourney">
-            <UserJourney data={data} />
+            <UserJourney data={data} refetch={refetch} />
           </TabPanel>
         )}
 

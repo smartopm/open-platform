@@ -17,7 +17,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           style={{ width: `${width || '100%'}` }}
           clearable
           margin="normal"
-          id="date-picker-dialog"
+          id={`date-picker-dialog-${label}`}
           label={label}
           format="yyyy-MM-dd"
           placeholder="YYYY-MM-DD"
