@@ -13,8 +13,8 @@ import { UserLandParcel } from '../../../graphql/queries'
 import MessageAlert from "../../MessageAlert"
 import { extractCurrency, formatError, formatMoney } from '../../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
-import { Spinner } from '../../../shared/Loading'
-
+import { Spinner } from '../../../shared/Loading';
+ 
 const initialValues = {
   amount: '',
   transactionType: '',

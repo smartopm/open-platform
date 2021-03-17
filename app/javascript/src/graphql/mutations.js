@@ -810,6 +810,9 @@ export const PaymentCreate = gql`
       transactionNumber: $transactionNumber
       landParcelId: $landParcelId
     ) {
+      walletTransaction {
+        id
+        source
         amount
         status
         bankName
