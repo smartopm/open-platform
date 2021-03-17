@@ -1,16 +1,17 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
 import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
-import { formatError, formatMoney, useParamsQuery } from '../../utils/helpers';
+import { formatError, formatMoney, useParamsQuery, propAccessor } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
@@ -23,6 +24,7 @@ import currency from '../../shared/types/currency';
 import Text from '../../shared/Text';
 import PaymentGraph from './PaymentGraph'
 import { Spinner } from '../../shared/Loading';
+import QueryBuilder from '../QueryBuilder'
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -42,15 +44,16 @@ export default function PaymentList({ currencyData }) {
   const history = useHistory()
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [displayBuilder, setDisplayBuilder] = useState('none')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterCount, setFilterCount] = useState(0)
 
   const pageNumber = Number(page);
   const { loading, data, error } = useQuery(TransactionsQuery, {
-    variables: { limit, offset: pageNumber, query: debouncedValue},
+    variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-
-  function handleFilter(){}
 
   let paymentList
   if (data?.transactions) {
@@ -89,11 +92,122 @@ export default function PaymentList({ currencyData }) {
     fetchPolicy: 'cache-and-network'
   })
 
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none')
+    } else {
+      setDisplayBuilder('')
+    }
+  }
+
+  function handleQueryOnChange(selectedOptions) {
+    if (selectedOptions) {
+      const andConjugate = selectedOptions.logic?.and
+      const orConjugate = selectedOptions.logic?.or
+      const availableConjugate = andConjugate || orConjugate
+      if (availableConjugate) {
+        const conjugate = andConjugate ? 'AND' : 'OR'
+        const queryy = availableConjugate
+          .map(option => {
+            let operator = Object.keys(option)[0]
+            // skipped nested object accessor here until fully tested 
+            // eslint-disable-next-line security/detect-object-injection
+            const property = filterFields[option[operator][0].var]
+            let value = propAccessor(option, operator)[1]
+
+            if (operator === '==') operator = '='
+            if (property === 'date_filter') {
+              operator = '>'
+              value = dateToString(value)
+            }
+
+            return `${property} ${operator} "${value}"`
+          })
+          .join(` ${conjugate} `)
+        setSearchQuery(queryy)
+        setListType('nongraph')
+        setFilterCount(availableConjugate.length)
+      }
+    }
+  }
+
+  const InitialConfig = MaterialConfig
+  const queryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      userName: {
+        label: 'User Name',
+        type: 'text',
+        valueSources: ['value'],
+      },
+      invoiceNumber: {
+        label: 'Invoice Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      phoneNumber: {
+        label: 'Phone Number',
+        type: 'number',
+        valueSources: ['value']
+      },
+      email: {
+        label: 'Email',
+        type: 'text',
+        valueSources: ['value']
+      },
+      plotNumber: {
+        label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      createdDate: {
+        label: 'Created Date',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      dueDate: {
+        label: 'Due Date',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      }
+    }
+  }
+
+  const queryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'userName',
+          operator: 'equal',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['text']
+        }
+      }
+    }
+  }
+
+  const filterFields = {
+    userName: 'user',
+    invoiceNumber: 'invoice_number',
+    phoneNumber: 'phone_number',
+    email: 'email',
+    plotNumber: 'land_parcel',
+    createdDate: 'created_at',
+    dueDate: 'due_date'
+  }
+
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
-  if (loading) return <Spinner />;
+  // if (loading) return <Spinner />;
   
   if (statError) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
@@ -104,21 +218,42 @@ export default function PaymentList({ currencyData }) {
         title='Payments' 
         searchValue={searchValue} 
         handleSearch={event => setsearch(event.target.value)} 
-        handleFilter={handleFilter} 
+        handleFilter={toggleFilterMenu} 
         handleClear={() => setSearchClear()}
       />
+      <Grid
+        container
+        justify="flex-end"
+        style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-100px',
+              display: displayBuilder
+            }}
+      >
+        <QueryBuilder
+          handleOnChange={handleQueryOnChange}
+          builderConfig={queryBuilderConfig}
+          initialQueryValue={queryBuilderInitialValue}
+          addRuleLabel="Add filter"
+        />
+      </Grid>
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
-      {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
-        <div>
-          {matches && <ListHeader headers={paymentHeaders} />}
-          {
+      {loading ? (<Spinner />) : (
+        <List>
+          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
+            <div>
+              {matches && <ListHeader headers={paymentHeaders} />}
+              {
             paymentStatData.paymentStatDetails.map(payment => (
               <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
             ))
           }
-        </div>
+            </div>
       ) : paymentList?.length && paymentList?.length > 0 ? (
         <div>
           {matches && <ListHeader headers={paymentHeaders} />}
@@ -130,6 +265,8 @@ export default function PaymentList({ currencyData }) {
         </div>
       ) : (
         <CenteredContent>No Payments Available</CenteredContent>
+      )}
+        </List>
       )}
       {
           paymentList?.length >= limit && (

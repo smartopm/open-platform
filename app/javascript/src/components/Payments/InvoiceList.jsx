@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
@@ -39,6 +40,7 @@ import ListHeader from '../../shared/list/ListHeader';
 import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
+import QueryBuilder from '../QueryBuilder'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -63,6 +65,9 @@ export default function InvoiceList({ currencyData, userType }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const [displayBuilder, setDisplayBuilder] = useState('none')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterCount, setFilterCount] = useState(0)
 
   function handleOpenMenu(event) {
     event.stopPropagation()
@@ -75,7 +80,7 @@ export default function InvoiceList({ currencyData, userType }) {
   }
 
   const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
-    variables: { limit, offset: pageNumber, query: debouncedValue },
+    variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -124,7 +129,118 @@ export default function InvoiceList({ currencyData, userType }) {
       history.push(`/payments?page=${pageNumber + limit}`);
     }
   }
-  if (loading) return <Spinner />;
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none')
+    } else {
+      setDisplayBuilder('')
+    }
+  }
+
+  function handleQueryOnChange(selectedOptions) {
+    if (selectedOptions) {
+      const andConjugate = selectedOptions.logic?.and
+      const orConjugate = selectedOptions.logic?.or
+      const availableConjugate = andConjugate || orConjugate
+      if (availableConjugate) {
+        const conjugate = andConjugate ? 'AND' : 'OR'
+        const queryy = availableConjugate
+          .map(option => {
+            let operator = Object.keys(option)[0]
+            // skipped nested object accessor here until fully tested 
+            // eslint-disable-next-line security/detect-object-injection
+            const property = filterFields[option[operator][0].var]
+            let value = propAccessor(option, operator)[1]
+
+            if (operator === '==') operator = '='
+            if (property === 'date_filter') {
+              operator = '>'
+              value = dateToString(value)
+            }
+
+            return `${property} ${operator} "${value}"`
+          })
+          .join(` ${conjugate} `)
+        setSearchQuery(queryy)
+        setListType('nongraph')
+        setFilterCount(availableConjugate.length)
+      }
+    }
+  }
+
+  const InitialConfig = MaterialConfig
+  const queryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      userName: {
+        label: 'User Name',
+        type: 'text',
+        valueSources: ['value'],
+      },
+      invoiceNumber: {
+        label: 'Invoice Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      phoneNumber: {
+        label: 'Phone Number',
+        type: 'number',
+        valueSources: ['value']
+      },
+      email: {
+        label: 'Email',
+        type: 'text',
+        valueSources: ['value']
+      },
+      plotNumber: {
+        label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      createdDate: {
+        label: 'Created Date',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      dueDate: {
+        label: 'Due Date',
+        type: 'date',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      }
+    }
+  }
+
+  const queryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'userName',
+          operator: 'equal',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['text']
+        }
+      }
+    }
+  }
+
+  const filterFields = {
+    userName: 'user',
+    invoiceNumber: 'invoice_number',
+    phoneNumber: 'phone_number',
+    email: 'email',
+    plotNumber: 'land_parcel',
+    createdDate: 'created_at',
+    dueDate: 'due_date'
+  }
+  
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -141,7 +257,7 @@ export default function InvoiceList({ currencyData, userType }) {
             searchValue={searchValue}
             handleSearch={event => setsearch(event.target.value)}
             // Todo: add a proper filter toggle function
-            handleFilter={() => {}}
+            handleFilter={toggleFilterMenu}
             handleClear={() => setSearchClear()}
           />
         </Grid>
@@ -176,11 +292,31 @@ export default function InvoiceList({ currencyData, userType }) {
           </CenteredContent>
         </Grid>
       </Grid>
+      <Grid
+        container
+        justify="flex-end"
+        style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-100px',
+              display: displayBuilder
+            }}
+      >
+        <QueryBuilder
+          handleOnChange={handleQueryOnChange}
+          builderConfig={queryBuilderConfig}
+          initialQueryValue={queryBuilderInitialValue}
+          addRuleLabel="Add filter"
+        />
+      </Grid>
       <br />
       <br />
       <InvoiceGraph handleClick={setGraphQuery} />
-      <List>
-        {
+      {loading ? (<Spinner />) : (
+        <List>
+          {
           listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length && invoicesStatData?.invoicesStatDetails?.length > 0 ?
         (
           <div>
@@ -214,7 +350,8 @@ export default function InvoiceList({ currencyData, userType }) {
           <CenteredContent>No Invoices Available</CenteredContent>
         )
         }
-      </List>
+        </List>
+      )}
 
       <CenteredContent>
         <Paginate
