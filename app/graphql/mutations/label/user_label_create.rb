@@ -12,7 +12,7 @@ module Mutations
       field :label, [Types::UserLabelType], null: true
 
       # TODO: move create label operations to background job : Saurabh
-      def resolve(query:, limit:, label_id:, user_list:)
+      def resolve(query: nil, limit: nil, label_id:, user_list: nil)
         user_ids = (user_list.present? ? user_list.split(',') : list_of_user_ids(query, limit))
         label_ids = label_id.split(',')
         labels = []
