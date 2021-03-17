@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
+import EditIcon from '@material-ui/icons/Edit';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { dateFormatter } from "../../components/DateContainer"
 import { userSubStatus } from '../../utils/constants';
@@ -80,10 +82,17 @@ export default function UserJourney({ data }) {
   return (
     <>
       {formattedSubStatusLogs.map(({ id, content }) => (
-        <Typography variant="body2" style={{marginTop: '10px', marginLeft: '12px'}} key={id}>
-          <b>{data.user.name}</b>
-          {content}
-        </Typography>
+        <Grid container spacing={3} key={id}>
+          <Grid item xs={10}>
+            <Typography variant="body2" style={{marginTop: 0, marginLeft: '12px'}}>
+              <b>{data.user.name}</b>
+              {content}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <EditIcon />
+          </Grid>
+        </Grid>
       ))}
     </>
   );
