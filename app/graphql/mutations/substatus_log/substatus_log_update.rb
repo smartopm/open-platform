@@ -12,9 +12,9 @@ module Mutations
   
         def resolve(vals)
           log = context[:site_community].substatus_logs.find_by(id: vals[:id])
-          raise GraphQL::ExecutionError, 'Label not found' if label.nil?
+          raise GraphQL::ExecutionError, 'Substatus log not found' if log.nil?
           return { log: log } if log.update(vals)
-          
+
           raise GraphQL::ExecutionError, log.errors.full_messages
         end
   

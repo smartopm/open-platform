@@ -76,7 +76,7 @@ module Mutations
         # maintains the time set in user model if no start_date provided
         return if start_date.nil?
 
-        status = SubstatusLog.find_by(id: user.latest_substatus_id)
+        status = user.substatus_logs.find_by(id: user.latest_substatus_id)
         status&.update!(start_date: start_date)
       end
 

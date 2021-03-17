@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation } from 'react-apollo';
 import { CustomizedDialogs } from '../Dialog';
 import MessageAlert from '../MessageAlert';
 import DatePickerDialog from '../DatePickerDialog';
+import { UserJourneyUpdateMutation } from '../../graphql/mutations/user_journey';
 
 export default function UserJourneyDialog({ open, handleModalClose, refetch, logId }) {
   const [messageAlert, setMessageAlert] = useState({ isError: false, message: '', isOpen: false });
   const [dates, setDates] = useState({ startDate: new Date(), endDate: new Date() });
+  const [updateUserJourney] = useMutation(UserJourneyUpdateMutation)  
+
+
   function handleSubmit() {
     refetch();
     console.log(logId);
