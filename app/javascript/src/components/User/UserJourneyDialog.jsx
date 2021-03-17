@@ -8,30 +8,46 @@ import { UserJourneyUpdateMutation } from '../../graphql/mutations/user_journey'
 import { formatError } from '../../utils/helpers';
 
 export default function UserJourneyDialog({ open, handleModalClose, refetch, log }) {
-  const [state, setState] = useState({ isError: false, message: '', isOpen: false, isLoading: false });
+  const [state, setState] = useState({
+    isError: false,
+    message: '',
+    isOpen: false,
+    isLoading: false
+  });
   const [dates, setDates] = useState({ startDate: log.startDate, endDate: log.stopDate });
-  const [updateUserJourney] = useMutation(UserJourneyUpdateMutation)  
+  const [updateUserJourney] = useMutation(UserJourneyUpdateMutation);
 
-  console.log(log)
-    
-    // force dates to update when we pick a different log
-    useEffect(() => {
-        setDates({ ...dates, startDate: log.startDate, endDate: log.stopDate })
+  console.log(log);
+
+  // force dates to update when we pick a different log
+  useEffect(() => {
+    setDates({ ...dates, startDate: log.startDate, endDate: log.stopDate });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [open])
+  }, [open]);
 
   function handleSubmit() {
-    setState({ ...state, isLoading: true })
+    setState({ ...state, isLoading: true });
     updateUserJourney({
-        variables: { id: log.id, startDate: dates.startDate, stopDate: dates.endDate }
+      variables: {
+        id: log.id,
+        startDate: dates.startDate,
+        stopDate: dates.endDate,
+        previousStatus: log.previousStatus
+      }
     })
-    .then(() => {
-        setState({ ...state, isLoading: false, message: 'Successfully updated', isOpen: true })
+      .then(() => {
+        setState({ ...state, isLoading: false, message: 'Successfully updated', isOpen: true });
         refetch();
-    })
-    .catch(error => {
-        setState({ ...state, isLoading: false, message: formatError(error.message), isOpen: true, isError: true })
-    })
+      })
+      .catch(error => {
+        setState({
+          ...state,
+          isLoading: false,
+          message: formatError(error.message),
+          isOpen: true,
+          isError: true
+        });
+      });
   }
   return (
     <>
@@ -69,10 +85,11 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
 UserJourneyDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  log: PropTypes.shape({ 
-      id: PropTypes.string,
-      stopDate: PropTypes.string,
-      startDate: PropTypes.string,
-   }).isRequired,
+  log: PropTypes.shape({
+    id: PropTypes.string,
+    stopDate: PropTypes.string,
+    startDate: PropTypes.string,
+    previousStatus: PropTypes.string
+  }).isRequired,
   refetch: PropTypes.func.isRequired
 };

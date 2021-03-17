@@ -55,7 +55,9 @@ export default function UserJourney({ data, refetch }) {
     Time lapse = startDate[index + 1] to startDate[index]
     For initial sub-status, change message content.
     */
-    const sortedLogsDescending = [...subStatusLogs].sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+    // const sortedLogsDescending = [...subStatusLogs].sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+
+    const sortedLogsDescending = subStatusLogs
 
     return (sortedLogsDescending.map((log, index) => {
         if(index === (sortedLogsDescending.length - 1)){
@@ -87,7 +89,7 @@ export default function UserJourney({ data, refetch }) {
   }
 
   const formattedSubStatusLogs = subsStatusLogsFormatter(data.user?.substatusLogs)
-
+  console.log(data.user?.substatusLogs)
   return (
     <>
       <UserJourneyDialog 

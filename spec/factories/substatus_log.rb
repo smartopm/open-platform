@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :substatus_log do
     user
     community
-    previous_status { "plots_fully_purchased" }
-    new_status { "eligible_to_start_construction" }
+    previous_status { 'plots_fully_purchased' }
+    new_status { 'eligible_to_start_construction' }
   end
 end
