@@ -11,7 +11,7 @@ import UserJourneyDialog from './UserJourneyDialog';
 
 export default function UserJourney({ data, refetch }) {
   const [isEditOpen, setIsEditing] = useState(false)
-  const [selectedJourneyLog, setCurrentLog] = useState("")
+  const [selectedJourneyLog, setCurrentLog] = useState({})
 
   function getInitialSubStatusContent({ startDate, newStatus }){
     return (
@@ -66,7 +66,7 @@ export default function UserJourney({ data, refetch }) {
             }
           )
 
-          return {id: log.id, content }
+          return {id: log.id, content, previousStatus: null}
         }
 
         const startDate = dateFormatter(sortedLogsDescending[Number(index + 1)].startDate)
@@ -76,13 +76,13 @@ export default function UserJourney({ data, refetch }) {
 
         const content = getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus })
 
-        return { id: log.id, content }
+        return { id: log.id, content, startDate, stopDate, previousStatus }
       })
     )
   }
 
-  function handleEdit(id){
-    setCurrentLog(id)
+  function handleEdit(log){
+    setCurrentLog(log)
     setIsEditing(true)
   }
 
@@ -93,19 +93,20 @@ export default function UserJourney({ data, refetch }) {
       <UserJourneyDialog 
         open={isEditOpen}
         handleModalClose={() => setIsEditing(false)}
-        logId={selectedJourneyLog}
+        log={selectedJourneyLog}
         refetch={refetch}
+
       />
-      {formattedSubStatusLogs.map(({ id, content }) => (
-        <Grid container spacing={3} key={id}>
+      {formattedSubStatusLogs.map((log) => (
+        <Grid container spacing={3} key={log.id}>
           <Grid item xs={10}>
             <Typography variant="body2" style={{marginTop: 10, marginLeft: '12px'}}>
               <b>{data.user.name}</b>
-              {content}
+              {log.content}
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <IconButton aria-label="edit user journey" color="primary" onClick={() => handleEdit(id)}>
+            <IconButton aria-label="edit user journey" color="primary" onClick={() => handleEdit(log)}>
               <EditIcon />
             </IconButton>
           </Grid>

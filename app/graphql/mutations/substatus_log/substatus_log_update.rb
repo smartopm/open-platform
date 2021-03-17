@@ -7,6 +7,7 @@ module Mutations
         argument :id, ID, required: true
         argument :start_date, String, required: true
         argument :stop_date, String, required: true
+        argument :previous_status, String, required: false
   
         field :log, Types::SubstatusLogType, null: true
   

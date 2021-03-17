@@ -4,8 +4,8 @@
 import gql from 'graphql-tag';
 
 export const UserJourneyUpdateMutation = gql`
-  mutation update_subtatus($id: ID!, $startDate: String!, $stopDate: String!) {
-    substatusLogUpdate(id: $id, startDate: $startDate, stopDate: $stopDate) {
+  mutation update_subtatus($id: ID!, $startDate: String!, $stopDate: String!, $previousStatus: String) {
+    substatusLogUpdate(id: $id, startDate: $startDate, stopDate: $stopDate, previousStatus: $previousStatus) {
       log {
         id
       }
