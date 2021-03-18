@@ -128,11 +128,9 @@ describe('Invoice Item Component', () => {
       { timeout: 100 }
     );
 
-        const filterClick = container.getByTestId("filter")
-
-        fireEvent.click(filterClick)
-
-        expect(container.queryByText('User Name')).toBeInTheDocument()
+    const filterClick = container.getByTestId("filter")
+    fireEvent.click(filterClick)
+    expect(container.queryByText('User Name')).toBeInTheDocument()
   });
   it('should check if renderInvoice works as expected', () => {
     const results = renderInvoice(invoices[0], currency);

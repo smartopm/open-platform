@@ -15,6 +15,6 @@ describe('Payments Component', () => {
       </MockedProvider>
     );
 
-    expect(container.getByText(/Invoices/)).toBeInTheDocument();
+    expect(container.getAllByText(/Invoices/)[0]).toBeInTheDocument();
   });
 });
