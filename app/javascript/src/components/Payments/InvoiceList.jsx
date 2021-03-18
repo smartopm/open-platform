@@ -41,6 +41,7 @@ import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
 import QueryBuilder from '../QueryBuilder'
+import { dateToString as utilDate } from '../../utils/dateutil'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -67,7 +68,6 @@ export default function InvoiceList({ currencyData, userType }) {
   const open = Boolean(anchorEl)
   const [displayBuilder, setDisplayBuilder] = useState('none')
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterCount, setFilterCount] = useState(0)
 
   function handleOpenMenu(event) {
     event.stopPropagation()
@@ -154,9 +154,8 @@ export default function InvoiceList({ currencyData, userType }) {
             let value = propAccessor(option, operator)[1]
 
             if (operator === '==') operator = '='
-            if (property === 'date_filter') {
-              operator = '>'
-              value = dateToString(value)
+            if (property === 'created_at' || property === 'due_date') {
+              value = utilDate(value)
             }
 
             return `${property} ${operator} "${value}"`
@@ -164,7 +163,6 @@ export default function InvoiceList({ currencyData, userType }) {
           .join(` ${conjugate} `)
         setSearchQuery(queryy)
         setListType('nongraph')
-        setFilterCount(availableConjugate.length)
       }
     }
   }
@@ -300,7 +298,7 @@ export default function InvoiceList({ currencyData, userType }) {
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '-100px',
+              marginLeft: '-250px',
               display: displayBuilder
             }}
       >

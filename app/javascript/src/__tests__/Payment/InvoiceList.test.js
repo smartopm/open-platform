@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -127,6 +127,12 @@ describe('Invoice Item Component', () => {
       },
       { timeout: 100 }
     );
+
+        const filterClick = container.getByTestId("filter")
+
+        fireEvent.click(filterClick)
+
+        expect(container.queryByText('User Name')).toBeInTheDocument()
   });
   it('should check if renderInvoice works as expected', () => {
     const results = renderInvoice(invoices[0], currency);

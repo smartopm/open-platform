@@ -25,6 +25,7 @@ import Text from '../../shared/Text';
 import PaymentGraph from './PaymentGraph'
 import { Spinner } from '../../shared/Loading';
 import QueryBuilder from '../QueryBuilder'
+import { dateToString as utilDate } from '../../utils/dateutil'
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -46,7 +47,6 @@ export default function PaymentList({ currencyData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [displayBuilder, setDisplayBuilder] = useState('none')
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterCount, setFilterCount] = useState(0)
 
   const pageNumber = Number(page);
   const { loading, data, error } = useQuery(TransactionsQuery, {
@@ -116,9 +116,8 @@ export default function PaymentList({ currencyData }) {
             let value = propAccessor(option, operator)[1]
 
             if (operator === '==') operator = '='
-            if (property === 'date_filter') {
-              operator = '>'
-              value = dateToString(value)
+            if (property === 'created_at') {
+              value = utilDate(value)
             }
 
             return `${property} ${operator} "${value}"`
@@ -126,7 +125,6 @@ export default function PaymentList({ currencyData }) {
           .join(` ${conjugate} `)
         setSearchQuery(queryy)
         setListType('nongraph')
-        setFilterCount(availableConjugate.length)
       }
     }
   }
@@ -168,8 +166,7 @@ export default function PaymentList({ currencyData }) {
       createdDate: {
         label: 'Created Date',
         type: 'date',
-        valueSources: ['value'],
-        excludeOperators: ['not_equal']
+        valueSources: ['value']
       },
       chequeNumber: {
         label: 'Cheque Number',
@@ -210,8 +207,6 @@ export default function PaymentList({ currencyData }) {
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-
-  // if (loading) return <Spinner />;
   
   if (statError) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
@@ -233,7 +228,7 @@ export default function PaymentList({ currencyData }) {
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '-100px',
+              marginLeft: '-50px',
               display: displayBuilder
             }}
       >
