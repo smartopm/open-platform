@@ -196,17 +196,15 @@ export default function InvoiceList({ currencyData, userType }) {
         type: 'text',
         valueSources: ['value']
       },
-      createdDate: {
-        label: 'Created Date',
+      issuedDate: {
+        label: 'Issued Date',
         type: 'date',
         valueSources: ['value'],
-        excludeOperators: ['not_equal']
       },
       dueDate: {
         label: 'Due Date',
         type: 'date',
         valueSources: ['value'],
-        excludeOperators: ['not_equal']
       }
     }
   }
@@ -235,7 +233,7 @@ export default function InvoiceList({ currencyData, userType }) {
     phoneNumber: 'phone_number',
     email: 'email',
     plotNumber: 'land_parcel',
-    createdDate: 'created_at',
+    issuedDate: 'created_at',
     dueDate: 'due_date'
   }
   
