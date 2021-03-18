@@ -81,7 +81,8 @@ export const paymentType = {
   mobile_money: 'Mobile Money',
   'bank_transfer/cash_deposit': 'Bank Transfer/Cash Deposit',
   'bank_transfer/eft': 'Bank Transfer/EFT',
-  pos: 'Point of Sale'
+  pos: 'Point of Sale',
+  cash: 'Cash'
 };
 
 export const paymentStatusColor = {

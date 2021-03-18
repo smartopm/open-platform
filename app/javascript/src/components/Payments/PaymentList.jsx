@@ -135,15 +135,20 @@ export default function PaymentList({ currencyData }) {
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {
-      userName: {
-        label: 'User Name',
+      clientName: {
+        label: 'Client Name',
         type: 'text',
         valueSources: ['value'],
       },
-      invoiceNumber: {
-        label: 'Invoice Number',
-        type: 'text',
-        valueSources: ['value']
+      paymentType: {
+        label: 'Payment Type',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(paymentType).map(([key, val]) => {
+            return { value: key, title: val }
+          })
+        }
       },
       phoneNumber: {
         label: 'Phone Number',
@@ -155,8 +160,8 @@ export default function PaymentList({ currencyData }) {
         type: 'text',
         valueSources: ['value']
       },
-      plotNumber: {
-        label: 'Plot Number',
+      transactionNumber: {
+        label: 'Transaction Number',
         type: 'text',
         valueSources: ['value']
       },
@@ -166,11 +171,10 @@ export default function PaymentList({ currencyData }) {
         valueSources: ['value'],
         excludeOperators: ['not_equal']
       },
-      dueDate: {
-        label: 'Due Date',
-        type: 'date',
-        valueSources: ['value'],
-        excludeOperators: ['not_equal']
+      chequeNumber: {
+        label: 'Cheque Number',
+        type: 'text',
+        valueSources: ['value']
       }
     }
   }
@@ -183,7 +187,7 @@ export default function PaymentList({ currencyData }) {
       '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
         type: 'rule',
         properties: {
-          field: 'userName',
+          field: 'clientName',
           operator: 'equal',
           value: [''],
           valueSrc: ['value'],
@@ -194,13 +198,13 @@ export default function PaymentList({ currencyData }) {
   }
 
   const filterFields = {
-    userName: 'user',
-    invoiceNumber: 'invoice_number',
+    clientName: 'user',
     phoneNumber: 'phone_number',
     email: 'email',
-    plotNumber: 'land_parcel',
     createdDate: 'created_at',
-    dueDate: 'due_date'
+    paymentType: 'source',
+    transactionNumber: 'transaction_number',
+    chequeNumber: 'cheque_number'
   }
 
   if (error) {
