@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
@@ -29,7 +28,11 @@ import {
   formatMoney
 } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
-import { invoiceStatus } from '../../utils/constants';
+import {
+  invoiceStatus, 
+  invoiceQueryBuilderConfig, 
+  invoiceQueryBuilderInitialValue, 
+  invoiceFilterFields } from '../../utils/constants';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
 import SearchInput from '../../shared/search/SearchInput';
@@ -150,7 +153,7 @@ export default function InvoiceList({ currencyData, userType }) {
             let operator = Object.keys(option)[0]
             // skipped nested object accessor here until fully tested 
             // eslint-disable-next-line security/detect-object-injection
-            const property = filterFields[option[operator][0].var]
+            const property = invoiceFilterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 
             if (operator === '==') operator = '='
@@ -165,76 +168,6 @@ export default function InvoiceList({ currencyData, userType }) {
         setListType('nongraph')
       }
     }
-  }
-
-  const InitialConfig = MaterialConfig
-  const queryBuilderConfig = {
-    ...InitialConfig,
-    fields: {
-      userName: {
-        label: 'User Name',
-        type: 'text',
-        valueSources: ['value'],
-      },
-      invoiceNumber: {
-        label: 'Invoice Number',
-        type: 'text',
-        valueSources: ['value']
-      },
-      phoneNumber: {
-        label: 'Phone Number',
-        type: 'number',
-        valueSources: ['value']
-      },
-      email: {
-        label: 'Email',
-        type: 'text',
-        valueSources: ['value']
-      },
-      plotNumber: {
-        label: 'Plot Number',
-        type: 'text',
-        valueSources: ['value']
-      },
-      issuedDate: {
-        label: 'Issued Date',
-        type: 'date',
-        valueSources: ['value'],
-      },
-      dueDate: {
-        label: 'Due Date',
-        type: 'date',
-        valueSources: ['value'],
-      }
-    }
-  }
-
-  const queryBuilderInitialValue = {
-    // Just any random UUID
-    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
-    type: 'group',
-    children1: {
-      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
-        type: 'rule',
-        properties: {
-          field: 'userName',
-          operator: 'equal',
-          value: [''],
-          valueSrc: ['value'],
-          valueType: ['text']
-        }
-      }
-    }
-  }
-
-  const filterFields = {
-    userName: 'user',
-    invoiceNumber: 'invoice_number',
-    phoneNumber: 'phone_number',
-    email: 'email',
-    plotNumber: 'land_parcel',
-    issuedDate: 'created_at',
-    dueDate: 'due_date'
   }
   
   if (error && !invoicesData) {
@@ -302,8 +235,8 @@ export default function InvoiceList({ currencyData, userType }) {
       >
         <QueryBuilder
           handleOnChange={handleQueryOnChange}
-          builderConfig={queryBuilderConfig}
-          initialQueryValue={queryBuilderInitialValue}
+          builderConfig={invoiceQueryBuilderConfig}
+          initialQueryValue={invoiceQueryBuilderInitialValue}
           addRuleLabel="Add filter"
         />
       </Grid>

@@ -5,7 +5,6 @@ import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
@@ -18,7 +17,11 @@ import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import Paginate from '../Paginate';
 import ListHeader from '../../shared/list/ListHeader';
-import { paymentType } from '../../utils/constants';
+import { 
+        paymentType,
+        paymentQueryBuilderConfig,
+        paymentQueryBuilderInitialValue,
+        paymentFilterFields } from '../../utils/constants';
 import TransactionDetails from './TransactionDetails';
 import currency from '../../shared/types/currency';
 import Text from '../../shared/Text';
@@ -112,7 +115,7 @@ export default function PaymentList({ currencyData }) {
             let operator = Object.keys(option)[0]
             // skipped nested object accessor here until fully tested 
             // eslint-disable-next-line security/detect-object-injection
-            const property = filterFields[option[operator][0].var]
+            const property = paymentFilterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 
             if (operator === '==') operator = '='
@@ -127,81 +130,6 @@ export default function PaymentList({ currencyData }) {
         setListType('nongraph')
       }
     }
-  }
-
-  const InitialConfig = MaterialConfig
-  const queryBuilderConfig = {
-    ...InitialConfig,
-    fields: {
-      clientName: {
-        label: 'Client Name',
-        type: 'text',
-        valueSources: ['value'],
-      },
-      paymentType: {
-        label: 'Payment Type',
-        type: 'select',
-        valueSources: ['value'],
-        fieldSettings: {
-          listValues: Object.entries(paymentType).map(([key, val]) => {
-            return { value: key, title: val }
-          })
-        }
-      },
-      phoneNumber: {
-        label: 'Phone Number',
-        type: 'number',
-        valueSources: ['value']
-      },
-      email: {
-        label: 'Email',
-        type: 'text',
-        valueSources: ['value']
-      },
-      transactionNumber: {
-        label: 'Transaction Number',
-        type: 'text',
-        valueSources: ['value']
-      },
-      createdDate: {
-        label: 'Created Date',
-        type: 'date',
-        valueSources: ['value']
-      },
-      chequeNumber: {
-        label: 'Cheque Number',
-        type: 'text',
-        valueSources: ['value']
-      }
-    }
-  }
-
-  const queryBuilderInitialValue = {
-    // Just any random UUID
-    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
-    type: 'group',
-    children1: {
-      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
-        type: 'rule',
-        properties: {
-          field: 'clientName',
-          operator: 'equal',
-          value: [''],
-          valueSrc: ['value'],
-          valueType: ['text']
-        }
-      }
-    }
-  }
-
-  const filterFields = {
-    clientName: 'user',
-    phoneNumber: 'phone_number',
-    email: 'email',
-    createdDate: 'created_at',
-    paymentType: 'source',
-    transactionNumber: 'transaction_number',
-    chequeNumber: 'cheque_number'
   }
 
   if (error) {
@@ -234,8 +162,8 @@ export default function PaymentList({ currencyData }) {
       >
         <QueryBuilder
           handleOnChange={handleQueryOnChange}
-          builderConfig={queryBuilderConfig}
-          initialQueryValue={queryBuilderInitialValue}
+          builderConfig={paymentQueryBuilderConfig}
+          initialQueryValue={paymentQueryBuilderInitialValue}
           addRuleLabel="Add filter"
         />
       </Grid>
