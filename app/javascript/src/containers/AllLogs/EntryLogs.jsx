@@ -316,10 +316,15 @@ export function IndexComponent({
         <TabPanel value={tabValue} index={2}>
           {data.result.map((log) => <LogView key={log.id} user={log} /> )}
         </TabPanel>
-        <FloatButton
-          title="New Visit Request"
-          handleClick={() => router.push('/visit_request')}
-        />
+        {
+          // only admins should be able to schedule a visit request
+          authState.user.userType === 'admin' && (
+            <FloatButton
+              title="New Visit Request"
+              handleClick={() => router.push('/visit_request')}
+            />
+          )
+        }
       </div>
 
       <div className="d-flex justify-content-center">
