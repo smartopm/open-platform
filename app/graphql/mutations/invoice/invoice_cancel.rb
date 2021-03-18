@@ -23,7 +23,9 @@ module Mutations
 
       def refund_amount(invoice)
         user = invoice.user
-        user.wallet.settle_pending_balance(invoice.amount)
+        paid_amount = invoice.amount - invoice.pending_amount
+        invoice.land_parcel.payment_plan.update_plot_balance(paid_amount)
+        user.wallet.update_balance(invoice.amount, 'credit')
         user.wallet_transactions.create!(
           source: 'invoice',
           destination: 'wallet',
