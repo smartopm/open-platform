@@ -155,5 +155,5 @@ export default function UserLabels({ userId }) {
 }
 
 UserLabels.propTypes = {
-  userId: PropTypes.number.isRequired
+  userId: PropTypes.string.isRequired
 };
