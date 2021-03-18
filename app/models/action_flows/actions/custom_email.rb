@@ -9,7 +9,7 @@ module ActionFlows
       ACTION_FIELDS = [
         { name: 'template_variables', type: 'json' },
       ].freeze
-  
+
       def self.execute_action(data, field_config)
         emails = ActionFieldsFetchable.process_vars('email', data, field_config) || ''
         template = ActionFieldsFetchable.process_vars('template', data, field_config)
@@ -22,7 +22,7 @@ module ActionFlows
 
       def self.template_data(data, field_config)
         vars_json = JSON.parse(
-          ActionFieldsFetchable.process_vars('template_vairables', data, field_config)
+          ActionFieldsFetchable.process_vars('template_vairables', data, field_config),
         )
         vars = []
         vars_json.each do |key, value|
