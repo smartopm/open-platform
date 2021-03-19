@@ -29,10 +29,11 @@ import {
   RuleFields,
   LabelsQuery,
   UsersLiteQuery
-} from '../../graphql/queries';
+, EmailTemplatesQuery } from '../../graphql/queries';
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
 import { NotesCategories } from '../../utils/constants';
+
 
 const { primary, dew } = colors;
 const initialData = {
@@ -56,9 +57,13 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     variables: { query: 'user_type = admin' },
     errorPolicy: 'all'
   });
+  const [loadEmailTemplates, { data: emailTemplatesData }] = useLazyQuery(EmailTemplatesQuery, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   const eventData = useQuery(Events);
   const actionData = useQuery(Actions);
+
   const actionFieldsData = useQuery(ActionFields, {
     variables: { action: data.actionType }
   });
@@ -77,6 +82,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       setMetaData(actionFieldsValues);
       loadLabelsLite();
       loadAssignees();
+      loadEmailTemplates();
     }
     return () => {
       setData(initialData);
@@ -143,6 +149,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
 
     if (data.eventType && value === 'task') {
       loadAssignees();
+    }
+
+    if (data.eventType && value === 'custom email') {
+      loadEmailTemplates();
     }
 
     // Reset the array of assignees when a new eventType/action is selected
@@ -326,6 +336,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 });
               }}
               options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
+              // REFACTOR THESE IF-ELSEs (Nurudeen)
               renderInput={params => {
                 if (actionField.type === 'select' && actionField.name === 'label') {
                   return (
@@ -396,6 +407,29 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                         {assigneesLiteData?.usersLite.map(user => (
                           <MenuItem key={user.id} value={user}>
                             {user.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  );
+                }
+                if (actionField.type === 'select' && actionField.name === 'templates') {
+                  return (
+                    <FormControl fullWidth>
+                      <InputLabel id={`select-${actionField.name}`}>
+                        {`Select ${capitalize(actionField.name)}`}
+                      </InputLabel>
+                      <Select
+                        labelId={`select-${actionField.name}`}
+                        id={`${actionField.name}-id-section`}
+                        name={actionField.name}
+                        value={data[actionField.name] || ''}
+                        onChange={handleSelect}
+                        fullWidth
+                      >
+                        {emailTemplatesData?.emailTemplates.map(({ id, name }) => (
+                          <MenuItem key={id} value={name}>
+                            {name}
                           </MenuItem>
                         ))}
                       </Select>

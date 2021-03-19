@@ -7,7 +7,8 @@ module ActionFlows
       include ActionFieldsFetchable
 
       ACTION_FIELDS = [
-        { name: 'template_variables', type: 'json' },
+        # { name: 'template_variables', type: 'json' },
+        { name: 'templates', type: 'select' }
       ].freeze
 
       def self.execute_action(data, field_config)
