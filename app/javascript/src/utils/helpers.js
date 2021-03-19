@@ -104,7 +104,7 @@ const cleanedFields = {
 export function saniteError(requiredFields, errorMessage) {
 
   if (!errorMessage.length) return;
-  const errArr = errorMessage.split(" ");
+  const errArr = errorMessage.replace(/\$/, '').split(" ");
   const foundFields = requiredFields.filter(field => errArr.includes(field));
   const cleanFields = foundFields.map(field => cleanedFields[field])
   // duplicate errors are already sanitized, we just need to remove the GraphQL
@@ -115,7 +115,7 @@ export function saniteError(requiredFields, errorMessage) {
   if (!foundFields.length) {
     return "Unexpected error happened, Please try again";
   }
-  return `${cleanFields.join(" or ")} value is blank`;
+  return `${cleanFields.join(" or ")} value is required`;
 }
 
 export function delimitorFormator(params) {

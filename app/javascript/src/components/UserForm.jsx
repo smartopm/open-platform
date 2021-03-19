@@ -512,15 +512,19 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           </div>
         )}
 
-        {showResults ? (
+        {
+        // eslint-disable-next-line no-nested-ternary
+        showResults && isFromRef ? (
           <div className="d-flex row justify-content-center">
             <p>Thank you for your referral. We will reach out to them soon.</p>
           </div>
-        ) : (
+        ) : isFromRef ? (
           Boolean(msg.length) && (
-            <p className="text-danger text-center">{msg}</p>
+            <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>
           )
-        )}
+        )
+        : null 
+      }
       </form>
     </div>
   )
