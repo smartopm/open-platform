@@ -10,7 +10,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
 import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
-import { formatError, formatMoney, useParamsQuery, propAccessor } from '../../utils/helpers';
+import { formatError, formatMoney, useParamsQuery, handleQueryOnChange } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
@@ -28,7 +28,6 @@ import Text from '../../shared/Text';
 import PaymentGraph from './PaymentGraph'
 import { Spinner } from '../../shared/Loading';
 import QueryBuilder from '../QueryBuilder'
-import { dateToString as utilDate } from '../../utils/dateutil'
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -103,33 +102,9 @@ export default function PaymentList({ currencyData }) {
     }
   }
 
-  function handleQueryOnChange(selectedOptions) {
-    if (selectedOptions) {
-      const andConjugate = selectedOptions.logic?.and
-      const orConjugate = selectedOptions.logic?.or
-      const availableConjugate = andConjugate || orConjugate
-      if (availableConjugate) {
-        const conjugate = andConjugate ? 'AND' : 'OR'
-        const queryy = availableConjugate
-          .map(option => {
-            let operator = Object.keys(option)[0]
-            // skipped nested object accessor here until fully tested 
-            // eslint-disable-next-line security/detect-object-injection
-            const property = paymentFilterFields[option[operator][0].var]
-            let value = propAccessor(option, operator)[1]
-
-            if (operator === '==') operator = '='
-            if (property === 'created_at') {
-              value = utilDate(value)
-            }
-
-            return `${property} ${operator} "${value}"`
-          })
-          .join(` ${conjugate} `)
-        setSearchQuery(queryy)
-        setListType('nongraph')
-      }
-    }
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, paymentFilterFields))
+    setListType('nongraph')
   }
 
   if (error) {
@@ -161,7 +136,7 @@ export default function PaymentList({ currencyData }) {
             }}
       >
         <QueryBuilder
-          handleOnChange={handleQueryOnChange}
+          handleOnChange={queryOnChange}
           builderConfig={paymentQueryBuilderConfig}
           initialQueryValue={paymentQueryBuilderInitialValue}
           addRuleLabel="Add filter"

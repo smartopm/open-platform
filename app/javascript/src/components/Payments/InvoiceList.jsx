@@ -25,7 +25,8 @@ import {
   useParamsQuery,
   InvoiceStatusColor,
   propAccessor,
-  formatMoney
+  formatMoney,
+  handleQueryOnChange
 } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
 import {
@@ -44,7 +45,6 @@ import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
 import QueryBuilder from '../QueryBuilder'
-import { dateToString as utilDate } from '../../utils/dateutil'
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -141,33 +141,9 @@ export default function InvoiceList({ currencyData, userType }) {
     }
   }
 
-  function handleQueryOnChange(selectedOptions) {
-    if (selectedOptions) {
-      const andConjugate = selectedOptions.logic?.and
-      const orConjugate = selectedOptions.logic?.or
-      const availableConjugate = andConjugate || orConjugate
-      if (availableConjugate) {
-        const conjugate = andConjugate ? 'AND' : 'OR'
-        const queryy = availableConjugate
-          .map(option => {
-            let operator = Object.keys(option)[0]
-            // skipped nested object accessor here until fully tested 
-            // eslint-disable-next-line security/detect-object-injection
-            const property = invoiceFilterFields[option[operator][0].var]
-            let value = propAccessor(option, operator)[1]
-
-            if (operator === '==') operator = '='
-            if (property === 'created_at' || property === 'due_date') {
-              value = utilDate(value)
-            }
-
-            return `${property} ${operator} "${value}"`
-          })
-          .join(` ${conjugate} `)
-        setSearchQuery(queryy)
-        setListType('nongraph')
-      }
-    }
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, invoiceFilterFields))
+    setListType('nongraph')
   }
   
   if (error && !invoicesData) {
@@ -234,7 +210,7 @@ export default function InvoiceList({ currencyData, userType }) {
             }}
       >
         <QueryBuilder
-          handleOnChange={handleQueryOnChange}
+          handleOnChange={queryOnChange}
           builderConfig={invoiceQueryBuilderConfig}
           initialQueryValue={invoiceQueryBuilderInitialValue}
           addRuleLabel="Add filter"

@@ -20,6 +20,7 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
         value={searchValue}
         onChange={handleSearch}
         placeholder="Type your search query"
+        inputProps={{ "data-testid": "search" }}
         endAdornment={(
           <InputAdornment position="end">
             { 

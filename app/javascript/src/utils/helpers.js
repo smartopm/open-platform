@@ -1,6 +1,7 @@
 /* eslint-disable */
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
+import { dateToString as utilDate } from './dateutil'
 
 // keep string methods [helpers]
 
@@ -433,4 +434,39 @@ export function getDrawPluginOptions (featureGroup) {
         remove: true
       }
     })
+}
+
+/**
+ * 
+ * @param {object} Onchange function on filter
+ * @return {object} Query
+ * @description Handles the onchange for filter
+ */
+
+export function handleQueryOnChange(selectedOptions, filterFields) {
+  if (selectedOptions) {
+    const andConjugate = selectedOptions.logic?.and
+    const orConjugate = selectedOptions.logic?.or
+    const availableConjugate = andConjugate || orConjugate
+    if (availableConjugate) {
+      const conjugate = andConjugate ? 'AND' : 'OR'
+      const queryy = availableConjugate
+        .map(option => {
+          let operator = Object.keys(option)[0]
+          // skipped nested object accessor here until fully tested 
+          // eslint-disable-next-line security/detect-object-injection
+          const property = filterFields[option[operator][0].var]
+          let value = propAccessor(option, operator)[1]
+
+          if (operator === '==') operator = '='
+          if (property === 'created_at' || property === 'due_date') {
+            value = utilDate(value)
+          }
+
+          return `${property} ${operator} "${value}"`
+        })
+        .join(` ${conjugate} `)
+      return queryy
+    }
+  }
 }
