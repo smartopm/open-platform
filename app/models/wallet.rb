@@ -12,15 +12,6 @@ class Wallet < ApplicationRecord
 
   after_update :settle_invoices, if: proc { saved_changes.key?('balance') }
 
-  def settle_pending_balance(amount)
-    if amount > pending_balance
-      credited_amount = amount - pending_balance
-      update(pending_balance: 0, balance: balance + credited_amount)
-    else
-      update(pending_balance: pending_balance - amount)
-    end
-  end
-
   def update_balance(amount, type = 'credit')
     return credit_amount(amount) if type.eql?('credit')
 
@@ -53,17 +44,19 @@ class Wallet < ApplicationRecord
     inv.paid! if inv.pending_amount.zero?
   end
 
-  def settle_from_plot_balance(inv, payment_amount)
-    update_balance(payment_amount, 'debit')
+  # rubocop:disable Style/OptionalBooleanParameter
+  def settle_from_plot_balance(inv, payment_amount, prepaid = false)
+    update_balance(payment_amount, 'debit') unless prepaid
     bal = inv.land_parcel.payment_plan&.plot_balance
     inv.land_parcel.payment_plan.update(plot_balance: bal - payment_amount)
     make_payment(inv, payment_amount)
   end
+  # rubocop:enable Style/OptionalBooleanParameter
 
   def settle_invoices
     return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
 
-    user.invoices.where('pending_amount > ?', 0).reverse.each do |invoice|
+    user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
       next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
 
       bal = invoice.land_parcel.payment_plan&.plot_balance

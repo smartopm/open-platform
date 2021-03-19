@@ -32,20 +32,24 @@ class Invoice < ApplicationRecord
     attributes phone_number: ['user.phone_number']
   end
 
+  # rubocop:disable Metrics/AbcSize
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       cur_payment = settle_amount
       user.wallet.update_balance(amount, 'debit')
       bal = land_parcel.payment_plan&.plot_balance
+      return if bal.nil? || cur_payment.zero?
+
       land_parcel.payment_plan.update(plot_balance: bal - cur_payment)
       user.wallet.make_payment(self, cur_payment)
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def settle_amount
     pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
     return amount - pending_amount if pending_amount.positive?
-      
+
     paid!
     amount
   end
@@ -98,6 +102,6 @@ class Invoice < ApplicationRecord
   end
 
   def set_pending_amount
-    self.pending_amount = self.amount
+    self.pending_amount = amount
   end
 end
