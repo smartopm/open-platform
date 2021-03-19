@@ -33,12 +33,16 @@ export default function UserPlotInfo({ account }) {
                   <b>Plots associated with this account:</b>
                 </Typography>
               </div>
-              {account[0].landParcels.map((plot, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <div style={{ display: 'flex' }} key={index}>
-                  <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
-                </div>
-              ))}
+              {
+                account.map((acc) => (
+                  acc.landParcels.map((plot, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <div style={{ display: 'flex' }} key={index}>
+                      <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
+                    </div>
+                  ))
+                ))
+              }
               <Typography variant="body2">
                 {`This data was updated on ${dateToString(account[0]?.updatedAt)}. If Something seems incorrect, contact our`}
                 <span className={css(styles.supportLink)}>
