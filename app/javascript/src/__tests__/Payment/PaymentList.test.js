@@ -113,6 +113,10 @@ describe('Payment List Item Component', () => {
     const filterClick = container.getByTestId("filter")
     fireEvent.click(filterClick)
     expect(container.queryByText('Client Name')).toBeInTheDocument()
+
+    const searchInput = container.queryByTestId('search')
+    fireEvent.change(searchInput, { target: { value: 'text' } })
+    expect(searchInput.value).toBe('text')
   });
   it('should check if renderPayment works as expected', () => {
     const results = renderPayment(transactions[0], currency);

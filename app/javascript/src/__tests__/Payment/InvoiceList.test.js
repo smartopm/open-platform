@@ -131,16 +131,11 @@ describe('Invoice Item Component', () => {
     const filterClick = container.getByTestId("filter")
     fireEvent.click(filterClick)
     expect(container.queryByText('User Name')).toBeInTheDocument()
-
-    fireEvent.click(container.queryByText('User Name'))
     
     const searchInput = container.queryByTestId('search')
     fireEvent.change(searchInput, { target: { value: 'text' } })
     expect(searchInput.value).toBe('text')
-    
-    // const searchContainer =  container.queryByTestId('clear_search')
-    // fireEvent.click(searchContainer)
-    // expect(searchInput.value).toBe('')
+
   });
   it('should check if renderInvoice works as expected', () => {
     const results = renderInvoice(invoices[0], currency);
