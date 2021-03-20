@@ -465,37 +465,38 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               />
             );
           })}
-        {emailTemplatesData?.emailTemplates
-          .find(temp => temp.name === metaData.template)
-          ?.variableNames.map((varName, index) => (
-            <Autocomplete
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              id={`${varName}-action-input`}
-              freeSolo
-              value={metaData[varName]}
-              inputValue={metaData[varName]}
-              onInputChange={(_event, newValue) => {
-                setMetaData({
-                  ...metaData,
-                  [varName]: newValue
-                });
-              }}
-              options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
-              renderInput={params => {
-                return (
-                  <TextField
-                    {...params}
-                    label={capitalize(varName)}
-                    name={varName}
-                    margin="normal"
-                    variant="outlined"
-                    multiline
-                  />
-                );
-              }}
-            />
-          ))}
+        {data.actionType === 'custom email' &&
+          emailTemplatesData?.emailTemplates
+            .find(temp => temp.name === metaData.template)
+            ?.variableNames.map((varName, index) => (
+              <Autocomplete
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                id={`${varName}-action-input`}
+                freeSolo
+                value={metaData[varName]}
+                inputValue={metaData[varName]}
+                onInputChange={(_event, newValue) => {
+                  setMetaData({
+                    ...metaData,
+                    [varName]: newValue
+                  });
+                }}
+                options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
+                renderInput={params => {
+                  return (
+                    <TextField
+                      {...params}
+                      label={capitalize(varName)}
+                      name={varName}
+                      margin="normal"
+                      variant="outlined"
+                      multiline
+                    />
+                  );
+                }}
+              />
+            ))}
       </DialogContent>
       <DialogActions style={{ justifyContent: 'flex-start' }}>
         <Button onClick={closeModal} color="secondary" variant="outlined">
