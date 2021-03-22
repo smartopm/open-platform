@@ -83,6 +83,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         bankName: inputValue.bankName,
         chequeNumber: inputValue.chequeNumber,
         transactionNumber: inputValue.transactionNumber,
+        receiptNumber: inputValue.receiptNumber,
+        createdAt: inputValue.paidDate,
         landParcelId: inputValue.landParcelId
       }
     })
@@ -119,6 +121,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
 
   if (loading) return <Spinner />
 
+  console.log(inputValue.receiptNumber)
   return (
     <>
       <MessageAlert
@@ -226,6 +229,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                     selectedDate={inputValue.paidDate}
                     label="Paid Date"
                     handleDateChange={date => setInputValue({...inputValue, paidDate: date})}
+                    maxDate={new Date()}
                   />
                 </>
                 )
