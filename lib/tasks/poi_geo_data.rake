@@ -26,9 +26,9 @@ namespace :db do
 
           # ensure the geometry type is Polygon
           geometry_type = f['geometry']['type']
-          unless geometry_type.eql?('Polygon')
+          unless geometry_type.eql?('Polygon') || geometry_type.eql?('Point')
             abort("Aborted. Invalid GeoJSON feature type::Geometry type must be
-              of SFC \'Polygon\' at - #{geometry_type}")
+              of SFC \'Polygon\' or SFC \'Point\' at - #{geometry_type}")
           end
 
           unique_record = false

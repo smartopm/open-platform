@@ -1,0 +1,122 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.651247,
+          -15.521933
+        ]
+      },
+      "properties": {
+        "marker-color": "#baf2d0",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "Sculpture 1 (Before entering Gate)",
+        "long_x": 28.651247,
+        "lat_y": -15.521933,
+        "icon": "https://www.pngrepo.com/png/278374/512/placeholder-pin.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6512384,
+          -15.5215996
+        ]
+      },
+      "properties": {
+        "marker-color": "#f7d708",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "The Big Man by George Mubanga",
+        "long_x": 28.6512384,
+        "lat_y": -15.5215996,
+        "icon": "https://www.pngrepo.com/png/278374/512/placeholder-pin.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6476044,
+          -15.5111968
+        ]
+      },
+      "properties": {
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "Renaissance Woman by George Mubanga",
+        "long_x": 28.6476044,
+        "lat_y": -15.5111968,
+        "icon": "https://www.pngrepo.com/png/278374/512/placeholder-pin.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6475840861111,
+          -15.5114938916667
+        ]
+      },
+      "properties": {
+        "marker-color": "#7492fb",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "The Acrobat by Kingsley Kapobe",
+        "long_x": 28.6475840861111,
+        "lat_y": -15.5114938916667,
+        "icon": "https://www.pngrepo.com/png/278374/512/placeholder-pin.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6474631361111,
+          -15.5116143833333
+        ]
+      },
+      "properties": {
+        "marker-color": "#12ede9",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "stroke": "#f2eeee",
+        "stroke-width": 1,
+        "stroke-opacity": 1,
+        "fill": "#10c647",
+        "fill-opacity": 0.5,
+        "poi_name": "Sculpture 5 (Pics from Zoussi)",
+        "long_x": 28.6474631361111,
+        "lat_y": -15.5116143833333,
+        "icon": "https://www.pngrepo.com/png/278374/512/placeholder-pin.png"
+      }
+    }
+  ]
+}
