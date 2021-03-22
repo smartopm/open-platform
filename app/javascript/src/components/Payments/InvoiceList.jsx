@@ -110,12 +110,14 @@ export default function InvoiceList({ currencyData, userType }) {
   }
 
   function handleOnClick(event) {
+    console.log(invoiceId)
     event.stopPropagation()
     cancelInvoice({
       variables: {
         invoiceId
       }
-    }).then(() => {
+    }).then((res) => {
+      console.log(res)
       setAnchorEl(null)
       setMessageAlert('Invoice successfully cancelled')
       setIsSuccessAlert(true)
