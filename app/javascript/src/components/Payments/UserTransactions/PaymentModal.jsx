@@ -14,6 +14,8 @@ import MessageAlert from "../../MessageAlert"
 import { extractCurrency, formatError, formatMoney } from '../../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
 import { Spinner } from '../../../shared/Loading'
+import SwitchInput from '../../Forms/SwitchInput';
+import DatePickerDialog from '../../DatePickerDialog';
 
 const initialValues = {
   amount: '',
@@ -21,7 +23,10 @@ const initialValues = {
   bankName: '',
   chequeNumber: '',
   transactionNumber: '',
-  landParcelId: ''
+  landParcelId: '',
+  pastPayment: false,
+  paidDate: new Date(),
+  receiptNumber: ''
 }
 export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
   const classes = useStyles();
@@ -198,6 +203,33 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
                 <MenuItem value='pos'>Point of Sale</MenuItem>
               </TextField>
+              <br />
+              <SwitchInput
+                name="pastPayment"
+                label="Is this a past payment?"
+                value={inputValue.pastPayment}
+                handleChange={event => setInputValue({...inputValue, pastPayment: event.target.checked})}
+                labelPlacement='end'
+              />
+              {
+                inputValue.pastPayment && (
+                <>
+                  <TextField
+                    margin="dense"
+                    id="receipt-number"
+                    label="Receipt Number"
+                    type='string'
+                    value={inputValue.receiptNumber}
+                    onChange={(event) => setInputValue({...inputValue, receiptNumber: event.target.value})}
+                  />
+                  <DatePickerDialog
+                    selectedDate={inputValue.paidDate}
+                    label="Paid Date"
+                    handleDateChange={date => setInputValue({...inputValue, paidDate: date})}
+                  />
+                </>
+                )
+              }
               <TextField
                 margin="dense"
                 id="transaction-number"
