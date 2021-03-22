@@ -156,6 +156,9 @@ export const commentStatusAction = {
   validate: 'valid'
 };
 // Values from here should be managed at the community level
+/**
+ * @deprecated This will be remove eventually in favor of community support contacts and avoid direct names in the app
+ */
 export const ponisoNumber = '+260976064298';
 
 export const messageFilters = [

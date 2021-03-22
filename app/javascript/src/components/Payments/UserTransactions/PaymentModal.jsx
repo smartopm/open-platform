@@ -52,12 +52,12 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
     errorPolicy: 'all'
   });
 
-  // reset bank details when transaction type is changed
+  // reset bank details when transaction type and pastPayment are changed
   // To avoid wrong details with wrong transaction type e.g: Cheque Number when paid using cash
   useEffect(() => {
-    setInputValue({ ...inputValue, bankName: '', chequeNumber: '' })
+    setInputValue({ ...inputValue, bankName: '', chequeNumber: '', receiptNumber: '', paidDate: new Date() })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue.transactionType])
+  }, [inputValue.transactionType,inputValue.pastPayment ])
 
   function cancelPayment() {
     if (isConfirm) {
@@ -84,7 +84,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         chequeNumber: inputValue.chequeNumber,
         transactionNumber: inputValue.transactionNumber,
         receiptNumber: inputValue.receiptNumber,
-        createdAt: inputValue.paidDate,
+        // allow rails to pick its default date rather than the initialValue past on top
+        createdAt: inputValue.pastPayment ? inputValue.paidDate : '',
         landParcelId: inputValue.landParcelId
       }
     })
@@ -120,8 +121,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   }
 
   if (loading) return <Spinner />
-
-  console.log(inputValue.receiptNumber)
   return (
     <>
       <MessageAlert
@@ -286,6 +285,14 @@ export function PaymentDetails({ inputValue, currencyData }) {
         Transaction Type:
         <b>{` ${inputValue.transactionType}`}</b>
       </Typography>
+      {
+        inputValue.pastPayment && (
+          <Typography variant="subtitle1" data-testid="receiptNumber" align="center" key="receiptNumber">
+            Receipt Number:
+            <b>{` ${inputValue.receiptNumber}`}</b>
+          </Typography>
+        )
+      }
       <Typography variant="subtitle1" data-testid="transactionNumber" align="center" key="number">
         {inputValue.transactionNumber && (
           <>
@@ -329,7 +336,9 @@ PaymentDetails.propTypes = {
     status: PropTypes.string,
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
-    transactionNumber: PropTypes.string
+    transactionNumber: PropTypes.string,
+    receiptNumber: PropTypes.string,
+    pastPayment: PropTypes.bool,
   }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
