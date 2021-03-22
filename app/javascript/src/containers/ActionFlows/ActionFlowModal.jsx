@@ -415,7 +415,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     fullWidth
                   >
                     {emailTemplatesData?.emailTemplates.map(({ id, name }) => (
-                      <MenuItem key={id} value={name}>
+                      <MenuItem key={id} value={id}>
                         {name}
                       </MenuItem>
                     ))}
@@ -467,7 +467,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           })}
         {data.actionType === 'custom_email' &&
           emailTemplatesData?.emailTemplates
-            .find(temp => temp.name === metaData.template)
+            .find(temp => temp.id === metaData.template)
             ?.variableNames.map((varName, index) => (
               <Autocomplete
                 // eslint-disable-next-line react/no-array-index-key
