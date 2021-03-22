@@ -20,6 +20,7 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
         value={searchValue}
         onChange={handleSearch}
         placeholder="Type your search query"
+        inputProps={{ "data-testid": "search" }}
         endAdornment={(
           <InputAdornment position="end">
             { 
@@ -29,7 +30,7 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
                 </IconButton>
               )
             }
-            <IconButton aria-label="toggle filter visibility" onClick={handleFilter} edge="end">
+            <IconButton aria-label="toggle filter visibility" onClick={handleFilter} edge="end" data-testid="filter">
               <FilterListOutlined />
             </IconButton>
           </InputAdornment>

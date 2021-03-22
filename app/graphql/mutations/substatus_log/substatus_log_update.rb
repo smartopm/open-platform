@@ -24,6 +24,8 @@ module Mutations
 
       # stopdate will be the startdate for the recent log, if there is no prevlog then we move on
       def update_previous(prev_status, stop_date)
+        # TODO: Find substatus_logs for the user not the community
+        # TODO: Fix: if there are multiple previous states then it will probably pick the wrong one
         prev_log = context[:site_community].substatus_logs.find_by(previous_status: prev_status)
         return if prev_log.nil?
 

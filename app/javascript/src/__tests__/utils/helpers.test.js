@@ -1,9 +1,10 @@
 import dompurify from 'dompurify';
+import { paymentFilterFields } from '../../utils/constants'
 
 import { sentencizeAction, titleize, pluralizeCount, 
 capitalize, validateEmail, invertArray,findLinkAndReplace,
 forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -179,4 +180,30 @@ describe('helper methods', () => {
         );
       });
     });
+});
+
+describe('handleQueryOnChange', () => {
+  const selectedOptions = {
+    data: {
+      clientName: null
+    },
+    errors: [],
+    logic: {
+      and: [
+        {
+          '==': [
+            {
+              var: 'clientName'
+            },
+            'name'
+          ]
+        }
+      ]
+    }
+  }
+  it('should return query for the filter', () => {
+    const result = handleQueryOnChange(selectedOptions, paymentFilterFields)
+
+    expect(result).toEqual("user = \"name\"");
+  });
 });

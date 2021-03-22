@@ -53,8 +53,9 @@ export default function RequestForm({ path }) {
         history.push(`/request/${data.result.entryRequest.id}`, {
           from: 'entry_request'
         })
+      } else {
+        history.push('/entry_logs')
       }
-      history.push('/entry_logs')
     })
   }
 

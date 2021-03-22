@@ -21,6 +21,7 @@ module Mutations
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
       argument :secondary_info, GraphQL::Types::JSON, required: false
+      argument :ext_ref_id, String, required: false
 
       field :user, Types::UserType, null: true
 

@@ -282,27 +282,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             required
           />
         </div>
-        {!isFromRef &&
-          data.contactInfos.map((contact, i) => (
-            <FormOptionWithOwnActions
-              // eslint-disable-next-line react/no-array-index-key
-              key={i}
-              id={i + 1}
-              value={contact.info}
-              actions={{
-                handleRemoveOption: () => handleRemoveOption(i),
-                handleOptionChange: event =>
-                  handleOptionChange(event, contact.id, i)
-              }}
-            />
-          ))}
-        {!isFromRef && (
-          <FormOptionInput
-            label="Secondary Phone number"
-            options={phoneNumbers}
-            setOptions={setPhoneNumbers}
-          />
-        )}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
             Primary email address
@@ -320,6 +299,40 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
         {!isFromRef && (
           <>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="extRefId">
+                External Reference ID
+              </label>
+              <input
+                className="form-control"
+                name="extRefId"
+                type="text"
+                onChange={handleInputChange}
+                value={data.extRefId || ''}
+                data-testid="ext-ref-id"
+              />
+            </div>
+            {
+            data.contactInfos.map((contact, i) => (
+              <FormOptionWithOwnActions
+                // eslint-disable-next-line react/no-array-index-key
+                key={i}
+                id={i + 1}
+                value={contact.info}
+                actions={{
+                  handleRemoveOption: () => handleRemoveOption(i),
+                  handleOptionChange: event =>
+                    handleOptionChange(event, contact.id, i)
+                }}
+              />
+            ))
+          }
+            <FormOptionInput
+              label="Secondary Phone number"
+              options={phoneNumbers}
+              setOptions={setPhoneNumbers}
+            />
+
             <FormOptionInput
               label="Secondary Email Address"
               options={emails}
@@ -448,19 +461,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                       handleDateChange={handleDateChange}
                     />
                   </div>
-                  <div className="form-group">
-                    <label className="bmd-label-static" htmlFor="extRefId">
-                      External Reference ID
-                    </label>
-                    <input
-                      className="form-control"
-                      name="extRefId"
-                      type="text"
-                      onChange={handleInputChange}
-                      value={data.extRefId || ''}
-                      data-testid="ext-ref-id"
-                    />
-                  </div>
                 </>
               )
             }
@@ -512,15 +512,19 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           </div>
         )}
 
-        {showResults ? (
+        {
+        // eslint-disable-next-line no-nested-ternary
+        showResults && isFromRef ? (
           <div className="d-flex row justify-content-center">
             <p>Thank you for your referral. We will reach out to them soon.</p>
           </div>
-        ) : (
+        ) : isFromRef ? (
           Boolean(msg.length) && (
-            <p className="text-danger text-center">{msg}</p>
+            <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>
           )
-        )}
+        )
+        : null 
+      }
       </form>
     </div>
   )

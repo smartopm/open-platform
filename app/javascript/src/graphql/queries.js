@@ -1001,6 +1001,7 @@ export const InvoicesStatsDetails = gql`
       user {
         id
         name
+        imageUrl
       }
       landParcel {
         id
