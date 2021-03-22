@@ -12,6 +12,7 @@ module Mutations
       argument :transaction_number, String, required: false
       argument :status, String, required: false
       argument :land_parcel_id, ID, required: true
+      argument :receipt_number, String, required: true
 
       field :wallet_transaction, Types::WalletTransactionType, null: true
 
