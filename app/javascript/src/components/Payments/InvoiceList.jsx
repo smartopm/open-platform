@@ -21,16 +21,20 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
 import {
   formatError,
   useParamsQuery,
   InvoiceStatusColor,
   propAccessor,
-  formatMoney
+  formatMoney,
+  handleQueryOnChange
 } from '../../utils/helpers';
 import { dateToString } from '../DateContainer';
-import { invoiceStatus } from '../../utils/constants';
+import {
+  invoiceStatus, 
+  invoiceQueryBuilderConfig, 
+  invoiceQueryBuilderInitialValue, 
+  invoiceFilterFields } from '../../utils/constants';
 import DataList from '../../shared/list/DataList';
 import Label from '../../shared/label/Label';
 import SearchInput from '../../shared/search/SearchInput';
@@ -41,10 +45,12 @@ import ListHeader from '../../shared/list/ListHeader';
 import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
+import QueryBuilder from '../QueryBuilder'
 import MenuList from '../../shared/MenuList';
 import { InvoiceCancel } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import DeleteDialogueBox from '../Business/DeleteDialogue'
+import { Spinner } from '../../shared/Loading';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -72,6 +78,8 @@ export default function InvoiceList({ currencyData, userType }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const [displayBuilder, setDisplayBuilder] = useState('none')
+  const [searchQuery, setSearchQuery] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [invoiceId, setInvoiceId] = useState(false)
   const [name, setName] = useState('')
@@ -128,7 +136,7 @@ export default function InvoiceList({ currencyData, userType }) {
   }
 
   const { loading, data: invoicesData, error, refetch } = useQuery(InvoicesQuery, {
-    variables: { limit, offset: pageNumber, query: debouncedValue },
+    variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -177,7 +185,20 @@ export default function InvoiceList({ currencyData, userType }) {
       history.push(`/payments?page=${pageNumber + limit}`);
     }
   }
-  if (loading) return <Spinner />;
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none')
+    } else {
+      setDisplayBuilder('')
+    }
+  }
+
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, invoiceFilterFields))
+    setListType('nongraph')
+  }
+  
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -200,7 +221,7 @@ export default function InvoiceList({ currencyData, userType }) {
             searchValue={searchValue}
             handleSearch={event => setsearch(event.target.value)}
             // Todo: add a proper filter toggle function
-            handleFilter={() => {}}
+            handleFilter={toggleFilterMenu}
             handleClear={() => setSearchClear()}
           />
         </Grid>
@@ -235,6 +256,25 @@ export default function InvoiceList({ currencyData, userType }) {
           </CenteredContent>
         </Grid>
       </Grid>
+      <Grid
+        container
+        justify="flex-end"
+        style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-250px',
+              display: displayBuilder
+            }}
+      >
+        <QueryBuilder
+          handleOnChange={queryOnChange}
+          builderConfig={invoiceQueryBuilderConfig}
+          initialQueryValue={invoiceQueryBuilderInitialValue}
+          addRuleLabel="Add filter"
+        />
+      </Grid>
       <br />
       <br />
       <InvoiceGraph handleClick={setGraphQuery} />
@@ -246,8 +286,9 @@ export default function InvoiceList({ currencyData, userType }) {
         action='delete'
         user={name}
       />
-      <List>
-        {
+      {loading ? (<Spinner />) : (
+        <List>
+          {
           listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length && invoicesStatData?.invoicesStatDetails?.length > 0 ?
         (
           <div>
@@ -281,7 +322,8 @@ export default function InvoiceList({ currencyData, userType }) {
           <CenteredContent>No Invoices Available</CenteredContent>
         )
         }
-      </List>
+        </List>
+      )}
 
       <CenteredContent>
         <Paginate

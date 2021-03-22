@@ -18,6 +18,7 @@ export default function MailTemplateList() {
 
       <Fab
         variant="extended"
+        data-testid="create"
         color="primary"
         style={{
           position: 'fixed',

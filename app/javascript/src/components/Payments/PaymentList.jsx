@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -10,19 +10,24 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
 import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
-import { formatError, formatMoney, useParamsQuery } from '../../utils/helpers';
+import { formatError, formatMoney, useParamsQuery, handleQueryOnChange } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
 import { dateToString } from '../DateContainer';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import Paginate from '../Paginate';
 import ListHeader from '../../shared/list/ListHeader';
-import { paymentType } from '../../utils/constants';
+import { 
+        paymentType,
+        paymentQueryBuilderConfig,
+        paymentQueryBuilderInitialValue,
+        paymentFilterFields } from '../../utils/constants';
 import TransactionDetails from './TransactionDetails';
 import currency from '../../shared/types/currency';
 import Text from '../../shared/Text';
 import PaymentGraph from './PaymentGraph'
 import { Spinner } from '../../shared/Loading';
+import QueryBuilder from '../QueryBuilder'
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -42,15 +47,15 @@ export default function PaymentList({ currencyData }) {
   const history = useHistory()
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [displayBuilder, setDisplayBuilder] = useState('none')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const pageNumber = Number(page);
   const { loading, data, error } = useQuery(TransactionsQuery, {
-    variables: { limit, offset: pageNumber, query: debouncedValue},
+    variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery},
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-
-  function handleFilter(){}
 
   let paymentList
   if (data?.transactions) {
@@ -89,11 +94,22 @@ export default function PaymentList({ currencyData }) {
     fetchPolicy: 'cache-and-network'
   })
 
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none')
+    } else {
+      setDisplayBuilder('')
+    }
+  }
+
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, paymentFilterFields))
+    setListType('nongraph')
+  }
+
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-
-  if (loading) return <Spinner />;
   
   if (statError) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
@@ -104,21 +120,42 @@ export default function PaymentList({ currencyData }) {
         title='Payments' 
         searchValue={searchValue} 
         handleSearch={event => setsearch(event.target.value)} 
-        handleFilter={handleFilter} 
+        handleFilter={toggleFilterMenu} 
         handleClear={() => setSearchClear()}
       />
+      <Grid
+        container
+        justify="flex-end"
+        style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-50px',
+              display: displayBuilder
+            }}
+      >
+        <QueryBuilder
+          handleOnChange={queryOnChange}
+          builderConfig={paymentQueryBuilderConfig}
+          initialQueryValue={paymentQueryBuilderInitialValue}
+          addRuleLabel="Add filter"
+        />
+      </Grid>
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
-      {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
-        <div>
-          {matches && <ListHeader headers={paymentHeaders} />}
-          {
+      {loading ? (<Spinner />) : (
+        <List>
+          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
+            <div>
+              {matches && <ListHeader headers={paymentHeaders} />}
+              {
             paymentStatData.paymentStatDetails.map(payment => (
               <TransactionItem key={payment.id} transaction={payment} currencyData={currencyData} />
             ))
           }
-        </div>
+            </div>
       ) : paymentList?.length && paymentList?.length > 0 ? (
         <div>
           {matches && <ListHeader headers={paymentHeaders} />}
@@ -130,6 +167,8 @@ export default function PaymentList({ currencyData }) {
         </div>
       ) : (
         <CenteredContent>No Payments Available</CenteredContent>
+      )}
+        </List>
       )}
       {
           paymentList?.length >= limit && (

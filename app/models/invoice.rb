@@ -11,6 +11,7 @@ class Invoice < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
 
   before_validation :invoice_not_present_for_month, on: :create
+  before_create :set_pending_amount
   after_create :collect_payment_from_wallet, if: proc { persisted? }
   after_create :generate_event_log, if: proc { persisted? }
   before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
@@ -23,29 +24,32 @@ class Invoice < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   search_scope :search do
-    attributes :status, :invoice_number, :pending_amount, :amount
+    attributes :status, :invoice_number, :pending_amount, :amount, :created_at, :due_date
     attributes land_parcel: ['land_parcel.parcel_number']
     attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number']
-    attributes user: ['user.name', 'user.email', 'user.phone_number']
+    attributes user: ['user.name']
+    attributes email: ['user.email']
+    attributes phone_number: ['user.phone_number']
   end
 
+  # rubocop:disable Metrics/AbcSize
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       cur_payment = settle_amount
-      return user.wallet.update_balance(amount, 'debit') if cur_payment.zero?
+      user.wallet.update_balance(amount, 'debit')
+      bal = land_parcel.payment_plan&.plot_balance
+      return if bal.nil? || cur_payment.zero?
 
-      user.wallet.settle_from_plot_balance(self, cur_payment)
+      land_parcel.payment_plan.update(plot_balance: bal - cur_payment)
+      user.wallet.make_payment(self, cur_payment)
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def settle_amount
     pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
-    if pending_amount.positive?
-      update(pending_amount: pending_amount)
-      return amount - pending_amount
-    end
+    return amount - pending_amount if pending_amount.positive?
 
-    update(pending_amount: 0)
     paid!
     amount
   end
@@ -95,5 +99,9 @@ class Invoice < ApplicationRecord
     ).count.zero?
 
     errors.add(:invoice, 'invoice already generated')
+  end
+
+  def set_pending_amount
+    self.pending_amount = amount
   end
 end

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -109,6 +109,14 @@ describe('Payment List Item Component', () => {
       },
       { timeout: 100 }
     );
+
+    const filterClick = container.getByTestId("filter")
+    fireEvent.click(filterClick)
+    expect(container.queryByText('Client Name')).toBeInTheDocument()
+
+    const searchInput = container.queryByTestId('search')
+    fireEvent.change(searchInput, { target: { value: 'text' } })
+    expect(searchInput.value).toBe('text')
   });
   it('should check if renderPayment works as expected', () => {
     const results = renderPayment(transactions[0], currency);

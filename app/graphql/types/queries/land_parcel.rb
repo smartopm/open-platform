@@ -42,7 +42,7 @@ module Types::Queries::LandParcel
                             .search(query)
                             .eager_load(:valuations, :accounts)
                             .with_attached_image
-                            .where.not(parcel_type: 'poi')
+                            .where("parcel_type <> 'poi' OR parcel_type is NULL")
                             .limit(limit).offset(offset)
   end
 
