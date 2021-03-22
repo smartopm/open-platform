@@ -151,7 +151,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       loadAssignees();
     }
 
-    if (data.eventType && value === 'custom email') {
+    if (data.eventType && value === 'custom_email') {
       loadEmailTemplates();
     }
 
@@ -313,7 +313,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               >
                 {actionData.data.actions.map((action, index) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <MenuItem key={index} value={action.toLowerCase()}>
+                  <MenuItem key={index} value={action.toLowerCase().replace(/ /g, "_")}>
                     {sentencizeAction(action)}
                   </MenuItem>
                 ))}
@@ -465,7 +465,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               />
             );
           })}
-        {data.actionType === 'custom email' &&
+        {data.actionType === 'custom_email' &&
           emailTemplatesData?.emailTemplates
             .find(temp => temp.name === metaData.template)
             ?.variableNames.map((varName, index) => (
