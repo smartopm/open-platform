@@ -103,14 +103,14 @@ describe('sanitize GraphQL errors', () => {
   // check for one field missing
   it('should return cleaned error when one field is missing', () => {
     expect(saniteError(requiredKeys, fieldError)).toBe(
-      'User Type value is blank'
+      'User Type value is required'
     )
   })
 
   // check for multiple fields missing
   it('should return cleaned error when multiple fields are missing', () => {
     expect(saniteError(requiredKeys, allFieldsError)).toBe(
-      'User Type or Phone Number or name value is blank'
+      'User Type or Phone Number or name value is required'
     )
   })
 })
