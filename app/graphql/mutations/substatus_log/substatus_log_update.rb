@@ -20,16 +20,15 @@ module Mutations
         raise GraphQL::ExecutionError, 'Substatus log not found' if log.nil?
 
         if log.update(vals)
-          update_previous(vals[:previous_status], vals[:start_date], user)
+          update_previous(log, user, vals[:start_date])
           return { log: log }
         end
         raise GraphQL::ExecutionError, log.errors.full_messages
       end
 
       # stopdate will be the startdate for the recent log, if there is no prevlog then we move on
-      def update_previous(prev_status, stop_date, user)
-        # TODO: Fix: if there are multiple previous states then it will probably pick the wrong one
-        prev_log = user.substatus_logs.find_by(previous_status: prev_status)
+      def update_previous(log, user, stop_date)
+        prev_log = user.substatus_logs.previous_log(log.created_at)
         return if prev_log.nil?
 
         prev_log.update(stop_date: stop_date)
