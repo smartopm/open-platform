@@ -8,22 +8,27 @@ import { dateFormatter } from '../DateContainer';
 import { userSubStatus } from '../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
 
+function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
+  return (
+    <span>
+      {' '}
+      changed status 
+      {' '}
+      {previousStatus ? 'from' : 'to'} 
+      {' '}
+      <b>{userSubStatus[String(newStatus)]}</b>
+      {' '}
+      {previousStatus && 'to'} 
+      {' '}
+      <b>{userSubStatus[String(previousStatus)]}</b> 
+      {' '}
+      {date}
+    </span>
+  );
+}
 export default function UserJourney({ data, refetch }) {
   const [isEditOpen, setIsEditing] = useState(false);
   const [selectedJourneyLog, setCurrentLog] = useState({});
-
-  function getInitialSubStatusContent({ startDate, newStatus }) {
-    return (
-      <>
-        {' '}
-        changed status to 
-        {' '}
-        <b>{userSubStatus[String(newStatus)]}</b> 
-        {' '}
-        {startDate}
-      </>
-    );
-  }
 
   function getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus }) {
     return (
@@ -38,12 +43,9 @@ export default function UserJourney({ data, refetch }) {
         <b>{userSubStatus[String(newStatus)]}</b>
         {' '}
         between
+        {startDate} 
         {' '}
-        {startDate}
-        {' '}
-        {
-            stopDate && `and ${stopDate}`
-        }
+        {`and ${stopDate}`}
       </>
     );
   }
@@ -58,23 +60,37 @@ export default function UserJourney({ data, refetch }) {
 
     const sortedLogsDescending = subStatusLogs;
 
-    return sortedLogsDescending.map((log, index) => {
-      if (index === sortedLogsDescending.length - 1) {
+    return sortedLogsDescending.map(log => {
+      if (!log.stopDate) {
         const content = getInitialSubStatusContent({
-          startDate: dateFormatter(log.startDate),
-          newStatus: log.newStatus
+          date: dateFormatter(log.startDate),
+          newStatus: log.newStatus,
+          previousStatus: log.previousStatus
         });
-        console.log(log)
-        return { id: log.id, content, previousStatus: null, userId: log.userId };
+        return {
+          id: log.id,
+          content,
+          previousStatus: log.previousStatus,
+          userId: log.userId,
+          startDate: log.startDate,
+          stopDate: log.stopDate
+        };
       }
 
-      const startDate = dateFormatter(log.startDate)
-      const stopDate = dateFormatter(log.stopDate)
-      const { newStatus, previousStatus } = log
+      const startDate = dateFormatter(log.startDate);
+      const stopDate = dateFormatter(log.stopDate);
+      const { newStatus, previousStatus } = log;
 
       const content = getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus });
 
-      return { id: log.id, content, startDate, stopDate, previousStatus, userId: log.userId };
+      return {
+        id: log.id,
+        content,
+        startDate: log.startDate,
+        stopDate: log.stopDate,
+        previousStatus,
+        userId: log.userId
+      };
     });
   }
 

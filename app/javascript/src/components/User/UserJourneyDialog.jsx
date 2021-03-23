@@ -14,14 +14,14 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
     isOpen: false,
     isLoading: false
   });
-  const [dates, setDates] = useState({ startDate: log.startDate, endDate: log.stopDate });
+  const [startDate, setDates] = useState(log.startDate);
   const [updateUserJourney] = useMutation(UserJourneyUpdateMutation);
 // console.log(log);
-  // force dates to update when we pick a different log
+  // force startDate to update when we pick a different log
   useEffect(() => {
-    setDates({ ...dates, startDate: log.startDate, endDate: log.stopDate });
+    setDates(log.startDate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, log.startDate, log.stopDate]);
+  }, [open]);
 
   function handleSubmit() {
     setState({ ...state, isLoading: true });
@@ -29,8 +29,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
       variables: {
         id: log.id,
         userId: log.userId,
-        startDate: dates.startDate,
-        stopDate: dates.endDate,
+        startDate,
         previousStatus: log.previousStatus
       }
     })
@@ -64,21 +63,11 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
       >
         <DatePickerDialog
           key="start_date"
-          selectedDate={dates.startDate || new Date()}
+          selectedDate={startDate}
           label="Customer Journey Start Date"
-          handleDateChange={date => setDates({ ...dates, startDate: date })}
-          minDate={dates.startDate}
-          maxDate={dates.endDate}
-          disablePastDate
-        />
-        <DatePickerDialog
-          key="end_date"
-          selectedDate={dates.endDate || new Date()}
-          label="Customer Journey End Date"
-          handleDateChange={date => setDates({ ...dates, endDate: date })}
-          minDate={dates.startDate}
-          maxDate={dates.endDate}
-          disablePastDate
+          handleDateChange={date => setDates(date)}
+          maxDate={log.stopDate || undefined}
+          minDate={startDate}
         />
       </CustomizedDialogs>
     </>

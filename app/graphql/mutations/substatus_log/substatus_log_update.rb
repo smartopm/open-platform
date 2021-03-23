@@ -7,7 +7,7 @@ module Mutations
       argument :id, ID, required: true
       argument :user_id, ID, required: true
       argument :start_date, String, required: true
-      argument :stop_date, String, required: true
+      argument :stop_date, String, required: false
       argument :previous_status, String, required: false
 
       field :log, Types::SubstatusLogType, null: true
@@ -27,11 +27,13 @@ module Mutations
       end
 
       # stopdate will be the startdate for the recent log, if there is no prevlog then we move on
-      def update_previous(log, user, stop_date)
+      def update_previous(log, user, start_date)
         prev_log = user.substatus_logs.previous_log(log.created_at)
         return if prev_log.nil?
 
-        prev_log.update(stop_date: stop_date)
+        # raise GraphQL::ExecutionError, 'Date can\'t be less than the previous log start date' if start_date < prev_log.start_date
+
+        prev_log.update(stop_date: start_date)
       end
 
       def authorized?(_vals)
