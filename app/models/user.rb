@@ -456,6 +456,20 @@ class User < ApplicationRecord
     community.users.find(payload['user_id'])
   end
 
+  def self.already_existing(email, phone_list, community)
+    email = email&.presence
+    phone_list = phone_list.reject(&:blank?)
+    (where.not(email: nil).where(community: community).where(
+      arel_table[:email].matches("#{email || ' '}%"),
+    ).or(where(phone_number: phone_list, community: community)) +
+      where(community: community).joins(:contact_infos).where(contact_infos:
+        { contact_type: 'email', info: email }).or(
+          where(community: community).joins(:contact_infos).where(contact_infos:
+          { contact_type: 'phone', info: phone_list }),
+        )
+    ).uniq
+  end
+
   def send_email_msg
     return if self[:email].nil?
 
