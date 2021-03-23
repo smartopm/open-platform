@@ -1,15 +1,20 @@
 # frozen_string_literal: true
+require 'host_env'
 
 namespace :land_parcels do
   desc 'imports plot info'
-  task :import_plot_info, %i[community_name csv_string] => :environment do |_t, args|
+  task :import_plot_info, %i[community_name csv_path] => :environment do |_t, args|
     errors        = {}
     warnings      = {}
     community     = Community.find_by(name: args.community_name)
-    current_user  = User.find_by(email: 'mutale@doublegdp.com')
+    current_user  = community.users.find_by(email: 'nurudeen@doublegdp.com')
+
+    abort("Aborted. File not found") unless File.exist?(args.csv_path)
 
     User.skip_callback(:create, :after, :send_email_msg)
-    csv = CSV.new(args.csv_string, headers: true)
+
+    csv_string = File.read(args.csv_path)
+    csv = CSV.new(csv_string, headers: true)
     ActiveRecord::Base.transaction do
       csv.each_with_index do |row, index|
         name          = "#{row['NAME']&.strip} #{row['SURNAME']&.strip}".presence
@@ -19,12 +24,7 @@ namespace :land_parcels do
         ext_ref_id    = row['NRC']&.strip&.presence
         parcel_type   = row['PLOT TYPE']&.strip&.presence
 
-        if [name, email, parcel_number, phone_number, ext_ref_id, parcel_type].compact.count < 6
-          errors[0]   = "Error: Kindly ensure that the following headers are present and written correctly:
-                        NAME, EMAIL, PLOT NUMBER, PHONE NUMBER, NRC"
-          break
-        end
-
+        puts "processing row: #{index + 1}, NRC: #{ext_ref_id}"
         if [email, phone_number].compact.empty?
           errors[index + 1] = 'Error: No means of identification'
         end
@@ -46,12 +46,12 @@ namespace :land_parcels do
           next
         end
 
-        if others.size > 1 && client.empty?
+        if others.size > 1 && clients.empty?
           errors[index + 1] = 'Error: Multiple users found and none is a client'
           next
         end
 
-        if client.size == 1 && !others.empty?
+        if clients.size == 1 && !others.empty?
           warnings[index + 1] = "Warning: Some other user types were found for this row.
                                  Consider merging them via the app"
         end
@@ -104,9 +104,9 @@ namespace :land_parcels do
       raise ActiveRecord::Rollback unless errors.empty?
     end
 
-    puts "The following are the issues encountered:"
     puts "Errors: #{errors}"
     puts "Warnings: #{warnings}"
+    puts "Records successfully imported" if errors.empty?
     User.set_callback(:create, :after, :send_email_msg)
   end
 end
