@@ -420,3 +420,62 @@ const InitialConfig = MaterialConfig
     transactionNumber: 'transaction_number',
     chequeNumber: 'cheque_number'
   }
+
+  export const propertyQueryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      owner: {
+        label: 'Owner\'s Name',
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      ownerAddress: {
+        label: 'Owner\'s Address',
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      parcelType: {
+        label: 'Property Type',
+        type: 'text',
+        valueSources: ['value']
+      },
+      plotNumber: {
+        label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      parcelAddress: {
+        label: 'Property Address',
+        type: 'text',
+        valueSources: ['value']
+      },
+    }
+  };
+
+  export const propertyQueryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'owner',
+          operator: 'equal',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['text']
+        }
+      }
+    }
+  };
+
+  export const propertyFilterFields = {
+    owner: 'owner',
+    ownerAddress: 'owner',
+    parcelType: 'parcel_type',
+    plotNumber: 'parcel_number',
+    parcelAddress: 'address1',
+  };

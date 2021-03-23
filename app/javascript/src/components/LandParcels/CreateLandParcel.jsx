@@ -83,8 +83,7 @@ export default function CreateLandParcel({ refetch }) {
 
 const useStyles = makeStyles(() => ({
   parcelButton: {
-    float: 'right',
-    margin: '25px 0'
+    margin: '10px 5px'
   },
   parcelForm: {
     display: 'flex',
