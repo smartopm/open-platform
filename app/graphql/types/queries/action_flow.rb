@@ -44,9 +44,11 @@ module Types::Queries::ActionFlow
   def actions
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    ActionFlows::Actions.constants.select do |c|
+    actions = ActionFlows::Actions.constants.select do |c|
       ActionFlows::Actions.const_get(c).is_a?(Class)
-    end.map { |ac| ac.to_s.titleize }
+    end
+
+    actions.map { |ac| ac.to_s.titleize }
   end
 
   def action_fields(action:)

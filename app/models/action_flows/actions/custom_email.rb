@@ -8,7 +8,7 @@ module ActionFlows
 
       ACTION_FIELDS = [
         { name: 'email', type: 'text' },
-        { name: 'template', type: 'select' }
+        { name: 'template', type: 'select' },
       ].freeze
 
       def self.execute_action(data, field_config)
