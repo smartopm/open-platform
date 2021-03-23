@@ -16,10 +16,9 @@ RSpec.describe Mutations::SubstatusLog::SubstatusLogUpdate do
     let(:substatus_mutation) do
       <<~GQL
         mutation update_subtatus {
-          substatusLogUpdate(id:"#{substatus_log.id}", startDate:"#{5.days.from_now}", stopDate:"#{20.days.from_now}"){
+          substatusLogUpdate(id:"#{substatus_log.id}", startDate:"#{5.days.from_now}", userId:"#{user.id}"){
             log {
               id
-              stopDate
             }
           }
         }
@@ -33,7 +32,6 @@ RSpec.describe Mutations::SubstatusLog::SubstatusLogUpdate do
                                          site_community: user.community,
                                        }).as_json
       expect(result.dig('data', 'substatusLogUpdate', 'log', 'id')).to eql substatus_log.id
-      expect(result.dig('data', 'substatusLogUpdate', 'log', 'stopDate')).not_to be_nil
       expect(result['errors']).to be_nil
     end
   end

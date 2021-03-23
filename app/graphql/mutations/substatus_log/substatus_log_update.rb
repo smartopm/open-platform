@@ -12,6 +12,7 @@ module Mutations
 
       field :log, Types::SubstatusLogType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find_by(id: vals[:user_id])
         raise GraphQL::ExecutionError, 'User not found' if user.nil?
@@ -25,13 +26,15 @@ module Mutations
         end
         raise GraphQL::ExecutionError, user_log.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       # stopdate will be the startdate for the recent log, if there is no prevlog then we move on
       def update_previous(log, user, start_date)
         prev_log = user.substatus_logs.previous_log(log.created_at)
         return if prev_log.nil?
 
-        # raise GraphQL::ExecutionError, 'Date can\'t be less than the previous log start date' if start_date < prev_log.start_date
+        # sd = start_date < prev_log.start_date
+        # raise GraphQL::ExecutionError, 'Date can\'t be less than previous log's start_date' if sd
 
         prev_log.update(stop_date: start_date)
       end
