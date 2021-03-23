@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import UserPlotInfo from '../components/UserPlotInfo'
+import UserPlotInfo from '../components/User/UserPlotInfo'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('User Plot Info Page', () => {
@@ -37,7 +37,7 @@ describe('User Plot Info Page', () => {
     userType:'admin',
     userId: 'bwekwjkewj'
   }
-  
+
   it('should include this type of a plot', () => {
     const container = render(
       <MockedProvider mock={[]}>
