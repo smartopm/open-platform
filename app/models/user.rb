@@ -502,12 +502,13 @@ class User < ApplicationRecord
     payment_plans.active.present? || wallet_transactions.present? || invoices.present?
   end
 
-  private
-
   def current_time_in_timezone
     # Should we get timezone from user's community instead?
     Time.now.in_time_zone('Africa/Lusaka')
   end
+
+  private
+
 
   def phone_number_valid?
     return if self[:phone_number].blank?
@@ -542,9 +543,10 @@ class User < ApplicationRecord
     new_status = sub_status_changes.last
     stop_date = nil
 
-    if previous_status.present? && new_status != previous_status
-      stop_date = current_time_in_timezone
-    end
+    # stop_date will be nil until a new step
+    # if previous_status.present? && new_status != previous_status
+    #   stop_date = current_time_in_timezone
+    # end
 
     latest_substatus = create_sub_status_log(start_date, previous_status, new_status, stop_date)
 

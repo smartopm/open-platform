@@ -32,7 +32,7 @@ module Mutations
         update_secondary_info(user, vals.delete(:secondary_info))
 
         if user.update(vals.except(*ATTACHMENTS.keys, :substatus_start_date))
-          update_substatus_date(user, vals[:substatus_start_date])
+          update_substatus_date(user)
           return { user: user }
         end
         raise GraphQL::ExecutionError, user.errors.full_messages
@@ -72,12 +72,10 @@ module Mutations
         context[:current_user].id == vals[:id]
       end
 
-      def update_substatus_date(user, start_date)
-        # maintains the time set in user model if no start_date provided
-        return if start_date.nil?
-
-        status = user.substatus_logs.find_by(id: user.latest_substatus_id)
-        status&.update!(start_date: start_date)
+      def update_substatus_date(user)
+        current_log = user.substatus_logs
+        start_date = user.current_time_in_timezone
+        current_log.previous_log(current_log.first.created_at).update(stop_date: start_date)
       end
 
       def authorized?(vals)

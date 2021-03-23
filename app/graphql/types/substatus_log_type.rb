@@ -8,5 +8,6 @@ module Types
     field :stop_date, GraphQL::Types::ISO8601DateTime, null: true
     field :new_status, String, null: true
     field :previous_status, String, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: true
   end
 end
