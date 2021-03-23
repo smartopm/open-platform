@@ -64,8 +64,8 @@ export default function UserJourney({ data, refetch }) {
           startDate: dateFormatter(log.startDate),
           newStatus: log.newStatus
         });
-
-        return { id: log.id, content, previousStatus: null };
+        console.log(log)
+        return { id: log.id, content, previousStatus: null, userId: log.userId };
       }
 
       const startDate = dateFormatter(log.startDate)
@@ -74,7 +74,7 @@ export default function UserJourney({ data, refetch }) {
 
       const content = getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus });
 
-      return { id: log.id, content, startDate, stopDate, previousStatus };
+      return { id: log.id, content, startDate, stopDate, previousStatus, userId: log.userId };
     });
   }
 
@@ -82,7 +82,6 @@ export default function UserJourney({ data, refetch }) {
     setCurrentLog(log);
     setIsEditing(true);
   }
-
   const formattedSubStatusLogs = subsStatusLogsFormatter(data.user?.substatusLogs);
   return (
     <>

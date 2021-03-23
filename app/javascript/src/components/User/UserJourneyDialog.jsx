@@ -16,20 +16,19 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
   });
   const [dates, setDates] = useState({ startDate: log.startDate, endDate: log.stopDate });
   const [updateUserJourney] = useMutation(UserJourneyUpdateMutation);
-
-  console.log(log);
-
+// console.log(log);
   // force dates to update when we pick a different log
   useEffect(() => {
     setDates({ ...dates, startDate: log.startDate, endDate: log.stopDate });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, log.startDate, log.stopDate]);
 
   function handleSubmit() {
     setState({ ...state, isLoading: true });
     updateUserJourney({
       variables: {
         id: log.id,
+        userId: log.userId,
         startDate: dates.startDate,
         stopDate: dates.endDate,
         previousStatus: log.previousStatus
@@ -68,6 +67,9 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
           selectedDate={dates.startDate || new Date()}
           label="Customer Journey Start Date"
           handleDateChange={date => setDates({ ...dates, startDate: date })}
+          minDate={dates.startDate}
+          maxDate={dates.endDate}
+          disablePastDate
         />
         <DatePickerDialog
           key="end_date"
@@ -75,6 +77,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
           label="Customer Journey End Date"
           handleDateChange={date => setDates({ ...dates, endDate: date })}
           minDate={dates.startDate}
+          maxDate={dates.endDate}
           disablePastDate
         />
       </CustomizedDialogs>
@@ -87,6 +90,7 @@ UserJourneyDialog.propTypes = {
   handleModalClose: PropTypes.func.isRequired,
   log: PropTypes.shape({
     id: PropTypes.string,
+    userId: PropTypes.string,
     stopDate: PropTypes.string,
     startDate: PropTypes.string,
     previousStatus: PropTypes.string

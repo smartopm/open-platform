@@ -4,6 +4,7 @@ module Types
   # SubStatus Log Type
   class SubstatusLogType < Types::BaseObject
     field :id, ID, null: true
+    field :user_id, ID, null: false
     field :start_date, GraphQL::Types::ISO8601DateTime, null: true
     field :stop_date, GraphQL::Types::ISO8601DateTime, null: true
     field :new_status, String, null: true
