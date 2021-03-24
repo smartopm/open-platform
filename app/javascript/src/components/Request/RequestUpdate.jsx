@@ -172,7 +172,7 @@ export default function RequestUpdate({ id }) {
             <p>
               Today is
               {' '}
-              {`${getWeekDay(date)} ${dateToString(date)}`}
+              {`${getWeekDay(date)}`}
               {' '}
               at
               {' '}

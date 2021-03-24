@@ -7,6 +7,7 @@ FactoryBot.define do
     percentage { '50%' }
     status { 'active' }
     land_parcel
+    plot_balance { (rand * 10_000).floor }
     user
   end
 end

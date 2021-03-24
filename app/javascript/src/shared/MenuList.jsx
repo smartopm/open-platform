@@ -33,7 +33,7 @@ export default function MenuList({
           id={index}
           key={index}
           style={menu.color ? {color: menu.color} : null}
-          onClick={(event) => menu.handleClick(event, anchorEl.getAttribute('dataid'), anchorEl.getAttribute('name'))}
+          onClick={(event) => menu.handleClick(event, anchorEl?.getAttribute('dataid'), anchorEl?.getAttribute('name'))}
         >
           {menu.content}
         </MenuItem>
