@@ -56,7 +56,8 @@ class WalletTransaction < ApplicationRecord
       sum(CASE WHEN wallet_transactions.source='bank_transfer/eft'
       THEN wallet_transactions.amount ELSE 0 END) as eft
      from wallet_transactions
-     where destination = 'wallet' and wallet_transactions.community_id='#{com.id}'
+     where destination = 'wallet' and source != 'invoice'
+     and wallet_transactions.community_id='#{com.id}'
      and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '60 days')
      group by trx_date order by trx_date",
     )
