@@ -13,6 +13,8 @@ import TransactionDetails from '../TransactionDetails'
 import { formatMoney } from '../../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
 import MenuList from '../../../../shared/MenuList'
+import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue'
+import MessageAlert from "../../../../components/MessageAlert"
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
@@ -28,11 +30,17 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [revertModalOpen, setRevertModalOpen] = useState(false)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [transactionId, setTransactionId] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
+  const [name, setName] = useState('')
   const anchorElOpen = Boolean(anchorEl)
 
   const menuList = [
     { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt},
-    { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenEdit}
+    { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenEdit},
+    { content: 'Revert Transaction', isAdmin: true, color: 'red', handleClick: handleClick},
   ]
 
   useEffect(() => {
@@ -44,6 +52,38 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
 
   if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
     return <CenteredContent><Text content="No Transactions Yet" align="justify" /></CenteredContent>
+  }
+
+  function handleRevertTransaction(event) {
+    event.stopPropagation()
+    // revertTransaction({
+    //   variables: {
+    //     transactionId
+    //   }
+    // }).then(() => {
+    //   setAnchorEl(null)
+    //   setMessageAlert('Transaction reverted')
+    //   setIsSuccessAlert(true)
+    //   setModalOpen(false)
+    //   refetch()
+    // })
+    // .catch((err) => {
+    //   setMessageAlert(formatError(err.message))
+    //   setIsSuccessAlert(false)
+    // })
+    setRevertModalOpen(false)
+  }
+
+  function handleClick(event, transactionId, name){
+    event.stopPropagation()
+    setTransactionId(transactionId)
+    setName(name)
+    setRevertModalOpen(true)
+  }
+
+  function handleRevertClose(event){
+    event.stopPropagation()
+    setRevertModalOpen(false)
   }
 
   function handleTransactionMenu(event){
@@ -73,6 +113,13 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
     setOpen(true)
   }
 
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+  }
+
   const menuData = {
     menuList,
     handleTransactionMenu,
@@ -81,8 +128,23 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
     userType,
     handleClose
   }
+
   return (
     <div>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
+      <DeleteDialogueBox
+        open={revertModalOpen}
+        handleClose={(event) => handleRevertClose(event)}
+        handleAction={(event) => handleRevertTransaction(event)}
+        title='Transaction'
+        action='delete'
+        user={name}
+      />
       <DataList
         keys={transactionHeader}
         data={[renderTransactions(transaction, currencyData, menuData)]}
@@ -181,7 +243,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
               aria-controls="simple-menu"
               aria-haspopup="true"
               data-testid="receipt-menu"
-              onClick={(event) => menuData.handleTransactionMenu(event, transaction)}
+              onClick={(event) => menuData.handleTransactionMenu(event)}
             >
               <MoreHorizOutlined />
             </IconButton>
