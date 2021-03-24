@@ -502,12 +502,13 @@ class User < ApplicationRecord
     payment_plans.active.present? || wallet_transactions.present? || invoices.present?
   end
 
-  private
-
   def current_time_in_timezone
     # Should we get timezone from user's community instead?
     Time.now.in_time_zone('Africa/Lusaka')
   end
+
+  private
+
 
   def phone_number_valid?
     return if self[:phone_number].blank?
