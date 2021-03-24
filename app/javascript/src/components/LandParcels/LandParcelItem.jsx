@@ -62,37 +62,37 @@ export default function ParcelItem({ parcel, onParcelClick }) {
   return [
     {
       'Property Number/Property Type': (
-        <Grid item xs={12} md={2} data-testid="issue_date">
+        <Grid item xs={12} md={2} data-testid="property">
           <div style={{fontWeight: 'bold', fontSize: '12px'}}>{parcel.parcelNumber}</div>
           <Text content={parcel.parcelType} />
         </Grid>
       ),
       'Address1/Address2': (
-        <Grid item xs={12} md={2} data-testid="invoice_amount">
+        <Grid item xs={12} md={2} data-testid="address">
           <Text content={parcel.address1} />
           <br />
           <Text content={parcel.address2} />
         </Grid>
       ),
       'Postal Code': (
-        <Grid item xs={12} md={2} data-testid="issue_date">
+        <Grid item xs={12} md={2} data-testid="postal-code">
           <Text content={parcel.postalCode} />
         </Grid>
       ),
       'City': (
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={2} data-testid="city">
           <Text content={parcel.city} />
         </Grid>
       ),
       'State Province/Country': (
-        <Grid item xs={12} md={2} data-testid="status">
+        <Grid item xs={12} md={2} data-testid="country">
           <Text content={parcel.stateProvince} />
           <br />
           <Text content={parcel.country} />
         </Grid>
       ),
       Menu: (
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={1} data-testid="menu">
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"
@@ -127,16 +127,3 @@ ParcelItem.propTypes = {
     }).isRequired,
     onParcelClick: PropTypes.func.isRequired
 }
-
-// const useStyles = makeStyles(() => ({
-//   parcelItem: {
-//       borderBottomStyle: 'solid',
-//       borderBottomColor: '#F6F6F6',
-//       borderBottom: 10,
-//       backgroundColor: '#FFFFFF',
-//       cursor: 'pointer'
-//   },
-//   parcelGrid: {
-//     marginTop: '8px'
-//   }
-// }));
