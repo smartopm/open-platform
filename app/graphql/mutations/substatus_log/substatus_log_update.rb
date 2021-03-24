@@ -31,7 +31,7 @@ module Mutations
       # stopdate will be the startdate for the recent log, if there is no prevlog then we move on
       def update_previous(log, user, start_date)
         prev_log = user.substatus_logs.previous_log(log.created_at)
-        return if prev_log.nil?
+        return if prev_log.blank?
 
         sd = start_date < prev_log.first.start_date
         raise GraphQL::ExecutionError, 'Date can\'t be less than previous log\'s start date' if sd
