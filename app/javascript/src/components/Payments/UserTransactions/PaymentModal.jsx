@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
+import subDays from 'date-fns/subDays';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +26,7 @@ const initialValues = {
   transactionNumber: '',
   landParcelId: '',
   pastPayment: false,
-  paidDate: new Date(),
+  paidDate: subDays(new Date(), 1),
   receiptNumber: ''
 }
 export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
@@ -43,6 +44,14 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
 
   function confirm(event) {
     event.preventDefault();
+
+    const checkReceipt = inputValue.pastPayment && !inputValue.receiptNumber
+
+    if (!inputValue.amount || !inputValue.transactionType || checkReceipt) {
+      setIsError(true)
+      setIsSubmitting(true)
+      return
+    }
     setIsConfirm(true);
   }
 
@@ -55,7 +64,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   // reset bank details when transaction type and pastPayment are changed
   // To avoid wrong details with wrong transaction type e.g: Cheque Number when paid using cash
   useEffect(() => {
-    setInputValue({ ...inputValue, bankName: '', chequeNumber: '', receiptNumber: '', paidDate: new Date() })
+    setInputValue({ ...inputValue, bankName: '', chequeNumber: '', receiptNumber: '', paidDate: subDays(new Date(), 1) })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue.transactionType,inputValue.pastPayment ])
 
@@ -69,12 +78,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
 
   function handleSubmit(event) {
     event.preventDefault()
-
-    if (!inputValue.amount || !inputValue.transactionType) {
-      setIsError(true)
-      setIsSubmitting(true)
-      return
-    }
     createPayment({
       variables: {
         userId,
@@ -119,7 +122,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
     setPromptOpen(false);
     history.push(`/user/${userId}?tab=Payments`);
   }
-
+  
   if (loading) return <Spinner />
   return (
     <>
@@ -223,12 +226,15 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                     type='string'
                     value={inputValue.receiptNumber}
                     onChange={(event) => setInputValue({...inputValue, receiptNumber: event.target.value})}
+                    required={inputValue.pastPayment}
+                    error={isError && submitting && !inputValue.receiptNumber}
+                    helperText={isError && !inputValue.receiptNumber && 'ReceiptNumber is required for past payments'}
                   />
                   <DatePickerDialog
                     selectedDate={inputValue.paidDate}
                     label="Paid Date"
                     handleDateChange={date => setInputValue({...inputValue, paidDate: date})}
-                    maxDate={new Date()}
+                    maxDate={subDays(new Date(), 1)}
                   />
                 </>
                 )
