@@ -12,7 +12,7 @@ import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
 import DataList from '../../shared/list/DataList';
 import { formatError, formatMoney, useParamsQuery, handleQueryOnChange } from '../../utils/helpers';
 import CenteredContent from '../CenteredContent';
-import { dateToString } from '../DateContainer';
+import { dateToString } from '../../utils/dateutil';
 import SearchInput from '../../shared/search/SearchInput';
 import useDebounce from '../../utils/useDebounce';
 import Paginate from '../Paginate';
@@ -59,7 +59,7 @@ export default function PaymentList({ currencyData }) {
 
   let paymentList
   if (data?.transactions) {
-    paymentList = data.transactions.filter((fil) => fil?.destination === 'wallet')
+    paymentList = data.transactions.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
   }
 
   function paginate(action) {

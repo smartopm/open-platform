@@ -9,8 +9,9 @@ class PaymentPlan < ApplicationRecord
   enum status: { active: 0, cancelled: 1, deleted: 2 }
 
   def update_plot_balance(amount, type = 'credit')
-    balance = type.eql?('credit') ? (plot_balance + amount) : (plot_balance - amount)
+    return if amount.zero?
 
+    balance = type.eql?('credit') ? (plot_balance + amount) : (plot_balance - amount)
     update(plot_balance: balance)
   end
 end

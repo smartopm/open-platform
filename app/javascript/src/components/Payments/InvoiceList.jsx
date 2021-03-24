@@ -2,6 +2,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
 import {
   Button,
@@ -10,16 +11,16 @@ import {
   DialogContent,
   Grid,
   List,
+  IconButton
 } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useQuery, useLazyQuery } from 'react-apollo';
+import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../CenteredContent';
 import Paginate from '../Paginate';
 import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
 import {
   formatError,
   useParamsQuery,
@@ -45,6 +46,11 @@ import currencyTypes from '../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
 import QueryBuilder from '../QueryBuilder'
+import MenuList from '../../shared/MenuList';
+import { InvoiceCancel } from '../../graphql/mutations'
+import MessageAlert from "../MessageAlert"
+import DeleteDialogueBox from '../Business/DeleteDialogue'
+import { Spinner } from '../../shared/Loading';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -52,9 +58,12 @@ const invoiceHeaders = [
   { title: 'Amount', col: 3 },
   { title: 'Payment Date', col: 3 },
   { title: 'Status', col: 4 },
+  { title: 'Menu', col: 4 }
 ];
 export default function InvoiceList({ currencyData, userType }) {
-  const menuList = []
+  const menuList = [
+    { content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick}
+  ]
   const history = useHistory();
   const path = useParamsQuery();
   const limit = 50;
@@ -71,6 +80,12 @@ export default function InvoiceList({ currencyData, userType }) {
   const open = Boolean(anchorEl)
   const [displayBuilder, setDisplayBuilder] = useState('none')
   const [searchQuery, setSearchQuery] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [invoiceId, setInvoiceId] = useState(false)
+  const [name, setName] = useState('')
+  const [cancelInvoice] = useMutation(InvoiceCancel)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [messageAlert, setMessageAlert] = useState('')
 
   function handleOpenMenu(event) {
     event.stopPropagation()
@@ -82,7 +97,45 @@ export default function InvoiceList({ currencyData, userType }) {
     setAnchorEl(null)
   }
 
-  const { loading, data: invoicesData, error } = useQuery(InvoicesQuery, {
+  function handleClick(event, invId, nam){
+    event.stopPropagation()
+    setInvoiceId(invId)
+    setName(nam)
+    setModalOpen(true)
+  }
+
+  function handleDeleteClose(event){
+    event.stopPropagation()
+    setModalOpen(false)
+  }
+
+  function handleOnClick(event) {
+    event.stopPropagation()
+    cancelInvoice({
+      variables: {
+        invoiceId
+      }
+    }).then(() => {
+      setAnchorEl(null)
+      setMessageAlert('Invoice successfully cancelled')
+      setIsSuccessAlert(true)
+      setModalOpen(false)
+      refetch()
+    })
+    .catch((err) => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+    })
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+  }
+
+  const { loading, data: invoicesData, error, refetch } = useQuery(InvoicesQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -155,6 +208,12 @@ export default function InvoiceList({ currencyData, userType }) {
 
   return (
     <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <Grid container>
         <Grid item xs={12} sm={10}>
           <SearchInput
@@ -219,6 +278,14 @@ export default function InvoiceList({ currencyData, userType }) {
       <br />
       <br />
       <InvoiceGraph handleClick={setGraphQuery} />
+      <DeleteDialogueBox 
+        open={modalOpen}
+        handleClose={(event) => handleDeleteClose(event)}
+        handleAction={(event) => handleOnClick(event)}
+        title='Invoice'
+        action='delete'
+        user={name}
+      />
       {loading ? (<Spinner />) : (
         <List>
           {
@@ -278,7 +345,7 @@ export default function InvoiceList({ currencyData, userType }) {
  * @param {object} currencyData community currencyData current and locale
  * @returns {object} an object with properties that DataList component uses to render
  */
-export function renderInvoice(invoice, currencyData) {
+export function renderInvoice(invoice, currencyData, menuData) {
   return [
     {
       'Issue Date': (
@@ -326,6 +393,31 @@ export function renderInvoice(invoice, currencyData) {
               color={propAccessor(InvoiceStatusColor, invoice.status)}
             />
           )}
+        </Grid>
+      ),
+      Menu: (
+        <Grid item xs={12} md={1} data-testid="menu">
+          {
+                invoice.status !== 'cancelled' && (
+                  <IconButton
+                    aria-label='more-verticon'
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={(event) => menuData.handleOpenMenu(event)}
+                    dataid={invoice.id}
+                    name={invoice.user.name}
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                )
+              }
+          <MenuList
+            open={menuData.open && menuData.anchorEl?.getAttribute('dataid') === invoice.id}
+            anchorEl={menuData.anchorEl}
+            userType={menuData.userType}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
+          />
         </Grid>
       )
     }
