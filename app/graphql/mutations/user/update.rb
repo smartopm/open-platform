@@ -74,9 +74,11 @@ module Mutations
       def update_substatus_date(user, substatus)
         return if substatus.nil?
 
-        current_log = user.substatus_logs
+        user_logs = user.substatus_logs
+        return if user_logs.blank?
+
         start_date = user.current_time_in_timezone
-        current_log.previous_log(current_log.first.created_at).update(stop_date: start_date)
+        user_logs.previous_log(user_logs.first.created_at).update(stop_date: start_date)
       end
 
       def authorized?(vals)

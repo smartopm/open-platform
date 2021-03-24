@@ -41,6 +41,22 @@ describe('<UserJourney />', () => {
     expect(container.queryAllByTestId('edit_journey')[0]).toBeInTheDocument()
     expect(container.queryAllByTestId('edit_journey')).toHaveLength(2)
   });
+  it('should show when there are no logs yet', () => {
+    const props = {
+      user: {
+        id: '90849232-234234fsdf-232',
+        name: 'User Name',
+        substatusLogs: []
+      }
+    };
+    const refetch = jest.fn();
+    const container = render(
+      <MockedProvider>
+        <UserJourney data={props} refetch={refetch} />
+      </MockedProvider>
+    );
+    expect(container.queryByText('There are no customer journey logs for this user')).toBeInTheDocument();
+  })
 });
 
 describe('user journey utils', () => {

@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { dateFormatter } from '../DateContainer';
 import { userSubStatus } from '../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
+import CenteredContent from '../CenteredContent';
 
 export function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
   return (
@@ -106,6 +107,11 @@ export default function UserJourney({ data, refetch }) {
         log={selectedJourneyLog}
         refetch={refetch}
       />
+      {
+        !formattedSubStatusLogs.length && (
+          <CenteredContent>There are no customer journey logs for this user</CenteredContent>
+        )
+      }
       {formattedSubStatusLogs.map(log => (
         <Grid container spacing={3} key={log.id}>
           <Grid item xs={10}>
