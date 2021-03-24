@@ -509,7 +509,6 @@ class User < ApplicationRecord
 
   private
 
-
   def phone_number_valid?
     return if self[:phone_number].blank?
 

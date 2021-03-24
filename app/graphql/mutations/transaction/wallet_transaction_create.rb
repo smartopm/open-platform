@@ -29,7 +29,7 @@ module Mutations
                          status: 'settled',
                          community_id: context[:site_community]&.id,
                          depositor_id: context[:current_user].id,
-                         originally_created_at: user.current_time_in_timezone
+                         originally_created_at: user.current_time_in_timezone,
                        }),
           )
           context[:current_user].generate_events('deposit_create', transaction)
