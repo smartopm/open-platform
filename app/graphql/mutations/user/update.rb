@@ -17,7 +17,6 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
-      argument :substatus_start_date, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
       argument :ext_ref_id, String, required: false
 
@@ -31,7 +30,7 @@ module Mutations
         log_user_update(user)
         update_secondary_info(user, vals.delete(:secondary_info))
 
-        if user.update(vals.except(*ATTACHMENTS.keys, :substatus_start_date))
+        if user.update(vals.except(*ATTACHMENTS.keys))
           update_substatus_date(user, vals[:sub_status])
           return { user: user }
         end
