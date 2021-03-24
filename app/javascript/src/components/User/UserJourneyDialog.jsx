@@ -30,7 +30,6 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
         id: log.id,
         userId: log.userId,
         startDate,
-        previousStatus: log.previousStatus
       }
     })
       .then(() => {
