@@ -9,6 +9,8 @@ class WalletTransaction < ApplicationRecord
   belongs_to :depositor, class_name: 'User', optional: true
   has_one :payment_invoice, dependent: :destroy
 
+  has_paper_trail
+
   search_scope :search do
     attributes :source, :created_at, :transaction_number, :cheque_number
     attributes user: ['user.name']
