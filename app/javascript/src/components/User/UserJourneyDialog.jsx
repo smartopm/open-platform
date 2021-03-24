@@ -16,7 +16,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
   });
   const [startDate, setDates] = useState(log.startDate);
   const [updateUserJourney] = useMutation(UserJourneyUpdateMutation);
-// console.log(log);
+
   // force startDate to update when we pick a different log
   useEffect(() => {
     setDates(log.startDate);
@@ -58,7 +58,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
-        dialogHeader="Edit Start and End Date"
+        dialogHeader="Edit Start for this step"
         handleBatchFilter={handleSubmit}
       >
         <DatePickerDialog
@@ -67,7 +67,6 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
           label="Customer Journey Start Date"
           handleDateChange={date => setDates(date)}
           maxDate={log.stopDate || undefined}
-          // minDate={startDate}
         />
       </CustomizedDialogs>
     </>

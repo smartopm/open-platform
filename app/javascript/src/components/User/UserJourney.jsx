@@ -8,9 +8,9 @@ import { dateFormatter } from '../DateContainer';
 import { userSubStatus } from '../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
 
-function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
+export function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
   return (
-    <span>
+    <span data-testid="initial_log_content">
       {' '}
       changed status 
       {' '}
@@ -26,73 +26,72 @@ function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
     </span>
   );
 }
-export default function UserJourney({ data, refetch }) {
-  const [isEditOpen, setIsEditing] = useState(false);
-  const [selectedJourneyLog, setCurrentLog] = useState({});
 
-  function getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus }) {
-    return (
-      <>
-        {' '}
-        changed status from 
-        {' '}
-        <b>{userSubStatus[String(previousStatus)]}</b>
-        {' '}
-        to
-        {' '}
-        <b>{userSubStatus[String(newStatus)]}</b>
-        {' '}
-        between
-        {startDate} 
-        {' '}
-        {`and ${stopDate}`}
-      </>
-    );
-  }
 
-  function subsStatusLogsFormatter(subStatusLogs) {
-    /* 
-    Sort by startDate. Don't mutate object
-    Time lapse = startDate[index + 1] to startDate[index]
-    For initial sub-status, change message content.
-    */
-    // const sortedLogsDescending = [...subStatusLogs].sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+export function getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus }) {
+  return (
+    <span data-testid="log_content">
+      {' '}
+      changed status from 
+      {' '}
+      <b>{userSubStatus[String(previousStatus)]}</b>
+      {' '}
+      to
+      {' '}
+      <b>{userSubStatus[String(newStatus)]}</b>
+      {' '}
+      between
+      {' '}
+      {startDate} 
+      {' '}
+      {`and ${stopDate}`}
+    </span>
+  );
+}
 
-    const sortedLogsDescending = subStatusLogs;
-
-    return sortedLogsDescending.map(log => {
-      if (!log.stopDate) {
-        const content = getInitialSubStatusContent({
-          date: dateFormatter(log.startDate),
-          newStatus: log.newStatus,
-          previousStatus: log.previousStatus
-        });
-        return {
-          id: log.id,
-          content,
-          previousStatus: log.previousStatus,
-          userId: log.userId,
-          startDate: log.startDate,
-          stopDate: log.stopDate
-        };
-      }
-
-      const startDate = dateFormatter(log.startDate);
-      const stopDate = dateFormatter(log.stopDate);
-      const { newStatus, previousStatus } = log;
-
-      const content = getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus });
-
+export function subsStatusLogsFormatter(subStatusLogs) {
+  /* 
+  Sort by startDate. Don't mutate object
+  Time lapse = startDate[index + 1] to startDate[index]
+  For initial sub-status, change message content.
+  */
+  const sortedLogsDescending = subStatusLogs;
+  return sortedLogsDescending.map(log => {
+    if (!log.stopDate) {
+      const content = getInitialSubStatusContent({
+        date: dateFormatter(log.startDate),
+        newStatus: log.newStatus,
+        previousStatus: log.previousStatus
+      });
       return {
         id: log.id,
         content,
+        previousStatus: log.previousStatus,
+        userId: log.userId,
         startDate: log.startDate,
-        stopDate: log.stopDate,
-        previousStatus,
-        userId: log.userId
+        stopDate: log.stopDate
       };
-    });
-  }
+    }
+
+    const startDate = dateFormatter(log.startDate);
+    const stopDate = dateFormatter(log.stopDate);
+    const { newStatus, previousStatus } = log;
+
+    const content = getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus });
+
+    return {
+      id: log.id,
+      content,
+      startDate: log.startDate,
+      stopDate: log.stopDate,
+      previousStatus,
+      userId: log.userId
+    };
+  });
+}
+export default function UserJourney({ data, refetch }) {
+  const [isEditOpen, setIsEditing] = useState(false);
+  const [selectedJourneyLog, setCurrentLog] = useState({});
 
   function handleEdit(log) {
     setCurrentLog(log);
@@ -110,7 +109,7 @@ export default function UserJourney({ data, refetch }) {
       {formattedSubStatusLogs.map(log => (
         <Grid container spacing={3} key={log.id}>
           <Grid item xs={10}>
-            <Typography variant="body2" style={{ marginTop: 10, marginLeft: '12px' }}>
+            <Typography variant="body2" style={{ marginTop: 10, marginLeft: '12px' }} data-testid="user_journey_content">
               <b>{data.user.name}</b>
               {log.content}
             </Typography>
@@ -120,6 +119,7 @@ export default function UserJourney({ data, refetch }) {
               aria-label="edit user journey"
               color="primary"
               onClick={() => handleEdit(log)}
+              data-testid="edit_journey"
             >
               <EditIcon />
             </IconButton>
