@@ -9,10 +9,10 @@ RSpec.describe Types::Queries::Invoice do
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: user.community) }
     let!(:payment) { create(:payment, user: user, community_id: user.community.id) }
-    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
     end
+    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
                        status: 'in_progress', invoice_number: '1234', created_by: user, amount: 500)
