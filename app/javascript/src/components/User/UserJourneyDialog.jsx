@@ -59,6 +59,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
         handleModal={handleModalClose}
         dialogHeader="Edit Start for this step"
         handleBatchFilter={handleSubmit}
+        saveAction={state.isLoading ? 'Saving ...' : 'Save'}
       >
         <DatePickerDialog
           key="start_date"
