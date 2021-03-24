@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Grid, IconButton } from '@material-ui/core'
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types'
-// import { makeStyles } from "@material-ui/core/styles";
 import DataList from '../../shared/list/DataList';
 import Text from '../../shared/Text';
 import MenuList from '../../shared/MenuList'
@@ -27,7 +26,6 @@ export default function ParcelItem({ parcel, onParcelClick }) {
     handlePropertyMenu,
     anchorEl,
     open: anchorElOpen,
-    // userType: 'admin',
     handleClose
   }
 
@@ -53,9 +51,8 @@ export default function ParcelItem({ parcel, onParcelClick }) {
 
 /**
  *
- * @param {object} invoices list of tasks
- * @param {function} handleOpenMenu a function that opens the menu for each task
- * @param {object} currencyData community currencyData current and locale
+ * @param {object} property list object
+ * @param {object} menuData data used for the menu
  * @returns {object} an object with properties that DataList component uses to render
  */
  export function renderParcel(parcel, menuData) {
