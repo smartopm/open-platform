@@ -67,7 +67,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
           label="Customer Journey Start Date"
           handleDateChange={date => setDates(date)}
           maxDate={log.stopDate || undefined}
-          minDate={startDate}
+          // minDate={startDate}
         />
       </CustomizedDialogs>
     </>

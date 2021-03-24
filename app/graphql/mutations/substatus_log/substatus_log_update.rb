@@ -33,8 +33,8 @@ module Mutations
         prev_log = user.substatus_logs.previous_log(log.created_at)
         return if prev_log.nil?
 
-        # sd = start_date < prev_log.start_date
-        # raise GraphQL::ExecutionError, 'Date can\'t be less than previous log's start_date' if sd
+        sd = start_date < prev_log.first.start_date
+        raise GraphQL::ExecutionError, 'Date can\'t be less than previous log\'s start date' if sd
 
         prev_log.update(stop_date: start_date)
       end
