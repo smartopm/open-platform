@@ -19,7 +19,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../graphql/queries';
-import { AssignUser } from '../../graphql/mutations';
+import { AssignUser, UpdateNote } from '../../graphql/mutations';
 import TaskForm from './TaskForm';
 import ErrorPage from '../Error';
 import Paginate from '../Paginate';
@@ -31,11 +31,12 @@ import DatePickerDialog from '../DatePickerDialog';
 import Loading from '../../shared/Loading';
 import QueryBuilder from '../QueryBuilder';
 import { ModalDialog } from '../Dialog';
-import { pluralizeCount, propAccessor } from '../../utils/helpers';
+import { formatError, pluralizeCount, propAccessor } from '../../utils/helpers';
 import useDebounce from '../../utils/useDebounce';
 import DataList from '../../shared/list/DataList';
 import ListHeaders from '../../shared/list/ListHeader';
 import renderTaskData from './RenderTaskData';
+import MessageAlert from '../MessageAlert';
 
 const taskHeader = [
   { title: 'Select', col: 1 },
@@ -52,7 +53,6 @@ export default function TodoList({
   saveDate,
   selectedDate,
   handleDateChange,
-  todoAction,
   location,
   currentUser
 }) {
@@ -79,6 +79,8 @@ export default function TodoList({
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [actionMenuOpen, setActionMenuOpen] = useState(null);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
 
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -142,6 +144,7 @@ export default function TodoList({
     fetchPolicy: 'network-only'
   });
   const [assignUserToNote] = useMutation(AssignUser);
+  const [taskUpdate] = useMutation(UpdateNote)
 
   function openModal() {
     setModalOpen(!open);
@@ -210,14 +213,24 @@ export default function TodoList({
   }
 
   function handleCompleteNote(noteId, completed) {
+    handleTaskActionMenuClose()
     setMutationLoading(true);
-    todoAction(noteId, completed);
-    // allow the mutation above to finish running before refetching
-    setTimeout(() => {
-      refetch();
-      taskCountData.refetch();
-      setMutationLoading(false);
-    }, 200);
+
+    taskUpdate({
+      variables: { id: noteId, completed: !completed }
+    })
+      .then(() => {
+        setErrorMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
+        setIsSuccessAlert(true);
+        refetch()
+        taskCountData.refetch()
+        setMutationLoading(false)
+      })
+      .catch(err => {
+        setErrorMessage(formatError(err.message))
+        setIsSuccessAlert(false);
+        setMutationLoading(false)
+      })
   }
 
   function paginate(action) {
@@ -296,6 +309,21 @@ export default function TodoList({
     }
   }
 
+  function handleTaskActionMenuClose(){
+    setActionMenuOpen(null)
+  } 
+
+  function handleTaskActionMenuOpen(e){
+    setActionMenuOpen(e.currentTarget)
+  }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorMessage('');
+  }
+
   const InitialConfig = MaterialConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
@@ -347,6 +375,12 @@ export default function TodoList({
   return (
     <>
       <div className="container" data-testid="todo-container">
+        <MessageAlert
+          type={isSuccessAlert ? 'success' : 'error'}
+          message={message}
+          open={!!message}
+          handleClose={handleMessageAlertClose}
+        />
         <ModalDialog
           open={isDialogOpen}
           handleClose={handleModal}
@@ -490,11 +524,18 @@ export default function TodoList({
                 {matches && <ListHeaders headers={taskHeader} />}
                 <DataList
                   keys={taskHeader}
-                  data={renderTaskData(
-                    data?.flaggedNotes,
+                  data={renderTaskData({
+                    data: data?.flaggedNotes,
                     handleChange,
                     selectedTasks,
-                    handleTaskDetails
+                    handleTaskDetails,
+                    handleCompleteNote,
+                    actionMenu: {
+                      open: actionMenuOpen,
+                      handleClose: handleTaskActionMenuClose,
+                      handleOpen: handleTaskActionMenuOpen,
+                    }
+                  }
                   )}
                   hasHeader={false}
                 />

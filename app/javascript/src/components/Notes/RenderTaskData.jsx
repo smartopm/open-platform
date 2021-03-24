@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
+import { Checkbox, Grid, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -25,7 +25,14 @@ export function LinkToUser({ userId, name }) {
  * @param {function} handleTaskDetails a function that routes to task details
  * @returns {object} an object with properties that DataList component uses to render
  */
-export default function renderTaskData(data, handleChange, selectedTasks, handleTaskDetails) {
+export default function renderTaskData({
+      data,
+      handleChange,
+      selectedTasks,
+      handleTaskDetails,
+      handleCompleteNote,
+      actionMenu: { open, handleClose, handleOpen }
+    }) {
   return data.map(task => {
     return {
       Select: (
@@ -73,10 +80,23 @@ export default function renderTaskData(data, handleChange, selectedTasks, handle
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"
-            onClick={() => handleTaskDetails(task.id)}
+            onClick={handleOpen}
           >
             <MoreHorizIcon />
           </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={open}
+            keepMounted
+            open={Boolean(open)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={() => handleTaskDetails(task.id)}>Edit Task</MenuItem>
+            <MenuItem onClick={() => handleTaskDetails(task.id)}>Leave a Comment</MenuItem>
+            <MenuItem onClick={() => handleCompleteNote(task.id, task.completed)}>
+              {task.completed ? 'Mark as Incomplete' : 'Mark as Complete'}
+            </MenuItem>
+          </Menu>
         </Grid>
       )
     };
