@@ -1,65 +1,116 @@
-import React from 'react'
-import {
-  ListItem,
-  Typography, Grid
-} from '@material-ui/core'
+import React, { useState } from 'react'
+import { Grid, IconButton } from '@material-ui/core'
+import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types'
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
+import DataList from '../../shared/list/DataList';
+import Text from '../../shared/Text';
+import MenuList from '../../shared/MenuList'
 
+const parcelHeaders = [
+  { title: 'Property Number/Property Type', col: 2 },
+  { title: 'Address1/Address2', col: 3 },
+  { title: 'Postal Code', col: 3 },
+  { title: 'City', col: 3 },
+  { title: 'State Province/Country', col: 4 },
+  { title: 'Menu', col: 1 },
+];
 
 export default function ParcelItem({ parcel, onParcelClick }) {
-  // eslint-disable-next-line no-use-before-define
-  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null)
+  const anchorElOpen = Boolean(anchorEl)
+  const menuList = [
+    { content: 'Edit Property', isAdmin: true, color: '', handleClick: () => onParcelClick(parcel)}
+  ]
+  const menuData = {
+    menuList,
+    handlePropertyMenu,
+    anchorEl,
+    open: anchorElOpen,
+    // userType: 'admin',
+    handleClose
+  }
 
+  function handlePropertyMenu(event){
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleClose(event) {
+    event.stopPropagation()
+    setAnchorEl(null)
+  }
   return (
-    <ListItem key={parcel.id} className={classes.parcelItem} onClick={() => onParcelClick(parcel)}>
-      <Grid container spacing={3}>
-        <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography
-            variant="subtitle1"
-            data-testid="label-title"
-          >
-            {parcel.parcelNumber}
-          </Typography>
-        </Grid>
-        <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-address1">
-            {parcel.address1}
-          </Typography>
-        </Grid>
-        <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-address2">
-            {parcel.address2}
-          </Typography>
-        </Grid>
-        <Grid item xs={2} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-city">
-            {parcel.city}
-          </Typography>
-        </Grid>
-        <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-postal">
-            {parcel.postalCode}
-          </Typography>
-        </Grid>
-        <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-state">
-            {parcel.stateProvince}
-          </Typography>
-        </Grid>
-        <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-country">
-            {parcel.country}
-          </Typography>
-        </Grid>
-        <Grid item xs={1} className={classes.parcelGrid}>
-          <Typography variant="subtitle1" data-testid="parcel-type">
-            {parcel.parcelType}
-          </Typography>
-        </Grid>
-      </Grid>
-    </ListItem>
+    <DataList
+      keys={parcelHeaders}
+      data={renderParcel(parcel, menuData)}
+      hasHeader={false}
+      clickable
+      handleClick={() => onParcelClick(parcel)}
+    />
   )
+}
+
+/**
+ *
+ * @param {object} invoices list of tasks
+ * @param {function} handleOpenMenu a function that opens the menu for each task
+ * @param {object} currencyData community currencyData current and locale
+ * @returns {object} an object with properties that DataList component uses to render
+ */
+ export function renderParcel(parcel, menuData) {
+  return [
+    {
+      'Property Number/Property Type': (
+        <Grid item xs={12} md={2} data-testid="issue_date">
+          <div style={{fontWeight: 'bold', fontSize: '12px'}}>{parcel.parcelNumber}</div>
+          <Text content={parcel.parcelType} />
+        </Grid>
+      ),
+      'Address1/Address2': (
+        <Grid item xs={12} md={2} data-testid="invoice_amount">
+          <Text content={parcel.address1} />
+          <br />
+          <Text content={parcel.address2} />
+        </Grid>
+      ),
+      'Postal Code': (
+        <Grid item xs={12} md={2} data-testid="issue_date">
+          <Text content={parcel.postalCode} />
+        </Grid>
+      ),
+      'City': (
+        <Grid item xs={12} md={2}>
+          <Text content={parcel.city} />
+        </Grid>
+      ),
+      'State Province/Country': (
+        <Grid item xs={12} md={2} data-testid="status">
+          <Text content={parcel.stateProvince} />
+          <br />
+          <Text content={parcel.country} />
+        </Grid>
+      ),
+      Menu: (
+        <Grid item xs={12} md={1}>
+          <IconButton
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            data-testid="receipt-menu"
+            onClick={(event) => menuData.handlePropertyMenu(event)}
+          >
+            <MoreHorizOutlined />
+          </IconButton>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
+          />
+        </Grid>
+    )
+    }
+  ];
 }
 
 ParcelItem.propTypes = {
@@ -77,15 +128,15 @@ ParcelItem.propTypes = {
     onParcelClick: PropTypes.func.isRequired
 }
 
-const useStyles = makeStyles(() => ({
-  parcelItem: {
-      borderBottomStyle: 'solid',
-      borderBottomColor: '#F6F6F6',
-      borderBottom: 10,
-      backgroundColor: '#FFFFFF',
-      cursor: 'pointer'
-  },
-  parcelGrid: {
-    marginTop: '8px'
-  }
-}));
+// const useStyles = makeStyles(() => ({
+//   parcelItem: {
+//       borderBottomStyle: 'solid',
+//       borderBottomColor: '#F6F6F6',
+//       borderBottom: 10,
+//       backgroundColor: '#FFFFFF',
+//       cursor: 'pointer'
+//   },
+//   parcelGrid: {
+//     marginTop: '8px'
+//   }
+// }));

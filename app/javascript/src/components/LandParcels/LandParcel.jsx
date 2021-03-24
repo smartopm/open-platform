@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { Grid, Typography, Link } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 import RoomIcon from '@material-ui/icons/Room';
 import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
@@ -25,6 +26,16 @@ import {
   propertyQueryBuilderConfig, 
   propertyQueryBuilderInitialValue, 
   propertyFilterFields } from '../../utils/constants';
+import ListHeader from '../../shared/list/ListHeader';
+
+const parcelHeaders = [
+  { title: 'Property Number/Property Type', col: 2 },
+  { title: 'Address1/Address2', col: 3 },
+  { title: 'Postal Code', col: 3 },
+  { title: 'City', col: 3 },
+  { title: 'State Province/Country', col: 4 },
+  { title: 'Menu', col: 1 }
+];
 
 export default function LandParcelList() {
   const limit = 20;
@@ -42,6 +53,8 @@ export default function LandParcelList() {
   const [confirmMergeOpen, setConfirmMergeOpen] = useState(false);
   const [conflictingParcelNumber, setConflictingParcelNumber] = useState('');
   const [searchQuery, setSearchQuery] = useState('')
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue || searchQuery, limit, offset }
@@ -186,7 +199,7 @@ export default function LandParcelList() {
 
   return (
     <>
-      <Grid container style={{margin: '15px'}}>
+      <Grid container style={{padding: '20px 0 20px 20px'}}>
         <Grid item xs={12} sm={10}>
           <SearchInput 
             title='Plot Properties' 
@@ -243,7 +256,7 @@ export default function LandParcelList() {
         )
       }
 
-      <Grid item xs={12} sm={12} style={{margin: '0 0 10px 15px'}}>
+      <Grid item xs={12} sm={12} style={{margin: '0 0 10px 20px'}}>
         <Toggler
           type={type}
           handleType={handleType}
@@ -274,9 +287,13 @@ export default function LandParcelList() {
               </Grid>
             </Grid>
             { loading && <Spinner /> }
-            {!loading && data?.fetchLandParcel.map(parcel => (
-              <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
-          ))}
+            <div style={{margin: '0 20px'}}>
+              {!loading && data.fetchLandParcel.length > 0 && matches && 
+                <ListHeader headers={parcelHeaders} />}
+              {!loading && data?.fetchLandParcel.map(parcel => (
+                <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
+              ))}
+            </div>
             <div className="d-flex justify-content-center">
               <nav aria-label="center Page navigation">
                 <ul className="pagination">
@@ -295,7 +312,7 @@ export default function LandParcelList() {
             </div>
           </>
         ):(
-          <>
+          <div style={{margin: '0 20px'}}>
             {viewResultsOnMap ? (
               <LandParcelMap
                 handlePlotClick={onParcelClick}
@@ -307,7 +324,7 @@ export default function LandParcelList() {
                 geoData={geoData?.landParcelGeoData}
               />
             )}
-          </>
+          </div>
         )}
     </>
   );

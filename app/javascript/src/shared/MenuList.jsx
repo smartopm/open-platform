@@ -11,7 +11,7 @@ export default function MenuList({
   open
 }) {
   let listData = list
-  if (userType !== 'admin') {
+  if (userType && userType !== 'admin') {
     listData = list.filter(lis => lis.isAdmin === false) 
   }
   return (
@@ -45,6 +45,7 @@ export default function MenuList({
 
 MenuList.defaultProps = {
   anchorEl: {},
+  userType: null
 }
 
 MenuList.propTypes = {
@@ -53,5 +54,5 @@ MenuList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
-  userType: PropTypes.string.isRequired
+  userType: PropTypes.string
 }
