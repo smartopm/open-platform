@@ -7,5 +7,14 @@ export default {
     path: '/news',
     component: News
   },
-  name: 'News'
+  name: 'News',
+  accessibleBy: [
+    'admin',
+    'client',
+    'security_guard',
+    'prospective_client',
+    'contractor',
+    'resident',
+    'visitor'
+  ]
 };

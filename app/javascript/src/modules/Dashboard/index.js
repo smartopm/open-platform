@@ -11,5 +11,16 @@ export default {
   styleProps: {
     icon: <HomeIcon />
   },
-  name: 'Home'
+  name: 'Home',
+  // TODO: find a way to simplify this if it is accessible by everyone, something like [] or ['*']
+  accessibleBy: [
+    'admin',
+    'client',
+    'security_guard',
+    'custodian',
+    'prospective_client',
+    'contractor',
+    'resident',
+    'visitor'
+  ]
 };

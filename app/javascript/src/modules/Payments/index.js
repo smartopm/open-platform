@@ -29,5 +29,6 @@ export default {
     icon: <PaymentIcon />
   },
   name: 'Payments',
+  accessibleBy: ['admin'],
   subMenu: subMenus
 };

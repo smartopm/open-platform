@@ -107,7 +107,7 @@ export function Component({
     <>
       {authState.loggedIn && (
         <Drawer open={state} onClose={toggleDrawer}>
-          <SideMenu toggleDrawer={toggleDrawer} menuItems={modules} user={authState.user} />
+          <SideMenu toggleDrawer={toggleDrawer} menuItems={modules} userType={authState.user.userType} />
         </Drawer>
       )}
       <nav className={`navbar navbar-dark`} style={{ boxShadow, minHeight: '50px' }}>

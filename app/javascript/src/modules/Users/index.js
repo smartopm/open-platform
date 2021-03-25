@@ -10,5 +10,6 @@ export default {
   styleProps: {
     icon: <PeopleIcon />
   },
-  name: 'Users'
+  name: 'Users',
+  accessibleBy: ['admin'],
 };
