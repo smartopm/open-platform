@@ -39,7 +39,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
               <Fragment key={menuItem.name}>
                 <ListItem button onClick={event => routeTo(event, menuItem)}>
                   <ListItemIcon className={`${css(styles.listItemIcon)}`}>
-                    {menuItem.styleProps.icon}
+                    {menuItem.styleProps?.icon}
                   </ListItemIcon>
                   <ListItemText primary={menuItem.name} />
                   {
@@ -57,13 +57,13 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
                 >
                   <List component="div" disablePadding>
                     {menuItem.subMenu &&
-                  menuItem.subMenu.map(item => (
-                    <ListItem button key={item.name} onClick={event => routeTo(event, item)}>
-                      {/* This is just a placeholder for icons to keep some padding */}
-                      <ListItemIcon />
-                      <ListItemText primary={item.name} />
-                    </ListItem>
-                  ))}
+                      menuItem.subMenu.map(item => (
+                        <ListItem button key={item.name} onClick={event => routeTo(event, item)}>
+                          {/* This is just a placeholder for icons to keep some padding */}
+                          <ListItemIcon />
+                          <ListItemText primary={item.name} />
+                        </ListItem>
+                      ))}
                   </List>
                 </Collapse>
               </Fragment>

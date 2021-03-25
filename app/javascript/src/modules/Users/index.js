@@ -1,5 +1,5 @@
 import React from 'react';
-import PeopleIcon from '@material-ui/icons/People';
+import PersonIcon from '@material-ui/icons/Person';
 import Users from '../../containers/Users';
 
 export default {
@@ -8,7 +8,7 @@ export default {
     component: Users
   },
   styleProps: {
-    icon: <PeopleIcon />
+    icon: <PersonIcon />
   },
   name: 'Users',
   accessibleBy: ['admin'],

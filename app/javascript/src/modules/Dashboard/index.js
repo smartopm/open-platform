@@ -12,7 +12,7 @@ export default {
     icon: <HomeIcon />
   },
   name: 'Home',
-  // TODO: find a way to simplify this if it is accessible by everyone, something like [] or ['*']
+  // TODO: we should find a way to simplify this if it is accessible by everyone, something like [] or ['*']
   accessibleBy: [
     'admin',
     'client',
