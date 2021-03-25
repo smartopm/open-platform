@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
@@ -7,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import { Collapse } from '@material-ui/core';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 const SideMenu = ({ toggleDrawer, menuItems }) => {
   const history = useHistory();
@@ -37,6 +40,11 @@ const SideMenu = ({ toggleDrawer, menuItems }) => {
                 {menuItem.styleProps.icon}
               </ListItemIcon>
               <ListItemText primary={menuItem.name} />
+              {
+                currentMenu.name === menuItem.name && currentMenu.isOpen 
+                ? <ExpandLess /> 
+                : menuItem.subMenu ? <ExpandMore /> : null
+              }
             </ListItem>
 
             <Collapse
