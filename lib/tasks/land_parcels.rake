@@ -1,6 +1,8 @@
 # frozen_string_literal: true
+
 require 'host_env'
 
+# rubocop:disable Metrics/BlockLength
 namespace :land_parcels do
   desc 'imports plot info'
   task :import_plot_info, %i[community_name csv_path] => :environment do |_t, args|
@@ -12,10 +14,10 @@ namespace :land_parcels do
     User.skip_callback(:create, :after, :send_email_msg)
     row_num = 0
     ActiveRecord::Base.transaction do
-      CSV.parse(open(args.csv_path).read, headers: true) do |row|
+      CSV.parse(URI.open(args.csv_path).read, headers: true) do |row|
         row_num += 1
-        name          = "#{row['NAME']&.strip} #{row['SURNAME']&.strip}".presence
-        email         = row['EMAIL']&.strip&.presence
+        name = "#{row['NAME']&.strip} #{row['SURNAME']&.strip}".presence
+        email = row['EMAIL']&.strip&.presence
         parcel_number = row['PLOT NUMBER']&.strip
         phone_number  = row['PHONE NUMBER']&.strip&.presence
         ext_ref_id    = row['NRC']&.strip&.presence
@@ -28,7 +30,7 @@ namespace :land_parcels do
           next
         end
 
-        user   = community.users.find_by(ext_ref_id: ext_ref_id)
+        user = community.users.find_by(ext_ref_id: ext_ref_id)
 
         clients = []
         others = []
@@ -57,17 +59,15 @@ namespace :land_parcels do
 
         user ||= clients.first || others.first
         user ||= current_user.enroll_user(
-                  name: name,
-                  email: email,
-                  phone_number: phone_number,
-                  user_type: 'client'
-                )
+          name: name,
+          email: email,
+          phone_number: phone_number,
+          user_type: 'client',
+        )
 
-        if user.ext_ref_id.present?
-          if user.ext_ref_id != ext_ref_id
-            errors[row_num + 1] = "Error: External ref IDs do not match"
-            next
-          end
+        if user.ext_ref_id.present? && user.ext_ref_id != ext_ref_id
+          errors[row_num + 1] = 'Error: External ref IDs do not match'
+          next
         end
 
         user.ext_ref_id = ext_ref_id
@@ -82,17 +82,18 @@ namespace :land_parcels do
         existing_parcel_with_comm_no = community.land_parcels.find_by(parcel_number: comm_plot_no)
         existing_parcel_with_govt_no = community.land_parcels.find_by(parcel_number: govt_plot_no)
 
-        if (existing_parcel_with_comm_no.present? && existing_parcel_with_govt_no.present?)
-          errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number are found.
-                               Kindly confirm why we have the two, and resolve manually."
+        if existing_parcel_with_comm_no.present? && existing_parcel_with_govt_no.present?
+          errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number are
+                                found. Kindly confirm why we have the two, and resolve manually."
           next
         end
 
         existing_parcel = existing_parcel_with_comm_no || existing_parcel_with_govt_no
         if existing_parcel.present?
           if existing_parcel.accounts.find_by(user_id: user.id).nil?
-            errors[row_num + 1] = "Error: This plot has already been assigned to https://#{HostEnv.base_url(community)}/user/#{user.id}.
-                                  Kindly confirm if they both own the plot and resolve manually"
+            errors[row_num + 1] = "Error: This plot has already been assigned to
+                                    https://#{HostEnv.base_url(community)}/user/#{user.id}.
+                                    Kindly confirm if they both own the plot and resolve manually"
           end
           next
         end
@@ -109,7 +110,8 @@ namespace :land_parcels do
 
     puts "Errors: #{errors}"
     puts "Warnings: #{warnings}"
-    puts "Records successfully imported" if errors.empty?
+    puts 'Records successfully imported' if errors.empty?
     User.set_callback(:create, :after, :send_email_msg)
   end
 end
+# rubocop:enable Metrics/BlockLength

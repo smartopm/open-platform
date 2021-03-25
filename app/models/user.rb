@@ -456,6 +456,8 @@ class User < ApplicationRecord
     community.users.find(payload['user_id'])
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def self.already_existing(email, phone_list, community)
     email = email&.presence
     phone_list = phone_list.reject(&:blank?)
@@ -469,6 +471,8 @@ class User < ApplicationRecord
         )
     ).uniq
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def send_email_msg
     return if self[:email].nil?
