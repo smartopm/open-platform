@@ -7,7 +7,7 @@ import { StyleSheet, css } from 'aphrodite';
 import { Context as AuthStateContext } from './containers/Provider/AuthStateProvider';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
-import { SideMenu } from './shared/SideMenu';
+import SideMenu from './shared/SideMenu';
 import { useQuery } from 'react-apollo';
 import { MyTaskCountQuery, messageCountQuery } from './graphql/queries';
 import NotificationBell from './components/NotificationBell';
