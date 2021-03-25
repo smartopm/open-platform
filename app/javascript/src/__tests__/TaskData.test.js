@@ -31,7 +31,14 @@ describe('Task Data components ', () => {
         assigneeNotes: []
       }
     ];
-    const results = renderTaskData(tasks, mock, [], mock);
+    const results = renderTaskData({
+      data: tasks,
+      handleChange: mock,
+      selectedTasks: [],
+      handleTaskDetails: mock,
+      handleCompleteNote: mock,
+      actionMenu: { open: false, handleClose: mock, handleOpen: mock }
+    });
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Select');
     expect(results[0]).toHaveProperty('Task');
