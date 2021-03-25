@@ -22,6 +22,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
    * @description check if the click menu has submenu, if yes open them if not route to the given link
    * Here event is necessary because the toggleDrawe needs to know type of a click
    * @returns void
+   * @todo reset the menu when another is clicked while current is still open
    */
   function routeTo(event, item) {
     if (item.subMenu) {
