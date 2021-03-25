@@ -5,10 +5,10 @@ import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { InvoicesStats } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import CenteredContent from '../CenteredContent';
-import { formatError } from '../../utils/helpers';
+import { InvoicesStats } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../components/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 
 export default function InvoiceGraph({ handleClick }){
   const { loading, data, error } = useQuery(InvoicesStats, {

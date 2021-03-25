@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { shape } from 'prop-types';
 import { useHistory } from 'react-router';
-import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
+import { StyledTabs, StyledTab, TabPanel } from '../../../components/Tabs';
 import InvoiceList from './InvoiceList';
-import authStateProps from '../../shared/types/authState';
-import { useParamsQuery } from '../../utils/helpers'
+import authStateProps from '../../../shared/types/authState';
+import { useParamsQuery } from '../../../utils/helpers'
 import PaymentList from './PaymentList';
-import { currencies } from '../../utils/constants';
+import { currencies } from '../../../utils/constants';
 
 export default function TabbedPayments({ authState }) {
   const path = useParamsQuery();

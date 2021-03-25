@@ -5,9 +5,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
-import { PaymentStats } from '../../graphql/queries';
-import CenteredContent from '../CenteredContent';
-import { formatError } from '../../utils/helpers';
+import { PaymentStats } from '../../../graphql/queries';
+import CenteredContent from '../../../components/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 
 
 export default function PaymentGraph({ handleClick }){

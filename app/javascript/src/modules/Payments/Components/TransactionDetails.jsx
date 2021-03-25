@@ -5,18 +5,18 @@ import Typography from '@material-ui/core/Typography';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { MenuItem } from '@material-ui/core';
-import { CustomizedDialogs } from '../Dialog';
-import DetailsField from '../../shared/DetailField';
-import { dateToString } from '../DateContainer';
-import { formatError, formatMoney } from '../../utils/helpers';
-import { StyledTab, StyledTabs, TabPanel } from '../Tabs';
-import { WalletTransactionUpdate } from '../../graphql/mutations/transactions';
-import MessageAlert from '../MessageAlert';
-import { AllEventLogsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import CenteredContent from '../CenteredContent';
-import EventTimeLine from '../../shared/TimeLine';
-import { paymentStatus } from '../../utils/constants';
+import { CustomizedDialogs } from '../../../components/Dialog';
+import DetailsField from '../../../shared/DetailField';
+import { dateToString } from '../../../components/DateContainer';
+import { formatError, formatMoney } from '../../../utils/helpers';
+import { StyledTab, StyledTabs, TabPanel } from '../../../components/Tabs';
+import { WalletTransactionUpdate } from '../../../graphql/mutations/transactions';
+import MessageAlert from '../../../components/MessageAlert';
+import { AllEventLogsQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../components/CenteredContent';
+import EventTimeLine from '../../../shared/TimeLine';
+import { paymentStatus } from '../../../utils/constants';
 
 export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
   const initialValues = {
@@ -169,9 +169,9 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               title="Payment Date"
               value={dateToString(data?.createdAt)}
             />
-            <DetailsField 
-              editable={isEditing} 
-              title="Status" 
+            <DetailsField
+              editable={isEditing}
+              title="Status"
               value={!isEditing ? inputValues.Status : 'settled'}
               handleChange={handleChange}
               options={{
@@ -185,22 +185,22 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             />
             {
               inputValues.PaymentType === 'cheque/cashier_cheque' && (
-                <> 
-                  <DetailsField 
-                    editable={isEditing} 
-                    title="Bank Name" 
+                <>
+                  <DetailsField
+                    editable={isEditing}
+                    title="Bank Name"
                     value={inputValues.BankName}
                     handleChange={handleChange}
                   />
-                  <DetailsField 
-                    editable={isEditing} 
-                    title="TransactionNumber" 
+                  <DetailsField
+                    editable={isEditing}
+                    title="TransactionNumber"
                     value={inputValues.TransactionNumber}
                     handleChange={handleChange}
                   />
-                  <DetailsField 
-                    editable={isEditing} 
-                    title="Cheque Number" 
+                  <DetailsField
+                    editable={isEditing}
+                    title="Cheque Number"
                     value={inputValues.ChequeNumber}
                     handleChange={handleChange}
                   />

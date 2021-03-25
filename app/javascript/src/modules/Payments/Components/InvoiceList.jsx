@@ -18,9 +18,9 @@ import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import CenteredContent from '../CenteredContent';
-import Paginate from '../Paginate';
-import { InvoicesQuery, InvoicesStatsDetails } from '../../graphql/queries';
+import CenteredContent from '../../../components/CenteredContent';
+import Paginate from '../../../components/Paginate';
+import { InvoicesQuery, InvoicesStatsDetails } from '../../../graphql/queries';
 import {
   formatError,
   useParamsQuery,
@@ -28,29 +28,29 @@ import {
   propAccessor,
   formatMoney,
   handleQueryOnChange
-} from '../../utils/helpers';
-import { dateToString } from '../DateContainer';
+} from '../../../utils/helpers';
+import { dateToString } from '../../../components/DateContainer';
 import {
-  invoiceStatus, 
-  invoiceQueryBuilderConfig, 
-  invoiceQueryBuilderInitialValue, 
-  invoiceFilterFields } from '../../utils/constants';
-import DataList from '../../shared/list/DataList';
-import Label from '../../shared/label/Label';
-import SearchInput from '../../shared/search/SearchInput';
-import useDebounce from '../../utils/useDebounce';
-import Text from '../../shared/Text';
+  invoiceStatus,
+  invoiceQueryBuilderConfig,
+  invoiceQueryBuilderInitialValue,
+  invoiceFilterFields } from '../../../utils/constants';
+import DataList from '../../../shared/list/DataList';
+import Label from '../../../shared/label/Label';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebounce from '../../../utils/useDebounce';
+import Text from '../../../shared/Text';
 import InvoiceDetails from './InvoiceDetail';
-import ListHeader from '../../shared/list/ListHeader';
-import currencyTypes from '../../shared/types/currency';
+import ListHeader from '../../../shared/list/ListHeader';
+import currencyTypes from '../../../shared/types/currency';
 import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
-import QueryBuilder from '../QueryBuilder'
-import MenuList from '../../shared/MenuList';
-import { InvoiceCancel } from '../../graphql/mutations'
-import MessageAlert from "../MessageAlert"
-import DeleteDialogueBox from '../Business/DeleteDialogue'
-import { Spinner } from '../../shared/Loading';
+import QueryBuilder from '../../../components/QueryBuilder'
+import MenuList from '../../../shared/MenuList';
+import { InvoiceCancel } from '../../../graphql/mutations'
+import MessageAlert from "../../../components/MessageAlert"
+import DeleteDialogueBox from '../../../components/Business/DeleteDialogue'
+import { Spinner } from '../../../shared/Loading';
 
 const invoiceHeaders = [
   { title: 'Issue Date', col: 2 },
@@ -198,7 +198,7 @@ export default function InvoiceList({ currencyData, userType }) {
     setSearchQuery(handleQueryOnChange(selectedOptions, invoiceFilterFields))
     setListType('nongraph')
   }
-  
+
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -244,10 +244,10 @@ export default function InvoiceList({ currencyData, userType }) {
             </DialogContent>
           </Dialog>
           <CenteredContent>
-            <Button 
-              variant="contained" 
-              data-testid="invoice-generate-button" 
-              color="primary" 
+            <Button
+              variant="contained"
+              data-testid="invoice-generate-button"
+              color="primary"
               onClick={handleGenerateDialog}
               style={{marginLeft: '5px', marginTop: '10px'}}
             >
@@ -278,7 +278,7 @@ export default function InvoiceList({ currencyData, userType }) {
       <br />
       <br />
       <InvoiceGraph handleClick={setGraphQuery} />
-      <DeleteDialogueBox 
+      <DeleteDialogueBox
         open={modalOpen}
         handleClose={(event) => handleDeleteClose(event)}
         handleAction={(event) => handleOnClick(event)}
@@ -295,9 +295,9 @@ export default function InvoiceList({ currencyData, userType }) {
             {matches && <ListHeader headers={invoiceHeaders} />}
             {
               invoicesStatData.invoicesStatDetails.map((invoice) => (
-                <InvoiceItem 
-                  invoice={invoice} 
-                  key={invoice.id} 
+                <InvoiceItem
+                  invoice={invoice}
+                  key={invoice.id}
                   currencyData={currencyData}
                   menuData={menuData}
                 />
@@ -309,9 +309,9 @@ export default function InvoiceList({ currencyData, userType }) {
             {matches && <ListHeader headers={invoiceHeaders} />}
             {
               invoicesData.invoices.map((invoice) => (
-                <InvoiceItem 
-                  invoice={invoice} 
-                  key={invoice.id} 
+                <InvoiceItem
+                  invoice={invoice}
+                  key={invoice.id}
                   currencyData={currencyData}
                   menuData={menuData}
                 />

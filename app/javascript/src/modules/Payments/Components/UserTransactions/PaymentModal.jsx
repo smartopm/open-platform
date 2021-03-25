@@ -7,13 +7,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { CustomizedDialogs } from '../../Dialog'
-import { PaymentCreate } from '../../../graphql/mutations'
-import { UserLandParcel } from '../../../graphql/queries'
-import MessageAlert from "../../MessageAlert"
-import { extractCurrency, formatError, formatMoney } from '../../../utils/helpers'
+import { CustomizedDialogs } from '../../../../components/Dialog'
+import { PaymentCreate } from '../../../../graphql/mutations'
+import { UserLandParcel } from '../../../../graphql/queries'
+import MessageAlert from "../../../../components/MessageAlert"
+import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
-import { Spinner } from '../../../shared/Loading'
+import { Spinner } from '../../../../shared/Loading'
 
 const initialValues = {
   amount: '',

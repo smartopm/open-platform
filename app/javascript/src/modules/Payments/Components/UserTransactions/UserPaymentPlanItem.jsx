@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DataList from '../../../shared/list/DataList';
-import { dateToString } from '../../DateContainer';
-import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../utils/helpers';
-import Text from '../../../shared/Text';
-import Label from '../../../shared/label/Label';
-import { invoiceStatus } from '../../../utils/constants';
+import DataList from '../../../../shared/list/DataList';
+import { dateToString } from '../../../../components/DateContainer';
+import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../../utils/helpers';
+import Text from '../../../../shared/Text';
+import Label from '../../../../shared/label/Label';
+import { invoiceStatus } from '../../../../utils/constants';
 
 export default function UserPaymentPlanItem({ plans, currencyData }) {
   const classes = useStyles();
@@ -69,20 +69,20 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
 
 export function renderPlan(plan, currencyData) {
   return {
-    'Plot Number': 
-  <Grid item xs={12} md={2} data-testid="plot-number"> 
+    'Plot Number':
+  <Grid item xs={12} md={2} data-testid="plot-number">
     {plan.landParcel.parcelNumber}
   </Grid>,
-    Balance: 
-  <Grid item xs={12} md={2} data-testid="balance"> 
+    Balance:
+  <Grid item xs={12} md={2} data-testid="balance">
     {formatMoney(currencyData, plan.plotBalance)}
   </Grid>,
-    'Start Date': 
-  <Grid item xs={12} md={2} data-testid="start-date"> 
+    'Start Date':
+  <Grid item xs={12} md={2} data-testid="start-date">
     {dateToString(plan.startDate)}
   </Grid>,
-    '% of total valuation': 
-  <Grid item xs={12} md={2} data-testid="percentage"> 
+    '% of total valuation':
+  <Grid item xs={12} md={2} data-testid="percentage">
     {plan.percentage}
   </Grid>,
   };
@@ -92,20 +92,20 @@ export function renderInvoice(inv, currencyData) {
   return {
     'Issue Date': (
       <Grid item xs={12} md={2} data-testid="issue-date">
-        <Text content={dateToString(inv.createdAt)} /> 
+        <Text content={dateToString(inv.createdAt)} />
         <br />
         <Typography variant='caption' style={{fontWeight: 'bold'}}>Issue Date</Typography>
       </Grid>),
     'Description': (
       <Grid item xs={12} md={2} data-testid="description">
-        <Text content={`Invoice #${inv.invoiceNumber}`} /> 
+        <Text content={`Invoice #${inv.invoiceNumber}`} />
         <br />
         <Typography variant='caption' style={{fontWeight: 'bold'}}>Description</Typography>
       </Grid>
     ),
     Amount: (
       <Grid item xs={12} md={2} data-testid="amount">
-        <Text content={formatMoney(currencyData, inv.amount)} /> 
+        <Text content={formatMoney(currencyData, inv.amount)} />
         <br />
         <Typography variant='caption' style={{fontWeight: 'bold'}}>Amount</Typography>
       </Grid>
@@ -135,7 +135,7 @@ export function renderInvoice(inv, currencyData) {
     ),
   };
 }
-   
+
 UserPaymentPlanItem.propTypes = {
   plans: PropTypes.arrayOf(
     PropTypes.shape({

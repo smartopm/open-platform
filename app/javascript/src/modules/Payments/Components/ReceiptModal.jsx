@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { DetailsDialog } from '../Dialog'
+import { DetailsDialog } from '../../../components/Dialog'
 import PaymentReceipt from './UserTransactions/PaymentReceipt'
 
 export default function ReceiptModal({ open, handleClose, paymentData, userData, currencyData }){
@@ -26,19 +26,19 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
         noActionButton
       >
         <div className={classes.buttons}>
-          <Button 
-            variant='contained' 
+          <Button
+            variant='contained'
             color='primary'
-            style={{marginRight: '15px'}} 
+            style={{marginRight: '15px'}}
             onClick={() => handlePaymentReceipt()}
             data-testid='print'
           >
             Print Receipt
           </Button>
-          <Button 
-            variant='outlined' 
-            color='secondary' 
-            style={{marginLeft: '15px'}} 
+          <Button
+            variant='outlined'
+            color='secondary'
+            style={{marginLeft: '15px'}}
             onClick={handleClose}
             data-testid='continue'
           >
@@ -46,9 +46,9 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
           </Button>
         </div>
       </DetailsDialog>
-      <PaymentReceipt 
-        paymentData={paymentData} 
-        open={paymentReceipt} 
+      <PaymentReceipt
+        paymentData={paymentData}
+        open={paymentReceipt}
         handleClose={() => handleReceiptClose()}
         userData={userData}
         currencyData={currencyData}

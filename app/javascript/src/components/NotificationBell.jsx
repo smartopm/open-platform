@@ -48,7 +48,7 @@ export default function NotificationBell({ user, data, messageCount }) {
           )}`}
         onClick={(e) => updateNotification(e)}
       >
-        <NotificationsIcon /> 
+        <NotificationsIcon />
       </Badge>
       <Popover open={open} anchorEl={anchorEl} onClose={handlePopClose}>
         <Typography align='center' className={`${css(styles.popup)}`}>Notifications</Typography>
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 5,
     height: 30,
-    color: '#FFF',
     ':hover': {
       cursor: 'pointer'
     }
@@ -73,7 +72,6 @@ const styles = StyleSheet.create({
   rightSideIconGuard: {
     position: 'absolute',
     right: 5,
-    color: '#FFF',
     ':hover': {
       cursor: 'pointer'
     }

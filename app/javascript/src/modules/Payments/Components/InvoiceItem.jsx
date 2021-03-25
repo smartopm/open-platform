@@ -6,13 +6,13 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from 'prop-types'
-import { dateToString } from '../DateContainer'
-import { invoiceStatus } from '../../utils/constants'
-import { DetailsDialog } from '../Dialog'
-import DataList from '../../shared/list/DataList';
-import { formatMoney } from '../../utils/helpers'
+import { dateToString } from '../../../components/DateContainer'
+import { invoiceStatus } from '../../../utils/constants'
+import { DetailsDialog } from '../../../components/Dialog'
+import DataList from '../../../shared/list/DataList';
+import { formatMoney } from '../../../utils/helpers'
 import PaymentModal from './UserTransactions/PaymentModal'
-import DetailsField from '../../shared/DetailField'
+import DetailsField from '../../../shared/DetailField'
 
 export default function InvoiceItem({ invoice, userId, creatorId, refetch, userType, currencyData }) {
   const classes = useStyles();
@@ -62,27 +62,27 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
       <DetailsDialog
         handleClose={() => setDetailsOpen(false)}
         open={detailsOpen}
-        title='Details for Invoice 100' 
+        title='Details for Invoice 100'
       >
         <DetailsField
           title='Plot Number'
-          value={invoice?.landParcel?.parcelNumber} 
+          value={invoice?.landParcel?.parcelNumber}
         />
         <DetailsField
           title='Amount'
-          value={formatMoney(currencyData, invoice?.amount)} 
+          value={formatMoney(currencyData, invoice?.amount)}
         />
         <DetailsField
           title='Date Created'
-          value={dateToString(invoice?.createdAt)} 
+          value={dateToString(invoice?.createdAt)}
         />
         <DetailsField
           title='Due Date'
-          value={dateToString(invoice?.dueDate)} 
+          value={dateToString(invoice?.dueDate)}
         />
         <DetailsField
           title='Status'
-          value={`${invoiceStatus[invoice.status]} ${outstandingPay()}`} 
+          value={`${invoiceStatus[invoice.status]} ${outstandingPay()}`}
         />
         {invoice?.payments && invoice?.payments?.length > 0 && (
           <Typography variant='h6' style={{textAlign: 'center'}}>Payment Details</Typography>
@@ -104,8 +104,8 @@ export default function InvoiceItem({ invoice, userId, creatorId, refetch, userT
         data={[renderInvoices(invoice, userType, currencyData, handleOpenPayment)]}
         hasHeader={false}
         clickable={{status: true, onclick: handleDetailsOpen}}
-      /> 
-    </ListItem> 
+      />
+    </ListItem>
   )
 }
 
@@ -119,7 +119,7 @@ export function renderInvoices(invoice, userType, currencyData, handleOpenPaymen
 
   return {
       'Amount': (
-        <Grid item xs={2} data-testid="amount"> 
+        <Grid item xs={2} data-testid="amount">
           {
             formatMoney(currencyData, invoice?.amount)
           }
@@ -144,13 +144,13 @@ export function renderInvoices(invoice, userType, currencyData, handleOpenPaymen
         <Grid item xs={2} data-testid="status">
           {
             // eslint-disable-next-line no-nested-ternary
-            userType === 'admin' && invoice?.status === ('paid' || 'cancelled') 
+            userType === 'admin' && invoice?.status === ('paid' || 'cancelled')
             ? invoiceStatus[invoice?.status]
             :  userType === 'admin' ? (
-              <Button 
-                variant='text' 
-                data-testid="pay-button" 
-                color='primary' 
+              <Button
+                variant='text'
+                data-testid="pay-button"
+                color='primary'
                 onClick={handleOpenPayment}
               >
                 make payment
@@ -161,7 +161,7 @@ export function renderInvoices(invoice, userType, currencyData, handleOpenPaymen
         </Grid>
       )
     }
-} 
+}
 
 InvoiceItem.propTypes = {
   invoice: PropTypes.shape({

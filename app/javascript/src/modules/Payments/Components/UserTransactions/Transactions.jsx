@@ -7,20 +7,20 @@ import { useHistory } from 'react-router'
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import InvoiceModal from './invoiceModal'
-import { formatError, formatMoney, useParamsQuery } from '../../../utils/helpers'
-import { TransactionQuery, AllTransactionQuery, UserBalance } from '../../../graphql/queries'
-import { Spinner } from '../../../shared/Loading'
-import CenteredContent from '../../CenteredContent'
-import Paginate from '../../Paginate'
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
-import { currencies } from '../../../utils/constants'
+import { formatError, formatMoney, useParamsQuery } from '../../../../utils/helpers'
+import { TransactionQuery, AllTransactionQuery, UserBalance } from '../../../../graphql/queries'
+import { Spinner } from '../../../../shared/Loading'
+import CenteredContent from '../../../../components/CenteredContent'
+import Paginate from '../../../../components/Paginate'
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
+import { currencies } from '../../../../utils/constants'
 import UserTransactionsList from './UserTransactions'
-import { StyledTabs, StyledTab, TabPanel } from '../../Tabs'
+import { StyledTabs, StyledTab, TabPanel } from '../../../../components/Tabs'
 import UserInvoiceItem from './UserInvoiceItem'
-import ButtonComponent from '../../../shared/buttons/Button'
+import ButtonComponent from '../../../../shared/buttons/Button'
 import UserPaymentPlanItem from './UserPaymentPlanItem'
 import PaymentModal from './PaymentModal'
-import ListHeader from '../../../shared/list/ListHeader';
+import ListHeader from '../../../../shared/list/ListHeader';
 
 export default function TransactionsList({ userId, user, userData }) {
   const history = useHistory()
@@ -163,8 +163,8 @@ export default function TransactionsList({ userId, user, userData }) {
       <TabPanel value={tabValue} index="Transactions">
         {matches && <ListHeader headers={transactionHeader} />}
         {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
-          <UserTransactionsList 
-            transaction={trans || {}} 
+          <UserTransactionsList
+            transaction={trans || {}}
             currencyData={currencyData}
             key={trans.id}
             userData={userData}
@@ -172,8 +172,8 @@ export default function TransactionsList({ userId, user, userData }) {
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
-          <UserTransactionsList 
-            transaction={trans || {}} 
+          <UserTransactionsList
+            transaction={trans || {}}
             currencyData={currencyData}
             key={trans?.id}
             userData={userData}
@@ -186,7 +186,7 @@ export default function TransactionsList({ userId, user, userData }) {
         {
           invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem
-              key={inv.id} 
+              key={inv.id}
               invoice={inv}
               currencyData={currencyData}
             />
@@ -200,11 +200,11 @@ export default function TransactionsList({ userId, user, userData }) {
           currencyData={currencyData}
         />
       </TabPanel>
-      <PaymentModal 
+      <PaymentModal
         open={payOpen}
         handleModalClose={() => setPayOpen(false)}
         userId={userId}
-        currencyData={currencyData} 
+        currencyData={currencyData}
         refetch={refetch}
         depRefetch={depRefetch}
         walletRefetch={walletRefetch}

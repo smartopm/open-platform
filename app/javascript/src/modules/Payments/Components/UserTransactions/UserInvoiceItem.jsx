@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from '@material-ui/core';
-import DataList from '../../../shared/list/DataList';
-import Text, { GridText } from '../../../shared/Text';
-import { dateToString } from '../../DateContainer';
-import Label from '../../../shared/label/Label';
+import DataList from '../../../../shared/list/DataList';
+import Text, { GridText } from '../../../../shared/Text';
+import { dateToString } from '../../../../components/DateContainer';
+import Label from '../../../../shared/label/Label';
 import InvoiceDetails from '../InvoiceDetail';
-import { invoiceStatus } from '../../../utils/constants';
-import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../utils/helpers';
+import { invoiceStatus } from '../../../../utils/constants';
+import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../../utils/helpers';
 
 const invoiceHeader = [
   { title: 'Issue Date', col: 4 },
@@ -45,7 +45,7 @@ export function renderInvoices(inv, currencyData) {
     'Issue Date': <GridText content={dateToString(inv.createdAt)} col={12} />,
     'Description': (
       <Grid item xs={12} md={2} data-testid="description">
-        <Text content={`Invoice Number #${inv.invoiceNumber}`} /> 
+        <Text content={`Invoice Number #${inv.invoiceNumber}`} />
         <br />
         <Text color='primary' content={`Plot Number #${inv.landParcel.parcelNumber}`} />
       </Grid>

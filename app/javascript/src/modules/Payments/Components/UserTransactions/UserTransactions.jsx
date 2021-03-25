@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Tooltip } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
-import DataList from '../../../shared/list/DataList';
-import Text, { GridText } from '../../../shared/Text';
-import { dateToString } from '../../DateContainer';
-import CenteredContent from '../../CenteredContent';
-import Label from '../../../shared/label/Label';
+import DataList from '../../../../shared/list/DataList';
+import Text, { GridText } from '../../../../shared/Text';
+import { dateToString } from '../../../../components/DateContainer';
+import CenteredContent from '../../../../components/CenteredContent';
+import Label from '../../../../shared/label/Label';
 import TransactionDetails from '../TransactionDetails'
-import { formatMoney } from '../../../utils/helpers';
+import { formatMoney } from '../../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
-import MenuList from '../../../shared/MenuList'
+import MenuList from '../../../../shared/MenuList'
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
@@ -83,24 +83,24 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   }
   return (
     <div>
-      <DataList 
-        keys={transactionHeader} 
-        data={[renderTransactions(transaction, currencyData, menuData)]} 
-        hasHeader={false} 
+      <DataList
+        keys={transactionHeader}
+        data={[renderTransactions(transaction, currencyData, menuData)]}
+        hasHeader={false}
         clickable={!anchorElOpen}
-        handleClick={handleOpenDetails} 
+        handleClick={handleOpenDetails}
       />
-      <TransactionDetails 
-        detailsOpen={open} 
-        handleClose={() => setOpen(false)} 
+      <TransactionDetails
+        detailsOpen={open}
+        handleClose={() => setOpen(false)}
         data={transaction}
         currencyData={currencyData}
         title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
         isEditing={isEditing}
       />
-      <PaymentReceipt 
-        paymentData={transaction} 
-        open={receiptOpen} 
+      <PaymentReceipt
+        paymentData={transaction}
+        open={receiptOpen}
         handleClose={handleOpenReceipt}
         userData={userData}
         currencyData={currencyData}
@@ -162,9 +162,9 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Status: (
       <Grid item xs={12} md={2} data-testid="status">
         {transaction.__typename === 'WalletTransaction' ? (
-          <Label 
-            title={transaction.status === 'settled' ? 'Paid' : 'Cancelled'} 
-            color={transaction.status === 'settled' ? '#66A69B' : '#E74540'} 
+          <Label
+            title={transaction.status === 'settled' ? 'Paid' : 'Cancelled'}
+            color={transaction.status === 'settled' ? '#66A69B' : '#E74540'}
           />
         ) : (
           <Label title="Unpaid" color="#EF6F51" />
@@ -174,7 +174,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Menu: (
       <Grid item xs={12} md={1}>
         {
-          transaction.__typename === 'WalletTransaction' 
+          transaction.__typename === 'WalletTransaction'
           && transaction.status === 'settled' && transaction.destination !== 'invoice' && transaction.source !== 'invoice'
           ? (
             <IconButton

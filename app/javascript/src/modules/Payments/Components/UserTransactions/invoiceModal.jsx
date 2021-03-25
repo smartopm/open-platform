@@ -6,13 +6,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import { CustomizedDialogs } from '../../Dialog'
-import DatePickerDialog from '../../DatePickerDialog'
-import { extractCurrency, formatError } from '../../../utils/helpers'
-import { InvoiceCreate } from '../../../graphql/mutations'
-import MessageAlert from "../../MessageAlert"
-import { UserLandParcel } from '../../../graphql/queries'
-import { Spinner } from '../../../shared/Loading'
+import { CustomizedDialogs } from '../../../../components/Dialog'
+import DatePickerDialog from '../../../../components/DatePickerDialog'
+import { extractCurrency, formatError } from '../../../../utils/helpers'
+import { InvoiceCreate } from '../../../../graphql/mutations'
+import MessageAlert from "../../../../components/MessageAlert"
+import { UserLandParcel } from '../../../../graphql/queries'
+import { Spinner } from '../../../../shared/Loading'
 
 const initialValues = {
   status: 'in_progress',
@@ -197,7 +197,7 @@ InvoiceModal.propTypes = {
   handleModalClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   depRefetch: PropTypes.func.isRequired,
-  walletRefetch: PropTypes.func.isRequired, 
+  walletRefetch: PropTypes.func.isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string

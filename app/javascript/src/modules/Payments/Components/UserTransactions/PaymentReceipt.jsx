@@ -2,10 +2,10 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider';
-import { FullScreenDialog } from '../../Dialog'
-import Logo from '../../../../../assets/images/logo.png'
-import { dateToString } from '../../DateContainer';
-import { extractCurrency, formatMoney } from '../../../utils/helpers';
+import { FullScreenDialog } from '../../../../components/Dialog'
+import Logo from '../../../../../../assets/images/logo.png'
+import { dateToString } from '../../../../components/DateContainer';
+import { extractCurrency, formatMoney } from '../../../../utils/helpers';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }){
   return (
@@ -15,24 +15,24 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
           <div>
             <img src={Logo} alt="reciept-logo" height='200' width='500' style={{margin: '20px 500px'}} />
             <div style={{ margin: '50px'}} data-testid='nkwashi'>
-              Nkwashi Project, 
+              Nkwashi Project,
               {' '}
               <br />
               Thebe Investment Management.
             </div>
             <div style={{float: 'right', marginRight: '50px'}}>
-              Name: 
+              Name:
               {' '}
-              {userData?.name} 
+              {userData?.name}
               {' '}
               <br />
-              Date:  
+              Date:
               {' '}
-              {paymentData.createdAt ? dateToString(paymentData.createdAt) : null} 
+              {paymentData.createdAt ? dateToString(paymentData.createdAt) : null}
               {' '}
               <br />
               {
-                paymentData.transactionNumber 
+                paymentData.transactionNumber
                   ? `TransactionId: ${paymentData.transactionNumber}`
                   : null
               }
@@ -54,7 +54,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
             <div style={{margin: '10px 50px 10px 50px'}}>
               <Grid container spacing={1}>
                 <Grid item xs={4}>
-                  {paymentData?.source === 'wallet' 
+                  {paymentData?.source === 'wallet'
                   ? 'cash'
                   : paymentData?.source}
                 </Grid>
@@ -67,23 +67,23 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
               </Grid>
             </div>
             <div style={{margin: '50px'}}>
-              <b>Cashier:</b> 
+              <b>Cashier:</b>
               {' '}
               {paymentData?.depositor?.name || '-'}
             </div>
             {paymentData?.source === 'cheque/cashier_cheque' && (
             <div style={{margin: '0 0 50px 50px'}}>
-              <b style={{fontSize: '30px'}}>Account Details</b> 
+              <b style={{fontSize: '30px'}}>Account Details</b>
               {' '}
               <br />
-              Bank Name: 
+              Bank Name:
                 {' '}
-              {paymentData?.bankName}  
+              {paymentData?.bankName}
               {' '}
               <br />
-              Cheque Number: 
+              Cheque Number:
                 {' '}
-              {paymentData?.chequeNumber} 
+              {paymentData?.chequeNumber}
             </div>
           )}
           </div>

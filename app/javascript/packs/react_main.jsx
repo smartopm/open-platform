@@ -93,8 +93,12 @@ import LandParcel from '../src/containers/LandParcels/LandParcel'
 import CommentsPage from '../src/containers/Comments/CommentPage'
 import CommunitySettings from '../src/containers/Settings/CommunitySettings'
 import MailTemplates from '../src/containers/MailTemplates'
-import Payments from '../src/containers/Payment/Payments'
+import Payments from '../src/modules/Payments/Components/Payments'
 import StatsPage from '../src/containers/User/StatsPage'
+// import Nav from '../src/components/Nav'
+import Main from '../src/Main'
+import modules from '../src/modules';
+
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com']
 
@@ -206,13 +210,17 @@ const App = () => {
                     <Route path="/logout" component={Logout} />
                     <Route path="/google/:token" component={MainAuthCallback} />
                     <Route path="/facebook/:token" component={MainAuthCallback} />
-   
+
                     {/* Spike page */}
                     <Route path="/news/post/:id" exact component={PostPage} />
 
                     <LoggedInOnly>
+                      <Main />
                       <Switch>
-                        <Route path="/" exact component={Home} />
+                      {modules.map(module => (
+                        <Route {...module.routeProps} key={module.name} />
+                      ))}
+                        {/* <Route path="/" exact component={Home} /> */}
                         <Route path="/scan" component={Scan} />
                         <Route path="/search" component={Search} />
                         <Route path="/id/:id" component={IDCard} />
@@ -322,7 +330,7 @@ const App = () => {
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
                         <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
-                        
+
                         <AdminRoutes>
                           <Switch>
                             <Route
@@ -330,7 +338,7 @@ const App = () => {
                               exact
                               component={ClientRequestForm}
                             />
-                            <Route path="/users" exact component={UsersList} />
+                            {/* <Route path="/users" exact component={UsersList} /> */}
                             <Route path="/users/import" component={UsersImport} />
                             <Route path="/users/stats" component={StatsPage} />
                             <Route path="/messages" component={AllMessages} />
@@ -365,7 +373,7 @@ const App = () => {
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route path="/comments" exact component={CommentsPage} />
                             <Route path="/community" component={CommunitySettings}  />
-                            <Route path="/payments" component={Payments}  />
+                            {/* <Route path="/payments" component={Payments}  /> */}
                             <Route path="/mail_templates" component={MailTemplates}  />
                             <Route path="/visit_request" component={EntryRequest} />
                           </Switch>

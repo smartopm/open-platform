@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { GenerateCurrentMonthInvoices } from '../../graphql/mutations'
-import { Spinner } from '../../shared/Loading';
-import CenteredContent from '../CenteredContent'
-import MessageAlert from "../MessageAlert"
-import { formatError, formatMoney } from '../../utils/helpers'
-import { InvoiceAutogenerationData } from '../../graphql/queries'
-import currency from '../../shared/types/currency';
+import { GenerateCurrentMonthInvoices } from '../../../graphql/mutations'
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../components/CenteredContent'
+import MessageAlert from "../../../components/MessageAlert"
+import { formatError, formatMoney } from '../../../utils/helpers'
+import { InvoiceAutogenerationData } from '../../../graphql/queries'
+import currency from '../../../shared/types/currency';
 
 export default function AutogenerateInvoice({ currencyData, close }) {
   const [generateCurrentMonthInvoices] = useMutation(GenerateCurrentMonthInvoices)
@@ -64,10 +64,10 @@ export default function AutogenerateInvoice({ currencyData, close }) {
         alignItems="center"
       >
         <CenteredContent>
-          <Button 
-            variant="contained" 
-            data-testid="invoice-generate-button" 
-            color="primary" 
+          <Button
+            variant="contained"
+            data-testid="invoice-generate-button"
+            color="primary"
             onClick={handleInvoiceGenerate}
             style={{marginLeft: '5px'}}
             disabled={disable}

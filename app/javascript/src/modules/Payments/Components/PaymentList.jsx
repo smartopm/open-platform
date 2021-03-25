@@ -8,26 +8,26 @@ import { useQuery, useLazyQuery } from 'react-apollo';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
-import { TransactionsQuery, PaymentStatsDetails } from '../../graphql/queries';
-import DataList from '../../shared/list/DataList';
-import { formatError, formatMoney, useParamsQuery, handleQueryOnChange } from '../../utils/helpers';
-import CenteredContent from '../CenteredContent';
-import { dateToString } from '../../utils/dateutil';
-import SearchInput from '../../shared/search/SearchInput';
-import useDebounce from '../../utils/useDebounce';
-import Paginate from '../Paginate';
-import ListHeader from '../../shared/list/ListHeader';
-import { 
+import { TransactionsQuery, PaymentStatsDetails } from '../../../graphql/queries';
+import DataList from '../../../shared/list/DataList';
+import { formatError, formatMoney, useParamsQuery, handleQueryOnChange } from '../../../utils/helpers';
+import CenteredContent from '../../../components/CenteredContent';
+import { dateToString } from '../../../utils/dateutil';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebounce from '../../../utils/useDebounce';
+import Paginate from '../../../components/Paginate';
+import ListHeader from '../../../shared/list/ListHeader';
+import {
         paymentType,
         paymentQueryBuilderConfig,
         paymentQueryBuilderInitialValue,
-        paymentFilterFields } from '../../utils/constants';
+        paymentFilterFields } from '../../../utils/constants';
 import TransactionDetails from './TransactionDetails';
-import currency from '../../shared/types/currency';
-import Text from '../../shared/Text';
+import currency from '../../../shared/types/currency';
+import Text from '../../../shared/Text';
 import PaymentGraph from './PaymentGraph'
-import { Spinner } from '../../shared/Loading';
-import QueryBuilder from '../QueryBuilder'
+import { Spinner } from '../../../shared/Loading';
+import QueryBuilder from '../../../components/QueryBuilder'
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -110,17 +110,17 @@ export default function PaymentList({ currencyData }) {
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
-  
+
   if (statError) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
   return (
     <div>
-      <SearchInput 
-        title='Payments' 
-        searchValue={searchValue} 
-        handleSearch={event => setsearch(event.target.value)} 
-        handleFilter={toggleFilterMenu} 
+      <SearchInput
+        title='Payments'
+        searchValue={searchValue}
+        handleSearch={event => setsearch(event.target.value)}
+        handleFilter={toggleFilterMenu}
         handleClear={() => setSearchClear()}
       />
       <Grid
@@ -227,9 +227,9 @@ export function TransactionItem({transaction, currencyData}){
   const [detailsOpen, setDetailsOpen] = useState(false)
   return (
     <div>
-      <TransactionDetails 
-        detailsOpen={detailsOpen} 
-        handleClose={() => setDetailsOpen(false)} 
+      <TransactionDetails
+        detailsOpen={detailsOpen}
+        handleClose={() => setDetailsOpen(false)}
         data={transaction}
         currencyData={currencyData}
         // eslint-disable-next-line no-underscore-dangle
