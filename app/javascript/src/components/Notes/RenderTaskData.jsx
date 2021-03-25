@@ -91,8 +91,8 @@ export default function renderTaskData({
             open={Boolean(open)}
             onClose={handleClose}
           >
-            <MenuItem onClick={() => handleTaskDetails(task.id)}>Edit Task</MenuItem>
-            <MenuItem onClick={() => handleTaskDetails(task.id)}>Leave a Comment</MenuItem>
+            <MenuItem onClick={() => handleTaskDetails({ id: task.id })}>Edit Task</MenuItem>
+            <MenuItem onClick={() => handleTaskDetails({ id: task.id, comment: true })}>Leave a Comment</MenuItem>
             <MenuItem onClick={() => handleCompleteNote(task.id, task.completed)}>
               {task.completed ? 'Mark as Incomplete' : 'Mark as Complete'}
             </MenuItem>

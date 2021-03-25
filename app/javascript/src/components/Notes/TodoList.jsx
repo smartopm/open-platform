@@ -106,8 +106,8 @@ export default function TodoList({
     }
   }
 
-  function handleTaskDetails(taskDetailId) {
-    history.push(`/tasks/${taskDetailId}`);
+  function handleTaskDetails({ id, comment }) {
+    history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
   }
 
   const taskCountData = useQuery(TaskStatsQuery);
