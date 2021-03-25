@@ -7,26 +7,25 @@ namespace :land_parcels do
     errors        = {}
     warnings      = {}
     community     = Community.find_by(name: args.community_name)
-    current_user  = community.users.find_by(email: 'nurudeen@doublegdp.com')
-
-    abort("Aborted. File not found") unless File.exist?(args.csv_path)
+    current_user  = community.users.find_by(email: 'mutale@doublegdp.com')
 
     User.skip_callback(:create, :after, :send_email_msg)
-
-    csv_string = File.read(args.csv_path)
-    csv = CSV.new(csv_string, headers: true)
+    row_num = 0
     ActiveRecord::Base.transaction do
-      csv.each_with_index do |row, index|
+      CSV.parse(open(args.csv_path).read, headers: true) do |row|
+        row_num += 1
         name          = "#{row['NAME']&.strip} #{row['SURNAME']&.strip}".presence
         email         = row['EMAIL']&.strip&.presence
-        parcel_number = row['PLOT NUMBER']&.strip&.presence
+        parcel_number = row['PLOT NUMBER']&.strip
         phone_number  = row['PHONE NUMBER']&.strip&.presence
         ext_ref_id    = row['NRC']&.strip&.presence
         parcel_type   = row['PLOT TYPE']&.strip&.presence
 
-        puts "processing row: #{index + 1}, NRC: #{ext_ref_id}"
+        puts "processing row: #{row_num + 1}, NRC: #{ext_ref_id}"
+
         if [email, phone_number].compact.empty?
-          errors[index + 1] = 'Error: No means of identification'
+          errors[row_num + 1] = 'Error: No means of identification'
+          next
         end
 
         user   = community.users.find_by(ext_ref_id: ext_ref_id)
@@ -42,17 +41,17 @@ namespace :land_parcels do
         end
 
         if clients.size > 1
-          errors[index + 1] = 'Error: Multiple clients found for this row.'
+          errors[row_num + 1] = 'Error: Multiple clients found for this row.'
           next
         end
 
         if others.size > 1 && clients.empty?
-          errors[index + 1] = 'Error: Multiple users found and none is a client'
+          errors[row_num + 1] = 'Error: Multiple users found and none is a client'
           next
         end
 
         if clients.size == 1 && !others.empty?
-          warnings[index + 1] = "Warning: Some other user types were found for this row.
+          warnings[row_num + 1] = "Warning: Some other user types were found for this row.
                                  Consider merging them via the app"
         end
 
@@ -66,21 +65,25 @@ namespace :land_parcels do
 
         if user.ext_ref_id.present?
           if user.ext_ref_id != ext_ref_id
-            errors[index + 1] = "Error: External ref IDs do not match"
+            errors[row_num + 1] = "Error: External ref IDs do not match"
             next
           end
         end
 
         user.ext_ref_id = ext_ref_id
         user.user_type = 'client' if user.user_type != 'client'
-        user.save!
+
+        unless user.save
+          errors[row_num + 1] = user.errors.full_messages
+          next
+        end
 
         comm_plot_no, govt_plot_no = parcel_number.split(/\(|\)/i).map(&:strip)
         existing_parcel_with_comm_no = community.land_parcels.find_by(parcel_number: comm_plot_no)
         existing_parcel_with_govt_no = community.land_parcels.find_by(parcel_number: govt_plot_no)
 
         if (existing_parcel_with_comm_no.present? && existing_parcel_with_govt_no.present?)
-          errors[index + 1] = "Error: Both Govt plot number and #{community_name} plot number are found.
+          errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number are found.
                                Kindly confirm why we have the two, and resolve manually."
           next
         end
@@ -88,7 +91,7 @@ namespace :land_parcels do
         existing_parcel = existing_parcel_with_comm_no || existing_parcel_with_govt_no
         if existing_parcel.present?
           if existing_parcel.accounts.find_by(user_id: user.id).nil?
-            errors[index + 1] = "Error: This plot has already been assigned to https://#{HostEnv.base_url(community)}/user/#{user.id}.
+            errors[row_num + 1] = "Error: This plot has already been assigned to https://#{HostEnv.base_url(community)}/user/#{user.id}.
                                   Kindly confirm if they both own the plot and resolve manually"
           end
           next
