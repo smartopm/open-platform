@@ -1,36 +1,16 @@
-import React, { useEffect } from "react";
+
+import React from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "react-apollo";
 import { css, StyleSheet } from "aphrodite";
-import { EntryRequestQuery } from "../../graphql/queries";
 import { ponisoNumber } from "../../utils/constants";
 import CenteredContent from "../../components/CenteredContent";
 
-// eslint-disable-next-line react/prop-types
-export default function HoldScreen({ match }) {
-  const { loading, data, stopPolling } = useQuery(EntryRequestQuery, {
-    // eslint-disable-next-line react/prop-types
-    variables: { id: match.params.id },
-    pollInterval: 5000
-  });
-  useEffect(() => {
-    return function cleanup() {
-      stopPolling();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  if (loading) {
-    return <CenteredContent>Waiting for approval</CenteredContent>
-  }
-  // removed the browser check, assuming this API is supported
-  if (data.result.grantedState === 1) {
-    window.navigator.vibrate([900]);
-    return  <CenteredContent>Approved</CenteredContent>;
-  } 
-  if (data.result.grantedState === 2) {
-    window.navigator.vibrate([900]);
-    return  <CenteredContent>Denied</CenteredContent>
-  }
+/**
+ * 
+ * @deprecated The security guard can now approve or deny requests without approval from security manager
+ * The rest of the component in here will be removed later
+ */
+export default function HoldScreen() {
   return (
     <CenteredContent>Waiting for approval</CenteredContent>
   )
