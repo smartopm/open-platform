@@ -8,7 +8,7 @@ namespace :db do
     desc 'Load GeoJSON parcel data into database'
     task land_parcel_geojson: :environment do
       dir = Rails.root.join('app/javascript/src/data')
-      src_file = 'nkwashi_plots.json'
+      src_file = 'sempala-plots.json'
       json_file = "#{dir}/#{src_file}"
 
       abort("Aborted. File not found - #{json_file}") unless File.exist?(json_file)
@@ -62,7 +62,8 @@ namespace :db do
                                                 long_x: long_x, lat_y: lat_y)
           if duplicate_parcel.present?
             abort("Aborted: Land Parcel already exists. Have you migrated before?
-              at Parcel No: #{duplicate_parcel.parcel_number}")
+              at Parcel No: #{duplicate_parcel.parcel_number}, longX: #{duplicate_parcel[:long_x]},
+              latY: #{duplicate_parcel[:lat_y]}")
           end
 
           LandParcel.create!(community_id: community_id,
