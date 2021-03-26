@@ -216,9 +216,12 @@ const App = () => {
                     <LoggedInOnly>
                       <Main />
                       <Switch>
-                          {modules.map(module => (
-                            <Route {...module.routeProps} key={module.name} />
-                          ))}
+                          {modules.map(module => {
+                            if (module.subMenu) {
+                              return module.subMenu.map(sub => <Route {...sub.routeProps} key={sub.name} />)
+                            }
+                            return <Route {...module.routeProps} key={module.name} />
+                          })}
                         {/* <Route path="/" exact component={Home} /> */}
                         <Route path="/scan" component={Scan} />
                         <Route path="/search" component={Search} />
@@ -306,7 +309,7 @@ const App = () => {
                           exact
                           component={ClientRequestForm}
                         />
-                        <Route path="/news" exact component={Posts} />
+                        {/* <Route path="/news" exact component={Posts} /> */}
                         <Route path="/news/:slug" exact component={Posts} />
                         <Route
                           path="/discussions"
