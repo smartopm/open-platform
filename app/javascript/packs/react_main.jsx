@@ -311,11 +311,11 @@ const App = () => {
                         />
                         {/* <Route path="/news" exact component={Posts} /> */}
                         <Route path="/news/:slug" exact component={Posts} />
-                        <Route
+                        {/* <Route
                           path="/discussions"
                           exact
                           component={Discussions}
-                        />
+                        /> */}
                         <Route
                           path="/discussions/:id"
                           exact
@@ -343,7 +343,7 @@ const App = () => {
                             {/* <Route path="/users" exact component={UsersList} /> */}
                             <Route path="/users/import" component={UsersImport} />
                             <Route path="/users/stats" component={StatsPage} />
-                            <Route path="/messages" component={AllMessages} />
+                            {/* <Route path="/messages" component={AllMessages} /> */}
                             <Route
                               path="/showroom_logs"
                               component={ShowroomLogs}

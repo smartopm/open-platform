@@ -30,6 +30,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
       return;
     }
     toggleDrawer(event);
+    // substitute :id to current_user id
     history.push(item.routeProps.path);
   }
   return (

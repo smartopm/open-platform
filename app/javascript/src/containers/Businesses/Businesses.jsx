@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
-import Nav from '../../components/Nav'
 import Business from '../../components/Business/BusinessList'
 import Loading from '../../shared/Loading'
 import { BusinessesQuery } from '../../graphql/queries'
@@ -17,11 +16,8 @@ export default function Businesses() {
       }
    
     return (
-      <div>
-        <>
-          <Nav navName="Business Directory" menuButton="back" backTo="/" />
-          <Business businessData={data} refetch={refetch} userType={authState.user.userType} />
-        </>
-      </div>
+      <>
+        <Business businessData={data} refetch={refetch} userType={authState.user.userType} />
+      </>
     )
 }

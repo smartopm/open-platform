@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import { useTheme } from '@material-ui/core/styles'
-import Nav from '../../components/Nav'
+// import Nav from '../../components/Nav'
 import DiscussionList from '../../components/Discussion/DiscussionList'
 import { DiscussionsQuery } from '../../graphql/queries'
 import Loading, { Spinner } from '../../shared/Loading'
@@ -82,7 +82,7 @@ export default function Discussions() {
   return (
     <div>
       <>
-        <Nav navName="Discussion Topics" menuButton="back" backTo="/" />
+        {/* <Nav navName="Discussion Topics" menuButton="back" backTo="/" /> */}
         <Dialog
           fullScreen={fullScreen}
           open={open}
