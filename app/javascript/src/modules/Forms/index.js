@@ -1,6 +1,8 @@
 import React from 'react'
 import DescriptionIcon from '@material-ui/icons/Description';
 
+// management of the form
+// checking all the forms they submitted
 const Forms = () => <h4>Forms Module</h4>
 
 // There are 2 different types of forms
@@ -8,8 +10,8 @@ const Forms = () => <h4>Forms Module</h4>
 // It would be nice to name them differently
 export default {
   routeProps: {
-    path: '/forms',
-    component: Forms
+    path: '/forms', // myforms
+    component: Forms,
   },
   styleProps: {
     icon: <DescriptionIcon />
@@ -18,10 +20,8 @@ export default {
   accessibleBy: [
     'admin',
     'client',
-    'security_guard',
     'prospective_client',
     'contractor',
     'resident',
-    'visitor'
   ]
 };
