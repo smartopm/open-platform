@@ -83,7 +83,11 @@ gem "barnes"
 gem "newrelic_rpm"
 
 # web scrapping and parsing html files
- gem 'nokogiri'
+gem 'nokogiri'
+
+# Point to yanked v0.3.5
+# Temporary workaround for https://github.com/rails/rails/issues/41757 until fix is released
+gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
