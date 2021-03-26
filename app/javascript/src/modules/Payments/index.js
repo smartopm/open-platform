@@ -9,16 +9,18 @@ const subMenus = [
       path: '/payments?tab=payment',
       component: Payments
     },
-    name: 'Transactions',
+    accessibleBy: ['admin'],
+    name: 'Transactions'
   },
   {
     routeProps: {
       path: '/payments?tab=invoice',
       component: Payments
     },
-    name: 'Invoices',
-  },
-]
+    accessibleBy: ['admin'],
+    name: 'Invoices'
+  }
+];
 
 export default {
   routeProps: {
