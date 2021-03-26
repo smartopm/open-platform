@@ -11,6 +11,13 @@ GIT
       warden (~> 1.2.3)
 
 GIT
+  remote: https://github.com/mimemagicrb/mimemagic.git
+  revision: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
+  ref: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
+  specs:
+    mimemagic (0.3.5)
+
+GIT
   remote: https://github.com/rspec/rspec-core
   revision: ea8554afd1a2b63677c6593059fa8f2476181deb
   branch: main
@@ -211,7 +218,6 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0225)
-    mimemagic (0.3.6)
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
     minitest (5.14.4)
@@ -465,6 +471,7 @@ DEPENDENCIES
   json_logic
   jwt
   listen (>= 3.0.5, < 3.2)
+  mimemagic!
   newrelic_rpm
   nexmo (~> 5.9)
   nokogiri
