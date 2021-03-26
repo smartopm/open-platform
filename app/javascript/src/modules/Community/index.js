@@ -4,17 +4,6 @@ import News from '../News'
 
 const Community = () => <div>Community Module</div>;
 
-
-const subMenu = [
-  {
-    routeProps: {
-      path: '/news',
-      component: News
-    },
-    name: 'News',
-  },
-]
-
 export default {
   routeProps: {
     path: '/community',
@@ -33,5 +22,5 @@ export default {
     'resident',
     'visitor'
   ],
-  subMenu
+  subMenu: [News]
 };
