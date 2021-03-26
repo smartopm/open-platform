@@ -1,6 +1,4 @@
-import React from 'react';
-
-const News = () => <div>News Module</div>;
+import News from '../../containers/Posts/Posts'
 
 export default {
   routeProps: {
