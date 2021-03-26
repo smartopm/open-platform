@@ -29,7 +29,7 @@ module ActionFlows
         values = []
         vars.each do |variable|
           value = ActionFieldsFetchable.process_vars(variable, data, field_config)
-          values.append({ key: "%#{variable}%", value: value })
+          values.append({ key: "%#{variable}%", value: value.to_s })
         end
         values
       end
