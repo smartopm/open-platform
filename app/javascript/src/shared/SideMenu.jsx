@@ -69,7 +69,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
                 </Collapse>
               </Fragment>
             )
-            : <span />
+            : <span key={menuItem.name} />
         ))}
       </List>
     </div>

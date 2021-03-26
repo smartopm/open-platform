@@ -26,6 +26,7 @@ import { dateToString } from '../utils/dateutil'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import { pluralizeCount, propAccessor } from '../utils/helpers'
 import SubStatusReportDialog from '../components/User/SubStatusReport'
+import AdminWrapper from '../shared/AdminWrapper'
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
@@ -382,7 +383,7 @@ export default function UsersList() {
   }
 
   return (
-    <>
+    <AdminWrapper>
       <div className="container">
         <ActionDialog
           open={openCampaignWarning}
@@ -586,7 +587,7 @@ export default function UsersList() {
           </>
         )}
       </div>
-    </>
+    </AdminWrapper>
   )
 }
 

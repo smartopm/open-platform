@@ -117,18 +117,17 @@ const LoggedInOnly = props => {
   )
 }
 
+/**
+ * @deprecated will deprecate this in favor of individual shared/AdminWrapper
+ * 
+ */
 const AdminRoutes = props => {
   const authState = useContext(AuthStateContext)
   if (authState.user.userType === 'admin') {
     return props.children
   }
   return (
-    <Redirect
-      to={{
-        pathname: '/',
-        state: { from: props.location }
-      }}
-    />
+    <Redirect to="/" />
   )
 }
 
@@ -217,9 +216,9 @@ const App = () => {
                     <LoggedInOnly>
                       <Main />
                       <Switch>
-                      {modules.map(module => (
-                        <Route {...module.routeProps} key={module.name} />
-                      ))}
+                          {modules.map(module => (
+                            <Route {...module.routeProps} key={module.name} />
+                          ))}
                         {/* <Route path="/" exact component={Home} /> */}
                         <Route path="/scan" component={Scan} />
                         <Route path="/search" component={Search} />
