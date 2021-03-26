@@ -7,15 +7,25 @@ import Forms from './Forms';
 import Plots from './Plots';
 import Communication from './Communication';
 import CustomerJourney from './CustomerJourney';
+import ActionFlows from './ActionFlows';
+import TimeCard from './TimeCard';
+import LogBook from './LogBook';
+import Portal from './Portal';
+import Properties from './Plots/Properties';
 
 // and exported back here
 export default [
   Dashboard,
   Plots,
   Communication,
+  LogBook,
   Payments,
   Forms,
   CustomerJourney,
   Users,
+  Properties,
   Community,
+  Portal,
+  ActionFlows,
+  TimeCard,
 ];

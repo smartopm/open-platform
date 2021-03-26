@@ -4,6 +4,9 @@ import News from '../News'
 import Message from '../Messages'
 import Discussions from '../Discussions';
 import Business from '../Business';
+import Labels from '../Labels';
+import Campaigns from '../Campaigns';
+import PermitRequestForms from '../Forms/PermitRequestForms';
 
 const Community = () => <div>Community Module</div>;
 
@@ -25,5 +28,5 @@ export default {
     'resident',
     'visitor'
   ],
-  subMenu: [News, Message, Discussions, Business]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms]
 };

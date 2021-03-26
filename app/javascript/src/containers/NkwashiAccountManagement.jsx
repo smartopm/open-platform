@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useWindowDimensions } from '../utils/customHooks'
 import IframeContainer from '../components/IframeContainer'
-import Nav from '../components/Nav';
+// import Nav from '../components/Nav';
 import { useLocation } from 'react-router-dom'
 import { ModalDialog } from '../components/Dialog'
 
@@ -26,12 +26,12 @@ export default function NkwashiAccountManagement() {
 
         <React.Fragment>
             <div>
-                <Nav navName="Thebe Portal" menuButton="back" backTo="/">
+                {/* <Nav navName="Thebe Portal" menuButton="back" backTo="/">
 
                     <div className="d-flex mb-0 justify-content-center">
                         <p data-testid="reset_password" onClick={openDialog} style={{ color: '#FFF', marginTop: '1%' }}><u><strong>Trouble logging in?</strong></u></p>
                     </div>
-                </Nav>
+                </Nav> */}
                 <ModalDialog
                     handleClose={openDialog}
                     handleConfirm={handleClick}

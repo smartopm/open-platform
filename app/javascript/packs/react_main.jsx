@@ -228,7 +228,7 @@ const App = () => {
                         <Route path="/id/:id" component={IDCard} />
                         <Route path="/print/:id" component={IDPrint} />
                         <Route path="/entry_logs/:userId" component={EntryLogs} />
-                        <Route path="/entry_logs" component={EntryLogs} />
+                        {/* <Route path="/entry_logs" component={EntryLogs} /> */}
                         <Route path="/user" exact component={UserEdit} />
                         <Route path="/map" component={Map} />
                         <Route path="/myplot" component={GeoMap} />
@@ -277,14 +277,14 @@ const App = () => {
                           path="/campaign-create"
                           component={CampaignCreate}
                         />
-                        <Route path="/campaigns" component={Campaigns} />
+                        {/* <Route path="/campaigns" component={Campaigns} /> */}
                         <Route path="/campaign/:id" component={CampaignUpdate} />
                         {/* users */}
                         {/*Nkwashi account management*/}
-                        <Route
+                        {/* <Route
                           path="/account"
                           component={NkwashiAccountManagement}
-                        />
+                        /> */}
                         <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
                         {/* Still admin route */}
                         <Route
@@ -294,11 +294,11 @@ const App = () => {
                         />{' '}
                         {/* Still admin route */}
                         <Route path={["/user/:id/:tm?/:dg?", "/user/:id/:tab?"]} component={UserShow} />
-                        <Route
+                        {/* <Route
                           path="/timesheet"
                           exact
                           component={CustodianLogs}
-                        />
+                        /> */}
                         <Route
                           path="/timesheet/:id"
                           exact
@@ -321,14 +321,14 @@ const App = () => {
                           exact
                           component={DiscussonPage}
                         />
-                        <Route path="/business" exact component={Businesses} />
+                        {/* <Route path="/business" exact component={Businesses} /> */}
                         <Route
                           path="/business/:id"
                           exact
                           component={BusinessProfile}
                         />
                         {/* Forms */}
-                        <Route path="/forms" component={FormLinks} />
+                        {/* <Route path="/forms" component={FormLinks} /> */}
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
                         <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route path="/user_form/:formId?/:userId?/:formName?/:type?" component={FormPage} />
@@ -368,9 +368,9 @@ const App = () => {
                             <Route path="/my_tasks" component={Todo} />
                             <Route path="/feedbacks" component={FeedbackPage} />
                             <Route path="/event_logs" component={EventLogs} />
-                            <Route path="/labels" component={Labels} />
-                            <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} />
-                            <Route path="/land_parcels" component={LandParcel} />
+                            {/* <Route path="/labels" component={Labels} /> */}
+                            {/* <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} /> */}
+                            {/* <Route path="/land_parcels" component={LandParcel} /> */}
 
                             <Route path="/new/user" exact component={UserEdit} />
                             <Route path="/comments" exact component={CommentsPage} />

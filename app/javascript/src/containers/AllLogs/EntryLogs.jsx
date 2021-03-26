@@ -10,7 +10,7 @@ import React, {
 import { useQuery } from 'react-apollo'
 import { useLocation } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
-import Nav from '../../components/Nav'
+// import Nav from '../../components/Nav'
 import Loading from '../../shared/Loading'
 import { AllEventLogsQuery } from '../../graphql/queries'
 import ErrorPage from '../../components/Error'
@@ -277,13 +277,13 @@ export function IndexComponent({
     })
   return (
     <div>
-      <div
+      {/* <div
         style={{
           backgroundColor: '#69ABA4'
         }}
       >
         <Nav menuButton="back" navName="Log Book" boxShadow="none" backTo="/" />
-      </div>
+      </div> */}
       <div className="container">
         <div className="form-group">
           <input

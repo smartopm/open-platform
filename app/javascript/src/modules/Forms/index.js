@@ -10,7 +10,7 @@ const Forms = () => <h4>Forms Module</h4>
 // It would be nice to name them differently
 export default {
   routeProps: {
-    path: '/forms', // myforms
+    path: '/myforms', // myforms
     component: Forms,
   },
   styleProps: {

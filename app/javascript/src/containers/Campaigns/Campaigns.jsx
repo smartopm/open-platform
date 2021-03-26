@@ -1,15 +1,13 @@
-/* eslint-disable */
 import React, { useContext } from 'react'
-import Nav from '../../components/Nav'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import CampaignList from '../../components/CampaignList'
+import AdminWrapper from '../../shared/AdminWrapper'
 
 export default function Campaigns() {
   const authState = useContext(AuthStateContext)
   return (
-    <>
-      <Nav navName="Campaigns" menuButton="back" backTo="/" />
+    <AdminWrapper>
       <CampaignList authState={authState} />
-    </>
+    </AdminWrapper>
   )
 }
