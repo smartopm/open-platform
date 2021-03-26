@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { shape } from 'prop-types';
 import { useHistory } from 'react-router';
 import { StyledTabs, StyledTab, TabPanel } from '../../../components/Tabs';
@@ -20,6 +20,15 @@ export default function TabbedPayments({ authState }) {
     history.push(`/payments?tab=${newValue}`);
     setValue(newValue);
   }
+
+  // monitor the change of the url and update the tab when coming from the left menu
+  useEffect(() => {
+    if (tab) {
+      setValue(tab)
+    } else {
+      setValue('invoice');
+    }
+  }, [path, tab])
 
   return (
     <>
