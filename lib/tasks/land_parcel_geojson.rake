@@ -62,8 +62,8 @@ namespace :db do
                                                 long_x: long_x, lat_y: lat_y)
           if duplicate_parcel.present?
             abort("Aborted: Land Parcel already exists. Have you migrated before?
-              at Parcel No: #{duplicate_parcel.parcel_number}, longX: #{duplicate_parcel[:long_x]},
-              latY: #{duplicate_parcel[:lat_y]}")
+              at Parcel No: #{duplicate_parcel.parcel_number}, long_x: #{duplicate_parcel[:long_x]},
+              lat_y: #{duplicate_parcel[:lat_y]}")
           end
 
           LandParcel.create!(community_id: community_id,
