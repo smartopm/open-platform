@@ -20,13 +20,13 @@ const useStyles = makeStyles({
   }
 })
 
-export default function SignaturePad({signRef, onEnd, detail}){
+export default function SignaturePad({signRef, onEnd, detail, label}){
     const classes = useStyles()
     return (
       <>
         <div className={classes.signatureContainer}>
           <label className="bmd-label-static" aria-label="sign_title">
-            SIGNATURE
+            {label}
           </label>
           <Signature
             canvasProps={{ className: classes.signaturePad }}
@@ -42,11 +42,16 @@ export default function SignaturePad({signRef, onEnd, detail}){
     )
 }
 
+SignaturePad.defaultProps = {
+  label: 'SIGNATURE'
+}
+
 SignaturePad.propTypes = {
     signRef: PropTypes.object.isRequired,
     onEnd: PropTypes.func.isRequired,
     detail: PropTypes.shape({
       status: PropTypes.string,
       type: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    label: PropTypes.string
 }
