@@ -46,7 +46,7 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
             />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
-            {plan.invoices && plan.invoices?.length &&
+            {plan.invoices && Boolean(plan.invoices?.length) &&
               <Typography color='primary' style={{margin: '0 0 10px 50px'}}>Invoices</Typography>}
             {plan.invoices
                 ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
