@@ -9,7 +9,7 @@ const Community = () => <div>Community Module</div>;
 
 export default {
   routeProps: {
-    path: '/community',
+    path: '',
     component: Community
   },
   styleProps: {
