@@ -56,4 +56,15 @@ describe('Login screen', () => {
   it('should have a button', () => {
     expect(loginWrapper.find('button').exists()).toBe(true)
   })
+
+  it('should show trouble logging in section', () => {
+    expect(loginWrapper.find('u').text()).toMatch(/don't have an account?/i)
+    expect(loginWrapper.find('#trouble-logging-div').exists()).toBe(true)
+    
+    loginWrapper.find('#trigger-modal-dialog').simulate('click', {})
+
+    expect(loginWrapper.find('h6').text()).toMatch(/to request your login information, email/i)
+    expect(loginWrapper.find("input[type='email']").exists()).toBe(true)
+    expect(loginWrapper.find("input[type='number']").exists()).toBe(true)
+  })
 })

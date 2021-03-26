@@ -29,13 +29,32 @@ export function LoginScreen() {
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
-  const [value, setValue] = useState('')
-  const [Interest, setInterest] = useState('')
+  const [email, setEmail] = useState('')
+  const [interest, setInterest] = useState('')
+  const [impact, setImpact] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
+
+  const AppLoginRequestSurvey = {
+    interest: {
+      question: 'Why are you interested in Nkwashi?',
+      responses: [
+        'I own property at Nkwashi',
+        'I want to own property at Nkwashi',
+        'I want to learn more about Nkwashi.',
+      ],
+    },
+    impact: {
+      question: 'How did you hear about Nkwashi?',
+      responses: [
+        'AIR Program/HIR Program/Social Media/Friend',
+        'Family/Other'
+      ],
+    }
+  }
 
   function loginWithPhone(event, type = 'input') {
 
@@ -87,7 +106,8 @@ export function LoginScreen() {
     window.open(
       `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
        I would like access to the Nkwashi app. Please provide me with my login credentials.
-       Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
+       Full Name: ${username}, Email: ${email}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${interest},
+       How did you hear about Nkwashi?: ${impact}`,
       'emailWindow'
     )
     setOpen(!open)
@@ -207,11 +227,12 @@ export function LoginScreen() {
 
       <div
         data-testid="trouble-logging-div"
+        id="trouble-logging-div"
         className="row justify-content-center align-items-center"
       >
-        <p onClick={handleModal} style={{ marginTop: '1%' }}>
+        <p id="trigger-modal-dialog" onClick={handleModal} style={{ marginTop: '1%', cursor: 'pointer' }}>
           <u>
-            <strong>Dont have an Account?</strong>
+            <strong>Don't have an Account?</strong>
           </u>
         </p>
       </div>
@@ -276,7 +297,7 @@ export function LoginScreen() {
           fullWidth
           name="email"
           label="Email"
-          onChange={event => setValue(event.target.value)}
+          onChange={event => setEmail(event.target.value)}
         />
         <TextField
           variant="outlined"
@@ -290,24 +311,39 @@ export function LoginScreen() {
         />
         <FormControl className={css(styles.formControl)}>
           <InputLabel id="demo-simple-select-outlined-label">
-            Why are you interested in Nkwashi?
+           {AppLoginRequestSurvey.interest.question}
           </InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
-            value={Interest}
+            value={interest}
             onChange={event => setInterest(event.target.value)}
             label="interest"
           >
-            <MenuItem value={'I own property at Nkwashi'}>
-              I own property at Nkwashi.
-            </MenuItem>
-            <MenuItem value={'I want to own property at Nkwashi'}>
-              I want to own property at Nkwashi
-            </MenuItem>
-            <MenuItem value={'I want to learn more about Nkwashi.'}>
-              I want to learn more about Nkwashi.
-            </MenuItem>
+            {AppLoginRequestSurvey.interest.responses.map((value) => (
+              <MenuItem value={value} key={value}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+          <br />
+        </FormControl>
+        <FormControl className={css(styles.formControl)}>
+          <InputLabel id="demo-simple-select-outlined-label">
+           {AppLoginRequestSurvey.impact.question}
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={impact}
+            onChange={event => setImpact(event.target.value)}
+            label="impact"
+          >
+            {AppLoginRequestSurvey.impact.responses.map((value) => (
+              <MenuItem value={value} key={value}>
+                {value}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </ModalDialog>
