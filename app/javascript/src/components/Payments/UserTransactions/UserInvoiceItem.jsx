@@ -50,7 +50,7 @@ export function renderInvoices(inv, currencyData) {
         <Text color='primary' content={`Plot Number #${inv.landParcel.parcelNumber}`} />
       </Grid>
     ),
-    Amount: <GridText content={formatMoney(currencyData, inv.amount)} />,
+    Amount: <GridText content={formatMoney(currencyData, inv.amount)} data-testid="amount" />,
     'Payment Date': (
       <Grid item xs={12} md={2}>
         {inv.status === 'paid' && inv.payments.length

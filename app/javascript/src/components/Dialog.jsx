@@ -112,6 +112,7 @@ export function CustomizedDialogs({
       onClose={handleModal}
       aria-labelledby="simple-dialog-title"
       open={open}
+      data-testid="dialog"
     >
       <DialogTitle className={classes.title}>
         <div className="d-flex justify-content-between">
@@ -164,7 +165,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
       <Divider />
       {!noActionButton && (
         <DialogActions style={{ margin: '10px' }}>
-          <Button onClick={handleClose} variant="outlined" color="secondary">
+          <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
             Cancel
           </Button>
         </DialogActions>

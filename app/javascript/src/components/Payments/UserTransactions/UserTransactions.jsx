@@ -90,14 +90,18 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         clickable={!anchorElOpen}
         handleClick={handleOpenDetails} 
       />
-      <TransactionDetails 
-        detailsOpen={open} 
-        handleClose={() => setOpen(false)} 
-        data={transaction}
-        currencyData={currencyData}
-        title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
-        isEditing={isEditing}
-      />
+      {open && 
+        (
+        <TransactionDetails 
+          detailsOpen={open} 
+          handleClose={() => setOpen(false)} 
+          data={transaction}
+          currencyData={currencyData}
+          title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
+          isEditing={isEditing}
+        />
+      )}
+      
       <PaymentReceipt 
         paymentData={transaction} 
         open={receiptOpen} 
@@ -172,7 +176,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       </Grid>
     ),
     Menu: (
-      <Grid item xs={12} md={1}>
+      <Grid item xs={12} md={1} data-testid="menu">
         {
           transaction.__typename === 'WalletTransaction' 
           && transaction.status === 'settled' && transaction.destination !== 'invoice' && transaction.source !== 'invoice'
