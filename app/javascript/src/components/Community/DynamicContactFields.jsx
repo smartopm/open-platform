@@ -25,6 +25,7 @@ export default function DynamicContactFields({
         onChange={event => handleChange(event, i)}
         value={propAccessor(options[parseInt(i, 10)], data.name)}
         name={data.name}
+        data-testid='text_field'
       />
       <TextField
         id={`${i}-select-category`}

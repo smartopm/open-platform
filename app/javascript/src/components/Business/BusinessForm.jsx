@@ -219,6 +219,7 @@ export default function BusinessForm({ close }) {
             aria-label="business_submit"
             color="primary"
             className={`btn ${css(discussStyles.submitBtn)}`}
+            data-testid='create_business'
           >
             Create a Business
           </Button>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-// import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
@@ -67,13 +66,6 @@ describe('It should test the payment modal component', () => {
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })
     expect(transactionInput).toHaveValue('cash')
-
-    // const transactionAmount = container.getByTestId('amount').querySelector('input')
-    // fireEvent.change(transactionAmount, { target: { value: '200' } })
-    // expect(transactionAmount).toHaveValue(200)
-    // fireEvent.change(container.queryByTestId('parcel-number'), { target: { value: 'ho2ij3' } })
-    // expect(container.queryByTestId('parcel-number')).toHaveValue('ho2ij3')
-    // fireEvent.click(container.queryByTestId('custom-dialog-button'))
   });
 });
 

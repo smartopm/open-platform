@@ -6,7 +6,7 @@ import CommunitySettings from '../../components/Community/CommunitySettings'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Community settings page ', () => {
-  it('should have input field and a remove button', () => {
+  it('should have input field and a remove button', async () => {
     const data = {
       supportNumber: [
         {
@@ -67,5 +67,11 @@ describe('Community settings page ', () => {
 
     fireEvent.select(container.queryByTestId('currency'), { target: { value: 'ZMW' }})
     expect(container.queryByTestId('currency').value).toBe('ZMW')
+
+    fireEvent.click(container.queryByTestId('email_click'))
+    expect(container.queryAllByLabelText('Email')).toHaveLength(3)
+
+    fireEvent.click(container.queryByTestId('whatsapp_click'))
+    expect(container.queryAllByLabelText('WhatsApp')).toHaveLength(2)
   })
 })

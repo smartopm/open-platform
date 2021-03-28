@@ -64,7 +64,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
       </Dialog>
       <List>
         {businessData.businesses.map((business) => (
-          <ListItem key={business.id}>
+          <ListItem key={business.id} data-testid='business_list'>
             <Link
               key={business.id}
               to={`/business/${business.id}`}
@@ -107,6 +107,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={business.id}
+                data-testid='open_menu'
               >
                 <MoreVertIcon />
               </IconButton>
