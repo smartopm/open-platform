@@ -18,7 +18,6 @@ export const UpdateUserMutation = gql`
     $expiresAt: String
     $subStatus: String
     $address: String
-    $substatusStartDate: String
     $secondaryInfo: [JSON!]
     $extRefId: String
   ) {
@@ -36,7 +35,6 @@ export const UpdateUserMutation = gql`
       expiresAt: $expiresAt
       subStatus: $subStatus
       address: $address
-      substatusStartDate: $substatusStartDate
       secondaryInfo: $secondaryInfo
       extRefId: $extRefId
     ) {

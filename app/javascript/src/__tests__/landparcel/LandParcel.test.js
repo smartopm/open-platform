@@ -6,8 +6,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import 'leaflet'
 import 'leaflet-draw'
-import ParcelItem from '../../components/LandParcels/LandParcelItem'
-import { ParcelPageTitle } from '../../components/LandParcels/LandParcel'
+import ParcelItem, { renderParcel } from '../../components/LandParcels/LandParcelItem'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 jest.mock('leaflet-draw')
@@ -24,6 +23,14 @@ describe('It should test the comment component', () => {
     parcelType: 'land'
   }
 
+  const menuData = {
+    menuList: [{ content: 'Example', isAdmin: true, color: '', handleClick: jest.fn()}],
+    handlePropertyMenu: jest.fn(),
+    anchorEl: null,
+    open: true,
+    handleClose: jest.fn()
+  }
+
   it('should check if ParcelItem renders with no error', () => {
     const container = render(
       <BrowserRouter>
@@ -33,26 +40,22 @@ describe('It should test the comment component', () => {
       </BrowserRouter>
     )
 
-    expect(container.getByTestId("parcel-address1")).toBeInTheDocument()
-    expect(container.queryByText("plot-1234")).toBeInTheDocument()
-    expect(container.queryByText("123234")).toBeInTheDocument()
-    expect(container.queryByText("address")).toBeInTheDocument()
-    expect(container.queryByText("lagos")).toBeInTheDocument()
-    expect(container.queryByText("Nigeria")).toBeInTheDocument()
-    expect(container.queryByText("hiwhe")).toBeInTheDocument()
-    expect(container.queryByText("add")).toBeInTheDocument()
+    expect(container.getByTestId("property")).toBeInTheDocument()
+    expect(container.getByTestId("address")).toBeInTheDocument()
+    expect(container.getByTestId("postal-code")).toBeInTheDocument()
+    expect(container.getByTestId("city")).toBeInTheDocument()
+    expect(container.getByTestId("country")).toBeInTheDocument()
+    expect(container.getByTestId("menu")).toBeInTheDocument()
   });
 
-// This should be replaced with DataList component
-  it('should check for parcel title', () => {
-    const container = render(<ParcelPageTitle />)
-    expect(container.queryByText("Property Number")).toBeInTheDocument()
-    expect(container.queryByText("Address1")).toBeInTheDocument()
-    expect(container.queryByText("Address2")).toBeInTheDocument()
-    expect(container.queryByText("Postal Code")).toBeInTheDocument()
-    expect(container.queryByText("city")).toBeInTheDocument()
-    expect(container.queryByText("State Province")).toBeInTheDocument()
-    expect(container.queryByText("Country")).toBeInTheDocument()
-    expect(container.queryByText("Property Type")).toBeInTheDocument()
-  })
+  it('should check if renderProperty works as expected', () => {
+    const results = renderParcel(data, menuData);
+    expect(results).toBeInstanceOf(Array);
+    expect(results[0]).toHaveProperty('Property Number/Property Type');
+    expect(results[0]).toHaveProperty('Address1/Address2');
+    expect(results[0]).toHaveProperty('Postal Code');
+    expect(results[0]).toHaveProperty('City');
+    expect(results[0]).toHaveProperty('State Province/Country');
+    expect(results[0]).toHaveProperty('Menu')
+  });
 });

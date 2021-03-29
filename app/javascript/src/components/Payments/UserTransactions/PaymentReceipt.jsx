@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider';
@@ -6,8 +6,10 @@ import { FullScreenDialog } from '../../Dialog'
 import Logo from '../../../../../assets/images/logo.png'
 import { dateToString } from '../../DateContainer';
 import { extractCurrency, formatMoney } from '../../../utils/helpers';
+import SignaturePad from '../../Forms/SignaturePad'
 
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }){
+  const signRef = useRef(null)
   return (
     <>
       <div>
@@ -87,6 +89,19 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
             </div>
           )}
           </div>
+          <div style={{ height: 'auto', width: '50%', margin: 'auto' }} data-testid="signature-container">
+            <b>Please Sign inside the box</b> 
+            <br />
+            <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '140px'}}>
+              <SignaturePad
+                key={paymentData.id}
+                detail={{ type: 'signature', status: '' }}
+                signRef={signRef}
+                onEnd={() => {}}
+                label=""
+              />
+            </div>
+          </div>
         </FullScreenDialog>
       </div>
     </>
@@ -99,6 +114,7 @@ PaymentReceipt.defaultProps = {
  }
  PaymentReceipt.propTypes = {
   paymentData: PropTypes.shape({
+    id: PropTypes.string,
     source: PropTypes.string,
     amount: PropTypes.number,
     currentWalletBalance: PropTypes.number,

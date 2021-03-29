@@ -12,6 +12,8 @@ module Mutations
       argument :transaction_number, String, required: false
       argument :status, String, required: false
       argument :land_parcel_id, ID, required: true
+      argument :receipt_number, String, required: false
+      argument :created_at, String, required: false
 
       field :wallet_transaction, Types::WalletTransactionType, null: true
 
@@ -27,6 +29,7 @@ module Mutations
                          status: 'settled',
                          community_id: context[:site_community]&.id,
                          depositor_id: context[:current_user].id,
+                         originally_created_at: user.current_time_in_timezone,
                        }),
           )
           context[:current_user].generate_events('deposit_create', transaction)

@@ -8,7 +8,7 @@ namespace :db do
     desc 'Load GeoJSON Point of Interest data into database'
     task poi_geo_data: :environment do
       dir = Rails.root.join('app/javascript/src/data')
-      src_file = 'nkwashi_poi_data.json'
+      src_file = 'nkwashi_sculpture_poi.json'
       json_file = "#{dir}/#{src_file}"
 
       abort("Aborted. File not found - #{json_file}") unless File.exist?(json_file)
@@ -26,9 +26,9 @@ namespace :db do
 
           # ensure the geometry type is Polygon
           geometry_type = f['geometry']['type']
-          unless geometry_type.eql?('Polygon')
+          unless geometry_type.eql?('Polygon') || geometry_type.eql?('Point')
             abort("Aborted. Invalid GeoJSON feature type::Geometry type must be
-              of SFC \'Polygon\' at - #{geometry_type}")
+              of SFC \'Polygon\' or SFC \'Point\' at - #{geometry_type}")
           end
 
           unique_record = false

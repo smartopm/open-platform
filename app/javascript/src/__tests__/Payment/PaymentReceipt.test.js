@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import PaymentReceipt from '../../components/Payments/UserTransactions/PaymentReceipt';
 import currency from '../../__mocks__/currency';
 
+jest.mock('react-signature-canvas')
 describe('It should test the payment receipt modal component', () => {
   const paymentData = {
     amount: 1000,
@@ -47,5 +48,6 @@ describe('It should test the payment receipt modal component', () => {
     expect(container.getByTestId('nkwashi')).toBeInTheDocument();
     expect(container.queryByText('cash')).toBeInTheDocument();
     expect(container.queryByText('$1,000.00')).toBeInTheDocument();
+    expect(container.queryByTestId('signature-container')).toBeInTheDocument();
   });
 });
