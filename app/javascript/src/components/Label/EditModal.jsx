@@ -52,6 +52,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
             fullWidth
             value={shortDesc}
             onChange={e => setShortDesc(e.target.value)}
+            inputProps={{
+              'data-testid': 'title'
+            }}
           />
           <TextField
             margin="dense"
@@ -62,6 +65,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
             multiline
             value={description}
             onChange={e => setDescription(e.target.value)}
+            inputProps={{
+              'data-testid': 'description'
+            }}
           />
           <div style={{display: 'flex'}}>
             <Paper 
@@ -76,6 +82,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
               fullWidth
               value={color}
               onChange={e => setColor(e.target.value)}
+              inputProps={{
+                'data-testid': 'color'
+              }}
             />
           </div>
           <div style={{display: 'flex'}}>
@@ -85,6 +94,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
                 key={i} 
                 style={{ height: '40px', width: '40px', margin: '5px', cursor: 'pointer', backgroundColor: `${col}`}}
                 onClick={() => setColor(col)}
+                data-testid='col'
               />
             )
             )}
@@ -94,7 +104,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
           <Button onClick={handleClose} color="secondary" variant="outlined">
             CANCEL
           </Button>
-          <Button onClick={handleEdit} color="primary" variant="contained">
+          <Button onClick={handleEdit} color="primary" variant="contained" data-testid='button'>
             SAVE CHANGES
           </Button>
         </DialogActions>
