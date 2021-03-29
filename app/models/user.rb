@@ -560,10 +560,6 @@ class User < ApplicationRecord
     new_status = sub_status_changes.last
     stop_date = nil
 
-    if previous_status.present? && new_status != previous_status
-      stop_date = current_time_in_timezone
-    end
-
     latest_substatus = create_sub_status_log(start_date, previous_status, new_status, stop_date)
 
     self[:latest_substatus_id] = latest_substatus[:id]

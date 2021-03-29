@@ -164,7 +164,6 @@ RSpec.describe Mutations::User do
             $reason: String,
             $userType: String!,
             $vehicle: String
-            $substatusStartDate: String
             $subStatus: String
           ) {
           userUpdate(
@@ -174,7 +173,6 @@ RSpec.describe Mutations::User do
               vehicle: $vehicle,
               userType: $userType
               subStatus: $subStatus
-              substatusStartDate: $substatusStartDate
             ) {
             user {
               id
@@ -199,6 +197,8 @@ RSpec.describe Mutations::User do
                                                 current_user: current_user,
                                                 site_community: current_user.community,
                                               }).as_json
+
+      expect(result['errors']).to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'requestReason')).to eql 'Rspec'
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql 'client'
@@ -244,15 +244,14 @@ RSpec.describe Mutations::User do
         name: 'joey',
         userType: 'admin',
         subStatus: 'floor_plan_purchased',
-        substatusStartDate: '2021-10-10',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
                                                 site_community: current_user.community,
                                               }).as_json
-      expect(result.dig('data', 'userUpdate', 'user')).not_to be_nil
       expect(result['errors']).to be_nil
+      expect(result.dig('data', 'userUpdate', 'user')).not_to be_nil
       status = ::SubstatusLog.find_by(user_id: current_user.id)
       expect(status.start_date).not_to be_nil
       expect(status.new_status).to eql 'floor_plan_purchased'

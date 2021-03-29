@@ -353,8 +353,8 @@ RSpec.describe User, type: :model do
       expect(SubstatusLog.count).to eq 2
       substatus_log = SubstatusLog.find_by(stop_date: nil)
       expect(substatus_log).not_to be_nil
-      expect(substatus_log.new_status).to eq 'plots_fully_purchased'
-      expect(substatus_log.previous_status).to be_nil
+      expect(substatus_log.new_status).to eq 'eligible_to_start_construction'
+      expect(substatus_log.previous_status).to eq 'plots_fully_purchased'
     end
   end
 end

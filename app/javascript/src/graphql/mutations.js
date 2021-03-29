@@ -41,6 +41,9 @@ export const CreateUserMutation = gql`
   `
   // ${UserFragment.publicFields}
 
+/**
+ * @deprecated this is no longer used in favor of this mutations/user.js and should be deleted
+ */  
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
