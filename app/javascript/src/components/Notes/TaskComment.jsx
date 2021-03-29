@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-apollo'
 import {
   Typography
@@ -9,14 +9,23 @@ import PropTypes from 'prop-types'
 import CommentTextField from './CommentField'
 import { CommentQuery } from '../../graphql/queries'
 import ErrorPage from "../Error"
+import { useParamsQuery } from '../../utils/helpers'
 
 export default function TaskComment({ authState, taskId }) {
-  const { data: commentData, error, refetch } = useQuery(CommentQuery, {
+  const { data: commentData, loading, error, refetch } = useQuery(CommentQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   })
+  const path = useParamsQuery();
+  const commentTabOpen = path.get('comment');
   const [commentOpen, setCommentOpen] = useState(false)
+
+  useEffect(() => {
+    if(!loading && commentTabOpen){
+      handleCommentOpen()
+    }
+  }, [commentTabOpen, loading])
 
   function handleCommentOpen(){
     setCommentOpen(true)

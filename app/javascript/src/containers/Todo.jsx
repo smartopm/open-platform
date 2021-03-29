@@ -8,8 +8,6 @@ import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useLocation } from 'react-router'
 
 export default function Todo({ history }) {
-  // /* eslint-disable */-next-line no-unused-vars
-  const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
 
   const [noteUpdate] = useMutation(UpdateNote)
@@ -17,13 +15,6 @@ export default function Todo({ history }) {
   const [userId, setUserId] = React.useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const location = useLocation()
-
-  function todoAction(id, isCompleted) {
-    setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
-      setLoading(false)
-    })
-  }
 
   function handleModal(Uid) {
     setUserId(Uid)
@@ -59,7 +50,6 @@ export default function Todo({ history }) {
           saveDate={saveDate}
           selectedDate={selectedDate}
           handleDateChange={handleDateChange}
-          todoAction={todoAction}
           location={location.pathname.replace(/\//, '')}
           currentUser={authState.user}
         />
