@@ -12,7 +12,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 
-const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
+const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
   const history = useHistory();
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
 
@@ -29,8 +29,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
       setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name });
       return;
     }
-    // find a way of closing the menu only on small screens
-    // toggleDrawer(event);
+    // close the menu only on small screens
+    if (mobileOpen) {
+      toggleDrawer(event);
+    }
     history.push(item.routeProps.path);
   }
   return (
@@ -101,7 +103,8 @@ const menuItemProps = PropTypes.shape({
 SideMenu.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
   menuItems: PropTypes.arrayOf(menuItemProps).isRequired,
-  userType: PropTypes.string.isRequired
+  userType: PropTypes.string.isRequired,
+  mobileOpen: PropTypes.bool.isRequired,
 };
 
 const styles = StyleSheet.create({

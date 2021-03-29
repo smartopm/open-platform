@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
-      // marginTop: 30
     },
     height: 50,
     backgroundColor: 'transparent',
@@ -89,15 +88,11 @@ export function Component({
   history,
   backTo
 }) {
-  // const [state, setState] = React.useState(false);
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
     setMobileOpen(!mobileOpen);
   };
 
@@ -191,6 +186,7 @@ export function Component({
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                mobileOpen
               />
             </Drawer>
           </Hidden>
@@ -206,6 +202,7 @@ export function Component({
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                mobileOpen={false}
               />
             </Drawer>
           </Hidden>
