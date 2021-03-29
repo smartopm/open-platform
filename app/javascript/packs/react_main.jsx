@@ -3,110 +3,105 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
-import React, { useContext, useEffect, Suspense } from 'react'
-import ReactDOM from 'react-dom'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
-  Route,
-  useHistory
-} from 'react-router-dom'
-import ReactGA from 'react-ga'
-import ApolloProvider from '../src/containers/Provider/ApolloProvider'
+import React, { useContext, useEffect, Suspense } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Redirect, Route, useHistory } from 'react-router-dom';
+import ReactGA from 'react-ga';
+import { makeStyles } from '@material-ui/core/styles';
+import ApolloProvider from '../src/containers/Provider/ApolloProvider';
 import AuthStateProvider, {
   Consumer,
   Context as AuthStateContext
-} from '../src/containers/Provider/AuthStateProvider'
-import Home from '../src/containers/Home'
-import UserShow from '../src/containers/UserShow'
-import IDCard from '../src/containers/IdCard'
-import IDPrint from '../src/containers/IdPrint'
-import EntryLogs from '../src/containers/AllLogs/EntryLogs'
-import UserLogs from '../src/containers/AllLogs/UserLogs'
-import EventLogs from '../src/containers/AllLogs/EventLogs'
-import Search from '../src/containers/Search'
-import UserEdit from '../src/containers/UserEdit'
-import Loading from '../src/shared/Loading.jsx'
-import '../src/i18n'
-import Map from '../src/containers/Map'
-import { LoginScreen } from '../src/components/AuthScreens/LoginScreen'
-import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen'
-import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode'
-import Support from '../src/containers/Support'
-import MobileMoney from '../src/components/MobileMoney'
-import GuardHome from '../src/containers/GuardHome'
-import EntryRequest from '../src/containers/Requests/EntryRequest'
-import RequestUpdate from '../src/containers/Requests/RequestUpdate'
-import RequestConfirm from '../src/containers/Requests/RequestConfirm'
-import WaitScreen from '../src/containers/Requests/WaitingScreen'
-import RequestApproval from '../src/containers/Requests/RequestApproval'
-import ErrorPage from '../src/components/Error'
-import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback'
-import ShowRoom from '../src/containers/showroom/Home'
-import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen'
-import ComingSoon from '../src/containers/showroom/ComingSoon'
-import VisitingClientForm from '../src/containers/showroom/CheckInForm'
-import { AUTH_TOKEN_KEY } from '../src/utils/apollo'
-import CheckInComplete from '../src/containers/showroom/CheckInComplete'
-import Todo from '../src/containers/Todo'
-import TaskUpdate from '../src/containers/Task/TaskUpdate'
-import OTPFeedbackScreen from '../src/containers/OTPScreen'
-import Feedback from '../src/containers/Activity/Feedback'
-import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess'
-import AllNotes from '../src/containers/Activity/AllNotes'
-import FeedbackPage from '../src/containers/Activity/AllFeedback'
-import UsersList from '../src/containers/Users'
-import ShowroomLogs from '../src/containers/showroom/ShowroomLogs'
-import AllMessages from '../src/containers/Messages/AllMessages'
-import UserMessages from '../src/containers/Messages/UserMessagePage'
-import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs'
-import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs'
-import ClientRequestForm from '../src/containers/ClientRequestForm'
-import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement'
-import CampaignCreate from '../src/containers/Campaigns/CampaignCreate'
-import Campaigns from '../src/containers/Campaigns/Campaigns'
-import Scan from '../src/containers/Scan.jsx'
-import WelcomePage from '../src/components/AuthScreens/WelcomePage'
-import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate'
-import Posts from '../src/containers/Posts/Posts'
-import PostPage from '../src/containers/Posts/PostPage'
-import ThemeProvider from '../Themes/Nkwashi/ThemeProvider'
-import Discussions from '../src/containers/Discussions/Discussions'
-import DiscussonPage from '../src/containers/Discussions/DiscussionPage'
-import Businesses from '../src/containers/Businesses/Businesses'
-import BusinessProfile from '../src/containers/Businesses/BusinessProfile'
-import GeoMap from '../src/containers/GeoMap'
-import Notifications from '../src/containers/Preferences/Notifications'
-import { MuiThemeProvider } from '@material-ui/core'
-import { theme } from '../src/themes/nkwashi/theme'
-import FormLinks from '../src/containers/Forms/FormLinks'
-import FormPage from '../src/containers/Forms/FormPage'
-import Labels from '../src/containers/Label/Labels'
-import ActionFlows from '../src/containers/ActionFlows/ActionFlows'
-import UsersImport from '../src/containers/UsersImport'
+} from '../src/containers/Provider/AuthStateProvider';
+import Home from '../src/containers/Home';
+import UserShow from '../src/containers/UserShow';
+import IDCard from '../src/containers/IdCard';
+import IDPrint from '../src/containers/IdPrint';
+import EntryLogs from '../src/containers/AllLogs/EntryLogs';
+import UserLogs from '../src/containers/AllLogs/UserLogs';
+import EventLogs from '../src/containers/AllLogs/EventLogs';
+import Search from '../src/containers/Search';
+import UserEdit from '../src/containers/UserEdit';
+import Loading from '../src/shared/Loading.jsx';
+import '../src/i18n';
+import Map from '../src/containers/Map';
+import { LoginScreen } from '../src/components/AuthScreens/LoginScreen';
+import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
+import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
+import Support from '../src/containers/Support';
+import MobileMoney from '../src/components/MobileMoney';
+import GuardHome from '../src/containers/GuardHome';
+import EntryRequest from '../src/containers/Requests/EntryRequest';
+import RequestUpdate from '../src/containers/Requests/RequestUpdate';
+import RequestConfirm from '../src/containers/Requests/RequestConfirm';
+import WaitScreen from '../src/containers/Requests/WaitingScreen';
+import RequestApproval from '../src/containers/Requests/RequestApproval';
+import ErrorPage from '../src/components/Error';
+import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
+import ShowRoom from '../src/containers/showroom/Home';
+import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen';
+import ComingSoon from '../src/containers/showroom/ComingSoon';
+import VisitingClientForm from '../src/containers/showroom/CheckInForm';
+import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
+import CheckInComplete from '../src/containers/showroom/CheckInComplete';
+import Todo from '../src/containers/Todo';
+import TaskUpdate from '../src/containers/Task/TaskUpdate';
+import OTPFeedbackScreen from '../src/containers/OTPScreen';
+import Feedback from '../src/containers/Activity/Feedback';
+import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
+import AllNotes from '../src/containers/Activity/AllNotes';
+import FeedbackPage from '../src/containers/Activity/AllFeedback';
+import UsersList from '../src/containers/Users';
+import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
+import AllMessages from '../src/containers/Messages/AllMessages';
+import UserMessages from '../src/containers/Messages/UserMessagePage';
+import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs';
+import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs';
+import ClientRequestForm from '../src/containers/ClientRequestForm';
+import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement';
+import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
+import Campaigns from '../src/containers/Campaigns/Campaigns';
+import Scan from '../src/containers/Scan.jsx';
+import WelcomePage from '../src/components/AuthScreens/WelcomePage';
+import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
+import Posts from '../src/containers/Posts/Posts';
+import PostPage from '../src/containers/Posts/PostPage';
+import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
+import Discussions from '../src/containers/Discussions/Discussions';
+import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
+import Businesses from '../src/containers/Businesses/Businesses';
+import BusinessProfile from '../src/containers/Businesses/BusinessProfile';
+import GeoMap from '../src/containers/GeoMap';
+import Notifications from '../src/containers/Preferences/Notifications';
+import { MuiThemeProvider } from '@material-ui/core';
+import { theme } from '../src/themes/nkwashi/theme';
+import FormLinks from '../src/containers/Forms/FormLinks';
+import FormPage from '../src/containers/Forms/FormPage';
+import Labels from '../src/containers/Label/Labels';
+import ActionFlows from '../src/containers/ActionFlows/ActionFlows';
+import UsersImport from '../src/containers/UsersImport';
 
-import FormBuilderPage from '../src/containers/Forms/FormBuilderPage'
-import LandParcel from '../src/containers/LandParcels/LandParcel'
-import CommentsPage from '../src/containers/Comments/CommentPage'
-import CommunitySettings from '../src/containers/Settings/CommunitySettings'
-import MailTemplates from '../src/containers/MailTemplates'
-import Payments from '../src/modules/Payments/Components/Payments'
-import StatsPage from '../src/containers/User/StatsPage'
+import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
+import LandParcel from '../src/containers/LandParcels/LandParcel';
+import CommentsPage from '../src/containers/Comments/CommentPage';
+import CommunitySettings from '../src/containers/Settings/CommunitySettings';
+import MailTemplates from '../src/containers/MailTemplates';
+import Payments from '../src/modules/Payments/Components/Payments';
+import StatsPage from '../src/containers/User/StatsPage';
 // import Nav from '../src/components/Nav'
-import Main from '../src/Main'
+import Main from '../src/Main';
 import modules from '../src/modules';
 
 // Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['app.doublegdp.com']
+const PRIMARY_DOMAINS = ['app.doublegdp.com'];
 
 const LoggedInOnly = props => {
-  const authState = useContext(AuthStateContext)
+  const authState = useContext(AuthStateContext);
   if (authState.loggedIn) {
-    return props.children
+    return props.children;
   }
   return (
     <Redirect
@@ -115,80 +110,76 @@ const LoggedInOnly = props => {
         state: { from: props.location }
       }}
     />
-  )
-}
+  );
+};
 
 /**
  * @deprecated will deprecate this in favor of individual module authorization using accessibleBy:[]
- * 
+ *
  */
 const AdminRoutes = props => {
-  const authState = useContext(AuthStateContext)
+  const authState = useContext(AuthStateContext);
   if (authState.user.userType === 'admin') {
-    return props.children
+    return props.children;
   }
-  return (
-    <Redirect to="/" />
-  )
-}
+  return <Redirect to="/" />;
+};
 
 const Logout = () => {
-  localStorage.removeItem(AUTH_TOKEN_KEY)
-  const authState = useContext(AuthStateContext)
-  authState.setToken({ action: 'delete' })
-  return <Redirect to="/login" />
-}
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  const authState = useContext(AuthStateContext);
+  authState.setToken({ action: 'delete' });
+  return <Redirect to="/login" />;
+};
 //page tracking
-ReactGA.initialize('UA-150647211-2')
+ReactGA.initialize('UA-150647211-2');
 
 const Analytics = props => {
-  const gtag = window.gtag
+  const gtag = window.gtag;
   const liveAnalytics = (host => {
-    return PRIMARY_DOMAINS.includes(host)
-  })(window.location.host)
+    return PRIMARY_DOMAINS.includes(host);
+  })(window.location.host);
 
-  const authState = useContext(AuthStateContext)
-  const history = useHistory()
+  const authState = useContext(AuthStateContext);
+  const history = useHistory();
 
   useEffect(() => {
-    const user = authState.user
+    const user = authState.user;
 
     if (user) {
       if (liveAnalytics) {
-        console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType)
-        gtag('set', { user_id: user.id })
-        gtag('set', 'user_properties', { Role: user.userType })
+        console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType);
+        gtag('set', { user_id: user.id });
+        gtag('set', 'user_properties', { Role: user.userType });
         ReactGA.event({
           category: 'LoggedInUserType',
           action: user.userType,
           eventLabel: user.id,
           nonInteraction: true
-        })
+        });
       } else {
-        console.log('GA DEVELOPMENT MODE: log user', user)
+        console.log('GA DEVELOPMENT MODE: log user', user);
       }
     }
     return history.listen(location => {
-      if (
-        location.pathname.includes('/id') ||
-        location.pathname.includes('/user')
-      ) {
-        let [, rootURL, , userPage] = location.pathname.split('/')
+      if (location.pathname.includes('/id') || location.pathname.includes('/user')) {
+        let [, rootURL, , userPage] = location.pathname.split('/');
 
-        let pageHit = `/${rootURL}/${userPage}`
-        ReactGA.pageview(pageHit)
+        let pageHit = `/${rootURL}/${userPage}`;
+        ReactGA.pageview(pageHit);
       } else {
-        ReactGA.set({ page: location.pathname })
-        ReactGA.pageview(location.pathname)
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname);
       }
-    })
+    });
     // /* eslint-disable */-next-line react-hooks/exhaustive-deps
-  }, [authState.user, history])
+  }, [authState.user, history]);
 
-  return props.children
-}
+  return props.children;
+};
 
 const App = () => {
+  const classes = useStyles();
   return (
     <Suspense
       fallback={() => {
@@ -216,140 +207,142 @@ const App = () => {
 
                     <LoggedInOnly>
                       <Main />
-                      <Switch>
-                        <Consumer>
-                            {({ user }) => (
-                              <Switch>
-                                {modules.map(module => {
-                                  if (module.subMenu) {
-                                    return module.subMenu.map(sub => (
-                                      <Route exact {...sub.routeProps} key={sub.name} />
-                                    ));
-                                  }
-                                  if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route exact {...module.routeProps} key={module.name} />;
-                                  }
-                                })}
-                                <Route render={() => <ErrorPage title="Sorry!! We couldn't find this page" />} />
-                              </Switch>
-                            )}
-                        </Consumer>
-                        {/* <Route path="/" exact component={Home} /> */}
-                        <Route path="/scan" component={Scan} />
-                        <Route path="/search" component={Search} />
-                        <Route path="/id/:id" component={IDCard} />
-                        <Route path="/print/:id" component={IDPrint} />
-                        <Route path="/entry_logs/:userId" component={EntryLogs} />
-                        {/* <Route path="/entry_logs" component={EntryLogs} /> */}
-                        <Route path="/user" exact component={UserEdit} />
-                        <Route path="/map" component={Map} />
-                        <Route path="/myplot" component={GeoMap} />
-                        <Route path="/mobile_money" component={MobileMoney} />
-                        <Route path="/contact" component={Support} />
-                        <Route path="/settings" component={Notifications} />
-                        <Route path="/otp_sent" component={OTPFeedbackScreen} />
-                        <Route path="/referral" component={UserEdit} />
-                        <Route path="/myaccount/:id" component={UserShow} />
-                        {/* new routes => guards */}
-                        <Route path="/guard_home" component={GuardHome} />
-                        {/* requests */}
-                        <Route path="/entry_request" component={EntryRequest} />
-                        <Route path="/request/:id/:logs?" component={RequestUpdate} />
-                        <Route path="/request_hos/:id/" component={RequestConfirm} />
-                        <Route path="/request_wait/:id" component={WaitScreen} />
-                        <Route path="/request_status/:id/edit" component={RequestApproval} />
-                        <Route path="/request_status/:id" component={RequestApproval} />
-                        {/* Showroom kiosk routes */}
-                        <Route path="/showroom_kiosk" component={ShowRoom} />
-                        <Route path="/sh_reason" component={VisitingReasonScreen} />
-                        <Route path="/sh_entry" component={VisitingClientForm} />
-                        <Route path="/sh_complete" component={CheckInComplete} />
-                        <Route path="/sh_soon" component={ComingSoon} />
-                        {/* activity */}
-                        <Route path="/feedback" component={Feedback} />
-                        <Route path="/feedback_success" component={FeedbackSuccess} />
-                        <Route path="/message/:id" component={UserMessages} />
-                        <Route path="/campaign-create" component={CampaignCreate} />
-                        {/* <Route path="/campaigns" component={Campaigns} /> */}
-                        <Route path="/campaign/:id" component={CampaignUpdate} />
-                        {/* users */}
-                        {/*Nkwashi account management*/}
-                        {/* <Route
-                          path="/account"
-                          component={NkwashiAccountManagement}
-                        /> */}
-                        <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
-                        {/* Still admin route */}
-                        <Route path="/user/:id/logs" exact component={UserLogs} />{' '}
-                        {/* Still admin route */}
-                        <Route
-                          path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
-                          component={UserShow}
-                        />
-                        {/* <Route
-                          path="/timesheet"
-                          exact
-                          component={CustodianLogs}
-                        /> */}
-                        <Route path="/timesheet/:id" exact component={EmployeeLogs} />
-                        <Route path="/client_request_from" exact component={ClientRequestForm} />
-                        {/* <Route path="/news" exact component={Posts} /> */}
-                        <Route path="/news/:slug" exact component={Posts} />
-                        {/* <Route
-                          path="/discussions"
-                          exact
-                          component={Discussions}
-                        /> */}
-                        <Route path="/discussions/:id" exact component={DiscussonPage} />
-                        {/* <Route path="/business" exact component={Businesses} /> */}
-                        <Route path="/business/:id" exact component={BusinessProfile} />
-                        {/* Forms */}
-                        {/* <Route path="/forms" component={FormLinks} /> */}
-                        <Route path="/form/:formId?/:formName?" component={FormPage} />
-                        <Route path="/edit_form/:formId" component={FormBuilderPage} />
-                        <Route
-                          path="/user_form/:formId?/:userId?/:formName?/:type?"
-                          component={FormPage}
-                        />
-                        <AdminRoutes>
-                          <Switch>
-                            <Route
-                              path="/client_request_from"
-                              exact
-                              component={ClientRequestForm}
-                            />
-                            {/* <Route path="/users" exact component={UsersList} /> */}
-                            <Route path="/users/import" component={UsersImport} />
-                            <Route path="/users/stats" component={StatsPage} />
-                            {/* <Route path="/messages" component={AllMessages} /> */}
-                            <Route path="/showroom_logs" component={ShowroomLogs} />
-                            <Route path="/notes" component={AllNotes} />
-                            <Route path="/tasks/:taskId" exact component={TaskUpdate} />
-                            <Route path="/tasks" component={Todo} />
-                            <Route
-                              exact
-                              path="/todo/:taskId"
-                              render={({ match }) => (
-                                <Redirect to={`/tasks/${match.params.taskId}`} />
+                      <div className={classes.appContainer}>
+                        <Switch>
+                          <Consumer>
+                              {({ user }) => (
+                                <Switch>
+                                  {modules.map(module => {
+                                    if (module.subMenu) {
+                                      return module.subMenu.map(sub => (
+                                        <Route exact {...sub.routeProps} key={sub.name} />
+                                      ));
+                                    }
+                                    if (module.accessibleBy.includes(user.userType)) {
+                                      return <Route exact {...module.routeProps} key={module.name} />;
+                                    }
+                                  })}
+                                  <Route render={() => <ErrorPage title="Sorry!! We couldn't find this page" />} />
+                                </Switch>
                               )}
-                            />
-                            <Route exact path="/todo" render={() => <Redirect to="/tasks" />} />
-                            <Route path="/my_tasks" component={Todo} />
-                            <Route path="/feedbacks" component={FeedbackPage} />
-                            <Route path="/event_logs" component={EventLogs} />
-                            {/* <Route path="/labels" component={Labels} /> */}
-                            {/* <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} /> */}
-                            {/* <Route path="/land_parcels" component={LandParcel} /> */}
+                          </Consumer>
+                          {/* <Route path="/" exact component={Home} /> */}
+                          <Route path="/scan" component={Scan} />
+                          <Route path="/search" component={Search} />
+                          <Route path="/id/:id" component={IDCard} />
+                          <Route path="/print/:id" component={IDPrint} />
+                          <Route path="/entry_logs/:userId" component={EntryLogs} />
+                          {/* <Route path="/entry_logs" component={EntryLogs} /> */}
+                          <Route path="/user" exact component={UserEdit} />
+                          <Route path="/map" component={Map} />
+                          <Route path="/myplot" component={GeoMap} />
+                          <Route path="/mobile_money" component={MobileMoney} />
+                          <Route path="/contact" component={Support} />
+                          <Route path="/settings" component={Notifications} />
+                          <Route path="/otp_sent" component={OTPFeedbackScreen} />
+                          <Route path="/referral" component={UserEdit} />
+                          <Route path="/myaccount/:id" component={UserShow} />
+                          {/* new routes => guards */}
+                          <Route path="/guard_home" component={GuardHome} />
+                          {/* requests */}
+                          <Route path="/entry_request" component={EntryRequest} />
+                          <Route path="/request/:id/:logs?" component={RequestUpdate} />
+                          <Route path="/request_hos/:id/" component={RequestConfirm} />
+                          <Route path="/request_wait/:id" component={WaitScreen} />
+                          <Route path="/request_status/:id/edit" component={RequestApproval} />
+                          <Route path="/request_status/:id" component={RequestApproval} />
+                          {/* Showroom kiosk routes */}
+                          <Route path="/showroom_kiosk" component={ShowRoom} />
+                          <Route path="/sh_reason" component={VisitingReasonScreen} />
+                          <Route path="/sh_entry" component={VisitingClientForm} />
+                          <Route path="/sh_complete" component={CheckInComplete} />
+                          <Route path="/sh_soon" component={ComingSoon} />
+                          {/* activity */}
+                          <Route path="/feedback" component={Feedback} />
+                          <Route path="/feedback_success" component={FeedbackSuccess} />
+                          <Route path="/message/:id" component={UserMessages} />
+                          <Route path="/campaign-create" component={CampaignCreate} />
+                          {/* <Route path="/campaigns" component={Campaigns} /> */}
+                          <Route path="/campaign/:id" component={CampaignUpdate} />
+                          {/* users */}
+                          {/*Nkwashi account management*/}
+                          {/* <Route
+                            path="/account"
+                            component={NkwashiAccountManagement}
+                          /> */}
+                          <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
+                          {/* Still admin route */}
+                          <Route path="/user/:id/logs" exact component={UserLogs} />{' '}
+                          {/* Still admin route */}
+                          <Route
+                            path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
+                            component={UserShow}
+                          />
+                          {/* <Route
+                            path="/timesheet"
+                            exact
+                            component={CustodianLogs}
+                          /> */}
+                          <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+                          <Route path="/client_request_from" exact component={ClientRequestForm} />
+                          {/* <Route path="/news" exact component={Posts} /> */}
+                          <Route path="/news/:slug" exact component={Posts} />
+                          {/* <Route
+                            path="/discussions"
+                            exact
+                            component={Discussions}
+                          /> */}
+                          <Route path="/discussions/:id" exact component={DiscussonPage} />
+                          {/* <Route path="/business" exact component={Businesses} /> */}
+                          <Route path="/business/:id" exact component={BusinessProfile} />
+                          {/* Forms */}
+                          {/* <Route path="/forms" component={FormLinks} /> */}
+                          <Route path="/form/:formId?/:formName?" component={FormPage} />
+                          <Route path="/edit_form/:formId" component={FormBuilderPage} />
+                          <Route
+                            path="/user_form/:formId?/:userId?/:formName?/:type?"
+                            component={FormPage}
+                          />
+                          <AdminRoutes>
+                            <Switch>
+                              <Route
+                                path="/client_request_from"
+                                exact
+                                component={ClientRequestForm}
+                              />
+                              {/* <Route path="/users" exact component={UsersList} /> */}
+                              <Route path="/users/import" component={UsersImport} />
+                              <Route path="/users/stats" component={StatsPage} />
+                              {/* <Route path="/messages" component={AllMessages} /> */}
+                              <Route path="/showroom_logs" component={ShowroomLogs} />
+                              <Route path="/notes" component={AllNotes} />
+                              <Route path="/tasks/:taskId" exact component={TaskUpdate} />
+                              <Route path="/tasks" component={Todo} />
+                              <Route
+                                exact
+                                path="/todo/:taskId"
+                                render={({ match }) => (
+                                  <Redirect to={`/tasks/${match.params.taskId}`} />
+                                )}
+                              />
+                              <Route exact path="/todo" render={() => <Redirect to="/tasks" />} />
+                              <Route path="/my_tasks" component={Todo} />
+                              <Route path="/feedbacks" component={FeedbackPage} />
+                              <Route path="/event_logs" component={EventLogs} />
+                              {/* <Route path="/labels" component={Labels} /> */}
+                              {/* <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} /> */}
+                              {/* <Route path="/land_parcels" component={LandParcel} /> */}
 
-                            <Route path="/new/user" exact component={UserEdit} />
-                            <Route path="/comments" exact component={CommentsPage} />
-                            <Route path="/community" component={CommunitySettings} />
-                            {/* <Route path="/payments" component={Payments}  /> */}
-                            <Route path="/mail_templates" component={MailTemplates} />
-                            <Route path="/visit_request" component={EntryRequest} />
-                          </Switch>
-                        </AdminRoutes>
-                      </Switch>
+                              <Route path="/new/user" exact component={UserEdit} />
+                              <Route path="/comments" exact component={CommentsPage} />
+                              <Route path="/community" component={CommunitySettings} />
+                              {/* <Route path="/payments" component={Payments}  /> */}
+                              <Route path="/mail_templates" component={MailTemplates} />
+                              <Route path="/visit_request" component={EntryRequest} />
+                            </Switch>
+                          </AdminRoutes>
+                        </Switch>
+                      </div>
                     </LoggedInOnly>
                   </Switch>
                 </Analytics>
@@ -360,8 +353,16 @@ const App = () => {
       </ApolloProvider>
     </Suspense>
   );
-}
+};
+
+const useStyles = makeStyles(() => ({
+  '@media (min-width: 768px)': {
+    appContainer: {
+      marginLeft: '260px'
+    }
+  }
+}));
 
 document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(<App />, document.getElementById('root'))
-})
+  ReactDOM.render(<App />, document.getElementById('root'));
+});
