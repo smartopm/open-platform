@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import { Snackbar } from '@material-ui/core'
 import NotificationPage from '../../components/NotificationPage'

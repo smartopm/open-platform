@@ -18,7 +18,6 @@ import { makeStyles } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 
-// TODO: needs cleanup, most styles are from material-ui
 const drawerWidth = 260;
 
 const useStyles = makeStyles(theme => ({
@@ -34,10 +33,11 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth
+      marginLeft: drawerWidth,
+      // marginTop: 30
     },
     height: 50,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -92,11 +92,11 @@ export function Component({
   const [state, setState] = React.useState(false);
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  // const [state, setMobileOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  // const handleDrawerToggle = () => {
+  //   setMobileOpen(!mobileOpen);
+  // };
 
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
   const { data: messageCount } = useQuery(messageCountQuery, {
@@ -104,22 +104,6 @@ export function Component({
     errorPolicy: 'all'
   });
 
-  function backButtonOrMenu() {
-    return (
-      <Fragment>
-        <MenuIcon
-          onClick={handleDrawerToggle}
-          className={`${css(styles.userAvatar)} guard-menu-icon`}
-        />
-        <NotificationBell
-          user={authState.user}
-          history={history}
-          data={data}
-          messageCount={messageCount}
-        />
-      </Fragment>
-    );
-  }
 
   function communityName() {
     if (authState.id && authState.community) {
@@ -150,7 +134,7 @@ export function Component({
       </Link>
     );
   }
-  const toggleDrawer = event => {
+  const handleDrawerToggle = event => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
@@ -191,7 +175,7 @@ export function Component({
             <Drawer
               variant="temporary"
               anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-              open={mobileOpen}
+              open={state}
               onClose={handleDrawerToggle}
               classes={{
                 paper: classes.drawerPaper
@@ -201,9 +185,10 @@ export function Component({
               }}
             >
               <SideMenu
-                toggleDrawer={toggleDrawer}
+                toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                open={state}
               />
             </Drawer>
           </Hidden>
@@ -216,14 +201,16 @@ export function Component({
               open
             >
               <SideMenu
-                toggleDrawer={toggleDrawer}
+                toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                open={state}
               />
             </Drawer>
           </Hidden>
         </nav>
       )}
+      <br />
       <br />
       <br />
     </div>
