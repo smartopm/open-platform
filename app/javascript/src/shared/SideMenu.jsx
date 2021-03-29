@@ -6,14 +6,15 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
   const history = useHistory();
-  const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
+  const { pathname } = useLocation()
+  const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: ''});
 
   /**
    * @param {Event} event browser event from clicked icon
@@ -26,7 +27,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
   function routeTo(event, item) {
     
     if (item.subMenu) {
-      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name });
+      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name});
       return;
     }
     // close the menu only on small screens
@@ -35,13 +36,14 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
     }
     history.push(item.routeProps.path);
   }
+
   return (
     <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer}>
       <List>
         {menuItems.map(menuItem => (
             menuItem.accessibleBy.includes(userType) ? (
               <Fragment key={menuItem.name}>
-                <ListItem button onClick={event => routeTo(event, menuItem)} selected={currentMenu.name === menuItem.name}>
+                <ListItem button onClick={event => routeTo(event, menuItem)} selected={pathname === menuItem.routeProps.path}>
                   <ListItemIcon className={`${css(styles.listItemIcon)}`}>
                     {menuItem.styleProps?.icon}
                   </ListItemIcon>
@@ -63,7 +65,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
                     {menuItem.subMenu && 
                       menuItem.subMenu.map(item => (
                         item.accessibleBy.includes(userType) ? (
-                          <ListItem button key={item.name} onClick={event => routeTo(event, item)} selected={currentMenu.name === item.name}>
+                          <ListItem button key={item.name} onClick={event => routeTo(event, item)} selected={pathname === item.routeProps.path}>
                             {/* This is just a placeholder for icons to keep some padding */}
                             <ListItemIcon />
                             <ListItemText primary={item.name} />
