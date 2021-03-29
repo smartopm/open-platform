@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { waitFor } from '@testing-library/react';
+import { waitFor, act } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { mount } from 'enzyme'
 import LoginScreen from '../components/AuthScreens/LoginScreen'
@@ -40,15 +40,16 @@ describe('Login screen', () => {
       }
     }
   ]
+
   const loginWrapper = mount(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <BrowserRouter>
-        <LoginScreen />
-      </BrowserRouter>
-    </MockedProvider>
-  )
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <LoginScreen />
+        </BrowserRouter>
+      </MockedProvider>
+    )
   it('should have a title of an h4', () => {
-    expect(loginWrapper.find('h4')).toHaveLength(1)
+    expect(loginWrapper.find('h4')).toHaveLength(1);
   })
   it('should have a welcome text', async () => {
     await waitFor(() => {
@@ -76,11 +77,5 @@ describe('Login screen', () => {
   it('should show trouble logging in section', () => {
     expect(loginWrapper.find('u').text()).toMatch(/don't have an account?/i)
     expect(loginWrapper.find('#trouble-logging-div').exists()).toBe(true)
-    
-    loginWrapper.find('#trigger-modal-dialog').at(0).simulate('click', {})
-
-    expect(loginWrapper.find('h6').text()).toMatch(/to request your login information, email/i)
-    expect(loginWrapper.find("input[type='email']").exists()).toBe(true)
-    expect(loginWrapper.find("input[type='number']").exists()).toBe(true)
   })
 })
