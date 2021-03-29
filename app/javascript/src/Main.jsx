@@ -89,14 +89,17 @@ export function Component({
   history,
   backTo
 }) {
-  const [state, setState] = React.useState(false);
+  // const [state, setState] = React.useState(false);
   const classes = useStyles();
   const theme = useTheme();
-  // const [state, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  // const handleDrawerToggle = () => {
-  //   setMobileOpen(!mobileOpen);
-  // };
+  const handleDrawerToggle = (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setMobileOpen(!mobileOpen);
+  };
 
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
   const { data: messageCount } = useQuery(messageCountQuery, {
@@ -134,12 +137,12 @@ export function Component({
       </Link>
     );
   }
-  const handleDrawerToggle = event => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setState(!state);
-  };
+  // const toggleDrawer = event => {
+  //   if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+  //     return;
+  //   }
+  //   setState(!state);
+  // };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -175,7 +178,7 @@ export function Component({
             <Drawer
               variant="temporary"
               anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-              open={state}
+              open={mobileOpen}
               onClose={handleDrawerToggle}
               classes={{
                 paper: classes.drawerPaper
@@ -188,7 +191,6 @@ export function Component({
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
-                open={state}
               />
             </Drawer>
           </Hidden>
@@ -204,12 +206,12 @@ export function Component({
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
-                open={state}
               />
             </Drawer>
           </Hidden>
         </nav>
       )}
+      <br />
       <br />
       <br />
       <br />

@@ -29,7 +29,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType }) => {
       setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name });
       return;
     }
-    toggleDrawer(event);
+    // find a way of closing the menu only on small screens
+    // toggleDrawer(event);
     history.push(item.routeProps.path);
   }
   return (
