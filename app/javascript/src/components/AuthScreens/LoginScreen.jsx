@@ -249,6 +249,7 @@ export default function LoginScreen() {
       </div>
 
       <div
+        data-testid="trouble-logging-div"
         id="trouble-logging-div"
         className="row justify-content-center align-items-center"
       >
