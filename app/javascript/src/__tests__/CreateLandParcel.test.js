@@ -1,19 +1,43 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import '@testing-library/jest-dom/extend-expect'
 import 'leaflet'
 import 'leaflet-draw'
 import CreateLandParcel from '../components/LandParcels/CreateLandParcel'
+import { AddNewProperty } from '../graphql/mutations'
+import { Spinner } from '../shared/Loading';
 
 jest.mock('leaflet-draw')
 describe('Land Property Component', () => {
-  it('it should render add property form', () => {
+  const mocks =
+    {
+      request: {
+        query: AddNewProperty,
+        variables: { 
+          parcelNumber: '', 
+          address1: '', 
+          address2: '', 
+          city: '', 
+          postalCode: '', 
+          stateProvince: '', 
+          parcelType: '', 
+          country: '', 
+          longX: 0, 
+          latY: 0 ,
+          geom: null,
+          valuationFields: [],
+          ownershipFields: []
+        },
+      },
+      result: { data: { PropertyCreate: { landParcel: { id: "7867943" } } } },
+    }
+  it('it should render add property form', async () => {
       const refetch = jest.fn()
     const container = render(
-      <MockedProvider>
+      <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <CreateLandParcel refetch={refetch} />
         </BrowserRouter>
@@ -55,5 +79,18 @@ describe('Land Property Component', () => {
       expect(parcelType.value).toBe("This is parcel type")
 
       expect(parcelButton).toBeInTheDocument()
+      expect(container.queryByTestId('custom-dialog-button')).toBeInTheDocument()
+
+      fireEvent.click(container.queryByTestId('custom-dialog-button'))
+
+      const loader = render(<Spinner />);
+      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+      await waitFor(
+        () => {
+          expect(container.queryByText("Property added successfully")).toBeInTheDocument()
+        },
+        { timeout: 500 }
+      );
+      fireEvent.click(container.queryByTestId('dialog_cancel'))
   })
 })

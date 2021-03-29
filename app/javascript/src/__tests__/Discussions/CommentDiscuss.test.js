@@ -43,4 +43,41 @@ describe('Discuss component', () => {
       expect(container.queryByText('Create a discussion topic')).not.toBeInTheDocument()
     })
   })
+
+  it('renders Discuss component incorrectly', async () => {
+    const errorMocks = [
+      {
+        request: {
+          query: DiscussionMutation,
+          variables: { title: 'title', description: 'description' },
+        },
+        result: { data: { discussionCreate: { discussion: { id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4' } } } },
+      },
+    ];
+    const container = render(
+      <MockedProvider mocks={errorMocks} addTypename={false}>
+        <BrowserRouter>
+          <Discuss
+            update={jest.fn}
+          />
+        </BrowserRouter>
+      </MockedProvider>
+    )
+    const title = container.queryByTestId('title')
+    const description = container.queryByTestId('description')
+    expect(title).toBeInTheDocument()
+    expect(description).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.change(title, { target: { value: 'title' } })
+      expect(title.value).toBe('title')
+
+      fireEvent.change(description, { target: { value: 'description' } })
+      expect(description.value).toBe('description')
+
+      const button = container.queryByTestId('button')
+      fireEvent.click(button)
+      expect(container.queryByText('Create a discussion topic')).not.toBeInTheDocument()
+    })
+  })
 })

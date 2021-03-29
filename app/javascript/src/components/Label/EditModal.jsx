@@ -101,7 +101,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="outlined">
+          <Button onClick={handleClose} color="secondary" variant="outlined" data-testid='cancel_button'>
             CANCEL
           </Button>
           <Button onClick={handleEdit} color="primary" variant="contained" data-testid='button'>

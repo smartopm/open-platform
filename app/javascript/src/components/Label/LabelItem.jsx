@@ -43,6 +43,7 @@ export default function LabelItem({ label, userType, refetch }) {
               aria-haspopup="true"
               onClick={handleOpenMenu}
               dataid={label.id}
+              data-testid='label_icon'
             >
               <MoreVertIcon />
             </IconButton>

@@ -126,7 +126,7 @@ export function CustomizedDialogs({
       {
         actionable && (
           <DialogActions>
-            <Button onClick={handleModal} variant="outlined" color="secondary">
+            <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
               {cancelAction}
             </Button>
             <Button
