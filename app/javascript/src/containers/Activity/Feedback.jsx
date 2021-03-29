@@ -1,4 +1,6 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/no-autofocus */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from '@material-ui/core/styles'
@@ -6,9 +8,8 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import IconButton from '@material-ui/core/IconButton'
 import { useMutation } from 'react-apollo'
-import { createFeedback } from '../../graphql/mutations'
-import Nav from '../../components/Nav'
 import { CircularProgress } from '@material-ui/core'
+import { createFeedback } from '../../graphql/mutations'
 
 const redLike = 'rgb(299, 63, 69)'
 const greenLike = 'rgb(37, 192, 176)'
@@ -77,73 +78,72 @@ export function Feedback(props) {
     }
 
     return (
-        <div>
-            <Nav navName='Feedback' menuButton='back' backTo="/" />
-            <div className={`container ${css(style.feedbackPage)}`}>
-                <div className='row justify-content-around'>
-                    <div className='col-4'>
-                        <IconButton
-                            onClick={handleThumbDown}
-                            className={classes.thumbDownButton}
-                            aria-label='Thumb Down'
-                            data-testid="thumbdown-icon"
-                        >
-                            <ThumbDownIcon className={classes.largeIcon} />
-                        </IconButton>
-                    </div>
-                    <div className='col-4'>
-                        <IconButton
-                            onClick={handleThumbUp}
-                            className={classes.thumbUpButton}
-                            aria-label='Thumb Up'
-                            data-testid="thumbup-icon"
-                        >
-                            {
+      <div>
+        <div className={`container ${css(style.feedbackPage)}`}>
+          <div className='row justify-content-around'>
+            <div className='col-4'>
+              <IconButton
+                onClick={handleThumbDown}
+                className={classes.thumbDownButton}
+                aria-label='Thumb Down'
+                data-testid="thumbdown-icon"
+              >
+                <ThumbDownIcon className={classes.largeIcon} />
+              </IconButton>
+            </div>
+            <div className='col-4'>
+              <IconButton
+                onClick={handleThumbUp}
+                className={classes.thumbUpButton}
+                aria-label='Thumb Up'
+                data-testid="thumbup-icon"
+              >
+                {
                                 isSubmitting ? <CircularProgress size={70} /> : <ThumbUpIcon className={classes.largeIcon} />
                             }
-                        </IconButton>
-                    </div>
-                </div>
-                <br />
-                <br />
-                {isTextAreaOpen && (
-                    <form data-testid='feedback-form'>
-                        <div className='form-group'>
-                            <label htmlFor='feedback'>
-                                We value your feedback. Do you have a suggestion on how we can
-                                improve?
-              </label>
-                            <br />
-                            <textarea
-                                className='form-control'
-                                id='feedback'
-                                rows='4'
-                                name='feedback'
-                                value={feedback}
-                                autoFocus
-                                onChange={(event) => setFeedback(event.target.value)}
-                            />
-                        </div>
-                        <button
-                            type='button'
-                            style={{ float: 'left' }}
-                            className='btn btn-outline-primary '
-                            onClick={handleSkipReview}
-                        >
-                            Skip
-                        </button>
-                        <button
-                            type='button'
-                            style={{ float: 'right' }}
-                            className='btn btn-outline-success '
-                            onClick={handleSubmitFeedback}
-                        >
-                            Submit
-                    </button>
-                    </form>
-                )}
+              </IconButton>
             </div>
+          </div>
+          <br />
+          <br />
+          {isTextAreaOpen && (
+            <form data-testid='feedback-form'>
+              <div className='form-group'>
+                <label htmlFor='feedback'>
+                  We value your feedback. Do you have a suggestion on how we can
+                  improve?
+                </label>
+                <br />
+                <textarea
+                  className='form-control'
+                  id='feedback'
+                  rows='4'
+                  name='feedback'
+                  value={feedback}
+                  autoFocus
+                  onChange={(event) => setFeedback(event.target.value)}
+                />
+              </div>
+              <button
+                type='button'
+                style={{ float: 'left' }}
+                className='btn btn-outline-primary '
+                onClick={handleSkipReview}
+              >
+                Skip
+              </button>
+              <button
+                type='button'
+                style={{ float: 'right' }}
+                className='btn btn-outline-success '
+                onClick={handleSubmitFeedback}
+              >
+                Submit
+              </button>
+            </form>
+                )}
         </div>
+      </div>
     )
 }
 export default withStyles(styles)(Feedback)

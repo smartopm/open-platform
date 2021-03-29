@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import Nav from './Nav';
 
 const useStyles = makeStyles({
   text1: {
@@ -24,12 +23,7 @@ const useStyles = makeStyles({
   }
 });
 export default function MobileMoneyPage() {
-  return (
-    <>
-      <Nav navName="Mobile Money" menuButton="back" backTo="/contact" />
-      <MobileMoney />
-    </>
-  );
+  return <MobileMoney />;
 }
 
 export function MobileMoney() {

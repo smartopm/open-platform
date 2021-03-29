@@ -5,7 +5,6 @@ import { useQuery, useMutation } from 'react-apollo'
 import { TaskQuery, UsersLiteQuery, HistoryQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../shared/Loading'
-import Nav from '../../components/Nav'
 import ErrorPage from '../../components/Error'
 import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
 import { AssignUser } from '../../graphql/mutations'
@@ -44,7 +43,6 @@ export default function TaskUpdate() {
 
   return (
     <>
-      <Nav navName="Task Update" menuButton="back" backTo="/tasks" />
       <div className="container">
         <TaskUpdateForm
           data={data?.task}

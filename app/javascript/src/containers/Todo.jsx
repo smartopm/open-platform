@@ -1,12 +1,11 @@
-/* eslint-disable */
-import React, { Fragment, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
+import { useLocation } from 'react-router'
 import { UpdateNote } from '../graphql/mutations'
 import TodoList from '../components/Notes/TodoList'
-import Nav from '../components/Nav'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
-import { useLocation } from 'react-router'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 
+// eslint-disable-next-line react/prop-types
 export default function Todo({ history }) {
   const authState = useContext(AuthStateContext)
 
@@ -22,7 +21,7 @@ export default function Todo({ history }) {
   }
 
   function saveDate() {
-    let id = userId
+    const id = userId
     noteUpdate({ variables: { id, dueDate: selectedDate } }).then(() => {
       setIsDialogOpen(!isDialogOpen)
     })
@@ -31,28 +30,23 @@ export default function Todo({ history }) {
   const handleDateChange = date => {
     setSelectedDate(new Date(date).toISOString())
   }
+  // this will be handled at the higher level in the routes and in modules
   if (authState.user?.userType !== 'admin') {
     // re-route to home
+    // eslint-disable-next-line react/prop-types
     history.push('/')
   }
-
-  // remove the forward slash and do pattern match for routes and nav name
-  const path = {
-    tasks: 'Tasks',
-    my_tasks: 'My Tasks'
-  }
   return (
-    <Fragment>
-      <Nav navName={path[location.pathname.replace(/\//, '')]} menuButton="back" backTo="/" />
-        <TodoList
-          isDialogOpen={isDialogOpen}
-          handleModal={handleModal}
-          saveDate={saveDate}
-          selectedDate={selectedDate}
-          handleDateChange={handleDateChange}
-          location={location.pathname.replace(/\//, '')}
-          currentUser={authState.user}
-        />
-    </Fragment>
+    <>
+      <TodoList
+        isDialogOpen={isDialogOpen}
+        handleModal={handleModal}
+        saveDate={saveDate}
+        selectedDate={selectedDate}
+        handleDateChange={handleDateChange}
+        location={location.pathname.replace(/\//, '')}
+        currentUser={authState.user}
+      />
+    </>
   )
 }

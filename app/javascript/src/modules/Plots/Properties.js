@@ -12,6 +12,6 @@ export default {
   styleProps: {
     icon: <HomeWorkIcon />
   },
-  name: 'Properies',
+  name: 'Properties',
   accessibleBy: ['admin']
 };

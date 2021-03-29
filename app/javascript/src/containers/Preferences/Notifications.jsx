@@ -1,13 +1,11 @@
-/* eslint-disable */
 import React, { Fragment, useState, useContext, useEffect } from 'react'
-import Nav from '../../components/Nav'
 import { useMutation, useQuery } from 'react-apollo'
+import { Snackbar } from '@material-ui/core'
 import NotificationPage from '../../components/NotificationPage'
 import { NotificationPreference } from '../../graphql/mutations'
 import { UserLabelsQuery } from '../../graphql/queries'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../shared/Loading'
-import { Snackbar } from '@material-ui/core'
 
 export default function Notifications() {
     const authState = useContext(AuthStateContext)
@@ -66,21 +64,22 @@ export default function Notifications() {
     }
     if(labelsLoading) return <Loading />
     return (
-        <div>
-            <Fragment>
-                <Nav navName="Preferences" menuButton="back" backTo="/" />
-                <Snackbar
-                    open={snackBarOpen} autoHideDuration={3000}
-                    onClose={() => setOpenSnackBar(!snackBarOpen)}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                    message={message}
-                />
-                 <NotificationPage
-                    handleChange={handleChange}
-                    checkedState={checkedState}
-                    loading={loading}
-                    handleSave={handleSave} />
-            </Fragment>
-        </div>
+      <div>
+        <>
+          <Snackbar
+            open={snackBarOpen}
+            autoHideDuration={3000}
+            onClose={() => setOpenSnackBar(!snackBarOpen)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            message={message}
+          />
+          <NotificationPage
+            handleChange={handleChange}
+            checkedState={checkedState}
+            loading={loading}
+            handleSave={handleSave}
+          />
+        </>
+      </div>
     )
 }

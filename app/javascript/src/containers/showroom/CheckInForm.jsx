@@ -6,7 +6,6 @@ import { css, StyleSheet } from "aphrodite";
 import { useMutation } from "react-apollo";
 import { infoSource } from "../../utils/constants";
 import { Footer } from "../../components/Footer";
-import Nav from "../../components/Nav";
 import { createShowroomEntry, EntryRequestCreate } from "../../graphql/mutations.js";
 
 export default function ClientForm({ history }) {
@@ -39,8 +38,6 @@ export default function ClientForm({ history }) {
   };
   return (
     <Fragment>
-      <Nav navName="Showroom Form" menuButton="back" backTo="/showroom_kiosk" />
-
       <div className="container">
         <div className="row justify-content-center align-items-center">
           <h3>Nkwashi Showroom Check-In</h3>

@@ -1,7 +1,8 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable react/prop-types */
 // One Time Passcode Screen
 import React, { Fragment, useState } from 'react'
-import Nav from '../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import Tooltip from '@material-ui/core/Tooltip'
 
@@ -17,14 +18,16 @@ export default function OTPFeedbackScreen({ location }) {
   }
 
   return (
-    <Fragment>
-      <Nav navName={userDetails.success ? "One Time Pass code Sent" : 'Error Sending Code'} menuButton="back" backTo="/" />
+    <>
       <div className={css(styles.passcodeSection)} data-testid="feedback">
         {
-          userDetails.success && <p>
-            The One Time Pass code was successfully sent to{' '}
+          userDetails.success && (
+          <p>
+            The One Time Pass code was successfully sent to
+            {' '}
             <span className={css(styles.user)}>{userDetails.user}</span>
           </p>
+)
         }
         <br />
         <Tooltip title={userDetails.success ? "Click to copy" : ''}>
@@ -44,7 +47,7 @@ export default function OTPFeedbackScreen({ location }) {
           </div>
         )}
       </div>
-    </Fragment>
+    </>
   )
 }
 

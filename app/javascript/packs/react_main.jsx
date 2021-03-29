@@ -240,6 +240,114 @@ const App = () => {
                                 />
                                 <Route exact path="/scan" component={Scan} />
                                 <Route exact path="/search" component={Search} />
+                                <Route path="/id/:id" component={IDCard} />
+                                <Route path="/print/:id" component={IDPrint} />
+                                <Route path="/entry_logs/:userId" component={EntryLogs} />
+                                <Route path="/user" exact component={UserEdit} />
+                                <Route path="/map" component={Map} />
+                                <Route path="/myplot" component={GeoMap} />
+                                <Route path="/mobile_money" component={MobileMoney} />
+                                <Route path="/contact" component={Support} />
+                                <Route path="/settings" component={Notifications} />
+                                <Route path="/otp_sent" component={OTPFeedbackScreen} />
+                                <Route path="/referral" component={UserEdit} />
+                                <Route path="/myaccount/:id" component={UserShow} />
+
+                                {/* requests */}
+                                {/* Guard home is somehow kinda special leaving it now */}
+                                <Route path="/guard_home" component={GuardHome} />
+                                {/* Guard home ends */}
+                                <Route path="/entry_request" component={EntryRequest} />
+                                <Route path="/request/:id/:logs?" component={RequestUpdate} />
+                                <Route path="/request_hos/:id/" component={RequestConfirm} />
+                                <Route path="/request_wait/:id" component={WaitScreen} />
+                                <Route path="/request_status/:id/edit" component={RequestApproval} />
+                                <Route path="/request_status/:id" component={RequestApproval} />
+                                {/* Showroom kiosk routes */}
+                                <Route path="/showroom_kiosk" component={ShowRoom} />
+                                <Route path="/sh_reason" component={VisitingReasonScreen} />
+                                <Route path="/sh_entry" component={VisitingClientForm} />
+                                <Route path="/sh_complete" component={CheckInComplete} />
+                                <Route path="/sh_soon" component={ComingSoon} />
+                                {/* activity */}
+                                <Route path="/feedback" component={Feedback} />
+                                <Route path="/feedback_success" component={FeedbackSuccess} />
+                                <Route path="/message/:id" component={UserMessages} />
+                                <Route path="/campaign-create" component={CampaignCreate} />
+                                {/* <Route path="/campaigns" component={Campaigns} /> */}
+                                <Route path="/campaign/:id" component={CampaignUpdate} />
+                                {/* users */}
+                                {/*Nkwashi account management*/}
+                                {/* <Route
+                                  path="/account"
+                                  component={NkwashiAccountManagement}
+                                /> */}
+                                <Route path="/user/:id/edit" component={UserEdit} />
+                                {/* Still admin route */}
+                                <Route path="/user/:id/logs" component={UserLogs} />
+                                {/* Still admin route */}
+                                <Route
+                                  path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
+                                  component={UserShow}
+                                />
+                                {/* <Route
+                                  path="/timesheet"
+                                  exact
+                                  component={CustodianLogs}
+                                /> */}
+                                <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+                                <Route path="/client_request_from" exact component={ClientRequestForm} />
+                                {/* <Route path="/news" exact component={Posts} /> */}
+                                <Route path="/news/:slug" exact component={Posts} />
+                                {/* <Route
+                                  path="/discussions"
+                                  exact
+                                  component={Discussions}
+                                /> */}
+                                <Route path="/discussions/:id" exact component={DiscussonPage} />
+                                {/* <Route path="/business" exact component={Businesses} /> */}
+                                <Route path="/business/:id" exact component={BusinessProfile} />
+                                {/* Forms */}
+                                {/* <Route path="/forms" component={FormLinks} /> */}
+                                <Route path="/form/:formId?/:formName?" component={FormPage} />
+                                <Route path="/edit_form/:formId" component={FormBuilderPage} />
+                                <Route
+                                  path="/user_form/:formId?/:userId?/:formName?/:type?"
+                                  component={FormPage}
+                                />
+                                <AdminRoutes>
+                                  <Switch>
+                                    {/* <Route path="/users" exact component={UsersList} /> */}
+                                    <Route path="/users/import" component={UsersImport} />
+                                    <Route path="/users/stats" component={StatsPage} />
+                                    {/* <Route path="/messages" component={AllMessages} /> */}
+                                    <Route path="/showroom_logs" component={ShowroomLogs} />
+                                    <Route path="/notes" component={AllNotes} />
+                                    <Route path="/tasks/:taskId" exact component={TaskUpdate} />
+                                    <Route path="/tasks" component={Todo} />
+                                    <Route
+                                      exact
+                                      path="/todo/:taskId"
+                                      render={({ match }) => (
+                                        <Redirect to={`/tasks/${match.params.taskId}`} />
+                                      )}
+                                    />
+                                    <Route exact path="/todo" render={() => <Redirect to="/tasks" />} />
+                                    <Route path="/my_tasks" component={Todo} />
+                                    <Route path="/feedbacks" component={FeedbackPage} />
+                                    <Route path="/event_logs" component={EventLogs} />
+                                    {/* <Route path="/labels" component={Labels} /> */}
+                                    {/* <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} /> */}
+                                    {/* <Route path="/land_parcels" component={LandParcel} /> */}
+
+                                    <Route path="/new/user" exact component={UserEdit} />
+                                    <Route path="/comments" exact component={CommentsPage} />
+                                    <Route path="/community" component={CommunitySettings} />
+                                    {/* <Route path="/payments" component={Payments}  /> */}
+                                    <Route path="/mail_templates" component={MailTemplates} />
+                                    <Route path="/visit_request" component={EntryRequest} />
+                                  </Switch>
+                                </AdminRoutes>
                                 <Route render={() => <ErrorPage title="Sorry!! We couldn't find this page" />} />
                               </Switch>
                             )}
@@ -247,11 +355,11 @@ const App = () => {
                         {/* <Route path="/" exact component={Home} /> */}
                         {/* <Route path="/scan" component={Scan} />
                         <Route path="/search" component={Search} /> */}
-                        <Route path="/id/:id" component={IDCard} />
+                        {/* <Route path="/id/:id" component={IDCard} />
                         <Route path="/print/:id" component={IDPrint} />
-                        <Route path="/entry_logs/:userId" component={EntryLogs} />
+                        <Route path="/entry_logs/:userId" component={EntryLogs} /> */}
                         {/* <Route path="/entry_logs" component={EntryLogs} /> */}
-                        <Route path="/user" exact component={UserEdit} />
+                        {/* <Route path="/user" exact component={UserEdit} />
                         <Route path="/map" component={Map} />
                         <Route path="/myplot" component={GeoMap} />
                         <Route path="/mobile_money" component={MobileMoney} />
@@ -259,39 +367,37 @@ const App = () => {
                         <Route path="/settings" component={Notifications} />
                         <Route path="/otp_sent" component={OTPFeedbackScreen} />
                         <Route path="/referral" component={UserEdit} />
-                        <Route path="/myaccount/:id" component={UserShow} />
+                        <Route path="/myaccount/:id" component={UserShow} /> */}
                         {/* new routes => guards */}
-                        <Route path="/guard_home" component={GuardHome} />
                         {/* requests */}
+                        {/* <Route path="/guard_home" component={GuardHome} />
                         <Route path="/entry_request" component={EntryRequest} />
                         <Route path="/request/:id/:logs?" component={RequestUpdate} />
                         <Route path="/request_hos/:id/" component={RequestConfirm} />
                         <Route path="/request_wait/:id" component={WaitScreen} />
                         <Route path="/request_status/:id/edit" component={RequestApproval} />
                         <Route path="/request_status/:id" component={RequestApproval} />
-                        {/* Showroom kiosk routes */}
+                       
                         <Route path="/showroom_kiosk" component={ShowRoom} />
                         <Route path="/sh_reason" component={VisitingReasonScreen} />
                         <Route path="/sh_entry" component={VisitingClientForm} />
                         <Route path="/sh_complete" component={CheckInComplete} />
                         <Route path="/sh_soon" component={ComingSoon} />
-                        {/* activity */}
+                       
                         <Route path="/feedback" component={Feedback} />
                         <Route path="/feedback_success" component={FeedbackSuccess} />
                         <Route path="/message/:id" component={UserMessages} />
                         <Route path="/campaign-create" component={CampaignCreate} />
-                        {/* <Route path="/campaigns" component={Campaigns} /> */}
+                        <Route path="/campaigns" component={Campaigns} /> 
                         <Route path="/campaign/:id" component={CampaignUpdate} />
                         {/* users */}
                         {/*Nkwashi account management*/}
                         {/* <Route
                           path="/account"
                           component={NkwashiAccountManagement}
-                        /> */}
+                        /> 
                         <Route path="/user/:id/edit" component={UserEdit} />{' '}
-                        {/* Still admin route */}
                         <Route path="/user/:id/logs" component={UserLogs} />{' '}
-                        {/* Still admin route */}
                         <Route
                           path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
                           component={UserShow}
@@ -300,65 +406,26 @@ const App = () => {
                           path="/timesheet"
                           exact
                           component={CustodianLogs}
-                        /> */}
+                        /> 
                         <Route path="/timesheet/:id" exact component={EmployeeLogs} />
                         <Route path="/client_request_from" exact component={ClientRequestForm} />
-                        {/* <Route path="/news" exact component={Posts} /> */}
+                        {/* <Route path="/news" exact component={Posts} />
                         <Route path="/news/:slug" exact component={Posts} />
                         {/* <Route
                           path="/discussions"
                           exact
                           component={Discussions}
-                        /> */}
+                        /> 
                         <Route path="/discussions/:id" exact component={DiscussonPage} />
-                        {/* <Route path="/business" exact component={Businesses} /> */}
+                        <Route path="/business" exact component={Businesses} />
                         <Route path="/business/:id" exact component={BusinessProfile} />
-                        {/* Forms */}
-                        {/* <Route path="/forms" component={FormLinks} /> */}
+                        <Route path="/forms" component={FormLinks} />
                         <Route path="/form/:formId?/:formName?" component={FormPage} />
                         <Route path="/edit_form/:formId" component={FormBuilderPage} />
                         <Route
                           path="/user_form/:formId?/:userId?/:formName?/:type?"
                           component={FormPage}
-                        />
-                        <AdminRoutes>
-                          <Switch>
-                            <Route
-                              path="/client_request_from"
-                              exact
-                              component={ClientRequestForm}
-                            />
-                            {/* <Route path="/users" exact component={UsersList} /> */}
-                            <Route path="/users/import" component={UsersImport} />
-                            <Route path="/users/stats" component={StatsPage} />
-                            {/* <Route path="/messages" component={AllMessages} /> */}
-                            <Route path="/showroom_logs" component={ShowroomLogs} />
-                            <Route path="/notes" component={AllNotes} />
-                            <Route path="/tasks/:taskId" exact component={TaskUpdate} />
-                            <Route path="/tasks" component={Todo} />
-                            <Route
-                              exact
-                              path="/todo/:taskId"
-                              render={({ match }) => (
-                                <Redirect to={`/tasks/${match.params.taskId}`} />
-                              )}
-                            />
-                            <Route exact path="/todo" render={() => <Redirect to="/tasks" />} />
-                            <Route path="/my_tasks" component={Todo} />
-                            <Route path="/feedbacks" component={FeedbackPage} />
-                            <Route path="/event_logs" component={EventLogs} />
-                            {/* <Route path="/labels" component={Labels} /> */}
-                            {/* <Route path={["/action_flows", "/action_flows/new", "/action_flows/:id/edit"]} exact component={ActionFlows} /> */}
-                            {/* <Route path="/land_parcels" component={LandParcel} /> */}
-
-                            <Route path="/new/user" exact component={UserEdit} />
-                            <Route path="/comments" exact component={CommentsPage} />
-                            <Route path="/community" component={CommunitySettings} />
-                            {/* <Route path="/payments" component={Payments}  /> */}
-                            <Route path="/mail_templates" component={MailTemplates} />
-                            <Route path="/visit_request" component={EntryRequest} />
-                          </Switch>
-                        </AdminRoutes>
+                        /> */}
                       </Switch>
                     </LoggedInOnly>
                   </Switch>

@@ -5,7 +5,6 @@ import { useQuery, useMutation } from 'react-apollo'
 import ReactGA from 'react-ga'
 import UserInformation from '../components/UserInformation'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
-import Nav from '../components/Nav'
 import Loading from '../shared/Loading'
 import { UserQuery, UserAccountQuery } from '../graphql/queries'
 import { AddActivityLog, SendOneTimePasscode } from '../graphql/mutations'
@@ -50,10 +49,7 @@ export default ({ history }) => {
     return <ErrorPage title={error.message || error} /> // error could be a string sometimes
   }
   return (
-    <>
-      {history.location.state?.from 
-        ? <Nav navName="Identification" menuButton="cancel" backTo={`/${history.location.state.from}?offset=${history.location.state.offset}`} />
-        : <Nav navName="Identification" menuButton="cancel" backTo="/" />}
+    <>      
       <UserInformation
         data={data}
         accountData={accountData}
