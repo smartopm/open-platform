@@ -13,6 +13,48 @@ import { MyTaskCountQuery, messageCountQuery } from './graphql/queries';
 import NotificationBell from './components/NotificationBell';
 import ImageAuth from './shared/ImageAuth';
 import modules from './modules';
+import { Hidden, IconButton, useTheme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+
+// TODO: weird stuff is going on with layout and children 
+const drawerWidth = 260;
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex'
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0
+    }
+  },
+  appBar: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth
+    },
+    height: 50,
+    backgroundColor: 'transparent'
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3)
+  }
+}));
 
 export default withRouter(function Nav({
   children,
@@ -48,6 +90,14 @@ export function Component({
   backTo
 }) {
   const [state, setState] = React.useState(false);
+  const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
   const { data: messageCount } = useQuery(messageCountQuery, {
     fetchPolicy: 'cache-and-network',
@@ -57,7 +107,10 @@ export function Component({
   function backButtonOrMenu() {
     return (
       <Fragment>
-        <MenuIcon onClick={toggleDrawer} className={`${css(styles.userAvatar)} guard-menu-icon`} />
+        <MenuIcon
+          onClick={handleDrawerToggle}
+          className={`${css(styles.userAvatar)} guard-menu-icon`}
+        />
         <NotificationBell
           user={authState.user}
           history={history}
@@ -104,28 +157,80 @@ export function Component({
     setState(!state);
   };
   return (
-    <>
-      {authState.loggedIn && (
-        <Drawer open={state} onClose={toggleDrawer}>
-          <SideMenu toggleDrawer={toggleDrawer} menuItems={modules} userType={authState.user.userType} />
-        </Drawer>
-      )}
-      <nav className={`navbar navbar-dark`} style={{ boxShadow, minHeight: '50px' }}>
-        <div className={css(styles.topNav)}>
-          {backButtonOrMenu()}
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar  position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            color="primary"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            className={classes.menuButton}
+            
+          >
+            <MenuIcon />
+          </IconButton>
+          <NotificationBell
+            user={authState.user}
+            history={history}
+            data={data}
+            messageCount={messageCount}
+          />
           <ul
             className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
             style={{ margin: 'auto' }}
           >
             <li>{navName ? navName : communityName()}</li>
           </ul>
-        </div>
-
-        <div className="nav navbar-nav" style={{ width: '100%' }}>
-          {children}
-        </div>
-      </nav>
-    </>
+        </Toolbar>
+      </AppBar>
+      {authState.loggedIn && (
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          <Hidden smUp implementation="css">
+            <Drawer
+              variant="temporary"
+              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              ModalProps={{
+                keepMounted: true 
+              }}
+            >
+              <SideMenu
+                toggleDrawer={toggleDrawer}
+                menuItems={modules}
+                userType={authState.user.userType}
+              />
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              variant="permanent"
+              open
+            >
+              <SideMenu
+                toggleDrawer={toggleDrawer}
+                menuItems={modules}
+                userType={authState.user.userType}
+              />
+            </Drawer>
+          </Hidden>
+        </nav>
+      )}
+      <br />
+      <br />
+      {/* push all children to 260 pixels further
+      <div style={{ marginLeft: 260 }}>
+        {children}
+      </div> */}
+    </div>
   );
 }
 

@@ -48,7 +48,7 @@ export default function NotificationBell({ user, data, messageCount }) {
           )}`}
         onClick={(e) => updateNotification(e)}
       >
-        <NotificationsIcon />
+        <NotificationsIcon color="primary" />
       </Badge>
       <Popover open={open} anchorEl={anchorEl} onClose={handlePopClose}>
         <Typography align='center' className={`${css(styles.popup)}`}>Notifications</Typography>
@@ -62,9 +62,9 @@ export default function NotificationBell({ user, data, messageCount }) {
 const styles = StyleSheet.create({
   rightSideIconAdmin: {
     position: 'absolute',
-    bottom: 0,
-    right: 5,
-    height: 30,
+    bottom: 30,
+    right: 25,
+    height: 20,
     ':hover': {
       cursor: 'pointer'
     }
