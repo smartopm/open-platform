@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { InvoicesQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import InvoiceList, { renderInvoice } from '../../components/Payments/InvoiceList';
+import InvoiceList, { renderInvoice } from '../../modules/Payments/Components/InvoiceList';
 import currency from '../../__mocks__/currency';
 
 describe('Invoice Item Component', () => {

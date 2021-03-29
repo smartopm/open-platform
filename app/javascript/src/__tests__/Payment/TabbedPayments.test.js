@@ -3,7 +3,7 @@ import { render, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import TabbedPayment from '../../components/Payments/TabbedPayments';
+import TabbedPayment from '../../modules/Payments/Components/TabbedPayments';
 
 describe('Tabbed Payment Component', () => {
   const authState = {

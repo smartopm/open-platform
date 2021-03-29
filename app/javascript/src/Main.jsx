@@ -18,7 +18,7 @@ import { makeStyles } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 
-// TODO: weird stuff is going on with layout and children 
+// TODO: needs cleanup, most styles are from material-ui
 const drawerWidth = 260;
 
 const useStyles = makeStyles(theme => ({
@@ -226,10 +226,6 @@ export function Component({
       )}
       <br />
       <br />
-      {/* push all children to 260 pixels further
-      <div style={{ marginLeft: 260 }}>
-        {children}
-      </div> */}
     </div>
   );
 }

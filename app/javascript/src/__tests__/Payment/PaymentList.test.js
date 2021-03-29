@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { AllEventLogsQuery, TransactionsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
-import PaymentList, { renderPayment } from '../../components/Payments/PaymentList';
+import PaymentList, { renderPayment } from '../../modules/Payments/Components/PaymentList';
 import currency from '../../__mocks__/currency';
 
 describe('Payment List Item Component', () => {
