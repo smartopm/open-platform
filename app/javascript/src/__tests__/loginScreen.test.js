@@ -1,11 +1,12 @@
 /* eslint-disable */
 import React from 'react'
-import { mount } from 'enzyme'
-import { LoginScreen } from '../components/AuthScreens/LoginScreen'
-import { createClient } from '../utils/apollo'
-import { loginPhone } from '../graphql/mutations'
-import { ApolloProvider } from 'react-apollo'
 import { BrowserRouter } from 'react-router-dom'
+import { waitFor, act } from '@testing-library/react';
+import { MockedProvider } from '@apollo/react-testing';
+import { mount } from 'enzyme'
+import LoginScreen from '../components/AuthScreens/LoginScreen'
+import { loginPhone } from '../graphql/mutations'
+import { CurrentCommunityQuery } from '../graphql/queries/community';
 
 describe('Login screen', () => {
   const mocks = [
@@ -14,30 +15,46 @@ describe('Login screen', () => {
         query: loginPhone,
         variables: { phoneNumber: '260971500748' }
       },
-      //  data.loginPhoneStart.user
       result: {
         data: {
           loginPhoneStart: {
             id: '11cdad78-5a04-4026-828c-17290a2c44b6',
             phoneNumber: '260971500748',
-            __typename: 'User'
+          }
+        }
+      }
+    },
+    {
+      request: {
+        query: CurrentCommunityQuery
+      },
+      result: {
+        data: {
+          currentCommunity: {
+            imageUrl: 'https://dev.dgdp.site/rails/active_storage/blobs/eyJ.png',
+            id: '8d66a68a-ded4-4f95-b9e2-62811d2f395f',
+            name: 'Test Community',
+            supportEmail: [{email: 'support@test.com', category: 'customer_care'}],
           }
         }
       }
     }
   ]
+
   const loginWrapper = mount(
-    <BrowserRouter>
-      <ApolloProvider client={createClient} mocks={mocks}>
-        <LoginScreen />
-      </ApolloProvider>
-    </BrowserRouter>
-  )
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <LoginScreen />
+        </BrowserRouter>
+      </MockedProvider>
+    )
   it('should have a title of an h4', () => {
-    expect(loginWrapper.find('h4')).toHaveLength(1)
+    expect(loginWrapper.find('h4')).toHaveLength(1);
   })
-  it('should have a welcome text', () => {
-    expect(loginWrapper.find('h4').text()).toContain('Welcome to Nkwashi')
+  it('should have a welcome text', async () => {
+    await waitFor(() => {
+      expect(loginWrapper.find('h4').text()).toContain('Welcome to Test Community')
+    }, 100);
   })
   it('should contain a nav with an arrow icon', () => {
     expect(loginWrapper.find('nav')).toHaveLength(1)
@@ -55,5 +72,10 @@ describe('Login screen', () => {
   })
   it('should have a button', () => {
     expect(loginWrapper.find('button').exists()).toBe(true)
+  })
+
+  it('should show trouble logging in section', () => {
+    expect(loginWrapper.find('u').text()).toMatch(/don't have an account?/i)
+    expect(loginWrapper.find('#trouble-logging-div').exists()).toBe(true)
   })
 })

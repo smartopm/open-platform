@@ -21,6 +21,7 @@ export const CurrentCommunityQuery = gql`
       imageUrl
       id
       name
+      supportEmail
     }
   }
 `;
