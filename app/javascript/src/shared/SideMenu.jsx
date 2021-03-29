@@ -11,7 +11,6 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
   const history = useHistory();
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
@@ -25,6 +24,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
    * @todo automatically open new menu when another is clicked while current is still open
    */
   function routeTo(event, item) {
+    
     if (item.subMenu) {
       setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name });
       return;
@@ -41,7 +41,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
         {menuItems.map(menuItem => (
             menuItem.accessibleBy.includes(userType) ? (
               <Fragment key={menuItem.name}>
-                <ListItem button onClick={event => routeTo(event, menuItem)}>
+                <ListItem button onClick={event => routeTo(event, menuItem)} selected={currentMenu.name === menuItem.name}>
                   <ListItemIcon className={`${css(styles.listItemIcon)}`}>
                     {menuItem.styleProps?.icon}
                   </ListItemIcon>
@@ -63,7 +63,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
                     {menuItem.subMenu && 
                       menuItem.subMenu.map(item => (
                         item.accessibleBy.includes(userType) ? (
-                          <ListItem button key={item.name} onClick={event => routeTo(event, item)}>
+                          <ListItem button key={item.name} onClick={event => routeTo(event, item)} selected={currentMenu.name === item.name}>
                             {/* This is just a placeholder for icons to keep some padding */}
                             <ListItemIcon />
                             <ListItemText primary={item.name} />
