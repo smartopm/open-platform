@@ -132,5 +132,8 @@ module Types
     # email_template
     field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
     field :email_template_update, mutation: Mutations::EmailTemplate::TemplateUpdate
+
+    # substatus_logs
+    field :substatus_log_update, mutation: Mutations::SubstatusLog::SubstatusLogUpdate
   end
 end

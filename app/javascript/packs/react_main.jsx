@@ -223,20 +223,30 @@ const App = () => {
                                 {modules.map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => (
-                                      <Route exact {...sub.routeProps} key={sub.name} />
+                                      <Route {...sub.routeProps} key={sub.name} />
                                     ));
                                   }
                                   if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route exact {...module.routeProps} key={module.name} />;
+                                    return <Route {...module.routeProps} key={module.name} />;
                                   }
                                 })}
+                                
+                                {/* routes will need to be moved up here so that the not found can catch them all */}
+                                <Route path="/user/:id/edit" component={UserEdit} />{' '}
+                                <Route path="/user/:id/logs" component={UserLogs} />{' '}
+                                <Route
+                                  path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
+                                  component={UserShow}
+                                />
+                                <Route exact path="/scan" component={Scan} />
+                                <Route exact path="/search" component={Search} />
                                 <Route render={() => <ErrorPage title="Sorry!! We couldn't find this page" />} />
                               </Switch>
                             )}
                         </Consumer>
                         {/* <Route path="/" exact component={Home} /> */}
-                        <Route path="/scan" component={Scan} />
-                        <Route path="/search" component={Search} />
+                        {/* <Route path="/scan" component={Scan} />
+                        <Route path="/search" component={Search} /> */}
                         <Route path="/id/:id" component={IDCard} />
                         <Route path="/print/:id" component={IDPrint} />
                         <Route path="/entry_logs/:userId" component={EntryLogs} />
@@ -278,9 +288,9 @@ const App = () => {
                           path="/account"
                           component={NkwashiAccountManagement}
                         /> */}
-                        <Route path="/user/:id/edit" exact component={UserEdit} />{' '}
+                        <Route path="/user/:id/edit" component={UserEdit} />{' '}
                         {/* Still admin route */}
-                        <Route path="/user/:id/logs" exact component={UserLogs} />{' '}
+                        <Route path="/user/:id/logs" component={UserLogs} />{' '}
                         {/* Still admin route */}
                         <Route
                           path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}

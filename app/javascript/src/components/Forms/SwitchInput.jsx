@@ -11,10 +11,10 @@ import PropTypes from 'prop-types'
  * @description basic switch component 
  * @returns {Node}
  */
-export default function SwitchInput({ name, label, value, handleChange }) {
+export default function SwitchInput({ name, label, value, handleChange, labelPlacement }) {
   return (
     <FormControlLabel
-      labelPlacement="start"
+      labelPlacement={labelPlacement}
       style={{ float: 'left' }}
       control={(
         <Switch
@@ -29,9 +29,14 @@ export default function SwitchInput({ name, label, value, handleChange }) {
   )
 }
 
+SwitchInput.defaultProps = {
+  labelPlacement: 'start',
+}
+
 SwitchInput.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  labelPlacement: PropTypes.string,
   value: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired
 }

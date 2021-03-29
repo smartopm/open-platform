@@ -2,10 +2,9 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
-import { render, fireEvent, screen } from '@testing-library/react'
-import gql from 'graphql-tag'
+import { render, fireEvent } from '@testing-library/react'
 import TodoList from '../components/Notes/TodoList'
-import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../graphql/queries'
+import { flaggedNotes, TaskStatsQuery } from '../graphql/queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()
@@ -15,7 +14,6 @@ const props = {
   saveDate: mck,
   selectedDate: new Date(Date.now()).toISOString(),
   handleDateChange: mck,
-  todoAction: mck,
   location: 'tasks'
 }
 
