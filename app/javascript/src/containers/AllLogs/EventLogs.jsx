@@ -1,10 +1,8 @@
-/* eslint-disable */
 import React, { useState, useContext } from "react";
 import { useQuery } from "react-apollo";
-import Nav from "../../components/Nav";
-import { Context as AuthStateContext } from "../Provider/AuthStateProvider.js";
-import Loading from "../../shared/Loading.jsx";
-import { AllEventLogsQuery } from "../../graphql/queries.js";
+import { Context as AuthStateContext } from "../Provider/AuthStateProvider";
+import Loading from "../../shared/Loading";
+import { AllEventLogsQuery } from "../../graphql/queries";
 import ErrorPage from "../../components/Error";
 import Events from "../../components/Events"
 
@@ -37,15 +35,14 @@ const AllEventLogs = (history, authState) => {
   }
   return (
     <>
-    <Nav menuButton="back" navName="Logs" boxShadow={"none"}  backTo="/"/>
-    <Events
-      data={data}
-      previousPage={handlePreviousPage}
-      offset={offset}
-      nextPage={handleNextPage}
-      router={history}
-      userToken={authState.token}
-    />
+      <Events
+        data={data}
+        previousPage={handlePreviousPage}
+        offset={offset}
+        nextPage={handleNextPage}
+        router={history}
+        userToken={authState.token}
+      />
     </>
   );
 };

@@ -1,6 +1,5 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState } from 'react'
-import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { allNotes } from '../../graphql/queries'
 import Loading from '../../shared/Loading'
@@ -28,8 +27,7 @@ export default function Notes() {
   }
 
   return (
-    <Fragment>
-      <Nav navName="Notes" menuButton="back" backTo="/" />
+    <>
 
       <div className="container">
         {data.allNotes.length ? (
@@ -38,15 +36,20 @@ export default function Notes() {
               <hr />
               <p>
                 <b>
-                  <a style={{color: 'black'}} href={`/user/${note.author.id}`}>{note.author.name}</a>{' '}
-                </b>{' '}
-                created a note for{' '}
+                  <a style={{color: 'black'}} href={`/user/${note.author.id}`}>{note.author.name}</a>
+                  {' '}
+                </b>
+                {' '}
+                created a note for
+                {' '}
                 <b>
                   <a style={{color: 'black'}} href={`/user/${note.user.id}`}>{note.user.name}</a>
-                </b>{' '}
-                on{' '}
+                </b>
+                {' '}
+                on
+                {' '}
                 <i style={{ color: 'grey' }}>
-                <DateContainer date={note.createdAt} />
+                  <DateContainer date={note.createdAt} />
                 </i>
                 <br />
                 {note.body}
@@ -79,6 +82,6 @@ export default function Notes() {
           </nav>
         </div>
       </div>
-    </Fragment>
+    </>
   )
 }

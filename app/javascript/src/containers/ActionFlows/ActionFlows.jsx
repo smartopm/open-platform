@@ -4,7 +4,6 @@ import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 import { useLocation } from 'react-router'
-import Nav from '../../components/Nav'
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
@@ -163,7 +162,6 @@ export default function ActionFlows() {
 
   return (
     <>
-      <Nav navName="Workflow" menuButton="back" backTo="/" />
       <div className="container">
         <ActionFlowModal
           open={open}

@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import IdCardPage, { UserIDDetail } from '../../containers/IdCard';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('UserId Detail component', () => {
   const data = {
     user: {
@@ -24,7 +23,7 @@ describe('UserId Detail component', () => {
     expect(container.queryByText('This "QR Code" is a unique identifier for you Nkwashi account and can be used at the main gate instead of writing your contact information manually. Our goal is to provide fast, easy and secure access.')).toBeInTheDocument();
     expect(container.queryByTestId('visiting_hours').textContent).toContain('Sunday: Off')
     expect(container.queryByTestId('visiting_hours').textContent).toContain('Saturday: 8:00 - 12:00')
-    expect(container.queryByTestId('visiting_hours').textContent).toContain('Monday - Friday: 8:00 - 16:00')
+    expect(container.queryByTestId('visiting_hours').textContent).toContain('Monday - Friday:8:00 - 16:00')
   });
 
 //   test the mother component here

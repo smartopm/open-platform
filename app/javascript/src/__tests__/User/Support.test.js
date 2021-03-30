@@ -8,7 +8,6 @@ import Support from '../../containers/Support';
 import { Context } from '../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../utils/apollo';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Support main page', () => {
   const data = {
     user: {
@@ -34,6 +33,5 @@ it('renders the support page correctly', () => {
       </ApolloProvider>
     );
     expect(container.queryByText('Sales Support')).toBeInTheDocument()
-    expect(container.queryByText('Contact')).toBeInTheDocument()
   });
 });

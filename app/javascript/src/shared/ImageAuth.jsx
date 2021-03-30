@@ -5,7 +5,6 @@ import Avatar from '@material-ui/core/Avatar'
 import { useWindowDimensions } from '../utils/customHooks'
 import { Spinner } from './Loading'
 import { CurrentCommunityQuery } from '../graphql/queries/community'
-import colors from '../themes/nkwashi/colors'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
 export default function ImageAuth({ imageLink, token, className, type, alt }) {
@@ -38,7 +37,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if(isLoading || loading) return <Spinner />
-  if(!loading && !error && !imageLink || isError) return <span data-testid="community_name" style={{ color: colors.textColor }}>{data?.currentCommunity.name}</span>
+  if(!loading && !error && !imageLink || isError) return <span data-testid="community_name">{data?.currentCommunity.name}</span>
   if (type === 'image') {
     return <img data-testid="authenticated_image" src={response.url} className={className} alt={alt} />
   }

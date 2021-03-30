@@ -6,7 +6,6 @@ import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'rea
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
 import { LandParcelGeoData, LandParcel } from '../graphql/queries'
-import Nav from '../components/Nav'
 import LandParcelMarker from '../components/Map/LandParcelMarker'
 import PointsOfInterestMarker from '../components/Map/PointsOfInterestMarker'
 import LandParcelLegend from '../components/Map/LandParcelLegend'
@@ -121,7 +120,6 @@ function onEachPoiLayerFeature(feature, layer){
         }}
        />
        <div data-testid="leaflet-map-container">
-         <Nav navName="Explore" menuButton="back" backTo="/" />
          <style
            // eslint-disable-next-line react/no-danger
            dangerouslySetInnerHTML={{

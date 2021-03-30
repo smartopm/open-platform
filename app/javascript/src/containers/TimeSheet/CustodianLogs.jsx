@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Fragment, useContext, useState } from 'react'
-import Nav from '../../components/Nav'
+// import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { TimeSheetLogsQuery } from '../../graphql/queries'
 import Spinner from '../../shared/Loading'
@@ -39,7 +39,7 @@ export default function CustodianLogs() {
 
   return (
     <Fragment>
-      <Nav navName="Time Cards" menuButton="back" backTo="/" />
+      {/* <Nav navName="Time Cards" menuButton="back" backTo="/" /> */}
       <br />
       <CustodianTimeSheetLogs data={data} />
       <CenteredContent>

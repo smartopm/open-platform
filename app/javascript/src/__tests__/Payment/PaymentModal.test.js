@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import PaymentModal, { PaymentDetails } from '../../components/Payments/UserTransactions/PaymentModal'
+import PaymentModal, { PaymentDetails } from '../../modules/Payments/Components/UserTransactions/PaymentModal'
 import currency from '../../__mocks__/currency'
 import { UserLandParcel } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';

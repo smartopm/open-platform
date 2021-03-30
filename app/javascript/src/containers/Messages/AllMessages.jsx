@@ -15,7 +15,6 @@ import CenteredContent from '../../components/CenteredContent'
 import ErrorPage from '../../components/Error'
 import MessageList from '../../components/Messaging/MessageList'
 import { Spinner } from '../../shared/Loading';
-import Nav from '../../components/Nav'
 
 const limit = 50
 export default function AllMessages() {
@@ -70,7 +69,6 @@ export default function AllMessages() {
 
     return (
       <>
-        <Nav navName="Messages" menuButton="back" backTo="/" />
         <div className={width > 1000 ? 'container' : 'container-fluid'}>
 
           <OutlinedInput

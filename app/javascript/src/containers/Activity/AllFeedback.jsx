@@ -1,13 +1,12 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState } from 'react'
-import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
-import { allFeedback } from '../../graphql/queries'
-import Loading from '../../shared/Loading'
-import ErrorPage from '../../components/Error'
 import { formatISO9075 } from 'date-fns'
 import ThumbDownIcon from '@material-ui/icons/ThumbDown'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import { allFeedback } from '../../graphql/queries'
+import Loading from '../../shared/Loading'
+import ErrorPage from '../../components/Error'
 
 const limit = 20
 export default function FeedbackPage() {
@@ -28,8 +27,7 @@ export default function FeedbackPage() {
     setOffset(offset - limit)
   }
   return (
-    <Fragment>
-      <Nav navName="Feedback" menuButton="back" backTo="/" />
+    <>
       <div className="container">
         {data.usersFeedback.length ? (
           data.usersFeedback.map(feedback => (
@@ -40,32 +38,49 @@ export default function FeedbackPage() {
                   {' '}
                   <a href={`/user/${feedback.user.id}`}>
                     {feedback.user.name}
-                  </a>{' '}
-                </b>{' '}
-                gave a thumbs{' '}
+                  </a>
+                  {' '}
+                </b>
+                {' '}
+                gave a thumbs
+                {' '}
                 {feedback.isThumbsUp ? (
                   <>
-                    Up <ThumbUpIcon />{' '}
+                    Up 
+                    {' '}
+                    <ThumbUpIcon />
+                    {' '}
                   </>
                 ) : (
                   <>
-                    Down <ThumbDownIcon />{' '}
+                    Down 
+                    {' '}
+                    <ThumbDownIcon />
+                    {' '}
                   </>
-                )}{' '}
-                on{' '}
+                )}
+                {' '}
+                on
+                {' '}
                 <i style={{ color: 'grey' }}>
                   {formatISO9075(new Date(feedback.createdAt))}
                 </i>
                 <br />
-                {feedback.review && <span> Review: {feedback.review} </span>}
+                {feedback.review && (
+                <span>
+                  {' '}
+                  Review:
+                  {feedback.review} 
+                </span>
+)}
               </p>
             </div>
           ))
         ) : (
-          <Fragment>
+          <>
             <br />
             <p className="text-center" data-testid="no-feedback-txt">No Feedback Yet</p>
-          </Fragment>
+          </>
         )}
         <div className="d-flex justify-content-center">
           <nav aria-label="center Page navigation">
@@ -87,6 +102,6 @@ export default function FeedbackPage() {
           </nav>
         </div>
       </div>
-    </Fragment>
+    </>
   )
 }

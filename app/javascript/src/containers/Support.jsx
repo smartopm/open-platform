@@ -1,8 +1,6 @@
-/* eslint-disable */
 import React, { Fragment, useContext } from 'react'
-import Nav from '../components/Nav'
 import { useHistory } from 'react-router-dom'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import SupportCard from '../components/SupportCard'
 
 
@@ -25,12 +23,10 @@ export default function Support() {
   }
 
   return (
-    <Fragment>
-      <Nav navName="Contact" menuButton="back" backTo="/" />
+    <>
       <br />
-
       <SupportCard handleSendMessage={handleSendMessage} user={authState.user} />
-    </Fragment>
+    </>
   )
 }
 

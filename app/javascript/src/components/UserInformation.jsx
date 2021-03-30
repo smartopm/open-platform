@@ -25,7 +25,7 @@ import UserStyledTabs from './User/UserTabs'
 import { TabPanel } from './Tabs'
 import UserFilledForms from './User/UserFilledForms'
 import UserMessages from './Messaging/UserMessages'
-import Transactions from './Payments/UserTransactions/Transactions'
+import Transactions from '../modules/Payments/Components/UserTransactions/Transactions'
 import UserJourney from './User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
 

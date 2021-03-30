@@ -7,14 +7,12 @@ import CreateCampaign from '../../containers/Campaigns/CampaignCreate';
 
 describe('CampaignCreate Component', () => {
   it('renders loader when loading notes', () => {
-    const container = render(
+    render(
       <MockedProvider>
         <BrowserRouter>
           <CreateCampaign />
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.getByText(/Campaign/)).toBeInTheDocument();
   });
 });

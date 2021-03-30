@@ -2,7 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
-import AutogenerateInvoice from '../../components/Payments/AutogenerateInvoice';
+import AutogenerateInvoice from '../../modules/Payments/Components/AutogenerateInvoice';
 import { InvoiceAutogenerationData } from '../../graphql/queries';
 import currency from '../../__mocks__/currency'
 import { Spinner } from '../../shared/Loading';

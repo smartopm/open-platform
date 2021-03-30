@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import PaymentPlan, { renderPlan } from "../../components/Payments/UserTransactions/UserPaymentPlanItem";
+import PaymentPlan, { renderPlan } from "../../modules/Payments/Components/UserTransactions/UserPaymentPlanItem";
 import currency from '../../__mocks__/currency'
 
 describe('Render Payment Plan Item', () => {

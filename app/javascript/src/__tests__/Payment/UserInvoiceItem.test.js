@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import UserInvoiceItem, { renderInvoices } from '../../components/Payments/UserTransactions/UserInvoiceItem';
+import UserInvoiceItem, { renderInvoices } from '../../modules/Payments/Components/UserTransactions/UserInvoiceItem';
 import currency from '../../__mocks__/currency';
 
 describe('Invoice Item Component', () => {
