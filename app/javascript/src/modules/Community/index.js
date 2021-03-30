@@ -8,12 +8,10 @@ import Labels from '../Labels';
 import Campaigns from '../Campaigns';
 import PermitRequestForms from '../Forms/PermitRequestForms';
 
-const Community = () => <div>Community Module</div>;
-
 export default {
   routeProps: {
     path: '',
-    component: Community
+    component: <span />
   },
   styleProps: {
     icon: <GroupIcon />
