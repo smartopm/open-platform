@@ -51,7 +51,7 @@ export default function EditField({ handleClose, data, refetch }) {
               <Button autoFocus variant="contained" type="submit" color="primary" style={{ marginRight: '5px' }}>
                 Save changes
               </Button>
-              <Button onClick={handleClose} variant="outlined" color="secondary">
+              <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
                 Cancel
               </Button>
             </div>

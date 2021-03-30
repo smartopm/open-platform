@@ -28,6 +28,7 @@ export default function CommentCard({ data, refetch }) {
   }
 
   function deleteClick(event) {
+    console.log(event.currentTarget.getAttribute('id'))
     setId(event.currentTarget.getAttribute('id'))
     setImageUrl(event.currentTarget.getAttribute('image'))
     setName(event.currentTarget.getAttribute('name'))
@@ -44,7 +45,7 @@ export default function CommentCard({ data, refetch }) {
             {!edit && editId !== com.id && ( 
             <CardContent>
               <div style={{ display: 'flex' }}>
-                <Typography className={classes.title} gutterBottom>
+                <Typography className={classes.title} gutterBottom data-testid='user-name'>
                   {com.user.name}
                 </Typography>
                 <span 
@@ -65,6 +66,7 @@ export default function CommentCard({ data, refetch }) {
                 size="small"
                 color="inherit"
                 onClick={() => setEditId(com.id)}
+                data-testid='edit'
               >
                 Edit
               </Button>
@@ -78,6 +80,7 @@ export default function CommentCard({ data, refetch }) {
                 image={com.user.imageUrl} 
                 body={com.body}
                 onClick={(event) => deleteClick(event)}
+                data-testid='deleteButton'
               >
                 Delete
               </Button>
