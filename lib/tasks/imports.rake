@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :imports do
   desc 'imports payment plans'
   task :payment_plans, %i[community_name csv_path] => :environment do |_t, args|
@@ -76,8 +77,8 @@ namespace :imports do
         existing_parcel_with_govt_no = community.land_parcels.find_by(parcel_number: govt_plot_no)
 
         if existing_parcel_with_comm_no.present? && existing_parcel_with_govt_no.present?
-          errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number are
-                                found. Kindly confirm why we have the two, and resolve manually."
+          errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number \
+                              are found. Kindly confirm why we have the two, and resolve manually."
           next
         end
 
@@ -109,7 +110,7 @@ namespace :imports do
 
             plan = user.payment_plans.create(
               land_parcel: existing_parcel,
-              status: PaymentPlan::statuses[:active],
+              status: PaymentPlan.statuses[:active],
               start_date: start_date,
               plan_type: 'lease',
               percentage: '2.75%',
@@ -120,9 +121,9 @@ namespace :imports do
 
             errors[row_num + 1] = plan.errors.full_messages unless plan.persisted?
           else
-            errors[row_num + 1] = "Error: This plot has already been assigned to
-                                    https://#{HostEnv.base_url(community)}/user/#{parcel_accounts.first&.user&.id}.
-                                    Kindly confirm if they both own the plot and resolve manually"
+            errors[row_num + 1] = "Error: This plot has already been assigned to \
+                  https://#{HostEnv.base_url(community)}/user/#{parcel_accounts.first&.user&.id}. \
+                  Kindly confirm if they both own the plot and resolve manually"
           end
         else
           errors[row_num + 1] = 'Error: Property not found.'
@@ -137,3 +138,4 @@ namespace :imports do
     puts 'Records successfully imported' if errors.empty?
   end
 end
+# rubocop:enable Metrics/BlockLength
