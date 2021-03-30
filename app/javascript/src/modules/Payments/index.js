@@ -4,6 +4,7 @@ import Invoices from '../Invoices';
 import Transactions from '../Transactions';
 
 const PaymentsPlaceHolder = () => <div>Payments Module</div>;
+// we also need to add user transaction tab 
 
 export default {
   routeProps: {

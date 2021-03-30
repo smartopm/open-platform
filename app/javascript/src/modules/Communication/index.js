@@ -12,10 +12,5 @@ export default {
     icon: <ForumIcon />
   },
   name: 'Communication',
-  accessibleBy: [
-    'client',
-    'prospective_client',
-    'contractor',
-    'resident',
-  ]
+  accessibleBy: ['admin']
 };

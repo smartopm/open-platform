@@ -30,13 +30,12 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
       setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name});
       return;
     }
-    // close the menu only on small screens
+    // close the menu and route  only when it is open and it is on small screens
     if (mobileOpen) {
       toggleDrawer(event);
     }
     history.push(item.routeProps.path);
   }
-
   return (
     <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer}>
       <List>

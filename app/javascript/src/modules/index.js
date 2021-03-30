@@ -10,8 +10,9 @@ import CustomerJourney from './CustomerJourney';
 import ActionFlows from './ActionFlows';
 import TimeCard from './TimeCard';
 import LogBook from './LogBook';
-import Portal from './Portal';
+import Portal from './Portal'; // thebe portal
 import Properties from './Plots/Properties';
+import UserPayments from './Payments/UserPayments';
 
 // and exported back here
 export default [
@@ -20,6 +21,7 @@ export default [
   Communication,
   LogBook,
   Payments,
+  UserPayments,
   Forms,
   CustomerJourney,
   Users,
