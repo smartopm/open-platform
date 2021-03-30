@@ -1,5 +1,9 @@
-import { render } from '@testing-library/react';
-import { renderTransactions } from "../../components/Payments/UserTransactions/UserTransactions";
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { MockedProvider } from '@apollo/react-testing';
+import { BrowserRouter } from 'react-router-dom';
+import UserTransactionsList, { renderTransactions } from "../../components/Payments/UserTransactions/UserTransactions";
 import currency from '../../__mocks__/currency'
 
 describe('Render Transaction', () => {
@@ -30,7 +34,40 @@ describe('Render Transaction', () => {
     userType: 'admin',
     handleClose: jest.fn()
   }
+
+  const userData = {
+    name: 'test-name'
+  }
   
+  it('should render the Transaction item component', async () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <UserTransactionsList transaction={transaction} currencyData={currency} userType='admin' userData={userData} />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+    
+    expect(container.queryByTestId('menu')).toBeInTheDocument();
+    expect(container.queryByTestId('amount')).toBeInTheDocument();
+    expect(container.queryByTestId('status')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId('receipt-menu'))
+    expect(container.queryByText('View Receipt')).toBeInTheDocument();
+    expect(container.queryByText('Edit Payment')).toBeInTheDocument();
+  });
+
+  it('should render the Transaction item component without transactions', async () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <UserTransactionsList transaction={{}} currencyData={currency} userType='admin' userData={userData} />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+    
+    expect(container.queryByText('No Transactions Yet')).toBeInTheDocument();
+  });
 
   it('should check if renderTransaction works as expected', () => {
       const results = renderTransactions(transaction, currency, menuData)

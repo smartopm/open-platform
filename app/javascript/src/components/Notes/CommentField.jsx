@@ -24,7 +24,9 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
     }}).then(() => {
       setBody('')
       refetch()
-    }).catch((err) => setErrorMessage(err))
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
   }
   return(
     <>
@@ -38,8 +40,9 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
             variant="outlined"
             size="small"
             onChange={e => setBody(e.target.value)}
+            inputProps={{ 'data-testid': 'body_input' }}
           />
-          <Button variant="contained" color="inherit" type="submit" disabled={!body.length}>SHARE</Button>
+          <Button variant="contained" color="inherit" type="submit" disabled={!body.length} data-testid='share'>SHARE</Button>
         </div>
       </form>
       <CommentCard data={data} refetch={refetch} />

@@ -5,6 +5,9 @@ import Adapter from 'enzyme-adapter-react-16'
 import * as Aphrodite from 'aphrodite'
 import * as AphroditeNoImportant from 'aphrodite/no-important'
 import { JSDOM } from 'jsdom'
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('dummy', { testMode: true });
 
 Aphrodite.StyleSheetTestUtils.suppressStyleInjection()
 AphroditeNoImportant.StyleSheetTestUtils.suppressStyleInjection()
@@ -41,3 +44,12 @@ global.cancelAnimationFrame = function(id) {
   clearTimeout(id)
 }
 copyProps(window, global)
+
+global.document.createRange = () => ({
+  setStart: () => {},
+  setEnd: () => {},
+  commonAncestorContainer: {
+    nodeName: 'BODY',
+    ownerDocument: document,
+  },
+});

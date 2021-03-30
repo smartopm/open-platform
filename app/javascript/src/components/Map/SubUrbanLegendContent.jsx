@@ -4,6 +4,7 @@ import { useLeaflet } from 'react-leaflet'
 import L from 'leaflet'
 import { getHexColor } from '../../utils/helpers'
 
+/* istanbul ignore next */
 export default function SubUrbanLegendContent(){
   const { map } = useLeaflet()
 

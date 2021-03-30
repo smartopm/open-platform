@@ -55,7 +55,8 @@ export default function Discuss({ update }) {
           value={title}
           margin="normal"
           inputProps={{
-            'aria-label': 'discuss_title'
+            'aria-label': 'discuss_title',
+            'data-testid': 'title'
           }}
           InputLabelProps={{
             shrink: true
@@ -73,7 +74,8 @@ export default function Discuss({ update }) {
           rows={3}
           margin="normal"
           inputProps={{
-            'aria-label': 'discuss_description'
+            'aria-label': 'discuss_description',
+            'data-testid': 'description'
           }}
           InputLabelProps={{
             shrink: true
@@ -98,6 +100,7 @@ export default function Discuss({ update }) {
             disabled={loading}
             aria-label="discussion_submit"
             className={`btn ${css(discussStyles.submitBtn)}`}
+            data-testid='button'
           >
             {loading ? 'Submitting ...' : 'Submit'}
           </Button>

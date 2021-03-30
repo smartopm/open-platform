@@ -264,7 +264,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           handleRemoveRow={handleWhatsappRemoveRow}
           data={{ label: 'WhatsApp', name: 'whatsapp' }}
         />
-        <div className={classes.addIcon} role="button" onClick={handleAddWhatsappOption}>
+        <div className={classes.addIcon} role="button" onClick={handleAddWhatsappOption} data-testid='whatsapp_click'>
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -280,7 +280,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           handleRemoveRow={handleEmailRemoveRow}
           data={{ label: 'Email', name: 'email' }}
         />
-        <div className={classes.addIcon} role="button" onClick={handleAddEmailOption}>
+        <div className={classes.addIcon} role="button" onClick={handleAddEmailOption} data-testid='email_click'>
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">

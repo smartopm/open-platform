@@ -9,6 +9,7 @@ import { mapTiles } from '../../utils/constants'
 const { attribution, centerPoint: { nkwashi } } = mapTiles
   /* eslint-disable no-unused-expressions */
   /* eslint-disable no-underscore-dangle */
+  /* istanbul ignore next */
 export default function MapEditor({ handleSaveMapEdit }){
   const feature = { 
     type: 'Feature',
