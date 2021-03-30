@@ -37,14 +37,14 @@ export default function CommentCard({ data, refetch }) {
 
   return(
     <>
-      {data.taskComments.map((com) => (
+      {data?.taskComments?.map((com) => (
         <Card style={{ display: 'flex' }} className={classes.root} key={com.id}>
           {!edit && editId !== com.id && <Avatar src={com.user.imageUrl} alt="avatar-image" style={{ marginTop: '7px' }} />}
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             {!edit && editId !== com.id && ( 
             <CardContent>
               <div style={{ display: 'flex' }}>
-                <Typography className={classes.title} gutterBottom>
+                <Typography className={classes.title} gutterBottom data-testid='user-name'>
                   {com.user.name}
                 </Typography>
                 <span 
@@ -65,6 +65,7 @@ export default function CommentCard({ data, refetch }) {
                 size="small"
                 color="inherit"
                 onClick={() => setEditId(com.id)}
+                data-testid='edit'
               >
                 Edit
               </Button>
@@ -78,6 +79,7 @@ export default function CommentCard({ data, refetch }) {
                 image={com.user.imageUrl} 
                 body={com.body}
                 onClick={(event) => deleteClick(event)}
+                data-testid='deleteButton'
               >
                 Delete
               </Button>

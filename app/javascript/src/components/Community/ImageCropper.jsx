@@ -3,6 +3,7 @@ import Cropper from 'react-easy-crop'
 import PropTypes from 'prop-types'
 import { getCroppedImg } from '../../utils/imageResizer'
 
+/* istanbul ignore next */
 export default function ImageCropper({ getBlob, inputImg, fileName }){
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)

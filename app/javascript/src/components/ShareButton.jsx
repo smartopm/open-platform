@@ -61,23 +61,23 @@ export function ShareButton({ url, styles, doOnShare }) {
         >
           <Box style={{ display: 'flex', flexDirection: 'column', margin: 10 }}>
 
-            <TwitterShareButton url={url} onClick={() => onShareClick('twitter')}>
+            <TwitterShareButton url={url} onClick={() => onShareClick('twitter')} data-testid="twitter">
               <TwitterIcon size={50} round />
             </TwitterShareButton>
 
-            <LinkedinShareButton url={url} title={document.title} onClick={() => onShareClick('linkedIn')}>
+            <LinkedinShareButton url={url} title={document.title} onClick={() => onShareClick('linkedIn')} data-testid="linkedIn">
               <LinkedinIcon size={50} round />
             </LinkedinShareButton>
-            <WhatsappShareButton url={url} title={document.title} onClick={() => onShareClick('whatsApp')}>
+            <WhatsappShareButton url={url} title={document.title} onClick={() => onShareClick('whatsApp')} data-testid="whatsapp">
               <WhatsappIcon size={50} round />
             </WhatsappShareButton>
-            <EmailShareButton url={url} subject={document.title} body={"Hi, vist Nkwashi's news page"} beforeOnClick={onEmailClick}>
+            <EmailShareButton url={url} subject={document.title} body={"Hi, vist Nkwashi's news page"} beforeOnClick={onEmailClick} data-testid="email">
               <EmailIcon size={50} round />
             </EmailShareButton>
-            <FacebookShareButton url={url} title={document.title} onClick={() => onShareClick('facebook')}>
+            <FacebookShareButton url={url} title={document.title} onClick={() => onShareClick('facebook')} data-testid="facebook">
               <FacebookIcon size={50} round />
             </FacebookShareButton>
-            <Fab size="medium" onClick={() => handleCopy(url)}>
+            <Fab size="medium" onClick={() => handleCopy(url)} data-testid="copy">
               <FileCopyOutlinedIcon />
             </Fab>
           </Box>

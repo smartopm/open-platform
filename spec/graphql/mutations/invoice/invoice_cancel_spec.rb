@@ -7,7 +7,6 @@ RSpec.describe Mutations::Invoice::InvoiceCancel do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
-    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 100)
     end

@@ -39,6 +39,16 @@ RSpec.describe Types::Queries::EmailTemplate do
       GQL
     end
 
+    let(:email_template_variables) do
+      <<~GQL
+        query emailTemplateVariables (
+          $id: ID!
+        ) {
+          emailTemplateVariables(id: $id)
+        }
+      GQL
+    end
+
     it 'should retrieve list of email templates' do
       result = DoubleGdpSchema.execute(email_templates, context: {
                                          current_user: admin,
@@ -104,6 +114,17 @@ RSpec.describe Types::Queries::EmailTemplate do
                                        }).as_json
       expect(result.dig('data', 'emailTemplates')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'should retrieve email template variables' do
+      result = DoubleGdpSchema.execute(email_template_variables,
+                                       variables: { id: comm_templates.id },
+                                       context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'emailTemplateVariables')).to eql ['variable']
+      expect(result.dig('errors', 0, 'message')).to be_nil
     end
   end
 end

@@ -54,6 +54,7 @@ function geoJSONPoiStyle(feature) {
   }
 }
 
+/* istanbul ignore next */
 export default function LandParcelMap({ handlePlotClick, geoData }){
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
   const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);

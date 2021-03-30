@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import '@testing-library/jest-dom/extend-expect';
@@ -25,5 +25,9 @@ describe('Label Item Component', () => {
     expect(container.queryByText('com_news_sms')).toBeInTheDocument();
     expect(container.queryByText('10')).toBeInTheDocument();
     expect(container.queryByTestId('label-title')).toHaveTextContent('com_news_sms');
+
+    fireEvent.click(container.queryByTestId('label_icon'))
+    expect(container.queryByText('Delete')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('label-title'))
   });
 });

@@ -16,7 +16,7 @@ export default function CreateLabel({ handleLabelSelect }) {
                     multiple
                     freeSolo
                     id="tags-filled"
-                    options={data.labels}
+                    options={data?.labels}
                     getOptionLabel={option => option.shortDesc}
                     onChange={(event, newValue) => {
                         // 2 things are happening here, there is a new value and an autocompleted value

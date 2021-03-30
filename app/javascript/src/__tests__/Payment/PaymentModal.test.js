@@ -65,7 +65,7 @@ describe('It should test the payment modal component', () => {
 
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })
-    expect(transactionInput.value).toBe('cash')
+    expect(transactionInput).toHaveValue('cash')
   });
 });
 
@@ -75,7 +75,9 @@ describe('Test Payment Details Screen', () => {
     transactionType: 'cash',
     bankName: 'Standard',
     chequeNumber: '423-22223-099',
-    transactionNumber: 'R45F112'
+    transactionNumber: 'R45F112',
+    pastPayment: true,
+    receiptNumber: '234652'
   }
   it('it should render payment details ', () => {
     const container = render(
@@ -86,6 +88,6 @@ describe('Test Payment Details Screen', () => {
     expect(container.queryByTestId('transactionNumber').textContent).toContain('Transaction Number: R45F112')
     expect(container.queryByTestId('chequeNumber').textContent).toContain('Cheque Number: 423-22223-099')
     expect(container.queryByTestId('bankName').textContent).toContain('Bank Name: Standard')
-
+    expect(container.queryByTestId('receiptNumber').textContent).toContain('Receipt Number: 234652')
   });
 })

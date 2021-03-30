@@ -7,7 +7,7 @@ import { FormControlLabel, Switch } from '@material-ui/core'
 import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider.js'
 
-
+/* istanbul ignore next */
 export default function QRScan() {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)

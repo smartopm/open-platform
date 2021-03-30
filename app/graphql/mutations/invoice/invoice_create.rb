@@ -14,13 +14,18 @@ module Mutations
 
       field :invoice, Types::InvoiceType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         vals = vals.merge(created_by: context[:current_user])
-        invoice = context[:site_community].invoices.create(vals)
+        land_parcel = context[:site_community].land_parcels.find(vals[:land_parcel_id])
+        invoice = context[:site_community].invoices.create(
+          vals.merge(payment_plan: land_parcel.payment_plan),
+        )
         return { invoice: invoice.reload } if invoice.persisted?
 
         raise GraphQL::ExecutionError, invoice.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
