@@ -22,4 +22,24 @@ RSpec.describe PaymentPlan, type: :model do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:land_parcel) }
   end
+
+  describe 'callbacks' do
+    let!(:user) { create(:user_with_community) }
+    let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
+
+    it 'should generate monthly invoices for the year' do
+      expect(Invoice.count).to eql 0
+      PaymentPlan.create(
+        percentage: '50',
+        status: 'active',
+        plan_type: 'lease',
+        start_date: Time.zone.now,
+        user: user,
+        plot_balance: 0,
+        land_parcel: land_parcel,
+      )
+      expect(land_parcel.payment_plan.invoices.count).to eql 12
+    end
+  end
 end
