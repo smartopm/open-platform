@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_22_141928) do
+ActiveRecord::Schema.define(version: 2021_03_30_131230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -492,6 +492,8 @@ ActiveRecord::Schema.define(version: 2021_03_22_141928) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "generated", default: false
     t.integer "plot_balance", default: 0
+    t.decimal "total_amount", precision: 11, scale: 2
+    t.integer "duration_in_month"
     t.index ["land_parcel_id"], name: "index_payment_plans_on_land_parcel_id"
     t.index ["user_id", "land_parcel_id"], name: "index_payment_plans_on_user_id_and_land_parcel_id", unique: true
     t.index ["user_id"], name: "index_payment_plans_on_user_id"
