@@ -37,7 +37,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
     history.push(item.routeProps.path);
   }
   return (
-    <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer}>
+    <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer} data-testid="sidenav-container">
       <List>
         {menuItems.map(menuItem => (
             menuItem.accessibleBy.includes(userType) ? (

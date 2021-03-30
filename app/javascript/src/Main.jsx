@@ -77,6 +77,7 @@ export function MainNav({ authState }) {
             edge="start"
             onClick={handleDrawerToggle}
             className={classes.menuButton}
+            data-testid="drawer"
           >
             <MenuIcon />
           </IconButton>
@@ -87,7 +88,7 @@ export function MainNav({ authState }) {
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (
-        <nav className={classes.drawer} aria-label="mailbox folders">
+        <nav className={classes.drawer} aria-label="mailbox folders" data-testid="nav-container">
           <Hidden smUp implementation="css">
             <Drawer
               variant="temporary"
