@@ -40,8 +40,9 @@ describe('Main Nav component', () => {
     );
   });
   it('should test the ordinary nav', () => {
+    const historyMock = jest.fn()
     const wrapper = render(
-      <NewsNav>
+      <NewsNav history={historyMock}>
         <h4>This is the content for the nav maybe a title</h4>
       </NewsNav>
     );

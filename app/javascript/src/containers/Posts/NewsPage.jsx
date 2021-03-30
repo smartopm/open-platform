@@ -1,11 +1,9 @@
-/* eslint-disable */
-import React, { Fragment } from 'react'
+import React from 'react'
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch } from '../../utils/customHooks'
 import Categories from '../../components/NewsPage/Categories'
 import PostContent from '../../components/NewsPage/PostContent'
 import { ShareButton } from '../../components/ShareButton'
-import Nav from '../../components/Nav'
 import { Spinner } from '../../shared/Loading'
 
 export default function NewsPage() {
@@ -18,11 +16,10 @@ export default function NewsPage() {
         return <Spinner />
     }
     return (
-        <Fragment >
-            <Nav navName="News" menuButton="back" backTo="/" />
-            <Categories />
-            <PostContent response={response.posts[0]} />
-            <ShareButton url={location} />
-        </Fragment>
+      <>
+        <Categories />
+        <PostContent response={response.posts[0]} />
+        <ShareButton url={location} />
+      </>
     )
 }

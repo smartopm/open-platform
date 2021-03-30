@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useParams, Redirect } from 'react-router-dom'
+import { useParams, Redirect, useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import {
   Button, Fab, Dialog,
@@ -15,7 +15,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import { wordpressEndpoint } from '../../utils/constants'
 import { useFetch, useWindowDimensions } from '../../utils/customHooks'
 import { ShareButton, styles } from '../../components/ShareButton'
-import Nav from '../../components/Nav'
 import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
 import { Spinner } from '../../shared/Loading'
 import IframeContainer from '../../components/IframeContainer'
@@ -25,6 +24,7 @@ import { DiscussionMutation } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
 import TagsComponent from '../../components/NewsPage/Tags'
 import MessageAlert from "../../components/MessageAlert"
+import { NewsNav } from '../../Main'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -33,6 +33,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function PostPage() {
   const limit = 20
   const { id } = useParams()
+  const history = useHistory()
   const authState = useContext(AuthStateContext)
   const currentUrl = window.location.href
   const { width, height } = useWindowDimensions()
@@ -103,10 +104,10 @@ export default function PostPage() {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <Nav
-        menuButton="back"
-        backTo={authState.loggedIn ? '/news' : '/welcome'}
-      />
+
+      <NewsNav history={history}>
+        <h4>News</h4>
+      </NewsNav>
       <div className="post_page">
         <IframeContainer
           link={response?.URL || ''}

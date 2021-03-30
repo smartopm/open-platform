@@ -3,7 +3,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Hidden, IconButton, useTheme } from '@material-ui/core';
+import { StyleSheet, css } from 'aphrodite';
+import { Button, Hidden, IconButton, useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
@@ -136,19 +137,24 @@ export function MainNav({ authState }) {
   );
 }
 
-export function NewsNav({ children }) {
+export function NewsNav({ children, history }) {
   return (
-    <AppBar
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        background: 'transparent',
-        boxShadow: 'none'
-      }}
+    <nav
+      className={css(styles.topNav)}
+      style={{ minHeight: '50px' }}
     >
-      <Toolbar>{children}</Toolbar>
-    </AppBar>
+      <div className={css(styles.topNav)}>
+        <Button onClick={() => history.push('/')}>
+          <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
+        </Button>
+        <ul
+          className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
+          style={{ margin: 'auto' }}
+        >
+          <li>{children}</li>
+        </ul>
+      </div>
+    </nav>
   );
 }
 
@@ -160,5 +166,31 @@ MainNav.propTypes = {
 };
 
 NewsNav.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  history: PropTypes.func.isRequired
 };
+
+const styles = StyleSheet.create({
+  logo: {
+    height: '25px'
+  },
+  topNav: {
+    width: '100%',
+    position: 'relative',
+    backgroundColor: '#FFFFFF',
+    minHeight: '50px'
+  },
+  navTitle: {
+    top: '8px',
+    color: '#000000',
+  },
+  buttonLeft: {
+    cursor: 'pointer'
+  },
+  icon: {
+    lineHeight: '1.7em',
+    color: '#000000',
+    'font-size': '1.5em'
+  },
+});
+

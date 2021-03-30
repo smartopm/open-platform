@@ -315,13 +315,7 @@ const App = () => {
                                   path="/user_form/:formId?/:userId?/:formName?/:type?"
                                   component={FormPage}
                                 />
-                                 {/* we will also need a not found page for non-logged in user */}
-                                 {/* if you are going to move this to another line carry it like an egg */}
-                                 <Route
-                                  render={() => (
-                                    <ErrorPage title="Sorry!! We couldn't find this page" />
-                                  )}
-                                />
+  
                                 <AdminRoutes>
                                   <Switch>
                                     <Route path="/users/import" component={UsersImport} />
@@ -352,6 +346,13 @@ const App = () => {
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>
+                                 {/* we will also need a not found page for non-logged in user */}
+                                 {/* if you are going to move this to another line carry it like an egg */}
+                                 <Route
+                                  render={() => (
+                                    <ErrorPage title="Sorry!! We couldn't find this page" />
+                                  )}
+                                />
 
                               </Switch>
                             )}

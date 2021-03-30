@@ -10,8 +10,5 @@ export default {
     icon: <LinearScaleIcon />
   },
   name: 'Customer Journey',
-  accessibleBy: [
-    'client',
-    'resident',
-  ]
+  accessibleBy: ['admin']
 };
