@@ -103,10 +103,7 @@ namespace :imports do
               next
             end
 
-            if user.payment_plans.find_by(land_parcel_id: existing_parcel.id).present?
-              errors[row_num + 1] = 'Error: Payment plan already exists for this plot'
-              next
-            end
+            next if user.payment_plans.find_by(land_parcel_id: existing_parcel.id).present?
 
             plan = user.payment_plans.create(
               land_parcel: existing_parcel,
