@@ -22,7 +22,9 @@ export default function EditField({ handleClose, data, refetch }) {
     }}).then(() => {
       handleClose()
       refetch()
-    }).catch((err) => setErrorMessage(err))
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
   }
 
   useEffect(() => {
@@ -46,9 +48,10 @@ export default function EditField({ handleClose, data, refetch }) {
               variant="outlined"
               size="small"
               onChange={e => setBody(e.target.value)}
+              inputProps={{ 'data-testid': 'body_input' }}
             />
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
-              <Button autoFocus variant="contained" type="submit" color="primary" style={{ marginRight: '5px' }}>
+              <Button autoFocus variant="contained" data-testid='button' type="submit" color="primary" style={{ marginRight: '5px' }}>
                 Save changes
               </Button>
               <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
