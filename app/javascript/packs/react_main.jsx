@@ -352,11 +352,11 @@ const App = () => {
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>
- 
+
                               </Switch>
                             )}
                           </Consumer>
-                          
+
                         </Switch>
                       </div>
                     </LoggedInOnly>
