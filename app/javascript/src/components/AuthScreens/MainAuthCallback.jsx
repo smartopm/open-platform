@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
+/* istanbul ignore next */
 export default function MainAuthCallback({ match }) {
   const token = match.params.token;
   const authState = useContext(AuthStateContext);

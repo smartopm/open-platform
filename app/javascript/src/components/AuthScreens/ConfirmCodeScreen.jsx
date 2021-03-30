@@ -17,6 +17,7 @@ import useTimer from '../../utils/customHooks'
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 
+/* istanbul ignore next */
 export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext)
   const { id } = match.params
