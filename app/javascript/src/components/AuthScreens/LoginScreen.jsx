@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect, useContext } from 'react'
 import {
   Button,
@@ -13,29 +12,60 @@ import {
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link, useHistory, useLocation } from 'react-router-dom'
-import { useMutation } from 'react-apollo'
-import { loginPhone } from '../../graphql/mutations'
+import { useMutation, useQuery } from 'react-apollo'
+import ReactGA from 'react-ga'
+import FacebookIcon from '@material-ui/icons/Facebook'
+import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
-import ReactGA from 'react-ga'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
-import FacebookIcon from '@material-ui/icons/Facebook'
 import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
-import PhoneInput from 'react-phone-input-2'
+import { loginPhone } from '../../graphql/mutations'
+import { CurrentCommunityQuery } from '../../graphql/queries/community'
 
-export function LoginScreen() {
+export default function LoginScreen() {
+  const { data: communityData } = useQuery(CurrentCommunityQuery)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [loginPhoneStart] = useMutation(loginPhone)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
-  const [value, setValue] = useState('')
-  const [Interest, setInterest] = useState('')
+  const [email, setEmail] = useState('')
+  const [interest, setInterest] = useState('')
+  const [impact, setImpact] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
+
+  const communityName = communityData?.currentCommunity?.name || 'Double GDP'
+  const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
+                                                                  .find(({ category }) => category === 'customer_care').email)
+                                                                  || 'support@doublegdp.com';
+
+  const AppLoginRequestSurvey = {
+    interest: {
+      question: `Why are you interested in ${communityName}?`,
+      responses: [
+        `I own property at ${communityName}`,
+        `I want to own property at ${communityName}`,
+        `I want to learn more about ${communityName}`,
+      ],
+    },
+    impact: {
+      question: `How did you hear about ${communityName}?`,
+      responses: [
+        'Artists in Residence (AIR) Program',
+        'Hackers in Residence (HIR) Program',
+        'Social Media',
+        'Friend/Family',
+        'Newspaper/Radio/Television',
+        'Event',
+        'Other'
+      ],
+    }
+  }
 
   function loginWithPhone(event, type = 'input') {
 
@@ -51,15 +81,15 @@ export function LoginScreen() {
         })
         .then(data => {
           history.push({
-            pathname: '/code/' + data.loginPhoneStart.user.id,
+            pathname: `/code/${  data.loginPhoneStart.user.id}`,
             state: {
-              phoneNumber: phoneNumber,
+              phoneNumber,
               from: `${!state ? '/' : state.from.pathname}`
             }
           })
         })
-        .catch(error => {
-          setError(error.message)
+        .catch(err => {
+          setError(err.message)
           setIsLoading(false)
         })
     }
@@ -76,8 +106,9 @@ export function LoginScreen() {
   function handleModal() {
     setOpen(!open)
   }
+  /* eslint-disable security/detect-non-literal-fs-filename */
   function handleClick() {
-    //Google Analytics tracking
+    // Google Analytics tracking
     ReactGA.event({
       category: 'LoginPage',
       action: 'TroubleLogging',
@@ -85,20 +116,20 @@ export function LoginScreen() {
       nonInteraction: true
     })
     window.open(
-      `mailto:support@doublegdp.com?subject=Nkwashi App Login Request&body=Hi,
-       I would like access to the Nkwashi app. Please provide me with my login credentials.
-       Full Name: ${username}, Email: ${value}, Phone Number: ${phone}, Why are you interested in Nkwashi?: ${Interest}`,
+      `mailto:${communitySupportEmail}?subject=${communityName} App Login Request&body=Hi,
+       I would like access to the ${communityName} app. Please provide me with my login credentials.
+       Full Name: ${username}, Email: ${email}, Phone Number: ${phone}, Why are you interested in ${communityName}?: ${interest},
+       How did you hear about ${communityName}?: ${impact}`,
       'emailWindow'
     )
     setOpen(!open)
   }
 
-
   return (
     <div style={{ overflow: 'hidden' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/welcome'} style={{ color: theme.primaryColor }}>
-          <i className={`material-icons`}>arrow_back</i>
+        <Link to="/welcome" style={{ color: theme.primaryColor }}>
+          <i className="material-icons">arrow_back</i>
         </Link>
       </nav>
       <div className="container ">
@@ -107,9 +138,19 @@ export function LoginScreen() {
             styles.welcomeContainer
           )}`}
         >
-          <h4 className={css(styles.welcomeText)}>Welcome to Nkwashi App</h4>
+          <h4 className={css(styles.welcomeText)}>
+            Welcome to 
+            {' '}
+            {communityName}
+            {' '}
+            App
+          </h4>
           <Typography color="textSecondary" variant="body2">
-            Hello! This is your all inclusive stop for Nkwashi news, payments,
+            Hello! This is your all inclusive stop for 
+            {' '}
+            {communityName}
+            {' '}
+            news, payments,
             client requests, gate access, and support.
           </Typography>
 
@@ -131,10 +172,10 @@ export function LoginScreen() {
             containerStyle={{ width: "55%" }}
             inputClass="phone-login-input"
             inputStyle={{ width: "100%", height: 51 }}
-            country={'zm'}
-            enableSearch={true}
+            country="zm"
+            enableSearch
             placeholder="Enter Number"
-            onChange={phone => setPhoneNumber(phone)}
+            onChange={value => setPhoneNumber(value)}
           />
         </div>
 
@@ -154,7 +195,7 @@ export function LoginScreen() {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-                <span>Next</span>
+              <span>Next</span>
               )}
           </Button>
         </div>
@@ -163,8 +204,10 @@ export function LoginScreen() {
         <div className="d-flex row justify-content-center align-items-center">
           <Divider
             style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
-          />{' '}
-          <p style={{ margin: 10 }}>OR</p>{' '}
+          />
+          {' '}
+          <p style={{ margin: 10 }}>OR</p>
+          {' '}
           <Divider
             style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
           />
@@ -173,13 +216,13 @@ export function LoginScreen() {
         <div className="container">
           <div className="d-flex row justify-content-center ">
             <Button
-              href={'/login_oauth'}
+              href="/login_oauth"
               style={{
                 backgroundColor: 'white',
                 textTransform: 'none'
               }}
               variant="contained"
-              startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
+              startIcon={<img src={GoogleIcon} alt="google-icon" />}
               className="google-sign-in-btn"
             >
               Sign In with Google
@@ -207,12 +250,15 @@ export function LoginScreen() {
 
       <div
         data-testid="trouble-logging-div"
+        id="trouble-logging-div"
         className="row justify-content-center align-items-center"
       >
-        <p onClick={handleModal} style={{ marginTop: '1%' }}>
-          <u>
-            <strong>Dont have an Account?</strong>
-          </u>
+        <p style={{ marginTop: '1%' }}>
+          <Button size="medium" id="trigger-modal-dialog" onClick={handleModal} style={{ textTransform: 'none'}}>
+            <u>
+              <strong>Don&apos;t have an Account?</strong>
+            </u>
+          </Button>
         </p>
       </div>
 
@@ -225,10 +271,10 @@ export function LoginScreen() {
         <div className="container">
           <div className="d-flex row justify-content-center ">
             <Button
-              href={'/login_oauth'}
+              href="/login_oauth"
               style={{ backgroundColor: 'white', textTransform: 'none' }}
               variant="contained"
-              startIcon={<img src={GoogleIcon} alt={'google-icon'} />}
+              startIcon={<img src={GoogleIcon} alt="google-icon" />}
             >
               Sign Up with Google
             </Button>
@@ -245,10 +291,12 @@ export function LoginScreen() {
         <div className="d-flex row justify-content-center align-items-center">
           <Divider
             style={{ width: '42%', height: 1, backgroundColor: 'grey' }}
-          />{' '}
+          />
+          {' '}
           <strong>
             <p style={{ margin: 10 }}>OR</p>
-          </strong>{' '}
+          </strong>
+          {' '}
           <Divider
             style={{ width: '42%', height: 1, backgroundColor: 'grey' }}
           />
@@ -256,7 +304,10 @@ export function LoginScreen() {
 
         <br />
         <h6>
-          To request your login information, email: <a>support@doublegdp.com</a>
+          To request your login information, email:
+          {' '} 
+          {' '}
+          {communitySupportEmail}
         </h6>
         <br />
         <TextField
@@ -276,7 +327,7 @@ export function LoginScreen() {
           fullWidth
           name="email"
           label="Email"
-          onChange={event => setValue(event.target.value)}
+          onChange={event => setEmail(event.target.value)}
         />
         <TextField
           variant="outlined"
@@ -290,24 +341,41 @@ export function LoginScreen() {
         />
         <FormControl className={css(styles.formControl)}>
           <InputLabel id="demo-simple-select-outlined-label">
-            Why are you interested in Nkwashi?
+            {AppLoginRequestSurvey.interest.question}
           </InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
-            value={Interest}
+            value={interest}
             onChange={event => setInterest(event.target.value)}
             label="interest"
+            required
           >
-            <MenuItem value={'I own property at Nkwashi'}>
-              I own property at Nkwashi.
-            </MenuItem>
-            <MenuItem value={'I want to own property at Nkwashi'}>
-              I want to own property at Nkwashi
-            </MenuItem>
-            <MenuItem value={'I want to learn more about Nkwashi.'}>
-              I want to learn more about Nkwashi.
-            </MenuItem>
+            {AppLoginRequestSurvey.interest.responses.map((value) => (
+              <MenuItem value={value} key={value}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+          <br />
+        </FormControl>
+        <FormControl className={css(styles.formControl)}>
+          <InputLabel id="demo-simple-select-outlined-label">
+            {AppLoginRequestSurvey.impact.question}
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={impact}
+            onChange={event => setImpact(event.target.value)}
+            label="impact"
+            required
+          >
+            {AppLoginRequestSurvey.impact.responses.map((value) => (
+              <MenuItem value={value} key={value}>
+                {value}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </ModalDialog>
@@ -333,7 +401,6 @@ const styles = StyleSheet.create({
   welcomeText: {
     marginTop: 33,
     color: '#1f2026'
-    // fontSize: "1.3em",
   },
   flag: {
     display: 'inline-block',
