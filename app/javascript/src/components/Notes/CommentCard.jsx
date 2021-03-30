@@ -28,7 +28,6 @@ export default function CommentCard({ data, refetch }) {
   }
 
   function deleteClick(event) {
-    console.log(event.currentTarget.getAttribute('id'))
     setId(event.currentTarget.getAttribute('id'))
     setImageUrl(event.currentTarget.getAttribute('image'))
     setName(event.currentTarget.getAttribute('name'))
@@ -38,7 +37,7 @@ export default function CommentCard({ data, refetch }) {
 
   return(
     <>
-      {data.taskComments.map((com) => (
+      {data?.taskComments?.map((com) => (
         <Card style={{ display: 'flex' }} className={classes.root} key={com.id}>
           {!edit && editId !== com.id && <Avatar src={com.user.imageUrl} alt="avatar-image" style={{ marginTop: '7px' }} />}
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>

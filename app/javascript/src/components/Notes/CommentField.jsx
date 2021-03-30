@@ -25,7 +25,6 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
       setBody('')
       refetch()
     }).catch((err) => {
-      console.log(err)
       setErrorMessage(err)
     })
   }
