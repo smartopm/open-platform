@@ -1,22 +1,19 @@
-/* eslint-disable */
-import React, { useContext, Fragment } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { StyleSheet, css } from 'aphrodite';
-import { Context as AuthStateContext } from './containers/Provider/AuthStateProvider';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
-import SideMenu from './shared/SideMenu';
-import { useQuery } from 'react-apollo';
-import { MyTaskCountQuery, messageCountQuery } from './graphql/queries';
-import NotificationBell from './components/NotificationBell';
-import ImageAuth from './shared/ImageAuth';
-import modules from './modules';
 import { Hidden, IconButton, useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
+import PropTypes from 'prop-types';
+import { Context as AuthStateContext } from './containers/Provider/AuthStateProvider';
+import SideMenu from './shared/SideMenu';
+import NotificationBell from './components/NotificationBell';
+import modules from './modules';
+import CommunityName from './shared/CommunityName';
+import CenteredContent from './components/CenteredContent';
+import userProps from './shared/types/user';
 
 const drawerWidth = 260;
 
@@ -33,10 +30,10 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
+      marginLeft: drawerWidth
     },
     height: 50,
-    backgroundColor: 'transparent',
+    backgroundColor: '#FFFFFF' // get this color from the theme
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -55,93 +52,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default withRouter(function Nav({
-  children,
-  menuButton,
-  history,
-  navName,
-  backTo,
-  boxShadow
-}) {
+export default function Main() {
   const authState = useContext(AuthStateContext);
-  return (
-    <Component
-      {...{
-        children,
-        authState,
-        menuButton,
-        history,
-        navName,
-        backTo,
-        boxShadow
-      }}
-    />
-  );
-});
+  return <MainNav {... { authState }} />;
+}
 
-export function Component({
-  children,
-  authState,
-  menuButton,
-  navName,
-  boxShadow,
-  history,
-  backTo
-}) {
+export function MainNav({ authState }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleDrawerToggle = (event) => {
+  const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
-  const { data: messageCount } = useQuery(messageCountQuery, {
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
-
-
-  function communityName() {
-    if (authState.id && authState.community) {
-      if (authState.community.logoUrl) {
-        return (
-          <Link to="/">
-            <img
-              src={authState.community.logoUrl}
-              className={css(styles.logo)}
-              alt="community logo"
-            />
-          </Link>
-        );
-      }
-      return (
-        <Link to="/">
-          <div>{authState.community.name}</div>
-        </Link>
-      );
-    }
-    return (
-      <Link to="/" style={{ textDecoration: 'none' }}>
-        <ImageAuth
-          imageLink={authState.user?.community.imageUrl}
-          token={authState.token}
-          className={css(styles.logo)}
-        />
-      </Link>
-    );
-  }
-  // const toggleDrawer = event => {
-  //   if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-  //     return;
-  //   }
-  //   setState(!state);
-  // };
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar  position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             color="primary"
@@ -149,22 +77,13 @@ export function Component({
             edge="start"
             onClick={handleDrawerToggle}
             className={classes.menuButton}
-            
           >
             <MenuIcon />
           </IconButton>
-          <NotificationBell
-            user={authState.user}
-            history={history}
-            data={data}
-            messageCount={messageCount}
-          />
-          <ul
-            className={`navbar-nav navbar-center ${css(styles.navTitle)}`}
-            style={{ margin: 'auto' }}
-          >
-            <li>{navName ? navName : communityName()}</li>
-          </ul>
+          <NotificationBell user={authState.user} />
+          <CenteredContent>
+            <CommunityName authState={authState} />
+          </CenteredContent>
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (
@@ -179,7 +98,7 @@ export function Component({
                 paper: classes.drawerPaper
               }}
               ModalProps={{
-                keepMounted: true 
+                keepMounted: true
               }}
             >
               <SideMenu
@@ -232,23 +151,13 @@ export function NewsNav({ children }) {
   );
 }
 
-Component.defaultProps = {
-  boxShadow: '0 2px 2px 0 rgba(0,0,0,.14)'
+MainNav.propTypes = {
+  authState: PropTypes.shape({
+    user: userProps,
+    loggedIn: PropTypes.bool
+  }).isRequired
 };
 
-const styles = StyleSheet.create({
-  logo: {
-    height: '25px'
-  },
-  topNav: {
-    width: '100%',
-    position: 'relative'
-  },
-  navTitle: {
-    top: '8px'
-  },
-  userAvatar: {
-    width: 30,
-    height: 30
-  }
-});
+NewsNav.propTypes = {
+  children: PropTypes.node.isRequired
+};

@@ -1,8 +1,7 @@
-/* eslint-disable */
 // Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
-
+/* eslint-disable */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
@@ -11,12 +10,12 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Redirect, Route, useHistory } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import { makeStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core';
 import ApolloProvider from '../src/containers/Provider/ApolloProvider';
 import AuthStateProvider, {
   Consumer,
   Context as AuthStateContext
 } from '../src/containers/Provider/AuthStateProvider';
-import Home from '../src/containers/Home';
 import UserShow from '../src/containers/UserShow';
 import IDCard from '../src/containers/IdCard';
 import IDPrint from '../src/containers/IdPrint';
@@ -54,44 +53,30 @@ import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
-import UsersList from '../src/containers/Users';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
-import AllMessages from '../src/containers/Messages/AllMessages';
 import UserMessages from '../src/containers/Messages/UserMessagePage';
-import CustodianLogs from '../src/containers/TimeSheet/CustodianLogs';
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
-import NkwashiAccountManagement from '../src/containers/NkwashiAccountManagement';
 import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
-import Campaigns from '../src/containers/Campaigns/Campaigns';
 import Scan from '../src/containers/Scan.jsx';
 import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
 import Posts from '../src/containers/Posts/Posts';
 import PostPage from '../src/containers/Posts/PostPage';
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
-import Discussions from '../src/containers/Discussions/Discussions';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
-import Businesses from '../src/containers/Businesses/Businesses';
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/containers/Preferences/Notifications';
-import { MuiThemeProvider } from '@material-ui/core';
 import { theme } from '../src/themes/nkwashi/theme';
-import FormLinks from '../src/containers/Forms/FormLinks';
 import FormPage from '../src/containers/Forms/FormPage';
-import Labels from '../src/containers/Label/Labels';
-import ActionFlows from '../src/containers/ActionFlows/ActionFlows';
 import UsersImport from '../src/containers/UsersImport';
 
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
-import LandParcel from '../src/containers/LandParcels/LandParcel';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
-import Payments from '../src/modules/Payments/Components/Payments';
 import StatsPage from '../src/containers/User/StatsPage';
-// import Nav from '../src/components/Nav'
 import Main from '../src/Main';
 import modules from '../src/modules';
 
@@ -131,11 +116,11 @@ const Logout = () => {
   authState.setToken({ action: 'delete' });
   return <Redirect to="/login" />;
 };
-//page tracking
+// page tracking
 ReactGA.initialize('UA-150647211-2');
 
 const Analytics = props => {
-  const gtag = window.gtag;
+  const {gtag} = window;
   const liveAnalytics = (host => {
     return PRIMARY_DOMAINS.includes(host);
   })(window.location.host);
@@ -144,7 +129,7 @@ const Analytics = props => {
   const history = useHistory();
 
   useEffect(() => {
-    const user = authState.user;
+    const {user} = authState;
 
     if (user) {
       if (liveAnalytics) {
@@ -163,9 +148,9 @@ const Analytics = props => {
     }
     return history.listen(location => {
       if (location.pathname.includes('/id') || location.pathname.includes('/user')) {
-        let [, rootURL, , userPage] = location.pathname.split('/');
+        const [, rootURL, , userPage] = location.pathname.split('/');
 
-        let pageHit = `/${rootURL}/${userPage}`;
+        const pageHit = `/${rootURL}/${userPage}`;
         ReactGA.pageview(pageHit);
       } else {
         ReactGA.set({ page: location.pathname });
@@ -256,8 +241,10 @@ const App = () => {
                                   }
                                 })}
                                 {/* routes will need to be moved up here so that the not found can catch them all */}
-                                <Route path="/user/:id/edit" component={UserEdit} />{' '}
-                                <Route path="/user/:id/logs" component={UserLogs} />{' '}
+                                <Route path="/user/:id/edit" component={UserEdit} />
+                                {' '}
+                                <Route path="/user/:id/logs" component={UserLogs} />
+                                {' '}
                                 <Route
                                   path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
                                   component={UserShow}
