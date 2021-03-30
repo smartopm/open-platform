@@ -41,7 +41,7 @@ export default function LoginScreen() {
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
-                                                                  .find(({ category }) => category === 'customer_care').email)
+                                                                  .find(({ category }) => category === 'customer_care')?.email)
                                                                   || 'support@doublegdp.com';
 
   const AppLoginRequestSurvey = {
