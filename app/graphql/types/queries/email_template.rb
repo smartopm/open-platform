@@ -14,6 +14,11 @@ module Types::Queries::EmailTemplate
     field :email_templates, [Types::EmailTemplateType], null: true do
       description 'get all email templates'
     end
+    # Get email template variable list
+    field :email_template_variables, [GraphQL::Types::String], null: true do
+      description 'get an email template variables names for the provided id'
+      argument :id, GraphQL::Types::ID, required: true
+    end
   end
 
   def email_template(id:)
@@ -29,5 +34,14 @@ module Types::Queries::EmailTemplate
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     context[:site_community].email_templates
+  end
+
+  def email_template_variables(id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    vars = []
+    template = context[:site_community].email_templates.find(id)
+    JSON.parse(template&.template_variables).each { |_key, value| vars.concat(value) }
+    vars
   end
 end

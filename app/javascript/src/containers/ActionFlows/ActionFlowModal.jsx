@@ -28,7 +28,8 @@ import {
   ActionFields,
   RuleFields,
   LabelsQuery,
-  UsersLiteQuery
+  UsersLiteQuery,
+  EmailTemplatesQuery
 } from '../../graphql/queries';
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
@@ -56,9 +57,13 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     variables: { query: 'user_type = admin' },
     errorPolicy: 'all'
   });
+  const [loadEmailTemplates, { data: emailTemplatesData }] = useLazyQuery(EmailTemplatesQuery, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   const eventData = useQuery(Events);
   const actionData = useQuery(Actions);
+
   const actionFieldsData = useQuery(ActionFields, {
     variables: { action: data.actionType }
   });
@@ -77,6 +82,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       setMetaData(actionFieldsValues);
       loadLabelsLite();
       loadAssignees();
+      loadEmailTemplates();
     }
     return () => {
       setData(initialData);
@@ -145,6 +151,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       loadAssignees();
     }
 
+    if (data.eventType && value === 'custom_email') {
+      loadEmailTemplates();
+    }
+
     // Reset the array of assignees when a new eventType/action is selected
     if (assignees.length) setAssignees([]);
 
@@ -166,6 +176,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       ...data,
       [name]: value
     });
+    // console.log(data, 'data');
+    // console.log(metaData, 'meta');
   }
 
   function handleDateChange(params) {
@@ -301,7 +313,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               >
                 {actionData.data.actions.map((action, index) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <MenuItem key={index} value={action.toLowerCase()}>
+                  <MenuItem key={index} value={action.toLowerCase().replace(/ /g, "_")}>
                     {sentencizeAction(action)}
                   </MenuItem>
                 ))}
@@ -311,122 +323,180 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         </FormControl>
         {data.actionType &&
           actionFieldsData.data &&
-          actionFieldsData.data.actionFields.map((actionField, index) => (
-            <Autocomplete
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              id={`${actionField.name}-action-input`}
-              freeSolo
-              value={metaData[actionField.name]}
-              inputValue={metaData[actionField.name]}
-              onInputChange={(_event, newValue) => {
-                setMetaData({
-                  ...metaData,
-                  [actionField.name]: newValue
-                });
-              }}
-              options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
-              renderInput={params => {
-                if (actionField.type === 'select' && actionField.name === 'label') {
-                  return (
-                    <FormControl fullWidth>
-                      <InputLabel id={`select-${actionField.name}`}>
-                        {`Select ${capitalize(actionField.name)}`}
-                      </InputLabel>
-                      <Select
-                        labelId={`select-${actionField.name}`}
-                        id={`${actionField.name}-id-section`}
-                        name={actionField.name}
-                        value={data[actionField.name] || ''}
-                        onChange={handleSelect}
-                        fullWidth
-                      >
-                        {labelsLiteData?.labels.map(({ id, shortDesc }) => (
-                          <MenuItem key={id} value={shortDesc}>
-                            {`${shortDesc}`}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  );
-                }
-                if (actionField.type === 'select' && actionField.name === 'category') {
-                  return (
-                    <FormControl fullWidth>
-                      <InputLabel id={`select-${actionField.name}`}>
-                        {`Select ${capitalize(actionField.name)}`}
-                      </InputLabel>
-                      <Select
-                        labelId={`select-${actionField.name}`}
-                        id={`${actionField.name}-id-section`}
-                        name={actionField.name}
-                        value={data[actionField.name] || ''}
-                        onChange={handleSelect}
-                        fullWidth
-                      >
-                        {Object.entries(NotesCategories).map(([key, val]) => (
-                          <MenuItem key={key} value={key}>
-                            {val}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  );
-                }
-                if (actionField.type === 'select' && actionField.name === 'assignees') {
-                  return (
-                    <FormControl fullWidth>
-                      <FormHelperText>Assign this task to users</FormHelperText>
-                      <Select
-                        labelId={`select-${actionField.name}`}
-                        id={`${actionField.name}-id-section`}
-                        name={actionField.name}
-                        value={assignees}
-                        onChange={handleChooseAssignees}
-                        fullWidth
-                        multiple
-                        renderValue={selected => (
-                          <div>
-                            {selected.map((value, i) => (
-                              <UserChip user={value} key={i} label={value.name} size="medium" />
-                            ))}
-                          </div>
-                        )}
-                      >
-                        {assigneesLiteData?.usersLite.map(user => (
-                          <MenuItem key={user.id} value={user}>
-                            {user.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  );
-                }
-                if (actionField.type === 'date' && actionField.name === 'due_date') {
-                  return (
-                    <FormControl fullWidth>
-                      <FormHelperText>Pick a due date</FormHelperText>
-                      <DatePickerDialog
-                        handleDateChange={date =>
-                          handleDateChange({ name: actionField.name, value: date })}
-                        selectedDate={selectedDate}
-                      />
-                    </FormControl>
-                  );
-                }
-                return (
-                  <TextField
-                    {...params}
-                    label={capitalize(actionField.name)}
+          actionFieldsData.data.actionFields.map((actionField, index) => {
+            // REFACTOR THESE IF-ELSEs (Nurudeen)
+            if (actionField.type === 'select' && actionField.name === 'label') {
+              return (
+                <FormControl fullWidth>
+                  <InputLabel id={`select-${actionField.name}`}>
+                    {`Select ${capitalize(actionField.name)}`}
+                  </InputLabel>
+                  <Select
+                    labelId={`select-${actionField.name}`}
+                    id={`${actionField.name}-id-section`}
                     name={actionField.name}
-                    margin="normal"
-                    variant="outlined"
-                    multiline
+                    value={data[actionField.name] || ''}
+                    onChange={handleSelect}
+                    fullWidth
+                  >
+                    {labelsLiteData?.labels.map(({ id, shortDesc }) => (
+                      <MenuItem key={id} value={shortDesc}>
+                        {`${shortDesc}`}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              );
+            }
+            if (actionField.type === 'select' && actionField.name === 'category') {
+              return (
+                <FormControl fullWidth>
+                  <InputLabel id={`select-${actionField.name}`}>
+                    {`Select ${capitalize(actionField.name)}`}
+                  </InputLabel>
+                  <Select
+                    labelId={`select-${actionField.name}`}
+                    id={`${actionField.name}-id-section`}
+                    name={actionField.name}
+                    value={data[actionField.name] || ''}
+                    onChange={handleSelect}
+                    fullWidth
+                  >
+                    {Object.entries(NotesCategories).map(([key, val]) => (
+                      <MenuItem key={key} value={key}>
+                        {val}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              );
+            }
+            if (actionField.type === 'select' && actionField.name === 'assignees') {
+              return (
+                <FormControl fullWidth>
+                  <FormHelperText>Assign this task to users</FormHelperText>
+                  <Select
+                    labelId={`select-${actionField.name}`}
+                    id={`${actionField.name}-id-section`}
+                    name={actionField.name}
+                    value={assignees}
+                    onChange={handleChooseAssignees}
+                    fullWidth
+                    multiple
+                    renderValue={selected => (
+                      <div>
+                        {selected.map((value, i) => (
+                          <UserChip user={value} key={i} label={value.name} size="medium" />
+                        ))}
+                      </div>
+                    )}
+                  >
+                    {assigneesLiteData?.usersLite.map(user => (
+                      <MenuItem key={user.id} value={user}>
+                        {user.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              );
+            }
+            if (actionField.type === 'select' && actionField.name === 'template') {
+              return (
+                <FormControl fullWidth>
+                  <InputLabel id={`select-${actionField.name}`}>
+                    {`Select ${capitalize(actionField.name)}`}
+                  </InputLabel>
+                  <Select
+                    labelId={`select-${actionField.name}`}
+                    id={`${actionField.name}-id-section`}
+                    name={actionField.name}
+                    value={data[actionField.name] || ''}
+                    onChange={handleSelect}
+                    fullWidth
+                  >
+                    {emailTemplatesData?.emailTemplates.map(({ id, name }) => (
+                      <MenuItem key={id} value={id}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              );
+            }
+            if (actionField.type === 'date' && actionField.name === 'due_date') {
+              return (
+                <FormControl fullWidth>
+                  <FormHelperText>Pick a due date</FormHelperText>
+                  <DatePickerDialog
+                    handleDateChange={date =>
+                      handleDateChange({ name: actionField.name, value: date })}
+                    selectedDate={selectedDate}
                   />
-                );
-              }}
-            />
-          ))}
+                </FormControl>
+              );
+            }
+            return (
+              <Autocomplete
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                id={`${actionField.name}-action-input`}
+                freeSolo
+                value={metaData[actionField.name]}
+                inputValue={metaData[actionField.name]}
+                onInputChange={(_event, newValue) => {
+                  setMetaData({
+                    ...metaData,
+                    [actionField.name]: newValue
+                  });
+                }}
+                options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
+                renderInput={params => {
+                  return (
+                    <TextField
+                      {...params}
+                      label={capitalize(actionField.name)}
+                      name={actionField.name}
+                      margin="normal"
+                      variant="outlined"
+                      multiline
+                    />
+                  );
+                }}
+              />
+            );
+          })}
+        {data.actionType === 'custom_email' &&
+          emailTemplatesData?.emailTemplates
+            .find(temp => temp.id === metaData.template)
+            ?.variableNames.map((varName, index) => (
+              <Autocomplete
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                id={`${varName}-action-input`}
+                freeSolo
+                value={metaData[varName]}
+                inputValue={metaData[varName]}
+                onInputChange={(_event, newValue) => {
+                  setMetaData({
+                    ...metaData,
+                    [varName]: newValue
+                  });
+                }}
+                options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
+                renderInput={params => {
+                  return (
+                    <TextField
+                      {...params}
+                      label={capitalize(varName)}
+                      name={varName}
+                      margin="normal"
+                      variant="outlined"
+                      multiline
+                    />
+                  );
+                }}
+              />
+            ))}
       </DialogContent>
       <DialogActions style={{ justifyContent: 'flex-start' }}>
         <Button onClick={closeModal} color="secondary" variant="outlined">

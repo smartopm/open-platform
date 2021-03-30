@@ -233,31 +233,26 @@ export function titleize(string) {
  * @returns {String}
  */
 export function sentencizeAction(action){
-  const sendActions = ['email', 'notification']
-  const createActions = ['task']
-
-  if(sendActions.indexOf(action.toLowerCase()) >= 0) {
-    return `Send ${action}`
-  }
-
-  if(createActions.indexOf(action.toLowerCase()) >= 0) {
+  if (action === 'Task') {
     return `Create ${action}`
   }
+
+  return  `Send ${action}`
 }
 
 
 export async function convertBase64ToFile(data){
   const res = await fetch(data)
   const blob = await res.blob()
-  // will pass in file name 
+  // will pass in file name
   const file = new File([blob], "File name", { type: "image/png" })
   return file
 }
 
 /**
- * 
- * @param {Object} field1 
- * @param {Object} field2 
+ *
+ * @param {Object} field1
+ * @param {Object} field2
  * @returns order
  */
 export function sortPropertyOrder(field1, field2){
@@ -304,7 +299,7 @@ export function checkValidGeoJSON(str){
     const o = JSON.parse(str)
     // Handle non-exception-throwing cases:
     // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
-    // but... JSON.parse(null) returns null, and typeof null === "object", 
+    // but... JSON.parse(null) returns null, and typeof null === "object",
     // so we must check for that, too. Thankfully, null is falsey, so this suffices:
     if (o && typeof o === "object") {
       return true;
@@ -315,9 +310,9 @@ export function checkValidGeoJSON(str){
   }
 
 /**
- * 
- * @param {object} obj 
- * @param {String} prop 
+ *
+ * @param {object} obj
+ * @param {String} prop
  * @description get value based on a passed property name, if validates object and string first
  */
   export function propAccessor(obj, prop){
@@ -325,7 +320,7 @@ export function checkValidGeoJSON(str){
     const newProp = prop.toString()
     // check if obj is a valid object
     // I couldn't find a better way of validating am object
-    if(Object.prototype.toString.call(obj) !== '[object Object]') return 
+    if(Object.prototype.toString.call(obj) !== '[object Object]') return
     // check if prop is in obj
     if(!obj.hasOwnProperty(newProp)) return
     for (const [key, value] of Object.entries(obj)) {
@@ -336,23 +331,23 @@ export function checkValidGeoJSON(str){
 }
 
 /**
- * 
+ *
  * @param {String} str snake_case string
  * @return {String} camelCase string
- * @description converts a snake_case string to a camelCase by finding words that start with _ or - 
- * and replaces this with a titlecased word after the _ or - since the regex is global, 
+ * @description converts a snake_case string to a camelCase by finding words that start with _ or -
+ * and replaces this with a titlecased word after the _ or - since the regex is global,
  * it applies this to all instances
- * @example snake_name ==> snakeName 
+ * @example snake_name ==> snakeName
  */
 export function toCamelCase(str){
   return str.replace(/([-_]\w)/g, word => word[1].toUpperCase())
 }
 
 /**
- * 
+ *
  * @param {Number} range integer number
  * @return {String} Hex color based on number range
- * @description Converts a number range to HEX color used for map map legend 
+ * @description Converts a number range to HEX color used for map map legend
  */
 /* eslint-disable no-nested-ternary */
 export function getHexColor (range) {
@@ -390,7 +385,7 @@ export function getHexColor (range) {
  }
 
  /**
-  * 
+  *
   * @param {object} currencyData currency and locale
   * @description it gets the currency from the locale, so instead of USD or ZMW, it gives $ or K
   */
@@ -403,10 +398,10 @@ export function getHexColor (range) {
  }
 
  /**
- * 
+ *
  * @param {object} featureGroup leaflet map layer
  * @return {object} plugin config
- * @description Creates a plugin config for leaflet draw control 
+ * @description Creates a plugin config for leaflet draw control
  */
 export function getDrawPluginOptions (featureGroup) {
   return ({

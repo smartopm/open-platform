@@ -31,15 +31,15 @@ const initialValues = {
 }
 export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
   const classes = useStyles();
-  const history = useHistory()
-  const [inputValue, setInputValue] = useState(initialValues)
-  const [createPayment] = useMutation(PaymentCreate)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
-  const [promptOpen, setPromptOpen] = useState(false)
-  const [paymentData, setPaymentData] = useState({})
-  const [isError, setIsError] = useState(false)
-  const [submitting, setIsSubmitting] = useState(false)
+  const history = useHistory();
+  const [inputValue, setInputValue] = useState(initialValues);
+  const [createPayment] = useMutation(PaymentCreate);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [paymentData, setPaymentData] = useState({});
+  const [isError, setIsError] = useState(false);
+  const [submitting, setIsSubmitting] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
 
   function confirm(event) {
@@ -100,7 +100,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         depRefetch();
         walletRefetch();
         setPaymentData(res.data.walletTransactionCreate.walletTransaction);
-        setInputValue(initialValues)
+        setInputValue(initialValues);
         setPromptOpen(true);
       })
       .catch(err => {
@@ -149,7 +149,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         saveAction={isConfirm ? 'Confirm' : 'Pay'}
         cancelAction={isConfirm ? 'Go Back' : 'Cancel'}
       >
-
         {isConfirm ? (
           <PaymentDetails inputValue={inputValue} currencyData={currencyData} />
         ) : (
@@ -160,14 +159,18 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 margin="dense"
                 id="amount"
                 label="Amount"
-                type='number'
+                type="number"
                 value={inputValue.amount}
-                onChange={(event) => setInputValue({...inputValue, amount: event.target.value})}
+                onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
                 InputProps={{
-            startAdornment: <InputAdornment position="start">{extractCurrency(currencyData)}</InputAdornment>,
-                "data-testid": "amount",
-                step: 0.01
-              }}
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {extractCurrency(currencyData)}
+                    </InputAdornment>
+                  ),
+                  'data-testid': 'amount',
+                  step: 0.01
+                }}
                 required
                 error={isError && submitting && !inputValue.amount}
                 helperText={isError && !inputValue.amount && 'amount is required'}
@@ -176,37 +179,41 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 autoFocus
                 margin="dense"
                 id="parcel-number"
-                inputProps={{ "data-testid": "parcel-number" }}
+                inputProps={{ 'data-testid': 'parcel-number' }}
                 label="Plot No"
                 value={inputValue.landParcelId}
-                onChange={(event) => setInputValue({...inputValue, landParcelId: event.target.value})}
+                onChange={event =>
+                  setInputValue({ ...inputValue, landParcelId: event.target.value })}
                 required
                 select
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
               >
                 {landParcels?.userLandParcel?.map(land => (
-                  <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
+                  <MenuItem value={land.id} key={land.id}>
+                    {land.parcelNumber}
+                  </MenuItem>
                 ))}
               </TextField>
               <TextField
                 margin="dense"
                 id="transaction-type"
-                inputProps={{ "data-testid": "transaction-type" }}
+                inputProps={{ 'data-testid': 'transaction-type' }}
                 label="Transaction Type"
                 value={inputValue.transactionType}
-                onChange={(event) => setInputValue({...inputValue, transactionType: event.target.value})}
+                onChange={event =>
+                  setInputValue({ ...inputValue, transactionType: event.target.value })}
                 required
                 select
                 error={isError && submitting && !inputValue.transactionType}
                 helperText={isError && !inputValue.transactionType && 'TransactionType is required'}
               >
-                <MenuItem value='cash'>Cash</MenuItem>
-                <MenuItem value='cheque/cashier_cheque'>Cheque/Cashier Cheque</MenuItem>
-                <MenuItem value='mobile_money'>Mobile Money</MenuItem>
-                <MenuItem value='bank_transfer/cash_deposit'>Bank Transfer/Cash Deposit</MenuItem>
-                <MenuItem value='bank_transfer/eft'>Bank Transfer/EFT</MenuItem>
-                <MenuItem value='pos'>Point of Sale</MenuItem>
+                <MenuItem value="cash">Cash</MenuItem>
+                <MenuItem value="cheque/cashier_cheque">Cheque/Cashier Cheque</MenuItem>
+                <MenuItem value="mobile_money">Mobile Money</MenuItem>
+                <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
+                <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
+                <MenuItem value="pos">Point of Sale</MenuItem>
               </TextField>
               <br />
               <SwitchInput
@@ -243,34 +250,35 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 margin="dense"
                 id="transaction-number"
                 label="Transaction Number"
-                type='string'
+                type="string"
                 value={inputValue.transactionNumber}
-                onChange={(event) => setInputValue({...inputValue, transactionNumber: event.target.value})}
+                onChange={event =>
+                  setInputValue({ ...inputValue, transactionNumber: event.target.value })}
               />
-              {
-            inputValue.transactionType === 'cheque/cashier_cheque' && (
-              <>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="bank-name"
-                  label="Bank Name"
-                  type='string'
-                  value={inputValue.bankName}
-                  onChange={(event) => setInputValue({...inputValue, bankName: event.target.value})}
-                />
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="cheque-number"
-                  label="Cheque Number"
-                  type='string'
-                  value={inputValue.chequeNumber}
-                  onChange={(event) => setInputValue({...inputValue, chequeNumber: event.target.value})}
-                />
-              </>
-            )
-          }
+              {inputValue.transactionType === 'cheque/cashier_cheque' && (
+                <>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="bank-name"
+                    label="Bank Name"
+                    type="string"
+                    value={inputValue.bankName}
+                    onChange={event =>
+                      setInputValue({ ...inputValue, bankName: event.target.value })}
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="cheque-number"
+                    label="Cheque Number"
+                    type="string"
+                    value={inputValue.chequeNumber}
+                    onChange={event =>
+                      setInputValue({ ...inputValue, chequeNumber: event.target.value })}
+                  />
+                </>
+              )}
             </div>
           </>
         )}
@@ -283,7 +291,7 @@ export function PaymentDetails({ inputValue, currencyData }) {
   return (
     <div>
       <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
-        Amount:
+        Amount: 
         {' '}
         <b>{formatMoney(currencyData, inputValue.amount)}</b>
       </Typography>
@@ -372,4 +380,4 @@ PaymentModal.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired
-}
+};

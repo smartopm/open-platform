@@ -1,6 +1,6 @@
 /* eslint-disable */
 import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment, NotesFragment, SubstatusDistributionReportFragment 
+import { UserFragment, EntryRequestFragment, NotesFragment, SubstatusDistributionReportFragment
 } from './fragments'
 
 export const UserQuery = gql`
@@ -1067,6 +1067,7 @@ export const EmailTemplatesQuery = gql`
     emailTemplates {
       name
       id
+      variableNames
     }
   }
 `
@@ -1267,3 +1268,9 @@ export const InvoiceAutogenerationData = gql`
     }
   }
 `
+
+export const EmailTemplateVariables = gql`
+  query emailTemplateVariables($templateId: ID!) {
+    emailTemplateVariables(id: $templateId)
+  }
+`;
