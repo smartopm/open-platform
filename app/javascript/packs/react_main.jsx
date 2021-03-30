@@ -80,6 +80,9 @@ import StatsPage from '../src/containers/User/StatsPage';
 import Main from '../src/Main';
 import modules from '../src/modules';
 
+
+// The routes defined here are carefully arranged, be mindful when changing them
+
 // Prevent Google Analytics reporting from staging and dev domains
 const PRIMARY_DOMAINS = ['app.doublegdp.com'];
 
@@ -198,6 +201,7 @@ const App = () => {
                             {({ user }) => (
                               <Switch>
                                 {/* these are redirects for pages we don't have yet, they can only be placed here */}
+                                {/* build individual modules for these once we have pages that directly route there */}
                                 {/* beginning of redirects */}
                                 <Route
                                   exact
@@ -311,6 +315,13 @@ const App = () => {
                                   path="/user_form/:formId?/:userId?/:formName?/:type?"
                                   component={FormPage}
                                 />
+                                 {/* we will also need a not found page for non-logged in user */}
+                                 {/* if you are going to move this to another line carry it like an egg */}
+                                 <Route
+                                  render={() => (
+                                    <ErrorPage title="Sorry!! We couldn't find this page" />
+                                  )}
+                                />
                                 <AdminRoutes>
                                   <Switch>
                                     <Route path="/users/import" component={UsersImport} />
@@ -341,11 +352,7 @@ const App = () => {
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>
-                                <Route
-                                  render={() => (
-                                    <ErrorPage title="Sorry!! We couldn't find this page" />
-                                  )}
-                                />
+ 
                               </Switch>
                             )}
                           </Consumer>
