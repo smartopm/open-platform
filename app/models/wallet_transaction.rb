@@ -20,6 +20,7 @@ class WalletTransaction < ApplicationRecord
   end
 
   before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }
+  after_update :revert_payments, if: proc { saved_changes.key?('status') }
 
   VALID_SOURCES = ['cash', 'cheque/cashier_cheque', 'wallet', 'mobile_money', 'invoice',
                    'bank_transfer/eft', 'bank_transfer/cash_deposit', 'pos'].freeze
@@ -64,4 +65,8 @@ class WalletTransaction < ApplicationRecord
     )
   end
   # rubocop:enable Metrics/MethodLength
+
+  def revert_payments
+    payment_invoice = PaymentInvoices.find(wallet_transaction_id: id)
+  end
 end

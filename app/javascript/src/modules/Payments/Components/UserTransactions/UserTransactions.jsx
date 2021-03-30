@@ -1,14 +1,16 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
+import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Tooltip } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
-import DataList from '../../../../shared/list/DataList';
-import Text, { GridText } from '../../../../shared/Text';
-import { dateToString } from '../../../../components/DateContainer';
-import CenteredContent from '../../../../components/CenteredContent';
-import Label from '../../../../shared/label/Label';
+import { WalletTransactionRevert } from '../../../graphql/mutations/transactions';
+import DataList from '../../../shared/list/DataList';
+import Text, { GridText } from '../../../shared/Text';
+import { dateToString } from '../../DateContainer';
+import CenteredContent from '../../CenteredContent';
+import Label from '../../../shared/label/Label';
 import TransactionDetails from '../TransactionDetails'
 import { formatMoney } from '../../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
@@ -35,6 +37,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const [transactionId, setTransactionId] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [name, setName] = useState('')
+  const [revertTransaction] = useMutation(WalletTransactionRevert)
   const anchorElOpen = Boolean(anchorEl)
 
   const menuList = [
@@ -56,21 +59,21 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
 
   function handleRevertTransaction(event) {
     event.stopPropagation()
-    // revertTransaction({
-    //   variables: {
-    //     transactionId
-    //   }
-    // }).then(() => {
-    //   setAnchorEl(null)
-    //   setMessageAlert('Transaction reverted')
-    //   setIsSuccessAlert(true)
-    //   setModalOpen(false)
-    //   refetch()
-    // })
-    // .catch((err) => {
-    //   setMessageAlert(formatError(err.message))
-    //   setIsSuccessAlert(false)
-    // })
+    revertTransaction({
+      variables: {
+        transactionId
+      }
+    }).then(() => {
+      setAnchorEl(null)
+      setMessageAlert('Transaction reverted')
+      setIsSuccessAlert(true)
+      setModalOpen(false)
+      refetch()
+    })
+    .catch((err) => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+    })
     setRevertModalOpen(false)
   }
 
