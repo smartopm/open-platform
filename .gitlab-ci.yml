@@ -162,8 +162,9 @@ include:
 #     - tags
 
 # Execute a DAST scan against DEV environment
+variables:
+  DAST_WEBSITE: https://victor.dgdp.site/
+
 dast:
-  variables:
-    DAST_WEBSITE: https://victor.dgdp.site/
-  script:
-    - echo 'running DAST on DEV'
+  before_script:
+    - echo 'Execute a DAST scan against DEV environment'
