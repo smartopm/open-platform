@@ -76,7 +76,6 @@ import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
-import StatsPage from '../src/containers/User/StatsPage';
 import { MainMenu } from '../src/modules/Menu/';
 import modules from '../src/modules';
 
@@ -318,7 +317,6 @@ const App = () => {
                                 <AdminRoutes>
                                   <Switch>
                                     <Route path="/users/import" component={UsersImport} />
-                                    <Route path="/users/stats" component={StatsPage} />
                                     <Route path="/showroom_logs" component={ShowroomLogs} />
                                     <Route path="/notes" component={AllNotes} />
                                     <Route path="/tasks/:taskId" exact component={TaskUpdate} />
