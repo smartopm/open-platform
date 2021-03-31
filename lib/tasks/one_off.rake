@@ -236,7 +236,6 @@ namespace :import do
       community: Community.find_by(name: 'Nkwashi'),
     )
   end
-
 end
 # rubocop:enable Metrics/BlockLength
 # rubocop:enable Layout/LineLength
@@ -252,9 +251,7 @@ namespace :backfill do
       next if plan.nil?
       next if plan.total_amount.present?
 
-      if latest_valuation.present?
-        plan.update(total_amount: latest_valuation.amount)
-      end
+      plan.update(total_amount: latest_valuation.amount) if latest_valuation.present?
     end
     puts 'Done.'
   end

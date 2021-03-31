@@ -13,7 +13,6 @@ module Mutations
       argument :total_amount, Float, required: true
       argument :duration_in_month, Integer, required: true
 
-
       field :payment_plan, Types::PaymentPlanType, null: true
 
       def resolve(vals)

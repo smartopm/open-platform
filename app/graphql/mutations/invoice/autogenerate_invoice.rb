@@ -6,7 +6,6 @@ module Mutations
     class AutogenerateInvoice < BaseMutation
       field :invoices, [Types::InvoiceType], null: true
 
-      # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def resolve
         month = Time.zone.now.month
@@ -27,7 +26,6 @@ module Mutations
         end
         { invoices: invoices }
       end
-      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
       def create_invoice(payment_plan, land_parcel)
