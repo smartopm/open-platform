@@ -161,10 +161,10 @@ include:
 #   only:
 #     - tags
 
-# Execute a DAST scan against DEV environment
+# Execute a DAST scan against DEV
 variables:
   DAST_WEBSITE: https://victor.dgdp.site/
 
 dast:
   before_script:
-    - echo 'Execute a DAST scan against DEV environment'
+    - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"
