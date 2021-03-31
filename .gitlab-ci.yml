@@ -166,4 +166,4 @@ dast:
   script:
     - echo 'running DAST on development'
   variables:
-    DAST_WEBSITE: https://double-gdp-dev.herokuapp.com/
+    DAST_WEBSITE: https://victor.dgdp.site/
