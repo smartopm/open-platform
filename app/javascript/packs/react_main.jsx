@@ -240,7 +240,7 @@ const App = () => {
                                     ));
                                   }
                                   if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route {...module.routeProps} key={module.name} />;
+                                    return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}
                                 {/* routes will need to be moved up here so that the not found can catch them all */}
