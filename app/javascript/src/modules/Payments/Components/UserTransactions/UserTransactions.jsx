@@ -12,7 +12,7 @@ import { dateToString } from '../../DateContainer';
 import CenteredContent from '../../CenteredContent';
 import Label from '../../../shared/label/Label';
 import TransactionDetails from '../TransactionDetails'
-import { formatMoney } from '../../../../utils/helpers';
+import { formatMoney, formatError } from '../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
 import MenuList from '../../../../shared/MenuList'
 import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue'
@@ -43,7 +43,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const menuList = [
     { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt},
     { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenEdit},
-    { content: 'Revert Transaction', isAdmin: true, color: 'red', handleClick: handleClick},
+    { content: 'Revert Transaction', isAdmin: true, color: 'red', handleClick: () => handleClick(event, transaction, userData)},
   ]
 
   useEffect(() => {
@@ -67,19 +67,19 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
       setAnchorEl(null)
       setMessageAlert('Transaction reverted')
       setIsSuccessAlert(true)
-      setModalOpen(false)
-      refetch()
+      setRevertModalOpen(false)
     })
     .catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
     })
-    setRevertModalOpen(false)
   }
 
-  function handleClick(event, transactionId, name){
+  function handleClick(event, transaction, user){
+    const txnId = transaction.id
+    const name = user.name
     event.stopPropagation()
-    setTransactionId(transactionId)
+    setTransactionId(txnId)
     setName(name)
     setRevertModalOpen(true)
   }

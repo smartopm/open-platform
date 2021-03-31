@@ -22,6 +22,7 @@ module Mutations
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:user_id])
+          land_parcel = context[:site_community].land_parcels.find_by(id: vals[:land_parcel_id])
           transaction = user.wallet_transactions.create!(
             vals.except(:user_id, :land_parcel_id)
                 .merge({
@@ -30,10 +31,11 @@ module Mutations
                          community_id: context[:site_community]&.id,
                          depositor_id: context[:current_user].id,
                          originally_created_at: user.current_time_in_timezone,
+                         payment_plan_id: land_parcel.payment_plan&.id,
                        }),
           )
           context[:current_user].generate_events('deposit_create', transaction)
-          update_plot_balance(vals[:land_parcel_id], vals[:amount])
+          land_parcel.payment_plan&.update_plot_balance(vals[:amount])
           update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
           return { wallet_transaction: transaction } if transaction.persisted?
         end
@@ -45,12 +47,6 @@ module Mutations
       def update_wallet_balance(user, transaction, amount)
         transaction.update(current_wallet_balance: user.wallet.balance + amount)
         user.wallet.update_balance(amount)
-      end
-
-      def update_plot_balance(land_parcel_id, amount)
-        land_parcel = context[:site_community].land_parcels.find_by(id: land_parcel_id)
-
-        land_parcel.payment_plan&.update_plot_balance(amount)
       end
 
       def authorized?(_vals)

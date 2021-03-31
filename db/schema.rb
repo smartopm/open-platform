@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_30_131230) do
+ActiveRecord::Schema.define(version: 2021_04_01_082616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -670,8 +670,10 @@ ActiveRecord::Schema.define(version: 2021_03_30_131230) do
     t.uuid "depositor_id"
     t.string "receipt_number"
     t.datetime "originally_created_at"
+    t.uuid "payment_plan_id"
     t.index ["community_id"], name: "index_wallet_transactions_on_community_id"
     t.index ["depositor_id"], name: "index_wallet_transactions_on_depositor_id"
+    t.index ["payment_plan_id"], name: "index_wallet_transactions_on_payment_plan_id"
     t.index ["transaction_number"], name: "index_wallet_transactions_on_transaction_number", unique: true
     t.index ["user_id"], name: "index_wallet_transactions_on_user_id"
   end
@@ -747,6 +749,7 @@ ActiveRecord::Schema.define(version: 2021_03_30_131230) do
   add_foreign_key "user_labels", "users"
   add_foreign_key "valuations", "land_parcels"
   add_foreign_key "wallet_transactions", "communities"
+  add_foreign_key "wallet_transactions", "payment_plans"
   add_foreign_key "wallet_transactions", "users"
   add_foreign_key "wallets", "users"
 end

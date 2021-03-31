@@ -64,28 +64,60 @@ class WalletTransaction < ApplicationRecord
      group by trx_date order by trx_date",
     )
   end
-  # rubocop:enable Metrics/MethodLength
 
   def revert_payments
+    user.wallet.update_balance(amount, 'debit')
+    update_plot_balance(amount)
     payments = user.payments.order(created_at: :desc)
     amount_to_revert = amount
     payments.each do |payment|
-      cur_revert_amount = payment.amount < amount_to_revert ? payment.amount : amount_to_revert 
+      break unless amount_to_revert.positive?
+
+      cur_revert_amount = payment.amount < amount_to_revert ? payment.amount : amount_to_revert
       cancel_payment(payment, cur_revert_amount)
-      amount_to_revert = amount_to_revert - cur_revert_amount
+      amount_to_revert -= cur_revert_amount
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def cancel_payment(payment, revert_amount)
     ActiveRecord::Base.transaction do
-      payment.amount.eql?(revert_amount) ? payment.cancelled! : payment.partially_cancelled!
-      
+      payment.cancelled!
+      create_new_payment(payment, revert_amount) unless payment.amount.eql?(revert_amount)
+
       payment.invoices.not_cancelled.each do |inv|
         break unless revert_amount.positive?
 
-        pending_amount = inv.amount > revert_amount ? revert_amount : inv.amount
-        inv.update(status: in_progress, pending_amount: pending_amount)
+        paid_amount = inv.amount - inv.pending_amount
+        inv_revert_amount = paid_amount > revert_amount ? revert_amount : paid_amount
+        inv.update(status: 'in_progress', pending_amount: inv.pending_amount + inv_revert_amount)
+        cancel_transaction(inv, payment)
+        revert_amount -= inv_revert_amount
       end
     end
+  end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
+
+  # rubocop:disable Rails/SkipsModelValidations
+  def cancel_transaction(inv, payment)
+    txn_id = PaymentInvoice.find_by(invoice_id: inv.id, payment_id: payment.id)
+                           .wallet_transaction_id
+    user.wallet_transactions.find_by(id: txn_id)&.update_columns(status: 'cancelled')
+  end
+  # rubocop:enable Rails/SkipsModelValidations
+
+  def create_new_payment(payment, payment_amount)
+    inv = payment.invoices.first
+    transaction = user.wallet.create_transaction(payment_amount)
+    payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
+                             user_id: user.id, community_id: user.community_id)
+    payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
+  end
+
+  def update_plot_balance(amount)
+    plan = user.payment_plans.find_by(id: payment_plan_id)
+    plan.plot_balance = plan.plot_balance < amount ? 0 : plan.plot_balance - amount
+    plan.save
   end
 end

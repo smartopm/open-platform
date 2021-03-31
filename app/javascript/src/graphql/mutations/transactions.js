@@ -39,7 +39,7 @@ export const WalletTransactionRevert = gql`
     $transactionId: ID!
   ) {
     walletTransactionRevert(
-      Id: $transactionId
+      id: $transactionId
     ) {
       walletTransaction {
         id
