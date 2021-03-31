@@ -27,7 +27,6 @@ describe('Side Nav component', () => {
     expect(container.queryByText('Communication')).toBeInTheDocument()
     expect(container.queryByText('Log Book')).toBeInTheDocument()
     expect(container.queryByText('Payments')).toBeInTheDocument()
-    expect(container.queryByText('Forms')).toBeInTheDocument()
     expect(container.queryByText('Users')).toBeInTheDocument()
     expect(container.queryByText('Properties')).toBeInTheDocument()
     expect(container.queryByText('Action Flows')).toBeInTheDocument()
