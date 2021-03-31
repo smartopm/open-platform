@@ -67,6 +67,25 @@ class WalletTransaction < ApplicationRecord
   # rubocop:enable Metrics/MethodLength
 
   def revert_payments
-    payment_invoice = PaymentInvoices.find(wallet_transaction_id: id)
+    payments = user.payments.order(created_at: :desc)
+    amount_to_revert = amount
+    payments.each do |payment|
+      cur_revert_amount = payment.amount < amount_to_revert ? payment.amount : amount_to_revert 
+      cancel_payment(payment, cur_revert_amount)
+      amount_to_revert = amount_to_revert - cur_revert_amount
+    end
+  end
+
+  def cancel_payment(payment, revert_amount)
+    ActiveRecord::Base.transaction do
+      payment.amount.eql?(revert_amount) ? payment.cancelled! : payment.partially_cancelled!
+      
+      payment.invoices.not_cancelled.each do |inv|
+        break unless revert_amount.positive?
+
+        pending_amount = inv.amount > revert_amount ? revert_amount : inv.amount
+        inv.update(status: in_progress, pending_amount: pending_amount)
+      end
+    end
   end
 end
