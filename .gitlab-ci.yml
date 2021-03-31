@@ -1,100 +1,100 @@
 stages:
   - build
-  # - test
-  # - report
+  - test
+  - report
   # - e2e
-  # - staging
-  # - deploy
+  - staging
+  - deploy
   - dast
 
-# image: "ruby:2.6"
+image: "ruby:2.6"
 
 include:
-  # - template: Dependency-Scanning.gitlab-ci.yml
-  # - template: Security/SAST.gitlab-ci.yml
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
 
-# .base_minimal:
-#   image: alpine:latest
-#   cache: {}
+.base_minimal:
+  image: alpine:latest
+  cache: {}
 
-# .base:
-#   image: "ruby:2.6"
-#   cache:
-#     key: gems_and_packages
-#     paths:
-#       - apt-cache/
-#       - vendor
-#     policy: pull
-#   before_script:
-#     - gem install bundler --no-document
-#     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path vendor
+.base:
+  image: "ruby:2.6"
+  cache:
+    key: gems_and_packages
+    paths:
+      - apt-cache/
+      - vendor
+    policy: pull
+  before_script:
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path vendor
 
-# .base_db:
-#   extends: .base
-#   services:
-#     - postgres:latest
-#     - redis:latest
-#   variables:
-#     POSTGRES_DB: dgdp_test
-#     POSTGRES_USER: postgres
-#     POSTGRES_PASSWORD: "6f5e79b56aca56ecc1cdaa46f126370f"
-#     REDIS_URL: redis://redis:6379
-#   before_script:
-#     - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
-#     - ruby -v
-#     - which ruby
-#     - gem install bundler --no-document
-#     - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
-#     - RAILS_ENV=test bundle exec rake db:create db:schema:load
-#     - curl -o- -L https://yarnpkg.com/install.sh | bash
-#     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-#     - yarn install
+.base_db:
+  extends: .base
+  services:
+    - postgres:latest
+    - redis:latest
+  variables:
+    POSTGRES_DB: dgdp_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: "6f5e79b56aca56ecc1cdaa46f126370f"
+    REDIS_URL: redis://redis:6379
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
+    - ruby -v
+    - which ruby
+    - gem install bundler --no-document
+    - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
+    - RAILS_ENV=test bundle exec rake db:create db:schema:load
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
 
 
-# pages:
-#     stage: staging
-#     extends: .base_db
-#     allow_failure: true
-#     when: always
-#     # Export storybook as a static site (to public)
-#     script:
-#       # - npm install
-#       - yarn build-storybook -o public
-#     # Required artifact for GitLab Pages
-#     artifacts:
-#         paths:
-#           - public
-#     only:
-#       - master
+pages:
+    stage: staging
+    extends: .base_db
+    allow_failure: true
+    when: always
+    # Export storybook as a static site (to public)
+    script:
+      # - npm install
+      - yarn build-storybook -o public
+    # Required artifact for GitLab Pages
+    artifacts:
+        paths:
+          - public
+    only:
+      - master
 
-# test:rspec:
-#   extends: .base_db
-#   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
-#   stage: test
-#   allow_failure: false
-#   script:
-#     - bundle exec rake lint
-#     - bundle exec rake
-#   artifacts:
-#     paths:
-#       - "coverage/"
-#     name: "Rails $CI_PIPELINE_ID Coverage Report"
-#     expire_in: 24 hours
+test:rspec:
+  extends: .base_db
+  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+  stage: test
+  allow_failure: false
+  script:
+    - bundle exec rake lint
+    - bundle exec rake
+  artifacts:
+    paths:
+      - "coverage/"
+    name: "Rails $CI_PIPELINE_ID Coverage Report"
+    expire_in: 24 hours
 
-# test:jest:
-#   extends: .base_db
-#   stage: test
-#   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
-#   allow_failure: false
-#   script:
-#     - yarn lint
-#     - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
-#   artifacts:
-#     paths:
-#       - "coverage/"
-#     name: "Jest $CI_PIPELINE_ID Coverage Report"
-#     expire_in: 24 hours
+test:jest:
+  extends: .base_db
+  stage: test
+  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
+  allow_failure: false
+  script:
+    - yarn lint
+    - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+  artifacts:
+    paths:
+      - "coverage/"
+    name: "Jest $CI_PIPELINE_ID Coverage Report"
+    expire_in: 24 hours
 
 # cypress:
 #   image: docker:latest
@@ -117,54 +117,54 @@ include:
 #   only:
 #     - master
 
-# staging:appdeploy:
-#   stage: staging
-#   allow_failure: false
-#   when: on_success
-#   script:
-#     - echo 'deploying to STAGING'
-#     - gem install dpl
-#     - dpl --provider=heroku --app=double-gdp-staging --api-key=$HEROKU_STAGING_API_KEY
-#     - echo 'deployed to STAGING'
-#   environment:
-#     name: staging
-#     url: https://double-gdp-staging.herokuapp.com/
-#   only:
-#     - master
+staging:appdeploy:
+  stage: staging
+  allow_failure: false
+  when: on_success
+  script:
+    - echo 'deploying to STAGING'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-staging --api-key=$HEROKU_STAGING_API_KEY
+    - echo 'deployed to STAGING'
+  environment:
+    name: staging
+    url: https://double-gdp-staging.herokuapp.com/
+  only:
+    - master
 
-# dev:deploy:
-#   stage: staging
-#   allow_failure: false
-#   when: on_success
-#   script:
-#     - echo 'deploying to DEV'
-#     - gem install dpl
-#     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
-#     - echo 'deployed to DEV'
-#   environment:
-#     name: development
-#     url: https://double-gdp-dev.herokuapp.com/
-#   only:
-#     - master
+dev:deploy:
+  stage: staging
+  allow_failure: false
+  when: on_success
+  script:
+    - echo 'deploying to DEV'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
+    - echo 'deployed to DEV'
+  environment:
+    name: development
+    url: https://double-gdp-dev.herokuapp.com/
+  only:
+    - master
 
-# production:
-#   stage: deploy
-#   allow_failure: false
-#   script:
-#     - echo 'deploying to PRODUCTION'
-#     - gem install dpl
-#     - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
-#     - echo 'deployed to PRODUCTION'
-#   environment:
-#     name: production
-#     url: https://app.doublegdp.com/
-#   only:
-#     - tags
+production:
+  stage: deploy
+  allow_failure: false
+  script:
+    - echo 'deploying to PRODUCTION'
+    - gem install dpl
+    - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
+    - echo 'deployed to PRODUCTION'
+  environment:
+    name: production
+    url: https://app.doublegdp.com/
+  only:
+    - tags
 
-# dast:
-#   stage: dast
-#   script:
-#     - echo 'running DAST on DEV'
-
+# Execute a DAST scan against DEV environment
 variables:
-  DAST_WEBSITE: https://victor.dgdp.site/
+  DAST_WEBSITE: https://double-gdp-dev.herokuapp.com/
+
+dast:
+  before_script:
+    - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"
