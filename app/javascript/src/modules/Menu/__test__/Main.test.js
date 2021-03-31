@@ -4,8 +4,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import Main, { MainNav, NewsNav } from '../../Main';
-import authState from '../../__mocks__/authstate';
+import Main, { MainNav, NewsNav } from '../component/Main';
+import authState from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Main Nav component', () => {

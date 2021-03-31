@@ -2,9 +2,9 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import authState from '../../__mocks__/authstate';
-import SideMenu from '../../shared/SideMenu';
-import modules from '../../modules';
+import authState from '../../../__mocks__/authstate';
+import SideMenu from '../component/SideMenu';
+import modules from '../..';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Side Nav component', () => {
