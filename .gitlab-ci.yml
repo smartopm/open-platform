@@ -5,7 +5,7 @@ stages:
   # - e2e
   # - staging
   # - deploy
-  - dast
+  # - dast
 
 image: "ruby:2.6"
 
