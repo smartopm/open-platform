@@ -16,10 +16,10 @@ module Mutations
         invoices = []
         payment_plans.each do |payment_plan|
           land_parcel = payment_plan.land_parcel
-          valuation = land_parcel.valuations&.latest
-          next if valuation.nil?
 
-          inv = create_invoice(payment_plan, land_parcel, valuation)
+          next if payment_plan.total_amount.nil?
+
+          inv = create_invoice(payment_plan, land_parcel)
           raise GraphQL::ExecutionError, inv.errors.full_messages unless inv.persisted?
 
           payment_plan.update(generated: true)
@@ -30,8 +30,8 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      def create_invoice(payment_plan, land_parcel, valuation)
-        amount = ((payment_plan.percentage.to_i * valuation.amount) / 12)
+      def create_invoice(payment_plan, land_parcel)
+        amount = ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12)
         payment_plan.invoices.create({
                                        land_parcel: land_parcel,
                                        amount: amount,

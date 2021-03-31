@@ -191,10 +191,10 @@ module Types::Queries::Invoice
     amount = 0
     payment_plans.each do |payment_plan|
       land_parcel = payment_plan.land_parcel
-      valuation = land_parcel.valuations&.latest
-      next if valuation.nil?
 
-      amount += ((payment_plan.percentage.to_i * valuation.amount) / 12)
+      next if payment_plan.total_amount.nil?
+
+      amount += ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12)
     end
     amount
   end
