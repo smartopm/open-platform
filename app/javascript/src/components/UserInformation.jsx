@@ -28,6 +28,7 @@ import UserMessages from './Messaging/UserMessages'
 import Transactions from '../modules/Payments/Components/UserTransactions/Transactions'
 import UserJourney from './User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
+// import LeftSideMenu from '../modules/Menu/component/LeftMenu'
 
 export default function UserInformation({
   data,
@@ -60,6 +61,7 @@ export default function UserInformation({
       form.reset()
     })
   }
+
 
   const open = Boolean(anchorEl)
   const userType = authState.user.userType.toLowerCase()
@@ -159,6 +161,7 @@ export default function UserInformation({
                   <MoreVertIcon />
                 </IconButton>
               )}
+              {/* <LeftSideMenu authState={authState} handleDrawerToggle={() => setOpen(false)} drawerOpen={isLeftOpenu} /> */}
               {/* Menu */}
               <UserActionMenu
                 data={data}

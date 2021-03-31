@@ -77,9 +77,8 @@ import CommentsPage from '../src/containers/Comments/CommentPage';
 import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
 import StatsPage from '../src/containers/User/StatsPage';
-import Main from '../src/Main';
+import { MainMenu } from '../src/modules/Menu/';
 import modules from '../src/modules';
-
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -194,7 +193,7 @@ const App = () => {
                     <Route path="/news/post/:id" exact component={PostPage} />
 
                     <LoggedInOnly>
-                      <Main />
+                      <MainMenu />
                       <div className={classes.appContainer}>
                         <Switch>
                           <Consumer>

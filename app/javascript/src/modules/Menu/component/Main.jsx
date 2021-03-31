@@ -104,6 +104,7 @@ export function MainNav({ authState }) {
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                direction="left"
                 mobileOpen
               />
             </Drawer>
@@ -118,6 +119,7 @@ export function MainNav({ authState }) {
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                direction="left"
                 mobileOpen={false}
               />
             </Drawer>

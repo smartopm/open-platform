@@ -11,7 +11,7 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
+const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) => {
   const history = useHistory();
   const { pathname } = useLocation()
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: ''});
@@ -34,9 +34,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen }) => {
     if (mobileOpen) {
       toggleDrawer(event);
     }
+    // check the direct and route differently
     history.push(item.routeProps.path);
   }
-  console.log(pathname)
+  console.log(direction)
   return (
     <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer} data-testid="sidenav-container">
       <List>
@@ -107,6 +108,7 @@ SideMenu.propTypes = {
   menuItems: PropTypes.arrayOf(menuItemProps).isRequired,
   userType: PropTypes.string.isRequired,
   mobileOpen: PropTypes.bool.isRequired,
+  direction: PropTypes.oneOf(['left', 'right']).isRequired
 };
 
 const styles = StyleSheet.create({
