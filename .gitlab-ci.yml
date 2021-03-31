@@ -161,10 +161,10 @@ include:
 #   only:
 #     - tags
 
-dast:
-  stage: dast
-  script:
-    - echo 'running DAST on DEV - $DAST_WEBSITE'
+# dast:
+#   stage: dast
+#   script:
+#     - echo 'running DAST on DEV'
 
 variables:
   DAST_WEBSITE: https://victor.dgdp.site/
