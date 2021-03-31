@@ -17,11 +17,11 @@ export function getInitialSubStatusContent({ date, newStatus, previousStatus }) 
       {' '}
       {previousStatus ? 'from' : 'to'} 
       {' '}
-      <b>{userSubStatus[String(newStatus)]}</b>
+      <b>{userSubStatus[String(previousStatus)]}</b>
       {' '}
       {previousStatus && 'to'} 
       {' '}
-      <b>{userSubStatus[String(previousStatus)]}</b> 
+      <b>{userSubStatus[String(newStatus)]}</b> 
       {' '}
       {date}
     </span>
