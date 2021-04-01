@@ -35,9 +35,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
       toggleDrawer(event);
     }
     // check the direct and route differently
+    // check current pathname and direction of the drawer if it has id then use that as new path for all left side based routes
+    console.log(direction)
     history.push(item.routeProps.path);
   }
-  console.log(direction)
   return (
     <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer} data-testid="sidenav-container">
       <List>
