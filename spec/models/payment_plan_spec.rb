@@ -38,6 +38,7 @@ RSpec.describe PaymentPlan, type: :model do
         user: user,
         plot_balance: 0,
         land_parcel: land_parcel,
+        total_amount: 100
       )
       expect(land_parcel.payment_plan.invoices.count).to eql 12
     end
