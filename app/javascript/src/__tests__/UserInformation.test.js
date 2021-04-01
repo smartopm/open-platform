@@ -85,7 +85,7 @@ describe("User information component loads",()=>{
           }
         }
       };
-      const { getByText } = render(
+      const { getAllByText } = render(
         <MockedProvider mocks={[anotherMock]}>
           <BrowserRouter>
             <UserInformation
@@ -100,10 +100,10 @@ describe("User information component loads",()=>{
 
       await waitFor(
         () => {
-          expect(getByText('Plots')).toBeInTheDocument();
-          expect(getByText('Communication')).toBeInTheDocument();
-          expect(getByText('Payments')).toBeInTheDocument();
-          expect(getByText('Contact')).toBeInTheDocument();
+          expect(getAllByText('Plots')[0]).toBeInTheDocument();
+          expect(getAllByText('Communication')[0]).toBeInTheDocument();
+          expect(getAllByText('Payments')[0]).toBeInTheDocument();
+          expect(getAllByText('Contact')[0]).toBeInTheDocument();
         },
         { timeout: 50 }
       );
