@@ -24,7 +24,7 @@ describe('Side Nav component', () => {
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
     expect(container.queryByText('Home')).toBeInTheDocument()
-    expect(container.queryByText('Communication')).toBeInTheDocument()
+    expect(container.queryByText('Communication')).not.toBeInTheDocument()
     expect(container.queryByText('Log Book')).toBeInTheDocument()
     expect(container.queryByText('Payments')).toBeInTheDocument()
     expect(container.queryByText('Users')).toBeInTheDocument()
