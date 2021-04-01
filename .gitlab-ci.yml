@@ -5,12 +5,14 @@ stages:
   # - e2e
   - staging
   - deploy
+  - dast
 
 image: "ruby:2.6"
 
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+  - template: DAST.gitlab-ci.yml
 
 .base_minimal:
   image: alpine:latest
@@ -158,3 +160,11 @@ production:
     url: https://app.doublegdp.com/
   only:
     - tags
+
+# Execute a DAST scan against DEV environment
+variables:
+  DAST_WEBSITE: https://double-gdp-dev.herokuapp.com/
+
+dast:
+  before_script:
+    - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"
