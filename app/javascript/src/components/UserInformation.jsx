@@ -45,7 +45,9 @@ export default function UserInformation({
   const CSMNumber = '260974624243'
   const path = useParamsQuery()
   const tab = path.get('tab')
+  const paymentSubTab = path.get('payment_sub_tab')
   const [tabValue, setValue] = useState(tab || 'Contacts')
+  const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices')
   const [anchorEl, setAnchorEl] = useState(null)
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
@@ -70,6 +72,13 @@ export default function UserInformation({
       setValue(tab)
     } else {
       setValue('Contacts');
+    }
+
+    console.log('topppp')
+    if (paymentSubTab && tabValue === 'Payments') {
+      setPaymentSubTabValue(paymentSubTab)
+    } else {
+      setPaymentSubTabValue('Invoices')
     }
   }, [path, tab])
 
@@ -172,9 +181,9 @@ export default function UserInformation({
                   aria-haspopup="true"
                   onClick={() => setDrawerOpen(true)}
                 >
-                  <DoubleArrowOutlinedIcon 
-                    // this is hacky, it should be replaced with a proper icon 
-                    style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }} 
+                  <DoubleArrowOutlinedIcon
+                    // this is hacky, it should be replaced with a proper icon
+                    style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
                   />
                 </IconButton>
               )}
@@ -205,7 +214,7 @@ export default function UserInformation({
               </IconButton>
             </div>
           </div>
-  
+
           <br />
           {authState.user.userType === 'custodian' &&
             ['security_guard', 'contractor'].includes(data.user.userType) && (
@@ -283,6 +292,7 @@ export default function UserInformation({
             userId={userId}
             user={authState.user}
             userData={data.user}
+            paymentSubTabValue={paymentSubTabValue}
           />
         </TabPanel>
         {['admin'].includes(userType) && (

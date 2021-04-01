@@ -13,9 +13,9 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) => {
   const history = useHistory();
-  const { pathname } = useLocation()
-  const params = useParams()
-  const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: ''});
+  const { pathname } = useLocation();
+  const params = useParams();
+  const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
 
   /**
    * @param {Event} event browser event from clicked icon
@@ -26,9 +26,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
    * @todo automatically open new menu when another is clicked while current is still open
    */
   function routeTo(event, item) {
-    
     if (item.subMenu) {
-      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name});
+      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name });
       return;
     }
     // close the menu and route  only when it is open and it is on small screens
@@ -40,51 +39,72 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     // this should also work for paths like /message/:id, but it has to be registered in the routes first(for now)
     if (direction === 'right') {
       history.push(item.routeProps.path.replace(':id', params.id));
-      return
+      return;
     }
     history.push(item.routeProps.path);
   }
   return (
-    <div role="button" tabIndex={0} className={`${css(styles.sidenav)}`} onKeyDown={toggleDrawer} data-testid="sidenav-container">
+    <div
+      role="button"
+      tabIndex={0}
+      className={`${css(styles.sidenav)}`}
+      onKeyDown={toggleDrawer}
+      data-testid="sidenav-container"
+    >
       <List>
-        {menuItems.map(menuItem => (
-            menuItem.accessibleBy.includes(userType) ? (
-              <Fragment key={menuItem.name}>
-                <ListItem button onClick={event => routeTo(event, menuItem)} selected={pathname === menuItem.routeProps.path}>
+        {menuItems.map(menuItem =>
+          menuItem.accessibleBy.includes(userType) ? (
+            <Fragment key={menuItem.name}>
+              <ListItem
+                button
+                onClick={event => routeTo(event, menuItem)}
+                selected={pathname === menuItem.routeProps.path}
+              >
+                {menuItem.styleProps?.icon && (
                   <ListItemIcon className={`${css(styles.listItemIcon)}`}>
-                    {menuItem.styleProps?.icon}
+                    {menuItem.styleProps.icon}
                   </ListItemIcon>
-                  <ListItemText primary={menuItem.name} />
-                  {
-                    currentMenu.name === menuItem.name && currentMenu.isOpen 
-                    ? <ExpandLess /> 
-                    // Avoid showing toggle icon on menus with no submenus
-                    : menuItem.subMenu ? <ExpandMore /> : null
-                  }
-                </ListItem>
+                )}
+                <ListItemText primary={menuItem.name} />
+                {currentMenu.name === menuItem.name && currentMenu.isOpen ? (
+                  <ExpandLess />
+                ) : // Avoid showing toggle icon on menus with no submenus
+                menuItem.subMenu ? (
+                  <ExpandMore />
+                ) : null}
+              </ListItem>
 
-                <Collapse
-                  in={currentMenu.name === menuItem.name && currentMenu.isOpen}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <List component="div" disablePadding>
-                    {menuItem.subMenu && 
-                      menuItem.subMenu.map(item => (
-                        item.accessibleBy.includes(userType) ? (
-                          <ListItem button key={item.name} onClick={event => routeTo(event, item)} selected={pathname === item.routeProps.path}>
-                            {/* This is just a placeholder for icons to keep some padding */}
-                            <ListItemIcon />
-                            <ListItemText primary={item.name} />
-                          </ListItem>
-                      ) : <span key={item.name} />
-                      ))}
-                  </List>
-                </Collapse>
-              </Fragment>
-            )
-            : <span key={menuItem.name} />
-        ))}
+              <Collapse
+                in={currentMenu.name === menuItem.name && currentMenu.isOpen}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {menuItem.subMenu &&
+                    menuItem.subMenu.map(item =>
+                      item.accessibleBy.includes(userType) ? (
+                        <ListItem
+                          button
+                          key={item.name}
+                          onClick={event => routeTo(event, item)}
+                          selected={pathname === item.routeProps.path}
+                        >
+                          <ListItemText
+                            primary={item.name}
+                            style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
+                          />
+                        </ListItem>
+                      ) : (
+                        <span key={item.name} />
+                      )
+                    )}
+                </List>
+              </Collapse>
+            </Fragment>
+          ) : (
+            <span key={menuItem.name} />
+          )
+        )}
       </List>
     </div>
   );
