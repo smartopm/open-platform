@@ -73,7 +73,7 @@ describe('user journey utils', () => {
       newStatus: 'eligible_to_start_construction'
     }
     const subWrapper = render(getInitialSubStatusContent({ ...anotherLog }))
-    expect(subWrapper.queryByTestId('initial_log_content').textContent).toContain(' changed status from Eligible to start Construction to Plots Fully Purchased 2020-03-01')
+    expect(subWrapper.queryByTestId('initial_log_content').textContent).toContain(' changed status from Plots Fully Purchased to Eligible to start Construction 2020-03-01')
   })
   it('should format the substatus', () => {
     const logs = [
