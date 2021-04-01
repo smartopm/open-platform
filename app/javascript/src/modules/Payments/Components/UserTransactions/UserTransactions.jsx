@@ -43,7 +43,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const menuList = [
     { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt},
     { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenEdit},
-    { content: 'Revert Transaction', isAdmin: true, color: 'red', handleClick: () => handleClick(event, transaction, userData)},
+    { content: 'Revert Transaction', isAdmin: true, color: 'red', handleClick: (event) => handleClick(event, transaction, userData)},
   ]
 
   useEffect(() => {
@@ -75,12 +75,12 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
     })
   }
 
-  function handleClick(event, transaction, user){
-    const txnId = transaction.id
-    const name = user.name
+  function handleClick(event, txn, user){
+    const txnId = txn.id
+    const userName = user.name
     event.stopPropagation()
     setTransactionId(txnId)
-    setName(name)
+    setName(userName)
     setRevertModalOpen(true)
   }
 

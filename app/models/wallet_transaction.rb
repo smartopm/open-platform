@@ -117,6 +117,8 @@ class WalletTransaction < ApplicationRecord
 
   def update_plot_balance(amount)
     plan = user.payment_plans.find_by(id: payment_plan_id)
+    return if plan.nil?
+
     plan.plot_balance = plan.plot_balance < amount ? 0 : plan.plot_balance - amount
     plan.save
   end
