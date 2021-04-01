@@ -6,7 +6,7 @@ class PaymentPlan < ApplicationRecord
   belongs_to :land_parcel
   has_many :invoices, dependent: :nullify
 
-  before_create :set_plot_balance
+  # before_create :set_plot_balance
   after_create :generate_monthly_invoices_for_the_year
 
   enum status: { active: 0, cancelled: 1, deleted: 2 }
@@ -21,7 +21,7 @@ class PaymentPlan < ApplicationRecord
   private
 
   def generate_monthly_invoices_for_the_year
-    return if total_amount.nil?
+    return if total_amount.nil? || total_amount.zero?
 
     amount = ((percentage.to_i * total_amount) / 12)
     (0...12).each { |index| create_invoice_for_month(amount, start_date + index.month) }
