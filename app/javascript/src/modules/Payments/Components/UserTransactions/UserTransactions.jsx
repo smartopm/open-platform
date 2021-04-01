@@ -5,14 +5,14 @@ import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Tooltip } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
-import { WalletTransactionRevert } from '../../../graphql/mutations/transactions';
-import DataList from '../../../shared/list/DataList';
-import Text, { GridText } from '../../../shared/Text';
-import { dateToString } from '../../DateContainer';
-import CenteredContent from '../../CenteredContent';
-import Label from '../../../shared/label/Label';
+import { WalletTransactionRevert } from '../../../../graphql/mutations/transactions';
+import DataList from '../../../../shared/list/DataList';
+import Text, { GridText } from '../../../../shared/Text';
+import { dateToString } from '../../../../components/DateContainer';
+import CenteredContent from '../../../../components/CenteredContent';
+import Label from '../../../../shared/label/Label';
 import TransactionDetails from '../TransactionDetails'
-import { formatMoney, formatError } from '../../../utils/helpers';
+import { formatMoney, formatError } from '../../../../utils/helpers';
 import PaymentReceipt from './PaymentReceipt';
 import MenuList from '../../../../shared/MenuList'
 import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue'
