@@ -51,5 +51,22 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
       expect(user.wallet.balance).to eql 100.0
       expect(result['errors']).to be_nil
     end
+
+    it 'throws unauthorized error when user is not admin' do
+      variables = {
+        userId: user.id,
+        amount: 100,
+        source: 'cash',
+        landParcelId: land_parcel.id,
+      }
+
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: user,
+                                                   site_community: user.community,
+                                                 }).as_json
+      expect(result.dig('data', 'walletTransactionCreate', 'walletTransaction', 'id')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
   end
 end
