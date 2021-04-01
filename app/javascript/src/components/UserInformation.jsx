@@ -69,18 +69,22 @@ export default function UserInformation({
 
   useEffect(() => {
     if (tab) {
-      setValue(tab)
+      setValue(tab);
     } else {
       setValue('Contacts');
     }
-
-    console.log('topppp')
     if (paymentSubTab && tabValue === 'Payments') {
-      setPaymentSubTabValue(paymentSubTab)
+      setPaymentSubTabValue(paymentSubTab);
     } else {
-      setPaymentSubTabValue('Invoices')
+      setPaymentSubTabValue('Invoices');
     }
-  }, [path, tab])
+
+    // open merge modal
+    if (tabValue === 'MergeUser') {
+      setDialogOpen(true)
+    }
+
+  }, [path, tab, tabValue]);
 
 
 
@@ -117,6 +121,9 @@ export default function UserInformation({
     // close the menu
     setAnchorEl(null)
     setDialogOpen(!isDialogOpen)
+    // invalidating the tabValue wont work unless params are changed, this is caused by the useEffect
+    setValue(null)
+    router.push(`/user/${userId}`)
   }
 
   function sendOTP() {

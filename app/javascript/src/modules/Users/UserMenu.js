@@ -95,6 +95,15 @@ const routes = [
     name: 'Payments',
     accessibleBy: ['admin'],
     subMenu: paymentSubMenus
+  },
+  {
+    routeProps: {
+        // we can have a different param here
+      path: '/user/:id?tab=MergeUser',
+      component: <span />
+    },
+    name: 'Merge User',
+    accessibleBy: ['admin'],
   }
 ];
 
