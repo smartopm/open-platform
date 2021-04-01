@@ -33,6 +33,8 @@ class WalletTransaction < ApplicationRecord
 
   enum status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
 
+  validates :amount, numericality: { greater_than: 0 }
+
   # rubocop:disable Style/ParenthesesAroundCondition
   def update_wallet_balance
     return if (!status.eql?('settled') || PaymentInvoice.exists?(wallet_transaction_id: id))

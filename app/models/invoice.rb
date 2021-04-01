@@ -10,6 +10,8 @@ class Invoice < ApplicationRecord
   belongs_to :payment_plan, optional: true
   belongs_to :created_by, class_name: 'User', optional: true
 
+  validates :amount, numericality: { greater_than: 0 }
+
   before_validation :invoice_not_present_for_month, on: :create
   before_create :set_pending_amount
   after_create :collect_payment_from_wallet, if: proc { persisted? }

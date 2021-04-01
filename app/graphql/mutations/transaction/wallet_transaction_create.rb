@@ -19,27 +19,33 @@ module Mutations
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
+      # Graphql Resolver to create new WalletTransaction.
+      # Creates WalletTransaction and update balance in Wallet and PaymentPlan of User.
       def resolve(vals)
         ActiveRecord::Base.transaction do
-          user = context[:site_community].users.find_by(id: vals[:user_id])
-          land_parcel = context[:site_community].land_parcels.find_by(id: vals[:land_parcel_id])
-          transaction = user.wallet_transactions.create!(
-            vals.except(:user_id, :land_parcel_id)
-                .merge({
-                         destination: 'wallet',
-                         status: 'settled',
-                         community_id: context[:site_community]&.id,
-                         depositor_id: context[:current_user].id,
-                         originally_created_at: user.current_time_in_timezone,
-                         payment_plan_id: land_parcel.payment_plan&.id,
-                       }),
-          )
-          context[:current_user].generate_events('deposit_create', transaction)
-          land_parcel.payment_plan&.update_plot_balance(vals[:amount])
-          update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
-          return { wallet_transaction: transaction } if transaction.persisted?
+          site_community = context[:site_community]
+          current_user = context[:current_user]
+
+          user = site_community.users.find_by(id: vals[:user_id])
+
+          transaction_attributes = vals.except(:user_id, :land_parcel_id)
+            .merge(
+              destination: 'wallet',
+              status: 'settled',
+              community_id: site_community&.id,
+              depositor_id: current_user.id
+            )
+          transaction = user.wallet_transactions.create(transaction_attributes)
+
+          if transaction.persisted?
+            current_user.generate_events('deposit_create', transaction)
+            update_plot_balance(vals[:land_parcel_id], vals[:amount])
+            update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
+            { wallet_transaction: transaction }
+          else
+            raise GraphQL::ExecutionError, transaction.errors.full_messages&.join(', ')
+          end
         end
-        raise GraphQL::ExecutionError, transaction.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
