@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone'
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
 import { css, StyleSheet } from 'aphrodite'
@@ -28,7 +29,7 @@ import UserMessages from './Messaging/UserMessages'
 import Transactions from '../modules/Payments/Components/UserTransactions/Transactions'
 import UserJourney from './User/UserJourney'
 import { propAccessor, useParamsQuery } from '../utils/helpers'
-// import LeftSideMenu from '../modules/Menu/component/LeftMenu'
+import RightSideMenu from '../modules/Menu/component/RightSideMenu'
 
 export default function UserInformation({
   data,
@@ -47,6 +48,7 @@ export default function UserInformation({
   const [tabValue, setValue] = useState(tab || 'Contacts')
   const [anchorEl, setAnchorEl] = useState(null)
   const [isDialogOpen, setDialogOpen] = useState(false)
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const { handleSubmit, register } = useForm()
@@ -61,6 +63,16 @@ export default function UserInformation({
       form.reset()
     })
   }
+
+
+  useEffect(() => {
+    if (tab) {
+      setValue(tab)
+    } else {
+      setValue('Contacts');
+    }
+  }, [path, tab])
+
 
 
   const open = Boolean(anchorEl)
@@ -139,6 +151,7 @@ export default function UserInformation({
         </Dialog>
 
         <div className="container">
+
           <div className="row d-flex justify-content-between">
             <div className="col-4 ">
               <Avatar
@@ -150,18 +163,22 @@ export default function UserInformation({
 
             <UserDetail data={data} userType={userType} />
 
+
             <div className="col-2 ml-auto">
               {Boolean(authState.user.userType !== 'security_guard') && (
                 <IconButton
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
-                  onClick={handleOpenMenu}
+                  onClick={() => setDrawerOpen(true)}
                 >
-                  <MoreVertIcon />
+                  <DoubleArrowOutlinedIcon 
+                    // this is hacky, it should be replaced with a proper icon 
+                    style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }} 
+                  />
                 </IconButton>
               )}
-              {/* <LeftSideMenu authState={authState} handleDrawerToggle={() => setOpen(false)} drawerOpen={isLeftOpenu} /> */}
+              <RightSideMenu authState={authState} handleDrawerToggle={() => setDrawerOpen(false)} drawerOpen={isDrawerOpen} />
               {/* Menu */}
               <UserActionMenu
                 data={data}
@@ -176,7 +193,19 @@ export default function UserInformation({
                 linkStyles={css(styles.linkItem)}
               />
             </div>
+            <div className="col-2 ml-auto">
+              {/* leaving the old menu here for now and for examples */}
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleOpenMenu}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </div>
           </div>
+  
           <br />
           {authState.user.userType === 'custodian' &&
             ['security_guard', 'contractor'].includes(data.user.userType) && (

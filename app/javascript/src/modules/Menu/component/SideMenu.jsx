@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -14,6 +14,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) => {
   const history = useHistory();
   const { pathname } = useLocation()
+  const params = useParams()
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: ''});
 
   /**
@@ -36,7 +37,11 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     }
     // check the direct and route differently
     // check current pathname and direction of the drawer if it has id then use that as new path for all left side based routes
-    console.log(direction)
+    // this should also work for paths like /message/:id, but it has to be registered in the routes first(for now)
+    if (direction === 'right') {
+      history.push(item.routeProps.path.replace(':id', params.id));
+      return
+    }
     history.push(item.routeProps.path);
   }
   return (
