@@ -210,7 +210,7 @@ const App = () => {
                                   exact
                                   path="/communication"
                                   render={() => (
-                                    <Redirect to={`/user/${user.id}?tab=Communication`} />
+                                    <Redirect to={`/message/${user.id}`} />
                                   )}
                                 />
                                 <Route
