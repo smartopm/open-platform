@@ -78,6 +78,7 @@ import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
 import { MainMenu } from '../src/modules/Menu/';
 import modules from '../src/modules';
+import UserMenus from '../src/modules/Users/UserMenu';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -231,8 +232,7 @@ const App = () => {
                                   render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
                                 />
                                 {/* end of redirects */}
-
-                                {modules.map(module => {
+                                {[...modules, ...UserMenus].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => (
                                       <Route {...sub.routeProps} key={sub.name} />
@@ -243,14 +243,14 @@ const App = () => {
                                   }
                                 })}
                                 {/* routes will need to be moved up here so that the not found can catch them all */}
-                                <Route path="/user/:id/edit" component={UserEdit} />
+                                {/* <Route path="/user/:id/edit" component={UserEdit} />
                                 {' '}
-                                <Route path="/user/:id/logs" component={UserLogs} />
+                                <Route path="/user/:id/logs" component={UserLogs} /> */}
                                 {' '}
-                                <Route
+                                {/* <Route
                                   path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
                                   component={UserShow}
-                                />
+                                /> */}
                                 <Route exact path="/scan" component={Scan} />
                                 <Route exact path="/search" component={Search} />
                                 <Route path="/id/:id" component={IDCard} />
@@ -290,14 +290,14 @@ const App = () => {
                                 <Route path="/message/:id" component={UserMessages} />
                                 <Route path="/campaign-create" component={CampaignCreate} />
                                 <Route path="/campaign/:id" component={CampaignUpdate} />
-                                <Route path="/user/:id/edit" component={UserEdit} />
+                                {/* <Route path="/user/:id/edit" component={UserEdit} /> */}
                                 {/* Still admin route */}
-                                <Route path="/user/:id/logs" component={UserLogs} />
+                                {/* <Route path="/user/:id/logs" component={UserLogs} /> */}
                                 {/* Still admin route */}
-                                <Route
+                                {/* <Route
                                   path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
                                   component={UserShow}
-                                />
+                                /> */}
                                 <Route path="/timesheet/:id" exact component={EmployeeLogs} />
                                 <Route
                                   path="/client_request_from"

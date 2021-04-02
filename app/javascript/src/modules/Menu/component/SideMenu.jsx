@@ -38,7 +38,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     // check current pathname and direction of the drawer if it has id then use that as new path for all left side based routes
     // this should also work for paths like /message/:id, but it has to be registered in the routes first(for now)
     if (direction === 'right') {
-      history.push(item.routeProps.path.replace(':id', params.id));
+      history.push(item.routeProps.to.replace(':id', params.id));
       return;
     }
     history.push(item.routeProps.path);
