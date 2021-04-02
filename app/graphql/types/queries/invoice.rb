@@ -190,7 +190,7 @@ module Types::Queries::Invoice
   def calculate_total_amount(payment_plans)
     amount = 0
     payment_plans.each do |payment_plan|
-      next if payment_plan.total_amount.nil?
+      next if payment_plan.total_amount.nil? || payment_plan.total_amount.zero?
 
       amount += ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12)
     end

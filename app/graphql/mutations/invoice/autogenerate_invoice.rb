@@ -7,6 +7,7 @@ module Mutations
       field :invoices, [Types::InvoiceType], null: true
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def resolve
         month = Time.zone.now.month
         payment_plans = ::PaymentPlan.where(
@@ -16,7 +17,7 @@ module Mutations
         payment_plans.each do |payment_plan|
           land_parcel = payment_plan.land_parcel
 
-          next if payment_plan.total_amount.nil?
+          next if payment_plan.total_amount.nil? || payment_plan.total_amount.zero?
 
           inv = create_invoice(payment_plan, land_parcel)
           raise GraphQL::ExecutionError, inv.errors.full_messages unless inv.persisted?
@@ -27,6 +28,7 @@ module Mutations
         { invoices: invoices }
       end
       # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def create_invoice(payment_plan, land_parcel)
         amount = ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12)
