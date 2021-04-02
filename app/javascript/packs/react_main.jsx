@@ -78,7 +78,7 @@ import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
 import { MainMenu } from '../src/modules/Menu/';
 import modules from '../src/modules';
-import UserMenus from '../src/modules/Users/UserMenu';
+import UserRoutes from '../src/modules/Users/UserRoutes';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -232,7 +232,7 @@ const App = () => {
                                   render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
                                 />
                                 {/* end of redirects */}
-                                {[...modules, ...UserMenus].map(module => {
+                                {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => (
                                       <Route {...sub.routeProps} key={sub.name} />
