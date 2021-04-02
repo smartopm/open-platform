@@ -35,6 +35,7 @@ class Invoice < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       cur_payment = settle_amount
@@ -54,15 +55,6 @@ class Invoice < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
-  def settle_amount
-    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
-    return amount - pending_amount if pending_amount.positive?
-
-    paid!
-    amount
-  end
-
-  # rubocop:disable Metrics/MethodLength
   def self.invoice_stat(com)
     Invoice.connection.select_all(
       sanitize_sql("select
@@ -80,6 +72,14 @@ class Invoice < ApplicationRecord
     )
   end
   # rubocop:enable Metrics/MethodLength
+
+  def settle_amount
+    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
+    return amount - pending_amount if pending_amount.positive?
+
+    paid!
+    amount
+  end
 
   def modify_status
     return if pending_amount.positive? || status.eql?('paid')

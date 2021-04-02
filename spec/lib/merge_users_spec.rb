@@ -67,6 +67,9 @@ RSpec.describe MergeUsers do
     create(:activity_log, reporting_user_id: user.id, community: user.community)
   end
   let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+  let!(:payment_plan) do
+    create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
+  end
   let!(:invoice) do
     create(:invoice, community: user.community, land_parcel: land_parcel, user_id: user.id,
                      status: 'in_progress', invoice_number: '1234')

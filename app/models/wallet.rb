@@ -38,7 +38,8 @@ class Wallet < ApplicationRecord
   def make_payment(inv, payment_amount)
     transaction = create_transaction(payment_amount)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
-                             user_id: user.id, community_id: user.community_id)
+                             user_id: user.id, community_id: user.community_id,
+                             payment_status: 'settled')
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
     inv.update(pending_amount: inv.pending_amount - payment_amount)
     inv.paid! if inv.pending_amount.zero?
