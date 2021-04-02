@@ -10,7 +10,6 @@ export default function UserActionMenu({
     anchorEl,
     handleClose,
     userType,
-    sendOTP,
     CSMNumber,
     open,
     OpenMergeDialog,
@@ -108,11 +107,12 @@ export default function UserActionMenu({
                 </Link>
               </MenuItem>
               <MenuItem key={'send_code'}>
-                            <a onClick={sendOTP}
-                                className={linkStyles}
-                            >
-                  Send One Time Passcode
-                </a>
+                <Link
+                  to={`/user/${data.user.id}/otp`}
+                  className={linkStyles}
+                >
+                  Send OTP
+                </Link>
               </MenuItem>
             </>
           )}

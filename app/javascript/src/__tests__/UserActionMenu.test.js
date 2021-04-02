@@ -42,6 +42,6 @@ describe('user action menu component', () => {
     expect(container.queryByText('Message Support')).toBeInTheDocument()
     expect(container.queryByText('Message Support')).toBeInTheDocument()
     expect(container.queryByText('Print')).toBeInTheDocument()
-    expect(container.queryByText('Send One Time Passcode')).toBeInTheDocument()
+    expect(container.queryByText('Send OTP')).toBeInTheDocument()
   })
 })

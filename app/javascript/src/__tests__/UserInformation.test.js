@@ -108,28 +108,4 @@ describe("User information component loads",()=>{
         { timeout: 50 }
       );
     });
-
-    it('should render Menue', async ()=>{
-        const {getByText} = render(
-          <MockedProvider mock={data}>
-            <BrowserRouter>
-              <UserInformation
-                data={data}
-                authState={authstate}
-                accountData={accountData}
-                parcelData={parcelData}
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        )
-
-        await waitFor(
-          () => { expect(getByText('Print')).toBeInTheDocument()
-          expect(getByText('Send One Time Passcode')).toBeInTheDocument()
-          expect(getByText('Message Support')).toBeInTheDocument() },
-          { timeout: 50 }
-        )
-
-    })
-
 })
