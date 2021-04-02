@@ -12,9 +12,24 @@ class PaymentPlan < ApplicationRecord
 
   def update_plot_balance(amount, type = 'credit')
     return if amount.zero?
+    
+    type.eql?('credit') ? credit_plot_balance(amount) : debit_plot_balance(amount)
+  end
 
-    balance = type.eql?('credit') ? (plot_balance + amount) : (plot_balance - amount)
-    update(plot_balance: balance)
+  def credit_plot_balance(amount)
+    if amount > pending_balance
+      update(pending_balance: 0, plot_balance: plot_balance + amount - pending_balance)
+    else
+      update(pending_balance: pending_balance - amount)
+    end
+  end
+
+  def debit_plot_balance(amount)
+    if amount > plot_balance
+      update(plot_balance: 0, pending_balance: pending_balance + amount - plot_balance)
+    else
+      update(plot_balance: plot_balance - amount)
+    end
   end
 
   private

@@ -24,7 +24,11 @@ module Mutations
       def refund_amount(invoice)
         user = invoice.user
         paid_amount = invoice.amount - invoice.pending_amount
-        invoice.land_parcel.payment_plan&.update_plot_balance(paid_amount)
+        plan = invoice.land_parcel.payment_plan
+        plan.update(
+          plot_balance: plan.plot_balance + paid_amount,
+          pending_balance: plan.pending_balance - invoice.pending_amount
+        )
         settle_pending_balance(user.wallet, invoice.amount)
         create_refund_transaction(user, invoice)
         settle_other_invoices(invoice.user)

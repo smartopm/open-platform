@@ -1132,6 +1132,7 @@ export const AllTransactionQuery = gql`
         status
         percentage
         plotBalance
+        pendingBalance
         createdAt
         invoices {
           id

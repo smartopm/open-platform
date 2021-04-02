@@ -39,10 +39,16 @@ class Invoice < ApplicationRecord
     ActiveRecord::Base.transaction do
       cur_payment = settle_amount
       user.wallet.update_balance(amount, 'debit')
-      bal = land_parcel.payment_plan&.plot_balance
-      return if bal.nil? || cur_payment.zero?
+      plan = land_parcel.payment_plan
+      if plan.plot_balance.nil? || cur_payment.zero?
+        plan.update(pending_balance: plan.pending_balance + amount)
+        return
+      end
 
-      land_parcel.payment_plan.update(plot_balance: bal - cur_payment)
+      plan.update(
+        plot_balance: plan.plot_balance - cur_payment,
+        pending_balance: plan.pending_balance + amount - cur_payment,
+      )
       user.wallet.make_payment(self, cur_payment)
     end
   end
