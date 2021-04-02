@@ -6,13 +6,16 @@ import React, { Fragment, useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import Tooltip from '@material-ui/core/Tooltip'
 
+
+// call the OTP function once this component renders
+// this is to be consistent with the rest of the menu
 export default function OTPFeedbackScreen({ location }) {
   const [msg, setMessage] = useState('')
   const userDetails = location.state
 
   function copyLink() {
-    if (userDetails.success) {
-      navigator.clipboard.writeText(userDetails.url)
+    if (userDetails?.success) {
+      navigator.clipboard.writeText(userDetails?.url)
       setMessage('Successfully copied the link')
     }
   }
@@ -21,21 +24,21 @@ export default function OTPFeedbackScreen({ location }) {
     <>
       <div className={css(styles.passcodeSection)} data-testid="feedback">
         {
-          userDetails.success && (
+          userDetails?.success && (
           <p>
             The One Time Pass code was successfully sent to
             {' '}
-            <span className={css(styles.user)}>{userDetails.user}</span>
+            <span className={css(styles.user)}>{userDetails?.user}</span>
           </p>
 )
         }
         <br />
-        <Tooltip title={userDetails.success ? "Click to copy" : ''}>
+        <Tooltip title={userDetails?.success ? "Click to copy" : ''}>
           <div>
-            {userDetails.success && 'Url: '}
+            {userDetails?.success && 'Url: '}
             <span onClick={copyLink} className={css(styles.url)} data-testid="link_copier">
               {' '}
-              {userDetails.url}
+              {userDetails?.url}
             </span>
           </div>
         </Tooltip>

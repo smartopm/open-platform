@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+// import MoreVertIcon from '@material-ui/icons/MoreVert'
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone'
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
@@ -18,7 +18,7 @@ import Avatar from './Avatar'
 import UserPlotInfo from './User/UserPlotInfo'
 import UserMerge from './User/UserMerge'
 import CenteredContent from './CenteredContent'
-import UserActionMenu from './User/UserActionMenu'
+// import UserActionMenu from './User/UserActionMenu'
 import UserNotes from './User/UserNote'
 import UserInfo from './User/UserInfo'
 import UserDetail from './User/UserDetail'
@@ -35,20 +35,20 @@ export default function UserInformation({
   data,
   onLogEntry,
   authState,
-  sendOneTimePasscode,
+  // sendOneTimePasscode,
   refetch,
   userId,
   router,
   accountData,
   accountRefetch
 }) {
-  const CSMNumber = '260974624243'
+  // const CSMNumber = '260974624243'
   const path = useParamsQuery()
   const tab = path.get('tab')
   const paymentSubTab = path.get('payment_sub_tab')
   const [tabValue, setValue] = useState(tab || 'Contacts')
   const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices')
-  const [anchorEl, setAnchorEl] = useState(null)
+  // const [anchorEl, setAnchorEl] = useState(null)
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [isDrawerOpen, setDrawerOpen] = useState(false)
 
@@ -88,7 +88,7 @@ export default function UserInformation({
 
 
 
-  const open = Boolean(anchorEl)
+  // const open = Boolean(anchorEl)
   const userType = authState.user.userType.toLowerCase()
 
   const handleChange = (_event, newValue) => {
@@ -109,42 +109,43 @@ export default function UserInformation({
       ReactGA.pageview(pageHit)
     }
   }
-  function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
-  }
+  // function handleOpenMenu(event) {
+  //   setAnchorEl(event.currentTarget)
+  // }
 
-  function handleClose() {
-    setAnchorEl(null)
-  }
+  // function handleClose() {
+  //   setAnchorEl(null)
+  // }
 
   function handleMergeDialog() {
     // close the menu
-    setAnchorEl(null)
+    // setAnchorEl(null)
     setDialogOpen(!isDialogOpen)
     // invalidating the tabValue wont work unless params are changed, this is caused by the useEffect
     setValue(null)
     router.push(`/user/${userId}`)
   }
 
-  function sendOTP() {
-    sendOneTimePasscode({
-      variables: { userId }
-    })
-      .then(_data => {
-        router.push('/otp_sent', {
-          url: _data.data.oneTimeLogin.url,
-          user: data.user.name,
-          success: true
-        })
-      })
-      .catch(() => {
-        router.push('/otp_sent', {
-          url: 'The user has no Phone number added',
-          user: data.user.name,
-          success: false
-        })
-      })
-  }
+  // function sendOTP() {
+  //   sendOneTimePasscode({
+  //     variables: { userId }
+  //   })
+  //     .then(_data => {
+  //       router.push('/otp_sent', {
+  //         url: _data.data.oneTimeLogin.url,
+  //         user: data.user.name,
+  //         success: true
+  //       })
+  //     })
+  //     .catch(() => {
+  //       router.push('/otp_sent', {
+  //         url: 'The user has no Phone number added',
+  //         user: data.user.name,
+  //         success: false
+  //       })
+  //     })
+  // }
+
   return (
     <div>
       <>
@@ -196,7 +197,7 @@ export default function UserInformation({
               )}
               <RightSideMenu authState={authState} handleDrawerToggle={() => setDrawerOpen(false)} drawerOpen={isDrawerOpen} />
               {/* Menu */}
-              <UserActionMenu
+              {/* <UserActionMenu
                 data={data}
                 router={router}
                 anchorEl={anchorEl}
@@ -207,10 +208,10 @@ export default function UserInformation({
                 open={open}
                 OpenMergeDialog={handleMergeDialog}
                 linkStyles={css(styles.linkItem)}
-              />
+              /> */}
             </div>
-            <div className="col-2 ml-auto">
-              {/* leaving the old menu here for now and for examples */}
+            {/* leaving the old menu here for now and for examples */}
+            {/* <div className="col-2 ml-auto">
               <IconButton
                 aria-label="more"
                 aria-controls="long-menu"
@@ -219,7 +220,7 @@ export default function UserInformation({
               >
                 <MoreVertIcon />
               </IconButton>
-            </div>
+            </div> */}
           </div>
 
           <br />
@@ -348,7 +349,7 @@ UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
   onLogEntry: PropTypes.func.isRequired,
   authState: PropTypes.shape({ user: User }).isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired,
+  // sendOneTimePasscode: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,

@@ -3,6 +3,8 @@ import UserShow from '../../containers/UserShow';
 import UserEdit from '../../containers/UserEdit';
 import UserLogs from '../../containers/AllLogs/UserLogs';
 import IdPrintPage from '../../containers/IdPrint';
+import UserMessagePage from '../../containers/Messages/UserMessagePage';
+import OTPFeedbackScreen from '../../containers/OTPScreen';
 
 // name in here is only used as key in routes, make sure it is unique
 
@@ -38,7 +40,23 @@ const routes = [
     },
     accessibleBy: ['admin', 'client', 'resident'],
     name: 'print_id'
-  }
+  },
+  {
+    routeProps: {
+      path: '/message/:id/',
+      component: UserMessagePage
+    },
+    accessibleBy: ['admin', 'client', 'resident'],
+    name: 'user_message'
+  },
+  {
+    routeProps: {
+      path: '/otp_sent',
+      component: OTPFeedbackScreen
+    },
+    accessibleBy: ['admin'],
+    name: 'user_otp'
+  },
 ];
 
 export default routes;

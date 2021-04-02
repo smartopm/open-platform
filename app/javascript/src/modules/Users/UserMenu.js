@@ -124,6 +124,30 @@ const UserMenus = [
     },
     name: 'Print ID',
     accessibleBy: ['admin', 'client', 'resident']
+  },
+  {
+    routeProps: {
+      path: '/message/:id/',
+      component: <span />
+    },
+    name: 'Message Support',
+    accessibleBy: ['admin', 'client', 'resident']
+  },
+  {
+    routeProps: {
+      path: '/message/:id/',
+      component: <span />
+    },
+    name: 'Send SMS',
+    accessibleBy: ['admin',]
+  },
+  {
+    routeProps: {
+      path: '/otp_sent',
+      component: <span />
+    },
+    name: 'Send OTP',
+    accessibleBy: ['admin']
   }
 ];
 

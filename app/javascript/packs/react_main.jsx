@@ -256,13 +256,13 @@ const App = () => {
                                 <Route path="/id/:id" component={IDCard} />
                                 <Route path="/print/:id" component={IDPrint} />
                                 <Route path="/entry_logs/:userId" component={EntryLogs} />
-                                <Route path="/user" exact component={UserEdit} />
+                                {/* <Route path="/user" exact component={UserEdit} /> */}
                                 <Route path="/map" component={Map} />
                                 <Route path="/myplot" component={GeoMap} />
                                 <Route path="/mobile_money" component={MobileMoney} />
                                 <Route path="/contact" component={Support} />
                                 <Route path="/settings" component={Notifications} />
-                                <Route path="/otp_sent" component={OTPFeedbackScreen} />
+                                {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
                                 <Route path="/referral" component={UserEdit} />
                                 <Route path="/myaccount/:id" component={UserShow} />
                                 {/* requests */}
@@ -287,7 +287,7 @@ const App = () => {
                                 {/* activity */}
                                 <Route path="/feedback" component={Feedback} />
                                 <Route path="/feedback_success" component={FeedbackSuccess} />
-                                <Route path="/message/:id" component={UserMessages} />
+                                {/* <Route path="/message/:id" component={UserMessages} /> */}
                                 <Route path="/campaign-create" component={CampaignCreate} />
                                 <Route path="/campaign/:id" component={CampaignUpdate} />
                                 {/* <Route path="/user/:id/edit" component={UserEdit} /> */}
