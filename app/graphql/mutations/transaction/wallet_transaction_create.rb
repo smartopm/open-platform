@@ -29,22 +29,19 @@ module Mutations
           user = site_community.users.find_by(id: vals[:user_id])
 
           transaction_attributes = vals.except(:user_id, :land_parcel_id)
-            .merge(
-              destination: 'wallet',
-              status: 'settled',
-              community_id: site_community&.id,
-              depositor_id: current_user.id
-            )
+                                       .merge(
+                                         destination: 'wallet',
+                                         status: 'settled',
+                                         community_id: site_community&.id,
+                                         depositor_id: current_user.id,
+                                       )
           transaction = user.wallet_transactions.create(transaction_attributes)
+          raise GraphQL::ExecutionError, err_msg(transaction) unless transaction.persisted?
 
-          if transaction.persisted?
-            current_user.generate_events('deposit_create', transaction)
-            update_plot_balance(vals[:land_parcel_id], vals[:amount])
-            update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
-            { wallet_transaction: transaction }
-          else
-            raise GraphQL::ExecutionError, transaction.errors.full_messages&.join(', ')
-          end
+          current_user.generate_events('deposit_create', transaction)
+          update_plot_balance(vals[:land_parcel_id], vals[:amount])
+          update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
+          { wallet_transaction: transaction }
         end
       end
       # rubocop:enable Metrics/AbcSize
@@ -53,6 +50,16 @@ module Mutations
       def update_wallet_balance(user, transaction, amount)
         transaction.update(current_wallet_balance: user.wallet.balance + amount)
         user.wallet.update_balance(amount)
+      end
+
+      def update_plot_balance(land_parcel_id, amount)
+        land_parcel = context[:site_community].land_parcels.find_by(id: land_parcel_id)
+
+        land_parcel.payment_plan&.update_plot_balance(amount)
+      end
+
+      def err_msg(transaction)
+        transaction.errors.full_messages&.join(', ')
       end
 
       def authorized?(_vals)
