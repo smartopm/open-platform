@@ -3,7 +3,10 @@ import React from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
-
+/**
+ * 
+ * @deprecated this will be completely removed with the new design, it currently only used on /users page
+ */
 export default function UserActionMenu({
     data,
     router,
