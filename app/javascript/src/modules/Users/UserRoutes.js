@@ -11,10 +11,10 @@ import OTPFeedbackScreen from '../../containers/OTPScreen';
 const routes = [
   {
     routeProps: {
-      path: '/user/:id/:tab?/:tm?/:dg?',
+      path: '/user/:id',
       component: UserShow
     },
-    accessibleBy: ['admin', 'client', 'resident', 'security_guard'],
+    accessibleBy: ['admin', 'client', 'resident', 'security_guard', 'custodian',],
     name: 'user_info'
   },
   {
@@ -51,7 +51,7 @@ const routes = [
   },
   {
     routeProps: {
-      path: '/otp_sent',
+      path: '/user/:id/otp',
       component: OTPFeedbackScreen
     },
     accessibleBy: ['admin'],

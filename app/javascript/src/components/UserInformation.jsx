@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button'
 // import MoreVertIcon from '@material-ui/icons/MoreVert'
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone'
-import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core'
 import { css, StyleSheet } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
@@ -167,68 +167,49 @@ export default function UserInformation({
           </DialogContent>
         </Dialog>
 
-        <div className="container">
 
-          <div className="row d-flex justify-content-between">
-            <div className="col-4 ">
-              <Avatar
-                user={data.user}
+        <Grid
+          container 
+          direction="row"
+          justify="space-between"
+        >
+          <Grid item xs={3}>
+            <Avatar
+              user={data.user}
                 // eslint-disable-next-line react/style-prop-object
-                style="small"
-              />
-            </div>
-
+              style="medium"
+            />
+          </Grid>
+          <Grid item xs={6}>
             <UserDetail data={data} userType={userType} />
-
-
-            <div className="col-2 ml-auto">
-              {Boolean(authState.user.userType !== 'security_guard') && (
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={() => setDrawerOpen(true)}
-                >
-                  <DoubleArrowOutlinedIcon
+          </Grid>
+          <Grid item xs={2}>
+            {Boolean(authState.user.userType !== 'security_guard') && (
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={() => setDrawerOpen(true)}
+              style={{
+                float: 'right',
+                marginRight: -23
+              }}
+            >
+              <DoubleArrowOutlinedIcon
                     // this is hacky, it should be replaced with a proper icon
-                    style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
-                  />
-                </IconButton>
+                style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
+              />
+            </IconButton>
               )}
-              <RightSideMenu authState={authState} handleDrawerToggle={() => setDrawerOpen(false)} drawerOpen={isDrawerOpen} />
-              {/* Menu */}
-              {/* <UserActionMenu
-                data={data}
-                router={router}
-                anchorEl={anchorEl}
-                handleClose={handleClose}
-                userType={userType}
-                sendOTP={sendOTP}
-                CSMNumber={CSMNumber}
-                open={open}
-                OpenMergeDialog={handleMergeDialog}
-                linkStyles={css(styles.linkItem)}
-              /> */}
-            </div>
-            {/* leaving the old menu here for now and for examples */}
-            {/* <div className="col-2 ml-auto">
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleOpenMenu}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            </div> */}
-          </div>
+            <RightSideMenu authState={authState} handleDrawerToggle={() => setDrawerOpen(false)} drawerOpen={isDrawerOpen} />
+          </Grid>
+        </Grid>
 
-          <br />
-          {authState.user.userType === 'custodian' &&
+        <br />
+        {authState.user.userType === 'custodian' &&
             ['security_guard', 'contractor'].includes(data.user.userType) && (
               <ShiftButtons userId={userId} />
             )}
-        </div>
         <UserStyledTabs
           tabValue={tabValue}
           handleChange={handleChange}

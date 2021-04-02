@@ -143,7 +143,7 @@ const UserMenus = [
   },
   {
     routeProps: {
-      path: '/otp_sent',
+      path: '/user/:id/otp',
       component: <span />
     },
     name: 'Send OTP',
