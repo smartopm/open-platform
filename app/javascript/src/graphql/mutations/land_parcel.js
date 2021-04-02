@@ -9,6 +9,9 @@ export const LandPaymentPlanCreateMutation = gql`
     $status: Int!
     $planType: String!
     $percentage: String!
+    $totalAmount: Float!
+    $durationInMonth: Int!
+
   ) {
     paymentPlanCreate(
       landParcelId: $landParcelId
@@ -17,6 +20,8 @@ export const LandPaymentPlanCreateMutation = gql`
       status: $status
       planType: $planType
       percentage: $percentage
+      totalAmount: $totalAmount
+      durationInMonth: $durationInMonth
     ) {
       paymentPlan {
         id

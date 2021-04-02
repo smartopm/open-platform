@@ -17,11 +17,12 @@ class PaymentPlan < ApplicationRecord
     update(plot_balance: balance)
   end
 
-  def generate_monthly_invoices_for_the_year
-    valuation = land_parcel.valuations&.latest
-    return if valuation.nil?
+  private
 
-    amount = ((percentage.to_i * valuation.amount) / 12)
+  def generate_monthly_invoices_for_the_year
+    return if total_amount.nil? || total_amount.zero?
+
+    amount = ((percentage.to_i * total_amount) / 12)
     (0...12).each { |index| create_invoice_for_month(amount, start_date + index.month) }
   end
 

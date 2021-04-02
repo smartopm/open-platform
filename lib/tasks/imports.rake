@@ -112,7 +112,6 @@ namespace :imports do
               plan_type: 'lease',
               percentage: '2.75%',
               total_amount: valuation_amount,
-              plot_balance: valuation_amount,
               duration_in_month: 12,
             )
 

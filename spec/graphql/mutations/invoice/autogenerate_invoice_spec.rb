@@ -24,6 +24,7 @@ RSpec.describe Mutations::Invoice::AutogenerateInvoice do
     end
 
     it 'creates invoices based on payment plans' do
+      payment_plan.update(total_amount: rand * 1000)
       result = DoubleGdpSchema.execute(query, variables: {},
                                               context: {
                                                 current_user: admin,
