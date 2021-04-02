@@ -46,8 +46,8 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
         status: 1,
         planType: 'lease',
         percentage: '50%',
-        duration_in_month: (rand * 10).ceil,
-        total_amount: 100.0,
+        durationInMonth: (rand * 10).ceil,
+        totalAmount: 0,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                               context: {
@@ -74,8 +74,8 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
         status: '1',
         planType: 'lease',
         percentage: '50%',
-        duration_in_month: (rand * 10).ceil,
-        total_amount: 100.0,
+        durationInMonth: (rand * 10).ceil,
+        totalAmount: 100.0,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                               context: {

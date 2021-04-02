@@ -6,7 +6,6 @@ class PaymentPlan < ApplicationRecord
   belongs_to :land_parcel
   has_many :invoices, dependent: :nullify
 
-  # before_create :set_plot_balance
   after_create :generate_monthly_invoices_for_the_year
 
   enum status: { active: 0, cancelled: 1, deleted: 2 }
@@ -37,9 +36,5 @@ class PaymentPlan < ApplicationRecord
                        due_date: date + 1.year,
                        user: user,
                      })
-  end
-
-  def set_plot_balance
-    self.plot_balance = total_amount
   end
 end
