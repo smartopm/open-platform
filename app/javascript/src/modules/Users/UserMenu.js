@@ -104,7 +104,25 @@ const routes = [
     },
     name: 'Merge User',
     accessibleBy: ['admin'],
-  }
+  },
+  {
+    routeProps: {
+        // we can have a different param here
+      path: '/user/:id/logs',
+      component: <span />
+    },
+    name: 'User Logs',
+    accessibleBy: ['admin'],
+  },
+  {
+    routeProps: {
+        // we can have a different param here
+      path: '/print/:id/',
+      component: <span />
+    },
+    name: 'Print ID',
+    accessibleBy: ['admin'],
+  },
 ];
 
 export default routes;
