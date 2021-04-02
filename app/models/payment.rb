@@ -14,7 +14,7 @@ class Payment < ApplicationRecord
     attributes user: ['user.name', 'user.email', 'user.phone_number']
   end
 
-  enum payment_status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
+  enum payment_status: { settled: 0, pending: 1, denied: 2, cancelled: 3, partially_cancelled: 4 }
   VALID_TYPES = ['cash', 'cheque/cashier_cheque', 'wallet',
                  'mobile_money', 'bank_transfer', 'pos'].freeze
 

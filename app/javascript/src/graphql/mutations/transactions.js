@@ -33,3 +33,18 @@ export const WalletTransactionUpdate = gql`
 `;
 
 export default WalletTransactionMutation;
+
+export const WalletTransactionRevert = gql`
+  mutation WalletTransactionRevert(
+    $transactionId: ID!
+  ) {
+    walletTransactionRevert(
+      id: $transactionId
+    ) {
+      walletTransaction {
+        id
+        status
+      }
+    }
+  }
+`

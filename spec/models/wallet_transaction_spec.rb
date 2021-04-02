@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe WalletTransaction, type: :model do
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:payment_plan_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:depositor_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:amount).of_type(:float) }
@@ -21,6 +22,14 @@ RSpec.describe WalletTransaction, type: :model do
   end
 
   describe 'associations' do
+    it { is_expected.to belong_to(:community) }
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:depositor).optional }
     it { is_expected.to have_one(:payment_invoice) }
+  end
+
+  describe 'callbacks' do
+    it { is_expected.to callback(:revert_payments).after(:update) }
+    it { is_expected.to callback(:update_wallet_balance).before(:update) }
   end
 end
