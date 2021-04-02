@@ -236,9 +236,9 @@ const App = () => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => (
                                       <Route {...sub.routeProps} key={sub.name} />
-                                    ));
-                                  }
-                                  if (module.accessibleBy.includes(user.userType)) {
+                                      ));
+                                    }
+                                    if (module.accessibleBy.includes(user.userType)) {
                                     return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}

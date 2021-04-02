@@ -9,10 +9,10 @@ import IdPrintPage from '../../containers/IdPrint';
 const routes = [
   {
     routeProps: {
-      path: '/user/:id',
+      path: '/user/:id/:tab?/:tm?/:dg?',
       component: UserShow
     },
-    accessibleBy: ['admin'],
+    accessibleBy: ['admin', 'client', 'resident', 'security_guard'],
     name: 'user_info'
   },
   {
@@ -28,7 +28,7 @@ const routes = [
       path: '/user/:id/edit',
       component: UserEdit
     },
-    accessibleBy: ['admin'],
+    accessibleBy: ['admin', 'client', 'resident'],
     name: 'user_edit'
   },
   {
@@ -36,7 +36,7 @@ const routes = [
       path: '/print/:id/',
       component: IdPrintPage
     },
-    accessibleBy: ['admin'],
+    accessibleBy: ['admin', 'client', 'resident'],
     name: 'print_id'
   }
 ];

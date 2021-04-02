@@ -115,7 +115,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Edit',
-    accessibleBy: ['admin']
+    accessibleBy: ['admin', 'client', 'resident']
   },
   {
     routeProps: {
@@ -123,7 +123,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Print ID',
-    accessibleBy: ['admin']
+    accessibleBy: ['admin', 'client', 'resident']
   }
 ];
 
