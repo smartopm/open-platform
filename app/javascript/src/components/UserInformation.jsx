@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import IconButton from '@material-ui/core/IconButton'
-import Button from '@material-ui/core/Button'
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
-import PhoneIcon from '@material-ui/icons/Phone'
-import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core'
-import { css, StyleSheet } from 'aphrodite'
-import { useMutation } from 'react-apollo'
-import PropTypes from 'prop-types'
-import ReactGA from 'react-ga'
-import { CreateNote } from '../graphql/mutations'
-import { ponisoNumber } from '../utils/constants'
-import ShiftButtons from './TimeTracker/ShiftButtons'
-import Avatar from './Avatar'
-import UserPlotInfo from './User/UserPlotInfo'
-import UserMerge from './User/UserMerge'
-import CenteredContent from './CenteredContent'
-import UserNotes from './User/UserNote'
-import UserInfo from './User/UserInfo'
-import UserDetail from './User/UserDetail'
-import UserStyledTabs from './User/UserTabs'
-import { TabPanel } from './Tabs'
-import UserFilledForms from './User/UserFilledForms'
-import UserMessages from './Messaging/UserMessages'
-import Transactions from '../modules/Payments/Components/UserTransactions/Transactions'
-import UserJourney from './User/UserJourney'
-import { propAccessor, useParamsQuery } from '../utils/helpers'
-import RightSideMenu from '../modules/Menu/component/RightSideMenu'
+import PhoneIcon from '@material-ui/icons/Phone';
+import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
+import { css, StyleSheet } from 'aphrodite';
+import { useMutation } from 'react-apollo';
+import PropTypes from 'prop-types';
+import ReactGA from 'react-ga';
+import { CreateNote } from '../graphql/mutations';
+import { ponisoNumber } from '../utils/constants';
+import ShiftButtons from './TimeTracker/ShiftButtons';
+import Avatar from './Avatar';
+import UserPlotInfo from './User/UserPlotInfo';
+import UserMerge from './User/UserMerge';
+import CenteredContent from './CenteredContent';
+import UserNotes from './User/UserNote';
+import UserInfo from './User/UserInfo';
+import UserDetail from './User/UserDetail';
+import UserStyledTabs from './User/UserTabs';
+import { TabPanel } from './Tabs';
+import UserFilledForms from './User/UserFilledForms';
+import UserMessages from './Messaging/UserMessages';
+import Transactions from '../modules/Payments/Components/UserTransactions/Transactions';
+import UserJourney from './User/UserJourney';
+import { propAccessor, useParamsQuery } from '../utils/helpers';
+import RightSideMenu from '../modules/Menu/component/RightSideMenu';
 
 export default function UserInformation({
   data,
@@ -39,28 +39,27 @@ export default function UserInformation({
   accountData,
   accountRefetch
 }) {
-  const path = useParamsQuery()
-  const tab = path.get('tab')
-  const paymentSubTab = path.get('payment_sub_tab')
-  const [tabValue, setValue] = useState(tab || 'Contacts')
-  const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices')
-  const [isDialogOpen, setDialogOpen] = useState(false)
-  const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const path = useParamsQuery();
+  const tab = path.get('tab');
+  const paymentSubTab = path.get('payment_sub_tab');
+  const [tabValue, setValue] = useState(tab || 'Contacts');
+  const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices');
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const { handleSubmit, register } = useForm()
-  const location = useLocation()
+  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
+  const { handleSubmit, register } = useForm();
+  const location = useLocation();
 
   const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form')
+    const form = document.getElementById('note-form');
     noteCreate({
       variables: { userId, body: note, flagged: false }
     }).then(() => {
-      refetch()
-      form.reset()
-    })
-  }
-
+      refetch();
+      form.reset();
+    });
+  };
 
   useEffect(() => {
     if (tab) {
@@ -76,18 +75,15 @@ export default function UserInformation({
 
     // open merge modal
     if (tabValue === 'MergeUser') {
-      setDialogOpen(true)
+      setDialogOpen(true);
     }
-
   }, [path, tab, tabValue]);
 
-
-
-  const userType = authState.user.userType.toLowerCase()
+  const userType = authState.user.userType.toLowerCase();
 
   const handleChange = (_event, newValue) => {
-    router.push(`/user/${userId}?tab=${newValue}`)
-    setValue(newValue)
+    router.push(`/user/${userId}?tab=${newValue}`);
+    setValue(newValue);
     const pages = {
       Contacts: 'Contacts',
       Notes: 'Notes',
@@ -95,20 +91,20 @@ export default function UserInformation({
       Plots: 'Plots',
       Payments: 'Payments',
       Forms: 'Forms',
-      CustomerJourney: 'Customer Journey',
-    }
+      CustomerJourney: 'Customer Journey'
+    };
     if (location.pathname.includes('/user')) {
-      const [, rootURL, , userPage] = location.pathname.split('/')
-      const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`
-      ReactGA.pageview(pageHit)
+      const [, rootURL, , userPage] = location.pathname.split('/');
+      const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`;
+      ReactGA.pageview(pageHit);
     }
-  }
+  };
 
   function handleMergeDialog() {
-    setDialogOpen(!isDialogOpen)
+    setDialogOpen(!isDialogOpen);
     // invalidating the tabValue wont work unless params are changed, this is caused by the useEffect
-    setValue(null)
-    router.push(`/user/${userId}`)
+    setValue(null);
+    router.push(`/user/${userId}`);
   }
 
   return (
@@ -132,16 +128,11 @@ export default function UserInformation({
           </DialogContent>
         </Dialog>
 
-
-        <Grid
-          container 
-          direction="row"
-          justify="space-between"
-        >
+        <Grid container direction="row" justify="space-between">
           <Grid item xs={3}>
             <Avatar
               user={data.user}
-                // eslint-disable-next-line react/style-prop-object
+              // eslint-disable-next-line react/style-prop-object
               style="medium"
             />
           </Grid>
@@ -149,37 +140,40 @@ export default function UserInformation({
             <UserDetail data={data} userType={userType} />
           </Grid>
           <Grid item xs={2}>
-            {Boolean(authState.user.userType !== 'security_guard') && (
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              onClick={() => setDrawerOpen(true)}
-              style={{
-                float: 'right',
-                marginRight: -23
-              }}
-            >
-              <DoubleArrowOutlinedIcon
+            {['client', 'resident', 'admin'].includes(userType) && (
+              <>
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={() => setDrawerOpen(true)}
+                  style={{
+                    float: 'right',
+                    marginRight: -23
+                  }}
+                >
+                  <DoubleArrowOutlinedIcon
                     // this is hacky, it should be replaced with a proper icon
-                style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
-              />
-            </IconButton>
-              )}
-            <RightSideMenu authState={authState} handleDrawerToggle={() => setDrawerOpen(false)} drawerOpen={isDrawerOpen} />
+                    style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
+                  />
+                </IconButton>
+
+                <RightSideMenu
+                  authState={authState}
+                  handleDrawerToggle={() => setDrawerOpen(false)}
+                  drawerOpen={isDrawerOpen}
+                />
+              </>
+            )}
           </Grid>
         </Grid>
 
         <br />
         {authState.user.userType === 'custodian' &&
-            ['security_guard', 'contractor'].includes(data.user.userType) && (
-              <ShiftButtons userId={userId} />
-            )}
-        <UserStyledTabs
-          tabValue={tabValue}
-          handleChange={handleChange}
-          userType={userType}
-        />
+          ['security_guard', 'contractor'].includes(data.user.userType) && (
+            <ShiftButtons userId={userId} />
+          )}
+        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} userType={userType} />
 
         <TabPanel value={tabValue} index="Contacts">
           {/* userinfo */}
@@ -234,10 +228,7 @@ export default function UserInformation({
               />
             </TabPanel>
             <TabPanel value={tabValue} index="Forms">
-              <UserFilledForms
-                userFormsFilled={data.user.formUsers}
-                userId={data.user.id}
-              />
+              <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
             </TabPanel>
           </>
         )}
@@ -256,8 +247,7 @@ export default function UserInformation({
         )}
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' &&
-          authState.user.userType === 'security_guard' ? (
+          {data.user.state === 'valid' && authState.user.userType === 'security_guard' ? (
             <Button
               id="log-entry"
               className={`${css(styles.logButton)} log-entry-btn`}
@@ -280,7 +270,7 @@ export default function UserInformation({
         </div>
       </>
     </div>
-  )
+  );
 }
 
 const User = PropTypes.shape({
@@ -290,7 +280,7 @@ const User = PropTypes.shape({
   state: PropTypes.string,
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object)
-})
+});
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
   onLogEntry: PropTypes.func.isRequired,
@@ -299,8 +289,8 @@ UserInformation.propTypes = {
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   accountData: PropTypes.shape({ user: User }).isRequired,
-  accountRefetch: PropTypes.func.isRequired,
-}
+  accountRefetch: PropTypes.func.isRequired
+};
 
 const styles = StyleSheet.create({
   linkItem: {
@@ -315,4 +305,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF6347',
     color: '#FFF'
   }
-})
+});
